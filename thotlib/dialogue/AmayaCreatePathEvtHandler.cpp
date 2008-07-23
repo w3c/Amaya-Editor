@@ -106,7 +106,6 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
       pFrame->GetCanvas()->CaptureMouse();
     }
 
-  InitDrawing (5, 1, 0);
   state = 0;
   clear = false;
 
@@ -126,44 +125,85 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
     finished = true;
     return;
     }
-
-    if(((PtrElement)leaf)->ElLeafType == LtPolyLine)
-      {
-	/* It's a polyline or a polygon */
-	pBuffer = ((PtrElement)leaf)->ElPolyLineBuffer;
-      }
-    else if(((PtrElement)leaf)->ElLeafType == LtPath)
-      {
-	/* It's a path */
-	pPa = ((PtrElement)leaf)->ElFirstPathSeg;
-      }
 }
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 {
-  int symX2, symY2;
+  int x1,y1,x2,y2,x3,y3,x4,y4;
+  PtrPathSeg          pPa;
 
-  if(shape == 8 && nb_points > 2)
+  if(shape == 8)
     {
       /* close the curve */
-      symX2=2*lastX1-lastX2;
-      symY2=2*lastY1-lastY2;
-      //AddPointInPolyline (pBuffer, *nb_points, symX2, symY2);
-      nb_points++;
+      pPa = ((PtrElement)leaf)->ElFirstPathSeg;
 
-      //symX2=2*pBuffer->BuPoints[1].XCoord-pBuffer->BuPoints[2].XCoord;
-      //symY2=2*pBuffer->BuPoints[1].YCoord-pBuffer->BuPoints[2].YCoord;
-      //AddPointInPolyline (pBuffer, *nb_points, symX2, symY2);
-      nb_points++;
-      /*AddPointInPolyline (pBuffer, *nb_points,
-			  pBuffer->BuPoints[1].XCoord,
-			  pBuffer->BuPoints[1].YCoord
-			  );*/
-      nb_points++;
+      if(pPa)
+	{
+	  if(state == 2)
+	    {
+	      x1 = lastX2;
+	      y1 = lastY2;
+	      x2 = symX;
+	      y2 = symY;
+	    }
+	  if(state == 3)
+	    {
+	      x1 = lastX2;
+	      y1 = lastY2;
+	      x2 = 2*lastX1-lastX2;
+	      y2 = 2*lastY1-lastY2;
+	    }
+	  else
+	    {
+	      x1 = lastX3;
+	      y1 = lastY3;
+	      x2 = 2*lastX2-lastX3;
+	      y2 = 2*lastY2-lastY3;
+	    }
+   
+	  MouseCoordinatesToSVG(document, pFrame,
+			    x0,y0,
+			    width,height,
+			    NULL,
+			    TRUE, &x1, &y1);
+
+	  MouseCoordinatesToSVG(document, pFrame,
+			    x0,y0,
+			    width,height,
+			    NULL,
+			    TRUE, &x2, &y2);
+
+	  x3 = 2*pPa->XStart - pPa->XCtrlStart;
+	  y3 = 2*pPa->YStart - pPa->YCtrlStart;
+
+	  x4 = pPa->XStart;
+	  y4 = pPa->YStart;
+
+	  /*                          (x3,y3)
+	   *
+	   *	(x2,y2)	     ..............
+	   *		.....		  ....
+	   *	      ...		      ..
+	   *	    ...				...
+	   *	  ...                             (x4,y4) = first point
+	   *	 ..                                         of the path
+	   *	..
+	   *  (x1,y1) = last point
+	   *    
+	   *
+	   */
+
+	  TtaAppendPathSeg (leaf,
+			    TtaNewPathSegCubic (x1, y1, x4 ,y4,
+						x2, y2, x3, y3, FALSE),
+			    document);
+	}
+      else
+	*created = FALSE;
     }
-  
+
   if (pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
@@ -301,15 +341,6 @@ void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
 			    TtaNewPathSegQuadratic (x1, y1, x4 ,y4,
 						    x2, y2, FALSE),
 			    document);
-
-	  // AddPointInPolyline (pBuffer, *nb_points, lastX2, lastY2);
-	  //	  nb_points++;
-	  // AddPointInPolyline (pBuffer, *nb_points, symX, symY);
-	  //nb_points++;
-	  // AddPointInPolyline (pBuffer, *nb_points, symX, symY);
-	  //nb_points++;
-	  // AddPointInPolyline (pBuffer, *nb_points, lastX1, lastY1);
-	  //nb_points++;
 	}
       else if(state == 4)
 	{
@@ -350,15 +381,6 @@ void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
 			    TtaNewPathSegCubic (x1, y1, x4 ,y4,
 						x2, y2, x3, y3, FALSE),
 			    document);
-	  
-
-	  /* Add a cubic Bezier Curve */
-	  //AddPointInPolyline (pBuffer, *nb_points, lastX2, lastY2);
-	  //nb_points++;
-	  //AddPointInPolyline (pBuffer, *nb_points, symX, symY);
-	  //nb_points++;
-	  //AddPointInPolyline (pBuffer, *nb_points, lastX1, lastY1);
-	  //nb_points++;
 	}
 
       if(state < 4)state++;
@@ -383,7 +405,11 @@ void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
-  *created = nb_points > 2;
+  if(shape == 5 || shape == 6)
+    *created = (nb_points > 2);
+  else
+    *created = (((PtrElement)leaf)->ElFirstPathSeg != NULL);
+
   finished = true;
 }
 
@@ -507,16 +533,6 @@ void AmayaCreatePathEvtHandler::DrawQuadraticBezier (int x1, int y1,
 
   glDisable(GL_MAP1_VERTEX_3);
   glDisable(GL_COLOR_LOGIC_OP);
-
-  /*
-    void        *mesh;
-    mesh = GetNewMesh ();
-    QuadraticSplit2 (x1, y1, x2, y2, x3, y3, mesh);
-    MeshNewPoint (x3, y3, mesh);
-    CountourCountAdd (mesh);
-    MakeMeshLines (mesh);
-    FreeMesh (mesh);*/
-
 }
 
 /*----------------------------------------------------------------------
@@ -559,16 +575,6 @@ void AmayaCreatePathEvtHandler::DrawCubicBezier (int x1, int y1,
 
   glDisable(GL_MAP1_VERTEX_3);
   glDisable(GL_COLOR_LOGIC_OP);
-
-  /*
-    void        *mesh;
-    mesh = GetNewMesh ();
-    PolySplit2 (x1, y1, x2, y2, x3, y3, x4, y4, mesh);
-    MeshNewPoint (x4, y4, mesh);
-    CountourCountAdd (mesh);
-    MakeMeshLines (mesh);
-    FreeMesh (mesh);
-  */
 }
 
 /*----------------------------------------------------------------------
@@ -623,13 +629,14 @@ void AmayaCreatePathEvtHandler::DrawControlPoints ()
 void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
 						 ThotBool specialColor)
 {
+  InitDrawing (5, 1, 0);
 
   switch(shape)
     {
     case 5:
     case 6:
-      /*      if(state == 1)
-	      DrawLine (lastX1, lastY1, currentX, currentY, specialColor);*/
+      if(state == 1)
+	DrawLine (lastX1, lastY1, currentX, currentY, specialColor);
       break;
 
     case 7:

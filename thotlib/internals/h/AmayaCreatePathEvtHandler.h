@@ -74,10 +74,6 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   int lastX2, lastY2;
   int lastX3, lastY3;
   bool clear;
-
-  PtrPathSeg          pPa;
-  PtrTextBuffer    pBuffer;
-
   Element leaf;
 };
 

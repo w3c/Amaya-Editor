@@ -2606,22 +2606,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
        newType.ElTypeNum == SVG_EL_path))
     {
 
-      if(entry >= 5 && entry <= 8)
-	{
-	  /* Add a temporary style */
-	  strcpy(buffer2, "stroke:black; fill:none;");
-
-	  ParseHTMLSpecificStyle (newEl,
-				  buffer2,
-				  doc, 0, FALSE);
-
-	  /* Ask the points of the polyline/curve */
-	  created = AskShapePoints (doc, svgAncestor, svgCanvas,
-				    entry, newEl);
-	  if(created)
-	    UpdatePointsOrPathAttribute(doc, newEl);
-	}
-
       *buffer = EOS;
 
       /* Is the shape visible with this configuration? */
@@ -2688,6 +2672,38 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  strcat(buffer, buffer2);
 	}
 
+      if(entry >= 5 && entry <= 8)
+	{
+	  /* Add a temporary style */
+
+	  if(StrokeEnabled &&
+	     Current_StrokeOpacity > 0 && Current_StrokeWidth > 0)
+	    {
+	    ParseHTMLSpecificStyle (newEl,
+				    buffer,
+				    doc, 0, FALSE);
+	    }
+	  else
+	    {
+	      strcpy(buffer2, "stroke:cyan;");
+	      ParseHTMLSpecificStyle (newEl,
+				      buffer2,
+				      doc, 0, FALSE);
+	    }
+
+	  strcpy(buffer2, "fill:none;");
+	  ParseHTMLSpecificStyle (newEl,
+				  buffer2,
+				  doc, 0, FALSE);
+
+	  /* Ask the points of the polyline/curve */
+	  created = AskShapePoints (doc, svgAncestor, svgCanvas,
+				    entry, newEl);
+
+	  if(created)
+	    UpdatePointsOrPathAttribute(doc, newEl);
+	}
+
       /* Apply the fill style */
       if(newType.ElTypeNum != SVG_EL_line_)
 	{
@@ -2703,6 +2719,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  strcat(buffer, buffer2);
 	}
 
+      ParseHTMLSpecificStyle (newEl, "stroke:none;", doc, 0, TRUE);
       ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
 
       attrType.AttrTypeNum = SVG_ATTR_style_;
