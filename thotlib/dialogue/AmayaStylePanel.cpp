@@ -606,18 +606,22 @@ void AmayaStyleToolPanel::SpinValueHasChanged(int id)
 	{
 	case OPACITY:
 	  TtaExecuteMenuAction ("DoSelectOpacity", doc, view, TRUE);
+	  XRCCTRL(*this, "wxID_SPIN_SVG_OPACITY", wxSpinCtrl)->SetFocus();
 	  break;
 
 	case STROKE_OPACITY:
 	  TtaExecuteMenuAction ("DoSelectStrokeOpacity", doc, view, TRUE);
+	  XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_OPACITY", wxSpinCtrl)->SetFocus();
 	  break;
 
 	case FILL_OPACITY:
 	  TtaExecuteMenuAction ("DoSelectFillOpacity", doc, view, TRUE);
+	  XRCCTRL(*this, "wxID_SPIN_SVG_FILL_OPACITY", wxSpinCtrl)->SetFocus();
 	  break;
 
 	case STROKE_WIDTH:
 	  TtaExecuteMenuAction ("DoSelectStrokeWidth", doc, view, TRUE);
+	  XRCCTRL(*this, "wxID_SPIN_SVG_STROKE_WIDTH", wxSpinCtrl)->SetFocus();
 	  break;
 	}
     }
