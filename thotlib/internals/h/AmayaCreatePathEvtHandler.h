@@ -19,17 +19,16 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   DECLARE_DYNAMIC_CLASS(AmayaCreatePathEvtHandler)
 
     AmayaCreatePathEvtHandler();
-  AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
-			    Document doc, 
-			    void *inverse,
-			    int ancestorX,
-			    int ancestorY,
-			    int canvasWidth,
-			    int canvasHeight,
-			    PtrTextBuffer buffer,
-			    int shape_number,
-			    int *nbPoints,
-			    ThotBool *created);
+    AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
+			      Document doc,
+			      void *inverse,
+			      int ancestorX,
+			      int ancestorY,
+			      int canvasWidth,
+			      int canvasHeight,
+			      int shape,
+			      Element el,
+			      ThotBool *created);
 
   virtual ~AmayaCreatePathEvtHandler();
 
@@ -64,17 +63,22 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   void *inverse;
   int x0, y0, width,height;
   int shape;
-
-  PtrTextBuffer pBuffer;
+  Element el;
+  PtrBox box;
   ThotBool *created;
 
-  int *nb_points, state;
+  int nb_points, state;
   int currentX,currentY;
   int lastX1, lastY1;
   int symX, symY;
   int lastX2, lastY2;
   int lastX3, lastY3;
   bool clear;
+
+  PtrPathSeg          pPa;
+  PtrTextBuffer    pBuffer;
+
+  Element leaf;
 };
 
 #endif /* __AMAYACREATEPATHEVTHANDLER_H__ */

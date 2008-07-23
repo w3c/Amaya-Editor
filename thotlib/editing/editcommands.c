@@ -2020,86 +2020,69 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
   AskShapePoints
   Ask the user the list of points of a polyline or curve.
   --------------------------------------------------------------------*/
-char *AskShapePoints (Document doc, int shape, Element svgRoot)
+ThotBool AskShapePoints (Document doc,
+			 Element svgAncestor,
+			 Element svgCanvas,
+			 int shape,
+			 Element el)
 {
-  PtrTextBuffer       pBuffer, pB;
   PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
   int frame;
-  int x1, x2, y1, y2;
-  char *attr_data = NULL;
-  int i, length;
-  short step;
-
-  /* TODO: - rewrite the module in order to directly create the graphical
-             unit in the Element.
-           - use a transformation matrix
-	   - use the functions to generate polyline/path attributes
-
-     fred */
-
-#define BUFFERPOINT_LENGTH 30
-  char bufferpoint[BUFFERPOINT_LENGTH];
+  PtrTransform CTM, inverse;
+  int canvasWidth,canvasHeight,ancestorX,ancestorY;
+  ThotBool created = FALSE;
 
   frame = ActiveFrame;
 
-  if(frame <= 0)return NULL;
+  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return FALSE;
 
-  if(frame <= 0 || svgRoot == NULL)return NULL;
-  pAb = ((PtrElement)svgRoot) -> ElAbstractBox[0];
-  if(!pAb)return NULL;
-  pBox = pAb -> AbBox;
-  if(!pBox)return NULL;
+  /* Get the current transform matrix */
+  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
+
+  if(CTM == NULL)
+    {
+      inverse = NULL;
+    }
+  else
+    {
+      /* Get the inverse of the CTM and free the CTM */
+      inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
+      TtaFreeTransform(CTM);
+
+      if(inverse == NULL)
+	/* Transform not inversible */
+	return FALSE;
+    }
 
   pFrame = &ViewFrameTable[frame - 1];
 
-  x1 = pBox->BxXOrg - pFrame->FrXOrg;
-  y1 = pBox->BxYOrg - pFrame->FrYOrg;
-  x2 = x1 + pBox->BxWidth;
-  y2 = y1 + pBox->BxHeight;
+  /* Get the size of the SVG Canvas */
+  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
 
-  pBuffer = PathCreation (frame, 
-			  doc, 
-			  NULL,
-			  x1, y1, x2 - x1, y2 - y1, shape, &length);
+  /* Get the origin of the ancestor */
+  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
+  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
+  if(pAb && pAb -> AbBox)
+    pBox = pAb -> AbBox;
+  else return FALSE;
+  ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
+  ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
+  
+  /* Call the interactive module */
+  created = PathCreation (frame,
+			  doc,
+			  inverse,
+			  ancestorX, ancestorY,
+			  canvasWidth, canvasHeight,
+			  shape, el);
 
-  if(!pBuffer)return NULL;
+  /* Free the inverse of the CTM */
+  if(inverse != NULL)
+    TtaFreeTransform(inverse);
 
-  attr_data = (char *)TtaGetMemory(BUFFERPOINT_LENGTH * length + 1);
-  if(attr_data)
-    {
-
-      attr_data[0] = '\0';
-      step = -1;
-      i = 1;
-
-      for(pB = pBuffer; pB; pB = pB -> BuNext)
-	{
-	  for(; i < pB -> BuLength; i++)
-	    {
-	      if((shape == 7 || shape == 8))
-		{
-		  if(step == -1)
-		    strcat (attr_data, "M ");
-		  else if(step == 0)
-		    strcat (attr_data, "C ");
-		}
-
-	      sprintf(bufferpoint, "%d,%d ",
-		      pB->BuPoints[i].XCoord, pB->BuPoints[i].YCoord);
-	      strcat (attr_data, bufferpoint);
-
-	      step = (step+1)%3;
-	    }
-	  i = 0;
-	}
-    }
-
-  /* Free the buffer */
-  FreeTextBuffer (pBuffer);
-
-  return attr_data;
+  return created;
 }
 
 /*----------------------------------------------------------------------
@@ -2194,10 +2177,10 @@ extern void UpdatePointsOrPathAttribute(Document doc, Element el);
 /*----------------------------------------------------------------------
   AskTransform
   --------------------------------------------------------------------*/
-ThotBool AskTransform(     Document doc,
-		       Element svgAncestor,
-		       Element svgCanvas,
-		       int transform_type, Element el)
+ThotBool AskTransform(Document doc,
+		      Element svgAncestor,
+		      Element svgCanvas,
+		      int transform_type, Element el)
 {
 
 
@@ -2276,8 +2259,8 @@ ThotBool AskTransform(     Document doc,
 /*----------------------------------------------------------------------
   AskPathEdit
   --------------------------------------------------------------------*/
-ThotBool AskPathEdit (  Document doc,
-		       int edit_type, Element el, int point)
+ThotBool AskPathEdit (Document doc,
+		      int edit_type, Element el, int point)
 {
 
   Element svgCanvas = NULL, svgAncestor = NULL, el2;

@@ -28,6 +28,9 @@ extern void ParseCSSequivAttribute ( int attrType,
                                      Element el,
                                      Document doc,
                                      ThotBool delete_ );
+extern Element CreateGraphicLeaf ( Element el,
+                                   Document doc,
+                                   ThotBool *closed );
 extern void SetGraphicDepths ( Document doc,
                                Element el );
 extern void CopyTRefContent ( Element source,
@@ -129,6 +132,9 @@ extern void ParseCSSequivAttribute ( int attrType,
                                        Element el,
                                        Document doc,
                                        ThotBool delete_ );
+extern Element CreateGraphicLeaf ( Element el,
+                                     Document doc,
+                                     ThotBool *closed );
 extern void SetGraphicDepths ( Document doc,
                                  Element el );
 extern void CopyTRefContent ( Element source,

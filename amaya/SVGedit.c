@@ -1711,8 +1711,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
   ThotBool	    found, newSVG = FALSE, replaceGraph = FALSE;
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
-  ThotBool          isFilled, isFormattedView;
-
+  ThotBool          isFilled, isFormattedView, closed;
+    
   int x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
   int tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
   unsigned short      red, green, blue;
@@ -1723,7 +1723,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   char buffer[500], buffer2[200];
   char stroke_color[10], fill_color[10];
-  char *attr_data;
 
   /* Check that a document is selected */
   if (doc == 0)
@@ -2401,34 +2400,11 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
 	  if (isFormattedView)
 	    {
-	      attr_data = AskShapePoints (doc, entry, svgCanvas);
-	      created = (attr_data != NULL);
-	    }
-	  else
-	    {
-	      attr_data = NULL;
+	      elType = TtaGetElementType(newEl);
+	      CreateGraphicLeaf (newEl, doc, &closed);
 	      created = TRUE;
 	    }
-
-	  if (created)
-	    {
-
-	      if (entry == 5 || entry == 6)
-		attrType.AttrTypeNum = SVG_ATTR_points;
-	      else
-		attrType.AttrTypeNum = SVG_ATTR_d;
-
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (newEl, attr, doc);
-
-	      TtaSetAttributeText (attr, attr_data, newEl, doc);
-	      TtaFreeMemory(attr_data);
-	      
-	      if (entry == 5 || entry == 6)
-		ParsePointsAttribute (attr, newEl, doc);
-	      else
-		ParsePathDataAttribute (attr, newEl, doc, TRUE);	    
-	    }
+	  else created = FALSE;
 	}
       else if (entry == 9)
         /* create a foreignObject containing an XHTML div element within the
@@ -2630,6 +2606,22 @@ void CreateGraphicElement (Document doc, View view, int entry)
        newType.ElTypeNum == SVG_EL_path))
     {
 
+      if(entry >= 5 && entry <= 8)
+	{
+	  /* Add a temporary style */
+	  strcpy(buffer2, "stroke:black; fill:none;");
+
+	  ParseHTMLSpecificStyle (newEl,
+				  buffer2,
+				  doc, 0, FALSE);
+
+	  /* Ask the points of the polyline/curve */
+	  created = AskShapePoints (doc, svgAncestor, svgCanvas,
+				    entry, newEl);
+	  if(created)
+	    UpdatePointsOrPathAttribute(doc, newEl);
+	}
+
       *buffer = EOS;
 
       /* Is the shape visible with this configuration? */
@@ -2717,7 +2709,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (newEl, attr, doc);
       TtaSetAttributeText (attr, buffer, newEl, doc);
-
     }
 
   if (selEl != NULL)

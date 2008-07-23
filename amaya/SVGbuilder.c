@@ -311,7 +311,7 @@ static Element CreateGraphicalLeaf (char shape, Element el, Document doc)
   Returns the created (or existing) element.
   When returning, closed indicates whether the shape is closed or not.
   ----------------------------------------------------------------------*/
-static Element CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
+Element CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
 {
   ElementType elType;
   Element     leaf;

@@ -1628,39 +1628,20 @@ ThotBool PathEdit (int frame,
 /*----------------------------------------------------------------------
   PathCreation
   ----------------------------------------------------------------------*/
-PtrTextBuffer PathCreation (int frame, 
-			    Document doc, 
-			    void *inverse,
-			    int ancestorX, int ancestorY,
-			    int canvasWidth, int canvasHeight,
-			    int shape_number, int *NbPoints)
+ThotBool PathCreation (int frame, 
+		       Document doc, 
+		       void *inverse,
+		       int ancestorX, int ancestorY,
+		       int canvasWidth, int canvasHeight,
+		       int shape,
+		       Element el)
 {
-
-  /* TODO: - rewrite the module in order to directly create the graphical
-             unit in the Element.
-           - use a transformation matrix
-
-     fred */
-
   ThotBool created;
-  PtrTextBuffer       pBuffer;
   AmayaFrame * p_frame;
   AmayaCreatePathEvtHandler * p_CreatePathEvtHandler;
   ThotEvent ev;
 
   p_frame = FrameTable[frame].WdFrame;
-
-  /* Allocate a polyline buffer to simulate a polyline */ 
-  GetTextBuffer (&pBuffer);
-
-  /* The coordinates of the points are "int", but AddPointInPolyline do not
-     accept value greater than width = BuPoints[0].XCoord and
-     height = BuPoints[0].YCoord. For Bezier Curves, the control point can be
-     outside the canvas, so take the greatest values. */
-  AddPointInPolyline (pBuffer, 0,0,0);
-
-  pBuffer->BuPoints[0].XCoord = INT_MAX;
-  pBuffer->BuPoints[0].YCoord = INT_MAX;
 
   p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame,
 							 doc,
@@ -1669,21 +1650,15 @@ PtrTextBuffer PathCreation (int frame,
 							 ancestorY,
 							 canvasWidth,
 							 canvasHeight,
-							 pBuffer,
-							 shape_number,
-							 NbPoints, &created);
+							 shape,
+							 el,
+							 &created);
   while(!p_CreatePathEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_CreatePathEvtHandler;
 
-  if(!created)
-    {
-      FreeTextBuffer (pBuffer);
-      pBuffer = NULL;
-    }
-
-  return pBuffer;
+  return created;
 }
 
 

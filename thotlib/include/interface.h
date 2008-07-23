@@ -501,7 +501,10 @@ extern ThotBool AskSurroundingBox(
 		       int *x4, int *y4,
 		       int *lx, int *ly);
 
-extern char *AskShapePoints (Document doc, int shape, Element svgRoot);
+extern ThotBool AskShapePoints (Document doc,
+			     Element svgAncestor,
+			     Element svgCanvas,
+			     int shape, Element el);
 
 extern ThotBool AskTransform(Document doc,
 			 Element svgAncestor,

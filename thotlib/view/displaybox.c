@@ -1277,7 +1277,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
   if (pBox->BxBuffer == NULL || pBox->BxNChars <= 1)
     return;
   /* Transform the polyline if the box size has changed */
-  PolyTransform (pBox, frame);
+  //PolyTransform (pBox, frame);
   pAb = pBox->BxAbstractBox;
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
