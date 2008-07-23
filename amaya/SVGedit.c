@@ -146,7 +146,8 @@ void GraphicsSelectionChanged (NotifyElement * event)
   ElementType  elType;
   int          elemType = 0;
   SSchema      svgSchema;
-  Document doc; View view;
+  Document doc;
+  View view;
 
   TtaGiveActiveView(&doc, &view);
 
@@ -189,9 +190,6 @@ void GraphicsSelectionChanged (NotifyElement * event)
 	   event->element = asc;
 	   event->elementType = TtaGetElementType(asc);
 	 }
-
-       /* Update the style panel according to the properties of "asc" */
-       UpdateStylePanelSVG(doc, view, asc);
     }
   else
     {
@@ -230,10 +228,11 @@ void GraphicsSelectionChanged (NotifyElement * event)
 	  event->element = use;
 	  event->elementType.ElTypeNum = elemType;
 	}
-
-      /* Update the style panel */
-      UpdateStylePanelSVG(doc, view, event->element);
     }
+
+  /* Update the style panel */
+  if(event->elementType.ElTypeNum != SVG_EL_GraphicsElement)
+    UpdateStylePanelSVG(doc, view, event->element);
 
   CheckSynchronize (event);
   Selection_changed_in_basedoc (event);
