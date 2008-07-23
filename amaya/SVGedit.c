@@ -2701,30 +2701,44 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
 	  if(created)
 	    UpdatePointsOrPathAttribute(doc, newEl);
+	  else
+	    {
+	      /* Actually, the user don't create the shape */
+	      TtaRegisterElementDelete (newEl, doc);
+	      TtaDeleteTree(newEl, doc);
+	      newEl = NULL;
+	      TtaUnselect(doc);
+	    }
 	}
-
-      /* Apply the fill style */
-      if(newType.ElTypeNum != SVG_EL_line_)
+      
+      if(created)
 	{
-	  sprintf(buffer2, "fill: %s; ", fill_color);
-	  strcat(buffer, buffer2);
+
+	  /* Apply the fill style */
+	  if(newType.ElTypeNum != SVG_EL_line_)
+	    {
+	      sprintf(buffer2, "fill: %s; ", fill_color);
+	      strcat(buffer, buffer2);
+	    }
+	  
+	  if (FillEnabled)
+	    {
+	      sprintf(buffer2, "fill-opacity: %g;",
+		      ((float)Current_FillOpacity)/100
+		      );
+	      strcat(buffer, buffer2);
+	    }
+	  
+	  strcpy(buffer2, "stroke:none;");
+	  ParseHTMLSpecificStyle (newEl, buffer2, doc, 0, TRUE);
+
+	  ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
+	  
+	  attrType.AttrTypeNum = SVG_ATTR_style_;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (newEl, attr, doc);
+	  TtaSetAttributeText (attr, buffer, newEl, doc);
 	}
-
-      if (FillEnabled)
-	{
-	  sprintf(buffer2, "fill-opacity: %g;",
-		  ((float)Current_FillOpacity)/100
-		  );
-	  strcat(buffer, buffer2);
-	}
-
-      ParseHTMLSpecificStyle (newEl, "stroke:none;", doc, 0, TRUE);
-      ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
-
-      attrType.AttrTypeNum = SVG_ATTR_style_;
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (newEl, attr, doc);
-      TtaSetAttributeText (attr, buffer, newEl, doc);
     }
 
   if (selEl != NULL)

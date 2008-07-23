@@ -108,6 +108,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
 
   state = 0;
   clear = false;
+  *created = FALSE;
 
   /* Get the box of the SVG element */
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
@@ -200,8 +201,6 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 						x2, y2, x3, y3, FALSE),
 			    document);
 	}
-      else
-	*created = FALSE;
     }
 
   if (pFrame)
@@ -229,7 +228,6 @@ bool AmayaCreatePathEvtHandler::IsFinish()
  *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
 {
-  *created = TRUE;
   finished = true;
 }
 
@@ -292,6 +290,9 @@ void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
 
   if(shape == 5 || shape == 6)
     {
+      if(nb_points == 2)
+	*created = TRUE;
+
       /* Add a new point in the polyline/polygon */
       state = 1;
       x1 = currentX;
@@ -341,6 +342,8 @@ void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
 			    TtaNewPathSegQuadratic (x1, y1, x4 ,y4,
 						    x2, y2, FALSE),
 			    document);
+
+	  *created = TRUE;
 	}
       else if(state == 4)
 	{
@@ -405,11 +408,6 @@ void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
-  if(shape == 5 || shape == 6)
-    *created = (nb_points > 2);
-  else
-    *created = (((PtrElement)leaf)->ElFirstPathSeg != NULL);
-
   finished = true;
 }
 
