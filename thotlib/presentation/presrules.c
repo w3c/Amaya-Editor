@@ -4098,14 +4098,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               pAb->AbForeground = DefaultFColor;
               appl = TRUE;
             }
-          else if (appl && pAb->AbLineWeight == 0 &&
-                   pAb->AbForeground != -2 /* transparent */ &&
-                   pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
-                   !strcmp (pEl->ElStructSchema->SsName, "SVG"))
-            {
-              pAb->AbLineWeight = 1;
-              pAb->AbLineWeightUnit = UnPoint;
-            }
           break;
         case PtHyphenate:
           pAb->AbHyphenate = BoolRule (pPRule, pEl,
