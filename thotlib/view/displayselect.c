@@ -512,21 +512,21 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX, topY + ry);
 	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX - rx, topY);
 	    
-	    /* 2 resize handles */
+	    /* 4 resize handles */
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
             break;
 
           case 'a': /* <circle/> */
           case 'c': /* <ellipse/> */
 	    thick+=2;
 
-	    /* 2 resize handles */
-	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, topY, N);
+	    /* 4 resize handles */
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
-
-	    /* 2 control points */
-	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
 	    break;
 
