@@ -21,13 +21,13 @@ class AmayaEditShapeEvtHandler : public wxEvtHandler
   AmayaEditShapeEvtHandler();
   AmayaEditShapeEvtHandler(
 			     AmayaFrame * p_frame,
-			     Document doc,
+			     Document document,
 			     void *inverse,
 			     int ancestorX,
 			     int ancestorY,
 			     int canvasWidth,
 			     int canvasHeight,
-			     Element el,
+			     Element element,
 			     int point_number,
 			     ThotBool *hasBeenEdited);
   virtual ~AmayaEditShapeEvtHandler();
@@ -51,9 +51,16 @@ class AmayaEditShapeEvtHandler : public wxEvtHandler
   int doc;
   void *inverse;
   int x0, y0, width, height;
+  Element el;
   int point;
   ThotBool *hasBeenEdited;
 
+  /* Coordinates of the mouse */
+  int lastX, lastY, mouse_x,mouse_y;
+  bool buttonDown;
+
+  Element leaf;
+  PtrBox  box;
 };
 
 #endif /* __AMAYAEDITSHAPEEVTHANDLER_H__ */

@@ -1593,13 +1593,13 @@ ThotBool TransformSVG (int frame,
   ShapeEdit
   ----------------------------------------------------------------------*/
 ThotBool ShapeEdit (int frame,
-		   Document doc, 
-		   void *inverse,
-		   int ancestorX, int ancestorY,
-		   int canvasWidth, int canvasHeight,
-		   Element el,
-		   int point_edited
-		   )
+		    Document doc, 
+		    void *inverse,
+		    int ancestorX, int ancestorY,
+		    int canvasWidth, int canvasHeight,
+		    Element el,
+		    int point_edited
+		    )
 {
   AmayaFrame * p_frame;
   AmayaEditShapeEvtHandler *p_EditShapeEvtHandler;
@@ -1608,15 +1608,15 @@ ThotBool ShapeEdit (int frame,
 
   p_frame = FrameTable[frame].WdFrame;
   p_EditShapeEvtHandler = new AmayaEditShapeEvtHandler(p_frame,
-						     doc,
-						     inverse,
-						     ancestorX,
-						     ancestorY,
-						     canvasWidth,
-						     canvasHeight,
-						     el,
-						     point_edited,
-						     &hasBeenEdited);
+						       doc,
+						       inverse,
+						       ancestorX,
+						       ancestorY,
+						       canvasWidth,
+						       canvasHeight,
+						       el,
+						       point_edited,
+						       &hasBeenEdited);
   
   while(!p_EditShapeEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);

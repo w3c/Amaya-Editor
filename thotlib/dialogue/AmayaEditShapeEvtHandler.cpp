@@ -26,6 +26,7 @@
 #include "geom_f.h"
 #include "font_f.h"
 #include "content_f.h"
+#include "viewapi_f.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -69,28 +70,33 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler() : wxEvtHandler()
  *----------------------------------------------------------------------*/
 AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
 (AmayaFrame * p_frame,
- Document doc,
+ Document document,
  void *inverse,
  int ancestorX,
  int ancestorY,
  int canvasWidth,
  int canvasHeight,
- Element el,
+ Element element,
  int point,
  ThotBool *hasBeenEdited)
   : wxEvtHandler()
   ,finished(false)
   ,pFrame(p_frame)
   ,frameId(p_frame->GetFrameId())
-  ,doc(doc)
+  ,doc(document)
   ,inverse(inverse)
   ,x0(ancestorX)
   ,y0(ancestorY)
   ,width(canvasWidth)
   ,height(canvasHeight)
+  ,el(element)
   ,point(point)
   ,hasBeenEdited(hasBeenEdited)
 {
+  PtrAbstractBox pAb;
+
+  *hasBeenEdited = FALSE;
+
   if (pFrame)
     {
       /* attach this handler to the canvas */
@@ -99,11 +105,27 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
 
       /* assign a cross mouse cursor */
       pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-
       pFrame->GetCanvas()->CaptureMouse();
-
     }
 
+  /* Get the GRAPHICS leaf */
+  leaf = TtaGetFirstLeaf((Element)el);
+  if(!leaf)
+    {
+    finished = true;
+    return;
+    }
+
+  /* Get the box of the SVG element */
+  pAb = ((PtrElement)leaf) -> ElAbstractBox[0];
+  if(!pAb || !(pAb->AbBox))
+    {
+    finished = true;
+    return;
+    }
+  box = pAb -> AbBox;
+
+  printf("editshape: %d, %d\n", box->BxWidth, box->BxHeight);
 }
 
 /*----------------------------------------------------------------------
@@ -180,6 +202,99 @@ void AmayaEditShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
+  int x1,y1,x2,y2;
+  int dx, dy;
+  if (IsFinish())return;
+
+  /* DELTA is the sensitivity toward mouse moves. */
+#define DELTA 0
+
+  /* Update the current mouse coordinates */
+  mouse_x = event.GetX();
+  mouse_y = event.GetY();
+
+  if(!buttonDown)
+    {
+      lastX = mouse_x;
+      lastY = mouse_y;
+      buttonDown = true;
+    }
+
+  if((abs(mouse_x -lastX) + abs(mouse_y - lastY) > DELTA))
+    {
+      x1 = lastX;
+      y1 = lastY;
+      x2 = mouse_x;
+      y2 = mouse_y;
+
+      MouseCoordinatesToSVG(doc, pFrame,
+			    x0, y0,
+			    width, height,
+			    inverse,
+			    TRUE, &x1, &y1);
+
+      MouseCoordinatesToSVG(doc, pFrame,
+			    x0, y0,
+			    width, height,
+			    inverse,
+			    TRUE, &x2, &y2);
+
+      dx = x2 - x1;
+      dy = y2 - y1;
+
+      printf("dx=%d, dy=%d\n", dx, dy);
+
+      switch(point)
+	{
+	case 4:
+	  box->BxW+=dx;
+	  break;
+	  
+	case 5:
+	  box->BxW+=dx;
+	  box->BxH+=dy;
+	  break;
+
+	case 6:
+	  box->BxH+=dy;
+	  break;
+
+	case 9:
+	  box->BxRx -= dx;
+	    
+	  break;
+
+	case 10:
+	  box->BxRy += dy;
+	  break;
+	}
+
+      if(box->BxW < 0)
+	box->BxW = 0;
+
+      if(box->BxH < 0)
+	box->BxH = 0;
+
+      box->BxWidth = box->BxW;
+      box->BxHeight = box->BxH;
+      NewDimension (box->BxAbstractBox, box->BxW, box->BxH, frameId, TRUE);
+
+#ifndef NODISPLAY
+      /* Redisplay the GRAPHICS leaf */
+            RedisplayLeaf ((PtrElement) leaf, doc, 0);
+#endif
+
+      /* Redisplay the SVG canvas to see the transform applied to the object */
+       DefBoxRegion (frameId, box, -1, -1, -1, -1);
+       RedrawFrameBottom (frameId, 0, NULL);
+       pFrame->GetCanvas()->Refresh();
+
+      /* Update the previous mouse coordinates */
+      lastX = mouse_x;
+      lastY = mouse_y;
+
+      *hasBeenEdited = TRUE;
+    }
 }
 
 /*----------------------------------------------------------------------

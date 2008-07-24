@@ -1435,10 +1435,8 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     {
       /* rect, circle and ellipse:
 	 is the user clicking on a resize handle? */
-      if(IsNear(x, y, 0, 0))
-	controlPoint = 1;
-      else if(IsNear(x, y, 0, height/2))
-	controlPoint = 8;
+      if(IsNear(x, y, width, height/2))
+	controlPoint = 4;
       else if(IsNear(x, y, width/2, height))
 	controlPoint = 6;
       else if(IsNear(x, y, width, height))
