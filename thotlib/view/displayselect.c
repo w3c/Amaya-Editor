@@ -159,6 +159,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
   int                 thick;
   int                 i, j;
   int                 x, y;
+  int                 rx, ry;
   int                 xstart, ystart, xctrlstart, yctrlstart;
   int                 xend, yend, xctrlend, yctrlend;
   ThotBool            svg_or_img;
@@ -502,16 +503,14 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    break;
 
           case 'C': /* <rect/> */
-
-	    /* 4 control points */
-	    DrawHandle(h, frame, thick, middleX, topY);
-	    DrawHandle(h, frame, thick, leftX, middleY);
-	    DrawHandle(h, frame, thick, rightX, middleY);
-	    DrawHandle(h, frame, thick, middleX, bottomY);
-
+	    thick+=2;
 	    /* 2 radius handles */
-	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX, topY + pAb->AbRy);
-	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX  - pAb->AbRx, topY);
+	    rx = pBox->BxRx;
+	    ry = pBox->BxRy;
+	    if(ry == 0)ry = rx;
+
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX, topY + ry);
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX - rx, topY);
 	    
 	    /* 2 resize handles */
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
@@ -520,13 +519,15 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 
           case 'a': /* <circle/> */
           case 'c': /* <ellipse/> */
+	    thick+=2;
+
 	    /* 2 resize handles */
 	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, topY, N);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
 
 	    /* 2 control points */
-	    DrawHandle(h, frame, thick, rightX, middleY);
-	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
 	    break;
 
           case 'W':
