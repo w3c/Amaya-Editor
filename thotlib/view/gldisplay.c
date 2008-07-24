@@ -3009,17 +3009,15 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
 			 int bg, int fg, int direction)
 {
   ThotPoint points[4];
-  int size2 = 0;
-  size /= 2;
+  int size2;
 
-  if(direction >= 0  && direction <= 3)
-    size2 = (int)(size*sqrt(2));
+  size2 = (int)(size/sqrt(2));
       
   switch(direction)
     {
     case 0: /* N */
       points[0].x = x_point;
-      points[0].y = y_point - size;
+      points[0].y = y_point;
       points[1].x = x_point - size2;
       points[1].y = y_point + size;
       points[2].x = x_point + size2;
@@ -3027,7 +3025,7 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
       break;
 
     case 1: /* W */
-      points[0].x = x_point - size;
+      points[0].x = x_point;
       points[0].y = y_point;
       points[1].x = x_point + size;
       points[1].y = y_point - size2;
@@ -3037,7 +3035,7 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
 
     case 2: /* S */
       points[0].x = x_point;
-      points[0].y = y_point + size;
+      points[0].y = y_point;
       points[1].x = x_point - size2;
       points[1].y = y_point - size;
       points[2].x = x_point + size2;
@@ -3045,7 +3043,7 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
       break;
 
     case 3: /* E */
-      points[0].x = x_point + size;
+      points[0].x = x_point;
       points[0].y = y_point;
       points[1].x = x_point - size;
       points[1].y = y_point - size2;
@@ -3054,20 +3052,20 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
       break;
 
     case 4: /* NW */
-      points[0].x = x_point - size;
+      points[0].x = x_point;
       points[0].y = y_point + size;
-      points[1].x = x_point - size;
-      points[1].y = y_point - size;
+      points[1].x = x_point;
+      points[1].y = y_point;
       points[2].x = x_point + size;
-      points[2].y = y_point - size;
+      points[2].y = y_point;
       break;
 
     case 7: /* SE */
       points[0].x = x_point - size;
-      points[0].y = y_point + size;
-      points[1].x = x_point + size;
-      points[1].y = y_point + size;
-      points[2].x = x_point + size;
+      points[0].y = y_point;
+      points[1].x = x_point;
+      points[1].y = y_point;
+      points[2].x = x_point;
       points[2].y = y_point - size;
       break;
 

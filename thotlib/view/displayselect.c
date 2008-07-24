@@ -513,10 +513,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX - rx, topY);
 	    
 	    /* 4 resize handles */
-	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX + thick,
-		       topY + thick, NW);
-	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX - thick,
-		       bottomY - thick, SE);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
             break;
@@ -526,10 +524,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    thick+=2;
 
 	    /* 4 resize handles */
-	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX + thick,
-		       topY + thick, NW);
-	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX - thick,
-		       bottomY - thick, SE);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
 	    break;
