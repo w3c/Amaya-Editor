@@ -456,7 +456,28 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 	      if(nChars > 0 && Selecting != NULL && el &&
 		 el->ElParent && IsSVGComponent(el->ElParent))
 		{
-		  printf("boxlocate: controlpoint=%d\n", nChars);
+		  if(el->ElLeafType == LtGraphics &&
+		     (pAb->AbShape == 'C' ||
+		      pAb->AbShape == 'c' ||
+		      pAb->AbShape == 'a'))
+		    {
+		      /* Click on a handle of a rect, circle or ellipse */
+		      *Selecting = FALSE;
+		      if(AskShapeEdit(doc,
+				      (Element)(el->ElParent), nChars))
+			{
+			  /* The user has moved an SVG element */
+			  TtaSetDocumentModified(doc);
+			  return FALSE;
+			}
+		      else
+			{
+			  NotifyClick (TteElemLClick, FALSE, el, doc);
+			  return FALSE;
+			}
+
+		      //printf("boxlocate: controlpoint=%d\n", nChars);
+		    }
 
 		  if(el->ElLeafType == LtPolyLine || el->ElLeafType == LtPath)
 		    {

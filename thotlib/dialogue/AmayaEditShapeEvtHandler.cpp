@@ -120,6 +120,8 @@ AmayaEditShapeEvtHandler::~AmayaEditShapeEvtHandler()
       pFrame->GetCanvas()->SetCursor( wxNullCursor );
       pFrame->GetCanvas()->ReleaseMouse();
     }
+
+
 }
 
 /*----------------------------------------------------------------------
@@ -158,6 +160,7 @@ void AmayaEditShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
+  finished = true;
 }
 
 /*----------------------------------------------------------------------
