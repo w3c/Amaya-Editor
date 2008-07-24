@@ -351,6 +351,13 @@ extern void DrawBezierControl ( int frame,
                                 int y_ctrl,
                                 int bg,
                                 int fg );
+extern void DrawResizeTriangle ( int frame,
+                                 int size,
+                                 int x_point,
+                                 int y_point,
+                                 int bg,
+                                 int fg,
+                                 int direction );
 extern void SetMainWindowBackgroundColor ( int frame,
                                            int color );
 extern void Clear ( int frame,
@@ -733,6 +740,13 @@ extern void DrawBezierControl ( int frame,
                                   int y_ctrl,
                                   int bg,
                                   int fg );
+extern void DrawResizeTriangle ( int frame,
+                                   int size,
+                                   int x_point,
+                                   int y_point,
+                                   int bg,
+                                   int fg,
+                                   int direction );
 extern void SetMainWindowBackgroundColor ( int frame,
                                              int color );
 extern void Clear ( int frame,

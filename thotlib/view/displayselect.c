@@ -46,7 +46,21 @@ enum handle_type
   {
     DEFAULT_HANDLE,
     FRAME_HANDLE,
-    BEZIER_HANDLE
+    BEZIER_HANDLE,
+    RESIZE_HANDLE,
+    ROUNDED_HANDLE
+  };
+
+enum direction
+  {
+    N,
+    W,
+    S,
+    E,
+    NW,
+    NE,
+    SW,
+    SE
   };
 
 /*----------------------------------------------------------------------
@@ -55,11 +69,37 @@ enum handle_type
 void DrawHandle(int handle, int frame, int thick, ...)
 {
   int x1, y1, x2, y2;
+  int dir;
+  int red = TtaGetThotColor(255, 0, 0);
+  int blue = TtaGetThotColor(0, 0, 255);
+
   va_list varpos;
   va_start(varpos, thick);
 
   switch(handle)
     {
+    case RESIZE_HANDLE:
+      x1 = va_arg(varpos, int);
+      y1 = va_arg(varpos, int);
+      dir = va_arg(varpos, int);
+      DrawResizeTriangle (frame, thick, x1, y1,
+			  blue, ResizeFgSelColor, dir);
+
+      break;
+
+    case ROUNDED_HANDLE:
+      x1 = va_arg(varpos, int);
+      y1 = va_arg(varpos, int);
+      DrawEllips (frame, 1, 0,
+		  x1 - thick/2,
+		  y1 - thick/2,
+		  thick, thick,
+		  ResizeFgSelColor,
+		  red,
+		  2
+		  );
+      break;
+
     case FRAME_HANDLE:
       x1 = va_arg(varpos, int);
       y1 = va_arg(varpos, int);
@@ -451,10 +491,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(h, frame, thick, middleX, bottomY);
 	    DrawHandle(h, frame, thick, rightX, bottomY);
             break;
-          case 'C':
           case 'L':
-          case 'a':
-          case 'c':
           case 'P':
           case 'Q':
             /* 4 control points */
@@ -462,17 +499,36 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(h, frame, thick, leftX, middleY);
 	    DrawHandle(h, frame, thick, rightX, middleY);
 	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    break;
 
-            if (pAb->AbRealShape == 'C' && pAb->AbRx == 0 && pAb->AbRy == 0)
-              /* rounded corners are not round. display a control point
-                 for each corner */
-              {
-		DrawHandle(h, frame, thick, leftX, topY);
-		DrawHandle(h, frame, thick, rightX, topY);
-		DrawHandle(h, frame, thick, leftX, bottomY);
-		DrawHandle(h, frame, thick, rightX, bottomY);
-              }
+          case 'C': /* <rect/> */
+
+	    /* 4 control points */
+	    DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, leftX, middleY);
+	    DrawHandle(h, frame, thick, rightX, middleY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
+
+	    /* 2 radius handles */
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX, topY + pAb->AbRy);
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX  - pAb->AbRx, topY);
+	    
+	    /* 2 resize handles */
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
             break;
+
+          case 'a': /* <circle/> */
+          case 'c': /* <ellipse/> */
+	    /* 2 resize handles */
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, topY, N);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
+
+	    /* 2 control points */
+	    DrawHandle(h, frame, thick, rightX, middleY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    break;
+
           case 'W':
             /* 3 control points */
 	    DrawHandle(h, frame, thick, leftX, topY);

@@ -3003,6 +3003,63 @@ void DrawBezierControl (int frame, int size, int x_point, int y_point,
 		   size*2+1, size*2+1, fg, bg, 2);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
+			 int bg, int fg, int direction)
+{
+  ThotPoint points[4];
+  size /= 2;
+
+  switch(direction)
+    {
+    case 0: /* N */
+      points[0].x = x_point;
+      points[0].y = y_point - size;
+      points[1].x = x_point - size;
+      points[1].y = y_point + size;
+      points[2].x = x_point + size;
+      points[2].y = y_point + size;
+      break;
+
+    case 1: /* W */
+      points[0].x = x_point - size;
+      points[0].y = y_point;
+      points[1].x = x_point + size;
+      points[1].y = y_point - size;
+      points[2].x = x_point + size;
+      points[2].y = y_point + size;
+      break;
+
+    case 4: /* NW */
+      points[0].x = x_point - size;
+      points[0].y = y_point + size;
+      points[1].x = x_point - size;
+      points[1].y = y_point - size;
+      points[2].x = x_point + size;
+      points[2].y = y_point - size;
+      break;
+
+    case 7: /* SE */
+      points[0].x = x_point - size;
+      points[0].y = y_point + size;
+      points[1].x = x_point + size;
+      points[1].y = y_point + size;
+      points[2].x = x_point + size;
+      points[2].y = y_point - size;
+      break;
+
+    default:
+      return;
+      break;
+    }
+
+  points[3] = points[0];
+
+  DoDrawLines (frame, 1, 5,
+	       points, 4, fg, bg,
+	       2);
+}
 
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.

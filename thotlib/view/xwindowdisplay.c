@@ -2708,6 +2708,11 @@ void DrawBezierControl (int frame, int size, int x_point, int y_point,
 		   size*2+1, size*2+1, fg, bg, 2);
 }
 
+void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
+			 int bg, int fg, int direction)
+{
+}
+
 /*----------------------------------------------------------------------
   SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
