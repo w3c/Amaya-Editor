@@ -42,6 +42,9 @@ extern ThotBool AskPathEdit ( Document doc,
                               int edit_type,
                               Element el,
                               int point );
+extern ThotBool AskShapeEdit ( Document doc,
+                               Element el,
+                               int point );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                              CHAR_T c,
@@ -111,6 +114,9 @@ extern ThotBool AskPathEdit ( Document doc,
                                 int edit_type,
                                 Element el,
                                 int point );
+extern ThotBool AskShapeEdit ( Document doc,
+                                 Element el,
+                                 int point );
 extern ThotBool ContentEditing ( int editType );
 extern ThotBool InsertChar ( int frame,
                                CHAR_T c,

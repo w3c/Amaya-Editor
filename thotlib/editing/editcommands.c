@@ -2340,6 +2340,88 @@ ThotBool AskPathEdit (Document doc,
 }
 
 /*----------------------------------------------------------------------
+  AskShapeEdit
+  --------------------------------------------------------------------*/
+ThotBool AskShapeEdit (Document doc,
+		       Element el, int point)
+{
+
+  Element svgCanvas = NULL, svgAncestor = NULL, el2;
+  PtrAbstractBox pAb;
+  PtrBox pBox;
+  ViewFrame          *pFrame;
+  int frame;
+  PtrTransform CTM, inverse;
+  int canvasWidth,canvasHeight,ancestorX,ancestorY;
+  ThotBool hasBeenEdited;
+
+  frame = ActiveFrame;
+
+  if(frame <= 0)return FALSE;
+
+  /* Get the ancestor and svg canvas */
+  el2 = el;
+
+  if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
+    return FALSE;
+
+  if(el2 != el)
+    /* el has changed: it was not a direct child of svgCanvas. Hence
+       transforming it is forbidden. */
+    return FALSE;
+
+  /* Get the current transform matrix */
+  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(el, svgAncestor);
+
+  if(CTM == NULL)
+      inverse = NULL;
+  else
+    {
+      /* Get the inverse of the CTM and free the CTM */
+      inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
+      TtaFreeTransform(CTM);
+
+      if(inverse == NULL)
+	{
+      /* Transform not inversible */
+	  TtaFreeTransform(CTM);
+	  return FALSE;
+	}
+    }
+
+  pFrame = &ViewFrameTable[frame - 1];
+  /* Get the size of the SVG Canvas */
+  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
+
+  /* Get the origin of the ancestor */
+  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
+  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
+  if(pAb && pAb -> AbBox)
+    pBox = pAb -> AbBox;
+  else return FALSE;
+  ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
+  ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
+
+  /* Call the interactive module */
+  hasBeenEdited = ShapeEdit (frame,
+			     doc, 
+			     inverse,
+			     ancestorX, ancestorY,
+			     canvasWidth, canvasHeight,
+			     el, point);
+
+  /* Free the transform matrix */
+  if(inverse)TtaFreeTransform(inverse);
+
+
+  /* Update the attribute */
+  /*  if(hasBeenEdited)
+      UpdatePointsOrPathAttribute(doc, el);*/
+
+  return hasBeenEdited;
+}
+
+/*----------------------------------------------------------------------
   ContentEditing manages Cut, Paste, Copy, Remvoe, and Insert commands.
   Return TRUE if a Cut command moved the selection to a next element.
   ----------------------------------------------------------------------*/

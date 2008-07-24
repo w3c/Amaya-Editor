@@ -203,6 +203,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaCreatePathEvtHandler.o \
 	dialogue/AmayaTransformEvtHandler.o \
 	dialogue/AmayaEditPathEvtHandler.o \
+	dialogue/AmayaEditShapeEvtHandler.o \
 	dialogue/AmayaDialog.o \
 	dialogue/AmayaWindow.o \
 	dialogue/AmayaWindowIterator.o \
