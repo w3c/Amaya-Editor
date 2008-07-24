@@ -211,7 +211,20 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
   PtrFlow         pFlow = NULL;
 
   if (FrameTable[frame].FrView == 1 && FirstSelectedElement &&
-      FirstSelectedElement == LastSelectedElement)
+      FirstSelectedElement == LastSelectedElement &&
+
+      /* This function must not be used for SVG */
+      !(
+	/* An SVG component */
+	IsSVGComponent(FirstSelectedElement) ||
+
+	/* A leaf of an SVG component */
+	(FirstSelectedElement->ElTerminal &&
+	 FirstSelectedElement->ElParent &&
+	 IsSVGComponent(FirstSelectedElement->ElParent))
+	)
+
+      )
     {
       pAb = FirstSelectedElement->ElAbstractBox[0];
       // take into account the document scroll
@@ -441,24 +454,25 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 
 	      if(nChars > 0 && Selecting != NULL && el &&
-		 (el->ElLeafType == LtPolyLine ||
-		  el->ElLeafType == LtPath) &&
 		 el->ElParent && IsSVGComponent(el->ElParent))
 		{
-		  /* Click on a point of a polyline or Path */
-		  SelectedPointInPolyline = nChars;
-		  *Selecting = FALSE;
-		  if(AskPathEdit(doc,
-				 0, (Element)(el->ElParent), nChars))
+		  if(el->ElLeafType == LtPolyLine || el->ElLeafType == LtPath)
 		    {
-		      /* The user has moved an SVG element */
-		      TtaSetDocumentModified(doc);
-		      return FALSE;
-		    }
-		  else
-		    {
-		      NotifyClick (TteElemLClick, FALSE, el, doc);
-		      return FALSE;
+		      /* Click on a point of a polyline or Path */
+		      SelectedPointInPolyline = nChars;
+		      *Selecting = FALSE;
+		      if(AskPathEdit(doc,
+				     0, (Element)(el->ElParent), nChars))
+			{
+			  /* The user has moved an SVG element */
+			  TtaSetDocumentModified(doc);
+			  return FALSE;
+			}
+		      else
+			{
+			  NotifyClick (TteElemLClick, FALSE, el, doc);
+			  return FALSE;
+			}
 		    }
 		}
 
