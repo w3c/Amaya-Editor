@@ -187,6 +187,7 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
 
 /*----------------------------------------------------------------------
   IsNear
+  Check if th point (x,y) is near the point (x0,y0)
   ----------------------------------------------------------------------*/
 static ThotBool IsNear(int x, int y, int x0, int y0)
 {
@@ -449,13 +450,14 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 	      if (SkipClickEvent)
 		/* the application asks Thot to do nothing */
 		return SkipClickEvent;
-		  
-
+	  
 	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 
 	      if(nChars > 0 && Selecting != NULL && el &&
 		 el->ElParent && IsSVGComponent(el->ElParent))
 		{
+		  printf("boxlocate: controlpoint=%d\n", nChars);
+
 		  if(el->ElLeafType == LtPolyLine || el->ElLeafType == LtPath)
 		    {
 		      /* Click on a point of a polyline or Path */
@@ -1380,6 +1382,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   int                 arc, xm, xp;
   double              value1, value2, value3;
   int                 width, height;
+  int                 rx,ry;
 
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
@@ -1389,51 +1392,95 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   height = pBox->BxHeight;
   *selpoint = 0;
   
-  /* Keep in mind the selected characteristic point       */
-  /*            1-------------2-------------3            */
-  /*            |                           |            */
-  /*            |                           |            */
-  /*            8                           4            */
-  /*            |                           |            */
-  /*            |                           |            */
-  /*            7-------------6-------------5            */
+  /* Keep in mind the selected characteristic point        */
+  /*                                                       */
+  /*                                   9 = Rx handle       */
+  /*                                  /                    */
+  /*            1-------------2------O------3              */
+  /*            |                           O              */
+  /*            |                           |\             */
+  /*            8                           4 \            */
+  /*            |                           |  10 = Ry     */
+  /*            |                           |       Handle */
+  /*            7-------------6-------------5              */
+  /*                                                       */
+  /*                                                       */
 
-  if (x < DELTA_SEL || ( x < 0  && x > -DELTA_SEL))
+  if(pAb->AbLeafType == LtGraphics &&
+     (pAb->AbShape == 'C' || 
+      pAb->AbShape == 'a' ||
+      pAb->AbShape == 'c'
+      ))
     {
-    if (y < DELTA_SEL || (y < 0 && y > -DELTA_SEL))
-      controlPoint = 1;
-    else if (y > height / 2 - DELTA_SEL &&
-             y < height / 2 + DELTA_SEL)
-      controlPoint = 8;
-    else if (y > height - DELTA_SEL || (y > height && y < height + DELTA_SEL))
-      controlPoint = 7;
-    else
-      controlPoint = 0;
-    }
-  else if (x > width / 2 - DELTA_SEL &&
-           x < width / 2 + DELTA_SEL)
-    {
-      if (y < DELTA_SEL || (y < 0 &&  y > -DELTA_SEL))
-      controlPoint = 2;
-      else if (y > height - DELTA_SEL || (y > height && y < height + DELTA_SEL))
-        controlPoint = 6;
+      /* rect, circle and ellipse:
+	 is the user clicking on a resize handle? */
+      if(IsNear(x, y, 0, 0))
+	controlPoint = 1;
+      else if(IsNear(x, y, 0, height/2))
+	controlPoint = 8;
+      else if(IsNear(x, y, width/2, height))
+	controlPoint = 6;
+      else if(IsNear(x, y, width, height))
+	controlPoint = 5;
       else
-        controlPoint = 0;
-    }
-  else if (x > width - DELTA_SEL || (x > width && x < width + DELTA_SEL))
-    {
-      if (y < DELTA_SEL || (y < 0 &&  y > -DELTA_SEL))
-        controlPoint = 3;
-      else if (y > height / 2 - DELTA_SEL &&
-               y < height / 2 + DELTA_SEL)
-        controlPoint = 4;
-      else if (y > height - DELTA_SEL || (y > height && y < height + DELTA_SEL))
-        controlPoint = 5;
-      else
-        controlPoint = 0;
+	controlPoint = 0;
+
+      if(pAb->AbShape == 'C')
+	{
+	  /* rect: Is the user clicking on a radius handle? */
+	  rx = pBox->BxRx;
+	  ry = pBox->BxRy;
+	  if(ry == 0)ry = rx;
+
+	  if(IsNear(x, y, width - rx, 0))
+	    controlPoint = 9;
+	  else if(IsNear(x, y, width, ry))
+	    controlPoint = 10;
+	}
+
+      *selpoint = controlPoint;
+      return pBox;
     }
   else
-    controlPoint = 0;
+    {
+      if (x < DELTA_SEL || ( x < 0  && x > -DELTA_SEL))
+	{
+	  if (y < DELTA_SEL || (y < 0 && y > -DELTA_SEL))
+	    controlPoint = 1;
+	  else if (y > height / 2 - DELTA_SEL &&
+		   y < height / 2 + DELTA_SEL)
+	    controlPoint = 8;
+	  else if (y > height - DELTA_SEL || (y > height && y < height + DELTA_SEL))
+	    controlPoint = 7;
+	  else
+	    controlPoint = 0;
+	}
+      else if (x > width / 2 - DELTA_SEL &&
+	       x < width / 2 + DELTA_SEL)
+	{
+	  if (y < DELTA_SEL || (y < 0 &&  y > -DELTA_SEL))
+	    controlPoint = 2;
+	  else if (y > height - DELTA_SEL || (y > height && y < height + DELTA_SEL))
+	    controlPoint = 6;
+	  else
+	    controlPoint = 0;
+	}
+      else if (x > width - DELTA_SEL || (x > width && x < width + DELTA_SEL))
+	{
+	  if (y < DELTA_SEL || (y < 0 &&  y > -DELTA_SEL))
+	    controlPoint = 3;
+	  else if (y > height / 2 - DELTA_SEL &&
+		   y < height / 2 + DELTA_SEL)
+	    controlPoint = 4;
+	  else if (y > height - DELTA_SEL || (y > height && y < height + DELTA_SEL))
+	    controlPoint = 5;
+	  else
+	    controlPoint = 0;
+	}
+      else
+	controlPoint = 0;
+    }
+
   /* Est-ce un point caracteristique specifique du graphique ? */
   if ((pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtCompound) &&
       x>-DELTA_SEL && x<width+DELTA_SEL && y>-DELTA_SEL && y<height+DELTA_SEL)
