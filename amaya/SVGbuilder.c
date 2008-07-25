@@ -329,10 +329,12 @@ Element CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
       w = TtaGetPRuleValue (rule);
       rule = TtaGetPRule(el, PRHeight);
       h = TtaGetPRuleValue (rule);
-      if(w == h)
+
+      if(w == h && w > 0)
 	leaf = CreateGraphicalLeaf ('\1', el, doc);
       else
 	leaf = CreateGraphicalLeaf ('C', el, doc);
+
       *closed = TRUE;
       break;
 
