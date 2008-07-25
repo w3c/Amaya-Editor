@@ -1260,6 +1260,13 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
           length = TtaGetTextAttributeLength (attr);
           utf8path = (char *)TtaGetMemory (length + 1);
           TtaGiveTextAttributeValue (attr, utf8path, &length);
+          /* remove trailing spaces */
+	  while (length > 0 &&
+		 (utf8path[length - 1] == SPACE || utf8path[length - 1] == TAB))
+	    {
+	      utf8path[length-1] = EOS;
+	      length--;
+	    }
           ptr = strrchr (utf8path, '#');
           if (ptr)
             {

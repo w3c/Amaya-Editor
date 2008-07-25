@@ -3541,8 +3541,9 @@ static void ApplyCSSRuleOneCol (Element col, PresentationContext ctxt,
 void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule,
 		      CSSInfoPtr css)
 {
-  Element             child, lastEl;
+  Element             child, lastEl, colhead, col;
   ElementType         elType;
+  Attribute           attr;
   AttributeType       attrType;
   SSchema             HTMLschema;
   Document            doc;
@@ -3558,7 +3559,33 @@ void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule,
       if (TtaIsColumnSelected (doc))
 	/* all cells of a column are selected */
 	{
-	  /* @@@@ */;
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum == HTML_EL_Data_cell ||
+	      elType.ElTypeNum == HTML_EL_Heading_cell)
+	    {
+	      /* get the relevant COL or COLGROUP element */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr)
+		{
+		  TtaGiveReferenceAttributeValue (attr, &colhead);
+		  if (colhead)
+		    {
+		      attrType.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
+		      attr = TtaGetAttribute (colhead, attrType);
+		      if (attr)
+			/* this Column-head is linked to a COL or COLGROUP */
+			{
+			  TtaGiveReferenceAttributeValue (attr, &col);
+			  if (col)
+			    el = col;
+			  /* @@@@ This COL or COLGROUP element may have a
+			     span attribute and control several columns... */
+			}
+		    }
+		}
+	    }
 	}
     }
   if (!el)

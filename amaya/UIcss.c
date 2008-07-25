@@ -732,29 +732,31 @@ static void GenerateStyle (const char * data , ThotBool add)
     return;
 
   if (data && data[0] != EOS)
+    // there are style properties to be associated with the current selection
     {
       elType = TtaGetElementType (el);
       if (TtaIsColumnSelected (doc) ||
           (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-           (elType.ElTypeNum == HTML_EL_COL ||
-            elType.ElTypeNum == HTML_EL_COLGROUP)))
-        /* a whole column is selected in a HTML table. Call the table editor */
-        {
-          /* create the context of the Specific presentation driver */
-          ctxt = TtaGetSpecificStyleContext (doc);
-          if (ctxt == NULL)
-            return;
-          ctxt->type = elType.ElTypeNum;
-          ctxt->cssSpecificity = 1;
-          ctxt->cssLine = TtaGetElementLineNumber (el);
-          ctxt->destroy = FALSE;
-          ColApplyCSSRule (NULL, ctxt, (char*)data, NULL);
-        }
+	   (elType.ElTypeNum == HTML_EL_COL ||
+	    elType.ElTypeNum == HTML_EL_COLGROUP)))
+	// whole column is selected in a HTML table. Call the table editor
+	{
+	  // create the context of the Specific presentation driver
+	  ctxt = TtaGetSpecificStyleContext (doc);
+	  if (ctxt == NULL)
+	    return;
+	  ctxt->type = elType.ElTypeNum;
+	  ctxt->cssSpecificity = 1;
+	  ctxt->cssLine = TtaGetElementLineNumber (el);
+	  ctxt->destroy = FALSE;
+	  ColApplyCSSRule (NULL, ctxt, (char*)data, NULL);
+	}
       else
         GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data,
                                !add);
     }
   else
+    // remove existing style attached to the selection
     {
       TtaGiveLastSelectedElement (doc, &lastC, &i, &j);
       if (el == lastC)

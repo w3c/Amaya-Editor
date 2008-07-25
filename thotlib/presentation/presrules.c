@@ -1732,7 +1732,9 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
   int                 lg, i;
   PtrTextBuffer       pBu1;
   PtrReference        pPR1;
-  
+  PtrPRule            pRSpec;
+  ThotBool            rxRule, ryRule;
+
   if (pEl->ElHolophrast)
     {
       pAb->AbLeafType = LtText;
@@ -1790,8 +1792,32 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
           if (pEl->ElLeafType == LtGraphics && pEl->ElGraph == 'C')
             /* rectangle with rounded corners */
             {
-              pAb-> AbRx = 0;
-              pAb-> AbRy = 0;
+	      /* check specific presentation rules related to rounded corners */
+              rxRule = FALSE;  ryRule = FALSE;
+	      pRSpec = pEl->ElFirstPRule;
+	      while (pRSpec)
+		{
+		  if (pRSpec->PrType == PtXRadius)
+		    rxRule = TRUE;
+		  if (pRSpec->PrType == PtYRadius)
+		    ryRule = TRUE;
+		  pRSpec = pRSpec->PrNextPRule;
+		}
+	      if (rxRule && !ryRule)
+		{
+		  pAb-> AbRx = 0;
+		  pAb-> AbRy = -1;
+		}
+	      else if (ryRule && !rxRule)
+		{
+		  pAb-> AbRx = -1;
+		  pAb-> AbRy = 0;
+		}
+	      else
+		{
+		  pAb-> AbRx = 0;
+		  pAb-> AbRy = 0;
+		}
             }
           pAb->AbGraphScript = 'G';
           if (pAb->AbShape == EOS)
