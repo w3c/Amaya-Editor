@@ -3285,6 +3285,20 @@ void UpdatePointsOrPathAttribute(Document doc, Element el)
  }
 
 /*----------------------------------------------------------------------
+  UpdateShapeElement
+  ----------------------------------------------------------------------*/
+void UpdateShapeElement(Document doc, Element el,
+			char shape,
+			int x, int y, int width, int height,
+			int rx, int ry)
+{
+  UpdateWidthHeightAttribute (el, doc, width, TRUE);
+  UpdateWidthHeightAttribute (el, doc, height, FALSE);
+  UpdatePositionAttribute (el, doc, x, TRUE);
+  UpdatePositionAttribute (el, doc, y, FALSE);
+}
+
+/*----------------------------------------------------------------------
   RotateElementInParentSpace
   ----------------------------------------------------------------------*/
 void RotateElementInParentSpace(Document doc, Element el, float theta)

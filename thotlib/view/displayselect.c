@@ -506,7 +506,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    thick+=2;
 	    rx = pBox->BxRx;
 	    ry = pBox->BxRy;
-	    if(ry == 0)ry = rx;
+	    if(ry == -1)ry = rx;
+	    else if(rx == -1)rx = ry; 
     
 	    DrawHandle(h, frame, thick, middleX, topY, N);
 	    DrawHandle(h, frame, thick, leftX, middleY, W);

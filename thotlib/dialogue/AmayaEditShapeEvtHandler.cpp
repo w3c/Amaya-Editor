@@ -144,7 +144,7 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
     }
 
   /* Get the box of the SVG element */
-  pAb = ((PtrElement)leaf) -> ElAbstractBox[0];
+  pAb = ((PtrElement)leaf)->ElAbstractBox[0];
   if(!pAb || !(pAb->AbBox))
     {
     finished = true;
@@ -312,8 +312,11 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       /*            |                           |       Handle */
       /*            7-------------6-------------5              */
 
-      same_size = (shape == 'a');
-      
+      if(1 <= point && point <= 8)
+	same_size = (shape == 'a');
+      else
+	same_size = (box->BxRx == -1 || box->BxRy == -1);
+
       switch(point)
 	{
 	case 1:
@@ -328,6 +331,12 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	case 2:
 	  y+=dy;
 	  ly-=dy;
+	  if(same_size)
+	    {
+	      x+=(dy/2);
+	      lx-=dy;
+	    }
+
 	  break;
 
 	case 3:
@@ -340,6 +349,11 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	case 4:
 	  lx+=dx;
+	  if(same_size)
+	    {
+	      y-=(dx/2);
+	      ly+=dx;
+	    }
 	  break;
 	  
 	case 5:
@@ -351,6 +365,11 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	case 6:
 	  ly+=dy;
+	  if(same_size)
+	    {
+	      x-=(dy/2);
+	      lx+=dy;
+	    }
 	  break;
 
 	case 7:
@@ -364,14 +383,21 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	case 8:
 	  x+=dx;
 	  lx-=dx;
+	  if(same_size)
+	    {
+	      y+=(dx/2);
+	      ly-=dx;
+	    }
 	  break;
 
 	case 9:
 	  rx -= dx;
+	  if(same_size)ry=rx;
 	  break;
 
 	case 10:
 	  ry += dy;
+	  if(same_size)rx=ry;
 	  break;
 	}
 
@@ -395,9 +421,6 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       box->BxH = ly;
       box->BxWidth = lx;
       box->BxHeight = ly;
-      NewDimension (box->BxAbstractBox, lx, ly, frameId, FALSE);
-      /*      NewDimension (((PtrElement)el)->ElAbstractBox[0],
-	      lx, ly, frameId, FALSE);*/
 
 #ifndef NODISPLAY
       /* Redisplay the GRAPHICS leaf */

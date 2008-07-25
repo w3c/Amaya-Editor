@@ -24,6 +24,15 @@ extern void UpdateTransformMatrix ( Document doc,
                                     Element el );
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                           Element el );
+extern void UpdateShapeElement ( Document doc,
+                                 Element el,
+                                 char shape,
+                                 int x,
+                                 int y,
+                                 int width,
+                                 int height,
+                                 int rx,
+                                 int ry );
 extern void RotateElementInParentSpace ( Document doc,
                                          Element el,
                                          float theta );
@@ -169,6 +178,15 @@ extern void UpdateTransformMatrix ( Document doc,
                                       Element el );
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                             Element el );
+extern void UpdateShapeElement ( Document doc,
+                                   Element el,
+                                   char shape,
+                                   int x,
+                                   int y,
+                                   int width,
+                                   int height,
+                                   int rx,
+                                   int ry );
 extern void RotateElementInParentSpace ( Document doc,
                                            Element el,
                                            float theta );

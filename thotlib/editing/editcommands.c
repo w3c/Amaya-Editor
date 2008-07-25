@@ -2173,6 +2173,11 @@ extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
 					   Element *svgCanvas);
 extern void UpdateTransformMatrix(Document doc, Element el);
 extern void UpdatePointsOrPathAttribute(Document doc, Element el);
+extern void UpdateShapeElement(Document doc, Element el,
+			       char shape,
+			       int x, int y, int width, int height,
+			       int rx, int ry);
+
 
 /*----------------------------------------------------------------------
   AskTransform
@@ -2345,7 +2350,6 @@ ThotBool AskPathEdit (Document doc,
 ThotBool AskShapeEdit (Document doc,
 		       Element el, int point)
 {
-
   Element svgCanvas = NULL, svgAncestor = NULL, el2;
   PtrAbstractBox pAb;
   PtrBox pBox;
@@ -2354,6 +2358,10 @@ ThotBool AskShapeEdit (Document doc,
   PtrTransform CTM, inverse;
   int canvasWidth,canvasHeight,ancestorX,ancestorY;
   ThotBool hasBeenEdited;
+  Element leaf;
+
+  char shape;
+  int rx,ry;
 
   frame = ActiveFrame;
 
@@ -2374,7 +2382,7 @@ ThotBool AskShapeEdit (Document doc,
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(el, svgAncestor);
 
   if(CTM == NULL)
-      inverse = NULL;
+    inverse = NULL;
   else
     {
       /* Get the inverse of the CTM and free the CTM */
@@ -2383,7 +2391,7 @@ ThotBool AskShapeEdit (Document doc,
 
       if(inverse == NULL)
 	{
-      /* Transform not inversible */
+	  /* Transform not inversible */
 	  TtaFreeTransform(CTM);
 	  return FALSE;
 	}
@@ -2415,9 +2423,37 @@ ThotBool AskShapeEdit (Document doc,
 
 
   /* Update the attribute */
-  /*  if(hasBeenEdited)
-      UpdatePointsOrPathAttribute(doc, el);*/
+  if(hasBeenEdited)
+    {
+      leaf =  TtaGetFirstLeaf(el);
+      if(leaf && 
+	 ((PtrElement)leaf)->ElAbstractBox[0])
+	{
+	  pAb = ((PtrElement)leaf)->ElAbstractBox[0];
+	  pBox = pAb->AbBox;
+	  shape = pAb->AbShape;
 
+	  if(shape == 'C')
+	    {
+	      rx = pBox->BxRx;
+	      ry = pBox->BxRy;
+	    }
+	  else
+	    {
+	      rx = 0;
+	      ry = 0;
+	    }
+
+	  if(pBox)
+	    UpdateShapeElement(doc, el,
+			       shape,
+			       pBox->BxXOrg,
+			       pBox->BxYOrg,
+			       pBox->BxW,
+			       pBox->BxH,
+			       rx, ry);
+	}
+    }
   return hasBeenEdited;
 }
 
