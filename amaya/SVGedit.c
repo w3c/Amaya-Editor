@@ -2086,8 +2086,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      switch(entry)
 		{
 		case 0: /* Line */
-		  SVGElementComplete (&context, newEl, &error);
-
 		  attrType.AttrTypeNum = SVG_ATTR_x1;
 		  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
 
@@ -2100,6 +2098,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		  attrType.AttrTypeNum = SVG_ATTR_y2;
 		  UpdateAttrText (newEl, doc, attrType, y4, FALSE, TRUE);
 
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 12: /* Simple Arrow */
@@ -2164,8 +2163,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		case 16:
 		  /* Rounded-Rectangle */
 		case 2:
-		  SVGElementComplete (&context, newEl, &error);
-
 		  if (svgCanvas == svgAncestor)
 		    {
 		      if (x4 < x1)x1 = x4;
@@ -2207,12 +2204,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		      ParsePointsAttribute (attr, newEl, doc);
 		    }
 
+		  SVGElementComplete (&context, newEl, &error);
+
 		  break;
 
 		  /* Circle */
 		case 3:
-		  SVGElementComplete (&context, newEl, &error);
-
 		  attrType.AttrTypeNum = SVG_ATTR_cx;
 		  UpdateAttrText (newEl, doc, attrType, (x1+x4)/2, FALSE, TRUE);
 
@@ -2222,12 +2219,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		  attrType.AttrTypeNum = SVG_ATTR_r;
 		  UpdateAttrText (newEl, doc, attrType, lx/2, FALSE, TRUE);
 
+
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		  /* Ellipse */
 		case 4:
-		  SVGElementComplete (&context, newEl, &error);
-
 		  attrType.AttrTypeNum = SVG_ATTR_cx;
 		  UpdateAttrText (newEl, doc, attrType, (x1+x4)/2, FALSE, TRUE);
 
@@ -2239,6 +2236,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
 		  attrType.AttrTypeNum = SVG_ATTR_ry;
 		  UpdateAttrText (newEl, doc, attrType, ly/2, FALSE, TRUE);;
+
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 17: /* diamond */
