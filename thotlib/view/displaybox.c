@@ -1062,7 +1062,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
             DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
           break;
         case 'C':
-          if (pBox->BxRx == 0 && pBox->BxRy == 0)	    
+          if (pBox->BxRx == 0 || pBox->BxRy == 0)
 #ifdef _GL
 	    DrawRectangle2(frame, i, style, xd, yd, width, height, fg, bg, pat);
 #else
@@ -1070,7 +1070,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 #endif /*_GL*/
           else
             DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
-                      pBox->BxRy, fg, bg, pat);
+                      (pBox->BxRy == -1 ? pBox->BxRx : pBox->BxRy),
+		      fg, bg, pat);
           break;
         case 'L':
           DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
@@ -1186,75 +1187,75 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
   to change anything, otherwise, all points are moved using
   Box-Width/Lim-X ratio horizontally and Box-Height/Lim-Y ratio vertically.
   ----------------------------------------------------------------------*/
-static void PolyTransform (PtrBox pBox, int frame)
-{
-  float               xRatio, yRatio, pointIndex;
-  PtrTextBuffer       adbuff;
-  int                 i;
-  int                 j, val;
-  int                 width, height;
-  int                 zoom;
+/* static void PolyTransform (PtrBox pBox, int frame) */
+/* { */
+/*   float               xRatio, yRatio, pointIndex; */
+/*   PtrTextBuffer       adbuff; */
+/*   int                 i; */
+/*   int                 j, val; */
+/*   int                 width, height; */
+/*   int                 zoom; */
   
-  /* box sizes have to be positive */
-  width = pBox->BxW;
-  if (width < 0)
-    width = 0;
-  height = pBox->BxH;
-  if (height < 0)
-    height = 0;
-  zoom = ViewFrameTable[frame - 1].FrMagnification;
-  val = PixelValue (pBox->BxBuffer->BuPoints[0].XCoord, UnPixel, NULL, zoom);
-  /* Compute ratio for axis X */
-  if (val != width && pBox->BxBuffer->BuPoints[0].XCoord > 0)
-    {
-      val = LogicalValue (width, UnPixel, NULL, zoom);
-      pointIndex = (float) pBox->BxBuffer->BuPoints[0].XCoord / pBox->BxXRatio;
-      /* save the new distortion ratio between box and abstract box */
-      pBox->BxXRatio = (float) val / pointIndex;
-      /* ratio applied to the box */
-      xRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].XCoord;
-      pBox->BxBuffer->BuPoints[0].XCoord = val;
-    }
-  else
-    xRatio = 1.0;
+/*   /\* box sizes have to be positive *\/ */
+/*   width = pBox->BxW; */
+/*   if (width < 0) */
+/*     width = 0; */
+/*   height = pBox->BxH; */
+/*   if (height < 0) */
+/*     height = 0; */
+/*   zoom = ViewFrameTable[frame - 1].FrMagnification; */
+/*   val = PixelValue (pBox->BxBuffer->BuPoints[0].XCoord, UnPixel, NULL, zoom); */
+/*   /\* Compute ratio for axis X *\/ */
+/*   if (val != width && pBox->BxBuffer->BuPoints[0].XCoord > 0) */
+/*     { */
+/*       val = LogicalValue (width, UnPixel, NULL, zoom); */
+/*       pointIndex = (float) pBox->BxBuffer->BuPoints[0].XCoord / pBox->BxXRatio; */
+/*       /\* save the new distortion ratio between box and abstract box *\/ */
+/*       pBox->BxXRatio = (float) val / pointIndex; */
+/*       /\* ratio applied to the box *\/ */
+/*       xRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].XCoord; */
+/*       pBox->BxBuffer->BuPoints[0].XCoord = val; */
+/*     } */
+/*   else */
+/*     xRatio = 1.0; */
   
-  /* Compute ratio for axis Y */
-  val = PixelValue (pBox->BxBuffer->BuPoints[0].YCoord, UnPixel, NULL, zoom);
-  if (val != height && pBox->BxBuffer->BuPoints[0].YCoord > 0)
-    {
-      val = LogicalValue (height, UnPixel, NULL, zoom);
-      pointIndex = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRatio;
-      /* save the new distortion ratio between box and abstract box */
-      pBox->BxYRatio = (float) val / pointIndex;
-      /* ratio applied to the box */
-      yRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].YCoord;
-      pBox->BxBuffer->BuPoints[0].YCoord = val;
-    }
-  else
-    yRatio = 1.0;
+/*   /\* Compute ratio for axis Y *\/ */
+/*   val = PixelValue (pBox->BxBuffer->BuPoints[0].YCoord, UnPixel, NULL, zoom); */
+/*   if (val != height && pBox->BxBuffer->BuPoints[0].YCoord > 0) */
+/*     { */
+/*       val = LogicalValue (height, UnPixel, NULL, zoom); */
+/*       pointIndex = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRatio; */
+/*       /\* save the new distortion ratio between box and abstract box *\/ */
+/*       pBox->BxYRatio = (float) val / pointIndex; */
+/*       /\* ratio applied to the box *\/ */
+/*       yRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].YCoord; */
+/*       pBox->BxBuffer->BuPoints[0].YCoord = val; */
+/*     } */
+/*   else */
+/*     yRatio = 1.0; */
   
-  if (xRatio != 1 || yRatio != 1)
-    {
-      j = 1;
-      adbuff = pBox->BxBuffer;
-      val = pBox->BxNChars;
-      for (i = 1; i < val; i++)
-        {
-          if (j >= adbuff->BuLength)
-            {
-              if (adbuff->BuNext != NULL)
-                {
-                  /* Next buffer */
-                  adbuff = adbuff->BuNext;
-                  j = 0;
-                }
-            }
-          adbuff->BuPoints[j].XCoord = (int) ((float) adbuff->BuPoints[j].XCoord * xRatio);
-          adbuff->BuPoints[j].YCoord = (int) ((float) adbuff->BuPoints[j].YCoord * yRatio);
-          j++;
-        }
-    }
-}
+/*   if (xRatio != 1 || yRatio != 1) */
+/*     { */
+/*       j = 1; */
+/*       adbuff = pBox->BxBuffer; */
+/*       val = pBox->BxNChars; */
+/*       for (i = 1; i < val; i++) */
+/*         { */
+/*           if (j >= adbuff->BuLength) */
+/*             { */
+/*               if (adbuff->BuNext != NULL) */
+/*                 { */
+/*                   /\* Next buffer *\/ */
+/*                   adbuff = adbuff->BuNext; */
+/*                   j = 0; */
+/*                 } */
+/*             } */
+/*           adbuff->BuPoints[j].XCoord = (int) ((float) adbuff->BuPoints[j].XCoord * xRatio); */
+/*           adbuff->BuPoints[j].YCoord = (int) ((float) adbuff->BuPoints[j].YCoord * yRatio); */
+/*           j++; */
+/*         } */
+/*     } */
+/* } */
 
 
 /*----------------------------------------------------------------------

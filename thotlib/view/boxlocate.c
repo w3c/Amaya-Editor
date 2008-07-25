@@ -1449,7 +1449,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	  /* rect: Is the user clicking on a radius handle? */
 	  rx = pBox->BxRx;
 	  ry = pBox->BxRy;
-	  if(ry == 0)ry = rx;
+	  if(ry == -1)ry = rx;
 
 	  if(IsNear(x, y, width - rx, 0))
 	    controlPoint = 9;

@@ -39,6 +39,8 @@
 #include "AmayaCanvas.h"
 #include "AmayaEditShapeEvtHandler.h"
 
+static char shape;
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaEditShapeEvtHandler, wxEvtHandler)
 
 /*----------------------------------------------------------------------
@@ -92,10 +94,13 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
   ,el(element)
   ,point(point)
   ,hasBeenEdited(hasBeenEdited)
+  ,leaf(NULL)
+  ,box(NULL)
 {
   PtrAbstractBox pAb;
 
   *hasBeenEdited = FALSE;
+  buttonDown = false;
 
   if (pFrame)
     {
@@ -123,9 +128,9 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
     finished = true;
     return;
     }
-  box = pAb -> AbBox;
 
-  printf("editshape: %d, %d\n", box->BxWidth, box->BxHeight);
+  box = pAb->AbBox;
+  shape = pAb->AbShape;
 }
 
 /*----------------------------------------------------------------------
@@ -202,6 +207,7 @@ void AmayaEditShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
+  int rx,ry,lx,ly;
   int x1,y1,x2,y2;
   int dx, dy;
   if (IsFinish())return;
@@ -242,42 +248,70 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       dx = x2 - x1;
       dy = y2 - y1;
 
-      printf("dx=%d, dy=%d\n", dx, dy);
+      lx = box->BxW;
+      ly = box->BxH;
+
+      if(shape == 'C')
+	{
+	  rx = box->BxRx;
+	  ry = box->BxRy;
+	  if(ry == -1)ry = rx;
+	}
 
       switch(point)
 	{
 	case 4:
-	  box->BxW+=dx;
+	  lx+=dx;
+	  if(shape == 'a')ly=lx;
 	  break;
 	  
 	case 5:
-	  box->BxW+=dx;
-	  box->BxH+=dy;
+	  lx+=dx;
+	  ly+=dy;
+
+	  if(shape == 'a')
+	    {
+	      if(lx < ly)ly=lx;
+	      else lx = ly;
+	    }
+
 	  break;
 
 	case 6:
-	  box->BxH+=dy;
+	  ly+=dy;
+	  if(shape == 'a')lx=ly;
 	  break;
 
 	case 9:
-	  box->BxRx -= dx;
-	    
+	  rx -= dx;
 	  break;
 
 	case 10:
-	  box->BxRy += dy;
+	  ry += dy;
 	  break;
 	}
 
-      if(box->BxW < 0)
-	box->BxW = 0;
+      if(lx < 0)lx = 0;
+      if(ly < 0)ly = 0;
 
-      if(box->BxH < 0)
-	box->BxH = 0;
+      if(shape == 'C')
+	{
+	  if(rx < 0)rx = 0;
+	  if(ry < 0)ry = 0;
+	  if(rx > lx/2)rx = lx/2;
+	  if(ry > ly/2)ry = ly/2;
 
-      box->BxWidth = box->BxW;
-      box->BxHeight = box->BxH;
-      NewDimension (box->BxAbstractBox, box->BxW, box->BxH, frameId, TRUE);
+	  box->BxRx = rx;
+	  if(box->BxRy != -1)box->BxRy = ry;
+	}
+
+      box->BxW = lx;
+      box->BxH = ly;
+      box->BxWidth = lx;
+      box->BxHeight = ly;
+      NewDimension (box->BxAbstractBox, lx, ly, frameId, FALSE);
+      /*      NewDimension (((PtrElement)el)->ElAbstractBox[0],
+	      lx, ly, frameId, FALSE);*/
 
 #ifndef NODISPLAY
       /* Redisplay the GRAPHICS leaf */
