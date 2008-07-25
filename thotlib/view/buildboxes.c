@@ -931,6 +931,7 @@ void GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
       *width = *height;
       *height = hfont / 3;
       break;
+    case '\1':
     case 'C':
     case 'a':
     case 'c':
@@ -3005,7 +3006,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           pBox->BxBuffer = NULL;
           pBox->BxNChars = pAb->AbVolume;
           GiveGraphicSize (pAb, &width, &height);
-          if (pAb->AbShape == 'C')
+          if (pAb->AbShape == '\1' || pAb->AbShape == 'C')
             {
               /* update radius of the rectangle with rounded corners */
               ComputeRadius (pAb, frame, TRUE);
@@ -4492,7 +4493,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                       LoadPicture (frame, pBox, (ThotPictInfo *) pAb->AbPictBackground);
                     }
                 }
-              else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
+              else if (pAb->AbLeafType == LtGraphics &&
+		       (pAb->AbShape == '\1' || pAb->AbShape == 'C'))
                 {
                   /* update radius of the rectangle with rounded corners */
                   ComputeRadius (pAb, frame, TRUE);
@@ -4919,7 +4921,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 
               /* check auto margins */
               CheckMBP (pAb, pCurrentBox, frame, TRUE);
-              if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
+              if (pAb->AbLeafType == LtGraphics &&
+		  (pAb->AbShape == '\1' || pAb->AbShape == 'C') &&
                   pAb->AbRxUnit == UnPercent)
                 /* update radius of the rectangle with rounded corners */
                 ComputeRadius (pAb, frame, TRUE);
@@ -5011,7 +5014,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 
               /* recheck auto and % margins */
               CheckMBP (pAb, pCurrentBox, frame, TRUE);
-              if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
+              if (pAb->AbLeafType == LtGraphics &&
+		  (pAb->AbShape == '\1' || pAb->AbShape == 'C') &&
                   pAb->AbRyUnit == UnPercent)
                 /* update radius of the rectangle with rounded corners */
                 ComputeRadius (pAb, frame, FALSE);

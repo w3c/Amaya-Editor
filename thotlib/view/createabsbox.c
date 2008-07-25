@@ -582,7 +582,7 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
         pAb->AbShape = (char)pConst->PdString[0];
       else
         pAb->AbShape = EOS;
-      if (pAb->AbShape == 'C')
+      if (pAb->AbShape == '\1' || pAb->AbShape == 'C')
         /* rectangle with rounded corners */
         {
           pAb->AbRx = 5;

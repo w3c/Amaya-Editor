@@ -1117,6 +1117,7 @@ void TtaSetGraphicsShape (Element element, char shape, Document document)
             pEl->ElPolyLineType = shape;
           else
             pEl->ElGraph = shape;
+
           /* Updates the volumes of ancestors */
           if (delta > 0)
             {

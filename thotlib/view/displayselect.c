@@ -492,7 +492,6 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(h, frame, thick, middleX, bottomY);
 	    DrawHandle(h, frame, thick, rightX, bottomY);
             break;
-          case 'L':
           case 'P':
           case 'Q':
             /* 4 control points */
@@ -502,6 +501,20 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(h, frame, thick, middleX, bottomY);
 	    break;
 
+          case 'L': /* diamond */
+	    thick+=2;
+	    DrawHandle(h, frame, thick, middleX, topY, N);
+	    DrawHandle(h, frame, thick, leftX, middleY, W);
+	    DrawHandle(h, frame, thick, middleX, bottomY, S);
+	    DrawHandle(h, frame, thick, rightX, middleY, E);
+
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, bottomY, SW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, topY, NE);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
+	    break;
+
+	  case '\1': /* square */
           case 'C': /* <rect/> */
 	    thick+=2;
 	    rx = pBox->BxRx;

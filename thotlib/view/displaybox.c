@@ -1061,6 +1061,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
             /* draw a / */
             DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
           break;
+	case '\1':
         case 'C':
           if (pBox->BxRx == 0 || pBox->BxRy == 0)
 #ifdef _GL

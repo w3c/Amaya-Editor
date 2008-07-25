@@ -3314,7 +3314,7 @@ void UpdateShapeElement(Document doc, Element el,
   UpdatePositionAttribute (el, doc, x, TRUE);
   UpdatePositionAttribute (el, doc, y, FALSE);
 
-  if(shape == 'C')
+  if(shape == '\1' || shape == 'C')
     {
       if(rx != -1)
 	{

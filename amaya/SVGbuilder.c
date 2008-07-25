@@ -316,13 +316,23 @@ Element CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
   ElementType elType;
   Element     leaf;
 
+  PRule               rule;
+  int w,h;
+
   leaf = NULL;
   *closed = FALSE;
   elType = TtaGetElementType (el);
   switch (elType.ElTypeNum)
     {
     case SVG_EL_rect:
-      leaf = CreateGraphicalLeaf ('C', el, doc);
+      rule = TtaGetPRule(el, PRWidth);
+      w = TtaGetPRuleValue (rule);
+      rule = TtaGetPRule(el, PRHeight);
+      h = TtaGetPRuleValue (rule);
+      if(w == h)
+	leaf = CreateGraphicalLeaf ('\1', el, doc);
+      else
+	leaf = CreateGraphicalLeaf ('C', el, doc);
       *closed = TRUE;
       break;
 
@@ -1258,6 +1268,7 @@ void      SVGElementCreated (Element el, Document doc)
   char          msgBuffer[100];
 
   elType = TtaGetElementType (el);
+
   if (elType.ElTypeNum == SVG_EL_SVG ||
       elType.ElTypeNum == SVG_EL_symbol_ ||
       elType.ElTypeNum == SVG_EL_image ||

@@ -1789,7 +1789,8 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
         case LtSymbol:
         case LtGraphics:
           pAb->AbShape = pEl->ElGraph;
-          if (pEl->ElLeafType == LtGraphics && pEl->ElGraph == 'C')
+          if (pEl->ElLeafType == LtGraphics &&
+	      (pEl->ElGraph == '1' || pEl->ElGraph == 'C'))
             /* rectangle with rounded corners */
             {
 	      /* check specific presentation rules related to rounded corners */

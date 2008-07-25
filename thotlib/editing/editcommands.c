@@ -1446,7 +1446,7 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
             }
           else
             {
-              if (c == 'C')
+              if (c == '\1' || c == 'C')
                 /* rectangle with rounded corners */
                 {
                   pAb->AbRx = 0;
@@ -1801,7 +1801,8 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
         else
           yDelta = 0;
         BoxUpdate (pBox, pLine, -1, 0, -xDelta, 0, -yDelta, frame, FALSE);
-        if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
+        if (pAb->AbLeafType == LtGraphics &&
+	    (pAb->AbShape == '\1' || pAb->AbShape == 'C'))
           {
             pAb->AbRx = 0;
             pAb->AbRy = 0;
@@ -2433,7 +2434,7 @@ ThotBool AskShapeEdit (Document doc,
 	  pBox = pAb->AbBox;
 	  shape = pAb->AbShape;
 
-	  if(shape == 'C')
+	  if(shape == '\1' || shape == 'C')
 	    {
 	      rx = pBox->BxRx;
 	      ry = pBox->BxRy;

@@ -457,7 +457,8 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		 el->ElParent && IsSVGComponent(el->ElParent))
 		{
 		  if(el->ElLeafType == LtGraphics &&
-		     (pAb->AbShape == 'C' ||
+		     (pAb->AbShape == '\1' ||
+		      pAb->AbShape == 'C' ||
 		      pAb->AbShape == 'c' ||
 		      pAb->AbShape == 'a'))
 		    {
@@ -1269,6 +1270,7 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
       point[3][1] = 0;
       max = 3;
       break;
+    case '\1':
     case 'C':
     case 'P':		/* rectangles with rounded corners */
       arc = (int) ((3 * DOT_PER_INCH) / 25.4 + 0.5);
@@ -1428,9 +1430,11 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   /*                                                       */
 
   if(pAb->AbLeafType == LtGraphics &&
-     (pAb->AbShape == 'C' || 
+     (pAb->AbShape == '\1' || 
+      pAb->AbShape == 'C' || 
       pAb->AbShape == 'a' ||
       pAb->AbShape == 'c'
+
       ))
     {
       /* rect, circle and ellipse:
@@ -1454,7 +1458,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
       else
 	controlPoint = 0;
 
-      if(pAb->AbShape == 'C')
+      if(pAb->AbShape == '\1' || pAb->AbShape == 'C')
 	{
 	  /* rect: Is the user clicking on a radius handle? */
 	  rx = pBox->BxRx;
@@ -1561,6 +1565,8 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
                          width / 2, height))
           return (pBox);
         break;
+
+      case '\1':
       case 'C':
       case 'P':
         /* rectangle with rounded corners */

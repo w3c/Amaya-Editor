@@ -304,7 +304,7 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       x = box->BxXOrg;
       y = box->BxYOrg;
 
-      if(shape == 'C')
+      if(shape == '\1' || shape == 'C')
 	{
 	  rx = box->BxRx;
 	  ry = box->BxRy;
@@ -323,7 +323,7 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       /*            7-------------6-------------5              */
 
       if(1 <= point && point <= 8)
-	same_size = (shape == 'a');
+	same_size = (shape == '\1' || shape == 'a');
       else
 	same_size = (box->BxRx == -1 || box->BxRy == -1);
 
@@ -414,7 +414,7 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       if(lx < 0)lx = 0;
       if(ly < 0)ly = 0;
 
-      if(shape == 'C')
+      if(shape == '\1' || shape == 'C')
 	{
 	  if(rx < 0)rx = 0;
 	  if(ry < 0)ry = 0;
