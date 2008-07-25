@@ -117,6 +117,7 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
   ,point(point)
   ,hasBeenEdited(hasBeenEdited)
   ,leaf(NULL)
+  ,parentbox(NULL)
   ,box(NULL)
 {
   PtrAbstractBox pAb;
@@ -134,6 +135,15 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
       pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
       pFrame->GetCanvas()->CaptureMouse();
     }
+
+  /* Get the box of the SVG element */
+  pAb = ((PtrElement)el)->ElAbstractBox[0];
+  if(!pAb || !(pAb->AbBox))
+    {
+    finished = true;
+    return;
+    }
+  parentbox = pAb->AbBox;
 
   /* Get the GRAPHICS leaf */
   leaf = TtaGetFirstLeaf((Element)el);
@@ -421,6 +431,14 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       box->BxH = ly;
       box->BxWidth = lx;
       box->BxHeight = ly;
+
+      //      parentbox->BxXOrg = x;
+      //parentbox->BxYOrg = y;
+      parentbox->BxW = lx;
+      parentbox->BxH = ly;
+      parentbox->BxWidth = lx;
+      parentbox->BxHeight = ly;
+
 
 #ifndef NODISPLAY
       /* Redisplay the GRAPHICS leaf */

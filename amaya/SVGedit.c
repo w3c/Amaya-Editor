@@ -3292,10 +3292,44 @@ void UpdateShapeElement(Document doc, Element el,
 			int x, int y, int width, int height,
 			int rx, int ry)
 {
+  SSchema      svgSchema = GetSVGSSchema (doc);
+  AttributeType attrType;
+  attrType.AttrSSchema = svgSchema;
+
+  DisplayMode     dispMode;
+
+  dispMode = TtaGetDisplayMode (doc);
+  /* ask Thot to stop displaying changes made to the document*/
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  if(shape == 'a' || shape == 'c')
+    {
+      x+=(width/2);
+      y+=(height/2);
+    }
+
   UpdateWidthHeightAttribute (el, doc, width, TRUE);
   UpdateWidthHeightAttribute (el, doc, height, FALSE);
   UpdatePositionAttribute (el, doc, x, TRUE);
   UpdatePositionAttribute (el, doc, y, FALSE);
+
+  if(shape == 'C')
+    {
+      if(rx != -1)
+	{
+	  attrType.AttrTypeNum = SVG_ATTR_rx;
+	  UpdateAttrText (el, doc,  attrType, rx, FALSE, TRUE);
+	}
+
+      if(ry != -1)
+	{
+	  attrType.AttrTypeNum = SVG_ATTR_ry;
+	  UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
+	}
+    }
+
+  TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------

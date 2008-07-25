@@ -2361,7 +2361,7 @@ ThotBool AskShapeEdit (Document doc,
   Element leaf;
 
   char shape;
-  int rx,ry;
+  int x,y,w,h,rx,ry;
 
   frame = ActiveFrame;
 
@@ -2444,13 +2444,18 @@ ThotBool AskShapeEdit (Document doc,
 	      ry = 0;
 	    }
 
+	  x = pBox->BxXOrg;
+	  y = pBox->BxYOrg;
+	  w = pBox->BxW;
+	  h = pBox->BxH;
+
 	  if(pBox)
 	    UpdateShapeElement(doc, el,
 			       shape,
-			       pBox->BxXOrg,
-			       pBox->BxYOrg,
-			       pBox->BxW,
-			       pBox->BxH,
+			       x,
+			       y,
+			       w,
+			       h,
 			       rx, ry);
 	}
     }
