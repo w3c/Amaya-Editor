@@ -41,6 +41,28 @@
 
 static char shape;
 
+/*
+  delta_min
+
+    sign(s) = sign(dx)*sign(dy)
+*/
+static void delta_min(int *dx, int *dy, int s)
+{
+  if((*dx)*(*dy)*s < 0)
+    {
+      /* Not the same direction */
+      *dx = 0;
+      *dy = 0;
+    }
+  else
+    {
+      if(abs(*dx) < abs(*dy))
+	*dy = s*(*dx);
+      else
+	*dx = s*(*dy);
+    }
+}
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaEditShapeEvtHandler, wxEvtHandler)
 
 /*----------------------------------------------------------------------
@@ -207,7 +229,8 @@ void AmayaEditShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-  int rx,ry,lx,ly;
+  ThotBool same_size;
+  int rx,ry,lx,ly, x, y;
   int x1,y1,x2,y2;
   int dx, dy;
   if (IsFinish())return;
@@ -248,38 +271,99 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       dx = x2 - x1;
       dy = y2 - y1;
 
+      /*               lx
+       *         <------------->
+       *                       
+       *       (x,y)------O-rx-.    ^
+       *         |             |    |
+       *         |             ry   |
+       *         |             |    |
+       *         |             O    |    
+       *         |             |    |    
+       *         |             |    |ly    
+       *         |             |    |    
+       *         |             |    |    
+       *         |             |    |    
+       *         |             |    |    
+       *         .-------------.    v
+       */
+
+
       lx = box->BxW;
       ly = box->BxH;
+      x = box->BxXOrg;
+      y = box->BxYOrg;
 
       if(shape == 'C')
 	{
 	  rx = box->BxRx;
 	  ry = box->BxRy;
 	  if(ry == -1)ry = rx;
+	  else if(rx == -1)rx = ry;
 	}
 
+      /*                                   9 = Rx handle       */
+      /*                                  /                    */
+      /*            1-------------2------O------3              */
+      /*            |                           O              */
+      /*            |                           |\             */
+      /*            8                           4 \            */
+      /*            |                           |  10 = Ry     */
+      /*            |                           |       Handle */
+      /*            7-------------6-------------5              */
+
+      same_size = (shape == 'a');
+      
       switch(point)
 	{
+	case 1:
+	  if(same_size)
+	    delta_min(&dx, &dy, 1);
+	  x+=dx;
+	  lx-=dx;
+	  y+=dy;
+	  ly-=dy;
+	  break;
+
+	case 2:
+	  y+=dy;
+	  ly-=dy;
+	  break;
+
+	case 3:
+	  if(same_size)
+	    delta_min(&dx, &dy, -1);
+	  lx+=dx;
+	  y+=dy;
+	  ly-=dy;
+	  break;
+
 	case 4:
 	  lx+=dx;
-	  if(shape == 'a')ly=lx;
 	  break;
 	  
 	case 5:
+	  if(same_size)
+	    delta_min(&dx, &dy, 1);
 	  lx+=dx;
 	  ly+=dy;
-
-	  if(shape == 'a')
-	    {
-	      if(lx < ly)ly=lx;
-	      else lx = ly;
-	    }
-
 	  break;
 
 	case 6:
 	  ly+=dy;
-	  if(shape == 'a')lx=ly;
+	  break;
+
+	case 7:
+	  if(same_size)
+	    delta_min(&dx, &dy, -1);
+	  x+=dx;
+	  lx-=dx;
+	  ly+=dy;
+	  break;
+
+	case 8:
+	  x+=dx;
+	  lx-=dx;
 	  break;
 
 	case 9:
@@ -301,10 +385,12 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  if(rx > lx/2)rx = lx/2;
 	  if(ry > ly/2)ry = ly/2;
 
-	  box->BxRx = rx;
+	  if(box->BxRx != -1)box->BxRx = rx;
 	  if(box->BxRy != -1)box->BxRy = ry;
 	}
 
+      box->BxXOrg = x;
+      box->BxYOrg = y;
       box->BxW = lx;
       box->BxH = ly;
       box->BxWidth = lx;

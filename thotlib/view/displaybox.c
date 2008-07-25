@@ -1069,7 +1069,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	    DrawRectangle(frame, i, style, xd, yd, width, height, fg, bg, pat);
 #endif /*_GL*/
           else
-            DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
+            DrawOval (frame, i, style, xd, yd, width, height,
+		      (pBox->BxRx == -1 ? pBox->BxRy : pBox->BxRx),
                       (pBox->BxRy == -1 ? pBox->BxRx : pBox->BxRy),
 		      fg, bg, pat);
           break;

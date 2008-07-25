@@ -3060,6 +3060,25 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
       points[2].y = y_point;
       break;
 
+    case 5: /* NE */
+      points[0].x = x_point;
+      points[0].y = y_point + size;
+      points[1].x = x_point;
+      points[1].y = y_point;
+      points[2].x = x_point - size;
+      points[2].y = y_point;
+      break;
+
+    case 6: /* SW */
+      points[0].x = x_point + size;
+      points[0].y = y_point;
+      points[1].x = x_point;
+      points[1].y = y_point;
+      points[2].x = x_point;
+      points[2].y = y_point - size;
+      break;
+
+
     case 7: /* SE */
       points[0].x = x_point - size;
       points[0].y = y_point;

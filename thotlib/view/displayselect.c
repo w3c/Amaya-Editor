@@ -504,28 +504,50 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 
           case 'C': /* <rect/> */
 	    thick+=2;
-	    /* 2 radius handles */
 	    rx = pBox->BxRx;
 	    ry = pBox->BxRy;
 	    if(ry == 0)ry = rx;
+    
+	    DrawHandle(h, frame, thick, middleX, topY, N);
+	    DrawHandle(h, frame, thick, leftX, middleY, W);
+	    DrawHandle(h, frame, thick, middleX, bottomY, S);
+	    DrawHandle(h, frame, thick, rightX, middleY, E);
 
+	    if(rx == 0 || ry == 0)
+	      {
+		DrawHandle(h, frame, thick, leftX, topY);
+		DrawHandle(h, frame, thick, leftX, bottomY);
+		DrawHandle(h, frame, thick, rightX, topY);
+		DrawHandle(h, frame, thick, rightX, bottomY);
+	      }
+	    else
+	      {
+		/* Rounded rectangle */
+		DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+		DrawHandle(RESIZE_HANDLE, frame, thick, leftX, bottomY, SW);
+		DrawHandle(RESIZE_HANDLE, frame, thick, rightX, topY, NE);
+		DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
+	      }
+
+	    /* 2 radius handles */
 	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX, topY + ry);
 	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX - rx, topY);
-	    
-	    /* 3 resize handles */
-	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
-	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
-	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
             break;
 
           case 'a': /* <circle/> */
           case 'c': /* <ellipse/> */
 	    thick+=2;
-
-	    /* 3 resize handles */
+	    DrawHandle(h, frame, thick, middleX, topY, N);
+	    DrawHandle(h, frame, thick, leftX, middleY, W);
+	    DrawHandle(h, frame, thick, middleX, bottomY, S);
+	    DrawHandle(h, frame, thick, rightX, middleY, E);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, bottomY, SW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, topY, NE);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
-	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
-	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
+
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX, middleY);
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, middleX, topY);
 	    break;
 
           case 'W':
