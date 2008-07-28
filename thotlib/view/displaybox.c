@@ -1080,7 +1080,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 			xd+width,yd+height);	  
 	  break;
 
-	case '\6': /* Rectangle triangle */
+	case '\6': /* Rectangled triangle */
 	  DrawTriangle (frame, i, style, fg, bg, pat,
 			xd,yd,
 			xd,yd+height,

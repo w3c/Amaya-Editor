@@ -462,7 +462,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		      pAb->AbShape == '\3' || /* Trapezium */
 		      pAb->AbShape == '\4' || /* Equilateral triangle */
 		      pAb->AbShape == '\5' || /* Isosceles triangle */
-		      pAb->AbShape == '\6' || /* Rectangle triangle */
+		      pAb->AbShape == '\6' || /* Rectangled triangle */
 		      pAb->AbShape == 'C' ||  /* Rectangle */
 		      pAb->AbShape == 'c' ||  /* Ellipse */
 		      pAb->AbShape == 'a' ||  /* Circle */
@@ -1277,8 +1277,8 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
       point[3][1] = 0;
       max = 3;
       break;
-    case '\1':
-    case 'C':
+    case '\1': /* square */
+    case 'C': /* rectangle */
     case 'P':		/* rectangles with rounded corners */
       arc = (int) ((3 * DOT_PER_INCH) / 25.4 + 0.5);
       point[0][0] = 0;
@@ -1299,7 +1299,7 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
       point[7][1] = 0;
       max = 7;
       break;
-    case 'L':		/* losange */
+    case 'L':		/* diamond */
       point[0][0] = 0;
       point[0][1] = height / 2;
       point[1][0] = width / 2;
@@ -1324,6 +1324,34 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
       else
         return (FALSE);	/* out of the circle */
       break;
+
+      case '\2': /* Parallelogram */
+	break;
+
+      case '\3': /* Trapezium */
+	break;
+
+      case '\4': /* Equilateral triangle */
+      case '\5': /* Isosceles triangle */
+	point[0][0] = width/2;
+	point[0][1] = 0;
+	point[1][0] = width;
+	point[1][1] = height;
+	point[2][0] = 0;
+	point[2][1] = height;
+	max = 2;
+	break;
+	
+      case '\6': /* Rectangled triangle */
+	point[0][0] = 0;
+	point[0][1] = 0;
+	point[1][0] = width;
+	point[1][1] = 0;
+	point[2][0] = 0;
+	point[2][1] = height;
+	max = 2;
+	break;
+
     default:
       break;
     }
@@ -1464,7 +1492,9 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 		controlPoint = 7;
 	    }
 	}
-      else if(pAb->AbShape == '\6') /* rectangle triangle */
+      /* TODO: '\3' = trapezium, '\2' = parallelogram  */
+
+      else if(pAb->AbShape == '\6') /* rectangled triangle */
 	{
 	  if(IsNear(x, y, 0, 0))
 	    controlPoint = 1;
@@ -1607,7 +1637,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
             IsOnSegment (x, y, width, 0, width, height))
           return (pBox);
         break;
-      case 'L':
+      case 'L': /* diamond */
         if (IsOnSegment (x, y, 0, height / 2, width / 2, 0) ||
             IsOnSegment (x, y, 0, height / 2, width / 2,
                          height) ||
@@ -1618,8 +1648,29 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
           return (pBox);
         break;
 
-      case '\1':
-      case 'C':
+      case '\2': /* Parallelogram */
+	break;
+
+      case '\3': /* Trapezium */
+	break;
+
+      case '\4': /* Equilateral triangle */
+      case '\5': /* Isosceles triangle */
+        if (IsOnSegment (x, y, width / 2, 0, 0, height) ||
+            IsOnSegment (x, y, width / 2, 0, width, height) ||
+            IsOnSegment (x, y, 0, height, width, height))
+          return (pBox);
+	break;
+	
+      case '\6': /* Rectangled triangle */
+        if (IsOnSegment (x, y, 0, 0, width, 0) ||
+            IsOnSegment (x, y, 0, 0, 0, height) ||
+            IsOnSegment (x, y, 0, height, width, 0))
+          return (pBox);
+	break;
+
+      case '\1': /* square */
+      case 'C': /* rectangle */
       case 'P':
         /* rectangle with rounded corners */
         arc = (int) ((3 * DOT_PER_INCH) / 25.4 + 0.5);
