@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
@@ -27,7 +26,7 @@
   <title>Amaya logo</title>
   <ellipse cx="0px" cy="0px" rx="66px" ry="45px"
         style="fill: #EDF3FF; stroke: #EDF3FF; color:#daf3f9"
-        transform="translate(138,96)">
+        transform="rotate(-36.9581,191.685,-166.966) scale(0.72665) ">
     <animateTransform attributeName="transform" attributeType="XML"
                       type="scale" from=".1" to="1" additive="sum" begin="0s"
                       dur="6s" fill="freeze"/>

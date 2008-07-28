@@ -850,6 +850,11 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                 FrameToView (frame, &document, &view);
                 DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS */
+
+		FrameRedraw (frame,
+			     FrameTable[frame].FrWidth,
+			     FrameTable[frame].FrHeight);
+		
               }
             else
               {

@@ -2713,6 +2713,13 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
 {
 }
 
+void DrawTriangle (int frame, int thick, int style, int fg, int bg, int pattern,
+		   int x1, int y1,
+		   int x2, int y2,
+		   int x3, int y3)
+{
+}
+
 /*----------------------------------------------------------------------
   SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/

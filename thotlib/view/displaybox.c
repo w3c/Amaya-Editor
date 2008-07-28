@@ -1033,6 +1033,65 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 
       switch (pAb->AbRealShape)
         {
+        case 'g': /* Line */
+          /* Coords are given by the enclosing box */
+          pAb = pAb->AbEnclosing;
+          if ((pAb->AbHorizPos.PosEdge == Left &&
+               pAb->AbVertPos.PosEdge == Top) ||
+              (pAb->AbHorizPos.PosEdge == Right &&
+               pAb->AbVertPos.PosEdge == Bottom))
+            /* draw a \ */
+            DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
+          else
+            /* draw a / */
+            DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
+          break;
+
+	case '\1': /* Square */
+	case 'C': /* Rectangle */
+          if (pBox->BxRx == 0 || pBox->BxRy == 0)
+#ifdef _GL
+	    DrawRectangle2(frame, i, style, xd, yd, width, height, fg, bg, pat);
+#else
+	    DrawRectangle(frame, i, style, xd, yd, width, height, fg, bg, pat);
+#endif /*_GL*/
+          else
+            DrawOval (frame, i, style, xd, yd, width, height,
+		      (pBox->BxRx == -1 ? pBox->BxRy : pBox->BxRx),
+                      (pBox->BxRy == -1 ? pBox->BxRx : pBox->BxRy),
+		      fg, bg, pat);
+          break;
+
+        case 'L': /* Diamond */
+          DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
+          break;
+
+	case '\2': /* Parallelogram */
+	  break;
+
+	case '\3': /* Trapezium */
+	    break;
+
+	case '\4': /* Equilateral triangle */
+	case '\5': /* Isosceles triangle */
+	  DrawTriangle (frame, i, style, fg, bg, pat,
+			xd+width/2,yd,
+			xd,yd+height,
+			xd+width,yd+height);	  
+	  break;
+
+	case '\6': /* Rectangle triangle */
+	  DrawTriangle (frame, i, style, fg, bg, pat,
+			xd,yd,
+			xd,yd+height,
+			xd+width,yd);
+	  break;
+
+        case 'a': /* Circle */
+        case 'c': /* Ellipse */
+          DrawEllips (frame, i, style, xd, yd, width, height, fg, bg, pat);
+          break;
+
         case '0':
           DrawRectangle (frame, 0, 0, xd, yd, width, height, fg, bg, pat);
           break;
@@ -1047,40 +1106,6 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
         case 'R':
           DrawRectangle (frame, i, style, xd, yd, width, height,
                          fg, bg, pat);
-          break;
-        case 'g':
-          /* Coords of the line are given by the enclosing box */
-          pAb = pAb->AbEnclosing;
-          if ((pAb->AbHorizPos.PosEdge == Left &&
-               pAb->AbVertPos.PosEdge == Top) ||
-              (pAb->AbHorizPos.PosEdge == Right &&
-               pAb->AbVertPos.PosEdge == Bottom))
-            /* draw a \ */
-            DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
-          else
-            /* draw a / */
-            DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
-          break;
-	case '\1':
-        case 'C':
-          if (pBox->BxRx == 0 || pBox->BxRy == 0)
-#ifdef _GL
-	    DrawRectangle2(frame, i, style, xd, yd, width, height, fg, bg, pat);
-#else
-	    DrawRectangle(frame, i, style, xd, yd, width, height, fg, bg, pat);
-#endif /*_GL*/
-          else
-            DrawOval (frame, i, style, xd, yd, width, height,
-		      (pBox->BxRx == -1 ? pBox->BxRy : pBox->BxRx),
-                      (pBox->BxRy == -1 ? pBox->BxRx : pBox->BxRy),
-		      fg, bg, pat);
-          break;
-        case 'L':
-          DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
-          break;
-        case 'a':
-        case 'c':
-          DrawEllips (frame, i, style, xd, yd, width, height, fg, bg, pat);
           break;
         case 'h':
           DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, fg, pBox,

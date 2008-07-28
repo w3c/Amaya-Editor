@@ -157,6 +157,18 @@ extern void TransformSVG_Scale ( Document document,
                                  View view );
 extern void TransformSVG_Translate ( Document document,
                                      View view );
+extern void TransformSVG_DistributeLeft ( Document document,
+                                          View view );
+extern void TransformSVG_DistributeCenter ( Document document,
+                                            View view );
+extern void TransformSVG_DistributeRight ( Document document,
+                                           View view );
+extern void TransformSVG_DistributeTop ( Document document,
+                                         View view );
+extern void TransformSVG_DistributeMiddle ( Document document,
+                                            View view );
+extern void TransformSVG_DistributeBottom ( Document document,
+                                            View view );
 
 #else /* __STDC__ */
 
@@ -311,6 +323,18 @@ extern void TransformSVG_Scale ( Document document,
                                    View view );
 extern void TransformSVG_Translate ( Document document,
                                        View view );
+extern void TransformSVG_DistributeLeft ( Document document,
+                                            View view );
+extern void TransformSVG_DistributeCenter ( Document document,
+                                              View view );
+extern void TransformSVG_DistributeRight ( Document document,
+                                             View view );
+extern void TransformSVG_DistributeTop ( Document document,
+                                           View view );
+extern void TransformSVG_DistributeMiddle ( Document document,
+                                              View view );
+extern void TransformSVG_DistributeBottom ( Document document,
+                                              View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -457,12 +457,20 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		 el->ElParent && IsSVGComponent(el->ElParent))
 		{
 		  if(el->ElLeafType == LtGraphics &&
-		     (pAb->AbShape == '\1' ||
-		      pAb->AbShape == 'C' ||
-		      pAb->AbShape == 'c' ||
-		      pAb->AbShape == 'a'))
+		     (pAb->AbShape == '\1' || /* Square */
+		      pAb->AbShape == '\2' || /* Parallelogram */
+		      pAb->AbShape == '\3' || /* Trapezium */
+		      pAb->AbShape == '\4' || /* Equilateral triangle */
+		      pAb->AbShape == '\5' || /* Isosceles triangle */
+		      pAb->AbShape == '\6' || /* Rectangle triangle */
+		      pAb->AbShape == 'C' ||  /* Rectangle */
+		      pAb->AbShape == 'c' ||  /* Ellipse */
+		      pAb->AbShape == 'a' ||  /* Circle */
+		      pAb->AbShape == 'g' ||  /* Line */
+		      pAb->AbShape == 'L'     /* Diamond */      
+		      ))
 		    {
-		      /* Click on a handle of a rect, circle or ellipse */
+		      /* Click on a handle */
 		      *Selecting = FALSE;
 		      if(AskShapeEdit(doc,
 				      (Element)(el->ElParent), nChars))
@@ -477,7 +485,6 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 			  return FALSE;
 			}
 
-		      //printf("boxlocate: controlpoint=%d\n", nChars);
 		    }
 
 		  if(el->ElLeafType == LtPolyLine || el->ElLeafType == LtPath)
@@ -1406,6 +1413,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   double              value1, value2, value3;
   int                 width, height;
   int                 rx,ry;
+  PtrAbstractBox      enc;
 
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
@@ -1429,51 +1437,95 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   /*                                                       */
   /*                                                       */
 
-  if(pAb->AbLeafType == LtGraphics &&
-     (pAb->AbShape == '\1' || 
-      pAb->AbShape == 'C' || 
-      pAb->AbShape == 'a' ||
-      pAb->AbShape == 'c'
-
-      ))
+  if(pAb->AbLeafType == LtGraphics)
     {
-      /* rect, circle and ellipse:
-	 is the user clicking on a resize handle? */
-      if(IsNear(x, y, 0, 0))
-	controlPoint = 1;
-      else if(IsNear(x, y, width/2, 0))
-	controlPoint = 2;
-      else if(IsNear(x, y, width, 0))
-	controlPoint = 3;
-      else if(IsNear(x, y, width, height/2))
-	controlPoint = 4;
-      else if(IsNear(x, y, width, height))
-	controlPoint = 5;
-      else if(IsNear(x, y, width/2, height))
-	controlPoint = 6;
-      else if(IsNear(x, y, 0, height))
-	controlPoint = 7;
-      else if(IsNear(x, y, 0, height/2))
-	controlPoint = 8;
-      else
-	controlPoint = 0;
+      controlPoint = 0;      
 
-      if(pAb->AbShape == '\1' || pAb->AbShape == 'C')
+      if(pAb->AbShape == 'g') /* line */
 	{
-	  /* rect: Is the user clicking on a radius handle? */
-	  rx = pBox->BxRx;
-	  ry = pBox->BxRy;
-	  if(ry == -1)ry = rx;
-	  else if(rx == -1)rx = ry;
+	  enc = pAb->AbEnclosing;
+	  if ((enc->AbHorizPos.PosEdge == Left &&
+	       enc->AbVertPos.PosEdge == Top) ||
+	      (enc->AbHorizPos.PosEdge == Right &&
+	       enc->AbVertPos.PosEdge == Bottom))
+	    {
+	      /* It's a \ */
+	      if(IsNear(x, y, 0, 0))
+		controlPoint = 1;
+	      else if(IsNear(x, y, width, height))
+		controlPoint = 5;
+	    }
+	  else
+	    {
+            /* I's a / */
+	      if(IsNear(x, y, width, 0))
+		controlPoint = 3;
+	      else if(IsNear(x, y, 0, height))
+		controlPoint = 7;
+	    }
+	}
+      else if(pAb->AbShape == '\6') /* rectangle triangle */
+	{
+	  if(IsNear(x, y, 0, 0))
+	    controlPoint = 1;
+	  else if(IsNear(x, y, width/2, 0))
+	    controlPoint = 2;
+	  else if(IsNear(x, y, width, 0))
+	    controlPoint = 3;
+	  else if(IsNear(x, y, width/2, height/2))
+	    controlPoint = 5;
+	  else if(IsNear(x, y, 0, height))
+	    controlPoint = 7;
+	  else if(IsNear(x, y, 0, height/2))
+	    controlPoint = 8;
+	}
+      else if(pAb->AbShape == '\1' || /* square */
+	      pAb->AbShape == 'C' || /* rectangle */
+	      pAb->AbShape == 'a' || /* circle */
+	      pAb->AbShape == 'c' || /* ellipse */
+	      pAb->AbShape == 'L' || /* diamond */
+	      pAb->AbShape == '\4' || /* Equilateral triangle */
+	      pAb->AbShape == '\5'    /* Isosceles triangle */
+	      )
+	{
+	  /* is the user clicking on a resize handle? */
+	  if(IsNear(x, y, 0, 0))
+	    controlPoint = 1;
+	  else if(IsNear(x, y, width/2, 0))
+	    controlPoint = 2;
+	  else if(IsNear(x, y, width, 0))
+	    controlPoint = 3;
+	  else if(IsNear(x, y, width, height/2))
+	    controlPoint = 4;
+	  else if(IsNear(x, y, width, height))
+	    controlPoint = 5;
+	  else if(IsNear(x, y, width/2, height))
+	    controlPoint = 6;
+	  else if(IsNear(x, y, 0, height))
+	    controlPoint = 7;
+	  else if(IsNear(x, y, 0, height/2))
+	    controlPoint = 8;
 
-	  if(IsNear(x, y, width - rx, 0))
-	    controlPoint = 9;
-	  else if(IsNear(x, y, width, ry))
-	    controlPoint = 10;
+	  if(pAb->AbShape == '\1' || pAb->AbShape == 'C')
+	    {
+	      /* rect: Is the user clicking on a radius handle? */
+	      rx = pBox->BxRx;
+	      ry = pBox->BxRy;
+	      if(ry == -1)ry = rx;
+	      else if(rx == -1)rx = ry;
+	      
+	      if(IsNear(x, y, width, ry))
+		controlPoint = 10;
+	      else if(IsNear(x, y, width - rx, 0))
+		controlPoint = 9;
+	    }
 	}
 
-      *selpoint = controlPoint;
-      return pBox;
+      if(controlPoint != 0)
+	{
+	  *selpoint = controlPoint;
+	  return pBox;
+	}
     }
   else
     {

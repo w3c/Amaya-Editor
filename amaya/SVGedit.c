@@ -2180,6 +2180,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		      attrType.AttrTypeNum = SVG_ATTR_height_;
 		      UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
 
+		      SVGElementComplete (&context, newEl, &error);
+
 		      if (entry == 16 || entry == 2)
 			{
 			  attrType.AttrTypeNum = SVG_ATTR_rx;
@@ -2203,8 +2205,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		      TtaSetAttributeText (attr, buffer, newEl, doc);
 		      ParsePointsAttribute (attr, newEl, doc);
 		    }
-
-		  SVGElementComplete (&context, newEl, &error);
 
 		  break;
 
@@ -2828,7 +2828,7 @@ void SelectGraphicElement (Document doc, View view)
 	    TtaAddElementToSelection(doc, sibling);
 	}
     }
-  
+
 #endif /* _SVG */
 }
 
@@ -2842,14 +2842,21 @@ void TransformGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
   Element          *selected;
+  int              *position;
+
+  Element          tmp_el;
+  int              tmp_pos;
+
   int              nb_selected;
-  Element          svgAncestor, svgCanvas;
+  Element          svgAncestor, svgCanvas, group;
   Element	         first, sibling, sibling2, child, parent;
   DisplayMode      dispMode;
-  int		           c1, c2, i;
+  int		   c1, c2, i, j, k;
   float            x, y, width, height;
   float            xmin, ymin, xmax, ymax, xcenter, ycenter;
   ThotBool         isFormattedView, done = TRUE;
+  ThotBool         isDistribution, sortSelection;
+  ElementType      elType;
 
   /* Check that a document is selected */
   if (doc == 0)return;
@@ -2892,23 +2899,59 @@ void TransformGraphicElement (Document doc, View view, int entry)
     if (TtaGetParent(sibling) == svgCanvas)nb_selected++;
   ;
 
-  /* Put all the pointer to the selected children into a table */
-  if (nb_selected == 0)
+  /* Check if there are enough elements selected */
+  isDistribution = (46 <= entry && entry <= 51);
+
+  if (nb_selected == 0 || (isDistribution && nb_selected < 3))
     return;
+
+  /* Put all the pointers to the selected children into a table */
   selected = (Element *)(TtaGetMemory(nb_selected * sizeof(Element)));
   if (selected == NULL)
     return;
+
+  /* For distribution, allocate a table of positions */
+  if(isDistribution)
+    position = (int *)(TtaGetMemory(nb_selected * sizeof(int)));
+  if(position == NULL)
+      return;
+
+  /* For some operations, the order of the selection is important */
+  sortSelection = (entry == 11 || entry == 26 ||
+		   (29 <= entry && entry <= 32));
 
   for(i = 0, sibling = first;
       i < nb_selected;
       TtaGiveNextSelectedElement(doc, &sibling, &c1, &c2)
       )
-    if (TtaGetParent(sibling) == svgCanvas)
-      {
-	selected[i] = sibling;
-	i++;
-      }
-  ;
+    {
+      /* Is the element a child the svgCanvas */
+      if (TtaGetParent(sibling) == svgCanvas)
+	{
+	  selected[i] = sibling;
+
+	  if(sortSelection)
+	    {
+	      /* Search where the element must be inserted */
+	      for(j = 0; j < i; j++)
+		{
+		  if(TtaIsBefore(selected[i], selected[j]))
+		    break;
+		}
+	      
+	      if(j < i)
+		{
+		  /* selected[i] must be inserted before selected[j] */
+		  tmp_el = selected[i];
+		  for(k = i; k > j; k--)
+		    selected[k] = selected[k-1];
+		  selected[j] = tmp_el;
+		}
+	    }
+
+	  i++;
+	}
+    }
 
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   dispMode = TtaGetDisplayMode (doc);
@@ -2918,6 +2961,30 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
   switch (entry)
     {
+    case 11: /* group */
+      elType.ElSSchema = GetSVGSSchema (doc);
+      elType.ElTypeNum = SVG_EL_g;
+      group = TtaNewElement (doc, elType);
+
+      /* insert the new group element */
+      TtaInsertSibling (group, selected[0], FALSE, doc);
+      TtaRegisterElementCreate (group, doc);
+
+      for (i = 0; i < nb_selected; i++)
+	{
+	  TtaRegisterElementDelete (selected[i], doc);
+	  TtaRemoveTree (selected[i], doc);
+	  if(i == 0)
+	    TtaInsertFirstChild (&selected[i], group, doc);
+	  else
+	    TtaInsertSibling (selected[i], selected[i-1], FALSE, doc);
+
+	  TtaRegisterElementCreate (selected[i], doc);
+	}
+
+      TtaSelectElement (doc, group);
+      break;
+
     case 26:	/* Ungroup */
       for (i = 0; i < nb_selected; i++)
         {
@@ -3027,7 +3094,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 		  break;
 
 		case 36:   /* AlignCenter */
-		  MoveElementInParentSpace(doc, selected[0], (xmax-width)/2, y);
+		  MoveElementInParentSpace(doc, selected[0], ((float)(xmax-width))/2, y);
 		  break;
 
 		case 37:   /* AlignRight */
@@ -3039,7 +3106,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 		  break;
 
 		case 39:   /* AlignMiddle */
-		  MoveElementInParentSpace(doc, selected[0], x, (ymax-height)/2);
+		  MoveElementInParentSpace(doc, selected[0], x, ((float)(ymax-height))/2);
 		  break;
 
 		case 40:   /* AlignBottom */
@@ -3081,7 +3148,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
 		case 36:   /* AlignCenter */
 		  MoveElementInParentSpace(doc, selected[i],
-					   xcenter - width/2, y);
+					   xcenter - ((float)width)/2, y);
 		  break;
 
 		case 37:   /* AlignRight */
@@ -3094,7 +3161,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
 		case 39:   /* AlignMiddle */
 		  MoveElementInParentSpace(doc, selected[i], x,
-					   ycenter - height/2);
+					   ycenter - ((float)height)/2);
 		  break;
 
 		case 40:   /* AlignBottom */
@@ -3124,13 +3191,131 @@ void TransformGraphicElement (Document doc, View view, int entry)
       if (isFormattedView)
         done = AskTransform(doc, svgAncestor, svgCanvas, 17, selected[0]);
       break;
+
+    case 46:   /* DistributeLeft */
+    case 47:   /* DistributeCenter */
+    case 48:   /* DistributeRight */
+    case 49:   /* DistributeTop */
+    case 50:   /* DistributeMiddle */
+    case 51:   /* DistributeBottom */
+
+      /* Get positions of selected elements and sort them */
+      for(i = 0; i < nb_selected; i++)
+	{
+	  GetPositionAndSizeInParentSpace(doc, selected[i],
+					  &x, &y, &width, &height);
+	  switch(entry)
+	    {
+	    case 46:   /* DistributeLeft */
+	      position[i] = x;
+	      break;
+	    case 47:   /* DistributeCenter */
+	      position[i] = x+width/2;
+	      break;
+
+	    case 48:   /* DistributeRight */
+	      position[i] = x+width;
+	      break;
+
+	    case 49:   /* DistributeTop */
+	      position[i] = y;
+	      break;
+
+	    case 50:   /* DistributeMiddle */
+	      position[i] = y+height/2;
+	      break;
+
+	    case 51:   /* DistributeBottom */
+	      position[i] = y+height;
+	      break;
+	    }
+
+	  /* Search where the element must be inserted */
+	  for(j = 0; j < i; j++)
+	    {
+	      if(position[i] < position[j])
+		break;
+	    }
+
+	  if(j < i)
+	    {
+	      /* selected[i] must be inserted before selected[j] */
+	      tmp_el = selected[i];
+	      tmp_pos = position[i];
+	      for(k = i; k > j; k--)
+		{
+		  selected[k] = selected[k-1];
+		  position[k] = position[k-1];
+		}
+	      selected[j] = tmp_el;
+	      position[j] = tmp_pos;
+	    }
+	}
+
+      /* Now we can distribute the elements */
+      j = position[0];
+      k = position[nb_selected - 1] - j;
+
+      for(i = 0; i < nb_selected; i++)
+	{
+	  GetPositionAndSizeInParentSpace(doc, selected[i],
+					  &x, &y, &width, &height);
+
+	  switch(entry)
+	    {
+	    case 46:   /* DistributeLeft */
+	      MoveElementInParentSpace(doc, selected[i],
+				       j + ((float)(i*k))/(nb_selected-1),
+				       y);
+	      break;
+	    case 47:   /* DistributeCenter */
+	      MoveElementInParentSpace(doc, selected[i],
+				       j + ((float)(i*k))/(nb_selected-1)
+				       - ((float)width)/2,
+				       y);
+	      break;
+
+	    case 48:   /* DistributeRight */
+	      MoveElementInParentSpace(doc, selected[i],
+				       j + ((float)(i*k))/(nb_selected-1)
+				       - width,
+				       y);
+	      break;
+
+	    case 49:   /* DistributeTop */
+	      MoveElementInParentSpace(doc, selected[i],
+				       x,
+				       j + ((float)(i*k))/(nb_selected-1));
+	      break;
+
+	    case 50:   /* DistributeMiddle */
+	      MoveElementInParentSpace(doc, selected[i],
+				       x,
+				       j + ((float)(i*k))/(nb_selected-1)
+				       - ((float)height/2));
+	      break;
+
+	    case 51:   /* DistributeBottom */
+	      MoveElementInParentSpace(doc, selected[i],
+				       x,
+				       j + ((float)(i*k))/(nb_selected-1)
+				       - height);
+	      break;
+	    }
+	}
+      
+      break;
+
+
     }
   
   TtaFreeMemory(selected);
+  if(isDistribution)
+    TtaFreeMemory(position);
 
   TtaCloseUndoSequence (doc);
   if (!done)
-    // no change done
+    /* no change done */
     TtaCancelLastRegisteredSequence (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
@@ -3302,6 +3487,8 @@ void UpdateShapeElement(Document doc, Element el,
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
   if(shape == 'a' || shape == 'c')
     {
       x+=(width/2);
@@ -3328,6 +3515,7 @@ void UpdateShapeElement(Document doc, Element el,
 	}
     }
 
+  TtaCloseUndoSequence (doc);
   TtaSetDisplayMode (doc, dispMode);
 }
 
@@ -4000,7 +4188,7 @@ void CreateSVG_Text (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Group (Document document, View view)
 {
-  CreateGroup();
+  TransformGraphicElement (document, view, 11);
 }
 
 /*----------------------------------------------------------------------
@@ -4282,4 +4470,52 @@ void TransformSVG_Scale (Document document, View view)
 void TransformSVG_Translate (Document document, View view)
 {
   TransformGraphicElement (document, view, 45);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_DistributeLeft
+  ----------------------------------------------------------------------*/
+void TransformSVG_DistributeLeft (Document document, View view)
+{
+  TransformGraphicElement (document, view, 46);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_DistributeCenter
+  ----------------------------------------------------------------------*/
+void TransformSVG_DistributeCenter (Document document, View view)
+{
+  TransformGraphicElement (document, view, 47);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_DistributeRight
+  ----------------------------------------------------------------------*/
+void TransformSVG_DistributeRight (Document document, View view)
+{
+  TransformGraphicElement (document, view, 48);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_DistributeTop
+  ----------------------------------------------------------------------*/
+void TransformSVG_DistributeTop (Document document, View view)
+{
+  TransformGraphicElement (document, view, 49);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_DistributeMiddle
+  ----------------------------------------------------------------------*/
+void TransformSVG_DistributeMiddle (Document document, View view)
+{
+  TransformGraphicElement (document, view, 50);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_DistributeBottom
+  ----------------------------------------------------------------------*/
+void TransformSVG_DistributeBottom (Document document, View view)
+{
+  TransformGraphicElement (document, view, 51);
 }

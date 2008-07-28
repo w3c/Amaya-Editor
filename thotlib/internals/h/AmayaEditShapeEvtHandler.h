@@ -60,8 +60,11 @@ class AmayaEditShapeEvtHandler : public wxEvtHandler
   bool buttonDown;
 
   Element leaf;
-  PtrBox  parentbox;
+  PtrAbstractBox e_ab;
+  PtrBox  e_box;
+  PtrAbstractBox ab;
   PtrBox  box;
+  char shape;
 };
 
 #endif /* __AMAYAEDITSHAPEEVTHANDLER_H__ */

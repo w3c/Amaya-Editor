@@ -705,6 +705,12 @@ HelpSVG
 &TransformSVG_Skew
 &TransformSVG_Scale
 &TransformSVG_Translate
+&TransformSVG_DistributeLeft
+&TransformSVG_DistributeCenter
+&TransformSVG_DistributeRight
+&TransformSVG_DistributeTop
+&TransformSVG_DistributeMiddle
+&TransformSVG_DistributeBottom
 
 ########### Javascript/DOM
 [javascript_dom]

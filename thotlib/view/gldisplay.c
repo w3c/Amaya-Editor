@@ -1373,49 +1373,6 @@ void DrawRectangle2 (int frame, int thick, int style, int x, int y, int width,
 }
 
 /*----------------------------------------------------------------------
-  DrawDiamond draw a diamond.
-  Parameters fg, bg, and pattern are for drawing
-  color, background color and fill pattern.
-  ----------------------------------------------------------------------*/
-void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
-                  int height, int fg, int bg, int pattern)
-{
-  ThotPoint           points[5];
-
-  if (width > thick + 1)
-    width = width - thick - 1;
-  if (height > thick + 1)
-    height = height - thick - 1;
-  x += thick / 2;
-  y = y + thick / 2 + FrameTable[frame].FrTopMargin;
-
-  points[0].x = x + (width / 2);
-  points[0].y = y;
-  points[4].x = points[0].x;
-  points[4].y = points[0].y;
-  points[1].x = x + width;
-  points[1].y = y + (height / 2);
-  points[2].x = points[0].x;
-  points[2].y = y + height;
-  points[3].x = x;
-  points[3].y = points[1].y;
-
-  /* Fill in the diamond */
-  if (pattern == 2)
-    {
-      LoadColor (bg);
-      GL_DrawPolygon (points, 5, 0);
-    }
-
-  /* Draw the border */
-  if (thick > 0 && fg >= 0)
-    {
-      InitDrawing (style, thick, fg);
-      GL_DrawPolygon (points, 5, 0);
-    }
-}
-
-/*----------------------------------------------------------------------
   DrawSegments draw a set of segments.
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
@@ -1504,6 +1461,52 @@ static void DoDrawLines (int frame, int thick, int style,
       InitDrawing (style, thick, fg);
       GL_DrawLines (points, npoints);
     }
+}
+
+
+/*----------------------------------------------------------------------
+  DrawDiamond draw a diamond.
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
+void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
+                  int height, int fg, int bg, int pattern)
+{
+  ThotPoint           points[5];
+
+  if (width > thick + 1)
+    width = width - thick - 1;
+  if (height > thick + 1)
+    height = height - thick - 1;
+  x += thick / 2;
+  y = y + thick / 2 + FrameTable[frame].FrTopMargin;
+
+  points[0].x = x + (width / 2);
+  points[0].y = y;
+  points[4].x = points[0].x;
+  points[4].y = points[0].y;
+  points[1].x = x + width;
+  points[1].y = y + (height / 2);
+  points[2].x = points[0].x;
+  points[2].y = y + height;
+  points[3].x = x;
+  points[3].y = points[1].y;
+
+/*   /\* Fill in the diamond *\/ */
+/*   if (pattern == 2) */
+/*     { */
+/*       LoadColor (bg); */
+/*       GL_DrawPolygon (points, 5, 0); */
+/*     } */
+
+/*   /\* Draw the border *\/ */
+/*   if (thick > 0 && fg >= 0) */
+/*     { */
+/*       InitDrawing (style, thick, fg); */
+/*       GL_DrawPolygon (points, 5, 0); */
+/*     } */
+
+  DoDrawLines (frame, thick, style, points, 5, fg, bg, pattern);
 }
 
 /*----------------------------------------------------------------------
@@ -3099,6 +3102,31 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
 	       points, 4, fg, bg,
 	       2);
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void DrawTriangle (int frame, int thick, int style, int fg, int bg, int pattern,
+		   int x1, int y1,
+		   int x2, int y2,
+		   int x3, int y3)
+{
+  ThotPoint points[4];
+
+  y1 += FrameTable[frame].FrTopMargin;
+  y2 += FrameTable[frame].FrTopMargin;
+  y3 += FrameTable[frame].FrTopMargin;
+
+  points[0].x = x1;
+  points[0].y = y1;
+  points[1].x = x2;
+  points[1].y = y2;
+  points[2].x = x3;
+  points[2].y = y3;
+  points[3] = points[0];
+
+  DoDrawLines (frame, thick, style, points, 4, fg, bg, pattern);
+}
+
 
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.

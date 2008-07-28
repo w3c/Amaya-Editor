@@ -2426,7 +2426,7 @@ ThotBool AskShapeEdit (Document doc,
   /* Update the attribute */
   if(hasBeenEdited)
     {
-      leaf =  TtaGetFirstLeaf(el);
+      leaf =  TtaGetLastChild(el);
       if(leaf && 
 	 ((PtrElement)leaf)->ElAbstractBox[0])
 	{
@@ -2434,30 +2434,39 @@ ThotBool AskShapeEdit (Document doc,
 	  pBox = pAb->AbBox;
 	  shape = pAb->AbShape;
 
-	  if(shape == '\1' || shape == 'C')
-	    {
-	      rx = pBox->BxRx;
-	      ry = pBox->BxRy;
-	    }
-	  else
-	    {
-	      rx = 0;
-	      ry = 0;
-	    }
-
-	  x = pBox->BxXOrg;
-	  y = pBox->BxYOrg;
-	  w = pBox->BxW;
-	  h = pBox->BxH;
-
 	  if(pBox)
-	    UpdateShapeElement(doc, el,
-			       shape,
-			       x,
-			       y,
-			       w,
-			       h,
-			       rx, ry);
+	    {
+
+	      if(shape == '\1' || shape == 'C')
+		{
+		  rx = pBox->BxRx;
+		  ry = pBox->BxRy;
+		}
+	      else
+		{
+		  rx = 0;
+		  ry = 0;
+		}
+
+	      x = pBox->BxXOrg;
+	      y = pBox->BxYOrg;
+	      w = pBox->BxW;
+	      h = pBox->BxH;
+	      if(shape == 'g')
+		{
+		  if((pAb->AbEnclosing->AbHorizPos.PosEdge == Left
+		      && pAb->AbEnclosing->AbVertPos.PosEdge == Top) ||
+		     (pAb->AbEnclosing->AbHorizPos.PosEdge == Right
+		      && pAb->AbEnclosing->AbVertPos.PosEdge == Bottom))
+		      /* draw a \ */
+		    UpdateShapeElement(doc, el, shape, x,y,x+w,y+h, 0, 0);
+		  else
+		    /* draw a / */
+		    UpdateShapeElement(doc, el, shape, x+w,y,x,y+h, 0, 0);
+		}
+	      else
+		UpdateShapeElement(doc, el, shape, x,y,w,h, rx, ry);
+	    }
 	}
     }
   return hasBeenEdited;

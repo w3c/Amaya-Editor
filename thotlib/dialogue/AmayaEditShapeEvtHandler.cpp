@@ -39,28 +39,65 @@
 #include "AmayaCanvas.h"
 #include "AmayaEditShapeEvtHandler.h"
 
-static char shape;
-
-/*
-  delta_min
-
-    sign(s) = sign(dx)*sign(dy)
-*/
-static void delta_min(int *dx, int *dy, int s)
+static void apply_deltas(int *x, int *y, int *lx, int *ly,
+		      int dx, int dy,
+		      int sx, int sy, float ratio)
 {
-  if((*dx)*(*dy)*s < 0)
+  if(ratio)
     {
-      /* Not the same direction */
-      *dx = 0;
-      *dy = 0;
+      /* The ratio = ly/lx must be preserved */
+
+      if(sx == 0)
+	{
+	  /* Vertical resize */
+	  (*ly)+=sy*dy;
+	  dx = (*lx - (*ly)/ratio)/2;
+	  (*lx)=(*ly)/ratio;
+	  sx = -1; // Force the change of coordinates
+	}
+      else if(sy == 0)
+	{
+	  /* Horizontal resize */
+	  (*lx)+=sx*dx;
+	  dy = (*ly - (*lx)*ratio)/2;
+	  (*ly)=(*lx)*ratio;
+	  sy = -1; // Force the change of coordinates
+	}
+      else if(dx*dy*sx*sy <= 0)
+	{
+	  /* A diagonal resize with contradictory directions */
+	  return;
+	}
+      else
+	{
+	  /* Diagonal resize */
+	  if(ratio*abs(dx) < abs(dy))
+	    {
+	      /* Choose the horizontal delta */
+	      (*lx)+=sx*dx;
+	      dy = sy*((*lx)*ratio - *ly);
+	      (*ly)=(*lx)*ratio;
+	    }
+	  else
+	    {
+	      /* Choose the vertical delta */
+	      (*ly)+=sy*dy;
+	      dx = sx*((*ly)/ratio - *lx);
+	      (*lx)=(*ly)/ratio;
+	    }
+
+	}
     }
   else
     {
-      if(abs(*dx) < abs(*dy))
-	*dy = s*(*dx);
-      else
-	*dx = s*(*dy);
+      /* Resize without ratio */
+      (*lx)+=sx*dx;
+      (*ly)+=sy*dy;
     }
+
+  /* Change the coordinates (*x,*y) of the box */
+  if(sx<0)(*x)+=dx;
+  if(sy<0)(*y)+=dy;
 }
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaEditShapeEvtHandler, wxEvtHandler)
@@ -117,11 +154,11 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
   ,point(point)
   ,hasBeenEdited(hasBeenEdited)
   ,leaf(NULL)
-  ,parentbox(NULL)
+  ,e_ab(NULL)
+  ,e_box(NULL)
+  ,ab(NULL)
   ,box(NULL)
 {
-  PtrAbstractBox pAb;
-
   *hasBeenEdited = FALSE;
   buttonDown = false;
 
@@ -137,16 +174,16 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
     }
 
   /* Get the box of the SVG element */
-  pAb = ((PtrElement)el)->ElAbstractBox[0];
-  if(!pAb || !(pAb->AbBox))
+  e_ab = ((PtrElement)el)->ElAbstractBox[0];
+  if(!e_ab || !(e_ab->AbBox))
     {
     finished = true;
     return;
     }
-  parentbox = pAb->AbBox;
+  e_box = e_ab->AbBox;
 
   /* Get the GRAPHICS leaf */
-  leaf = TtaGetFirstLeaf((Element)el);
+  leaf = TtaGetLastChild((Element)el);
   if(!leaf)
     {
     finished = true;
@@ -154,15 +191,15 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
     }
 
   /* Get the box of the SVG element */
-  pAb = ((PtrElement)leaf)->ElAbstractBox[0];
-  if(!pAb || !(pAb->AbBox))
+  ab = ((PtrElement)leaf)->ElAbstractBox[0];
+  if(!ab || !(ab->AbBox))
     {
     finished = true;
     return;
     }
 
-  box = pAb->AbBox;
-  shape = pAb->AbShape;
+  box = ab->AbBox;
+  shape = ab->AbShape;
 }
 
 /*----------------------------------------------------------------------
@@ -239,10 +276,14 @@ void AmayaEditShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
+#define RATIO_EQUILATERAL sqrt(3)/2
+
   ThotBool same_size;
   int rx,ry,lx,ly, x, y;
-  int x1,y1,x2,y2;
+  int x1,y1,x2,y2,  x3=0,y3=0,x4=0,y4=0;
   int dx, dy;
+  float ratio = 0.;
+
   if (IsFinish())return;
 
   /* DELTA is the sensitivity toward mouse moves. */
@@ -304,14 +345,6 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       x = box->BxXOrg;
       y = box->BxYOrg;
 
-      if(shape == '\1' || shape == 'C')
-	{
-	  rx = box->BxRx;
-	  ry = box->BxRy;
-	  if(ry == -1)ry = rx;
-	  else if(rx == -1)rx = ry;
-	}
-
       /*                                   9 = Rx handle       */
       /*                                  /                    */
       /*            1-------------2------O------3              */
@@ -322,127 +355,200 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       /*            |                           |       Handle */
       /*            7-------------6-------------5              */
 
-      if(1 <= point && point <= 8)
-	same_size = (shape == '\1' || shape == 'a');
-      else
-	same_size = (box->BxRx == -1 || box->BxRy == -1);
-
-      switch(point)
+      switch(shape)
 	{
-	case 1:
-	  if(same_size)
-	    delta_min(&dx, &dy, 1);
-	  x+=dx;
-	  lx-=dx;
-	  y+=dy;
-	  ly-=dy;
-	  break;
-
-	case 2:
-	  y+=dy;
-	  ly-=dy;
-	  if(same_size)
+	case 'g': /* line */
+	  switch(point)
 	    {
-	      x+=(dy/2);
-	      lx-=dy;
+	    case 1:
+	      x3 = x+lx;
+	      y3 = y+ly;
+	      x4 = x;
+	      y4 = y;
+	      break;
+
+	    case 3:
+	      x3 = x;
+	      y3 = y+ly;
+	      x4 = x+lx;
+	      y4 = y;
+	      break;
+
+	    case 5:
+	      x3 = x;
+	      y3 = y;
+	      x4 = x+lx;
+	      y4 = y+ly;
+	      break;
+
+	    case 7:
+	      x3 = x+lx;
+	      y3 = y;
+	      x4 = x;
+	      y4 = y+ly;
+	      break;
 	    }
 
-	  break;
+	  x4+=dx;
+	  y4+=dy;
 
-	case 3:
-	  if(same_size)
-	    delta_min(&dx, &dy, -1);
-	  lx+=dx;
-	  y+=dy;
-	  ly-=dy;
-	  break;
+	  lx = abs(x4 - x3);
+	  ly = abs(y4 - y3);
+	  if(x3 < x4)x = x3; else x = x4;
+	  if(y3 < y4)y = y3; else y = y4;
 
-	case 4:
-	  lx+=dx;
-	  if(same_size)
+	  e_ab->AbHorizPos.PosEdge = (x == x4 ? Left : Right);
+	  e_ab->AbVertPos.PosEdge = (y == y4 ? Top : Bottom);
+
+	  if(e_ab->AbHorizPos.PosEdge == Left)
 	    {
-	      y-=(dx/2);
-	      ly+=dx;
+	      if(e_ab->AbVertPos.PosEdge == Top)
+		point = 1;
+	      else
+		point = 7;
 	    }
+	  else
+	    {
+	      if(e_ab->AbVertPos.PosEdge == Top)
+		point = 3;
+	      else
+		point = 5;
+	    }
+
+	  /* Change the selected point in the line. */
+	  ViewFrameTable[frameId - 1].FrSelectionBegin.VsIndBox = point;
 	  break;
+
+	case '\1': /* square */
+	case 'C': /* rectangle */
+	case 'a': /* circle */
+	case 'c': /* ellipse */
+	case 'L': /* diamond */
+	case '\4': /* Equilateral triangle (ly = lx*R) */
+	case '\5': /* Isosceles triangle */
+	case '\6': /* Rectangle triangle */
+
+	  if(shape == '\1' || shape == 'C')
+	    {
+	      rx = box->BxRx;
+	      ry = box->BxRy;
+	      if(ry == -1)ry = rx;
+	      else if(rx == -1)rx = ry;
+	    }
+
+	  if(1 <= point && point <= 8)
+	    {
+	    same_size = (shape == '\1' || shape == 'a');
+	    if(same_size)ratio = 1.;
+	    }
+	  else
+	    same_size = (box->BxRx == -1 || box->BxRy == -1);
+
+	  if(shape == '\4')
+	    ratio = RATIO_EQUILATERAL;
+
+	  if(shape == '\6' && point == 5)
+	    {
+	      /* The point is actually the middle of the hypot */
+	      dx*=2;
+	      dy*=2;
+	    }
+
+	  switch(point)
+	    {
+	    case 1:
+	      apply_deltas(&x, &y, &lx, &ly, dx, dy, -1, -1, ratio);
+	      break;
+	      
+	    case 2:
+	      apply_deltas(&x, &y, &lx, &ly, dx, dy, 0, -1, ratio);
+   	      break;
+	      
+	    case 3:
+	      apply_deltas(&x, &y, &lx, &ly, dx, dy, +1, -1, ratio);
+	      break;
+
+	    case 4:
+	      apply_deltas(&x, &y, &lx, &ly, dx, dy, +1, 0, ratio);
+	      break;
+	      
+	    case 5:
+	      apply_deltas(&x, &y, &lx, &ly, dx, dy, +1, +1, ratio);
+	      break;
+	      
+	    case 6:
+	      apply_deltas(&x, &y, &lx, &ly, dx, dy, 0, +1, ratio);
+	      break;
+	      
+	    case 7:
+	      apply_deltas(&x, &y, &lx, &ly, dx, dy, -1, +1, ratio);
+	      break;
+	      
+	    case 8:
+	      apply_deltas(&x, &y, &lx, &ly, dx, dy, -1, 0, ratio);
+	      break;
+	      
+	    case 9:
+	      rx -= dx;
+	      if(same_size)ry=rx;
+	      break;
+	      
+	    case 10:
+	      ry += dy;
+	      if(same_size)rx=ry;
+	      break;
+	    }
 	  
-	case 5:
-	  if(same_size)
-	    delta_min(&dx, &dy, 1);
-	  lx+=dx;
-	  ly+=dy;
-	  break;
-
-	case 6:
-	  ly+=dy;
-	  if(same_size)
+	  if(lx < 0){lx = 0; x = box->BxXOrg;}
+	  if(ly < 0){ly = 0; y = box->BxYOrg;}
+	  
+	  if(shape == '\1' || shape == 'C')
 	    {
-	      x-=(dy/2);
-	      lx+=dy;
+	      if(rx < 0)rx = 0;
+	      if(ry < 0)ry = 0;
+	      if(rx > lx/2)rx = lx/2;
+	      if(ry > ly/2)ry = ly/2;
+	      
+	      if(box->BxRx != -1)box->BxRx = rx;
+	      if(box->BxRy != -1)box->BxRy = ry;
 	    }
+
 	  break;
 
-	case 7:
-	  if(same_size)
-	    delta_min(&dx, &dy, -1);
-	  x+=dx;
-	  lx-=dx;
-	  ly+=dy;
-	  break;
-
-	case 8:
-	  x+=dx;
-	  lx-=dx;
-	  if(same_size)
-	    {
-	      y+=(dx/2);
-	      ly-=dx;
-	    }
-	  break;
-
-	case 9:
-	  rx -= dx;
-	  if(same_size)ry=rx;
-	  break;
-
-	case 10:
-	  ry += dy;
-	  if(same_size)rx=ry;
+	default:
 	  break;
 	}
-
-      if(lx < 0)lx = 0;
-      if(ly < 0)ly = 0;
-
-      if(shape == '\1' || shape == 'C')
-	{
-	  if(rx < 0)rx = 0;
-	  if(ry < 0)ry = 0;
-	  if(rx > lx/2)rx = lx/2;
-	  if(ry > ly/2)ry = ly/2;
-
-	  if(box->BxRx != -1)box->BxRx = rx;
-	  if(box->BxRy != -1)box->BxRy = ry;
-	}
-
+      
+      /*NewDimension (ab, lx, ly, frameId, TRUE);
+	NewPosition (ab, x, 0, y, 0, frameId, TRUE);*/
+      
       box->BxXOrg = x;
       box->BxYOrg = y;
       box->BxW = lx;
       box->BxH = ly;
       box->BxWidth = lx;
       box->BxHeight = ly;
+      
+      /*ab->AbWidthChange = TRUE;
+      ab->AbHeightChange = TRUE;
+      ab->AbHorizPosChange = TRUE;
+      ab->AbVertPosChange = TRUE;*/
 
-      //      parentbox->BxXOrg = x;
-      //parentbox->BxYOrg = y;
-      parentbox->BxW = lx;
-      parentbox->BxH = ly;
-      parentbox->BxWidth = lx;
-      parentbox->BxHeight = ly;
+      //e_box->BxXOrg = x;
+      //e_box->BxYOrg = y;
+      e_box->BxW = lx;
+      e_box->BxH = ly;
+      e_box->BxWidth = lx;
+      e_box->BxHeight = ly;
 
+      /*e_ab->AbWidthChange = TRUE;
+      e_ab->AbHeightChange = TRUE;
+      e_ab->AbHorizPosChange = TRUE;
+      e_ab->AbVertRefChange = TRUE;*/
 
 #ifndef NODISPLAY
       /* Redisplay the GRAPHICS leaf */
-            RedisplayLeaf ((PtrElement) leaf, doc, 0);
+      RedisplayLeaf ((PtrElement) leaf, doc, 0);
 #endif
 
       /* Redisplay the SVG canvas to see the transform applied to the object */

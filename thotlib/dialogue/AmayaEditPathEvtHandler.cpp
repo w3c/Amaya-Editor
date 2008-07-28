@@ -119,7 +119,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   box = pAb -> AbBox;
 
   /* Get the GRAPHICS leaf */
-  leaf = TtaGetFirstLeaf((Element)el);
+  leaf = TtaGetLastChild((Element)el);
   if(!leaf)
     {
     finished = true;

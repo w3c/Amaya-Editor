@@ -185,10 +185,13 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
         thick += 2;
 
       /* The box is smaller than the handle */
-      if (thick > pBox->BxWidth)
-        thick = pBox->BxWidth;
-      if (thick > pBox->BxHeight)
-        thick = pBox->BxHeight;
+      if(!(pAb->AbLeafType == LtGraphics && pAb->AbRealShape == 'g'))
+	{
+	  if (thick > pBox->BxWidth)
+	    thick = pBox->BxWidth;
+	  if (thick > pBox->BxHeight)
+	    thick = pBox->BxHeight;
+	}
 
       /* selection points */
       GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
@@ -499,6 +502,39 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(h, frame, thick, leftX, middleY);
 	    DrawHandle(h, frame, thick, rightX, middleY);
 	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    break;
+
+	  case '\2': /* Parallelogram */
+	    break;
+
+	  case '\3': /* Trapezium */
+	    break;
+
+	  case '\4': /* Equilateral triangle */
+	  case '\5': /* Isosceles triangle */
+            /* control points */
+	    DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, leftX, bottomY);
+	    DrawHandle(h, frame, thick, rightX, bottomY);
+	    
+	    /* resize handle */
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, topY, NE);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
+	    break;
+
+	  case '\6': /* rectangle triangle */
+            /* control points */
+	    DrawHandle(h, frame, thick, leftX, topY);
+	    DrawHandle(h, frame, thick, leftX, bottomY);
+	    DrawHandle(h, frame, thick, rightX, topY);
+
+	    /* resize handle */
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, topY, N);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, middleY, SE);
 	    break;
 
           case 'L': /* diamond */
