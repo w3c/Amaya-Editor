@@ -10,7 +10,7 @@
  *
  * Authors: V. Quint (INRIA)
  *          I. Vatton (INRIA) - Polylines
- *          F. Wang - Operations on transform matrix
+ *          F. Wang - Operations on transform matrix, geometric properties
  */
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -3928,4 +3928,123 @@ int TtaGetPageView (Element pageElement)
   else
     pageView = ((PtrElement) pageElement)->ElViewPSchema;
   return pageView;
+}
+
+
+/*----------------------------------------------------------------------
+  AlmostEqual*
+
+  Used in CheckGeometricProperties to check the approximative equalities
+  of mathematical properties.
+  ----------------------------------------------------------------------*/
+static ThotBool AlmostEqual(float l1, float l2)
+{
+#define UN_PIXEL 1.
+  printf("AlmostEqual: %f\n", fabs(l2 - l1));
+  return (fabs(l2 - l1) <= UN_PIXEL);
+}
+
+static ThotBool AlmostEqualVector(float dx1, float dy1, float dx2, float dy2)
+{
+  printf("AlmostEqualVector:(%f,%f) (%f,%f)", dx1, dy1, dx2, dy2);
+  return (AlmostEqual(dx1, dx2) && AlmostEqual(dy1, dy2));
+}
+
+static ThotBool AlmostColinearVector(float dx1, float dy1, float dx2, float dy2)
+{
+  printf("AlmostColinearVector:%f\n", dx1*dy2 - dy1*dx2);
+  return AlmostEqual(sqrt(dx1*dy2 - dy1*dx2), 0.);
+}
+
+/*----------------------------------------------------------------------
+  CheckGeometricProperties
+  ----------------------------------------------------------------------*/
+void CheckGeometricProperties(Element leaf)
+{
+  PtrElement pLeaf = (PtrElement)leaf;
+  PtrTextBuffer       pBuffer;
+  int x1,y1,x2,y2,x3,y3,x4,y4,tmpx,tmpy;
+  int nbPoints;
+
+  if(pLeaf->ElLeafType == LtPolyLine)
+    {
+      pBuffer = pLeaf->ElPolyLineBuffer;
+      nbPoints = pLeaf->ElNPoints - 1;
+
+      printf(">>> NbPoints = %d\n", nbPoints);
+
+      if(nbPoints == 3)
+	{
+	  /* A triangle */
+	  printf("A triangle \n");
+	}
+      else if(nbPoints == 4)
+	{
+	  /* A quadrilateral
+	   *      4  
+	   *     /   \
+	   *    /      \
+	   *   1         \    
+	   *    \          \  
+	   *     \           \
+	   *      2----------3
+	   */
+
+	  x1 = pBuffer->BuPoints[1].XCoord;
+	  y1 = pBuffer->BuPoints[1].YCoord;
+	  x2 = pBuffer->BuPoints[2].XCoord;
+	  y2 = pBuffer->BuPoints[2].YCoord;
+	  x3 = pBuffer->BuPoints[3].XCoord;
+	  y3 = pBuffer->BuPoints[3].YCoord;
+	  x4 = pBuffer->BuPoints[4].XCoord;
+	  y4 = pBuffer->BuPoints[4].YCoord;
+
+	  printf("A quadrilateral (%d,%d, %d,%d %d,%d %d,%d)\n",
+		 x1,y1,x2,y2,x3,y3,x4,y4);
+
+	  if(AlmostColinearVector(x3 - x2, y3 - y2,
+				  x4 - x1, y4 - y1))
+	    {
+	      /* Edges (2-3) and (1-4) are parallel, apply a circular
+		 permutation of the points */
+	      tmpx = x1; tmpy = y1;
+	      x1 = x2; y1 = y2;
+	      x2 = x3; y2 = y3;
+	      x3 = x4; y3 = y4;
+	      x4 = tmpx; y4 = tmpy;
+	    }
+
+	  if(AlmostColinearVector(x2 - x1, y2 - y1,
+				  x3 - x4, y3 - y4))
+	    {
+	      /* A trapezium
+	       *
+	       *   1---------2
+	       *  /           \
+	       * /              \
+	       * 4---------------3
+	       */
+	      printf("A trapezium \n");	      
+
+
+	      if(AlmostEqualVector(x2 - x1, y2 - y1,
+				   x3 - x4, y3 - y4))
+		{
+		  /* A parallelogram
+		   *
+		   *     1----------2 
+		   *      \          \
+		   *       \          \
+		   *        4----------3
+		   */
+		  printf("A parallelogram \n");
+
+		}
+	    }
+
+
+	}
+
+      printf(">>>\n");
+    }
 }

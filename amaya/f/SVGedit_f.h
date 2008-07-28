@@ -169,6 +169,10 @@ extern void TransformSVG_DistributeMiddle ( Document document,
                                             View view );
 extern void TransformSVG_DistributeBottom ( Document document,
                                             View view );
+extern void TransformSVG_DistributeHSpacing ( Document document,
+                                              View view );
+extern void TransformSVG_DistributeVSpacing ( Document document,
+                                              View view );
 
 #else /* __STDC__ */
 
@@ -335,6 +339,10 @@ extern void TransformSVG_DistributeMiddle ( Document document,
                                               View view );
 extern void TransformSVG_DistributeBottom ( Document document,
                                               View view );
+extern void TransformSVG_DistributeHSpacing ( Document document,
+                                                View view );
+extern void TransformSVG_DistributeVSpacing ( Document document,
+                                                View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

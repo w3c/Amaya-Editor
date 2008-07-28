@@ -1606,6 +1606,11 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
                   TtaRemovePRule (el, fillPatternRule, doc);
                 }
             }
+
+	  
+	  /* Check the geometric properties of the leaf */
+	  if(elType.ElTypeNum == SVG_EL_polygon)
+	    CheckGeometricProperties(leaf);
           break;
         }
     }

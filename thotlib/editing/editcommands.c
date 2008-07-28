@@ -28,6 +28,7 @@
 #include "appaction.h"
 #include "appdialogue.h"
 #include "logdebug.h"
+#include "content.h"
 
 /* variables */
 #undef THOT_EXPORT

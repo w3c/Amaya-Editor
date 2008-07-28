@@ -10,6 +10,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typeint.h"
+#include "content.h"
 
 class AmayaFrame;
 

@@ -229,6 +229,7 @@ extern void TtaGivePolylinePoint ( Element element,
                                    int *y );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
+extern void CheckGeometricProperties ( Element leaf );
 
 #else /* __STDC__ */
 
@@ -455,6 +456,7 @@ extern void TtaGivePolylinePoint ( Element element,
                                      int *y );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
+extern void CheckGeometricProperties ( Element leaf );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
