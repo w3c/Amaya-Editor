@@ -711,6 +711,8 @@ HelpSVG
 &TransformSVG_DistributeTop
 &TransformSVG_DistributeMiddle
 &TransformSVG_DistributeBottom
+&TransformSVG_DistributeVSpacing
+&TransformSVG_DistributeHSpacing
 
 ########### Javascript/DOM
 [javascript_dom]

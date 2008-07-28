@@ -216,6 +216,12 @@
           <object class="tool" name="wxID_PANEL_SVG_DISTRIBUTE_TOP">
             <bitmap>../icons/16x16/SVG_distribute_top.png</bitmap>
           </object>
+          <object class="tool" name="wxID_PANEL_SVG_DISTRIBUTE_HSPACING">
+            <bitmap>../icons/16x16/SVG_distribute_horizontal_spacing.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_SVG_DISTRIBUTE_VSPACING">
+            <bitmap>../icons/16x16/SVG_distribute_vertical_spacing.png</bitmap>
+          </object>
         </object>
       </object>
     </object>

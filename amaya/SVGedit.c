@@ -2900,7 +2900,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
   ;
 
   /* Check if there are enough elements selected */
-  isDistribution = (46 <= entry && entry <= 51);
+  isDistribution = (46 <= entry && entry <= 53);
 
   if (nb_selected == 0 || (isDistribution && nb_selected < 3))
     return;
@@ -3198,6 +3198,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
     case 49:   /* DistributeTop */
     case 50:   /* DistributeMiddle */
     case 51:   /* DistributeBottom */
+    case 52:   /* DistributeHorizontalSpacing */
+    case 53:   /* DistributeVerticalSpacing */
 
       /* Get positions of selected elements and sort them */
       for(i = 0; i < nb_selected; i++)
@@ -3210,6 +3212,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	      position[i] = x;
 	      break;
 	    case 47:   /* DistributeCenter */
+	    case 52:
 	      position[i] = x+width/2;
 	      break;
 
@@ -3222,6 +3225,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	      break;
 
 	    case 50:   /* DistributeMiddle */
+	    case 53:
 	      position[i] = y+height/2;
 	      break;
 
@@ -3252,9 +3256,48 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	    }
 	}
 
-      /* Now we can distribute the elements */
-      j = position[0];
-      k = position[nb_selected - 1] - j;
+      /* Now we can distribute the elements
+
+	 We are going to compute:
+	 j = left side
+	 k = (n-1)*delta
+
+	 Where delta is the distance we want to be constant.
+      */
+
+      if(entry == 52 || entry == 53)
+	{
+	 /* It's a distribution according to space */
+	  for(i = 0; i < nb_selected; i++)
+	    {
+	      GetPositionAndSizeInParentSpace(doc, selected[i],
+					      &x, &y, &width, &height);
+
+	      switch(entry)
+		{
+		case 52:
+		  if(i == 0) { k = -x; j = x; }
+		  else if(i == nb_selected - 1)k+=(x+width);
+
+		  k-=width;
+		  break;
+
+		case 53:
+		  if(i == 0) { k = -y; j = y; }
+		  else if(i == nb_selected - 1)k+=(y+height);
+
+		  k-=height;
+		  break;
+		}
+	    }
+	}
+      else
+	{
+	  /* It's a distribution according to position. */
+	  j = position[0];
+	  k = position[nb_selected - 1] - j;
+	}
+
 
       for(i = 0; i < nb_selected; i++)
 	{
@@ -3263,6 +3306,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
 	  switch(entry)
 	    {
+	    case 52:   /* DistributeHorizontalSpacing */
 	    case 46:   /* DistributeLeft */
 	      MoveElementInParentSpace(doc, selected[i],
 				       j + ((float)(i*k))/(nb_selected-1),
@@ -3282,6 +3326,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 				       y);
 	      break;
 
+	    case 53: /* DistributeVerticalSpacing */
 	    case 49:   /* DistributeTop */
 	      MoveElementInParentSpace(doc, selected[i],
 				       x,
@@ -3302,6 +3347,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
 				       - height);
 	      break;
 	    }
+
+	  /* For distribution according to space, update the origin */
+	  if(entry == 52)j+=width;
+	  else if(entry == 53)j+=height;
+
 	}
       
       break;
@@ -4518,4 +4568,20 @@ void TransformSVG_DistributeMiddle (Document document, View view)
 void TransformSVG_DistributeBottom (Document document, View view)
 {
   TransformGraphicElement (document, view, 51);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_DistributeMiddle
+  ----------------------------------------------------------------------*/
+void TransformSVG_DistributeHSpacing (Document document, View view)
+{
+  TransformGraphicElement (document, view, 52);
+}
+
+/*----------------------------------------------------------------------
+  TransformSVG_DistributeBottom
+  ----------------------------------------------------------------------*/
+void TransformSVG_DistributeVSpacing (Document document, View view)
+{
+  TransformGraphicElement (document, view, 53);
 }

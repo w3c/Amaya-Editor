@@ -717,6 +717,8 @@ FUNCTIONS
   TransformSVG_DistributeTop,
   TransformSVG_DistributeMiddle,
   TransformSVG_DistributeBottom,
+  TransformSVG_DistributeVSpacing,
+  TransformSVG_DistributeHSpacing,
   DoSelectOpacity,
   DoSelectStrokeOpacity,
   DoSelectFillOpacity,
