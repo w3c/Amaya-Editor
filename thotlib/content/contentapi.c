@@ -3932,29 +3932,137 @@ int TtaGetPageView (Element pageElement)
 
 
 /*----------------------------------------------------------------------
-  AlmostEqual*
+  Almost*
 
   Used in CheckGeometricProperties to check the approximative equalities
   of mathematical properties.
   ----------------------------------------------------------------------*/
-static ThotBool AlmostEqual(float l1, float l2)
+
+/* Error on angle are less than 1° */
+#define EPSILON_MAX M_PI/180
+
+static ThotBool IsNull(float dx1, float dy1)
 {
-#define UN_PIXEL 1.
-  printf("AlmostEqual: %f\n", fabs(l2 - l1));
-  return (fabs(l2 - l1) <= UN_PIXEL);
+  return (dx1 == 0 && dy1 == 0);
 }
 
-static ThotBool AlmostEqualVector(float dx1, float dy1, float dx2, float dy2)
+static float UnsignedAngle(float dx1, float dy1,
+			   float dx2, float dy2)
 {
-  printf("AlmostEqualVector:(%f,%f) (%f,%f)", dx1, dy1, dx2, dy2);
-  return (AlmostEqual(dx1, dx2) && AlmostEqual(dy1, dy2));
+  /*       (dx1) (dx2)
+       s = (dy1).(dy2) = r1*r2*cosA
+
+   */
+
+  float s, r1, r2, cosA;
+  s = dx1*dx2 + dy1*dy2;
+  r1 = sqrt(dx1*dx1+dy1*dy1);
+  r2 = sqrt(dx2*dx2+dy2*dy2);
+
+  if(r1 == 0 || r2 == 0)
+    return -1;
+
+  cosA = s/(r1*r2);
+
+  /* Avoid errors when cosA is slightly greater/lower that 1/-1
+    because of float approximations */
+  if(cosA > 1.)cosA = 1.;
+  if(cosA < -1.)cosA = -1.;
+
+  return acos(cosA);
 }
 
-static ThotBool AlmostColinearVector(float dx1, float dy1, float dx2, float dy2)
+static ThotBool AlmostOrthogonalVectors(float dx1, float dy1,
+					float dx2, float dy2)
 {
-  printf("AlmostColinearVector:%f\n", dx1*dy2 - dy1*dx2);
-  return AlmostEqual(sqrt(dx1*dy2 - dy1*dx2), 0.);
+  float epsilon;
+
+  if(IsNull(dx1, dy1) || IsNull(dx2, dy2))return TRUE;
+  
+  epsilon = fabs(UnsignedAngle(dx1, dy1, dx2, dy2) - M_PI/2);
+  //printf("  AlmostOrthogonalVectors: epsilon=%f\n", epsilon);
+  return (epsilon < EPSILON_MAX);
 }
+
+static ThotBool AlmostColinearVectors(float dx1, float dy1,
+				      float dx2, float dy2)
+{
+  float angle;
+
+  if(IsNull(dx1, dy1) || IsNull(dx2, dy2))return TRUE;
+
+  angle = UnsignedAngle(dx1, dy1, dx2, dy2);
+  //printf("    AlmostColinearVectors: angle=%f\n", angle);
+  return (angle < EPSILON_MAX || fabs(angle - M_PI) < EPSILON_MAX);
+}
+
+static ThotBool AlmostEqualAngle(float ax, float ay,
+				 float bx, float by,
+				 float cx, float cy,
+				 float dx, float dy,
+				 float ex, float ey,
+				 float fx, float fy)
+{
+  float angle1, angle2;
+
+  if(IsNull(ax - bx, ay - by) || IsNull(cx - bx, cy - by) ||
+     IsNull(dx - ex, dy - ey) || IsNull(fx - ex, fy - ey))
+    return FALSE;
+
+  angle1 = UnsignedAngle(ax - bx, ay - by, cx - bx, cy - by);
+  angle2 = UnsignedAngle(dx - ex, dy - ey, fx - ex, fy - ey);
+  
+  //printf("    AlmostEqualAngle: angle1=%f angle2=%f\n", angle1, angle2);
+
+  return (fabs(angle1 - angle2) < EPSILON_MAX);
+}
+
+static void CircularPermutationOnTriangle(int *x1, int *y1,
+					  int *x2, int *y2,
+					  int *x3, int *y3,
+					  int direction)
+{
+  int   tmpx = *x1,tmpy = *y1;
+
+  if(direction > 0)
+    {
+      *x1 = *x2; *y1 = *y2;
+      *x2 = *x3; *y2 = *y3;
+      *x3 = tmpx; *y3 = tmpy;
+    }
+  else
+    {
+      *x1 = *x3; *y1 = *y3;
+      *x3 = *x2; *y3 = *y2;
+      *x2 = tmpx; *y2 = tmpy;
+    }
+}
+
+static void CircularPermutationOnQuadrilateral(int *x1, int *y1,
+					       int *x2, int *y2,
+					       int *x3, int *y3,
+					       int *x4, int *y4)
+{
+  int   tmpx = *x1,tmpy = *y1;
+
+  *x1 = *x2; *y1 = *y2;
+  *x2 = *x3; *y2 = *y3;
+  *x3 = *x4; *y3 = *y4;
+  *x4 = tmpx; *y4 = tmpy;
+  
+}
+
+enum shapes
+  {
+    EQUILATERAL_TRIANGLE,
+    ISOSCELES_TRIANGLE,
+    RECTANGLED_TRIANGLE,
+    TRAPEZIUM,
+    PARALLELOGRAM,
+    DIAMOND,
+    RECTANGLE,
+    SQUARE    
+  };
 
 /*----------------------------------------------------------------------
   CheckGeometricProperties
@@ -3963,20 +4071,94 @@ void CheckGeometricProperties(Element leaf)
 {
   PtrElement pLeaf = (PtrElement)leaf;
   PtrTextBuffer       pBuffer;
-  int x1,y1,x2,y2,x3,y3,x4,y4,tmpx,tmpy;
+  int x1,y1,x2,y2,x3,y3,x4,y4;
   int nbPoints;
+  int shape = -1;
 
-  if(pLeaf->ElLeafType == LtPolyLine)
+  if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
     {
+      printf("<<<\n");
+
       pBuffer = pLeaf->ElPolyLineBuffer;
       nbPoints = pLeaf->ElNPoints - 1;
 
-      printf(">>> NbPoints = %d\n", nbPoints);
-
       if(nbPoints == 3)
 	{
-	  /* A triangle */
-	  printf("A triangle \n");
+	  /* A triangle
+	   *                2
+	   *             .  /
+	   *         .     /
+	   *      .       /  
+	   *     1_______3
+	   */
+
+	  x1 = pBuffer->BuPoints[1].XCoord;
+	  y1 = pBuffer->BuPoints[1].YCoord;
+	  x2 = pBuffer->BuPoints[2].XCoord;
+	  y2 = pBuffer->BuPoints[2].YCoord;
+	  x3 = pBuffer->BuPoints[3].XCoord;
+	  y3 = pBuffer->BuPoints[3].YCoord;
+
+	  printf("A triangle (%d,%d, %d,%d %d,%d)\n",
+		 x1,y1,x2,y2,x3,y3);
+
+	  /* Is 2 a right angle? */
+	  if(AlmostOrthogonalVectors(x3 - x2, y3 - y2,
+				     x1 - x2, y1 - y2))
+	    CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, -1);
+ 	  /* Is 3 a right angle? */
+	  else if(AlmostOrthogonalVectors(x2 - x3, y2 - y3,
+					  x1 - x3, y1 - y3))
+	    CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, +1);
+
+
+	  /* Is 1 a right angle? */
+	  if(AlmostOrthogonalVectors(x2 - x1, y2 - y1,
+				     x3 - x1, y3 - y1))
+	    {
+	      /* A right triangle
+	       *
+	       *   1---------2
+	       *   |         .
+	       *   |   ...
+	       *   3. 
+	       */
+	      shape = RECTANGLED_TRIANGLE;
+	    }
+	  else
+	    {
+	      /* Is Angle(3,1,2) == Angle(1,2,3)? */
+	      if(AlmostEqualAngle(x3, y3, x1, y1, x2, y2,
+				  x1, y1, x2, y2, x3, y3))
+		CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, -1);
+	      /* Is Angle(3,1,2) == Angle(2,3,1)? */
+	      else if(AlmostEqualAngle(x3, y3, x1, y1, x2, y2,
+				       x2, y2, x3, y3, x1, y1))
+		CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, +1);
+	      
+	      /* Is Angle(1,2,3) == Angle(2,3,1)? */
+	      if(AlmostEqualAngle(x1, y1, x2, y2, x3, y3,
+				  x2, y2, x3, y3, x1, y1))
+		{
+		  /* An isosceles triangle
+		   *
+		   *      1
+		   *      /\
+		   *     /  \
+		   *    /    \
+		   *   /      \
+		   *  3________2
+		   *
+		   */
+		  shape = ISOSCELES_TRIANGLE;
+
+		  /* Is Angle(3,1,2) == Angle(1,2,3) */
+		  if(AlmostEqualAngle(x3, y3, x1, y1, x2, y2,
+				      x1, y1, x2, y2, x3, y3))
+		    /* An equilateral triangle */
+		    shape = EQUILATERAL_TRIANGLE;
+		}	  
+	    }
 	}
       else if(nbPoints == 4)
 	{
@@ -4002,19 +4184,13 @@ void CheckGeometricProperties(Element leaf)
 	  printf("A quadrilateral (%d,%d, %d,%d %d,%d %d,%d)\n",
 		 x1,y1,x2,y2,x3,y3,x4,y4);
 
-	  if(AlmostColinearVector(x3 - x2, y3 - y2,
-				  x4 - x1, y4 - y1))
-	    {
-	      /* Edges (2-3) and (1-4) are parallel, apply a circular
-		 permutation of the points */
-	      tmpx = x1; tmpy = y1;
-	      x1 = x2; y1 = y2;
-	      x2 = x3; y2 = y3;
-	      x3 = x4; y3 = y4;
-	      x4 = tmpx; y4 = tmpy;
-	    }
+	  /* Are edges (2-3) and (1-4) parallel?*/
+	  if(AlmostColinearVectors(x3 - x2, y3 - y2,
+				   x4 - x1, y4 - y1))
+	    CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
+					       &x3, &y3, &x4, &y4);
 
-	  if(AlmostColinearVector(x2 - x1, y2 - y1,
+	  if(AlmostColinearVectors(x2 - x1, y2 - y1,
 				  x3 - x4, y3 - y4))
 	    {
 	      /* A trapezium
@@ -4024,27 +4200,82 @@ void CheckGeometricProperties(Element leaf)
 	       * /              \
 	       * 4---------------3
 	       */
-	      printf("A trapezium \n");	      
+	      shape = TRAPEZIUM;
 
-
-	      if(AlmostEqualVector(x2 - x1, y2 - y1,
-				   x3 - x4, y3 - y4))
+	      /* Is Angle(1,2,3) == Angle(3,4,1)? */
+	      if(AlmostEqualAngle(x1, y1, x2, y2, x3, y3,
+				  x3, y3, x4, y4, x1, y1))
 		{
 		  /* A parallelogram
 		   *
 		   *     1----------2 
-		   *      \          \
-		   *       \          \
+		   *      \___    \__\
+		   *       \  \       \
 		   *        4----------3
 		   */
-		  printf("A parallelogram \n");
 
+		  shape = PARALLELOGRAM;
+
+		  /* Is Angle(2,4,1) == Angle(1,2,4)? */
+		  if(AlmostEqualAngle(x2, y2, x4, y4, x1, y1,
+				      x1, y1, x2, y2, x4, y4))
+		    {
+		      /* A diamond
+		       *
+		       *           1
+		       *          /\  
+		       *         /  \
+		       *        /\  /\
+		       *       / |  | \
+		       *      /__|__|__\
+		       *     4\        /2
+		       *       \      /
+		       *        \    /
+		       *         \  /
+		       *          \/
+		       *          3
+		       */
+		      shape = DIAMOND;
+		    }
+
+		  if(AlmostOrthogonalVectors(x2 - x1, y2 - y1,
+					     x3 - x2, y3 - y2))
+		    {		      /* A diamond
+		       *
+		       *    1-------2
+		       *    |       |
+		       *    |       |
+		       *    4-------3
+		       */
+		      if(shape == DIAMOND)
+			shape = SQUARE;
+		      else
+			shape = RECTANGLE;
+		    }
 		}
 	    }
 
 
 	}
 
-      printf(">>>\n");
+      switch(shape)
+	{
+	case EQUILATERAL_TRIANGLE:
+	  printf("equilateral triangle\n"); 
+	  break;
+	case ISOSCELES_TRIANGLE:
+	  printf("isosceles triangle\n"); 
+	  break;
+	case RECTANGLED_TRIANGLE:
+	  printf("rectangled triangle\n"); 
+	  break;
+	case TRAPEZIUM: printf("trapezium\n"); break;
+	case PARALLELOGRAM: printf("parallelogram\n"); break;
+	case DIAMOND: printf("diamond\n"); break;
+	case RECTANGLE: printf("rectangle\n"); break;
+	case SQUARE: printf("square\n"); break;
+	}
+
+      printf(">>>\n\n");
     }
 }
