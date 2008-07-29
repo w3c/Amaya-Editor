@@ -3997,7 +3997,8 @@ static ThotBool AlmostOrthogonalVectors(float dx1, float dy1,
 }
 
 static ThotBool AlmostColinearVectors(float dx1, float dy1,
-				      float dx2, float dy2)
+				      float dx2, float dy2,
+				      ThotBool same)
 {
   float angle;
 
@@ -4005,7 +4006,8 @@ static ThotBool AlmostColinearVectors(float dx1, float dy1,
 
   angle = UnsignedAngle(dx1, dy1, dx2, dy2);
   //printf("    AlmostColinearVectors: angle=%f\n", angle);
-  return (angle < EPSILON_MAX || fabs(angle - M_PI) < EPSILON_MAX);
+  return (angle < EPSILON_MAX ||
+	  (!same && fabs(angle - M_PI) < EPSILON_MAX));
 }
 
 static ThotBool AlmostEqualAngle(float ax, float ay,
@@ -4064,6 +4066,53 @@ static void CircularPermutationOnQuadrilateral(int *x1, int *y1,
   
 }
 
+static ThotBool IsAcuteAngle(float x1, float y1, float x2, float y2,
+			     float x3, float y3)
+{
+  return (UnsignedAngle(x1 - x2, y1 - y2, x3 - x2, y3 - y2) <= M_PI/2);
+}
+
+static void GiveIntersectionPoint(float x1, float y1, float dx1, float dy1,
+				  float x2, float y2, float dx2, float dy2,
+				  float *x0, float *y0)
+{
+  /*                   2
+   *                    \
+   *                     \    (dx1,dy1)         (x1)    (dx1)   (x0)
+   *               1------0------>              (y1) + t(dy1) = (y0)
+   *                       \
+   *                        \ (dx2,dy2)         (x2)    (dx2)   (x0)
+   *                         v                  (y2) + u(dy2) = (y0)
+   *
+   */
+  float t;
+  float a, b, c, d, e, f, det;
+  
+  a = -dx1;
+  b = dx2;
+  c = -dy1;
+  d = dy2;
+  e = x1 - x2;
+  f = y1 - y2;
+  det = a*d - b*c;
+  /*
+   *   (a  b)(t)   (e)
+   *   (c  d)(u) = (f)
+   *
+   */
+
+  if(det == 0)
+    {
+      *x0 = 0;
+      *y0 = 0;
+      return;
+    }
+
+  t = (d*e - b*f)/det;
+  *x0 = x1 + t*dx1;
+  *y0 = y1 + t*dy1;
+}
+
 enum shapes
   {
     EQUILATERAL_TRIANGLE,
@@ -4088,6 +4137,7 @@ void CheckGeometricProperties(Element leaf)
   int shape = -1;
   float w, h;
   float a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
+  float x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
 
   if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
     {
@@ -4200,12 +4250,12 @@ void CheckGeometricProperties(Element leaf)
 
 	  /* Are edges (2-3) and (1-4) parallel?*/
 	  if(AlmostColinearVectors(x3 - x2, y3 - y2,
-				   x4 - x1, y4 - y1))
+				   x4 - x1, y4 - y1, TRUE))
 	    CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
 					       &x3, &y3, &x4, &y4);
 
 	  if(AlmostColinearVectors(x2 - x1, y2 - y1,
-				  x3 - x4, y3 - y4))
+				   x3 - x4, y3 - y4, TRUE))
 	    {
 	      /* A trapezium
 	       *
@@ -4267,6 +4317,14 @@ void CheckGeometricProperties(Element leaf)
 		      shape = RECTANGLE;
 		    }
 		}
+	      /* Trapezium: make (1-2) smaller than (3-4) */
+	      else if(Norm(x4 - x3, y4 - y3) < Norm(x2 - x1, y2 - y1))
+		{
+		  CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
+						     &x3, &y3, &x4, &y4);
+		  CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
+						     &x3, &y3, &x4, &y4);
+		}
 	    }
 
 
@@ -4316,9 +4374,90 @@ void CheckGeometricProperties(Element leaf)
 	  e = x1;
 	  f = y1;
 	  break;
-	case TRAPEZIUM: printf("trapezium\n"); break;
+	case TRAPEZIUM:
 	case PARALLELOGRAM:
-	  printf("parallelogram\n");
+	  if(shape == TRAPEZIUM)
+	    printf("trapezium\n");
+	  else
+	    printf("parallelogram\n");
+
+	  /*  We want to determine the bounding box:
+	   *   
+	   *   (1_)--------(2_)
+	   *   |             |
+	   *   |             |
+	   *   (4_)--------(3_)
+	   */
+
+	  if(IsAcuteAngle(x4, y4, x1, y1, x2, y2))
+	    {
+	      /*   1-------2.
+               *   @\         ..
+               *   @ \           .
+	       *   @@@4-----------3
+	       */
+	      x1_ = x1;
+	      y1_ = y1;
+
+	      GiveIntersectionPoint(x1, y1, -(y2 - y1), x2 - x1, 
+				    x4, y4, x3 - x4, y3 - y4,
+				    &x4_, &y4_);
+	    }
+	  else
+	    {
+	      /*      @@@1--------2
+               *      @ /         |
+               *      @/          |
+	       *      4-----------3
+	       */
+	      x4_ = x4;
+	      y4_ = y4;
+
+	      GiveIntersectionPoint(x1, y1, x2 - x1, y2 - y1,
+				    x4, y4, -(y3 - y4), x3 - x4,
+				    &x1_, &y1_);
+	    }
+
+	  if(IsAcuteAngle(x1, y1, x2, y2, x3, y3))
+	    {
+	      /*   1---------------2 
+               *    \             /@
+               *     \           / @
+	       *      4---------3@@@
+	       */
+	      x2_ = x2;
+	      y2_ = y2;
+
+	      GiveIntersectionPoint(x2, y2, -(y2 - y1), x2 - x1,
+				    x3, y3, x3 - x4, y3 - y4,
+				    &x3_, &y3_);
+	    }
+	  else
+	    {
+	      /*         1--------2@@@
+               *        /          \ @
+               *       /            \@
+	       *      4--------------3
+	       */
+	      x3_ = x3;
+	      y3_ = y3;
+
+	      GiveIntersectionPoint(x2, y2, x2 - x1, y2 - y1,
+				    x3, y3, -(y3 - y4), x3 - x4,
+				    &x2_, &y2_);
+	    }
+
+	  w = Norm(x2_ - x1_, y2_ - y1_);
+	  h = Norm(x4_ - x1_, y4_ - y1_);
+	  if(w == 0 || h == 0)
+	    return;
+
+	  a = (x2_ - x1_)/w;
+	  b = (y2_ - y1_)/w;
+	  c = (x4_ - x1_)/h;
+	  d = (y4_ - y1_)/h;
+	  e = x1_;
+	  f = y1_;
 	  break;
 
 	case DIAMOND:
