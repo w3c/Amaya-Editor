@@ -1610,7 +1610,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	  
 	  /* Check the geometric properties of the leaf */
 	  if(elType.ElTypeNum == SVG_EL_polygon)
-	    CheckGeometricProperties(leaf);
+	    CheckGeometricProperties(doc, leaf);
           break;
         }
     }

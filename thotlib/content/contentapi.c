@@ -4128,7 +4128,7 @@ enum shapes
 /*----------------------------------------------------------------------
   CheckGeometricProperties
   ----------------------------------------------------------------------*/
-void CheckGeometricProperties(Element leaf)
+void CheckGeometricProperties(Document doc, Element leaf)
 {
   PtrElement pLeaf = (PtrElement)leaf;
   PtrTextBuffer       pBuffer;
@@ -4138,6 +4138,8 @@ void CheckGeometricProperties(Element leaf)
   float w, h;
   float a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
   float x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
+
+  return;
 
   if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
     {
@@ -4359,7 +4361,12 @@ void CheckGeometricProperties(Element leaf)
 	  b = (y2 - y3)/w;
 	  c = (x3 - e)/h;
 	  d = (y3 - f)/h;
+	  if(shape == EQUILATERAL_TRIANGLE)
+	    TtaSetGraphicsShape (leaf, '\4', doc);
+	  else
+	    TtaSetGraphicsShape (leaf, '\5', doc);
 	  break;
+
 	case RECTANGLED_TRIANGLE:
 	  printf("rectangled triangle\n"); 
 	  w = Norm(x2 - x1, y2 - y1);
@@ -4373,7 +4380,10 @@ void CheckGeometricProperties(Element leaf)
 	  d = (y3 - y1)/h;
 	  e = x1;
 	  f = y1;
+
+	  TtaSetGraphicsShape (leaf, '\6', doc);
 	  break;
+
 	case TRAPEZIUM:
 	case PARALLELOGRAM:
 	  if(shape == TRAPEZIUM)
@@ -4474,6 +4484,8 @@ void CheckGeometricProperties(Element leaf)
 	  e = x1 - a*w/2;
 	  f = y1 - b*w/2;
 
+	  TtaSetGraphicsShape (leaf, 'L', doc);
+
 	  break;
 	case RECTANGLE:
 	case SQUARE:
@@ -4493,6 +4505,12 @@ void CheckGeometricProperties(Element leaf)
 	  d = (y4 - y1)/h;
 	  e = x1;
 	  f = y1;
+
+	  /*if(shape == SQUARE)
+	    TtaSetGraphicsShape (leaf, '\1', doc);
+	  else
+	  TtaSetGraphicsShape (leaf, 'C', doc);*/
+
 	  break;
 	}
 
