@@ -1610,7 +1610,74 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	  
 	  /* Check the geometric properties of the leaf */
 	  if(elType.ElTypeNum == SVG_EL_polygon)
-	    CheckGeometricProperties(doc, leaf);
+	    {
+	      int w,h;
+	      PresentationContext  ctxt;
+	      PresentationValue    pval;
+	      char *transform = NULL, *points = NULL;
+
+	      if(CheckGeometricProperties(doc, leaf, &w, &h,
+					  &transform, &points))
+		{
+		  ctxt = TtaGetSpecificStyleContext (doc);
+		  /* the specific presentation is not a CSS rule */
+		  ctxt->cssSpecificity = 2000;
+		  ctxt->destroy = FALSE;
+		  pval.typed_data.real = FALSE;
+		  pval.typed_data.unit = UNIT_PX;
+
+		  pval.typed_data.value = w;
+		  TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);
+		  pval.typed_data.value = h;
+		  TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
+
+		  attrType.AttrSSchema = SVGSSchema;
+
+		  /* Update transform attribute */
+		  attrType.AttrTypeNum = SVG_ATTR_transform;
+		  attr = TtaGetAttribute (el, attrType);
+
+		  if (transform == NULL)
+		    {
+		      if (attr)
+			TtaRemoveAttribute (el, attr, doc);
+		    }
+		  else
+		    {
+		      if(attr == NULL)
+			{
+			  attr = TtaNewAttribute (attrType);
+			  TtaAttachAttribute (el, attr, doc);
+			}
+		      
+		      TtaSetAttributeText (attr, transform, el, doc);
+		      TtaFreeMemory(transform);
+		    }
+
+
+		  /* Update points attribute */
+		  attrType.AttrTypeNum = SVG_ATTR_points;
+		  attr = TtaGetAttribute (el, attrType);
+
+		  if (points == NULL)
+		    {
+		      if (attr)
+			TtaRemoveAttribute (el, attr, doc);
+		    }
+		  else
+		    {
+		      if(attr == NULL)
+			{
+			  attr = TtaNewAttribute (attrType);
+			  TtaAttachAttribute (el, attr, doc);
+			}
+		      
+		      TtaSetAttributeText (attr, points, el, doc);
+		      TtaFreeMemory(points);
+		    }
+ 
+		}
+	    }
           break;
         }
     }

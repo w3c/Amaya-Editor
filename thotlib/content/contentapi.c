@@ -1493,36 +1493,45 @@ char *TtaGetPathAttributeValue (Element el)
   ---------------------------------------------------------------------- */
 char *TtaGetPointsAttributeValue (Element el)
 {
+  PtrElement pEl;
   PtrTextBuffer       pBuffer;
   char *points;
   int i, length, l, add, nbPoints;
 #define SIZE_OF_ONE_POINT 20
 
-  if(!el)return NULL;
+  pEl = ((PtrElement)el);
+  if(!pEl)return NULL;
 
-  pBuffer = ((PtrElement)el)->ElPolyLineBuffer;
-
-  nbPoints = ((PtrElement) el)->ElNPoints;
-  length = nbPoints * SIZE_OF_ONE_POINT;
-  points = (char *)TtaGetMemory (length);
-  points[0] = EOS;
-  i = 1;
-  l = 0;
-
-  while(pBuffer && l + SIZE_OF_ONE_POINT <= length)
+  if(pEl->ElLeafType == LtPolyLine)
     {
-      sprintf (&points[l], "%d,%d ",
-	       pBuffer->BuPoints[i].XCoord,
-	       pBuffer->BuPoints[i].YCoord);
-      add = strlen (&points[l]);
-      l += add;
+      pBuffer = pEl->ElPolyLineBuffer;
+
+      nbPoints = pEl->ElNPoints;
+      length = nbPoints * SIZE_OF_ONE_POINT;
+      points = (char *)TtaGetMemory (length);
+      points[0] = EOS;
+      i = 1;
+      l = 0;
       
-      i++;
-      if (i == pBuffer->BuLength)
+      while(pBuffer && l + SIZE_OF_ONE_POINT <= length)
 	{
-	pBuffer = pBuffer->BuNext;
-	i = 0;
+	  sprintf (&points[l], "%d,%d ",
+		   pBuffer->BuPoints[i].XCoord,
+		   pBuffer->BuPoints[i].YCoord);
+	  add = strlen (&points[l]);
+	  l += add;
+	  
+	  i++;
+	  if (i == pBuffer->BuLength)
+	    {
+	      pBuffer = pBuffer->BuNext;
+	      i = 0;
+	    }
 	}
+    }
+  else
+    {
+      return NULL;
     }
 
   return points;
@@ -3938,19 +3947,25 @@ int TtaGetPageView (Element pageElement)
   of mathematical properties.
   ----------------------------------------------------------------------*/
 
-/* Error on angle are less than 1° */
+/* Error on angles are less than 1° */
 #define EPSILON_MAX M_PI/180
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static ThotBool IsNull(float dx1, float dy1)
 {
   return (dx1 == 0 && dy1 == 0);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static float Norm(float dx1, float dy1)
 {
   return sqrt(dx1*dx1+dy1*dy1);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static float sgn(float x)
 {
   if(x<0)
@@ -3958,6 +3973,8 @@ static float sgn(float x)
   else return +1.;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static float UnsignedAngle(float dx1, float dy1,
 			   float dx2, float dy2)
 {
@@ -3984,6 +4001,8 @@ static float UnsignedAngle(float dx1, float dy1,
   return acos(cosA);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static ThotBool AlmostOrthogonalVectors(float dx1, float dy1,
 					float dx2, float dy2)
 {
@@ -3996,6 +4015,10 @@ static ThotBool AlmostOrthogonalVectors(float dx1, float dy1,
   return (epsilon < EPSILON_MAX);
 }
 
+/*----------------------------------------------------------------------
+  AlmostColinearVectors
+  same = vectors are indentically oriented
+  ----------------------------------------------------------------------*/
 static ThotBool AlmostColinearVectors(float dx1, float dy1,
 				      float dx2, float dy2,
 				      ThotBool same)
@@ -4010,6 +4033,8 @@ static ThotBool AlmostColinearVectors(float dx1, float dy1,
 	  (!same && fabs(angle - M_PI) < EPSILON_MAX));
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static ThotBool AlmostEqualAngle(float ax, float ay,
 				 float bx, float by,
 				 float cx, float cy,
@@ -4031,6 +4056,8 @@ static ThotBool AlmostEqualAngle(float ax, float ay,
   return (fabs(angle1 - angle2) < EPSILON_MAX);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void CircularPermutationOnTriangle(int *x1, int *y1,
 					  int *x2, int *y2,
 					  int *x3, int *y3,
@@ -4052,6 +4079,8 @@ static void CircularPermutationOnTriangle(int *x1, int *y1,
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void CircularPermutationOnQuadrilateral(int *x1, int *y1,
 					       int *x2, int *y2,
 					       int *x3, int *y3,
@@ -4066,12 +4095,16 @@ static void CircularPermutationOnQuadrilateral(int *x1, int *y1,
   
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static ThotBool IsAcuteAngle(float x1, float y1, float x2, float y2,
 			     float x3, float y3)
 {
   return (UnsignedAngle(x1 - x2, y1 - y2, x3 - x2, y3 - y2) <= M_PI/2);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void GiveIntersectionPoint(float x1, float y1, float dx1, float dy1,
 				  float x2, float y2, float dx2, float dy2,
 				  float *x0, float *y0)
@@ -4128,7 +4161,10 @@ enum shapes
 /*----------------------------------------------------------------------
   CheckGeometricProperties
   ----------------------------------------------------------------------*/
-void CheckGeometricProperties(Document doc, Element leaf)
+ThotBool CheckGeometricProperties(Document doc, Element leaf,
+				  int *width, int *height,
+				  char **transform, char **points)
+			      
 {
   PtrElement pLeaf = (PtrElement)leaf;
   PtrTextBuffer       pBuffer;
@@ -4139,7 +4175,7 @@ void CheckGeometricProperties(Document doc, Element leaf)
   float a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
   float x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
 
-  return;
+  return FALSE;
 
   if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
     {
@@ -4306,7 +4342,7 @@ void CheckGeometricProperties(Document doc, Element leaf)
 
 		  if(AlmostOrthogonalVectors(x2 - x1, y2 - y1,
 					     x3 - x2, y3 - y2))
-		    {		      /* A diamond
+		    { /* A rectangle
 		       *
 		       *    1-------2
 		       *    |       |
@@ -4352,7 +4388,7 @@ void CheckGeometricProperties(Document doc, Element leaf)
 	  w = Norm(x2 - x3, y2 - y3);
 	  h = Norm(((float) x2+x3)/2 - x1, ((float) y2+y3)/2 - y1);
 	  if(w == 0 || h == 0)
-	    return;
+	    return FALSE;
 
 	  e = ((float) 2*x1 + x3 - x2)/2;
 	  f = ((float) 2*y1 + y3 - y2)/2;
@@ -4372,7 +4408,7 @@ void CheckGeometricProperties(Document doc, Element leaf)
 	  w = Norm(x2 - x1, y2 - y1);
 	  h = Norm(x3 - x1, y3 - y1);
 	  if(w == 0 || h == 0)
-	    return;
+	    return FALSE;
 
 	  a = (x2 - x1)/w;
 	  b = (y2 - y1)/w;
@@ -4460,7 +4496,7 @@ void CheckGeometricProperties(Document doc, Element leaf)
 	  w = Norm(x2_ - x1_, y2_ - y1_);
 	  h = Norm(x4_ - x1_, y4_ - y1_);
 	  if(w == 0 || h == 0)
-	    return;
+	    return FALSE;
 
 	  a = (x2_ - x1_)/w;
 	  b = (y2_ - y1_)/w;
@@ -4475,7 +4511,7 @@ void CheckGeometricProperties(Document doc, Element leaf)
 	  w = Norm(x4 - x2, y4 - y2);
 	  h = Norm(x3 - x1, y3 - y1);
 	  if(w == 0 || h == 0)
-	    return;
+	    return FALSE;
 
 	  a = (x2 - x4)/w;
 	  b = (y2 - y4)/w;
@@ -4497,7 +4533,7 @@ void CheckGeometricProperties(Document doc, Element leaf)
 	  w = Norm(x2 - x1, y2 - y1);
 	  h = Norm(x4 - x1, y4 - y1);
 	  if(w == 0 || h == 0)
-	    return;
+	    return FALSE;
 
 	  a = (x2 - x1)/w;
 	  b = (y2 - y1)/w;
@@ -4514,8 +4550,24 @@ void CheckGeometricProperties(Document doc, Element leaf)
 	  break;
 	}
 
-      printf("Bounding box:\n  <rect width=\"%f\" height=\"%f\" transform=\"matrix(%f %f %f %f %f %f)\" />\n", w, h, a, b, c, d, e, f);
+      TtaAppendTransform (TtaGetParent(leaf),
+			  TtaNewTransformMatrix(a, b, c, d, e, f),
+			  doc);
+
+      *width = (int)(w);
+      *height = (int)(h);
+      *transform = TtaGetTransformAttributeValue(doc, TtaGetParent(leaf));
+      //points = TtaGetPointsAttributeValue (leaf);
+      *points = (char *)TtaGetMemory(100);
+      sprintf(*points, "0,0 %g,0, %g,%g 0,%g", w, w, h, h);
+
+
+      printf("Bounding box:\n  <rect width=\"%f\" height=\"%f\" transform=\"%s\" />\n", w, h, *transform);
 
       printf(">>>\n\n");
+
+      return TRUE;
     }
+
+  return FALSE;
 }

@@ -742,7 +742,9 @@ extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor);
 extern void *TtaInverseTransform (void *transform);
 extern char *TtaGetTransformAttributeValue(Document document, Element el);
 
-extern void CheckGeometricProperties(Document doc, Element leaf);
+extern ThotBool CheckGeometricProperties(Document doc, Element leaf,
+					 int *width, int *height,
+					 char **transform, char **points);
 
 #endif /* __CEXTRACT__ */
 
