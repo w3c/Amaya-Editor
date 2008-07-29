@@ -3946,6 +3946,18 @@ static ThotBool IsNull(float dx1, float dy1)
   return (dx1 == 0 && dy1 == 0);
 }
 
+static float Norm(float dx1, float dy1)
+{
+  return sqrt(dx1*dx1+dy1*dy1);
+}
+
+static float sgn(float x)
+{
+  if(x<0)
+    return -1.;
+  else return +1.;
+}
+
 static float UnsignedAngle(float dx1, float dy1,
 			   float dx2, float dy2)
 {
@@ -3956,8 +3968,8 @@ static float UnsignedAngle(float dx1, float dy1,
 
   float s, r1, r2, cosA;
   s = dx1*dx2 + dy1*dy2;
-  r1 = sqrt(dx1*dx1+dy1*dy1);
-  r2 = sqrt(dx2*dx2+dy2*dy2);
+  r1 = Norm(dx1, dy1);
+  r2 = Norm(dx2, dy2);
 
   if(r1 == 0 || r2 == 0)
     return -1;
@@ -4074,6 +4086,8 @@ void CheckGeometricProperties(Element leaf)
   int x1,y1,x2,y2,x3,y3,x4,y4;
   int nbPoints;
   int shape = -1;
+  float w, h;
+  float a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
 
   if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
     {
@@ -4250,31 +4264,100 @@ void CheckGeometricProperties(Element leaf)
 		      if(shape == DIAMOND)
 			shape = SQUARE;
 		      else
-			shape = RECTANGLE;
+		      shape = RECTANGLE;
 		    }
 		}
 	    }
 
 
 	}
+      
+      /* Now we want to find a transform matrix from the local box to
+	 the current system of coordinates:
 
+	 (a  c  e)
+	 (b  d  f)
+	 (0  0  1)
+	     
+       */
       switch(shape)
 	{
 	case EQUILATERAL_TRIANGLE:
-	  printf("equilateral triangle\n"); 
-	  break;
 	case ISOSCELES_TRIANGLE:
-	  printf("isosceles triangle\n"); 
+	  if(shape == EQUILATERAL_TRIANGLE)
+	    printf("equilateral triangle\n"); 
+	  else
+	    printf("isosceles triangle\n"); 
+
+	  w = Norm(x2 - x3, y2 - y3);
+	  h = Norm(((float) x2+x3)/2 - x1, ((float) y2+y3)/2 - y1);
+	  if(w == 0 || h == 0)
+	    return;
+
+	  e = ((float) 2*x1 + x3 - x2)/2;
+	  f = ((float) 2*y1 + y3 - y2)/2;
+
+	  a = (x2 - x3)/w;
+	  b = (y2 - y3)/w;
+	  c = (x3 - e)/h;
+	  d = (y3 - f)/h;
 	  break;
 	case RECTANGLED_TRIANGLE:
 	  printf("rectangled triangle\n"); 
+	  w = Norm(x2 - x1, y2 - y1);
+	  h = Norm(x3 - x1, y3 - y1);
+	  if(w == 0 || h == 0)
+	    return;
+
+	  a = (x2 - x1)/w;
+	  b = (y2 - y1)/w;
+	  c = (x3 - x1)/h;
+	  d = (y3 - y1)/h;
+	  e = x1;
+	  f = y1;
 	  break;
 	case TRAPEZIUM: printf("trapezium\n"); break;
-	case PARALLELOGRAM: printf("parallelogram\n"); break;
-	case DIAMOND: printf("diamond\n"); break;
-	case RECTANGLE: printf("rectangle\n"); break;
-	case SQUARE: printf("square\n"); break;
+	case PARALLELOGRAM:
+	  printf("parallelogram\n");
+	  break;
+
+	case DIAMOND:
+	  printf("diamond\n");
+	  w = Norm(x4 - x2, y4 - y2);
+	  h = Norm(x3 - x1, y3 - y1);
+	  if(w == 0 || h == 0)
+	    return;
+
+	  a = (x2 - x4)/w;
+	  b = (y2 - y4)/w;
+	  c = (x3 - x1)/h;
+	  d = (y3 - y1)/h;
+	  e = x1 - a*w/2;
+	  f = y1 - b*w/2;
+
+	  break;
+	case RECTANGLE:
+	case SQUARE:
+	  if(shape == SQUARE)
+	    printf("square\n");
+	  else
+	    printf("rectangle\n");
+
+	  w = Norm(x2 - x1, y2 - y1);
+	  h = Norm(x4 - x1, y4 - y1);
+	  if(w == 0 || h == 0)
+	    return;
+
+	  a = (x2 - x1)/w;
+	  b = (y2 - y1)/w;
+	  c = (x4 - x1)/h;
+	  d = (y4 - y1)/h;
+	  e = x1;
+	  f = y1;
+	  break;
 	}
+
+      printf("Bounding box:\n  <rect width=\"%f\" height=\"%f\" transform=\"matrix(%f %f %f %f %f %f)\" />\n", w, h, a, b, c, d, e, f);
 
       printf(">>>\n\n");
     }
