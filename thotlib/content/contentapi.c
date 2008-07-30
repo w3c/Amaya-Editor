@@ -1048,6 +1048,7 @@ void TtaSetGraphicsShape (Element element, char shape, Document document)
   int                 delta;
   ThotBool            polyline;
   PtrElement          pElAsc, pEl;
+  PtrPathSeg pPa, pPaNext;
 
   UserErrorCode = 0;
   if (element == NULL)
@@ -1056,7 +1057,8 @@ void TtaSetGraphicsShape (Element element, char shape, Document document)
     TtaError (ERR_invalid_element_type);
   else if (((PtrElement) element)->ElLeafType != LtSymbol &&
            ((PtrElement) element)->ElLeafType != LtGraphics &&
-           ((PtrElement) element)->ElLeafType != LtPolyLine)
+           ((PtrElement) element)->ElLeafType != LtPolyLine &&
+	   ((PtrElement) element)->ElLeafType != LtPath)
     TtaError (ERR_invalid_element_type);
   else
     {
@@ -1070,7 +1072,29 @@ void TtaSetGraphicsShape (Element element, char shape, Document document)
         {
           delta = 0;
           pEl = (PtrElement) element;
-          if (pEl->ElLeafType == LtSymbol)
+	  if(pEl->ElLeafType == LtPath)
+	    {
+	      if(shape == EOS)
+		return;
+
+	      /* changing path --> simple graphic */
+	      delta = -pEl->ElVolume;
+	      if (shape != EOS)
+		  delta++;
+
+	      pPa = pEl->ElFirstPathSeg;
+	      pEl->ElFirstPathSeg = NULL;
+	      do
+		{
+		  pPaNext = pPa->PaNext;
+		  FreePathSeg (pPa);
+		  pPa = pPaNext;
+		}
+	      while (pPa);
+
+	      pEl->ElLeafType = LtGraphics;
+	    }
+          else if (pEl->ElLeafType == LtSymbol)
             {
               if (pEl->ElGraph == EOS && shape != EOS)
                 delta = 1;
@@ -1420,70 +1444,127 @@ void TtaRemovePathData (Document document, Element element)
   TtaGetPathAttributeValue returns the path attribute value corresponding to
   the current set of path segments
   ---------------------------------------------------------------------- */
-char *TtaGetPathAttributeValue (Element el)
+char *TtaGetPathAttributeValue (Element el, int width, int height)
 {
+  PtrElement pEl;
   PtrPathSeg          b;
   int                 length, l, add;
   char               *path;
   int nbPoints;
-
 #define SIZE_OF_ONE_SEGMENT 50
 
-  if(!el)return NULL;
+  double w = width, h = height;
 
-  nbPoints = ((PtrElement) el)->ElVolume;
-  length = nbPoints * SIZE_OF_ONE_SEGMENT;
-  path = (char *)TtaGetMemory (length);
-  path[0] = EOS;
-  b = ((PtrElement) el)->ElFirstPathSeg;
-  l = 0;
-  while (b && l + SIZE_OF_ONE_SEGMENT <= length)
+  pEl = ((PtrElement)el);
+
+  if(pEl)
     {
-      if (!b->PaPrevious || b->PaNewSubpath)
-        {
-          // new position
-          sprintf (&path[l], "M %d,%d ",
-                   b->XStart, b->YStart);
-          add = strlen (&path[l]);
-          l += add;          
-        }
-      switch (b->PaShape)
-        {
-        case PtLine:
-          sprintf (&path[l], "L %d,%d",
-                   b->XEnd, b->YEnd);
-          break;
-        case PtCubicBezier:
-          sprintf (&path[l], "C %d,%d %d,%d %d,%d",
-                   b->XCtrlStart, b->YCtrlStart,
-                   b->XCtrlEnd, b->YCtrlEnd,
-		   b->XEnd, b->YEnd);
-          break;
-        case PtQuadraticBezier:
-          sprintf (&path[l], "Q %d,%d %d,%d",
-                   b->XCtrlStart, b->YCtrlStart,
-		   b->XEnd, b->YEnd);
-          break;
-        case PtEllipticalArc:
-          sprintf (&path[l], "A %d %d %d %d %d %d,%d",
-		   b->XRadius,
-		   b->YRadius,
-		   b->XAxisRotation,
-		   b->LargeArc ? 1 : 0,
-		   b->Sweep ? 1 : 0,
-		   b->XEnd, b->YEnd);
-          break;
-        }
-      if (b)
-        {
-          strcat (&path[l], " ");
-          add = strlen (&path[l]);
-          l += add;
-        }
-      /* next path element */
-      b = b->PaNext;
-    }
+      if(pEl->ElLeafType == LtPath)
+	{
+	  nbPoints = pEl->ElVolume;
+	  length = nbPoints * SIZE_OF_ONE_SEGMENT;
+	  path = (char *)TtaGetMemory (length);
+	  path[0] = EOS;
+	  b = pEl->ElFirstPathSeg;
+	  l = 0;
+	  while (b && l + SIZE_OF_ONE_SEGMENT <= length)
+	    {
+	      if (!b->PaPrevious || b->PaNewSubpath)
+		{
+		  // new position
+		  sprintf (&path[l], "M %d,%d ",
+			   b->XStart, b->YStart);
+		  add = strlen (&path[l]);
+		  l += add;          
+		}
+	      switch (b->PaShape)
+		{
+		case PtLine:
+		  sprintf (&path[l], "L %d,%d",
+			   b->XEnd, b->YEnd);
+		  break;
+		case PtCubicBezier:
+		  sprintf (&path[l], "C %d,%d %d,%d %d,%d",
+			   b->XCtrlStart, b->YCtrlStart,
+			   b->XCtrlEnd, b->YCtrlEnd,
+			   b->XEnd, b->YEnd);
+		  break;
+		case PtQuadraticBezier:
+		  sprintf (&path[l], "Q %d,%d %d,%d",
+			   b->XCtrlStart, b->YCtrlStart,
+			   b->XEnd, b->YEnd);
+		  break;
+		case PtEllipticalArc:
+		  sprintf (&path[l], "A %d %d %d %d %d %d,%d",
+			   b->XRadius,
+			   b->YRadius,
+			   b->XAxisRotation,
+			   b->LargeArc ? 1 : 0,
+			   b->Sweep ? 1 : 0,
+			   b->XEnd, b->YEnd);
+		  break;
+		}
+	      if (b)
+		{
+		  strcat (&path[l], " ");
+		  add = strlen (&path[l]);
+		  l += add;
+		}
+	      /* next path element */
+	      b = b->PaNext;
+	    }
+	}
+      else if(pEl->ElLeafType == LtGraphics)
+	{
+	  /* It's a special graphics */
 
+	  path = (char *)TtaGetMemory (4*SIZE_OF_ONE_SEGMENT);
+
+	  switch(pEl->ElGraph)
+	    {
+  	    case 'L': /* diamond */
+	      sprintf(path, "M %g,%g L %g,%g %g,%g %g,%g z",
+		      w/2, 0.,
+		      w, h/2,
+		      w/2, h,
+		      0., h/2);
+	      break;
+
+	    case 2: /* Parallelogram */
+	      break;
+
+	    case 3: /* Trapezium */
+	      break;
+
+	    case 4: /* Equilateral triangle */
+	    case 5: /* Isosceles triangle */
+	      sprintf(path, "M %g,%g L %g,%g %g,%g z",
+		      0.,h,
+		      w,h,
+		      w/2,0.);
+	      break;
+
+	    case 6: /* Rectangled triangle */
+	      sprintf(path, "M %g,%g L %g,%g %g,%g z",
+		      0.,0.,
+		      0.,h,
+		      w,0.);
+	      break;
+
+  	    case 7: /* square */
+  	    case 8: /* rectangle */
+	      sprintf(path, "M %g,%g L %g,%g %g,%g %g,%g z",
+		      0., 0.,
+		      w, 0.,
+		      w, h,
+		      0., h);
+	      break;
+	      
+	    default:
+	      break;
+	    }
+	}
+    }
   return path;
 }
 
@@ -4243,14 +4324,39 @@ enum shapes
     SQUARE    
   };
 
+
+ThotBool PathIsPolygon(PtrPathSeg pPa, int nbPoints)
+{
+  int nb = 0;
+  int x0, y0;
+  
+  if(pPa == NULL || pPa->PaShape != PtLine)return FALSE;
+  x0 = pPa->XStart;
+  y0 = pPa->YStart;
+  nb++;
+
+  while(pPa && pPa->PaShape == PtLine)
+    {
+      nb++;
+      if(nb == nbPoints + 1)
+	return (pPa->PaNext == NULL && pPa->XEnd == x0 && pPa->YEnd == y0);
+	
+      pPa=pPa->PaNext;
+      if(pPa->PaNewSubpath)
+	return FALSE;
+    }
+  return FALSE;
+}
+
+
 /*----------------------------------------------------------------------
   CheckGeometricProperties
   ----------------------------------------------------------------------*/
 ThotBool CheckGeometricProperties(Document doc, Element leaf,
-				  int *width, int *height,
-				  char **transform, char **points)
+				  int *width, int *height)
 			      
 {
+  PtrPathSeg pPa;
   PtrElement pLeaf = (PtrElement)leaf;
   PtrTextBuffer       pBuffer;
   int x1,y1,x2,y2,x3,y3,x4,y4;
@@ -4259,15 +4365,60 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
   float w, h;
   float a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
   float x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
+  ThotBool doAnalyse = FALSE;
 
   //return FALSE;
 
   if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
     {
-      printf("<<<\n");
-
       pBuffer = pLeaf->ElPolyLineBuffer;
       nbPoints = pLeaf->ElNPoints - 1;
+
+      if(nbPoints == 3 || nbPoints == 4)
+	{
+	  doAnalyse = TRUE;
+	  x1 = pBuffer->BuPoints[1].XCoord;
+	  y1 = pBuffer->BuPoints[1].YCoord;
+	  x2 = pBuffer->BuPoints[2].XCoord;
+	  y2 = pBuffer->BuPoints[2].YCoord;
+	  x3 = pBuffer->BuPoints[3].XCoord;
+	  y3 = pBuffer->BuPoints[3].YCoord;
+	  if(nbPoints == 4)
+	    {
+	      x4 = pBuffer->BuPoints[4].XCoord;
+	      y4 = pBuffer->BuPoints[4].YCoord;
+	    }
+	} 
+    }
+  else if(pLeaf->ElLeafType == LtPath)
+    {
+      nbPoints = pLeaf->ElVolume;
+      if(nbPoints == 3 || nbPoints == 4)
+	{
+	  pPa = pLeaf->ElFirstPathSeg;
+	  if(PathIsPolygon(pPa, nbPoints))
+	    {
+	      doAnalyse = TRUE;
+	      x1 = pPa->XStart;
+	      y1 = pPa->YStart;
+	      x2 = pPa->XEnd;
+	      y2 = pPa->YEnd;
+	      pPa = pPa->PaNext;
+	      x3 = pPa->XEnd;
+	      y3 = pPa->YEnd;
+	      if(nbPoints == 4)
+		{
+		  pPa = pPa->PaNext;
+		  x4 = pPa->XEnd;
+		  y4 = pPa->YEnd;
+		}
+	    }
+	}
+    }
+
+  if(doAnalyse)
+    {
+      printf("<<<\n");
 
       if(nbPoints == 3)
 	{
@@ -4279,12 +4430,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	   *     1_______3
 	   */
 
-	  x1 = pBuffer->BuPoints[1].XCoord;
-	  y1 = pBuffer->BuPoints[1].YCoord;
-	  x2 = pBuffer->BuPoints[2].XCoord;
-	  y2 = pBuffer->BuPoints[2].YCoord;
-	  x3 = pBuffer->BuPoints[3].XCoord;
-	  y3 = pBuffer->BuPoints[3].YCoord;
 
 	  printf("A triangle (%d,%d, %d,%d %d,%d)\n",
 		 x1,y1,x2,y2,x3,y3);
@@ -4358,15 +4503,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	   *     \           \
 	   *      2----------3
 	   */
-
-	  x1 = pBuffer->BuPoints[1].XCoord;
-	  y1 = pBuffer->BuPoints[1].YCoord;
-	  x2 = pBuffer->BuPoints[2].XCoord;
-	  y2 = pBuffer->BuPoints[2].YCoord;
-	  x3 = pBuffer->BuPoints[3].XCoord;
-	  y3 = pBuffer->BuPoints[3].YCoord;
-	  x4 = pBuffer->BuPoints[4].XCoord;
-	  y4 = pBuffer->BuPoints[4].YCoord;
 
 	  printf("A quadrilateral (%d,%d, %d,%d %d,%d %d,%d)\n",
 		 x1,y1,x2,y2,x3,y3,x4,y4);
@@ -4485,7 +4621,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  if(shape == EQUILATERAL_TRIANGLE)
 	    TtaSetGraphicsShape (leaf, 4, doc);
 	  else
-	  TtaSetGraphicsShape (leaf, 5, doc);
+	    TtaSetGraphicsShape (leaf, 5, doc);
 	  break;
 
 	case RECTANGLED_TRIANGLE:
@@ -4630,7 +4766,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  if(shape == SQUARE)
 	    TtaSetGraphicsShape (leaf, 7, doc);
 	  else
-	  TtaSetGraphicsShape (leaf, 8, doc);
+	    TtaSetGraphicsShape (leaf, 8, doc);
 
 	  break;
 	}
@@ -4643,9 +4779,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
       
 	  *width = (int)(w);
 	  *height = (int)(h);
-	  *transform = TtaGetTransformAttributeValue(doc, TtaGetParent(leaf));
-	  *points = TtaGetPointsAttributeValue (leaf, w, h);
-
 	  printf(">>>\n\n");
 
 	  return TRUE;

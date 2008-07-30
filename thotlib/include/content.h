@@ -667,7 +667,7 @@ extern void TtaRemovePathData (Document document, Element element);
   TtaGetPathAttributeValue returns the path attribut valuee corresponding to
   the current set of path segments
   ---------------------------------------------------------------------- */
-extern char *TtaGetPathAttributeValue (Element el);
+extern char *TtaGetPathAttributeValue (Element el, int width, int height);
 
 /*----------------------------------------------------------------------
   TtaGetPointsAttributeValue returns the path attribute value corresponding to
@@ -746,8 +746,7 @@ extern void *TtaInverseTransform (void *transform);
 extern char *TtaGetTransformAttributeValue(Document document, Element el);
 
 extern ThotBool CheckGeometricProperties(Document doc, Element leaf,
-					 int *width, int *height,
-					 char **transform, char **points);
+					 int *width, int *height);
 
 #endif /* __CEXTRACT__ */
 

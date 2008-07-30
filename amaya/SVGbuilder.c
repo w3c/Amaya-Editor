@@ -35,6 +35,7 @@
 #include "styleparser_f.h"
 #include "SVGbuilder_f.h"
 #include "Xml2thot_f.h"
+#include "SVGedit_f.h"
 
 /*----------------------------------------------------------------------
   SVGGetDTDName
@@ -1609,15 +1610,14 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 
 	  
 	  /* Check the geometric properties of the leaf */
-	  if(elType.ElTypeNum == SVG_EL_polygon)
+	  if(elType.ElTypeNum == SVG_EL_polygon ||
+	     elType.ElTypeNum == SVG_EL_path)
 	    {
 	      int w,h;
 	      PresentationContext  ctxt;
 	      PresentationValue    pval;
-	      char *transform = NULL, *points = NULL;
 
-	      if(CheckGeometricProperties(doc, leaf, &w, &h,
-					  &transform, &points))
+	      if(CheckGeometricProperties(doc, leaf, &w, &h))
 		{
 		  ctxt = TtaGetSpecificStyleContext (doc);
 		  /* the specific presentation is not a CSS rule */
@@ -1631,51 +1631,11 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 		  pval.typed_data.value = h;
 		  TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
 
-		  attrType.AttrSSchema = SVGSSchema;
-
 		  /* Update transform attribute */
-		  attrType.AttrTypeNum = SVG_ATTR_transform;
-		  attr = TtaGetAttribute (el, attrType);
-
-		  if (transform == NULL)
-		    {
-		      if (attr)
-			TtaRemoveAttribute (el, attr, doc);
-		    }
-		  else
-		    {
-		      if(attr == NULL)
-			{
-			  attr = TtaNewAttribute (attrType);
-			  TtaAttachAttribute (el, attr, doc);
-			}
-		      
-		      TtaSetAttributeText (attr, transform, el, doc);
-		      TtaFreeMemory(transform);
-		    }
-
+		  UpdateTransformMatrix(doc, el);
 
 		  /* Update points attribute */
-		  attrType.AttrTypeNum = SVG_ATTR_points;
-		  attr = TtaGetAttribute (el, attrType);
-
-		  if (points == NULL)
-		    {
-		      if (attr)
-			TtaRemoveAttribute (el, attr, doc);
-		    }
-		  else
-		    {
-		      if(attr == NULL)
-			{
-			  attr = TtaNewAttribute (attrType);
-			  TtaAttachAttribute (el, attr, doc);
-			}
-		      
-		      TtaSetAttributeText (attr, points, el, doc);
-		      TtaFreeMemory(points);
-		    }
- 
+		  UpdatePointsOrPathAttribute(doc, el, w, h);
 		}
 	    }
           break;
@@ -3028,15 +2988,19 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
             case 'z':
               /* close path */
               /* draw a line from (xcur, ycur) to (xinit, yinit) */
-              seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit, newSubpath);
-              if (IsDrawn)
-                TtaAppendPathSeg (leaf, seg, doc);
-              else
-                TtaAppendPathSegToAnim (anim_seg, seg, doc);
+	      if(!(xcur == xinit && ycur == yinit))
+		{
+		  seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit,
+					   newSubpath);
+		  if (IsDrawn)
+		    TtaAppendPathSeg (leaf, seg, doc);
+		  else
+		    TtaAppendPathSegToAnim (anim_seg, seg, doc);
 
-              newSubpath = FALSE;
-              xcur = xinit;
-              ycur = yinit;
+		  newSubpath = FALSE;
+		  xcur = xinit;
+		  ycur = yinit;
+		}
               break;
 
             case 'L':

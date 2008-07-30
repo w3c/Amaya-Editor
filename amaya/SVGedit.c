@@ -3466,7 +3466,7 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h)
   leaf = TtaGetFirstLeaf(el);
 
   if(isPath)
-    buffer = TtaGetPathAttributeValue(leaf);
+    buffer = TtaGetPathAttributeValue(leaf, w, h);
   else
     buffer = TtaGetPointsAttributeValue(leaf, w, h);
 
