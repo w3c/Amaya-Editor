@@ -3559,8 +3559,7 @@ void UpdateShapeElement(Document doc, Element el,
       UpdatePositionAttribute (el, doc, y, FALSE);
       break;
 
-
-    case '\1':
+    case 1:
     case 'C':
       UpdateWidthHeightAttribute (el, doc, width, TRUE);
       UpdateWidthHeightAttribute (el, doc, height, FALSE);

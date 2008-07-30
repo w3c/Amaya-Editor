@@ -457,17 +457,19 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		 el->ElParent && IsSVGComponent(el->ElParent))
 		{
 		  if(el->ElLeafType == LtGraphics &&
-		     (pAb->AbShape == '\1' || /* Square */
-		      pAb->AbShape == '\2' || /* Parallelogram */
-		      pAb->AbShape == '\3' || /* Trapezium */
-		      pAb->AbShape == '\4' || /* Equilateral triangle */
-		      pAb->AbShape == '\5' || /* Isosceles triangle */
-		      pAb->AbShape == '\6' || /* Rectangled triangle */
+		     (pAb->AbShape == 1 || /* Square */
+		      pAb->AbShape == 2 || /* Parallelogram */
+		      pAb->AbShape == 3 || /* Trapezium */
+		      pAb->AbShape == 4 || /* Equilateral triangle */
+		      pAb->AbShape == 5 || /* Isosceles triangle */
+		      pAb->AbShape == 6 || /* Rectangled triangle */
 		      pAb->AbShape == 'C' ||  /* Rectangle */
 		      pAb->AbShape == 'c' ||  /* Ellipse */
 		      pAb->AbShape == 'a' ||  /* Circle */
 		      pAb->AbShape == 'g' ||  /* Line */
-		      pAb->AbShape == 'L'     /* Diamond */      
+		      pAb->AbShape == 'L' ||  /* Diamond */      
+		      pAb->AbShape == 7   ||  /* Square */
+		      pAb->AbShape == 8   /* Rectangle */      
 		      ))
 		    {
 		      /* Click on a handle */
@@ -1277,8 +1279,10 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
       point[3][1] = 0;
       max = 3;
       break;
-    case '\1': /* square */
+    case 1: /* square */
     case 'C': /* rectangle */
+    case 7: /* Square */
+    case 8: /* Rectangle */
     case 'P':		/* rectangles with rounded corners */
       arc = (int) ((3 * DOT_PER_INCH) / 25.4 + 0.5);
       point[0][0] = 0;
@@ -1325,14 +1329,14 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
         return (FALSE);	/* out of the circle */
       break;
 
-      case '\2': /* Parallelogram */
+      case 2: /* Parallelogram */
 	break;
 
-      case '\3': /* Trapezium */
+      case 3: /* Trapezium */
 	break;
 
-      case '\4': /* Equilateral triangle */
-      case '\5': /* Isosceles triangle */
+      case 4: /* Equilateral triangle */
+      case 5: /* Isosceles triangle */
 	point[0][0] = width/2;
 	point[0][1] = 0;
 	point[1][0] = width;
@@ -1342,7 +1346,7 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
 	max = 2;
 	break;
 	
-      case '\6': /* Rectangled triangle */
+      case 6: /* Rectangled triangle */
 	point[0][0] = 0;
 	point[0][1] = 0;
 	point[1][0] = width;
@@ -1492,9 +1496,9 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 		controlPoint = 7;
 	    }
 	}
-      /* TODO: '\3' = trapezium, '\2' = parallelogram  */
+      /* TODO: 3 = trapezium, 2 = parallelogram  */
 
-      else if(pAb->AbShape == '\6') /* rectangled triangle */
+      else if(pAb->AbShape == 6) /* rectangled triangle */
 	{
 	  if(IsNear(x, y, 0, 0))
 	    controlPoint = 1;
@@ -1509,13 +1513,15 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	  else if(IsNear(x, y, 0, height/2))
 	    controlPoint = 8;
 	}
-      else if(pAb->AbShape == '\1' || /* square */
+      else if(pAb->AbShape == 1 || /* square */
 	      pAb->AbShape == 'C' || /* rectangle */
+	      pAb->AbShape == 7 || /* square */
+	      pAb->AbShape == 8 || /* rectangle */
 	      pAb->AbShape == 'a' || /* circle */
 	      pAb->AbShape == 'c' || /* ellipse */
 	      pAb->AbShape == 'L' || /* diamond */
-	      pAb->AbShape == '\4' || /* Equilateral triangle */
-	      pAb->AbShape == '\5'    /* Isosceles triangle */
+	      pAb->AbShape == 4 || /* Equilateral triangle */
+	      pAb->AbShape == 5    /* Isosceles triangle */
 	      )
 	{
 	  /* is the user clicking on a resize handle? */
@@ -1536,7 +1542,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	  else if(IsNear(x, y, 0, height/2))
 	    controlPoint = 8;
 
-	  if(pAb->AbShape == '\1' || pAb->AbShape == 'C')
+	  if(pAb->AbShape == 1 || pAb->AbShape == 'C')
 	    {
 	      /* rect: Is the user clicking on a radius handle? */
 	      rx = pBox->BxRx;
@@ -1648,28 +1654,30 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
           return (pBox);
         break;
 
-      case '\2': /* Parallelogram */
+      case 2: /* Parallelogram */
 	break;
 
-      case '\3': /* Trapezium */
+      case 3: /* Trapezium */
 	break;
 
-      case '\4': /* Equilateral triangle */
-      case '\5': /* Isosceles triangle */
+      case 4: /* Equilateral triangle */
+      case 5: /* Isosceles triangle */
         if (IsOnSegment (x, y, width / 2, 0, 0, height) ||
             IsOnSegment (x, y, width / 2, 0, width, height) ||
             IsOnSegment (x, y, 0, height, width, height))
           return (pBox);
 	break;
 	
-      case '\6': /* Rectangled triangle */
+      case 6: /* Rectangled triangle */
         if (IsOnSegment (x, y, 0, 0, width, 0) ||
             IsOnSegment (x, y, 0, 0, 0, height) ||
             IsOnSegment (x, y, 0, height, width, 0))
           return (pBox);
 	break;
 
-      case '\1': /* square */
+      case 7: /* square */
+      case 8: /* rectangle */	
+      case 1: /* square */
       case 'C': /* rectangle */
       case 'P':
         /* rectangle with rounded corners */

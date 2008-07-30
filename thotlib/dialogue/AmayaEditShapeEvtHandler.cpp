@@ -441,16 +441,18 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  ViewFrameTable[frameId - 1].FrSelectionBegin.VsIndBox = point;
 	  break;
 
-	case '\1': /* square */
+	case 1: /* square */
 	case 'C': /* rectangle */
 	case 'a': /* circle */
 	case 'c': /* ellipse */
 	case 'L': /* diamond */
-	case '\4': /* Equilateral triangle (ly = lx*R) */
-	case '\5': /* Isosceles triangle */
-	case '\6': /* Rectangle triangle */
+	case 4: /* Equilateral triangle (ly = lx*R) */
+	case 5: /* Isosceles triangle */
+	case 6: /* Rectangle triangle */
+	case 7: /* square */
+	case 8: /* rectangle */
 
-	  if(shape == '\1' || shape == 'C')
+	  if(shape == 1 || shape == 'C')
 	    {
 	      rx = box->BxRx;
 	      ry = box->BxRy;
@@ -460,16 +462,16 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	  if(1 <= point && point <= 8)
 	    {
-	    same_size = (shape == '\1' || shape == 'a');
+	    same_size = (shape == 1 || shape == 7 || shape == 'a');
 	    if(same_size)ratio = 1.;
 	    }
 	  else
 	    same_size = (box->BxRx == -1 || box->BxRy == -1);
 
-	  if(shape == '\4')
+	  if(shape == 4)
 	    ratio = RATIO_EQUILATERAL;
 
-	  if(shape == '\6' && point == 5)
+	  if(shape == 6 && point == 5)
 	    {
 	      /* The point is actually the middle of the hypot */
 	      dx*=2;
@@ -524,7 +526,7 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  if(lx < 0){lx = 0; x = x_org;}
 	  if(ly < 0){ly = 0; y = y_org;}
 	  
-	  if(shape == '\1' || shape == 'C')
+	  if(shape == 1 || shape == 'C')
 	    {
 	      if(rx < 0)rx = 0;
 	      if(ry < 0)ry = 0;

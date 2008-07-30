@@ -504,14 +504,14 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(h, frame, thick, middleX, bottomY);
 	    break;
 
-	  case '\2': /* Parallelogram */
+	  case 2: /* Parallelogram */
 	    break;
 
-	  case '\3': /* Trapezium */
+	  case 3: /* Trapezium */
 	    break;
 
-	  case '\4': /* Equilateral triangle */
-	  case '\5': /* Isosceles triangle */
+	  case 4: /* Equilateral triangle */
+	  case 5: /* Isosceles triangle */
             /* control points */
 	    DrawHandle(h, frame, thick, middleX, topY);
 	    DrawHandle(h, frame, thick, leftX, bottomY);
@@ -525,7 +525,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
 	    break;
 
-	  case '\6': /* rectangle triangle */
+	  case 6: /* rectangle triangle */
             /* control points */
 	    DrawHandle(h, frame, thick, leftX, topY);
 	    DrawHandle(h, frame, thick, leftX, bottomY);
@@ -537,12 +537,24 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, middleY, SE);
 	    break;
 
+	  case 7: /* square */
+          case 8: /* rectangle */
+	    DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, leftX, middleY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    DrawHandle(h, frame, thick, rightX, middleY);
+	    DrawHandle(h, frame, thick, leftX, topY);
+	    DrawHandle(h, frame, thick, leftX, bottomY);
+	    DrawHandle(h, frame, thick, rightX, topY);
+	    DrawHandle(h, frame, thick, rightX, bottomY);
+	    break;
+
           case 'L': /* diamond */
 	    thick+=2;
-	    DrawHandle(h, frame, thick, middleX, topY, N);
-	    DrawHandle(h, frame, thick, leftX, middleY, W);
-	    DrawHandle(h, frame, thick, middleX, bottomY, S);
-	    DrawHandle(h, frame, thick, rightX, middleY, E);
+	    DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, leftX, middleY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    DrawHandle(h, frame, thick, rightX, middleY);
 
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, bottomY, SW);
@@ -550,7 +562,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
 	    break;
 
-	  case '\1': /* square */
+	  case 1: /* square */
           case 'C': /* <rect/> */
 	    thick+=2;
 	    rx = pBox->BxRx;
@@ -558,10 +570,10 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    if(ry == -1)ry = rx;
 	    else if(rx == -1)rx = ry; 
     
-	    DrawHandle(h, frame, thick, middleX, topY, N);
-	    DrawHandle(h, frame, thick, leftX, middleY, W);
-	    DrawHandle(h, frame, thick, middleX, bottomY, S);
-	    DrawHandle(h, frame, thick, rightX, middleY, E);
+	    DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, leftX, middleY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    DrawHandle(h, frame, thick, rightX, middleY);
 
 	    if(rx == 0 || ry == 0)
 	      {
@@ -587,10 +599,10 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
           case 'a': /* <circle/> */
           case 'c': /* <ellipse/> */
 	    thick+=2;
-	    DrawHandle(h, frame, thick, middleX, topY, N);
-	    DrawHandle(h, frame, thick, leftX, middleY, W);
-	    DrawHandle(h, frame, thick, middleX, bottomY, S);
-	    DrawHandle(h, frame, thick, rightX, middleY, E);
+	    DrawHandle(h, frame, thick, middleX, topY);
+	    DrawHandle(h, frame, thick, leftX, middleY);
+	    DrawHandle(h, frame, thick, middleX, bottomY);
+	    DrawHandle(h, frame, thick, rightX, middleY);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, bottomY, SW);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, topY, NE);

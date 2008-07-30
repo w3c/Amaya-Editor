@@ -1548,25 +1548,34 @@ char *TtaGetPointsAttributeValue (Element el, int width, int height)
 		      0., h/2);
 	      break;
 
-	    case '\2': /* Parallelogram */
+	    case 2: /* Parallelogram */
 	      break;
 
-	    case '\3': /* Trapezium */
+	    case 3: /* Trapezium */
 	      break;
 
-	    case '\4': /* Equilateral triangle */
-	    case '\5': /* Isosceles triangle */
+	    case 4: /* Equilateral triangle */
+	    case 5: /* Isosceles triangle */
 	      sprintf(points, "%g,%g %g,%g %g,%g",
-		      w/2,0.,
 		      0.,h,
-		      w,h);
+		      w,h,
+		      w/2,0.);
 	      break;
 
-	    case '\6': /* Rectangled triangle */
+	    case 6: /* Rectangled triangle */
 	      sprintf(points, "%g,%g %g,%g %g,%g",
 		      0.,0.,
 		      0.,h,
 		      w,0.);
+	      break;
+
+  	    case 7: /* square */
+  	    case 8: /* rectangle */
+	      sprintf(points, "%g,%g %g,%g %g,%g %g,%g",
+		      0., 0.,
+		      w, 0.,
+		      w, h,
+		      0., h);
 	      break;
 	      
 	    default:
@@ -4087,7 +4096,7 @@ static ThotBool AlmostOrthogonalVectors(float dx1, float dy1,
   if(IsNull(dx1, dy1) || IsNull(dx2, dy2))return TRUE;
   
   epsilon = fabs(UnsignedAngle(dx1, dy1, dx2, dy2) - M_PI/2);
-  //printf("  AlmostOrthogonalVectors: epsilon=%f\n", epsilon);
+  printf("  AlmostOrthogonalVectors: epsilon=%f\n", epsilon);
   return (epsilon < EPSILON_MAX);
 }
 
@@ -4283,11 +4292,11 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  /* Is 2 a right angle? */
 	  if(AlmostOrthogonalVectors(x3 - x2, y3 - y2,
 				     x1 - x2, y1 - y2))
-	    CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, -1);
+	    CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, +1);
  	  /* Is 3 a right angle? */
 	  else if(AlmostOrthogonalVectors(x2 - x3, y2 - y3,
 					  x1 - x3, y1 - y3))
-	    CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, +1);
+	    CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, -1);
 
 
 	  /* Is 1 a right angle? */
@@ -4474,9 +4483,9 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  c = (x3 - e)/h;
 	  d = (y3 - f)/h;
 	  if(shape == EQUILATERAL_TRIANGLE)
-	    TtaSetGraphicsShape (leaf, '\4', doc);
+	    TtaSetGraphicsShape (leaf, 4, doc);
 	  else
-	  TtaSetGraphicsShape (leaf, '\5', doc);
+	  TtaSetGraphicsShape (leaf, 5, doc);
 	  break;
 
 	case RECTANGLED_TRIANGLE:
@@ -4493,7 +4502,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  e = x1;
 	  f = y1;
 
-	  TtaSetGraphicsShape (leaf, '\6', doc);
+	  TtaSetGraphicsShape (leaf, 6, doc);
 	  break;
 
 	case TRAPEZIUM:
@@ -4618,19 +4627,15 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  e = x1;
 	  f = y1;
 
-	  /*if(shape == SQUARE)
-	    TtaSetGraphicsShape (leaf, '\1', doc);
+	  if(shape == SQUARE)
+	    TtaSetGraphicsShape (leaf, 7, doc);
 	  else
-	  TtaSetGraphicsShape (leaf, 'C', doc);*/
+	  TtaSetGraphicsShape (leaf, 8, doc);
 
 	  break;
 	}
 
-      if(//shape != -1
-	 shape == DIAMOND ||
-	 shape == RECTANGLED_TRIANGLE ||
-	 shape == EQUILATERAL_TRIANGLE ||
-	 shape == ISOSCELES_TRIANGLE)
+      if(shape != -1 && !(shape == TRAPEZIUM || shape == PARALLELOGRAM))
 	{
 	  TtaAppendTransform (TtaGetParent(leaf),
 			      TtaNewTransformMatrix(a, b, c, d, e, f),

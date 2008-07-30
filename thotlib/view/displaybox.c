@@ -1047,8 +1047,10 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
             DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
           break;
 
-	case '\1': /* Square */
+	case 1: /* Square */
 	case 'C': /* Rectangle */
+	case 7: /* Square */
+	case 8: /* Rectangle */
           if (pBox->BxRx == 0 || pBox->BxRy == 0)
 #ifdef _GL
 	    DrawRectangle2(frame, i, style, xd, yd, width, height, fg, bg, pat);
@@ -1066,21 +1068,21 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
           break;
 
-	case '\2': /* Parallelogram */
+	case 2: /* Parallelogram */
 	  break;
 
-	case '\3': /* Trapezium */
+	case 3: /* Trapezium */
 	    break;
 
-	case '\4': /* Equilateral triangle */
-	case '\5': /* Isosceles triangle */
+	case 4: /* Equilateral triangle */
+	case 5: /* Isosceles triangle */
 	  DrawTriangle (frame, i, style, fg, bg, pat,
 			xd+width/2,yd,
 			xd,yd+height,
 			xd+width,yd+height);	  
 	  break;
 
-	case '\6': /* Rectangled triangle */
+	case 6: /* Rectangled triangle */
 	  DrawTriangle (frame, i, style, fg, bg, pat,
 			xd,yd,
 			xd,yd+height,
