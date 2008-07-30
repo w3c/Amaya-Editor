@@ -2604,6 +2604,49 @@ extern void TtaApplyMatrixTransform (Document document, Element element,
 }
 
 /*----------------------------------------------------------------------
+  TtaAppendMatrixTransform
+
+  Apply a transform matrix to an element and simplify its transformation
+  matrix.
+  ---------------------------------------------------------------------- */
+extern void TtaAppendMatrixTransform (Document document, Element element,
+			    float a, float b, float c, float d, float e,
+			    float f)
+{
+  PtrTransform       transform;
+
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    /* verifies the parameter document */
+    if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+    else if (LoadedDocument[document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
+    else
+      /* parameter document is correct */
+      {
+	/* Add a new transform */
+	TtaAppendTransform (element,
+			    TtaNewTransformMatrix (a, b, c, d, e, f),
+                            document);
+
+	/* Simplify the transform matrix */
+	transform = (PtrTransform)
+	  TtaSimplifyTransformMatrix(((PtrElement) element)->ElTransform);
+
+	if(transform)
+	  {
+	    TtaFreeTransform (((PtrElement) element)->ElTransform);
+	    ((PtrElement) element)->ElTransform = transform;
+	  }
+      }
+}
+
+
+
+/*----------------------------------------------------------------------
   TtaDecomposeTransform
 
   Decompose the transform as a product of simple transforms:
@@ -4186,7 +4229,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
   float a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
   float x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
 
-  return FALSE;
+  //return FALSE;
 
   if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
     {

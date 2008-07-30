@@ -65,6 +65,7 @@ class AmayaEditShapeEvtHandler : public wxEvtHandler
   PtrAbstractBox ab;
   PtrBox  box;
   char shape;
+  int x_org, y_org;
 };
 
 #endif /* __AMAYAEDITSHAPEEVTHANDLER_H__ */

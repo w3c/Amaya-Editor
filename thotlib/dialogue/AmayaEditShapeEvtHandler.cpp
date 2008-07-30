@@ -25,6 +25,7 @@
 #include "boxlocate_f.h"
 #include "geom_f.h"
 #include "font_f.h"
+#include "content.h"
 #include "content_f.h"
 #include "viewapi_f.h"
 
@@ -158,6 +159,8 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
   ,e_box(NULL)
   ,ab(NULL)
   ,box(NULL)
+  ,x_org(0)
+  ,y_org(0)
 {
   *hasBeenEdited = FALSE;
   buttonDown = false;
@@ -200,6 +203,25 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler
 
   box = ab->AbBox;
   shape = ab->AbShape;
+
+  if(!(box->BxXOrg == 0 && box->BxYOrg == 0))
+    {
+      /* Move the origin */
+      x_org = box->BxXOrg;
+      y_org = box->BxYOrg;
+
+      box->BxXOrg = 0;
+      box->BxYOrg = 0;
+      TtaAppendMatrixTransform (doc, el, 1, 0, 0, 1, x_org, y_org);
+
+#ifndef NODISPLAY
+      RedisplayLeaf ((PtrElement) leaf, doc, 0);
+#endif
+
+      DefBoxRegion (frameId, box, -1, -1, -1, -1);
+      RedrawFrameBottom (frameId, 0, NULL);
+      pFrame->GetCanvas()->Refresh();
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -342,8 +364,8 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
       lx = box->BxW;
       ly = box->BxH;
-      x = box->BxXOrg;
-      y = box->BxYOrg;
+      x = x_org;
+      y = y_org;
 
       /*                                   9 = Rx handle       */
       /*                                  /                    */
@@ -499,8 +521,8 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	      break;
 	    }
 	  
-	  if(lx < 0){lx = 0; x = box->BxXOrg;}
-	  if(ly < 0){ly = 0; y = box->BxYOrg;}
+	  if(lx < 0){lx = 0; x = x_org;}
+	  if(ly < 0){ly = 0; y = y_org;}
 	  
 	  if(shape == '\1' || shape == 'C')
 	    {
@@ -521,9 +543,11 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       
       /*NewDimension (ab, lx, ly, frameId, TRUE);
 	NewPosition (ab, x, 0, y, 0, frameId, TRUE);*/
-      
-      box->BxXOrg = x;
-      box->BxYOrg = y;
+
+      TtaAppendMatrixTransform (doc, el, 1, 0, 0, 1, x - x_org, y - y_org);
+      x_org = x;
+      y_org = y;
+
       box->BxW = lx;
       box->BxH = ly;
       box->BxWidth = lx;
@@ -534,8 +558,6 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       ab->AbHorizPosChange = TRUE;
       ab->AbVertPosChange = TRUE;*/
 
-      //e_box->BxXOrg = x;
-      //e_box->BxYOrg = y;
       e_box->BxW = lx;
       e_box->BxH = ly;
       e_box->BxWidth = lx;

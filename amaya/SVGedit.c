@@ -2252,6 +2252,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePointsAttribute (attr, newEl, doc);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 18: /* trapezium */
@@ -3540,6 +3541,9 @@ void UpdateShapeElement(Document doc, Element el,
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
 
+  /* Apply the translate */
+  UpdateTransformMatrix(doc, el);
+
   switch(shape)
     {
     case 'a': /* circle */
@@ -3573,8 +3577,6 @@ void UpdateShapeElement(Document doc, Element el,
       break;
 
     default:
-      TtaAppendTransform (el, TtaNewTransformTranslate(x, y), doc);
-      UpdateTransformMatrix(doc, el);
       UpdatePointsOrPathAttribute(doc, el, width, height);
       break;
     }
