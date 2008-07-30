@@ -1540,13 +1540,35 @@ char *TtaGetPointsAttributeValue (Element el, int width, int height)
 
 	  switch(pEl->ElGraph)
 	    {
-	    case 'L':
+  	    case 'L': /* diamond */
 	      sprintf(points, "%g,%g %g,%g %g,%g %g,%g",
 		      w/2, 0.,
 		      w, h/2,
 		      w/2, h,
 		      0., h/2);
 	      break;
+
+	    case '\2': /* Parallelogram */
+	      break;
+
+	    case '\3': /* Trapezium */
+	      break;
+
+	    case '\4': /* Equilateral triangle */
+	    case '\5': /* Isosceles triangle */
+	      sprintf(points, "%g,%g %g,%g %g,%g",
+		      w/2,0.,
+		      0.,h,
+		      w,h);
+	      break;
+
+	    case '\6': /* Rectangled triangle */
+	      sprintf(points, "%g,%g %g,%g %g,%g",
+		      0.,0.,
+		      0.,h,
+		      w,0.);
+	      break;
+	      
 	    default:
 	      break;
 	    }
@@ -4451,10 +4473,10 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  b = (y2 - y3)/w;
 	  c = (x3 - e)/h;
 	  d = (y3 - f)/h;
-	  /*	  if(shape == EQUILATERAL_TRIANGLE)
+	  if(shape == EQUILATERAL_TRIANGLE)
 	    TtaSetGraphicsShape (leaf, '\4', doc);
 	  else
-	  TtaSetGraphicsShape (leaf, '\5', doc);*/
+	  TtaSetGraphicsShape (leaf, '\5', doc);
 	  break;
 
 	case RECTANGLED_TRIANGLE:
@@ -4471,7 +4493,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  e = x1;
 	  f = y1;
 
-	  /*TtaSetGraphicsShape (leaf, '\6', doc);*/
+	  TtaSetGraphicsShape (leaf, '\6', doc);
 	  break;
 
 	case TRAPEZIUM:
@@ -4605,10 +4627,11 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	}
 
       if(//shape != -1
-	 shape == DIAMOND)
+	 shape == DIAMOND ||
+	 shape == RECTANGLED_TRIANGLE ||
+	 shape == EQUILATERAL_TRIANGLE ||
+	 shape == ISOSCELES_TRIANGLE)
 	{
-	  //printf("Bounding box:\n  <rect width=\"%f\" height=\"%f\" transform=\"matrix(%g %g %g %g %g %g)\" />\n", w, h, a, b, c, d, e, f);
-
 	  TtaAppendTransform (TtaGetParent(leaf),
 			      TtaNewTransformMatrix(a, b, c, d, e, f),
 			      doc);
@@ -4617,8 +4640,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  *height = (int)(h);
 	  *transform = TtaGetTransformAttributeValue(doc, TtaGetParent(leaf));
 	  *points = TtaGetPointsAttributeValue (leaf, w, h);
-	  
-	  /*printf("Bounding box:\n  <rect width=\"%f\" height=\"%f\" transform=\"%s\" />\n", w, h, *transform);*/
 
 	  printf(">>>\n\n");
 

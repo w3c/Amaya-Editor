@@ -2289,12 +2289,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		  TtaAttachAttribute (newEl, attr, doc);
 
 		  sprintf(buffer, "%d %d %d %d %d %d",
-			  (x1+x2)/2, (y1+y2)/2,
 			  x3,y3,
-			  x4,y4
+			  x4,y4,
+			  (x1+x2)/2, (y1+y2)/2
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePointsAttribute (attr, newEl, doc);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 21: /* isosceles triangle */
@@ -2302,12 +2303,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		  attr = TtaNewAttribute (attrType);
 		  TtaAttachAttribute (newEl, attr, doc);
 		  sprintf(buffer, "%d %d %d %d %d %d",
-			  (x1+x2)/2, (y1+y2)/2,
 			  x3, y3,
-			  x4, y4
+			  x4, y4,
+			  (x1+x2)/2, (y1+y2)/2
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePointsAttribute (attr, newEl, doc);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 22: /* rectangle triangle */
@@ -2321,6 +2323,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePointsAttribute (attr, newEl, doc);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 23: /* cube */
