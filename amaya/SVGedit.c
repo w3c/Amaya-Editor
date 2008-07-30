@@ -3549,6 +3549,13 @@ void UpdateShapeElement(Document doc, Element el,
 
   switch(shape)
     {
+    case 'g':
+      UpdateWidthHeightAttribute (el, doc, width, TRUE);
+      UpdateWidthHeightAttribute (el, doc, height, FALSE);
+      UpdatePositionAttribute (el, doc, x, TRUE);
+      UpdatePositionAttribute (el, doc, y, FALSE);
+      break;
+
     case 'a': /* circle */
     case 'c': /* ellipse */
       x+=(width/2);
