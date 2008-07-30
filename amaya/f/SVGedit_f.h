@@ -23,7 +23,9 @@ extern void TransformGraphicElement ( Document doc,
 extern void UpdateTransformMatrix ( Document doc,
                                     Element el );
 extern void UpdatePointsOrPathAttribute ( Document doc,
-                                          Element el );
+                                          Element el,
+                                          int w,
+                                          int h );
 extern void UpdateShapeElement ( Document doc,
                                  Element el,
                                  char shape,
@@ -193,7 +195,9 @@ extern void TransformGraphicElement ( Document doc,
 extern void UpdateTransformMatrix ( Document doc,
                                       Element el );
 extern void UpdatePointsOrPathAttribute ( Document doc,
-                                            Element el );
+                                            Element el,
+                                            int w,
+                                            int h );
 extern void UpdateShapeElement ( Document doc,
                                    Element el,
                                    char shape,

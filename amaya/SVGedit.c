@@ -2699,7 +2699,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 				    entry, newEl);
 
 	  if(created)
-	    UpdatePointsOrPathAttribute(doc, newEl);
+	    UpdatePointsOrPathAttribute(doc, newEl, 0, 0);
 	  else
 	    {
 	      /* Actually, the user don't create the shape */
@@ -3431,7 +3431,7 @@ void UpdateTransformMatrix(Document doc, Element el)
 /*----------------------------------------------------------------------
   UpdatePointsOrPathAttribute
   ----------------------------------------------------------------------*/
-void UpdatePointsOrPathAttribute(Document doc, Element el)
+void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h)
 {
   char         *buffer;
   Attribute     attr;
@@ -3464,7 +3464,7 @@ void UpdatePointsOrPathAttribute(Document doc, Element el)
   if(isPath)
     buffer = TtaGetPathAttributeValue(leaf);
   else
-    buffer = TtaGetPointsAttributeValue(leaf);
+    buffer = TtaGetPointsAttributeValue(leaf, w, h);
 
   /* Check if the attribute already exists */
   attrType.AttrSSchema = svgSchema;
@@ -3539,19 +3539,26 @@ void UpdateShapeElement(Document doc, Element el,
 
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
-  if(shape == 'a' || shape == 'c')
+
+  switch(shape)
     {
+    case 'a': /* circle */
+    case 'c': /* ellipse */
       x+=(width/2);
       y+=(height/2);
-    }
+      UpdateWidthHeightAttribute (el, doc, width, TRUE);
+      UpdateWidthHeightAttribute (el, doc, height, FALSE);
+      UpdatePositionAttribute (el, doc, x, TRUE);
+      UpdatePositionAttribute (el, doc, y, FALSE);
+      break;
 
-  UpdateWidthHeightAttribute (el, doc, width, TRUE);
-  UpdateWidthHeightAttribute (el, doc, height, FALSE);
-  UpdatePositionAttribute (el, doc, x, TRUE);
-  UpdatePositionAttribute (el, doc, y, FALSE);
 
-  if(shape == '\1' || shape == 'C')
-    {
+    case '\1':
+    case 'C':
+      UpdateWidthHeightAttribute (el, doc, width, TRUE);
+      UpdateWidthHeightAttribute (el, doc, height, FALSE);
+      UpdatePositionAttribute (el, doc, x, TRUE);
+      UpdatePositionAttribute (el, doc, y, FALSE);
       if(rx != -1)
 	{
 	  attrType.AttrTypeNum = SVG_ATTR_rx;
@@ -3563,6 +3570,13 @@ void UpdateShapeElement(Document doc, Element el,
 	  attrType.AttrTypeNum = SVG_ATTR_ry;
 	  UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
 	}
+      break;
+
+    default:
+      TtaAppendTransform (el, TtaNewTransformTranslate(x, y), doc);
+      UpdateTransformMatrix(doc, el);
+      UpdatePointsOrPathAttribute(doc, el, width, height);
+      break;
     }
 
   TtaCloseUndoSequence (doc);

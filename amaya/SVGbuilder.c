@@ -2102,7 +2102,7 @@ void TranslateElement (Element el, Document doc, int delta, TypeUnit unit,
 void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
                            int maxX, int maxY)
 {
-  PRule                pRule;
+  /*PRule                pRule;*/
   Element              leaf;
   Attribute            attr;
   AttributeType        attrType;
@@ -2162,7 +2162,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
   pval.typed_data.real = FALSE;
   TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
 
-  if (minX != 0)
+  /*if (minX != 0)
     {
       pRule = TtaGetPRule (el, PRHorizPos);
       if (pRule)
@@ -2192,7 +2192,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
       pval.typed_data.real = FALSE;
       pval.typed_data.mainValue = TRUE;
       TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
-    }
+      }*/
 
   TtaFreeMemory (ctxt);
 
@@ -2200,8 +2200,11 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
      translation by (minX, minY) */
   if (minX != 0)
     TranslateElement (el, doc, minX, unit, TRUE, TRUE);
+    
   if (minY != 0)
     TranslateElement (el, doc, minY, unit, FALSE, TRUE);
+
+  TtaAppendTransform (el, TtaNewTransformTranslate(minX, minY), doc);
 }
 
 /*----------------------------------------------------------------------

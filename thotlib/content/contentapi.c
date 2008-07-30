@@ -1488,50 +1488,70 @@ char *TtaGetPathAttributeValue (Element el)
 }
 
 /*----------------------------------------------------------------------
-  TtaGetPointsAttributeValue returns the path attribute value corresponding to
+  TtaGetPointsAttributeValue returns the points attribute value corresponding to
   the current set of points
   ---------------------------------------------------------------------- */
-char *TtaGetPointsAttributeValue (Element el)
+char *TtaGetPointsAttributeValue (Element el, int width, int height)
 {
   PtrElement pEl;
   PtrTextBuffer       pBuffer;
-  char *points;
+  char *points = NULL;
   int i, length, l, add, nbPoints;
 #define SIZE_OF_ONE_POINT 20
 
+  double w = width, h = height;
+
   pEl = ((PtrElement)el);
-  if(!pEl)return NULL;
-
-  if(pEl->ElLeafType == LtPolyLine)
+  if(pEl)
     {
-      pBuffer = pEl->ElPolyLineBuffer;
-
-      nbPoints = pEl->ElNPoints;
-      length = nbPoints * SIZE_OF_ONE_POINT;
-      points = (char *)TtaGetMemory (length);
-      points[0] = EOS;
-      i = 1;
-      l = 0;
-      
-      while(pBuffer && l + SIZE_OF_ONE_POINT <= length)
+      if(pEl->ElLeafType == LtPolyLine)
 	{
-	  sprintf (&points[l], "%d,%d ",
-		   pBuffer->BuPoints[i].XCoord,
-		   pBuffer->BuPoints[i].YCoord);
-	  add = strlen (&points[l]);
-	  l += add;
+	  /* It's a polyline, generate the list of coordinates */
+	  pBuffer = pEl->ElPolyLineBuffer;
 	  
-	  i++;
-	  if (i == pBuffer->BuLength)
+	  nbPoints = pEl->ElNPoints;
+	  length = nbPoints * SIZE_OF_ONE_POINT;
+	  points = (char *)TtaGetMemory (length);
+	  points[0] = EOS;
+	  i = 1;
+	  l = 0;
+	  
+	  while(pBuffer && l + SIZE_OF_ONE_POINT <= length)
 	    {
-	      pBuffer = pBuffer->BuNext;
-	      i = 0;
+	      sprintf (&points[l], "%d,%d ",
+		       pBuffer->BuPoints[i].XCoord,
+		       pBuffer->BuPoints[i].YCoord);
+	      add = strlen (&points[l]);
+	      l += add;
+	      
+	      i++;
+	      if (i == pBuffer->BuLength)
+		{
+		  pBuffer = pBuffer->BuNext;
+		  i = 0;
+		}
 	    }
 	}
-    }
-  else
-    {
-      return NULL;
+      else if(pEl->ElLeafType == LtGraphics)
+	{
+	  /* It's a special graphics */
+
+	  points = (char *)TtaGetMemory (4*SIZE_OF_ONE_POINT);
+
+	  switch(pEl->ElGraph)
+	    {
+	    case 'L':
+	      sprintf(points, "%g,%g %g,%g %g,%g %g,%g",
+		      w/2, 0.,
+		      w, h/2,
+		      w/2, h,
+		      0., h/2);
+	      break;
+	    default:
+	      break;
+	    }
+
+	}
     }
 
   return points;
@@ -3966,15 +3986,6 @@ static float Norm(float dx1, float dy1)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static float sgn(float x)
-{
-  if(x<0)
-    return -1.;
-  else return +1.;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
 static float UnsignedAngle(float dx1, float dy1,
 			   float dx2, float dy2)
 {
@@ -4397,10 +4408,10 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  b = (y2 - y3)/w;
 	  c = (x3 - e)/h;
 	  d = (y3 - f)/h;
-	  if(shape == EQUILATERAL_TRIANGLE)
+	  /*	  if(shape == EQUILATERAL_TRIANGLE)
 	    TtaSetGraphicsShape (leaf, '\4', doc);
 	  else
-	    TtaSetGraphicsShape (leaf, '\5', doc);
+	  TtaSetGraphicsShape (leaf, '\5', doc);*/
 	  break;
 
 	case RECTANGLED_TRIANGLE:
@@ -4417,7 +4428,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  e = x1;
 	  f = y1;
 
-	  TtaSetGraphicsShape (leaf, '\6', doc);
+	  /*TtaSetGraphicsShape (leaf, '\6', doc);*/
 	  break;
 
 	case TRAPEZIUM:
@@ -4550,23 +4561,26 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 	}
 
-      TtaAppendTransform (TtaGetParent(leaf),
-			  TtaNewTransformMatrix(a, b, c, d, e, f),
-			  doc);
+      if(//shape != -1
+	 shape == DIAMOND)
+	{
+	  //printf("Bounding box:\n  <rect width=\"%f\" height=\"%f\" transform=\"matrix(%g %g %g %g %g %g)\" />\n", w, h, a, b, c, d, e, f);
 
-      *width = (int)(w);
-      *height = (int)(h);
-      *transform = TtaGetTransformAttributeValue(doc, TtaGetParent(leaf));
-      //points = TtaGetPointsAttributeValue (leaf);
-      *points = (char *)TtaGetMemory(100);
-      sprintf(*points, "0,0 %g,0, %g,%g 0,%g", w, w, h, h);
+	  TtaAppendTransform (TtaGetParent(leaf),
+			      TtaNewTransformMatrix(a, b, c, d, e, f),
+			      doc);
+      
+	  *width = (int)(w);
+	  *height = (int)(h);
+	  *transform = TtaGetTransformAttributeValue(doc, TtaGetParent(leaf));
+	  *points = TtaGetPointsAttributeValue (leaf, w, h);
+	  
+	  /*printf("Bounding box:\n  <rect width=\"%f\" height=\"%f\" transform=\"%s\" />\n", w, h, *transform);*/
 
+	  printf(">>>\n\n");
 
-      printf("Bounding box:\n  <rect width=\"%f\" height=\"%f\" transform=\"%s\" />\n", w, h, *transform);
-
-      printf(">>>\n\n");
-
-      return TRUE;
+	  return TRUE;
+	}
     }
 
   return FALSE;

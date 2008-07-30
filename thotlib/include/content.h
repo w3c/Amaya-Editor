@@ -673,7 +673,7 @@ extern char *TtaGetPathAttributeValue (Element el);
   TtaGetPointsAttributeValue returns the path attribute value corresponding to
   the current set of points
   ---------------------------------------------------------------------- */
-extern char *TtaGetPointsAttributeValue (Element el);
+extern char *TtaGetPointsAttributeValue (Element el, int width, int height);
 
 /*----------------------------------------------------------------------
    TtaGetPageNumber
@@ -749,10 +749,4 @@ extern ThotBool CheckGeometricProperties(Document doc, Element leaf,
 #endif /* __CEXTRACT__ */
 
 #endif
-
-
-
-
-
-
 

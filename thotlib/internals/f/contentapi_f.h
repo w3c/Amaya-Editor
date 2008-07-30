@@ -67,7 +67,9 @@ extern void TtaChangeLimitOfPolyline ( Element element,
 extern void TtaRemovePathData ( Document document,
                                 Element element );
 extern char *TtaGetPathAttributeValue ( Element el );
-extern char *TtaGetPointsAttributeValue ( Element el );
+extern char *TtaGetPointsAttributeValue ( Element el,
+                                          int width,
+                                          int height );
 extern char *TtaTransformCurveIntoPath ( Element el );
 extern PathSegment TtaNewPathSegLine ( int xstart,
                                        int ystart,
@@ -229,7 +231,12 @@ extern void TtaGivePolylinePoint ( Element element,
                                    int *y );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
-extern void CheckGeometricProperties ( Element leaf );
+extern ThotBool CheckGeometricProperties ( Document doc,
+                                           Element leaf,
+                                           int *width,
+                                           int *height,
+                                           char **transform,
+                                           char **points );
 
 #else /* __STDC__ */
 
@@ -294,7 +301,9 @@ extern void TtaChangeLimitOfPolyline ( Element element,
 extern void TtaRemovePathData ( Document document,
                                   Element element );
 extern char *TtaGetPathAttributeValue ( Element el );
-extern char *TtaGetPointsAttributeValue ( Element el );
+extern char *TtaGetPointsAttributeValue ( Element el,
+                                            int width,
+                                            int height );
 extern char *TtaTransformCurveIntoPath ( Element el );
 extern PathSegment TtaNewPathSegLine ( int xstart,
                                          int ystart,
@@ -456,7 +465,12 @@ extern void TtaGivePolylinePoint ( Element element,
                                      int *y );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
-extern void CheckGeometricProperties ( Element leaf );
+extern ThotBool CheckGeometricProperties ( Document doc,
+                                             Element leaf,
+                                             int *width,
+                                             int *height,
+                                             char **transform,
+                                             char **points );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
