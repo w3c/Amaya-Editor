@@ -1582,6 +1582,27 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
 {
 }
 
+void DrawTriangle (int frame, int thick, int style, int fg, int bg, int pattern,
+		   int x1, int y1,
+		   int x2, int y2,
+		   int x3, int y3)
+{
+}
+
+void DrawParallelogram (int frame, int thick, int style, int x, int y,
+			int width, int height, int e, int fg, int bg,
+			int pattern)
+{
+}
+
+void DrawTrapezium (int frame, int thick, int style, int x, int y,
+		    int width, int height, int e, int f,
+		    int fg, int bg,
+		    int pattern)
+{
+}
+
+
 /*----------------------------------------------------------------------
   DoDrawPolygon
   Draw a polygon whose points are stored in buffer points
