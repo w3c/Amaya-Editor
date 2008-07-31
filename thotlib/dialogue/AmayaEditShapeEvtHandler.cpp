@@ -564,6 +564,19 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	      if(rx > lx)rx = lx;
 	      box->BxRx = rx;
 	    }
+	  else if(shape == 3)
+	    {
+	      if(x+abs(rx) > x+lx-abs(ry))
+		{
+		  box->BxRx = (rx < 0 ? -1 : 1)*(lx/2);
+		  box->BxRy = (ry < 0 ? -1 : 1)*(lx/2);
+		}
+	      else
+		{
+		  box->BxRx = rx;
+		  box->BxRy = ry;
+		}
+	    }
 
 	  break;
 
