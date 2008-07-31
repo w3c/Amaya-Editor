@@ -974,7 +974,8 @@ void RedisplayLeaf (PtrElement element, Document document, int delta)
                       pAbbox1->AbHeight.DimUnit = UnPixel;
                     pAbbox1->AbHeightChange = TRUE;
                   }
-                else if (element->ElGraph == '\1' || element->ElGraph == 'C')
+                else if (element->ElGraph == 2 || element->ElGraph == 3 ||
+			 element->ElGraph == 1 || element->ElGraph == 'C')
                   /* a rectangle with rounded corners */
                   {
                     pAbbox1->AbRx = 0;

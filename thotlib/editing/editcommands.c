@@ -1447,7 +1447,8 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
             }
           else
             {
-              if (c == 1 || c == 'C')
+              if (c == 2 || c == 3 ||
+		  c == 1 || c == 'C')
                 /* rectangle with rounded corners */
                 {
                   pAb->AbRx = 0;
@@ -1803,7 +1804,8 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
           yDelta = 0;
         BoxUpdate (pBox, pLine, -1, 0, -xDelta, 0, -yDelta, frame, FALSE);
         if (pAb->AbLeafType == LtGraphics &&
-	    (pAb->AbShape == 1 || pAb->AbShape == 'C'))
+	    (pAb->AbShape == 2 || pAb->AbShape == 3 ||
+	     pAb->AbShape == 1 || pAb->AbShape == 'C'))
           {
             pAb->AbRx = 0;
             pAb->AbRy = 0;

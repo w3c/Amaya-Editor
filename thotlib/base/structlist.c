@@ -1470,7 +1470,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
           fprintf (fileDescriptor, "script=%c \'%c\'",
                    pAb->AbGraphScript, pAb->AbShape);
           if (pAb->AbLeafType == LtGraphics &&
-	      (pAb->AbShape == '\1' || pAb->AbShape == 'C'))
+	      (pAb->AbShape == 2 || pAb->AbShape == 3 ||
+	       pAb->AbShape == 1 || pAb->AbShape == 'C'))
             {
               fprintf (fileDescriptor, " rx:%d", pAb->AbRx);
               wrTypeUnit (pAb->AbRxUnit, fileDescriptor);
@@ -2141,7 +2142,8 @@ static void ListBoxTree (PtrAbstractBox pAb, int frame, int Indent,
               fprintf (fileDescriptor, " printed graphics: \'");
               putc (pAb->AbRealShape, fileDescriptor);
               fprintf (fileDescriptor, "\'");
-              if (pAb->AbShape == '\1' || pAb->AbShape == 'C')
+              if (pAb->AbShape == 2 || pAb->AbShape == 3 ||
+		  pAb->AbShape == 1 || pAb->AbShape == 'C')
                 {
                   fprintf (fileDescriptor, " rx:%d", pAb->AbRx);
                   wrTypeUnit (pAb->AbRxUnit, fileDescriptor);
