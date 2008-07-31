@@ -1556,14 +1556,14 @@ void DrawTrapezium (int frame, int thick, int style, int x, int y,
       points[0].x = x;
       points[0].y = y;
       points[3].x = x + e;
-      points[3].y = y + width;
+      points[3].y = y + height;
     }
   else
     {
       points[0].x = x + e;
       points[0].y = y;
       points[3].x = x;
-      points[3].y = y + width;
+      points[3].y = y + height;
     }
 
   if(f < 0)
@@ -1572,14 +1572,14 @@ void DrawTrapezium (int frame, int thick, int style, int x, int y,
       points[1].x = x + width - f;
       points[1].y = y;
       points[2].x = x + width;
-      points[2].y = y + width;
+      points[2].y = y + height;
     }
   else
     {
       points[1].x = x + width;
       points[1].y = y;
       points[2].x = x + width - f;
-      points[2].y = y + width;
+      points[2].y = y + height;
     }
 
   points[4].x = points[0].x;

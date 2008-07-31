@@ -1247,6 +1247,7 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   PtrBox              box;
   ThotBool            ok;
   int                 width, height;
+  int rx,ry;
 
   box = pAb->AbBox;
   x -= box->BxXOrg;
@@ -1329,33 +1330,78 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
         return (FALSE);	/* out of the circle */
       break;
 
-      case 2: /* Parallelogram */
-	break;
+    case 2: /* Parallelogram */
+      rx = box->BxRx;
+      point[0][0] = rx;
+      point[0][1] = 0;
+      point[1][0] = width;
+      point[1][1] = 0;
+      point[2][0] = width - rx;
+      point[2][1] = height;
+      point[3][0] = 0;
+      point[3][1] = height;
+      max = 3;
+      break;
 
       case 3: /* Trapezium */
-	break;
+      rx = box->BxRx;
+      ry = box->BxRy;
+      if(rx < 0)
+	{
+	  rx=-rx;
+	  point[0][0] = 0;
+	  point[0][1] = 0;
+	  point[3][0] = rx;
+	  point[3][1] = height;
+	}
+      else
+	{
+	  point[0][0] = rx;
+	  point[0][1] = 0;
+	  point[3][0] = 0;
+	  point[3][1] = height;
+	}
+      
+      if(ry < 0)
+	{
+	  ry=-ry;
+	  point[1][0] = width - ry;
+	  point[1][1] = 0;
+	  point[2][0] = width;
+	  point[2][1] = height;
+	}
+      else
+	{
+	  point[1][0] = width;
+	  point[1][1] = 0;
+	  point[2][0] = width - ry;
+	  point[2][1] = height;
+	}
 
-      case 4: /* Equilateral triangle */
-      case 5: /* Isosceles triangle */
-	point[0][0] = width/2;
-	point[0][1] = 0;
-	point[1][0] = width;
-	point[1][1] = height;
-	point[2][0] = 0;
-	point[2][1] = height;
-	max = 2;
-	break;
+      max = 3;
+      break;
+
+    case 4: /* Equilateral triangle */
+    case 5: /* Isosceles triangle */
+      point[0][0] = width/2;
+      point[0][1] = 0;
+      point[1][0] = width;
+      point[1][1] = height;
+      point[2][0] = 0;
+      point[2][1] = height;
+      max = 2;
+      break;
 	
-      case 6: /* Rectangled triangle */
-	point[0][0] = 0;
-	point[0][1] = 0;
-	point[1][0] = width;
-	point[1][1] = 0;
-	point[2][0] = 0;
-	point[2][1] = height;
-	max = 2;
-	break;
-
+    case 6: /* Rectangled triangle */
+      point[0][0] = 0;
+      point[0][1] = 0;
+      point[1][0] = width;
+      point[1][1] = 0;
+      point[2][0] = 0;
+      point[2][1] = height;
+      max = 2;
+      break;
+      
     default:
       break;
     }
@@ -1446,6 +1492,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   int                 width, height;
   int                 rx,ry;
   PtrAbstractBox      enc;
+  int x1,y1,x2,y2,x3,y3,x4,y4;
 
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
@@ -1496,8 +1543,6 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 		controlPoint = 7;
 	    }
 	}
-      /* TODO: 3 = trapezium, 2 = parallelogram  */
-
       else if(pAb->AbShape == 6) /* rectangled triangle */
 	{
 	  if(IsNear(x, y, 0, 0))
@@ -1521,7 +1566,9 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	      pAb->AbShape == 'c' || /* ellipse */
 	      pAb->AbShape == 'L' || /* diamond */
 	      pAb->AbShape == 4 || /* Equilateral triangle */
-	      pAb->AbShape == 5    /* Isosceles triangle */
+	      pAb->AbShape == 5 || /* Isosceles triangle */
+	      pAb->AbShape == 2 || /* Parallelogram */
+	      pAb->AbShape == 3    /* trapezium   */
 	      )
 	{
 	  /* is the user clicking on a resize handle? */
@@ -1554,6 +1601,24 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 		controlPoint = 10;
 	      else if(IsNear(x, y, width - rx, 0))
 		controlPoint = 9;
+	    }
+	  else if(pAb->AbShape == 2)
+	    {
+	      /* parallelogram */
+	      /*                  9                           */
+	      /*            1-----O-------2-------------3     */
+	      /*            |    /                     /|     */
+	      /*            |   /                     / |     */
+	      /*            8  /                     /  4     */
+	      /*            | /                     /   |     */
+	      /*            |/                     /    |     */
+	      /*            7-------------6-------O-----5     */
+	      /*                                 10           */
+	      rx = pBox->BxRx;
+	      if(IsNear(x, y, rx, 0))
+		controlPoint = 9;
+	      else if(IsNear(x, y, width - rx, height))
+		controlPoint = 10;
 	    }
 	}
 
@@ -1655,9 +1720,56 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
         break;
 
       case 2: /* Parallelogram */
+	rx = pBox->BxRx;
+	if (IsOnSegment (x, y, rx, 0, width, 0) ||
+            IsOnSegment (x, y, width, 0, width - rx, height) ||
+            IsOnSegment (x, y, width - rx, height, 0, height) ||
+	    IsOnSegment (x, y, 0, height, rx, 0)
+	    )
+          return (pBox);
 	break;
 
       case 3: /* Trapezium */
+	rx = pBox->BxRx;
+	ry = pBox->BxRy;
+	if(rx < 0)
+	  {
+	    rx=-rx;
+	    x1 = 0;
+	    y1 = 0;
+	    x4 = rx;
+	    y4 = height;
+	  }
+	else
+	  {
+	    x1 = rx;
+	    y1 = 0;
+	    x4 = 0;
+	    y4 = height;
+	  }
+
+	if(ry < 0)
+	  {
+	    ry=-ry;
+	    x2 = width - ry;
+	    y2 = 0;
+	    x3 = width;
+	    y3 = height;
+	  }
+	else
+	  {
+	    x2 = width;
+	    y2 = 0;
+	    x3 = width - ry;
+	    y3 = height;
+	  }
+
+        if (IsOnSegment (x, y, x1, y1, x2, y2) ||
+	    IsOnSegment (x, y, x2, y2, x3, y3) ||
+	    IsOnSegment (x, y, x3, y3, x4, y4) ||
+	    IsOnSegment (x, y, x4, y4, x1, y1))
+          return (pBox);
+
 	break;
 
       case 4: /* Equilateral triangle */
