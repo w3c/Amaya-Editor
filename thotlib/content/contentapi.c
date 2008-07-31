@@ -1539,9 +1539,10 @@ char *TtaGetPathAttributeValue (Element el, int width, int height)
 	    case 4: /* Equilateral triangle */
 	    case 5: /* Isosceles triangle */
 	      sprintf(path, "M %g,%g L %g,%g %g,%g z",
+		      w/2,0.,
 		      0.,h,
-		      w,h,
-		      w/2,0.);
+		      w,h
+		      );
 	      break;
 
 	    case 6: /* Rectangled triangle */
@@ -1638,9 +1639,10 @@ char *TtaGetPointsAttributeValue (Element el, int width, int height)
 	    case 4: /* Equilateral triangle */
 	    case 5: /* Isosceles triangle */
 	      sprintf(points, "%g,%g %g,%g %g,%g",
+		      w/2,0.,
 		      0.,h,
-		      w,h,
-		      w/2,0.);
+		      w,h
+		      );
 	      break;
 
 	    case 6: /* Rectangled triangle */
@@ -4367,10 +4369,10 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
   float x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
   ThotBool doAnalyse = FALSE;
 
-  //return FALSE;
-
   if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
     {
+      /* A polygon: look if it's a triangle/quadrilateral */
+
       pBuffer = pLeaf->ElPolyLineBuffer;
       nbPoints = pLeaf->ElNPoints - 1;
 
@@ -4392,6 +4394,8 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
     }
   else if(pLeaf->ElLeafType == LtPath)
     {
+      /* A path: look if it's a triangle/quadrilateral */
+
       nbPoints = pLeaf->ElVolume;
       if(nbPoints == 3 || nbPoints == 4)
 	{
@@ -4418,8 +4422,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 
   if(doAnalyse)
     {
-      printf("<<<\n");
-
       if(nbPoints == 3)
 	{
 	  /* A triangle
@@ -4430,64 +4432,60 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	   *     1_______3
 	   */
 
-
-	  printf("A triangle (%d,%d, %d,%d %d,%d)\n",
-		 x1,y1,x2,y2,x3,y3);
-
-	  /* Is 2 a right angle? */
-	  if(AlmostOrthogonalVectors(x3 - x2, y3 - y2,
-				     x1 - x2, y1 - y2))
-	    CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, +1);
- 	  /* Is 3 a right angle? */
-	  else if(AlmostOrthogonalVectors(x2 - x3, y2 - y3,
-					  x1 - x3, y1 - y3))
-	    CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, -1);
-
-
 	  /* Is 1 a right angle? */
-	  if(AlmostOrthogonalVectors(x2 - x1, y2 - y1,
-				     x3 - x1, y3 - y1))
+	  if(AlmostOrthogonalVectors(x2 - x1, y2 - y1, x3 - x1, y3 - y1))
+	    shape = RECTANGLED_TRIANGLE;
+	  /* Is 2 a right angle? */
+	  else if(AlmostOrthogonalVectors(x3 - x2, y3 - y2,
+					  x1 - x2, y1 - y2))
 	    {
-	      /* A right triangle
-	       *
-	       *   1---------2
-	       *   |         .
-	       *   |   ...
-	       *   3. 
-	       */
+	      CircularPermutationOnTriangle(&x1, &y1, &x2, &y2,
+					    &x3, &y3, +1);
+	      shape = RECTANGLED_TRIANGLE;
+	    }
+	  /* Is 3 a right angle? */
+	  else if(AlmostOrthogonalVectors(x2 - x3, y2 - y3,
+					      x1 - x3, y1 - y3))
+	    {
+	      CircularPermutationOnTriangle(&x1, &y1, &x2, &y2,
+					    &x3, &y3, -1);
 	      shape = RECTANGLED_TRIANGLE;
 	    }
 	  else
 	    {
+	      if(AlmostEqualAngle(x1, y1, x2, y2, x3, y3,
+				  x2, y2, x3, y3, x1, y1))
+		
+		shape = ISOSCELES_TRIANGLE;
 	      /* Is Angle(3,1,2) == Angle(1,2,3)? */
-	      if(AlmostEqualAngle(x3, y3, x1, y1, x2, y2,
-				  x1, y1, x2, y2, x3, y3))
-		CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, -1);
+	      else if(AlmostEqualAngle(x3, y3, x1, y1, x2, y2,
+				       x1, y1, x2, y2, x3, y3))
+		{
+		  CircularPermutationOnTriangle(&x1, &y1, &x2, &y2,
+						&x3, &y3, -1);
+		  shape = ISOSCELES_TRIANGLE;
+		}
 	      /* Is Angle(3,1,2) == Angle(2,3,1)? */
 	      else if(AlmostEqualAngle(x3, y3, x1, y1, x2, y2,
 				       x2, y2, x3, y3, x1, y1))
-		CircularPermutationOnTriangle(&x1, &y1, &x2, &y2, &x3, &y3, +1);
-	      
-	      /* Is Angle(1,2,3) == Angle(2,3,1)? */
-	      if(AlmostEqualAngle(x1, y1, x2, y2, x3, y3,
-				  x2, y2, x3, y3, x1, y1))
 		{
-		  /* An isosceles triangle
-		   *
-		   *      1
-		   *      /\
-		   *     /  \
-		   *    /    \
-		   *   /      \
-		   *  3________2
-		   *
-		   */
+		  CircularPermutationOnTriangle(&x1, &y1, &x2, &y2,
+						&x3, &y3, +1);
 		  shape = ISOSCELES_TRIANGLE;
+		}
+	      
+	      if(shape == ISOSCELES_TRIANGLE)
+		{
+		  /*       /\
+		   *      /  \
+		   *     /    \
+		   *    /      \
+		   *   /________\
+		   */
 
-		  /* Is Angle(3,1,2) == Angle(1,2,3) */
+		  /* Is Angle(3,1,2) == Angle(1,2,3)? */
 		  if(AlmostEqualAngle(x3, y3, x1, y1, x2, y2,
 				      x1, y1, x2, y2, x3, y3))
-		    /* An equilateral triangle */
 		    shape = EQUILATERAL_TRIANGLE;
 		}	  
 	    }
@@ -4504,33 +4502,34 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	   *      2----------3
 	   */
 
-	  printf("A quadrilateral (%d,%d, %d,%d %d,%d %d,%d)\n",
-		 x1,y1,x2,y2,x3,y3,x4,y4);
-
-	  /* Are edges (2-3) and (1-4) parallel?*/
-	  if(AlmostColinearVectors(x3 - x2, y3 - y2,
-				   x4 - x1, y4 - y1, TRUE))
-	    CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
-					       &x3, &y3, &x4, &y4);
-
+	  /* Are edges (1-2) and (3-4) parallel?*/
 	  if(AlmostColinearVectors(x2 - x1, y2 - y1,
 				   x3 - x4, y3 - y4, TRUE))
+	    shape = TRAPEZIUM;
+	  /* Are edges (2-3) and (1-4) parallel?*/
+	  else if(AlmostColinearVectors(x3 - x2, y3 - y2,
+					x4 - x1, y4 - y1, TRUE))
 	    {
-	      /* A trapezium
+	      CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
+						 &x3, &y3, &x4, &y4);
+	      shape = TRAPEZIUM;
+	    }
+
+	  if(shape == TRAPEZIUM)
+	    {
+	      /*
 	       *
 	       *   1---------2
 	       *  /           \
 	       * /              \
 	       * 4---------------3
 	       */
-	      shape = TRAPEZIUM;
 
 	      /* Is Angle(1,2,3) == Angle(3,4,1)? */
 	      if(AlmostEqualAngle(x1, y1, x2, y2, x3, y3,
 				  x3, y3, x4, y4, x1, y1))
 		{
-		  /* A parallelogram
-		   *
+		  /*
 		   *     1----------2 
 		   *      \___    \__\
 		   *       \  \       \
@@ -4543,8 +4542,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 		  if(AlmostEqualAngle(x2, y2, x4, y4, x1, y1,
 				      x1, y1, x2, y2, x4, y4))
 		    {
-		      /* A diamond
-		       *
+		      /*
 		       *           1
 		       *          /\  
 		       *         /  \
@@ -4563,8 +4561,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 
 		  if(AlmostOrthogonalVectors(x2 - x1, y2 - y1,
 					     x3 - x2, y3 - y2))
-		    { /* A rectangle
-		       *
+		    { /*
 		       *    1-------2
 		       *    |       |
 		       *    |       |
@@ -4576,7 +4573,8 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 		      shape = RECTANGLE;
 		    }
 		}
-	      /* Trapezium: make (1-2) smaller than (3-4) */
+	      /* A trapezium which is not a parallelogram:
+		 make (1-2) smaller than (3-4) */
 	      else if(Norm(x4 - x3, y4 - y3) < Norm(x2 - x1, y2 - y1))
 		{
 		  CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
@@ -4601,11 +4599,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	{
 	case EQUILATERAL_TRIANGLE:
 	case ISOSCELES_TRIANGLE:
-	  if(shape == EQUILATERAL_TRIANGLE)
-	    printf("equilateral triangle\n"); 
-	  else
-	    printf("isosceles triangle\n"); 
-
 	  w = Norm(x2 - x3, y2 - y3);
 	  h = Norm(((float) x2+x3)/2 - x1, ((float) y2+y3)/2 - y1);
 	  if(w == 0 || h == 0)
@@ -4625,7 +4618,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 
 	case RECTANGLED_TRIANGLE:
-	  printf("rectangled triangle\n"); 
 	  w = Norm(x2 - x1, y2 - y1);
 	  h = Norm(x3 - x1, y3 - y1);
 	  if(w == 0 || h == 0)
@@ -4643,11 +4635,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 
 	case TRAPEZIUM:
 	case PARALLELOGRAM:
-	  if(shape == TRAPEZIUM)
-	    printf("trapezium\n");
-	  else
-	    printf("parallelogram\n");
-
 	  /*  We want to determine the bounding box:
 	   *   
 	   *   (1_)--------(2_)
@@ -4728,7 +4715,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 
 	case DIAMOND:
-	  printf("diamond\n");
 	  w = Norm(x4 - x2, y4 - y2);
 	  h = Norm(x3 - x1, y3 - y1);
 	  if(w == 0 || h == 0)
@@ -4746,11 +4732,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 	case RECTANGLE:
 	case SQUARE:
-	  if(shape == SQUARE)
-	    printf("square\n");
-	  else
-	    printf("rectangle\n");
-
 	  w = Norm(x2 - x1, y2 - y1);
 	  h = Norm(x4 - x1, y4 - y1);
 	  if(w == 0 || h == 0)
@@ -4779,7 +4760,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
       
 	  *width = (int)(w);
 	  *height = (int)(h);
-	  printf(">>>\n\n");
 
 	  return TRUE;
 	}
