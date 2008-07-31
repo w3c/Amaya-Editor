@@ -1461,6 +1461,12 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
     }
 }
 
+void DrawParallelogram (int frame, int thick, int style, int x, int y,
+			int width, int height, int e, int fg, int bg,
+			int pattern)
+{
+}
+
 /*----------------------------------------------------------------------
   DrawSegments draw a set of segments.
   Parameter buffer is a pointer to the list of control points.

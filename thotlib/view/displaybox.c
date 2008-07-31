@@ -1069,6 +1069,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           break;
 
 	case 2: /* Parallelogram */
+	  DrawParallelogram (frame, i, style, xd, yd, width, height, pBox->BxRx,
+			     fg, bg, pat);
 	  break;
 
 	case 3: /* Trapezium */

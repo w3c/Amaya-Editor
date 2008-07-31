@@ -746,7 +746,8 @@ extern void *TtaInverseTransform (void *transform);
 extern char *TtaGetTransformAttributeValue(Document document, Element el);
 
 extern ThotBool CheckGeometricProperties(Document doc, Element leaf,
-					 int *width, int *height);
+					 int *width, int *height,
+					 int *rx, int *ry);
 
 #endif /* __CEXTRACT__ */
 

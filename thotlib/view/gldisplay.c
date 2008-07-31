@@ -1510,6 +1510,35 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
 }
 
 /*----------------------------------------------------------------------
+  DrawParallelogram draw a diamond.
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
+void DrawParallelogram (int frame, int thick, int style, int x, int y,
+			int width, int height, int e, int fg, int bg,
+			int pattern)
+{
+  ThotPoint           points[5];
+
+  y += FrameTable[frame].FrTopMargin;
+
+  points[0].x = x + e;
+  points[0].y = y;
+  points[4].x = points[0].x;
+  points[4].y = points[0].y;
+  points[1].x = x + width;
+  points[1].y = y;
+  points[2].x = x + width - e;
+  points[2].y = y + height;
+  points[3].x = x;
+  points[3].y = y + height;
+
+  DoDrawLines (frame, thick, style, points, 5, fg, bg, pattern);
+}
+
+
+
+/*----------------------------------------------------------------------
   DrawPolygon draw a polygon.
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.

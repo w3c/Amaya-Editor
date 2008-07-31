@@ -902,8 +902,9 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
                     pAb->AbShape = pEl->ElGraph;
                     pAb->AbGraphScript = 'G';
                     if (pEl->ElLeafType == LtGraphics && 
-			(pEl->ElGraph == '\1' || pEl->ElGraph == 'C'))
-                      /* rectangle with rounded corners */
+			(pEl->ElGraph == 1 || pEl->ElGraph == 'C'))
+                      /* rectangle with rounded corners
+		       */
                       {
                         pAb->AbRx = 0;
                         pAb->AbRy = 0;

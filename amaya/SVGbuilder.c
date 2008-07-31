@@ -1613,11 +1613,11 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	  if(elType.ElTypeNum == SVG_EL_polygon ||
 	     elType.ElTypeNum == SVG_EL_path)
 	    {
-	      int w,h;
+	      int w,h,rx = 0,ry = 0;
 	      PresentationContext  ctxt;
 	      PresentationValue    pval;
 
-	      if(CheckGeometricProperties(doc, leaf, &w, &h))
+	      if(CheckGeometricProperties(doc, leaf, &w, &h, &rx, &ry))
 		{
 		  ctxt = TtaGetSpecificStyleContext (doc);
 		  /* the specific presentation is not a CSS rule */
@@ -1630,6 +1630,18 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 		  TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);
 		  pval.typed_data.value = h;
 		  TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
+
+		  if(rx)
+		    {
+		      pval.typed_data.value = rx;
+		      TtaSetStylePresentation (PRXRadius, el, NULL, ctxt, pval);
+		    }
+		  
+		  if(ry)
+		    {
+		      pval.typed_data.value = ry;
+		      TtaSetStylePresentation (PRYRadius, el, NULL, ctxt, pval);
+		    }
 
 		  /* Update transform attribute */
 		  UpdateTransformMatrix(doc, el);

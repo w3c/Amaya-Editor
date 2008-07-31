@@ -4179,7 +4179,6 @@ static ThotBool AlmostOrthogonalVectors(float dx1, float dy1,
   if(IsNull(dx1, dy1) || IsNull(dx2, dy2))return TRUE;
   
   epsilon = fabs(UnsignedAngle(dx1, dy1, dx2, dy2) - M_PI/2);
-  printf("  AlmostOrthogonalVectors: epsilon=%f\n", epsilon);
   return (epsilon < EPSILON_MAX);
 }
 
@@ -4196,7 +4195,6 @@ static ThotBool AlmostColinearVectors(float dx1, float dy1,
   if(IsNull(dx1, dy1) || IsNull(dx2, dy2))return TRUE;
 
   angle = UnsignedAngle(dx1, dy1, dx2, dy2);
-  //printf("    AlmostColinearVectors: angle=%f\n", angle);
   return (angle < EPSILON_MAX ||
 	  (!same && fabs(angle - M_PI) < EPSILON_MAX));
 }
@@ -4218,8 +4216,6 @@ static ThotBool AlmostEqualAngle(float ax, float ay,
 
   angle1 = UnsignedAngle(ax - bx, ay - by, cx - bx, cy - by);
   angle2 = UnsignedAngle(dx - ex, dy - ey, fx - ex, fy - ey);
-  
-  //printf("    AlmostEqualAngle: angle1=%f angle2=%f\n", angle1, angle2);
 
   return (fabs(angle1 - angle2) < EPSILON_MAX);
 }
@@ -4355,7 +4351,8 @@ ThotBool PathIsPolygon(PtrPathSeg pPa, int nbPoints)
   CheckGeometricProperties
   ----------------------------------------------------------------------*/
 ThotBool CheckGeometricProperties(Document doc, Element leaf,
-				  int *width, int *height)
+				  int *width, int *height,
+				  int *rx, int *ry)
 			      
 {
   PtrPathSeg pPa;
@@ -4572,6 +4569,16 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 		      else
 		      shape = RECTANGLE;
 		    }
+
+		  if(shape == PARALLELOGRAM)
+		    {
+		      /* A parallelogram which is not a rectangle/diamond:
+			 make (4,1,2) a obtuse */
+		      if(IsAcuteAngle(x4, y4, x1, y1, x2, y2))
+			CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
+							   &x3, &y3, &x4, &y4);
+		    }
+
 		}
 	      /* A trapezium which is not a parallelogram:
 		 make (1-2) smaller than (3-4) */
@@ -4634,7 +4641,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 
 	case TRAPEZIUM:
-	case PARALLELOGRAM:
 	  /*  We want to determine the bounding box:
 	   *   
 	   *   (1_)--------(2_)
@@ -4714,6 +4720,36 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  f = y1_;
 	  break;
 
+	case PARALLELOGRAM:
+	  x4_ = x4;
+	  y4_ = y4;
+
+	  GiveIntersectionPoint(x1, y1, x2 - x1, y2 - y1,
+				x4, y4, -(y3 - y4), x3 - x4,
+				&x1_, &y1_);
+
+	  x2_ = x2;
+	  y2_ = y2;
+
+	  GiveIntersectionPoint(x2, y2, -(y2 - y1), x2 - x1,
+				x3, y3, x3 - x4, y3 - y4,
+				&x3_, &y3_);
+
+	  w = Norm(x2_ - x1_, y2_ - y1_);
+	  h = Norm(x4_ - x1_, y4_ - y1_);
+	  if(w == 0 || h == 0)
+	    return FALSE;
+
+	  a = (x2_ - x1_)/w;
+	  b = (y2_ - y1_)/w;
+	  c = (x4_ - x1_)/h;
+	  d = (y4_ - y1_)/h;
+	  e = x1_;
+	  f = y1_;
+	  TtaSetGraphicsShape (leaf, 2, doc);
+	  *rx = x1 - x1_;
+	  break;
+
 	case DIAMOND:
 	  w = Norm(x4 - x2, y4 - y2);
 	  h = Norm(x3 - x1, y3 - y1);
@@ -4728,7 +4764,6 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  f = y1 - b*w/2;
 
 	  TtaSetGraphicsShape (leaf, 'L', doc);
-
 	  break;
 	case RECTANGLE:
 	case SQUARE:
@@ -4752,7 +4787,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 	}
 
-      if(shape != -1 && !(shape == TRAPEZIUM || shape == PARALLELOGRAM))
+      if(shape != -1 && shape != TRAPEZIUM)
 	{
 	  TtaAppendTransform (TtaGetParent(leaf),
 			      TtaNewTransformMatrix(a, b, c, d, e, f),

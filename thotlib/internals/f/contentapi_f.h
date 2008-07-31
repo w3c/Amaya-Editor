@@ -66,7 +66,9 @@ extern void TtaChangeLimitOfPolyline ( Element element,
                                        Document document );
 extern void TtaRemovePathData ( Document document,
                                 Element element );
-extern char *TtaGetPathAttributeValue ( Element el );
+extern char *TtaGetPathAttributeValue ( Element el,
+                                        int width,
+                                        int height );
 extern char *TtaGetPointsAttributeValue ( Element el,
                                           int width,
                                           int height );
@@ -153,6 +155,14 @@ extern void TtaApplyMatrixTransform ( Document document,
                                       float d,
                                       float e,
                                       float f );
+extern void TtaAppendMatrixTransform ( Document document,
+                                       Element element,
+                                       float a,
+                                       float b,
+                                       float c,
+                                       float d,
+                                       float e,
+                                       float f );
 extern void *TtaDecomposeTransform ( void *transform );
 extern char *TtaGetTransformAttributeValue ( Document document,
                                              Element el );
@@ -231,12 +241,12 @@ extern void TtaGivePolylinePoint ( Element element,
                                    int *y );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
+extern ThotBool PathIsPolygon ( PtrPathSeg pPa,
+                                int nbPoints );
 extern ThotBool CheckGeometricProperties ( Document doc,
                                            Element leaf,
                                            int *width,
-                                           int *height,
-                                           char **transform,
-                                           char **points );
+                                           int *height );
 
 #else /* __STDC__ */
 
@@ -300,7 +310,9 @@ extern void TtaChangeLimitOfPolyline ( Element element,
                                          Document document );
 extern void TtaRemovePathData ( Document document,
                                   Element element );
-extern char *TtaGetPathAttributeValue ( Element el );
+extern char *TtaGetPathAttributeValue ( Element el,
+                                          int width,
+                                          int height );
 extern char *TtaGetPointsAttributeValue ( Element el,
                                             int width,
                                             int height );
@@ -387,6 +399,14 @@ extern void TtaApplyMatrixTransform ( Document document,
                                         float d,
                                         float e,
                                         float f );
+extern void TtaAppendMatrixTransform ( Document document,
+                                         Element element,
+                                         float a,
+                                         float b,
+                                         float c,
+                                         float d,
+                                         float e,
+                                         float f );
 extern void *TtaDecomposeTransform ( void *transform );
 extern char *TtaGetTransformAttributeValue ( Document document,
                                                Element el );
@@ -465,12 +485,12 @@ extern void TtaGivePolylinePoint ( Element element,
                                      int *y );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
+extern ThotBool PathIsPolygon ( PtrPathSeg pPa,
+                                  int nbPoints );
 extern ThotBool CheckGeometricProperties ( Document doc,
                                              Element leaf,
                                              int *width,
-                                             int *height,
-                                             char **transform,
-                                             char **points );
+                                             int *height );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
