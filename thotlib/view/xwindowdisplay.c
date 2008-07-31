@@ -1467,6 +1467,13 @@ void DrawParallelogram (int frame, int thick, int style, int x, int y,
 {
 }
 
+void DrawTrapezium (int frame, int thick, int style, int x, int y,
+		    int width, int height, int e, int f,
+		    int fg, int bg,
+		    int pattern)
+{
+}
+
 /*----------------------------------------------------------------------
   DrawSegments draw a set of segments.
   Parameter buffer is a pointer to the list of control points.

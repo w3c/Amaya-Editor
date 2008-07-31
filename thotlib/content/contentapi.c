@@ -4721,7 +4721,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 
 	case PARALLELOGRAM:
-	  return FALSE;
+	  //	  return FALSE;
 	  x4_ = x4;
 	  y4_ = y4;
 

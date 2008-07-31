@@ -246,7 +246,9 @@ extern ThotBool PathIsPolygon ( PtrPathSeg pPa,
 extern ThotBool CheckGeometricProperties ( Document doc,
                                            Element leaf,
                                            int *width,
-                                           int *height );
+                                           int *height,
+                                           int *rx,
+                                           int *ry );
 
 #else /* __STDC__ */
 
@@ -490,7 +492,9 @@ extern ThotBool PathIsPolygon ( PtrPathSeg pPa,
 extern ThotBool CheckGeometricProperties ( Document doc,
                                              Element leaf,
                                              int *width,
-                                             int *height );
+                                             int *height,
+                                             int *rx,
+                                             int *ry );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

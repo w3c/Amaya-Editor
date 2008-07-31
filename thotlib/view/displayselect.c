@@ -505,9 +505,62 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    break;
 
 	  case 2: /* Parallelogram */
+	    rx = pBox->BxRx;
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, leftX+rx, topY);
+	    DrawHandle(h, frame, thick, rightX, topY);
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, rightX - rx, bottomY);
+	    DrawHandle(h, frame, thick, leftX, bottomY);
+
+	    /* resize handle */
+	    if(rx > 0)
+	      {
+		DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+		DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
+	      }
+
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, topY, N);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
+
 	    break;
 
 	  case 3: /* Trapezium */
+	    rx = pBox->BxRx;
+	    ry = pBox->BxRy;
+
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, middleX, topY);
+	    DrawHandle(ROUNDED_HANDLE, frame, thick, middleX, bottomY);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
+
+	    if(rx < 0)
+	      {
+		rx=-rx;
+		DrawHandle(RESIZE_HANDLE, frame, thick, leftX, bottomY, SW);
+		DrawHandle(h, frame, thick, leftX+rx, bottomY);
+		DrawHandle(h, frame, thick, leftX, topY);
+	      }
+	    else
+	      {
+		DrawHandle(RESIZE_HANDLE, frame, thick, leftX, topY, NW);
+		DrawHandle(h, frame, thick, leftX+rx, topY);
+		DrawHandle(h, frame, thick, leftX, bottomY);
+	      }
+
+	    if(ry < 0)
+	      {
+		ry=-ry;
+		DrawHandle(RESIZE_HANDLE, frame, thick, rightX, topY, NE);
+		DrawHandle(h, frame, thick, rightX-ry, topY);
+		DrawHandle(h, frame, thick, rightX, bottomY);
+	      }
+	    else
+	      {
+		DrawHandle(RESIZE_HANDLE, frame, thick, rightX, bottomY, SE);
+		DrawHandle(h, frame, thick, rightX-ry, bottomY);
+		DrawHandle(h, frame, thick, rightX, topY);
+	      }
 	    break;
 
 	  case 4: /* Equilateral triangle */
