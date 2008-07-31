@@ -332,7 +332,7 @@ Element CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
       h = TtaGetPRuleValue (rule);
 
       if(w == h)
-	leaf = CreateGraphicalLeaf (2, el, doc);
+	leaf = CreateGraphicalLeaf (3, el, doc);
       else
 	leaf = CreateGraphicalLeaf ('C', el, doc);
 

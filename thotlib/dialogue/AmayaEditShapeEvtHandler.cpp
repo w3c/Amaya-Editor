@@ -442,6 +442,8 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  break;
 
 	case 1: /* square */
+	case 2: /* Parallelogram */
+	case 3: /* Trapezium */
 	case 'C': /* rectangle */
 	case 'a': /* circle */
 	case 'c': /* ellipse */
@@ -454,10 +456,20 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
 	  if(shape == 1 || shape == 'C')
 	    {
+	      /* square and rectangle with rounded corner */
 	      rx = box->BxRx;
 	      ry = box->BxRy;
 	      if(ry == -1)ry = rx;
 	      else if(rx == -1)rx = ry;
+	    }
+	  else if(shape == 2)
+	    /* parallelogram */
+	    rx = box->BxRx;
+	  else if(shape == 3)
+	    {
+	      /* trapezium */
+	      rx = box->BxRx;
+	      ry = box->BxRy;
 	    }
 
 	  if(1 <= point && point <= 8)
@@ -513,13 +525,23 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	      break;
 	      
 	    case 9:
-	      rx -= dx;
-	      if(same_size)ry=rx;
+	      if(shape == 1 || shape == 'C')
+		{
+		  rx -= dx;
+		  if(same_size)ry=rx;
+		}
+	      else if(shape == 2)
+		rx += dx;
 	      break;
 	      
 	    case 10:
-	      ry += dy;
-	      if(same_size)rx=ry;
+	      if(shape == 1 || shape == 'C')
+		{
+		  ry += dy;
+		  if(same_size)rx=ry;
+		}
+	      else if(shape == 2)
+		rx -= dx;
 	      break;
 	    }
 	  
@@ -535,6 +557,12 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	      
 	      if(box->BxRx != -1)box->BxRx = rx;
 	      if(box->BxRy != -1)box->BxRy = ry;
+	    }
+	  else if(shape == 2)
+	    {
+	      if(rx < 0)rx = 0;
+	      if(rx > lx)rx = lx;
+	      box->BxRx = rx;
 	    }
 
 	  break;

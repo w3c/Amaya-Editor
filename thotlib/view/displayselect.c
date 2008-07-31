@@ -529,8 +529,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    rx = pBox->BxRx;
 	    ry = pBox->BxRy;
 
-	    DrawHandle(ROUNDED_HANDLE, frame, thick, middleX, topY);
-	    DrawHandle(ROUNDED_HANDLE, frame, thick, middleX, bottomY);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, topY, N);
+	    DrawHandle(RESIZE_HANDLE, frame, thick, middleX, bottomY, S);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, leftX, middleY, W);
 	    DrawHandle(RESIZE_HANDLE, frame, thick, rightX, middleY, E);
 
