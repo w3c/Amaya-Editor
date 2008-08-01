@@ -616,11 +616,6 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       RedisplayLeaf ((PtrElement) leaf, doc, 0);
 #endif
 
-      /* Redisplay the SVG canvas to see the transform applied to the object */
-       DefBoxRegion (frameId, box, -1, -1, -1, -1);
-       RedrawFrameBottom (frameId, 0, NULL);
-       pFrame->GetCanvas()->Refresh();
-
       /* Update the previous mouse coordinates */
       lastX = mouse_x;
       lastY = mouse_y;
