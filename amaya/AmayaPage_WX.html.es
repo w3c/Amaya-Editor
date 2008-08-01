@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+      "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:svg="http://www.w3.org/2000/svg">
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="content-type"
+  content="application/xhtml+xml; charset=UTF-8" />
   <title>Bienvenido a Amaya</title>
-  <meta name="generator" content="amaya 9.52, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es">
 
 <div id="header">
 <ul id="links">
@@ -22,83 +25,85 @@
 </div>
 
 <div id="logo">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.0" height="150px"
-     width="230px">
-  <title>Amaya logo</title>
-  <ellipse cx="0px" cy="0px" rx="66px" ry="45px"
-        style="fill: #EDF3FF; stroke: #EDF3FF" transform="translate(138,96)">
-    <animateTransform attributeName="transform" attributeType="XML"
+<svg:svg height="150px" width="230px">
+  <svg:title>Amaya logo</svg:title>
+  <svg:ellipse cx="0px" cy="0px" rx="66px" ry="45px"
+        style="fill: #EDF3FF; stroke: #EDF3FF"
+        transform="translate(143,98) scale(0.552043) ">
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="scale" from=".1" to="1" additive="sum" begin="0s"
                       dur="6s" fill="freeze"/>
-  </ellipse>
-  <g transform="rotate(-30,100,150)">
-    <polygon points="0,117 66,0 21,117" transform="translate(49,22)"
+  </svg:ellipse>
+  <svg:g transform="rotate(-30,100,150)">
+    <svg:polygon points="0,117 66,0 21,117" transform="translate(49,22)"
              style="fill: #B27700; stroke: #D9E500"/>
-    <polygon points="0,0 9,30 27,41 21,14 12,3" transform="translate(117,25)"
+    <svg:polygon points="0,0 9,30 27,41 21,14 12,3"
+             transform="translate(117,25)"
              style="fill: #00B200; stroke: #00E500"/>
-    <polygon points="0,6 29,0 56,8 32,15 13,19" transform="translate(95,76)"
+    <svg:polygon points="0,6 29,0 56,8 32,15 13,19"
+             transform="translate(95,76)"
              style="fill: #00B200; stroke: #00E500"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-30,100,150" to="-20,100,150"
                       begin="2.5s" dur="0.3s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-20,100,150" to="-10,100,150"
                       begin="2.8s" dur="0.2s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-10,100,150" to="0,100,150"
                       begin="3s" dur="0.1s" fill="freeze"/>
-  </g>
-  <g transform="translate(118,110)">
-    <polygon points="3,0 5,16 0,16" transform="translate(25,-20)"
+  </svg:g>
+  <svg:g transform="translate(118,110)">
+    <svg:polygon points="3,0 5,16 0,16" transform="translate(25,-20)"
              style="stroke: #E50000; fill: #E50000"/>
-    <polygon
+    <svg:polygon
              points="0,13 10,0 20,1 23,10 29,2 40,1 42,9 45,17 32,17 33,11 30,11 23,15 18,15 12,7 8,7 8,13"
              stroke="#E50000" fill="#FF9595"/>
     <!-- M scale -->
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="scale" from=".1" to="1" additive="sum" begin="0s"
                       dur="3s" fill="freeze"/>
     <!-- M translation -->
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="translate" from="0,0" to="118,110" begin="0s"
                       dur="3s" fill="freeze"/>
     <!-- M oscillations -->
     <!-- Maybe rotation center is not correct... (30,-22)  -->
-    <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="0,30,-22" to="-30,30,-22"
-                      begin="3s" dur="0.2s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="0,30,-22" to="-30,30,-22" begin="3s"
+                      dur="0.2s" fill="freeze"/>
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-30,30,-22" to="25,30,-22"
                       begin="3.2s" dur="0.4s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="25,30,-22" to="-20,30,-22"
                       begin="3.6s" dur="0.6s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-20,30,-22" to="15,30,-22"
                       begin="4.2s" dur="0.8s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="15,30,-22" to="-10,30,-22"
-                      begin="5s" dur="1s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="-10,30,-22" to="0,30,-22"
-                      begin="6s" dur="0.6s" fill="freeze"/>
-  </g>
-</svg>
+    <svg:animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="15,30,-22" to="-10,30,-22" begin="5s"
+                      dur="1s" fill="freeze"/>
+    <svg:animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="-10,30,-22" to="0,30,-22" begin="6s"
+                      dur="0.6s" fill="freeze"/>
+  </svg:g>
+</svg:svg>
 </div>
 
 <div id="intro" class="section">
-<p>Amaya es un cliente Web que actúa como navegador y como editor. Ha sido
-diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a
+<p>Amaya es un cliente Web que actÃºa como navegador y como editor. Ha sido
+diseÃ±ado por el <a href="http://www.w3.org/">W3C</a> y el <a
 href="http://www.inria.fr/">INRIA</a> con el principal objetivo de demostrar
-nuevas tecnologías Web y ayudar a los usuarios a producir páginas Web
-válidas.</p>
+nuevas tecnologÃ­as Web y ayudar a los usuarios a producir pÃ¡ginas Web
+vÃ¡lidas.</p>
 
-<p>Con Amaya se pueden manipular páginas Web complejas, con formularios,
-tablas y las características más avanzadas del <acronym
-title="Hypertext Markup Language">XHTML</acronym>. Se pueden crear y editar
-<a href="../doc/WX/Math.html">expresiones matemáticas</a> complejas dentro de
-las páginas Web. Se pueden asociar estilos a los documentos mediantes Hojas
-de estilo en Cascada (CSS).</p>
+<p>Con Amaya se pueden manipular pÃ¡ginas Web complejas, con formularios,
+tablas y las caracterÃ­sticas mÃ¡s avanzadas del <acronym
+title="Hypertext Markup Language">XHTML</acronym>. Se pueden crear y editar <a
+href="../doc/WX/Math.html">expresiones matemÃ¡ticas</a> y <a
+href="../doc/WX/SVG.html">grÃ¡ficos</a> dentro de las pÃ¡ginas Web. Se pueden
+asociar estilos a los documentos mediantes Hojas de estilo en Cascada (CSS).</p>
 </div>
 
 <div class="body">
@@ -123,29 +128,27 @@ de estilo en Cascada (CSS).</p>
 
 <p>Embedded MathML and SVG:</p>
 
-<p><svg xmlns="http://www.w3.org/2000/svg" height="250" width="250">
-  <g transform="matrix(0.707107,-0.707107,0.707107,0.707107,0,150)">
-    <rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;" width="200"
+
+<div id="mathml_svg">
+  <svg:svg height="250" width="250">
+  <svg:g transform="rotate(-47.78,198.421,64.1654) scale(1) ">
+    <svg:rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;" width="200"
           height="100"/>
-    <path
+    <svg:path
           d="M 44.727272,21.090909 L 36.359858,29.587325 L 40.292606,40.845041 L 28.432844,39.600562 L 22.083235,49.69438 L 15.661767,39.646124 L 3.8111859,40.975193 L 7.6635087,29.689702 L -0.76431515,21.253205 L 10.460921,17.228684 L 11.802177,5.3794762 L 21.947495,11.646471 L 32.047838,5.3072476 L 33.473606,17.146584 L 44.727272,21.090909 z "
           transform="translate(150,40)"
           style="stroke:#ffaa00;stroke-width:1px;fill:#ffff00;"/>
-    <path
+    <svg:path
           d="M 50.363636,43.81818 C 50.090154,43.025081 51.297791,43.058245 51.681818,43.363636 C 52.722508,44.191224 52.181922,45.777285 51.272725,46.454544 C 49.646384,47.666002 47.379434,46.796331 46.40909,45.181813 C 44.98507,42.812444 46.220462,39.785248 48.545459,38.545452 C 51.644314,36.892997 55.454153,38.507192 56.954547,41.545458 C 58.842639,45.368806 56.844001,49.970617 53.090902,51.727273 C 48.545397,53.854818 43.146815,51.468849 41.136361,46.999991 C 38.767111,41.733596 41.542078,35.535434 46.727281,33.272723 C 52.713804,30.660333 59.713334,33.825342 62.227275,39.727281 C 65.083776,46.433439 61.528027,54.235551 54.909079,57.000002 C 47.483621,60.101298 38.878068,56.15432 35.863632,48.818168 C 32.517038,40.673649 36.8556,31.26402 44.909104,27.999994"
           transform="translate(-5,30)"
           style="fill:none;stroke:#000000;stroke-width:1px;"/>
-    <path
-          d="M 43.454546 30.272728 A 16.454546 7.3636365 0 1 1  10.545454,30.272728 A 16.454546 7.3636365 0 1 1  43.454546 30.272728 z"
-          style="stroke:#ff0000;stroke-width:3px;fill:#ffaaaa;"
-          transform="translate(70,40)"/>
-    <switch>
-      <foreignObject width="200" height="100">
+    <svg:switch>
+      <svg:foreignObject width="200" height="100">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <mstyle mathcolor="#000080;">
             <mrow>
-              <mi>&#x393;</mi>
-              <mo>&#x2061;</mo>
+              <mi>Î“</mi>
+              <mo>â¡</mo>
               <mrow>
                 <mo>(</mo>
                 <mi>x</mi>
@@ -155,84 +158,87 @@ de estilo en Cascada (CSS).</p>
             <mo>=</mo>
             <mrow>
               <msubsup>
-                <mo>&#x222b;</mo>
+                <mo>âˆ«</mo>
                 <mn>0</mn>
                 <mrow>
                   <mo>+</mo>
-                  <mi>&#x221e;</mi>
+                  <mi>âˆž</mi>
                 </mrow>
               </msubsup>
               <msup>
                 <mi>t</mi>
                 <mrow>
                   <mi>x</mi>
-                  <mo>&#x2212;</mo>
+                  <mo>âˆ’</mo>
                   <mn>1</mn>
                 </mrow>
               </msup>
               <msup>
-                <mi>&#x2147;</mi>
+                <mi>â…‡</mi>
                 <mrow>
-                  <mo>&#x2212;</mo>
+                  <mo>âˆ’</mo>
                   <mi>t</mi>
                 </mrow>
               </msup>
               <mrow>
-                <mo>&#x2146;</mo>
+                <mo>â…†</mo>
                 <mi>t</mi>
               </mrow>
             </mrow>
           </mstyle>
-        </math> </foreignObject>
-    </switch>
-  </g>
-</svg>
- </p>
+        </math> </svg:foreignObject>
+    </svg:switch>
+    <svg:ellipse cx="18px" cy="8px" rx="18px" ry="8px"
+          style="opacity: 1; stroke: #ff0000; stroke-opacity: 1; stroke-width: 3; fill: #ffaaaa; fill-opacity: 1;"
+          transform="translate(83,65) "/>
+  </svg:g>
+</svg:svg>
+ </div>
 </div>
 </div>
 
 <div class="main">
 
 <div class="section">
-<h2>¿Sabía que...?</h2>
+<h2>Â¿SabÃ­a que...?</h2>
 <dl>
   <dt>Elija su perfil</dt>
-    <dd><p>Amaya pone a su disposición 5 perfiles distintos que adaptan los
-      menús y barras de herramientas a sus necesidades. En cualquier perfil,
-      los paneles de herramientas se pueden personalizar y mostrar a derecha
-      o izquierda (véase Preferencias).</p>
+    <dd><p>Amaya pone a su disposiciÃ³n 5 perfiles distintos que adaptan los
+      menÃºs y barras de herramientas a sus necesidades. En cualquier perfil,
+      los paneles de herramientas se pueden personalizar y mostrar a derecha o
+      izquierda (vÃ©ase Preferencias).</p>
     </dd>
   <dt>Amaya es un editor estructurado</dt>
-    <dd>Al pulsar la tecla F2 (o Escape), se selecciona la estructura de
-      nivel superior, de manera que las funciones de edición (copiar, pegar,
+    <dd>Al pulsar la tecla F2 (o Escape), se selecciona la estructura de nivel
+      superior, de manera que las funciones de ediciÃ³n (copiar, pegar,
       atributos, etc.) se aplican a esos elementos estructurados.</dd>
   <dt>Los documentos pueden editarse utilizando vistas sincronizadas</dt>
-    <dd>El menú Ver permite abrir la vista de Estructura, la vista de Código
-      fuente, etc. Al hacer clic en la línea roja inferior, abre o cierra esa
+    <dd>El menÃº Ver permite abrir la vista de Estructura, la vista de CÃ³digo
+      fuente, etc. Al hacer clic en la lÃ­nea roja inferior, abre o cierra esa
       segunda vista.</dd>
   <dt>Los documentos pueden publicarse directamente en un servidor</dt>
-    <dd>Mediante el método http PUT se puede escribir en un servidor, siempre
+    <dd>Mediante el mÃ©todo http PUT se puede escribir en un servidor, siempre
       que se cuente con el permiso para hacerlo.</dd>
   <dt>Los enlaces pueden crearse con un simple clic</dt>
-    <dd>Para crear un enlace, se puede simplemente hacer clic en el destino
-      (al activar la opción Mostrar destinos se identifican los destinos
+    <dd>Para crear un enlace, se puede simplemente hacer clic en el destino (al
+      activar la opciÃ³n Mostrar destinos se identifican los destinos
       disponibles mediante iconos).</dd>
   <dt>Amaya dispone de comandos avanzados</dt>
-    <dd>Por ejemplo, Numeración de secciones, Generación de tabla de
-      contenidos, Inserción de la fecha y hora actual o Transformación de
+    <dd>Por ejemplo, NumeraciÃ³n de secciones, GeneraciÃ³n de tabla de
+      contenidos, InserciÃ³n de la fecha y hora actual o TransformaciÃ³n de
       estructuras</dd>
 </dl>
 </div>
 </div>
 </div>
 
-<p class="bottom section">Se concede permiso para utilizar, copiar, modificar
-y distribuir este programa y su documentación, para cualquier fin y sin
-cargas ni regalías, siempre que el texto completo de la <a
+<p class="bottom section">Se concede permiso para utilizar, copiar, modificar y
+distribuir este programa y su documentaciÃ³n, para cualquier fin y sin cargas
+ni regalÃ­as, siempre que el texto completo de la <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
 title="Massachusetts Institute of Technology">licencia MIT</acronym> e
-INRIA</a> se incluya en <strong>todas</strong> las copias del programa y de
-la documentación o de porciones de ellos, incluso en las modificaciones que
-se hayan realizado.</p>
+INRIA</a> se incluya en <strong>todas</strong> las copias del programa y de la
+documentaciÃ³n o de porciones de ellos, incluso en las modificaciones que se
+hayan realizado.</p>
 </body>
 </html>

@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="windows-1251"?>
-<?xml-stylesheet type="text/xsl" href="pmathml.xsl"?>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
+      "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:svg="http://www.w3.org/2000/svg">
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=windows-1251" />
-  <title>Добро пожаловать в Amaya</title>
-  <meta name="generator" content="amaya 9.52, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="content-type"
+  content="application/xhtml+xml; charset=UTF-8" />
+  <title>Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ РІ Amaya</title>
+  <meta name="generator" content="amaya, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="ru" lang="ru">
+<body xml:lang="ru">
 
 <div id="header">
 <ul id="links">
@@ -22,83 +25,93 @@
 </div>
 
 <div id="logo">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.0" height="150px"
-     width="230px">
-  <title>Amaya logo</title>
-  <ellipse cx="0px" cy="0px" rx="66px" ry="45px"
-        style="fill: #EDF3FF; stroke: #EDF3FF" transform="translate(138,96)">
-    <animateTransform attributeName="transform" attributeType="XML"
+<svg:svg height="150px" width="230px">
+  <svg:title>Amaya logo</svg:title>
+  <svg:ellipse cx="0px" cy="0px" rx="66px" ry="45px"
+        style="fill: #EDF3FF; stroke: #EDF3FF"
+        transform="translate(143,98) scale(0.552043) ">
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="scale" from=".1" to="1" additive="sum" begin="0s"
                       dur="6s" fill="freeze"/>
-  </ellipse>
-  <g transform="rotate(-30,100,150)">
-    <polygon points="0,117 66,0 21,117" transform="translate(49,22)"
+  </svg:ellipse>
+  <svg:g transform="rotate(-30,100,150)">
+    <svg:polygon points="0,117 66,0 21,117" transform="translate(49,22)"
              style="fill: #B27700; stroke: #D9E500"/>
-    <polygon points="0,0 9,30 27,41 21,14 12,3" transform="translate(117,25)"
+    <svg:polygon points="0,0 9,30 27,41 21,14 12,3"
+             transform="translate(117,25)"
              style="fill: #00B200; stroke: #00E500"/>
-    <polygon points="0,6 29,0 56,8 32,15 13,19" transform="translate(95,76)"
+    <svg:polygon points="0,6 29,0 56,8 32,15 13,19"
+             transform="translate(95,76)"
              style="fill: #00B200; stroke: #00E500"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-30,100,150" to="-20,100,150"
                       begin="2.5s" dur="0.3s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-20,100,150" to="-10,100,150"
                       begin="2.8s" dur="0.2s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-10,100,150" to="0,100,150"
                       begin="3s" dur="0.1s" fill="freeze"/>
-  </g>
-  <g transform="translate(118,110)">
-    <polygon points="3,0 5,16 0,16" transform="translate(25,-20)"
+  </svg:g>
+  <svg:g transform="translate(118,110)">
+    <svg:polygon points="3,0 5,16 0,16" transform="translate(25,-20)"
              style="stroke: #E50000; fill: #E50000"/>
-    <polygon
+    <svg:polygon
              points="0,13 10,0 20,1 23,10 29,2 40,1 42,9 45,17 32,17 33,11 30,11 23,15 18,15 12,7 8,7 8,13"
              stroke="#E50000" fill="#FF9595"/>
-    <!-- M масштабирование -->
-    <animateTransform attributeName="transform" attributeType="XML"
+    <!-- M scale -->
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="scale" from=".1" to="1" additive="sum" begin="0s"
                       dur="3s" fill="freeze"/>
-    <!-- M преобразование -->
-    <animateTransform attributeName="transform" attributeType="XML"
+    <!-- M translation -->
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="translate" from="0,0" to="118,110" begin="0s"
                       dur="3s" fill="freeze"/>
-    <!-- M колебание -->
-    <!-- Вероятно центр вращения указан неправильно... (30,-22)  -->
-    <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="0,30,-22" to="-30,30,-22"
-                      begin="3s" dur="0.2s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <!-- M oscillations -->
+    <!-- Maybe rotation center is not correct... (30,-22)  -->
+    <svg:animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="0,30,-22" to="-30,30,-22" begin="3s"
+                      dur="0.2s" fill="freeze"/>
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-30,30,-22" to="25,30,-22"
                       begin="3.2s" dur="0.4s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="25,30,-22" to="-20,30,-22"
                       begin="3.6s" dur="0.6s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
+    <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="rotate" from="-20,30,-22" to="15,30,-22"
                       begin="4.2s" dur="0.8s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="15,30,-22" to="-10,30,-22"
-                      begin="5s" dur="1s" fill="freeze"/>
-    <animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="-10,30,-22" to="0,30,-22"
-                      begin="6s" dur="0.6s" fill="freeze"/>
-  </g>
-</svg>
+    <svg:animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="15,30,-22" to="-10,30,-22" begin="5s"
+                      dur="1s" fill="freeze"/>
+    <svg:animateTransform attributeName="transform" attributeType="XML"
+                      type="rotate" from="-10,30,-22" to="0,30,-22" begin="6s"
+                      dur="0.6s" fill="freeze"/>
+  </svg:g>
+</svg:svg>
 </div>
 
-<div id="intro" class="section">
-<p>Amaya является веб клиентом и может использоваться и как браузер и как
-инструмент авторского редактирования. Он создан <a
-href="http://www.w3.org/">W3C</a> и <a href="http://www.inria.fr/">INRIA</a>
-главной целью которых является демонстрация новых веб технологий и помощь
-пользователям в создании правильных веб страниц.</p>
 
-<p>С помощью Amaya, вы можете работать со сложными веб страницами, таблицами,
-и большинством дополнительных возможностей, предоставляемых <acronym
-title="Hypertext Markup Language">XHTML</acronym>. Вы можете создавать и
-редактировать сложные <a href="../doc/WX/Math.html">математические
-выражения</a> в веб страницах. Используя каскадные таблицы стилей, вы можете
-стильно оформлять свои документы.</p>
+<div id="intro" class="section">
+<p>Amaya СЏРІР»СЏРµС‚СЃСЏ РІРµР± РєР»РёРµРЅС‚РѕРј Рё РјРѕР¶РµС‚
+РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ Рё РєР°Рє Р±СЂР°СѓР·РµСЂ Рё РєР°Рє
+РёРЅСЃС‚СЂСѓРјРµРЅС‚ Р°РІС‚РѕСЂСЃРєРѕРіРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ. РћРЅ
+СЃРѕР·РґР°РЅ <a href="http://www.w3.org/">W3C</a> Рё <a
+href="http://www.inria.fr/">INRIA</a> РіР»Р°РІРЅРѕР№ С†РµР»СЊСЋ РєРѕС‚РѕСЂС‹С…
+СЏРІР»СЏРµС‚СЃСЏ РґРµРјРѕРЅСЃС‚СЂР°С†РёСЏ РЅРѕРІС‹С… РІРµР±
+С‚РµС…РЅРѕР»РѕРіРёР№ Рё РїРѕРјРѕС‰СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј РІ
+СЃРѕР·РґР°РЅРёРё РїСЂР°РІРёР»СЊРЅС‹С… РІРµР± СЃС‚СЂР°РЅРёС†.</p>
+
+<p>РЎ РїРѕРјРѕС‰СЊСЋ Amaya, РІС‹ РјРѕР¶РµС‚Рµ СЂР°Р±РѕС‚Р°С‚СЊ СЃРѕ
+СЃР»РѕР¶РЅС‹РјРё РІРµР± СЃС‚СЂР°РЅРёС†Р°РјРё, С‚Р°Р±Р»РёС†Р°РјРё, Рё
+Р±РѕР»СЊС€РёРЅСЃС‚РІРѕРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РІРѕР·РјРѕР¶РЅРѕСЃС‚РµР№,
+РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµРјС‹С… <acronym
+title="Hypertext Markup Language">XHTML</acronym>. Р’С‹ РјРѕР¶РµС‚Рµ
+СЃРѕР·РґР°РІР°С‚СЊ Рё СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЃР»РѕР¶РЅС‹Рµ <a
+href="../doc/WX/Math.html">РјР°С‚РµРјР°С‚РёС‡РµСЃРєРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ</a>
+РІ РІРµР± СЃС‚СЂР°РЅРёС†Р°С…. РСЃРїРѕР»СЊР·СѓСЏ РєР°СЃРєР°РґРЅС‹Рµ
+С‚Р°Р±Р»РёС†С‹ СЃС‚РёР»РµР№, РІС‹ РјРѕР¶РµС‚Рµ СЃС‚РёР»СЊРЅРѕ
+РѕС„РѕСЂРјР»СЏС‚СЊ СЃРІРѕРё РґРѕРєСѓРјРµРЅС‚С‹.</p>
 </div>
 
 <div class="body">
@@ -123,29 +136,26 @@ title="Hypertext Markup Language">XHTML</acronym>. Вы можете создавать и
 
 <p>Embedded MathML and SVG:</p>
 
-<p><svg xmlns="http://www.w3.org/2000/svg" height="250" width="250">
-  <g transform="matrix(0.707107,-0.707107,0.707107,0.707107,0,150)">
-    <rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;" width="200"
+<div id="mathml_svg">
+  <svg:svg height="250" width="250">
+  <svg:g transform="rotate(-47.78,198.421,64.1654) scale(1) ">
+    <svg:rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;" width="200"
           height="100"/>
-    <path
+    <svg:path
           d="M 44.727272,21.090909 L 36.359858,29.587325 L 40.292606,40.845041 L 28.432844,39.600562 L 22.083235,49.69438 L 15.661767,39.646124 L 3.8111859,40.975193 L 7.6635087,29.689702 L -0.76431515,21.253205 L 10.460921,17.228684 L 11.802177,5.3794762 L 21.947495,11.646471 L 32.047838,5.3072476 L 33.473606,17.146584 L 44.727272,21.090909 z "
           transform="translate(150,40)"
           style="stroke:#ffaa00;stroke-width:1px;fill:#ffff00;"/>
-    <path
+    <svg:path
           d="M 50.363636,43.81818 C 50.090154,43.025081 51.297791,43.058245 51.681818,43.363636 C 52.722508,44.191224 52.181922,45.777285 51.272725,46.454544 C 49.646384,47.666002 47.379434,46.796331 46.40909,45.181813 C 44.98507,42.812444 46.220462,39.785248 48.545459,38.545452 C 51.644314,36.892997 55.454153,38.507192 56.954547,41.545458 C 58.842639,45.368806 56.844001,49.970617 53.090902,51.727273 C 48.545397,53.854818 43.146815,51.468849 41.136361,46.999991 C 38.767111,41.733596 41.542078,35.535434 46.727281,33.272723 C 52.713804,30.660333 59.713334,33.825342 62.227275,39.727281 C 65.083776,46.433439 61.528027,54.235551 54.909079,57.000002 C 47.483621,60.101298 38.878068,56.15432 35.863632,48.818168 C 32.517038,40.673649 36.8556,31.26402 44.909104,27.999994"
           transform="translate(-5,30)"
           style="fill:none;stroke:#000000;stroke-width:1px;"/>
-    <path
-          d="M 43.454546 30.272728 A 16.454546 7.3636365 0 1 1  10.545454,30.272728 A 16.454546 7.3636365 0 1 1  43.454546 30.272728 z"
-          style="stroke:#ff0000;stroke-width:3px;fill:#ffaaaa;"
-          transform="translate(70,40)"/>
-    <switch>
-      <foreignObject width="200" height="100">
+    <svg:switch>
+      <svg:foreignObject width="200" height="100">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <mstyle mathcolor="#000080;">
             <mrow>
-              <mi>&#x393;</mi>
-              <mo>&#x2061;</mo>
+              <mi>О“</mi>
+              <mo>вЃЎ</mo>
               <mrow>
                 <mo>(</mo>
                 <mi>x</mi>
@@ -155,78 +165,97 @@ title="Hypertext Markup Language">XHTML</acronym>. Вы можете создавать и
             <mo>=</mo>
             <mrow>
               <msubsup>
-                <mo>&#x222b;</mo>
+                <mo>в€«</mo>
                 <mn>0</mn>
                 <mrow>
                   <mo>+</mo>
-                  <mi>&#x221e;</mi>
+                  <mi>в€ћ</mi>
                 </mrow>
               </msubsup>
               <msup>
                 <mi>t</mi>
                 <mrow>
                   <mi>x</mi>
-                  <mo>&#x2212;</mo>
+                  <mo>в€’</mo>
                   <mn>1</mn>
                 </mrow>
               </msup>
               <msup>
-                <mi>&#x2147;</mi>
+                <mi>в…‡</mi>
                 <mrow>
-                  <mo>&#x2212;</mo>
+                  <mo>в€’</mo>
                   <mi>t</mi>
                 </mrow>
               </msup>
               <mrow>
-                <mo>&#x2146;</mo>
+                <mo>в…†</mo>
                 <mi>t</mi>
               </mrow>
             </mrow>
           </mstyle>
-        </math> </foreignObject>
-    </switch>
-  </g>
-</svg>
- </p>
+        </math> </svg:foreignObject>
+    </svg:switch>
+    <svg:ellipse cx="18px" cy="8px" rx="18px" ry="8px"
+          style="opacity: 1; stroke: #ff0000; stroke-opacity: 1; stroke-width: 3; fill: #ffaaaa; fill-opacity: 1;"
+          transform="translate(83,65) "/>
+  </svg:g>
+</svg:svg>
+ </div>
 </div>
 </div>
 
 <div class="main">
 
 <div class="section">
-<h2>А вы знаете?</h2>
+<h2>Рђ РІС‹ Р·РЅР°РµС‚Рµ?</h2>
 <dl>
-  <dt>Amaya является редактором структуры</dt>
-    <dd>С помощью кнопки F2 вы можете выбирать вложенные структуры, а функции
-      редактирования (копировать, вставить, атрибуты, и прочее.) могут
-      применяться к этим самым элементам структуры.</dd>
-  <dt>Документ может редактироваться через синхронизируемые виды</dt>
-    <dd>Из меню Вид можно открывать вид Структура, вид Исходный код и прочее.
-      Щелчок по основанию красной линии открывает или закрывает второй
-    вид.</dd>
-  <dt>Документ может публиковаться непосредственно на сервере</dt>
-    <dd>С http методом PUT вы можете записывать прямо на сервер, в
-      соответствии с вашими правами доступа.</dd>
-  <dt>Ссылки могут создаваться простым щелчком</dt>
-    <dd>Для создания ссылки вы можете щёлкнуть прямо на цели (используя для
-      показа доступных целей пункт меню Показать цель).</dd>
-  <dt>Amaya предоставляет дополнительные команды</dt>
-    <dd>Такие как: нумерация разделов, генерирование оглавления, вставка
-      штампа времени, преобразование структуры.</dd>
+  <dt>Amaya СЏРІР»СЏРµС‚СЃСЏ СЂРµРґР°РєС‚РѕСЂРѕРј СЃС‚СЂСѓРєС‚СѓСЂС‹</dt>
+    <dd>РЎ РїРѕРјРѕС‰СЊСЋ РєРЅРѕРїРєРё F2 РІС‹ РјРѕР¶РµС‚Рµ РІС‹Р±РёСЂР°С‚СЊ
+      РІР»РѕР¶РµРЅРЅС‹Рµ СЃС‚СЂСѓРєС‚СѓСЂС‹, Р° С„СѓРЅРєС†РёРё
+      СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ (РєРѕРїРёСЂРѕРІР°С‚СЊ, РІСЃС‚Р°РІРёС‚СЊ,
+      Р°С‚СЂРёР±СѓС‚С‹, Рё РїСЂРѕС‡РµРµ.) РјРѕРіСѓС‚ РїСЂРёРјРµРЅСЏС‚СЊСЃСЏ Рє
+      СЌС‚РёРј СЃР°РјС‹Рј СЌР»РµРјРµРЅС‚Р°Рј СЃС‚СЂСѓРєС‚СѓСЂС‹.</dd>
+  <dt>Р”РѕРєСѓРјРµРЅС‚ РјРѕР¶РµС‚ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊСЃСЏ С‡РµСЂРµР·
+  СЃРёРЅС…СЂРѕРЅРёР·РёСЂСѓРµРјС‹Рµ РІРёРґС‹</dt>
+    <dd>РР· РјРµРЅСЋ Р’РёРґ РјРѕР¶РЅРѕ РѕС‚РєСЂС‹РІР°С‚СЊ РІРёРґ
+      РЎС‚СЂСѓРєС‚СѓСЂР°, РІРёРґ РСЃС…РѕРґРЅС‹Р№ РєРѕРґ Рё РїСЂРѕС‡РµРµ.
+      Р©РµР»С‡РѕРє РїРѕ РѕСЃРЅРѕРІР°РЅРёСЋ РєСЂР°СЃРЅРѕР№ Р»РёРЅРёРё
+      РѕС‚РєСЂС‹РІР°РµС‚ РёР»Рё Р·Р°РєСЂС‹РІР°РµС‚ РІС‚РѕСЂРѕР№ РІРёРґ.</dd>
+  <dt>Р”РѕРєСѓРјРµРЅС‚ РјРѕР¶РµС‚ РїСѓР±Р»РёРєРѕРІР°С‚СЊСЃСЏ
+  РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РЅР° СЃРµСЂРІРµСЂРµ</dt>
+    <dd>РЎ http РјРµС‚РѕРґРѕРј PUT РІС‹ РјРѕР¶РµС‚Рµ Р·Р°РїРёСЃС‹РІР°С‚СЊ
+      РїСЂСЏРјРѕ РЅР° СЃРµСЂРІРµСЂ, РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РІР°С€РёРјРё
+      РїСЂР°РІР°РјРё РґРѕСЃС‚СѓРїР°.</dd>
+  <dt>РЎСЃС‹Р»РєРё РјРѕРіСѓС‚ СЃРѕР·РґР°РІР°С‚СЊСЃСЏ РїСЂРѕСЃС‚С‹Рј
+  С‰РµР»С‡РєРѕРј</dt>
+    <dd>Р”Р»СЏ СЃРѕР·РґР°РЅРёСЏ СЃСЃС‹Р»РєРё РІС‹ РјРѕР¶РµС‚Рµ С‰С‘Р»РєРЅСѓС‚СЊ
+      РїСЂСЏРјРѕ РЅР° С†РµР»Рё (РёСЃРїРѕР»СЊР·СѓСЏ РґР»СЏ РїРѕРєР°Р·Р°
+      РґРѕСЃС‚СѓРїРЅС‹С… С†РµР»РµР№ РїСѓРЅРєС‚ РјРµРЅСЋ РџРѕРєР°Р·Р°С‚СЊ
+      С†РµР»СЊ).</dd>
+  <dt>Amaya РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ
+  РєРѕРјР°РЅРґС‹</dt>
+    <dd>РўР°РєРёРµ РєР°Рє: РЅСѓРјРµСЂР°С†РёСЏ СЂР°Р·РґРµР»РѕРІ,
+      РіРµРЅРµСЂРёСЂРѕРІР°РЅРёРµ РѕРіР»Р°РІР»РµРЅРёСЏ, РІСЃС‚Р°РІРєР°
+      С€С‚Р°РјРїР° РІСЂРµРјРµРЅРё, РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ
+      СЃС‚СЂСѓРєС‚СѓСЂС‹.</dd>
 </dl>
 </div>
 </div>
 </div>
 
-<p class="bottom section">Разрешение на использование, копирование, изменение
-и распространение этого программного обеспечения и его документации для любых
-целей без оплаты и любых других лицензионных платежей, может быть получено
-при условии что полный текст <a
-href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
-title="Massachusetts Institute of Technology">MIT</acronym> и права
-собствености INRIA</a> будут находиться во <strong>всех</strong> копиях этого
-программного обеспечения и документации или части всего этого, включая
-изменения которые вы сделаете.</p>
+<p class="bottom section">Р Р°Р·СЂРµС€РµРЅРёРµ РЅР° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ,
+РєРѕРїРёСЂРѕРІР°РЅРёРµ, РёР·РјРµРЅРµРЅРёРµ Рё СЂР°СЃРїСЂРѕСЃС‚СЂР°РЅРµРЅРёРµ
+СЌС‚РѕРіРѕ РїСЂРѕРіСЂР°РјРјРЅРѕРіРѕ РѕР±РµСЃРїРµС‡РµРЅРёСЏ Рё РµРіРѕ
+РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РґР»СЏ Р»СЋР±С‹С… С†РµР»РµР№ Р±РµР· РѕРїР»Р°С‚С‹ Рё
+Р»СЋР±С‹С… РґСЂСѓРіРёС… Р»РёС†РµРЅР·РёРѕРЅРЅС‹С… РїР»Р°С‚РµР¶РµР№, РјРѕР¶РµС‚
+Р±С‹С‚СЊ РїРѕР»СѓС‡РµРЅРѕ РїСЂРё СѓСЃР»РѕРІРёРё С‡С‚Рѕ РїРѕР»РЅС‹Р№ С‚РµРєСЃС‚
+<a href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
+title="Massachusetts Institute of Technology">MIT</acronym> Рё РїСЂР°РІР°
+СЃРѕР±СЃС‚РІРµРЅРѕСЃС‚Рё INRIA</a> Р±СѓРґСѓС‚ РЅР°С…РѕРґРёС‚СЊСЃСЏ РІРѕ
+<strong>РІСЃРµС…</strong> РєРѕРїРёСЏС… СЌС‚РѕРіРѕ РїСЂРѕРіСЂР°РјРјРЅРѕРіРѕ
+РѕР±РµСЃРїРµС‡РµРЅРёСЏ Рё РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РёР»Рё С‡Р°СЃС‚Рё РІСЃРµРіРѕ
+СЌС‚РѕРіРѕ, РІРєР»СЋС‡Р°СЏ РёР·РјРµРЅРµРЅРёСЏ РєРѕС‚РѕСЂС‹Рµ РІС‹
+СЃРґРµР»Р°РµС‚Рµ.</p>
 
 <p></p>
 </body>
