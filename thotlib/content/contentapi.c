@@ -4648,6 +4648,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	   *   |             |
 	   *   (4_)--------(3_)
 	   */
+	  return FALSE;
 
 	  if(IsAcuteAngle(x4, y4, x1, y1, x2, y2))
 	    {
@@ -4721,7 +4722,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 
 	case PARALLELOGRAM:
-	  //	  return FALSE;
+	  return FALSE;
 	  x4_ = x4;
 	  y4_ = y4;
 
@@ -4788,7 +4789,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  break;
 	}
 
-      if(shape != -1 && shape != TRAPEZIUM)
+      if(shape != -1)
 	{
 	  TtaAppendTransform (TtaGetParent(leaf),
 			      TtaNewTransformMatrix(a, b, c, d, e, f),

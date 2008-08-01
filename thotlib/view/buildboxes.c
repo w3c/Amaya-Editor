@@ -3011,8 +3011,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           pBox->BxBuffer = NULL;
           pBox->BxNChars = pAb->AbVolume;
           GiveGraphicSize (pAb, &width, &height);
-          if (pAb->AbShape == 2 || pAb->AbShape == 3 ||
-	      pAb->AbShape == 1 || pAb->AbShape == 'C')
+          if (pAb->AbShape == 1 || pAb->AbShape == 'C')
             {
               /* update radius of the rectangle with rounded corners */
               ComputeRadius (pAb, frame, TRUE);
@@ -4500,8 +4499,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                     }
                 }
               else if (pAb->AbLeafType == LtGraphics &&
-		       (pAb->AbShape == 2 || pAb->AbShape == 3 ||
-			pAb->AbShape == 1 || pAb->AbShape == 'C'))
+		       (pAb->AbShape == 1 || pAb->AbShape == 'C'))
                 {
                   /* update radius of the rectangle with rounded corners */
                   ComputeRadius (pAb, frame, TRUE);
@@ -4929,8 +4927,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
               /* check auto margins */
               CheckMBP (pAb, pCurrentBox, frame, TRUE);
               if (pAb->AbLeafType == LtGraphics &&
-		  (pAb->AbShape == 2 || pAb->AbShape == 3 ||
-		   pAb->AbShape == 1 || pAb->AbShape == 'C') &&
+		  (pAb->AbShape == 1 || pAb->AbShape == 'C') &&
                   pAb->AbRxUnit == UnPercent)
                 /* update radius of the rectangle with rounded corners */
                 ComputeRadius (pAb, frame, TRUE);
@@ -5023,8 +5020,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
               /* recheck auto and % margins */
               CheckMBP (pAb, pCurrentBox, frame, TRUE);
               if (pAb->AbLeafType == LtGraphics &&
-		  (pAb->AbShape == 2 || pAb->AbShape == 3 ||
-		   pAb->AbShape == 1 || pAb->AbShape == 'C') &&
+		  (pAb->AbShape == 1 || pAb->AbShape == 'C') &&
                   pAb->AbRyUnit == UnPercent)
                 /* update radius of the rectangle with rounded corners */
                 ComputeRadius (pAb, frame, FALSE);
