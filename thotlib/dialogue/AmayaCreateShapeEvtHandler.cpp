@@ -387,6 +387,9 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
       glEnd (); 
       break;
 
+      /* svg */
+    case -1:
+
       /* Selection */
     case 42:
 

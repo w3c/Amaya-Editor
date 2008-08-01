@@ -1799,6 +1799,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               selType = TtaGetElementType (elem);
               if (selType.ElTypeNum != elType.ElTypeNum)
                 svgCanvas = TtaGetTypedAncestor (elem, elType);
+	      newSVG = TRUE;
             }
           else
             {
@@ -1896,6 +1897,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   switch (entry)
     {
+    case -1: /* <svg/> */
+      newType.ElTypeNum = SVG_EL_SVG;
+      break;
+
     case 0:	/* line */
       newType.ElTypeNum = SVG_EL_line_;
       isFilled = FALSE;
@@ -2047,7 +2052,39 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
 	}
 
-      if (entry <= 4 || entry >= 12)
+      if(!newSVG && entry == -1)
+	{
+	  /* <svg/> */
+	  if (isFormattedView)
+	    {
+	      created = AskSurroundingBox(doc,
+					  svgAncestor,
+					  svgCanvas,
+					  entry,
+					  &x1, &y1, &x2, &y2,
+					  &x3, &y3, &x4, &y4,
+					  &lx, &ly);
+	    }
+	  else
+	    {
+	      /* TODO: add a dialog box ? */
+	      x1 = y1 = 0;
+	      lx = 500;
+	      ly = 300;
+	      created = TRUE;
+	    }
+
+	  attrType.AttrTypeNum = SVG_ATTR_x;
+	  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
+	  attrType.AttrTypeNum = SVG_ATTR_y;
+	  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
+	  attrType.AttrTypeNum = SVG_ATTR_width_;
+	  UpdateAttrText (newEl, doc, attrType, lx, FALSE, TRUE);
+	  attrType.AttrTypeNum = SVG_ATTR_height_;
+	  UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
+	  selEl = newEl;
+	}
+      else if ((0 <= entry && entry <= 4) || entry >= 12)
 	{
 	  /* Basic Shapes and lines */
 	  selEl = newEl;
@@ -2598,7 +2635,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
     }
 
   /* create attributes fill and stroke */
-  if (created && 
+  if (entry != -1 && created && 
       (newType.ElTypeNum == SVG_EL_line_ ||
        newType.ElTypeNum == SVG_EL_rect ||
        newType.ElTypeNum == SVG_EL_circle_ ||
@@ -4168,6 +4205,14 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
 #ifdef _SVG
 	Key_position_defined (event->document, event->element);
 #endif /* _SVG */
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_Svg
+  ----------------------------------------------------------------------*/
+void CreateSVG_Svg (Document document, View view)
+{
+  CreateGraphicElement (document, view, -1);
 }
 
 /*----------------------------------------------------------------------

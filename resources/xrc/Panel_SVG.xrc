@@ -5,6 +5,9 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_1" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_SVG_SVG">
+            <bitmap>../icons/16x16/document_svg.png</bitmap>
+          </object>
           <object class="tool" name="wxID_PANEL_SVG_LINE">
             <bitmap>../icons/16x16/SVG_line.png</bitmap>
           </object>

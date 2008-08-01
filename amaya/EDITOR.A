@@ -664,6 +664,7 @@ FUNCTIONS
   CreateMSINH,
   CreateMTAN,
   CreateMTANH,
+  CreateSVG_Svg,
   CreateSVG_Line,
   CreateSVG_Rectangle,
   CreateSVG_RoundedRectangle,

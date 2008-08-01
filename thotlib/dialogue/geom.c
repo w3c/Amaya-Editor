@@ -1467,7 +1467,7 @@ ThotBool ShapeCreation (int frame,
   *ly = abs(*y4 - *y1);
 
   /* Some shapes have specific contrainsts.  */
-  if(shape == 9 || shape == 10 || shape == 42)
+  if(shape == 9 || shape == 10 || shape == 42 || shape == -1)
     {
       /* text, foreign object or selection */
       created = TRUE;
