@@ -1719,6 +1719,10 @@
 	<message xml:lang="sk">Zmenšiť veľkosť textu</message>
 	<message xml:lang="ja">ズームアウト(&amp;O)</message>
 </label>
+<label define="BZoomNormal">
+	<message xml:lang="en">Normal zoom</message>
+	<message xml:lang="fr">Zoom normal</message>
+</label>
 <label define="BParagraph">
 	<message xml:lang="en">Paragraph (p)</message>
 	<message xml:lang="fr">Paragraphe (p)</message>

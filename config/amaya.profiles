@@ -280,6 +280,7 @@ FollowTheLinkNewWin
 FollowTheLinkNewTab
 ZoomIn
 ZoomOut
+ZoomNormal
 DoAction
 GoToHome
 OpenDoc

@@ -65,6 +65,8 @@ extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
+extern void CreateSVG_Svg ( Document document,
+                            View view );
 extern void CreateSVG_Line ( Document document,
                              View view );
 extern void CreateSVG_Rectangle ( Document document,
@@ -237,6 +239,8 @@ extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
+extern void CreateSVG_Svg ( Document document,
+                              View view );
 extern void CreateSVG_Line ( Document document,
                                View view );
 extern void CreateSVG_Rectangle ( Document document,

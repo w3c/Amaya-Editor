@@ -48,6 +48,8 @@ Ctrl <Key>6:        ZoomOut()
 Ctrl <Key>-:        ZoomOut()
 Ctrl <Key>=:        ZoomIn()
 Ctrl <Key>+:        ZoomIn()
+Ctrl <Key>):        ZoomNormal()
+Ctrl <Key>0:        ZoomNormal()
 
 # BR and &nbsp;
 Ctrl <Key>Return:                  CreateBreak("\212") 

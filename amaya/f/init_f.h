@@ -168,6 +168,8 @@ extern void ZoomIn ( Document document,
                      View view );
 extern void ZoomOut ( Document document,
                       View view );
+extern void ZoomNormal ( Document document,
+                         View view );
 extern void ShowSource ( Document doc,
                          View view );
 extern void ShowFormatted ( Document doc,
@@ -431,6 +433,8 @@ extern void ZoomIn ( Document document,
                        View view );
 extern void ZoomOut ( Document document,
                         View view );
+extern void ZoomNormal ( Document document,
+                           View view );
 extern void ShowSource ( Document doc,
                            View view );
 extern void ShowFormatted ( Document doc,

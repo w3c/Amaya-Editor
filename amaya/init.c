@@ -4203,7 +4203,6 @@ void ShowTargets (Document document, View view)
 void ZoomIn (Document document, View view)
 {
   int               zoom, zoomVal;
-  char             *zoomStr;
 
   zoom = TtaGetZoom (document, view);
   if (zoom < 10)
@@ -4213,23 +4212,9 @@ void ZoomIn (Document document, View view)
     }
 
   /* compare to the standard value? */
-  zoomStr = TtaGetEnvString ("ZOOM");
-  if (zoomStr == NULL)
-    zoomVal = 0;
-  else
-    {
-      sscanf (zoomStr, "%d", &zoomVal);
-      if (zoomVal > 10 || zoomVal < -10)
-        zoomVal = 0;
-    }
-  if (zoom > zoomVal)
-    TtaSetToggleItem (document, 1, Views, TZoomIn, TRUE);
-  else
-    TtaSetToggleItem (document, 1, Views, TZoomIn, FALSE);
-  if (zoom < zoomVal)
-    TtaSetToggleItem (document, 1, Views, TZoomOut, TRUE);
-  else
-    TtaSetToggleItem (document, 1, Views, TZoomOut, FALSE);
+  TtaGetEnvInt ("ZOOM", &zoomVal);
+  TtaSetToggleItem (document, 1, Views, TZoomIn, zoom > zoomVal);
+  TtaSetToggleItem (document, 1, Views, TZoomOut, zoom < zoomVal);
 }
 
 /*----------------------------------------------------------------------
@@ -4237,7 +4222,6 @@ void ZoomIn (Document document, View view)
 void ZoomOut (Document document, View view)
 {
   int               zoom, zoomVal;
-  char             *zoomStr;
 
   zoom = TtaGetZoom (document, view);
   if (zoom > -10)
@@ -4247,23 +4231,25 @@ void ZoomOut (Document document, View view)
     }
 
   /* compare to the standard value? */
-  zoomStr = TtaGetEnvString ("ZOOM");
-  if (zoomStr == NULL)
-    zoomVal = 0;
-  else
+  TtaGetEnvInt ("ZOOM", &zoomVal);
+  TtaSetToggleItem (document, 1, Views, TZoomIn, zoom > zoomVal);
+  TtaSetToggleItem (document, 1, Views, TZoomOut, zoom < zoomVal);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void ZoomNormal (Document document, View view)
+{
+  int               zoom, zoomVal;
+
+  zoom = TtaGetZoom (document, view);
+  TtaGetEnvInt ("ZOOM", &zoomVal);
+  if(zoom != zoomVal)
     {
-      sscanf (zoomStr, "%d", &zoomVal);
-      if (zoomVal > 10 || zoomVal < -10)
-        zoomVal = 0;
+      TtaSetZoom (document, view, zoomVal);
+      TtaSetToggleItem (document, 1, Views, TZoomIn, FALSE);
+      TtaSetToggleItem (document, 1, Views, TZoomOut, FALSE);
     }
-  if (zoom > zoomVal)
-    TtaSetToggleItem (document, 1, Views, TZoomIn, TRUE);
-  else
-    TtaSetToggleItem (document, 1, Views, TZoomIn, FALSE);
-  if (zoom < zoomVal)
-    TtaSetToggleItem (document, 1, Views, TZoomOut, TRUE);
-  else
-    TtaSetToggleItem (document, 1, Views, TZoomOut, FALSE);
 }
 
 /*----------------------------------------------------------------------

@@ -152,6 +152,7 @@ MENUS
 	Views button:BFullScreen -> FullScreen;
 	Views toggle:TZoomIn -> ZoomIn;
 	Views toggle:TZoomOut -> ZoomOut;
+	Views button:BZoomNormal -> ZoomNormal;
 
 	Types button:BParagraph -> CreateParagraph icon:XHTML_P.png;
 	Types.Heading button:BH1 -> CreateHeading1 icon:XHTML_H1.png;
