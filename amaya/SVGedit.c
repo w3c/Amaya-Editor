@@ -1110,8 +1110,8 @@ void GraphElemPasted (NotifyElement *event)
 {
   ElementType    elType;
   SSchema	       SvgSchema;
-  AttributeType  attrType;
-  Attribute      attr;
+  /*  AttributeType  attrType;
+      Attribute      attr;*/
   Element        parent;
   int            profile;
 
@@ -1146,14 +1146,14 @@ void GraphElemPasted (NotifyElement *event)
               /* Put a namespace declaration on the pasted <svg> element */
               TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
               TtaSetANamespaceDeclaration (event->document, event->element,
-                                           NULL, SVG_URI);
+                                           "svg", SVG_URI);
               /* put a version attribute on the <svg> element */
-              attrType.AttrSSchema = SvgSchema;
+              /*attrType.AttrSSchema = SvgSchema;
               attrType.AttrTypeNum = SVG_ATTR_version;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (event->element, attr, event->document);
               TtaSetAttributeText (attr, SVG_VERSION, event->element,
-                                   event->document);
+	      event->document);*/
             }
         }
     }
@@ -1822,10 +1822,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
           if (svgCanvas)
             /* a root SVG element was created. Create the required attributes*/
             {
-              attrType.AttrTypeNum = SVG_ATTR_version;
+              /*attrType.AttrTypeNum = SVG_ATTR_version;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (svgCanvas, attr, doc);
-              TtaSetAttributeText (attr, SVG_VERSION, svgCanvas, doc);
+              TtaSetAttributeText (attr, SVG_VERSION, svgCanvas, doc);*/
 
 	      attrType.AttrTypeNum = SVG_ATTR_width_;
               attr = TtaNewAttribute (attrType);
@@ -3995,7 +3995,7 @@ void SVGCreated (NotifyElement * event)
            declaration on the  <svg> element */
         {
           TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
-          TtaSetANamespaceDeclaration (event->document, event->element, NULL,
+          TtaSetANamespaceDeclaration (event->document, event->element, "svg",
                                        SVG_URI);
         }
     }
