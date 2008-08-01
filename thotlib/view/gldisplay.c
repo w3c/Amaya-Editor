@@ -1887,8 +1887,10 @@ void DrawPath (int frame, int thick, int style, int x, int y,
               y1 = PixelValueDble (y, pPa->YStart, frame);
               x2 = PixelValueDble (x, pPa->XEnd, frame);
               y2 = PixelValueDble (y, pPa->YEnd, frame);
-              cx1 = (double) pPa->XRadius; 
-              cy1 = (double) pPa->YRadius; 
+              cx1 = (double) PixelValue (pPa->XRadius, UnPixel, NULL,
+					 ViewFrameTable[frame - 1].FrMagnification); 
+              cy1 = (double) PixelValue (pPa->YRadius, UnPixel, NULL,
+					 ViewFrameTable[frame - 1].FrMagnification); 
               EllipticSplit2 (frame, x, y,
                               x1, y1, 
                               x2, y2, 
