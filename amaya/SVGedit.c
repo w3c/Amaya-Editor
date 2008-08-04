@@ -2689,7 +2689,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       *buffer = EOS;
 
       /* Is the shape visible with this configuration? */
-      if(
+      if(entry == -2 ||
 	 Current_Opacity == 0 ||
 
 	 (
