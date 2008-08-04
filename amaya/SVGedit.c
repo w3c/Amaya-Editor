@@ -2061,7 +2061,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
       if(entry == -2)
 	{
-	  char *path = "/home/fwang/Amaya/resources/svg/erlenmeyer_flask.svg";//TtaGetResourcePathWX(WX_RESOURCES_SVG, "erlenmeyer_flask.svg");
+//	  char *path = "/home/kia/workspace/Amaya/resources/svg/erlenmeyer_flask.svg";
+	  char* path = TtaStrdup((const char*)TtaGetResourcePathWX(WX_RESOURCES_SVG, "erlenmeyer_flask.svg").mb_str(wxConvUTF8));
 	  if (isFormattedView)
 	    {
 	      /* Ask the position and size */
@@ -2083,6 +2084,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
 
 	  tmpDoc = GetAmayaDoc (path, NULL, 0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
+	  TtaFreeMemory(path);
 	  parent = TtaGetMainRoot(tmpDoc);
 	  elType.ElSSchema = svgSchema;
 	  elType.ElTypeNum = SVG_EL_SVG;
