@@ -152,7 +152,7 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
-static char* svg_sources_files[] = 
+static const char* svg_sources_files[] = 
 {
     "",
     "test.svg",
@@ -173,8 +173,8 @@ void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 {
   if(event.GetId()>=1 && event.GetId()<=3)
     {
-      wxString path = TtaGetResourcePathWX(svg_sources_files[event.GetId()]);
-      TtaInsertSvgImage(path);
+      wxString path = TtaGetResourcePathWX(WX_RESOURCES_SVG, svg_sources_files[event.GetId()]);
+      wxMessageBox(wxT("Insert : ")+path);
     }
 }
 
