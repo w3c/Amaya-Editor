@@ -81,6 +81,17 @@ wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
 #endif /* _UNIX */
       }
       break;
+    case WX_RESOURCES_SVG:
+      {
+        wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+#ifdef _WINDOWS
+        path = amaya_directory + _T("\\resources\\svg\\") + wxString( filename, *wxConvCurrent );
+#endif /* _WINDOWS */
+#ifdef _UNIX
+        path = amaya_directory + _T("/resources/svg/") + wxString( filename, *wxConvCurrent );
+#endif /* _UNIX */
+      }
+      break;
     }
   //TTALOGDEBUG_0( TTA_LOG_INIT, _T("TtaGetResourcePathWX: path=")+path);
   return path;

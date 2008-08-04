@@ -79,6 +79,10 @@
           <object class="tool" name="wxID_PANEL_SVG_ELLIPSE">
             <bitmap>../icons/16x16/SVG_ellipse.png</bitmap>
           </object>
+          <object class="separator"/>
+          <object class="tool" name="wxID_MENUTEST">
+            <bitmap>../icons/16x16/open.png</bitmap>
+          </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>

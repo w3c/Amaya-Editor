@@ -8,7 +8,8 @@ typedef enum
     WX_RESOURCES_ICON_16X16,
     WX_RESOURCES_ICON_22X22,
     WX_RESOURCES_ICON_MISC,
-    WX_RESOURCES_XRC
+    WX_RESOURCES_XRC,
+    WX_RESOURCES_SVG
   } wxResourceType;
 
 extern wxString TtaGetResourcePathWX( wxResourceType type, const char * filename );

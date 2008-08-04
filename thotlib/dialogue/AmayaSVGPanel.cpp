@@ -152,5 +152,36 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
+static char* svg_sources_files[] = 
+{
+    "",
+    "test.svg",
+    "triangle.svg",
+    "star.svg"
+};
+
+void AmayaSVGPanel::OnMenuTest(wxCommandEvent& event)
+{
+  wxMenu menu;
+  menu.Append(1, wxT("Rectangle"));
+  menu.Append(2, wxT("Triangle"));
+  menu.Append(3, wxT("Star"));
+  PopupMenu(&menu);
+}
+
+void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
+{
+  if(event.GetId()>=1 && event.GetId()<=3)
+    {
+      wxString path = TtaGetResourcePathWX(svg_sources_files[event.GetId()]);
+      TtaInsertSvgImage(path);
+    }
+}
+
+
+BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
+  EVT_TOOL(XRCID("wxID_MENUTEST"), AmayaSVGPanel::OnMenuTest)
+  EVT_MENU_RANGE(1, 3, AmayaSVGPanel::OnInsertElement)
+END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

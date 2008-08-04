@@ -13,6 +13,7 @@ class AmayaNormalWindow;
  */
 class AmayaSVGPanel : public wxPanel
 {
+  DECLARE_EVENT_TABLE()
 public:
   AmayaSVGPanel();
   AmayaSVGPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, 
@@ -24,7 +25,10 @@ public:
             const wxSize& size = wxDefaultSize, long style = 0,
             const wxString& name = wxT("AmayaSVGPanel"), wxObject* extra=NULL);
 protected:
-
+  void OnMenuTest(wxCommandEvent& event);
+  void OnInsertElement(wxCommandEvent& event);
+  
+  
   AmayaBaseToolBar *m_tbar1, *m_tbar2, *m_tbar3, *m_tbar4, *m_tbar5,
     *m_tbar6, *m_tbar7, *m_tbar8;
 };

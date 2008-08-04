@@ -153,6 +153,10 @@ void AmayaBaseToolBar::OnTool(wxCommandEvent& event)
       FrameToView (TtaGiveActiveFrame(), &doc, &view);
       TtaExecuteMenuAction (def->action, doc, view, FALSE);
     }
+  else
+    {
+      event.Skip();
+    }
 }
 
 /*----------------------------------------------------------------------
