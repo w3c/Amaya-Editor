@@ -51,6 +51,7 @@
 #include "XLinkedit_f.h"
 #include "Xmlbuilder_f.h"
 #include "styleparser_f.h"
+#include "registry_wx.h"
 
 static ThotIcon   iconGraph;
 static ThotIcon   iconGraphNo;
@@ -1696,6 +1697,8 @@ ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
 void CreateGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
+  Document          tmpDoc;
+
   Element           svgAncestor, svgCanvas;
   Element	    first, newEl, sibling, selEl;
   Element           child, parent, elem, switch_, foreignObj, altText, leaf;
@@ -1897,6 +1900,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   switch (entry)
     {
+    case -2: /* template */
+      newType.ElTypeNum = SVG_EL_g;
+      break;
+
     case -1: /* <svg/> */
       newType.ElTypeNum = SVG_EL_SVG;
       break;
@@ -2052,6 +2059,57 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
 	}
 
+      if(entry == -2)
+	{
+	  char *path = "/home/fwang/Amaya/resources/svg/erlenmeyer_flask.svg";//TtaGetResourcePathWX(WX_RESOURCES_SVG, "erlenmeyer_flask.svg");
+	  if (isFormattedView)
+	    {
+	      /* Ask the position and size */
+	      AskSurroundingBox(doc,
+				svgAncestor,
+				svgCanvas,
+				entry,
+				&x1, &y1, &x2, &y2,
+				&x3, &y3, &x4, &y4,
+				&lx, &ly);
+
+	      /* create a transform=translate attribute */
+	      attrType.AttrTypeNum = SVG_ATTR_transform;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (newEl, attr, doc);
+	      sprintf(buffer, "translate(%d,%d)", x1, y1);
+	      TtaSetAttributeText (attr, buffer, newEl, doc);
+	      ParseTransformAttribute (attr, newEl, doc, FALSE);
+	    }
+
+	  tmpDoc = GetAmayaDoc (path, NULL, 0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
+	  parent = TtaGetMainRoot(tmpDoc);
+	  elType.ElSSchema = svgSchema;
+	  elType.ElTypeNum = SVG_EL_SVG;
+	  parent = TtaSearchTypedElement(elType, SearchForward, parent);
+
+	  if(parent)
+	    {
+	      
+	      child = TtaGetFirstChild(parent);
+	      sibling = NULL;
+	      while(child)
+		{
+		  printf("*\n");
+		  elem = TtaCopyTree(child, tmpDoc, doc, newEl);
+		  if(sibling)
+		    TtaInsertSibling (elem, sibling, FALSE, doc);
+		  else
+		    TtaInsertFirstChild (&elem, newEl, doc);
+		  sibling = elem;
+		  TtaNextSibling(&child);
+		}
+	      created = TRUE;
+	    }
+	  TtaRemoveDocumentReference (tmpDoc);
+
+	  selEl = newEl;
+	}
       if(!newSVG && entry == -1)
 	{
 	  /* <svg/> */
@@ -2636,7 +2694,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   /* create attributes fill and stroke */
   if (entry != -1 && created && 
-      (newType.ElTypeNum == SVG_EL_line_ ||
+      (newType.ElTypeNum == SVG_EL_g ||
+       newType.ElTypeNum == SVG_EL_line_ ||
        newType.ElTypeNum == SVG_EL_rect ||
        newType.ElTypeNum == SVG_EL_circle_ ||
        newType.ElTypeNum == SVG_EL_ellipse ||
@@ -4212,7 +4271,7 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
   ----------------------------------------------------------------------*/
 void CreateSVG_Svg (Document document, View view)
 {
-  CreateGraphicElement (document, view, -1);
+  CreateGraphicElement (document, view, -2); //-1);
 }
 
 /*----------------------------------------------------------------------
