@@ -26,6 +26,9 @@ extern ThotBool StrokeEnabled;
 extern int  Current_StrokeColor;
 extern int  Current_StrokeOpacity;
 extern int  Current_StrokeWidth;
+
+extern char *LastSVGelement;
+
 #endif /* _WX */
 
 

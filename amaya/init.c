@@ -61,6 +61,8 @@
 extern XmlEntity *pMathEntityTable;
 #include "appdialogue_wx.h"
 
+char *LastSVGelement = NULL;
+
 /* SVG Style panel */
 int  Current_Opacity = 100;
 ThotBool FillEnabled = FALSE;

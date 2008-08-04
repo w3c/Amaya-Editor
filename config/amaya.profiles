@@ -659,6 +659,7 @@ ShowLibrary
 AddNewModelIntoLibraryForm
 HelpSVG
 *AmayaSVGToolPanel
+&CreateSVG_Template
 &CreateSVG_Svg
 &CreateSVG_Line
 &CreateSVG_Rectangle

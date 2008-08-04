@@ -152,31 +152,39 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
+#define NB_ELEMENTS 2
+
 static const char* svg_sources_files[] = 
 {
-    "",
-    "test.svg",
-    "triangle.svg",
-    "star.svg"
+  "",
+  "burette.svg",
+  "erlenmeyer_flask.svg"
 };
 
 void AmayaSVGPanel::OnMenuTest(wxCommandEvent& event)
 {
   wxMenu menu;
-  menu.Append(1, wxT("Rectangle"));
-  menu.Append(2, wxT("Triangle"));
-  menu.Append(3, wxT("Star"));
+  menu.Append(1, wxT("Burette"));
+  menu.Append(2, wxT("Erlenmeyer"));
+  //menu.Append(3, wxT(""));
   PopupMenu(&menu);
 }
 
 void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 {
-  if(event.GetId()>=1 && event.GetId()<=3)
+  Document doc;
+  View view;
+
+  TtaGiveActiveView( &doc, &view );
+
+  if(doc > 0 && event.GetId()>=1 && event.GetId()<=NB_ELEMENTS)
     {
       wxString path = TtaGetResourcePathWX(WX_RESOURCES_SVG, svg_sources_files[event.GetId()]);
-      wxMessageBox(wxT("Insert : ")+path);
+      LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
+      TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
     }
 }
+
 
 
 BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)

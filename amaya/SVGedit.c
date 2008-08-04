@@ -2059,32 +2059,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
 	}
 
-      if(entry == -2)
+      if(entry == -2 && LastSVGelement != NULL)
 	{
-//	  char *path = "/home/kia/workspace/Amaya/resources/svg/erlenmeyer_flask.svg";
-	  char* path = TtaStrdup((const char*)TtaGetResourcePathWX(WX_RESOURCES_SVG, "erlenmeyer_flask.svg").mb_str(wxConvUTF8));
-	  if (isFormattedView)
-	    {
-	      /* Ask the position and size */
-	      AskSurroundingBox(doc,
-				svgAncestor,
-				svgCanvas,
-				entry,
-				&x1, &y1, &x2, &y2,
-				&x3, &y3, &x4, &y4,
-				&lx, &ly);
+	  tmpDoc = GetAmayaDoc (LastSVGelement, NULL,
+				0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
+	  TtaFreeMemory(LastSVGelement);
+	  LastSVGelement = NULL;
 
-	      /* create a transform=translate attribute */
-	      attrType.AttrTypeNum = SVG_ATTR_transform;
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (newEl, attr, doc);
-	      sprintf(buffer, "translate(%d,%d)", x1, y1);
-	      TtaSetAttributeText (attr, buffer, newEl, doc);
-	      ParseTransformAttribute (attr, newEl, doc, FALSE);
-	    }
-
-	  tmpDoc = GetAmayaDoc (path, NULL, 0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
-	  TtaFreeMemory(path);
 	  parent = TtaGetMainRoot(tmpDoc);
 	  elType.ElSSchema = svgSchema;
 	  elType.ElTypeNum = SVG_EL_SVG;
@@ -2097,7 +2078,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      sibling = NULL;
 	      while(child)
 		{
-		  printf("*\n");
 		  elem = TtaCopyTree(child, tmpDoc, doc, newEl);
 		  if(sibling)
 		    TtaInsertSibling (elem, sibling, FALSE, doc);
@@ -4269,11 +4249,19 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
 }
 
 /*----------------------------------------------------------------------
+  CreateSVG_Template
+  ----------------------------------------------------------------------*/
+void CreateSVG_Template (Document document, View view)
+{
+  CreateGraphicElement (document, view, -2);
+}
+
+/*----------------------------------------------------------------------
   CreateSVG_Svg
   ----------------------------------------------------------------------*/
 void CreateSVG_Svg (Document document, View view)
 {
-  CreateGraphicElement (document, view, -2); //-1);
+  CreateGraphicElement (document, view, -1);
 }
 
 /*----------------------------------------------------------------------
