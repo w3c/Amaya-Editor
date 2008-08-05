@@ -152,14 +152,16 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
-#define NB_ELEMENTS 7
+#define NB_ELEMENTS 9
 
 static const char* svg_sources_files[] = 
 {
   "3d/cone.svg",
   "3d/cube.svg",
   "3d/cylinder.svg",
+  "3d/octahedron.svg",
   "3d/parallelepiped.svg",
+  "3d/pyramid.svg",
   "chemistry/burette.svg",
   "chemistry/erlenmeyer_flask.svg",
   "ring.svg"
@@ -171,10 +173,12 @@ void AmayaSVGPanel::OnMenuTest(wxCommandEvent& event)
   menu.Append(1, wxT("Cone"));
   menu.Append(2, wxT("Cube"));
   menu.Append(3, wxT("Cylinder"));
-  menu.Append(4, wxT("Parallelepiped"));
-  menu.Append(5, wxT("Burette"));
-  menu.Append(6, wxT("Erlenmeyer"));
-  menu.Append(7, wxT("Ring"));
+  menu.Append(4, wxT("Octahedron"));
+  menu.Append(5, wxT("Parallelepiped"));
+  menu.Append(6, wxT("Pyramid"));
+  menu.Append(7, wxT("Burette"));
+  menu.Append(8, wxT("Erlenmeyer"));
+  menu.Append(9, wxT("Ring"));
   PopupMenu(&menu);
 }
 
