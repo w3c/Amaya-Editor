@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <path
+        d="M 0,50 L 70,50 A 20,20 0 0 0 110,50 A 20,20 0 0 0 70,50 M 110,50 L 180,50"/>
+  <text x="75" y="55">-</text>
+  <text x="95" y="55">+</text>
+</svg>
