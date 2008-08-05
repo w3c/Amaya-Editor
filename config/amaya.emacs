@@ -151,10 +151,7 @@ Ctrl <Key>g , Shift Ctrl <Key>Y:   TtcInsertChar("&#x3A8;")
 Ctrl <Key>g , Shift Ctrl <Key>W:   TtcInsertChar("&#x3A9;")
 
 #SVG Graphics
-Ctrl Shift <Key>G , Ctrl <Key>c:	CreateSVG_Cube()
-Ctrl Shift <Key>G , Ctrl <Key>d:	CreateSVG_Cylinder()
 Ctrl Shift <Key>G , Ctrl <Key>t:	CreateSVG_Text()
-Ctrl Shift <Key>G , Ctrl <Key>p:	CreateSVG_Parallelepiped()
 
 Ctrl Shift <Key>G , Ctrl Shift <Key>A:	CreateSVG_SimpleArrow()
 Ctrl Shift <Key>G , Ctrl Shift <Key>C:	CreateSVG_Circle()

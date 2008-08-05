@@ -2005,17 +2005,17 @@ void CreateGraphicElement (Document doc, View view, int entry)
       newType.ElTypeNum = SVG_EL_polygon;
       break;
 
-    case 23: /* cube */
-      newType.ElTypeNum = SVG_EL_path;
-      break;
+/*     case 23: /\* cube *\/ */
+/*       newType.ElTypeNum = SVG_EL_path; */
+/*       break; */
 
-    case 24: /* parallelepiped */
-      newType.ElTypeNum = SVG_EL_path;
-      break;
+/*     case 24: /\* parallelepiped *\/ */
+/*       newType.ElTypeNum = SVG_EL_path; */
+/*       break; */
 
-    case 25: /* cylinder */
-      newType.ElTypeNum = SVG_EL_path;
-      break;
+/*     case 25: /\* cylinder *\/ */
+/*       newType.ElTypeNum = SVG_EL_path; */
+/*       break; */
 
     default:
       break;
@@ -2403,69 +2403,69 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
-		case 23: /* cube */
-		case 24: /* parallelepiped */
-		  attrType.AttrTypeNum = SVG_ATTR_d;
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (newEl, attr, doc);
+/* 		case 23: /\* cube *\/ */
+/* 		case 24: /\* parallelepiped *\/ */
+/* 		  attrType.AttrTypeNum = SVG_ATTR_d; */
+/* 		  attr = TtaNewAttribute (attrType); */
+/* 		  TtaAttachAttribute (newEl, attr, doc); */
 
-		  tmpx1 = (3*x1+x3)/4;
-		  tmpy1 = (3*y1+y3)/4;
-		  tmpx2 = (3*x2+x4)/4;
-		  tmpy2 = (3*y2+y4)/4;
+/* 		  tmpx1 = (3*x1+x3)/4; */
+/* 		  tmpy1 = (3*y1+y3)/4; */
+/* 		  tmpx2 = (3*x2+x4)/4; */
+/* 		  tmpy2 = (3*y2+y4)/4; */
 
-		  tmpx3 = (tmpx1+3*tmpx2)/4;
-		  tmpy3 = (tmpy1+3*tmpy2)/4;
+/* 		  tmpx3 = (tmpx1+3*tmpx2)/4; */
+/* 		  tmpy3 = (tmpy1+3*tmpy2)/4; */
 
-		  tmpx4= (3*x4+x3)/4;
-		  tmpy4 = (3*y4+y3)/4;
+/* 		  tmpx4= (3*x4+x3)/4; */
+/* 		  tmpy4 = (3*y4+y3)/4; */
 
-		  sprintf(buffer, "M %d %d L %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d M %d %d L %d %d",
-			  tmpx1,tmpy1,            /*<-1        2------------3 */
-			  (3*x1+x2)/4,(3*y1+y2)/4,/*<-2       /             / */
-			  x2,y2,                  /*<-3      /             /| */
-			  (3*x4+x2)/4,(3*y4+y2)/4,/*<-4     /             / | */
-			  tmpx4,tmpy4,            /*<-5    1-------------7  | */
-			  x3,y3,                  /*<-6    |             |  | */
-			  tmpx1,tmpy1,            /*<-1    |             |  4 */
-			  tmpx3,tmpy3,            /*<-7    |             |  / */
-			  tmpx4,tmpy4,            /*<-5    |             | /  */
-			  tmpx3,tmpy3,            /*<-7    |             |/   */
-			  x2,y2                   /*<-3    6-------------5    */
-			  );
-		  TtaSetAttributeText (attr, buffer, newEl, doc);
-		  ParsePathDataAttribute (attr, newEl, doc, TRUE);
-		  break;
+/* 		  sprintf(buffer, "M %d %d L %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d M %d %d L %d %d", */
+/* 			  tmpx1,tmpy1,            /\*<-1        2------------3 *\/ */
+/* 			  (3*x1+x2)/4,(3*y1+y2)/4,/\*<-2       /             / *\/ */
+/* 			  x2,y2,                  /\*<-3      /             /| *\/ */
+/* 			  (3*x4+x2)/4,(3*y4+y2)/4,/\*<-4     /             / | *\/ */
+/* 			  tmpx4,tmpy4,            /\*<-5    1-------------7  | *\/ */
+/* 			  x3,y3,                  /\*<-6    |             |  | *\/ */
+/* 			  tmpx1,tmpy1,            /\*<-1    |             |  4 *\/ */
+/* 			  tmpx3,tmpy3,            /\*<-7    |             |  / *\/ */
+/* 			  tmpx4,tmpy4,            /\*<-5    |             | /  *\/ */
+/* 			  tmpx3,tmpy3,            /\*<-7    |             |/   *\/ */
+/* 			  x2,y2                   /\*<-3    6-------------5    *\/ */
+/* 			  ); */
+/* 		  TtaSetAttributeText (attr, buffer, newEl, doc); */
+/* 		  ParsePathDataAttribute (attr, newEl, doc, TRUE); */
+/* 		  break; */
 
-		case 25: /* Cylinder */
-		  tmpx1=(5*x1+x3)/6;
-		  tmpy1=(5*y1+y3)/6;
-		  tmpx2=(5*x3+x1)/6;
-		  tmpy2=(5*y3+y1)/6;
-		  tmpx3=(5*x4+x2)/6;
-		  tmpy3=(5*y4+y2)/6;
-		  tmpx4=(5*x2+x4)/6;
-		  tmpy4=(5*y2+y4)/6;
+/* 		case 25: /\* Cylinder *\/ */
+/* 		  tmpx1=(5*x1+x3)/6; */
+/* 		  tmpy1=(5*y1+y3)/6; */
+/* 		  tmpx2=(5*x3+x1)/6; */
+/* 		  tmpy2=(5*y3+y1)/6; */
+/* 		  tmpx3=(5*x4+x2)/6; */
+/* 		  tmpy3=(5*y4+y2)/6; */
+/* 		  tmpx4=(5*x2+x4)/6; */
+/* 		  tmpy4=(5*y2+y4)/6; */
 	      
-		  attrType.AttrTypeNum = SVG_ATTR_d;
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (newEl, attr, doc);
-		  sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 %d %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d",
-			  tmpx1,tmpy1,       /*    <-1      /----\            */
-			  tmpx2,tmpy2,       /*    <-2     1      4           */
-			  lx/2, ly/6,        /*            |\----/|           */
-			  ((x4 - x1)*(y4 - y1)/*           |      |           */			   >= 0 ? 0 : 1),    /*            |      |           */
-			  tmpx3,tmpy3,       /*    <-3     |      |           */
-			  tmpx4,tmpy4,       /*    <-4     |      |           */
-			  lx/2, ly/6,        /*	           |      |           */
-			  tmpx1,tmpy1,       /*    <-1     2      3           */
-			  lx/2, ly/6,        /*             \----/            */
-			  tmpx4,tmpy4        /*    <-4                            */
-			  );
-		  TtaSetAttributeText (attr, buffer, newEl, doc);
-		  ParsePathDataAttribute (attr, newEl, doc, TRUE);
+/* 		  attrType.AttrTypeNum = SVG_ATTR_d; */
+/* 		  attr = TtaNewAttribute (attrType); */
+/* 		  TtaAttachAttribute (newEl, attr, doc); */
+/* 		  sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 %d %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d", */
+/* 			  tmpx1,tmpy1,       /\*    <-1      /----\            *\/ */
+/* 			  tmpx2,tmpy2,       /\*    <-2     1      4           *\/ */
+/* 			  lx/2, ly/6,        /\*            |\----/|           *\/ */
+/* 			  ((x4 - x1)*(y4 - y1)/\*           |      |           *\/			   >= 0 ? 0 : 1),    /\*            |      |           *\/ */
+/* 			  tmpx3,tmpy3,       /\*    <-3     |      |           *\/ */
+/* 			  tmpx4,tmpy4,       /\*    <-4     |      |           *\/ */
+/* 			  lx/2, ly/6,        /\*	           |      |           *\/ */
+/* 			  tmpx1,tmpy1,       /\*    <-1     2      3           *\/ */
+/* 			  lx/2, ly/6,        /\*             \----/            *\/ */
+/* 			  tmpx4,tmpy4        /\*    <-4                            *\/ */
+/* 			  ); */
+/* 		  TtaSetAttributeText (attr, buffer, newEl, doc); */
+/* 		  ParsePathDataAttribute (attr, newEl, doc, TRUE); */
 
-		  break;
+/* 		  break; */
 
 		default:
 		  break;
@@ -4448,29 +4448,29 @@ void CreateSVG_RectangleTriangle (Document document, View view)
   CreateGraphicElement (document, view, 22);
 }
 
-/*----------------------------------------------------------------------
-  CreateSVG_Cube
-  ----------------------------------------------------------------------*/
-void CreateSVG_Cube (Document document, View view)
-{
-  CreateGraphicElement (document, view, 23);
-}
+/* /\*---------------------------------------------------------------------- */
+/*   CreateSVG_Cube */
+/*   ----------------------------------------------------------------------*\/ */
+/* void CreateSVG_Cube (Document document, View view) */
+/* { */
+/*   CreateGraphicElement (document, view, 23); */
+/* } */
 
-/*----------------------------------------------------------------------
-  CreateSVG_Parallelepiped
-  ----------------------------------------------------------------------*/
-void CreateSVG_Parallelepiped (Document document, View view)
-{
-  CreateGraphicElement (document, view, 24);
-}
+/* /\*---------------------------------------------------------------------- */
+/*   CreateSVG_Parallelepiped */
+/*   ----------------------------------------------------------------------*\/ */
+/* void CreateSVG_Parallelepiped (Document document, View view) */
+/* { */
+/*   CreateGraphicElement (document, view, 24); */
+/* } */
 
-/*----------------------------------------------------------------------
-  CreateSVG_Cylinder
-  ----------------------------------------------------------------------*/
-void CreateSVG_Cylinder (Document document, View view)
-{
-  CreateGraphicElement (document, view, 25);
-}
+/* /\*---------------------------------------------------------------------- */
+/*   CreateSVG_Cylinder */
+/*   ----------------------------------------------------------------------*\/ */
+/* void CreateSVG_Cylinder (Document document, View view) */
+/* { */
+/*   CreateGraphicElement (document, view, 25); */
+/* } */
 
 /*----------------------------------------------------------------------
   TransformSVG_Ungroup

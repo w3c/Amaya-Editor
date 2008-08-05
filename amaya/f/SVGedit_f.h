@@ -65,6 +65,8 @@ extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
+extern void CreateSVG_Template ( Document document,
+                                 View view );
 extern void CreateSVG_Svg ( Document document,
                             View view );
 extern void CreateSVG_Line ( Document document,
@@ -113,12 +115,6 @@ extern void CreateSVG_IsoscelesTriangle ( Document document,
                                           View view );
 extern void CreateSVG_RectangleTriangle ( Document document,
                                           View view );
-extern void CreateSVG_Cube ( Document document,
-                             View view );
-extern void CreateSVG_Parallelepiped ( Document document,
-                                       View view );
-extern void CreateSVG_Cylinder ( Document document,
-                                 View view );
 extern void TransformSVG_Ungroup ( Document document,
                                    View view );
 extern void TransformSVG_FlipVertically ( Document document,
@@ -239,6 +235,8 @@ extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
+extern void CreateSVG_Template ( Document document,
+                                   View view );
 extern void CreateSVG_Svg ( Document document,
                               View view );
 extern void CreateSVG_Line ( Document document,
@@ -287,12 +285,6 @@ extern void CreateSVG_IsoscelesTriangle ( Document document,
                                             View view );
 extern void CreateSVG_RectangleTriangle ( Document document,
                                             View view );
-extern void CreateSVG_Cube ( Document document,
-                               View view );
-extern void CreateSVG_Parallelepiped ( Document document,
-                                         View view );
-extern void CreateSVG_Cylinder ( Document document,
-                                   View view );
 extern void TransformSVG_Ungroup ( Document document,
                                      View view );
 extern void TransformSVG_FlipVertically ( Document document,

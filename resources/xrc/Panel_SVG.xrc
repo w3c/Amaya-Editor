@@ -102,10 +102,10 @@
           <object class="tool" name="wxID_PANEL_SVG_CLOSED">
             <bitmap>../icons/16x16/SVG_closed.png</bitmap>
           </object>
-          <bitmapsize>16,16</bitmapsize>
+<!--          <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
-          <object class="tool" name="wxID_PANEL_SVG_CUBE">
+-          <object class="tool" name="wxID_PANEL_SVG_CUBE">
             <bitmap>../icons/16x16/SVG_cube.png</bitmap>
           </object>
           <object class="tool" name="wxID_PANEL_SVG_PARALLELEPIPED">
@@ -113,7 +113,7 @@
           </object>
           <object class="tool" name="wxID_PANEL_SVG_CYLINDER">
             <bitmap>../icons/16x16/SVG_cylinder.png</bitmap>
-          </object>
+          </object>-->
         </object>
       </object>
       <object class="sizeritem">

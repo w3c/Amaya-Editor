@@ -64,9 +64,9 @@ AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_PARALLELOGRAM", "CreateSVG_Parallelogram", wxI
 AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_EQUILATERAL_TRIANGLE", "CreateSVG_EquilateralTriangle", wxID_ANY, wxID_ANY)
 AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ISOSCELES_TRIANGLE", "CreateSVG_IsoscelesTriangle", wxID_ANY, wxID_ANY)
 AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_RECTANGLE_TRIANGLE", "CreateSVG_RectangleTriangle", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CUBE", "CreateSVG_Cube", wxID_ANY, wxID_ANY)
+/*AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CUBE", "CreateSVG_Cube", wxID_ANY, wxID_ANY)
 AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_PARALLELEPIPED", "CreateSVG_Parallelepiped", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CYLINDER", "CreateSVG_Cylinder", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CYLINDER", "CreateSVG_Cylinder", wxID_ANY, wxID_ANY)*/
 AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_UNGROUP", "TransformSVG_Ungroup", LIB, TMSG_UNGROUP)
 AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SELECT", "SVG_Select", LIB, TMSG_SEL)
 AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_FLIP_VERTICALLY", "TransformSVG_FlipVertically", LIB, TMSG_VREVERSE)
@@ -152,21 +152,29 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
-#define NB_ELEMENTS 2
+#define NB_ELEMENTS 7
 
 static const char* svg_sources_files[] = 
 {
-  "",
-  "burette.svg",
-  "erlenmeyer_flask.svg"
+  "3d/cone.svg",
+  "3d/cube.svg",
+  "3d/cylinder.svg",
+  "3d/parallelepiped.svg",
+  "chemistry/burette.svg",
+  "chemistry/erlenmeyer_flask.svg",
+  "ring.svg"
 };
 
 void AmayaSVGPanel::OnMenuTest(wxCommandEvent& event)
 {
   wxMenu menu;
-  menu.Append(1, wxT("Burette"));
-  menu.Append(2, wxT("Erlenmeyer"));
-  //menu.Append(3, wxT(""));
+  menu.Append(1, wxT("Cone"));
+  menu.Append(2, wxT("Cube"));
+  menu.Append(3, wxT("Cylinder"));
+  menu.Append(4, wxT("Parallepiped"));
+  menu.Append(5, wxT("Burette"));
+  menu.Append(6, wxT("Erlenmeyer"));
+  menu.Append(7, wxT("Ring"));
   PopupMenu(&menu);
 }
 
@@ -179,7 +187,7 @@ void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 
   if(doc > 0 && event.GetId()>=1 && event.GetId()<=NB_ELEMENTS)
     {
-      wxString path = TtaGetResourcePathWX(WX_RESOURCES_SVG, svg_sources_files[event.GetId()]);
+      wxString path = TtaGetResourcePathWX(WX_RESOURCES_SVG, svg_sources_files[event.GetId()-1]);
       LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
       TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
     }
@@ -189,7 +197,7 @@ void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 
 BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
   EVT_TOOL(XRCID("wxID_MENUTEST"), AmayaSVGPanel::OnMenuTest)
-  EVT_MENU_RANGE(1, 3, AmayaSVGPanel::OnInsertElement)
+  EVT_MENU_RANGE(1, NB_ELEMENTS, AmayaSVGPanel::OnInsertElement)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

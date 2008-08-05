@@ -684,9 +684,9 @@ HelpSVG
 &CreateSVG_EquilateralTriangle
 &CreateSVG_IsoscelesTriangle
 &CreateSVG_RectangleTriangle
-&CreateSVG_Cube
-&CreateSVG_Parallelepiped
-&CreateSVG_Cylinder
+#&CreateSVG_Cube
+#&CreateSVG_Parallelepiped
+#&CreateSVG_Cylinder
 &TransformSVG_Ungroup
 &TransformSVG_FlipVertically
 &TransformSVG_FlipHorizontally

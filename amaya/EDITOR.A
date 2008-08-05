@@ -241,9 +241,9 @@ MENUS
 	Types.SvgConstruct  button:BSVG_Polygon -> CreateSVG_Polygon icon:SVG_polygon.png;
 	Types.SvgConstruct  button:BSVG_Spline -> CreateSVG_Spline icon:SVG_spline.png;
 	Types.SvgConstruct  button:BSVG_Closed -> CreateSVG_Closed icon:SVG_closed.png;
-	Types.SvgConstruct  button:BSVG_Cube -> CreateSVG_Cube icon:SVG_cube.png;
-	Types.SvgConstruct  button:BSVG_Parallelepiped -> CreateSVG_Parallelepiped icon:SVG_parallelepiped.png;
-	Types.SvgConstruct  button:BSVG_Cylinder -> CreateSVG_Cylinder icon:SVG_cylinder.png;
+#	Types.SvgConstruct  button:BSVG_Cube -> CreateSVG_Cube icon:SVG_cube.png;
+#	Types.SvgConstruct  button:BSVG_Parallelepiped -> CreateSVG_Parallelepiped icon:SVG_parallelepiped.png;
+#	Types.SvgConstruct  button:BSVG_Cylinder -> CreateSVG_Cylinder icon:SVG_cylinder.png;
 
 	Types.Form button:BForm -> CreateForm;
 	Types.Form Separator;
@@ -690,9 +690,9 @@ FUNCTIONS
   CreateSVG_EquilateralTriangle,
   CreateSVG_IsoscelesTriangle,
   CreateSVG_RectangleTriangle,
-  CreateSVG_Cube,
-  CreateSVG_Parallelepiped,
-  CreateSVG_Cylinder,
+#  CreateSVG_Cube,
+#  CreateSVG_Parallelepiped,
+#  CreateSVG_Cylinder,
   TransformSVG_Ungroup,
   TransformSVG_FlipVertically,
   TransformSVG_FlipHorizontally,
