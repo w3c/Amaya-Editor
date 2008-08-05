@@ -171,7 +171,7 @@ void AmayaSVGPanel::OnMenuTest(wxCommandEvent& event)
   menu.Append(1, wxT("Cone"));
   menu.Append(2, wxT("Cube"));
   menu.Append(3, wxT("Cylinder"));
-  menu.Append(4, wxT("Parallepiped"));
+  menu.Append(4, wxT("Parallelepiped"));
   menu.Append(5, wxT("Burette"));
   menu.Append(6, wxT("Erlenmeyer"));
   menu.Append(7, wxT("Ring"));
