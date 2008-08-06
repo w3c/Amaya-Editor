@@ -260,15 +260,12 @@ void AmayaSVGPanel::DisplayMenu(int directory)
 
   for(j = 0; j < e.length; j++)
     {
-      item = menu.Append(j,
-			 TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id))
-			 );
       sprintf(name, "%s/%s.png", e.directory, e.list[j].file_name);
-
-      x = wxBitmap(TtaGetResourcePathWX(WX_RESOURCES_SVG, name),
-		   wxBITMAP_TYPE_PNG);
-      printf("%s\n", name);
-      item->SetBitmap(x);
+      item = new wxMenuItem(NULL, j, TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id)));
+      item->SetBitmap(wxBitmap(TtaGetResourcePathWX(WX_RESOURCES_SVG, name),
+       wxBITMAP_TYPE_PNG));
+      menu.Append(item);
+      
     }
 
   PopupMenu(&menu);
