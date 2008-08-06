@@ -201,186 +201,183 @@
 199 Polygone
 200 Courbe ouverte
 201 Courbe fermée
-202 Cube
-203 Parallèlépidède
-204 Cylindre
-205 Formulaire
-206 Insérer un formulaire (form)
-207 Bouton (input)
-208 Bouton bascule (input)
-209 Sélecteur fichier (input)
-210 Contrôle caché (input)
-211 Image (input)...
-212 Mot de passe (input)
-213 Bouton radio (input)
-214 Réinitialisation (input)
-215 Soumission (input)
-216 Saisie de texte (input)
-217 Groupe de champs (fieldset)
-218 Étiquette (label)
-219 Menu (option)
-220 Sous-menu (optgroup)
-221 Zone de texte (textarea)
-222 Objet
-223 Objet (object)
-224 Paramètre (param)
-225 Plan
-226 Insérer un plan (map)
-227 Cercle (area)
-228 Polygone (area)
-229 Rectangle (area)
-230 Eléments cachés
-231 style
-232 Commentaire
-233 base
-234 meta
-235 Lien (link)
-236 script
-237 noscript
-238 Division (div)
-239 Adresse (address)
-240 Citation (blockquote)
-241 Cadre en ligne (iframe)
-242 ruby
-243 Thème
-244 Classique
-245 Moderne
-246 Pas de thème
-247 Couleur du texte
-248 Sélectionner une couleur du texte...
+202 Formulaire
+203 Insérer un formulaire (form)
+204 Bouton (input)
+205 Bouton bascule (input)
+206 Sélecteur fichier (input)
+207 Contrôle caché (input)
+208 Image (input)...
+209 Mot de passe (input)
+210 Bouton radio (input)
+211 Réinitialisation (input)
+212 Soumission (input)
+213 Saisie de texte (input)
+214 Groupe de champs (fieldset)
+215 Étiquette (label)
+216 Menu (option)
+217 Sous-menu (optgroup)
+218 Zone de texte (textarea)
+219 Objet
+220 Objet (object)
+221 Paramètre (param)
+222 Plan
+223 Insérer un plan (map)
+224 Cercle (area)
+225 Polygone (area)
+226 Rectangle (area)
+227 Eléments cachés
+228 style
+229 Commentaire
+230 base
+231 meta
+232 Lien (link)
+233 script
+234 noscript
+235 Division (div)
+236 Adresse (address)
+237 Citation (blockquote)
+238 Cadre en ligne (iframe)
+239 ruby
+240 Thème
+241 Classique
+242 Moderne
+243 Pas de thème
+244 Couleur du texte
+245 Sélectionner une couleur du texte...
+246 Pas de couleur
+247 Couleur de fond
+248 Sélectionner une couleur de fond...
 249 Pas de couleur
-250 Couleur de fond
-251 Sélectionner une couleur de fond...
-252 Pas de couleur
-253 Alignement
-254 A gauche
-255 Centré
-256 A droite
-257 Justifié
-258 Défaut
-259 Espacement de ligne
-260 Simple
-261 Moitié
-262 Double
-263 Défaut
-264 Indentation
-265 Augmenter
-266 Diminuer
+250 Alignement
+251 A gauche
+252 Centré
+253 A droite
+254 Justifié
+255 Défaut
+256 Espacement de ligne
+257 Simple
+258 Moitié
+259 Double
+260 Défaut
+261 Indentation
+262 Augmenter
+263 Diminuer
+264 Défaut
+265 Caractère
+266 Choisir une police de caractères...
 267 Défaut
-268 Caractère
-269 Choisir une police de caractères...
-270 Défaut
-271 Editeur de &style...
-272 Créer une &règle...
-273 Montrer le style appliqué...
-274 Feuilles de style
-275 Ajouter...
-276 Ouvrir...
-277 Désactiver...
-278 Réactiver...
-279 Retirer...
-280 Copier l'adresse
-281 Coller l'adresse
-282 &Lier à la cible créée
-283 &Créer/changer un lien...
-284 Créer une ci&ble
-285 &Supprimer le lien ou la cible
-286 &Ajouter/Retirer des attributs ID...
-287 Vérifier &orthographe...
-288 Transfor&mer...
-289 Nettoyage du code
-290 Editer la table
-291 Changer en cellule
-292 Changer en cellule titre
-293 Fusionner les cellules
-294 Joindre avec la cellule de droite
-295 Joindre avec la cellule au-dessous
-296 Réduire extension horizontale
-297 Réduire extension verticale
-298 Sélectionner la ligne
-299 Insérer une ligne
-300 Ajouter une ligne
-301 Sélectionner la colonne
-302 Insérer une colonne
-303 Ajouter une colonne
-304 Coller avant
-305 Coller après
-306 Changer le titre...
-307 Changer le doctype
-308 Supprimer le doctype
-309 Ajouter un doctype
-310 Changer pour XHTML 1.1
-311 Changer pour XHTML 1.0 Transitional
-312 Changer pour XHTML 1.0 Strict
-313 Changer pour XHTML 1.0 Basic
-314 Changer pour XHTML+RDFa
-315 Changer pour HTML 4.01 Transitional
-316 Changer pour HTML 4.01 Strict
-317 &Numéroter les sections
-318 &Ajouter/Actualiser la table des matières
-319 &Construire un livre
-320 Insérer la date de mise à jour
-321 Graphiques
-322 Montrer la librairie SVG
-323 Ajouter à la librairie SVG
-324 A&nnotations
-325 Annoter la sélection
-326 Annoter le document
-327 Déplacer sur la sélection
-328 Enregistrer la sélection comme &XPointer
-329 Déplacer sur le XPointer enregistré
-330 Répondre à l'annotation
-331 Enregister sur le serveur
-332 Supprimer
-333 Charger annotations
-334 Personnaliser la requête...
-335 Filtrer local...
-336 C&oopération
-337 Verrouiller la ressource...
-338 Déverrouiller la ressource...
-339 Visualiser les propriétés de la ressource...
-340 Copier les informations du verrou...
-341 Verrouillé ?
-342 Modèles
-343 Créer un modèle depuis le document courant...
-344 Créer une zone de texte
-345 Créer et utiliser un composant
-346 Créer une zone d'édition libre
-347 Créer un composant répétée
-348 &Javascript/DOM
-349 Activer/Désactiver
-350 Exécuter une commande
-351 Exécuter un script externe
-352 Ajouter un script externe
-353 Inserer un script
-354 À propos de Amaya
-355 À propos d'Amaya au W3C
-356 Index
-357 Navigation
-358 Vues
-359 Sélection
-360 Documents
-361 Création d'éléments
-362 Attributs
-363 Caractères
-364 Modèles
-365 Restructuration
-366 Liens
-367 Tableaux
-368 Images
-369 Math
-370 Graphiques
-371 Support XML
-372 Feuilles de style
-373 Recherche
-374 Vérification orthographique
-375 Enregistrement
-376 Coopération
-377 Impression
-378 Numérotation
-379 Construction de livre
-380 Annotations
-381 Configuration
-382 Raccourcis clavier
-383 Accessibilité d'Amaya
-384 Conseil du jour...
+268 Editeur de &style...
+269 Créer une &règle...
+270 Montrer le style appliqué...
+271 Feuilles de style
+272 Ajouter...
+273 Ouvrir...
+274 Désactiver...
+275 Réactiver...
+276 Retirer...
+277 Copier l'adresse
+278 Coller l'adresse
+279 &Lier à la cible créée
+280 &Créer/changer un lien...
+281 Créer une ci&ble
+282 &Supprimer le lien ou la cible
+283 &Ajouter/Retirer des attributs ID...
+284 Vérifier &orthographe...
+285 Transfor&mer...
+286 Nettoyage du code
+287 Editer la table
+288 Changer en cellule
+289 Changer en cellule titre
+290 Fusionner les cellules
+291 Joindre avec la cellule de droite
+292 Joindre avec la cellule au-dessous
+293 Réduire extension horizontale
+294 Réduire extension verticale
+295 Sélectionner la ligne
+296 Insérer une ligne
+297 Ajouter une ligne
+298 Sélectionner la colonne
+299 Insérer une colonne
+300 Ajouter une colonne
+301 Coller avant
+302 Coller après
+303 Changer le titre...
+304 Changer le doctype
+305 Supprimer le doctype
+306 Ajouter un doctype
+307 Changer pour XHTML 1.1
+308 Changer pour XHTML 1.0 Transitional
+309 Changer pour XHTML 1.0 Strict
+310 Changer pour XHTML 1.0 Basic
+311 Changer pour XHTML+RDFa
+312 Changer pour HTML 4.01 Transitional
+313 Changer pour HTML 4.01 Strict
+314 &Numéroter les sections
+315 &Ajouter/Actualiser la table des matières
+316 &Construire un livre
+317 Insérer la date de mise à jour
+318 Graphiques
+319 Montrer la librairie SVG
+320 Ajouter à la librairie SVG
+321 A&nnotations
+322 Annoter la sélection
+323 Annoter le document
+324 Déplacer sur la sélection
+325 Enregistrer la sélection comme &XPointer
+326 Déplacer sur le XPointer enregistré
+327 Répondre à l'annotation
+328 Enregister sur le serveur
+329 Supprimer
+330 Charger annotations
+331 Personnaliser la requête...
+332 Filtrer local...
+333 C&oopération
+334 Verrouiller la ressource...
+335 Déverrouiller la ressource...
+336 Visualiser les propriétés de la ressource...
+337 Copier les informations du verrou...
+338 Verrouillé ?
+339 Modèles
+340 Créer un modèle depuis le document courant...
+341 Créer une zone de texte
+342 Créer et utiliser un composant
+343 Créer une zone d'édition libre
+344 Créer un composant répétée
+345 &Javascript/DOM
+346 Activer/Désactiver
+347 Exécuter une commande
+348 Exécuter un script externe
+349 Ajouter un script externe
+350 Inserer un script
+351 À propos de Amaya
+352 À propos d'Amaya au W3C
+353 Index
+354 Navigation
+355 Vues
+356 Sélection
+357 Documents
+358 Création d'éléments
+359 Attributs
+360 Caractères
+361 Modèles
+362 Restructuration
+363 Liens
+364 Tableaux
+365 Images
+366 Math
+367 Graphiques
+368 Support XML
+369 Feuilles de style
+370 Recherche
+371 Vérification orthographique
+372 Enregistrement
+373 Coopération
+374 Impression
+375 Numérotation
+376 Construction de livre
+377 Annotations
+378 Configuration
+379 Raccourcis clavier
+380 Accessibilité d'Amaya
+381 Conseil du jour...

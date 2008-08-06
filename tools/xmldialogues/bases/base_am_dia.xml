@@ -3019,6 +3019,7 @@
 	<message xml:lang="en">Closed curve</message>
 	<message xml:lang="fr">Courbe fermée</message>
 </label>
+<!--
 <label define="BSVG_Cube">
 	<message xml:lang="en">Cube</message>
 	<message xml:lang="fr">Cube</message>
@@ -3033,7 +3034,7 @@
 	<message xml:lang="fr">Cylindre</message>
 	<message xml:lang="es">Cilindro</message>
 </label>
-
+-->
 <label define="Form">
 	<message xml:lang="en">Form</message>
 	<message xml:lang="fr">Formulaire</message>
