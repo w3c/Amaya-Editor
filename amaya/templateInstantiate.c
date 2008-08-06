@@ -76,42 +76,6 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
 #endif /* TEMPLATES */
 }
 
-/*----------------------------------------------------------------------
-  Template_InsertRepeatChild
-  Insert a child to a xt:repeat
-  The decl parameter must be valid and will not be verified. It must be a
-    direct child element or the "use in the use" for union elements.
-  @param el element (repeat) in which insert a new element
-  @param decl Template declaration of the element to insert
-  @param pos Position of insertion (0 before all, 1 after first ... -1 after all)
-  @return The inserted element
-  ----------------------------------------------------------------------*/
-Element Template_InsertRepeatChild (Document doc, Element el, Declaration decl, int pos)
-{
-#ifdef TEMPLATES
-  if (!TtaGetDocumentAccessMode(doc) || !decl)
-    return NULL;
-
-  if (pos == 0)
-    return Template_InsertRepeatChildAfter (doc, el, decl, NULL);
-  else if (pos == -1)
-    return Template_InsertRepeatChildAfter (doc, el, decl, TtaGetLastChild(el));
-  else
-  {
-    Element elem = TtaGetFirstChild(el);
-    pos--;
-    while (pos > 0)
-      {
-        TtaNextSibling(&elem);
-        pos--;
-      }
-    return Template_InsertRepeatChildAfter (doc, el, decl, elem);
-  }
-#else /* TEMPLATES */
-  return NULL;
-#endif /* TEMPLATES */
-}
-
 
 /*----------------------------------------------------------------------
   Template_InsertBagChild

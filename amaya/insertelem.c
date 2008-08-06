@@ -391,9 +391,9 @@ void InsertableElement_DoInsertElement (void* el)
     {
       case Template_EL_repeat:
         if (elem->typeClass==DefinedComponent)
-          newEl = Template_InsertRepeatChild (doc, ref,
+          newEl = Template_InsertRepeatChildAfter (doc, ref,
                                               (Declaration)elem->elem.component.declaration,
-                                              -1);
+                                              TtaGetLastChild(ref));
         break;
       case Template_EL_bag:
         newEl = Template_InsertBagChild (doc, ref,

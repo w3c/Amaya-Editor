@@ -734,15 +734,16 @@ Declaration Template_DeclareNewSimpleType (XTigerTemplate t, const char *name,
   Add a declaration to a template for a new component.
   ----------------------------------------------------------------------*/
 Declaration Template_DeclareNewComponent (XTigerTemplate t, const char *name,
-                                                           const Element el)
+                                                           Element el)
 {
 #ifdef TEMPLATES
   if (!t)
     return NULL;
 
   Declaration dec = Declaration_Create (t, name, ComponentNat);
-  dec->componentType.content = TtaCopyTree (el, TtaGetDocument (el),
-                                            TtaGetDocument (el), el);
+  dec->componentType.content = el;
+//  dec->componentType.content = TtaCopyTree (el, TtaGetDocument (el),
+//                                            TtaGetDocument (el), el);
   Template_AddDeclaration (t, dec);
   return dec;
 #else /* TEMPLATES */
@@ -959,6 +960,23 @@ Declaration Template_GetElementDeclaration (const XTigerTemplate t, const char *
 #endif /* TEMPLATES */
     return NULL;
 }
+
+/*----------------------------------------------------------------------
+  Template_GetUnionDeclaration
+  Find a declaration of an union in a specified template and return it.
+  \param t Template in which search the declaration
+  \param name Declaration name to find.
+  ----------------------------------------------------------------------*/
+Declaration Template_GetUnionDeclaration (const XTigerTemplate t, const char *name)
+{
+#ifdef TEMPLATES
+  if (t)
+     return (Declaration)SearchSet_SearchElement (t->unions, (void*)name, NULL); 
+  else
+#endif /* TEMPLATES */
+    return NULL;
+}
+
 
 /*----------------------------------------------------------------------
   Re-initialize the XTigerTemplate structure
@@ -1682,6 +1700,18 @@ ThotBool Template_IsLibrary(XTigerTemplate t)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+ThotBool Template_IsTemplate(XTigerTemplate t)
+{
+#ifdef TEMPLATES
+  if (t)
+    return (t->state&templTemplate)!=0;
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 ThotBool Template_IsInstance(XTigerTemplate t)
 {
 #ifdef TEMPLATES
@@ -2325,3 +2355,85 @@ ThotBool Template_CanInsertElementInUse (Document doc, ElementType type, char* u
   return FALSE;
 }
 
+
+/**----------------------------------------------------------------------
+  Template_IsUsedComponentInSubtree
+  Test if a component is used by xt:use or xt:union.
+  Use it to test if a xt:component or a xt:use is used in a template.
+  // Param validity must be tested by caller.
+  ----------------------------------------------------------------------*/
+static ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc,
+                                                    Element elem, const char* name)
+{
+#ifdef TEMPLATES
+  ElementType  elType;
+  SSchema      schema;
+  Declaration  decl;
+  char        *elName, *types;
+  SearchSet    set;
+  ThotBool     res;
+  Element      child;
+  
+#ifdef AMAYA_DEBUG
+  if(t && doc && elem && name && name[0]!=EOS)
+#endif /* AMAYA_DEBUG */
+    {
+      elType = TtaGetElementType(elem);
+      if(elType.ElTypeNum==Template_EL_union)
+        {
+          schema = TtaGetSSchema ("Template", doc);
+          if(elType.ElSSchema == schema)
+            {
+              elName = GetAttributeStringValueFromNum(elem, Template_ATTR_name, NULL);
+              decl = Template_GetUnionDeclaration(t, elName);
+              TtaFreeMemory(elName);
+              set = Template_ExpandUnion(t, decl);
+              return SearchSet_Search(set, (void*) name, NULL)!=NULL;
+            }
+        }
+      else if(elType.ElTypeNum==Template_EL_useEl || elType.ElTypeNum==Template_EL_useSimple)
+        {
+          schema = TtaGetSSchema ("Template", doc);
+          if(elType.ElSSchema == schema)
+            {
+              types = GetAttributeStringValueFromNum(elem, Template_ATTR_types, NULL);
+              set = Template_GetDeclarationSetFromNames(t, types, TRUE);
+              res = SearchSet_Search(set, (void*) name, NULL)!=NULL;
+              SearchSet_Destroy(set);
+              TtaFreeMemory(types);
+              if (res)
+                return TRUE;
+            }          
+        }
+      
+      child = TtaGetFirstChild(elem);
+      while(child)
+        {
+          if(Template_IsUsedComponentInSubtree(t, doc, child, name))
+            return TRUE;
+          TtaNextSibling(&child);
+        }
+
+    }
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/**----------------------------------------------------------------------
+  Template_IsUsedComponent
+  Test if a component is used by xt:use or xt:union.
+  Use it to test if a xt:component or a xt:use is used in a template.
+  ----------------------------------------------------------------------*/
+ThotBool Template_IsUsedComponent(XTigerTemplate t, Document doc, const char* name)
+{
+#ifdef TEMPLATES
+  Element elem;
+  if(t && doc&& name && name[0]!=EOS)
+    {
+      elem = TtaGetMainRoot(doc);
+      if(elem)
+        return Template_IsUsedComponentInSubtree(t, doc, elem, name);
+    }
+#endif /* TEMPLATES */
+  return FALSE;
+}

@@ -10,10 +10,6 @@ extern Element Template_InsertRepeatChildAfter ( Document doc,
                                                  Element el,
                                                  Declaration decl,
                                                  Element elPrev );
-extern Element Template_InsertRepeatChild ( Document doc,
-                                            Element el,
-                                            Declaration decl,
-                                            int pos );
 extern Element Template_InsertBagChild ( Document doc,
                                          Element el,
                                          Declaration decl,
@@ -61,10 +57,6 @@ extern Element Template_InsertRepeatChildAfter ( Document doc,
                                                    Element el,
                                                    Declaration decl,
                                                    Element elPrev );
-extern Element Template_InsertRepeatChild ( Document doc,
-                                              Element el,
-                                              Declaration decl,
-                                              int pos );
 extern Element Template_InsertBagChild ( Document doc,
                                            Element el,
                                            Declaration decl,

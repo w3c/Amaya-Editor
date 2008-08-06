@@ -190,7 +190,6 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
           name    = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
           include   = GetAttributeStringValueFromNum (el, Template_ATTR_includeAt, NULL);
           exclude   = GetAttributeStringValueFromNum (el, Template_ATTR_exclude, NULL);
-          
           if(name)
             Template_DeclareNewUnion (t, name, include, exclude);
           TtaFreeMemory (name);

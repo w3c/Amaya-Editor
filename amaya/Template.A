@@ -14,6 +14,11 @@ DEFAULT
    
 ELEMENTS
 
+  component :
+    BEGIN
+      ElemDelete.Pre -> TemplateComponentWillBeDeleted;
+    END;
+
    useEl :
       BEGIN
          ElemLClick.Pre -> UseButtonClicked;

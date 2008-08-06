@@ -1524,7 +1524,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   SSchema        templateSSchema;
   XTigerTemplate t;
   ThotBool       selparent = FALSE;
-
+  
   if(event->info==1)
     return FALSE;
 
@@ -1534,13 +1534,17 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   templateSSchema = TtaGetSSchema ("Template", event->document);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
+  
+  t = GetXTigerDocTemplate(doc);
+  if(Template_IsTemplate(t)||Template_IsLibrary(t))
+    return FALSE; // If template or library, pass to specialized functions.
 
   xtElem = GetFirstTemplateParentElement(elem);
   if (xtElem)
   {
     xtType = TtaGetElementType(xtElem);
     
-    t = GetXTigerDocTemplate(doc);
+    
 
     if (xtType.ElTypeNum==Template_EL_bag)
     {
@@ -2104,7 +2108,8 @@ Element Template_CreateComponentFromSelection(Document doc)
   ElementType selType, selType2;
   int         firstChar, lastChar, firstChar2, lastChar2;
   SSchema     sstempl = TtaGetSSchema ("Template", doc);
-
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  
   ElementType compType;
   Element     comp = NULL;
   char        buffer[128];
@@ -2112,7 +2117,7 @@ Element Template_CreateComponentFromSelection(Document doc)
   const char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_NEWCOMP);
   const char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
 
-  if(doc && TtaGetDocumentAccessMode(doc) &&
+  if(doc && t && TtaGetDocumentAccessMode(doc) &&
       TtaGetDocumentAccessMode(doc) && sstempl &&
       IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
     {
@@ -2173,6 +2178,8 @@ Element Template_CreateComponentFromSelection(Document doc)
                   TtaCloseUndoSequence(doc);
                   TtaSelectElement(doc, comp);
                   
+                  Template_DeclareNewComponent(t, buffer, comp);
+                  
                   TtaSetStructureChecking (oldStructureChecking, doc);
                   TtaSetDisplayMode (doc, dispMode);
                 }
@@ -2185,5 +2192,23 @@ Element Template_CreateComponentFromSelection(Document doc)
 #endif /* TEMPLATES */ 
 }
 
+/*----------------------------------------------------------------------
+  TemplateComponentWillBeDeleted
+  Processed when a component element will be deleted in a template context.
+  ----------------------------------------------------------------------*/
+ThotBool TemplateComponentWillBeDeleted (NotifyElement *event)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t = GetXTigerDocTemplate(event->document);
+  char* elemName = GetAttributeStringValueFromNum(event->element, Template_ATTR_name, NULL);
+  
+  if(Template_IsUsedComponent(t, event->document, elemName))
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_TEMPLATE_USEDCOMP_CANTREMOVE);
+      return TRUE;
+    }
+#endif /* TEMPLATES */ 
+  return FALSE;
+}
 
 

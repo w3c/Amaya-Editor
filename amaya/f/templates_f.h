@@ -72,6 +72,7 @@ extern void TemplateCreateUseBox ( Document doc,
                                    View view );
 extern Element Template_CreateUseFromSelection ( Document doc );
 extern Element Template_CreateComponentFromSelection ( Document doc );
+extern ThotBool TemplateComponentWillBeDeleted ( NotifyElement *event );
 
 #else /* __STDC__ */
 
@@ -141,6 +142,7 @@ extern void TemplateCreateUseBox ( Document doc,
                                      View view );
 extern Element Template_CreateUseFromSelection ( Document doc );
 extern Element Template_CreateComponentFromSelection ( Document doc );
+extern ThotBool TemplateComponentWillBeDeleted ( NotifyElement *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

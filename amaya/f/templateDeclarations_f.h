@@ -33,7 +33,7 @@ extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                    SimpleTypeType xtype );
 extern Declaration Template_DeclareNewComponent ( XTigerTemplate t,
                                                   const char *name,
-                                                  const Element el );
+                                                  Element el );
 extern Declaration Template_DeclareNewElement ( const XTigerTemplate t,
                                                 const char *name );
 extern Declaration Template_DeclareNewUnion ( XTigerTemplate t,
@@ -53,6 +53,8 @@ extern Declaration Template_GetComponentDeclaration ( const XTigerTemplate t,
                                                       const char *name );
 extern Declaration Template_GetElementDeclaration ( const XTigerTemplate t,
                                                     const char *name );
+extern Declaration Template_GetUnionDeclaration ( const XTigerTemplate t,
+                                                  const char *name );
 extern void Template_Clear ( XTigerTemplate t );
 extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
@@ -82,6 +84,7 @@ extern void Template_AddReference ( XTigerTemplate t );
 extern void Template_RemoveReference ( XTigerTemplate t );
 extern ThotBool Template_IsPredefined ( XTigerTemplate t );
 extern ThotBool Template_IsLibrary ( XTigerTemplate t );
+extern ThotBool Template_IsTemplate ( XTigerTemplate t );
 extern ThotBool Template_IsInstance ( XTigerTemplate t );
 extern ThotBool Template_IsLoaded ( XTigerTemplate t );
 extern ThotBool Template_IsInternal ( XTigerTemplate t );
@@ -121,6 +124,9 @@ extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                  char* useType,
                                                  Element parent,
                                                  int position );
+extern ThotBool Template_IsUsedComponent ( XTigerTemplate t,
+                                           Document doc,
+                                           const char* name );
 
 #else /* __STDC__ */
 
@@ -151,7 +157,7 @@ extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                      SimpleTypeType xtype );
 extern Declaration Template_DeclareNewComponent ( XTigerTemplate t,
                                                     const char *name,
-                                                    const Element el );
+                                                    Element el );
 extern Declaration Template_DeclareNewElement ( const XTigerTemplate t,
                                                   const char *name );
 extern Declaration Template_DeclareNewUnion ( XTigerTemplate t,
@@ -171,6 +177,8 @@ extern Declaration Template_GetComponentDeclaration ( const XTigerTemplate t,
                                                         const char *name );
 extern Declaration Template_GetElementDeclaration ( const XTigerTemplate t,
                                                       const char *name );
+extern Declaration Template_GetUnionDeclaration ( const XTigerTemplate t,
+                                                    const char *name );
 extern void Template_Clear ( XTigerTemplate t );
 extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
@@ -200,6 +208,7 @@ extern void Template_AddReference ( XTigerTemplate t );
 extern void Template_RemoveReference ( XTigerTemplate t );
 extern ThotBool Template_IsPredefined ( XTigerTemplate t );
 extern ThotBool Template_IsLibrary ( XTigerTemplate t );
+extern ThotBool Template_IsTemplate ( XTigerTemplate t );
 extern ThotBool Template_IsInstance ( XTigerTemplate t );
 extern ThotBool Template_IsLoaded ( XTigerTemplate t );
 extern ThotBool Template_IsInternal ( XTigerTemplate t );
@@ -239,6 +248,9 @@ extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                    char* useType,
                                                    Element parent,
                                                    int position );
+extern ThotBool Template_IsUsedComponent ( XTigerTemplate t,
+                                             Document doc,
+                                             const char* name );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
