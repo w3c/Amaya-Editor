@@ -1757,7 +1757,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
       return;
     }
     
-
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   selEl = first;
   newEl = NULL;
@@ -1894,6 +1893,11 @@ void CreateGraphicElement (Document doc, View view, int entry)
       TtaSelectElement(doc, svgCanvas);
     }
 
+  dispMode = TtaGetDisplayMode (doc);
+  /* ask Thot to stop displaying changes made in the document */
+  if (dispMode == DisplayImmediately)
+  TtaSetDisplayMode (doc, DeferredDisplay);
+
   newType.ElSSchema = svgSchema;
   newType.ElTypeNum = 0;
   isFilled = TRUE;
@@ -2023,11 +2027,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   if (newType.ElTypeNum > 0)
     {
-      dispMode = TtaGetDisplayMode (doc);
-      /* ask Thot to stop displaying changes made in the document */
-      if (dispMode == DisplayImmediately)
-        TtaSetDisplayMode (doc, DeferredDisplay);
-
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
 
@@ -2669,9 +2668,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  TtaDeleteTree(newEl, doc);
 	  newEl = NULL;
 	}
-	  
-      /* ask Thot to display changes made in the document */
-      TtaSetDisplayMode (doc, dispMode);
+ 
     }
 
   /* create attributes fill and stroke */
@@ -2829,6 +2826,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
   /* adapt the size of the SVG root element if necessary */
   /* CheckSVGRoot (doc, newEl);
      SetGraphicDepths (doc, svgCanvas);*/
+
+  /* ask Thot to display changes made in the document */
+  TtaSetDisplayMode (doc, dispMode);
 
   TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
