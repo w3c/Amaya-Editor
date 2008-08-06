@@ -152,6 +152,8 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
+/*****************************************************************************
+ ******************************************************************************/
 #define NB_ELEMENTS 9
 
 static const char* svg_sources_files[] = 
