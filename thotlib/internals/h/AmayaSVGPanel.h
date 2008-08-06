@@ -25,9 +25,17 @@ public:
             const wxSize& size = wxDefaultSize, long style = 0,
             const wxString& name = wxT("AmayaSVGPanel"), wxObject* extra=NULL);
 protected:
+  int last_menu;
+
   void DisplayMenu(int directory);
   void InsertElement(int directory, int file);
-  void OnMenuTest(wxCommandEvent& event);
+
+  void OnMenu0(wxCommandEvent& event);
+  void OnMenu1(wxCommandEvent& event);
+  void OnMenu2(wxCommandEvent& event);
+  void OnMenu3(wxCommandEvent& event);
+  void OnMenu4(wxCommandEvent& event);
+  void OnMenu5(wxCommandEvent& event);
   void OnInsertElement(wxCommandEvent& event);
     
   AmayaBaseToolBar *m_tbar1, *m_tbar2, *m_tbar3, *m_tbar4, *m_tbar5,

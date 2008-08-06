@@ -80,7 +80,22 @@
             <bitmap>../icons/16x16/SVG_ellipse.png</bitmap>
           </object>
           <object class="separator"/>
-          <object class="tool" name="wxID_MENUTEST">
+          <object class="tool" name="wxID_MENU_SVG_3D">
+            <bitmap>../icons/16x16/open.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_BALLOONS">
+            <bitmap>../icons/16x16/open.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_CHEMISTRY">
+            <bitmap>../icons/16x16/open.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_CIRCUIT_DIAGRAM">
+            <bitmap>../icons/16x16/open.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_POLYGON_AND_STARS">
+            <bitmap>../icons/16x16/open.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_OTHERS">
             <bitmap>../icons/16x16/open.png</bitmap>
           </object>
           <bitmapsize>16,16</bitmapsize>
@@ -102,7 +117,7 @@
           <object class="tool" name="wxID_PANEL_SVG_CLOSED">
             <bitmap>../icons/16x16/SVG_closed.png</bitmap>
           </object>
-<!--          <bitmapsize>16,16</bitmapsize>
+          <!--          <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
 -          <object class="tool" name="wxID_PANEL_SVG_CUBE">

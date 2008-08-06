@@ -99,7 +99,8 @@ AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_VSPACING", "TransformSVG_Distribute
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
 AmayaSVGPanel::AmayaSVGPanel():
-  wxPanel()
+  wxPanel(),
+  last_menu(-1)  
 {
 }
 
@@ -222,7 +223,7 @@ static svg_elements svg_templates[] =
      }
     },
 
-    {"polygons_and_star/", 7,
+    {"polygons_and_stars/", 7,
      {
        {"pentagon.svg", TMSG_SVG_Pentagon},
        {"hexagon.svg", TMSG_SVG_Hexagon},
@@ -252,6 +253,8 @@ void AmayaSVGPanel::DisplayMenu(int directory)
   svg_elements e = svg_templates[directory];
   int j;
 
+  last_menu = directory;
+
   for(j = 0; j < e.length; j++)
     menu.Append(j,
 		TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id))
@@ -274,12 +277,11 @@ void AmayaSVGPanel::InsertElement(int directory, int file)
   View view;
   TtaGiveActiveView( &doc, &view );
 
-  if(doc > 0 && file >= 0 && file < svg_templates[directory].length)
+  if(doc > 0 && file >= 0 && file < e.length)
     {
       *name = '\0';
       strcat(name, e.directory);
       strcat(name, e.list[file].file_name);
-	
       path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
       LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
       TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
@@ -288,19 +290,51 @@ void AmayaSVGPanel::InsertElement(int directory, int file)
 
 /***************************************************************************
   ****************************************************************************/
-void AmayaSVGPanel::OnMenuTest(wxCommandEvent& event)
+void AmayaSVGPanel::OnMenu0(wxCommandEvent& event)
 {
   DisplayMenu(0);
 }
 
+void AmayaSVGPanel::OnMenu1(wxCommandEvent& event)
+{
+  DisplayMenu(1);
+}
+
+void AmayaSVGPanel::OnMenu2(wxCommandEvent& event)
+{
+  DisplayMenu(2);
+}
+
+void AmayaSVGPanel::OnMenu3(wxCommandEvent& event)
+{
+  DisplayMenu(3);
+}
+
+void AmayaSVGPanel::OnMenu4(wxCommandEvent& event)
+{
+  DisplayMenu(4);
+}
+
+void AmayaSVGPanel::OnMenu5(wxCommandEvent& event)
+{
+  DisplayMenu(5);
+}
+
 void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 {
-  InsertElement(0, event.GetId());
+  if(last_menu != -1)
+    InsertElement(last_menu, event.GetId());
 }
 
 BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
-EVT_TOOL(XRCID("wxID_MENUTEST"), AmayaSVGPanel::OnMenuTest)
-EVT_MENU_RANGE(0, svg_templates[0].length - 1, AmayaSVGPanel::OnInsertElement)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_3D"), AmayaSVGPanel::OnMenu0)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu1)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu2)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu3)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu4)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu5)
+
+  EVT_MENU_RANGE(0, MAX_BY_DIRECTORY - 1, AmayaSVGPanel::OnInsertElement)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
