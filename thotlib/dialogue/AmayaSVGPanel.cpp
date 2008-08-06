@@ -31,7 +31,6 @@
 #include "AmayaSVGPanel.h"
 #include "AmayaNormalWindow.h"
 
-
 //
 //
 // AmayaSVGPanel
@@ -152,58 +151,156 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
-/*****************************************************************************
- ******************************************************************************/
-#define NB_ELEMENTS 9
+/***************************************************************************
+  ****************************************************************************/
+#define MAX_BY_DIRECTORY 14
 
-static const char* svg_sources_files[] = 
-{
-  "3d/cone.svg",
-  "3d/cube.svg",
-  "3d/cylinder.svg",
-  "3d/octahedron.svg",
-  "3d/parallelepiped.svg",
-  "3d/pyramid.svg",
-  "chemistry/burette.svg",
-  "chemistry/erlenmeyer_flask.svg",
-  "ring.svg"
-};
+typedef struct svg_element_
+  {
+    const char *file_name;
+    int  msg_id;
+  } svg_element;
 
-void AmayaSVGPanel::OnMenuTest(wxCommandEvent& event)
+typedef struct svg_elements_
+  {
+    const char* directory;
+    int length;
+    svg_element list[MAX_BY_DIRECTORY];
+  } svg_elements;
+
+static svg_elements svg_templates[] =
+  {
+    {"3d/", 6,
+     {
+       {"cone.svg", TMSG_SVG_Cone},
+       {"cube.svg", TMSG_SVG_Cube},
+       {"cylinder.svg", TMSG_SVG_Cylinder},
+       {"octahedron.svg", TMSG_SVG_Octahedron},
+       {"parallelepiped.svg", TMSG_SVG_Parallelepiped},
+       {"pyramid.svg", TMSG_SVG_Pyramid},
+     }
+    },
+
+    {"balloons/", 5,
+     {
+       {"rectangular.svg", TMSG_SVG_Rectangular},
+       {"round.svg", TMSG_SVG_Round},
+       {"rounded_rectangular.svg", TMSG_SVG_Rounded_rectangular},
+       {"scream.svg", TMSG_SVG_Scream},
+       {"thought.svg", TMSG_SVG_Thought},
+     }
+    },
+
+    {"chemistry/", 7,
+     {
+       {"beaker.svg", TMSG_SVG_Beaker},
+       {"boiling_flask.svg", TMSG_SVG_Boiling_flask},
+       {"buchner_flask.svg", TMSG_SVG_Buchner_flask},
+       {"burette.svg", TMSG_SVG_Burette},
+       {"erlenmeyer_flask.svg", TMSG_SVG_Erlenmeyer_flask},
+       {"pipette.svg", TMSG_SVG_Pipette},
+       {"test_tube.svg", TMSG_SVG_Test_tube},
+     }
+    },
+
+    {"circuit_diagram/", 14,
+     {
+       {"capacitor.svg", TMSG_SVG_Capacitor},
+       {"current_source.svg", TMSG_SVG_Current_source},
+       {"diode.svg", TMSG_SVG_Diode},
+       {"ground_point.svg", TMSG_SVG_Ground_point},
+       {"inductor.svg", TMSG_SVG_Inductor},
+       {"led.svg", TMSG_SVG_Led},
+       {"op-amp.svg", TMSG_SVG_Op_amp},
+       {"op-amp2.svg", TMSG_SVG_Op_amp},
+       {"resistor.svg", TMSG_SVG_Resistor},
+       {"resistor2.svg", TMSG_SVG_Resistor},
+       {"switch.svg", TMSG_SVG_Switch},
+       {"transistor.svg", TMSG_SVG_Transistor},
+       {"voltage_source.svg", TMSG_SVG_Voltage_source},
+       {"zener_diode.svg", TMSG_SVG_Zener_diode},
+     }
+    },
+
+    {"polygons_and_star/", 7,
+     {
+       {"pentagon.svg", TMSG_SVG_Pentagon},
+       {"hexagon.svg", TMSG_SVG_Hexagon},
+       {"heptagon.svg", TMSG_SVG_Heptagon},
+       {"octogon.svg", TMSG_SVG_Octogon},
+       {"star4.svg", TMSG_SVG_Star4},
+       {"star5.svg", TMSG_SVG_Star5},
+       {"star6.svg", TMSG_SVG_Star6},
+     }
+    },
+
+    {"", 3,
+     {
+       {"cross.svg", TMSG_SVG_Cross},
+       {"frame.svg", TMSG_SVG_Frame},
+       {"ring.svg", TMSG_SVG_Ring},
+     }
+    }
+    
+  };
+
+/***************************************************************************
+  ****************************************************************************/
+void AmayaSVGPanel::DisplayMenu(int directory)
 {
   wxMenu menu;
-  menu.Append(1, wxT("Cone"));
-  menu.Append(2, wxT("Cube"));
-  menu.Append(3, wxT("Cylinder"));
-  menu.Append(4, wxT("Octahedron"));
-  menu.Append(5, wxT("Parallelepiped"));
-  menu.Append(6, wxT("Pyramid"));
-  menu.Append(7, wxT("Burette"));
-  menu.Append(8, wxT("Erlenmeyer"));
-  menu.Append(9, wxT("Ring"));
+  svg_elements e = svg_templates[directory];
+  int j;
+
+  for(j = 0; j < e.length; j++)
+    menu.Append(j,
+		TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id))
+		);
+
   PopupMenu(&menu);
 }
 
-void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
+/***************************************************************************
+  ****************************************************************************/
+void AmayaSVGPanel::InsertElement(int directory, int file)
 {
+  char name[MAX_LENGTH];
+  wxString path;
+
+  wxMenu menu;
+  svg_elements e = svg_templates[directory];
+
   Document doc;
   View view;
-
   TtaGiveActiveView( &doc, &view );
 
-  if(doc > 0 && event.GetId()>=1 && event.GetId()<=NB_ELEMENTS)
+  if(doc > 0 && file >= 0 && file < svg_templates[directory].length)
     {
-      wxString path = TtaGetResourcePathWX(WX_RESOURCES_SVG, svg_sources_files[event.GetId()-1]);
+      *name = '\0';
+      strcat(name, e.directory);
+      strcat(name, e.list[file].file_name);
+	
+      path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
       LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
       TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
     }
 }
 
+/***************************************************************************
+  ****************************************************************************/
+void AmayaSVGPanel::OnMenuTest(wxCommandEvent& event)
+{
+  DisplayMenu(0);
+}
 
+void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
+{
+  InsertElement(0, event.GetId());
+}
 
 BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
-  EVT_TOOL(XRCID("wxID_MENUTEST"), AmayaSVGPanel::OnMenuTest)
-  EVT_MENU_RANGE(1, NB_ELEMENTS, AmayaSVGPanel::OnInsertElement)
+EVT_TOOL(XRCID("wxID_MENUTEST"), AmayaSVGPanel::OnMenuTest)
+EVT_MENU_RANGE(0, svg_templates[0].length - 1, AmayaSVGPanel::OnInsertElement)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
