@@ -171,75 +171,75 @@ typedef struct svg_elements_
 
 static svg_elements svg_templates[] =
   {
-    {"3d/", 6,
+    {"3d", 6,
      {
-       {"cone.svg", TMSG_SVG_Cone},
-       {"cube.svg", TMSG_SVG_Cube},
-       {"cylinder.svg", TMSG_SVG_Cylinder},
-       {"octahedron.svg", TMSG_SVG_Octahedron},
-       {"parallelepiped.svg", TMSG_SVG_Parallelepiped},
-       {"pyramid.svg", TMSG_SVG_Pyramid},
+       {"cone", TMSG_SVG_Cone},
+       {"cube", TMSG_SVG_Cube},
+       {"cylinder", TMSG_SVG_Cylinder},
+       {"octahedron", TMSG_SVG_Octahedron},
+       {"parallelepiped", TMSG_SVG_Parallelepiped},
+       {"pyramid", TMSG_SVG_Pyramid},
      }
     },
 
-    {"balloons/", 5,
+    {"balloons", 5,
      {
-       {"rectangular.svg", TMSG_SVG_Rectangular},
-       {"round.svg", TMSG_SVG_Round},
-       {"rounded_rectangular.svg", TMSG_SVG_Rounded_rectangular},
-       {"scream.svg", TMSG_SVG_Scream},
-       {"thought.svg", TMSG_SVG_Thought},
+       {"rectangular", TMSG_SVG_Rectangular},
+       {"round", TMSG_SVG_Round},
+       {"rounded_rectangular", TMSG_SVG_Rounded_rectangular},
+       {"scream", TMSG_SVG_Scream},
+       {"thought", TMSG_SVG_Thought},
      }
     },
 
-    {"chemistry/", 7,
+    {"chemistry", 7,
      {
-       {"beaker.svg", TMSG_SVG_Beaker},
-       {"boiling_flask.svg", TMSG_SVG_Boiling_flask},
-       {"buchner_flask.svg", TMSG_SVG_Buchner_flask},
-       {"burette.svg", TMSG_SVG_Burette},
-       {"erlenmeyer_flask.svg", TMSG_SVG_Erlenmeyer_flask},
-       {"pipette.svg", TMSG_SVG_Pipette},
-       {"test_tube.svg", TMSG_SVG_Test_tube},
+       {"beaker", TMSG_SVG_Beaker},
+       {"boiling_flask", TMSG_SVG_Boiling_flask},
+       {"buchner_flask", TMSG_SVG_Buchner_flask},
+       {"burette", TMSG_SVG_Burette},
+       {"erlenmeyer_flask", TMSG_SVG_Erlenmeyer_flask},
+       {"pipette", TMSG_SVG_Pipette},
+       {"test_tube", TMSG_SVG_Test_tube},
      }
     },
 
-    {"circuit_diagram/", 14,
+    {"circuit_diagram", 14,
      {
-       {"capacitor.svg", TMSG_SVG_Capacitor},
-       {"current_source.svg", TMSG_SVG_Current_source},
-       {"diode.svg", TMSG_SVG_Diode},
-       {"ground_point.svg", TMSG_SVG_Ground_point},
-       {"inductor.svg", TMSG_SVG_Inductor},
-       {"led.svg", TMSG_SVG_Led},
-       {"op-amp.svg", TMSG_SVG_Op_amp},
-       {"op-amp2.svg", TMSG_SVG_Op_amp},
-       {"resistor.svg", TMSG_SVG_Resistor},
-       {"resistor2.svg", TMSG_SVG_Resistor},
-       {"switch.svg", TMSG_SVG_Switch},
-       {"transistor.svg", TMSG_SVG_Transistor},
-       {"voltage_source.svg", TMSG_SVG_Voltage_source},
-       {"zener_diode.svg", TMSG_SVG_Zener_diode},
+       {"capacitor", TMSG_SVG_Capacitor},
+       {"current_source", TMSG_SVG_Current_source},
+       {"diode", TMSG_SVG_Diode},
+       {"ground_point", TMSG_SVG_Ground_point},
+       {"inductor", TMSG_SVG_Inductor},
+       {"led", TMSG_SVG_Led},
+       {"op-amp", TMSG_SVG_Op_amp},
+       {"op-amp2", TMSG_SVG_Op_amp},
+       {"resistor", TMSG_SVG_Resistor},
+       {"resistor2", TMSG_SVG_Resistor},
+       {"switch", TMSG_SVG_Switch},
+       {"transistor", TMSG_SVG_Transistor},
+       {"voltage_source", TMSG_SVG_Voltage_source},
+       {"zener_diode", TMSG_SVG_Zener_diode},
      }
     },
 
-    {"polygons_and_stars/", 7,
+    {"polygons_and_stars", 7,
      {
-       {"pentagon.svg", TMSG_SVG_Pentagon},
-       {"hexagon.svg", TMSG_SVG_Hexagon},
-       {"heptagon.svg", TMSG_SVG_Heptagon},
-       {"octogon.svg", TMSG_SVG_Octogon},
-       {"star4.svg", TMSG_SVG_Star4},
-       {"star5.svg", TMSG_SVG_Star5},
-       {"star6.svg", TMSG_SVG_Star6},
+       {"pentagon", TMSG_SVG_Pentagon},
+       {"hexagon", TMSG_SVG_Hexagon},
+       {"heptagon", TMSG_SVG_Heptagon},
+       {"octogon", TMSG_SVG_Octogon},
+       {"star4", TMSG_SVG_Star4},
+       {"star5", TMSG_SVG_Star5},
+       {"star6", TMSG_SVG_Star6},
      }
     },
 
     {"", 3,
      {
-       {"cross.svg", TMSG_SVG_Cross},
-       {"frame.svg", TMSG_SVG_Frame},
-       {"ring.svg", TMSG_SVG_Ring},
+       {"cross", TMSG_SVG_Cross},
+       {"frame", TMSG_SVG_Frame},
+       {"ring", TMSG_SVG_Ring},
      }
     }
     
@@ -249,16 +249,27 @@ static svg_elements svg_templates[] =
   ****************************************************************************/
 void AmayaSVGPanel::DisplayMenu(int directory)
 {
+  wxBitmap x;
   wxMenu menu;
+  wxMenuItem *item;
   svg_elements e = svg_templates[directory];
   int j;
+  char name[MAX_LENGTH];
 
   last_menu = directory;
 
   for(j = 0; j < e.length; j++)
-    menu.Append(j,
-		TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id))
-		);
+    {
+      item = menu.Append(j,
+			 TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id))
+			 );
+      sprintf(name, "%s/%s.png", e.directory, e.list[j].file_name);
+
+      x = wxBitmap(TtaGetResourcePathWX(WX_RESOURCES_SVG, name),
+		   wxBITMAP_TYPE_PNG);
+      printf("%s\n", name);
+      item->SetBitmap(x);
+    }
 
   PopupMenu(&menu);
 }
@@ -279,9 +290,7 @@ void AmayaSVGPanel::InsertElement(int directory, int file)
 
   if(doc > 0 && file >= 0 && file < e.length)
     {
-      *name = '\0';
-      strcat(name, e.directory);
-      strcat(name, e.list[file].file_name);
+      sprintf(name, "%s/%s.svg", e.directory, e.list[file].file_name);
       path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
       LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
       TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
