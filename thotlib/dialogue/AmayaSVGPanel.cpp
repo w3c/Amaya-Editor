@@ -100,7 +100,7 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
 ****************************************************************************/
 
 /* Number maximum of constructs in one directory */
-#define MAX_CONSTRUCTS_BY_DIRECTORY 14
+#define MAX_CONSTRUCTS_BY_DIRECTORY 16
 
 /* Structure of an SVG contruct */
 typedef struct svg_construct_
@@ -160,8 +160,8 @@ static svg_constructs list_of_constructs[] =
      {
        {"polyline", TMSG_SVG_Polyline, "CreateSVG_Polyline"},
        {"polygon", TMSG_SVG_Polygon, "CreateSVG_Polygon"},
-       {"closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed"},
-       {"bezier", TMSG_SVG_Bezier, "CreateSVG_Spline"}
+       {"bezier", TMSG_SVG_Bezier, "CreateSVG_Spline"},
+       {"closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed"}
      }
     },
 
@@ -246,10 +246,12 @@ static svg_constructs list_of_constructs[] =
      }
     },
 
-    {"circuit_diagram", 14,
+    {"circuit_diagram", 16,
      {
        {"current_source", TMSG_SVG_Current_source, NULL},
+       {"current_source2", TMSG_SVG_Current_source, NULL},
        {"voltage_source", TMSG_SVG_Voltage_source, NULL},
+       {"voltage_source2", TMSG_SVG_Voltage_source, NULL},
        {"ground_point", TMSG_SVG_Ground_point, NULL},
        {"resistor", TMSG_SVG_Resistor, NULL},
        {"resistor2", TMSG_SVG_Resistor, NULL},

@@ -308,14 +308,14 @@
 306 Aligner axe horizontal
 307 Aligner bord droit
 308 Aligner bord supérieur
-309 **Distribute bottom
-310 **Distribute center
-311 **Distribute left
-312 **Distribute middle
-313 **Distribute right
-314 **Distribute top
-315 **Distribute vertical spacing
-316 **Distribute horizontal spacing
+309 Distribuer bords inférieurs
+310 Distribuer axes verticaux
+311 Distribuer bords gauches
+312 Distribuer axes verticaux
+313 Distribuer bords droits
+314 Distribuer bords supérieurs
+315 Distribuer espacements verticaux
+316 Distribuer espacements horizontaux
 317 **Closed Bezier curve
 318 **Bezier curve
 319 **Polyline

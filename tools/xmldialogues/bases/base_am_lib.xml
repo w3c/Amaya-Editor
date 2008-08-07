@@ -4486,27 +4486,35 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 
 <label define="TMSG_SVG_DistributeBottom">
   <message xml:lang="en">Distribute bottom</message>
+  <message xml:lang="fr">Distribuer bords inférieurs</message>
 </label>
 <label define="TMSG_SVG_DistributeCenter">
   <message xml:lang="en">Distribute center</message>
+  <message xml:lang="fr">Distribuer axes verticaux</message>
 </label>
 <label define="TMSG_SVG_DistributeLeft">
   <message xml:lang="en">Distribute left</message>
+  <message xml:lang="fr">Distribuer bords gauches</message>
 </label>
 <label define="TMSG_SVG_DistributeMiddle">
   <message xml:lang="en">Distribute middle</message>
+  <message xml:lang="fr">Distribuer axes verticaux</message>
 </label>
 <label define="TMSG_SVG_DistributeRight">
   <message xml:lang="en">Distribute right</message>
+  <message xml:lang="fr">Distribuer bords droits</message>
 </label>
 <label define="TMSG_SVG_DistributeTop">
   <message xml:lang="en">Distribute top</message>
+  <message xml:lang="fr">Distribuer bords supérieurs</message>
 </label>
 <label define="TMSG_SVG_DistributeVSpacing">
   <message xml:lang="en">Distribute vertical spacing</message>
+  <message xml:lang="fr">Distribuer espacements verticaux</message>
 </label>
 <label define="TMSG_SVG_DistributeHSpacing">
   <message xml:lang="en">Distribute horizontal spacing</message>
+  <message xml:lang="fr">Distribuer espacements horizontaux</message>
 </label>
 
 <label define="TMSG_SVG_ClosedBezier">
