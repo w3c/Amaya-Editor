@@ -39,6 +39,12 @@
           <object class="tool" name="wxID_PANEL_SVG_SELECT">
             <bitmap>../icons/16x16/SVG_select.png</bitmap>
           </object>
+          <object class="tool" name="wxID_PANEL_SVG_GROUP">
+            <bitmap>../icons/16x16/SVG_group.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_PANEL_SVG_UNGROUP">
+            <bitmap>../icons/16x16/SVG_ungroup.png</bitmap>
+          </object>
           <object class="tool" name="wxID_MENU_SVG_LAYERS">
             <bitmap>../svg/layers/group.png</bitmap>
           </object>
@@ -47,6 +53,9 @@
           </object>
           <object class="tool" name="wxID_MENU_SVG_ALIGN">
             <bitmap>../svg/align/left.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_DISTRIBUTE">
+            <bitmap>../svg/distribute/left.png</bitmap>
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
@@ -66,8 +75,6 @@
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
         </object>
       </object>
-      
-
     </object>
     <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
   </object>

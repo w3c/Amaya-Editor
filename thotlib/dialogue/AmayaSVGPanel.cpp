@@ -40,14 +40,8 @@
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaSVGToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SELECT", "SVG_Select", LIB, TMSG_SEL)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_LEFT", "TransformSVG_DistributeLeft", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_CENTER", "TransformSVG_DistributeCenter", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_RIGHT", "TransformSVG_DistributeRight", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_TOP", "TransformSVG_DistributeTop", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_MIDDLE", "TransformSVG_DistributeMiddle", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_CENTER", "TransformSVG_DistributeCenter", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_HSPACING", "TransformSVG_DistributeHSpacing", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_VSPACING", "TransformSVG_DistributeVSpacing", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_GROUP", "CreateSVG_Group", LIB, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_UNGROUP", "TransformSVG_Ungroup", LIB, wxID_ANY)
   AMAYA_END_TOOLBAR_DEF_TABLE()
 
   AmayaSVGPanel::AmayaSVGPanel():
@@ -102,8 +96,10 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
 }
 
 /***************************************************************************
-  List of all SVG constructions.
+  SVG constructions.
 ****************************************************************************/
+
+/* Number maximum of constructs in one directory */
 #define MAX_CONSTRUCTS_BY_DIRECTORY 14
 
 /* Structure of an SVG contruct */
@@ -114,6 +110,7 @@ typedef struct svg_construct_
   const char *function_name;
 } svg_construct;
 
+/* Structure of a list of a set of constructs */
 typedef struct svg_constructs_
 {
   const char* directory;
@@ -121,6 +118,7 @@ typedef struct svg_constructs_
   svg_construct list[MAX_CONSTRUCTS_BY_DIRECTORY];
 } svg_constructs;
 
+/* list of all constructions */
 static svg_constructs list_of_constructs[] =
   {
     {"special_objects", 4,
@@ -167,10 +165,8 @@ static svg_constructs list_of_constructs[] =
      }
     },
 
-    {"layers", 6,
+    {"layers", 4,
      {
-       {"group", TMSG_SVG_Group, "CreateSVG_Group"},
-       {"ungroup", TMSG_SVG_Ungroup, "TransformSVG_Ungroup"},
        {"send_to_back", TMSG_SVG_SendToBack, "TransformSVG_SendToBack"},
        {"send_backward", TMSG_SVG_SendBackward, "TransformSVG_SendBackward"},
        {"bring_forward", TMSG_SVG_BringForward, "TransformSVG_BringForward"},
