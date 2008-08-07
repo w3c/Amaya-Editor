@@ -272,91 +272,87 @@
 270 Classique
 271 Moderne
 272 Pas de thème
-273 Aligner en haut
-274 Aligner en bas
-275 Aligner au milieu
-276 Grouper
-277 Dégrouper
-278 Mettre au dessus
-279 Mettre en dessous
-280 Monter d'un niveau
-281 Descendre d'un niveau
-282 90° à gauche
-283 90° à droite
-284 Tourner
-285 Symétrie verticale
-286 Symétrie horizontale
-287 Redimensionner
-288 Incliner
-289 Déplacer
-290 **Align bottom
-291 **Align center
-292 **Align left
-293 **Align middle
-294 **Align right
-295 **Align top
-296 Carré
-297 **Rounded Square
-298 Rectangle
-299 **Rounded rectangle
-300 Losange
-301 **Parallelogram
-302 **Trapezium
-303 Triangle équilatéral
-304 Triangle isocèle
-305 Triangle rectangle
-306 Cercle
-307 Ellipse
-308 Ligne
-309 Flèche
-310 Flèche double
-311 **Zigzag
-312 **Closed Bezier curve
-313 **Bezier curve
-314 **Polyline
-315 **Polygon
-316 Objet étranger (<foreignObject/>)
-317 Image
-318 Canevas SVG
-319 Texte
-320 Groupe
-321 Cône
-322 Cube
-323 Cylindre
-324 Octaèdre
-325 Parallèlépidède
-326 Pyramide
-327 Bécher
-328 Fiole à vide
-329 Ballon
-330 Burette
-331 Erlenmeyer
-332 Tube à essai
-333 Pipette
-334 Rectangulaire
-335 À coins arrondis
-336 Ronde
-337 Cri
-338 Pensée
-339 Condensateur
-340 Source de courant
-341 Diode
-342 Terre
-343 Inductance
-344 DEL
-345 Ampli-op
-346 Résistance
-347 Interrupteur
-348 Transistor
-349 Source de tension
-350 Diode Zener
-351 Pentagone
-352 Hexagone
-353 Heptagone
-354 Octogone
-355 Étoile (4 branches)
-356 Étoile (5 branches)
-357 Étoile (6 branches)
-358 Croix
-359 Cadre
-360 Anneau
+273 **Align bottom
+274 **Align center
+275 **Align left
+276 **Align middle
+277 **Align right
+278 **Align top
+279 Carré
+280 **Rounded Square
+281 Rectangle
+282 **Rounded rectangle
+283 Losange
+284 **Parallelogram
+285 **Trapezium
+286 Triangle équilatéral
+287 Triangle isocèle
+288 Triangle rectangle
+289 Cercle
+290 Ellipse
+291 Ligne
+292 Flèche
+293 Flèche double
+294 **Zigzag
+295 Grouper
+296 Dégrouper
+297 Mettre au dessus
+298 Mettre en dessous
+299 Monter d'un niveau
+300 Descendre d'un niveau
+301 90° à gauche
+302 90° à droite
+303 Tourner
+304 Symétrie verticale
+305 Symétrie horizontale
+306 Redimensionner
+307 Incliner
+308 Déplacer
+309 **Closed Bezier curve
+310 **Bezier curve
+311 **Polyline
+312 **Polygon
+313 Objet étranger (<foreignObject/>)
+314 Image
+315 Canevas SVG
+316 Texte
+317 Cône
+318 Cube
+319 Cylindre
+320 Octaèdre
+321 Parallèlépidède
+322 Pyramide
+323 Bécher
+324 Fiole à vide
+325 Ballon
+326 Burette
+327 Erlenmeyer
+328 Tube à essai
+329 Pipette
+330 Rectangulaire
+331 À coins arrondis
+332 Ronde
+333 Cri
+334 Pensée
+335 Condensateur
+336 Source de courant
+337 Diode
+338 Terre
+339 Inductance
+340 DEL
+341 Ampli-op
+342 Résistance
+343 Interrupteur
+344 Transistor
+345 Source de tension
+346 Diode Zener
+347 Pentagone
+348 Hexagone
+349 Heptagone
+350 Octogone
+351 Étoile (4 branches)
+352 Étoile (5 branches)
+353 Étoile (6 branches)
+354 Croix
+355 Cadre
+356 Anneau

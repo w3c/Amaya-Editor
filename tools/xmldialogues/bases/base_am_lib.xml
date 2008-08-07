@@ -4328,82 +4328,25 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
  <message xml:lang="hu">Téma nélkül</message>
  <message xml:lang="ja">テーマなし</message></label>
 
-
-<label define="TMSG_FORMATTOP">
-<message xml:lang="en">Align top</message>
- <message xml:lang="fr">Aligner en haut</message></label>
-<label define="TMSG_FORMATBOTTOM">
-<message xml:lang="en">Align bottom</message>
- <message xml:lang="fr">Aligner en bas</message></label>
-<label define="TMSG_FORMATMIDDLE">
-<message xml:lang="en">Align middle</message>
- <message xml:lang="fr">Aligner au milieu</message></label>
-<label define="TMSG_GROUP">
-<message xml:lang="en">Group</message>
- <message xml:lang="fr">Grouper</message></label>
-<label define="TMSG_UNGROUP">
-<message xml:lang="en">Ungroup</message>
- <message xml:lang="fr">Dégrouper</message></label>
-<label define="TMSG_TOFRONT">
-<message xml:lang="en">Bring to front</message>
- <message xml:lang="fr">Mettre au dessus</message></label>
-<label define="TMSG_TOBACK">
-<message xml:lang="en">Send to back</message>
- <message xml:lang="fr">Mettre en dessous</message></label>
-<label define="TMSG_UP">
-<message xml:lang="en">One level up</message>
- <message xml:lang="fr">Monter d'un niveau</message></label>
-<label define="TMSG_DOWN">
-<message xml:lang="en">One level down</message>
- <message xml:lang="fr">Descendre d'un niveau</message></label>
-<label define="TMSG_TURNLEFT">
-<message xml:lang="en">90° left</message>
- <message xml:lang="fr">90° à gauche</message></label>
-<label define="TMSG_TURNRIGHT">
-<message xml:lang="en">90° right</message>
- <message xml:lang="fr">90° à droite</message></label>
-<label define="TMSG_ROTATE">
-<message xml:lang="en">Rotate</message>
- <message xml:lang="fr">Tourner</message></label>
-<label define="TMSG_VREVERSE">
-<message xml:lang="en">Vertical symmetry</message>
- <message xml:lang="fr">Symétrie verticale</message></label>
-<label define="TMSG_HREVERSE">
-<message xml:lang="en">Horizontal symmetry</message>
- <message xml:lang="fr">Symétrie horizontale</message></label>
-<label define="TMSG_SCALE">
-<message xml:lang="en">Scale</message>
- <message xml:lang="fr">Redimensionner</message></label>
-<label define="TMSG_SKEW">
-<message xml:lang="en">Skew</message>
- <message xml:lang="fr">Incliner</message></label>
-<label define="TMSG_TRANSLATE">
-<message xml:lang="en">Move</message>
- <message xml:lang="fr">Déplacer</message></label>
-
 <!-- SVG panel -->
 <label define="TMSG_SVG_AlignBottom">
-	<message xml:lang="en">Align bottom</message>
+  <message xml:lang="en">Align bottom</message>
 </label>
 <label define="TMSG_SVG_AlignCenter">
-	<message xml:lang="en">Align center</message>
+  <message xml:lang="en">Align center</message>
 </label>
 <label define="TMSG_SVG_AlignLeft">
-	<message xml:lang="en">Align left</message>
+  <message xml:lang="en">Align left</message>
 </label>
 <label define="TMSG_SVG_AlignMiddle">
-	<message xml:lang="en">Align middle</message>
+  <message xml:lang="en">Align middle</message>
 </label>
 <label define="TMSG_SVG_AlignRight">
-	<message xml:lang="en">Align right</message>
+  <message xml:lang="en">Align right</message>
 </label>
 <label define="TMSG_SVG_AlignTop">
-	<message xml:lang="en">Align top</message>
+  <message xml:lang="en">Align top</message>
 </label>
-
-
-
-
 
 <label define="TMSG_SVG_Square">
   <message xml:lang="en">Square</message>
@@ -4477,6 +4420,59 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
   <message xml:lang="en">Zigzag</message>
 </label>
 
+<label define="TMSG_SVG_Group">
+  <message xml:lang="en">Group</message>
+  <message xml:lang="fr">Grouper</message>
+</label>
+<label define="TMSG_SVG_Ungroup">
+  <message xml:lang="en">Ungroup</message>
+  <message xml:lang="fr">Dégrouper</message></label>
+<label define="TMSG_SVG_BringToFront">
+  <message xml:lang="en">Bring to front</message>
+  <message xml:lang="fr">Mettre au dessus</message></label>
+<label define="TMSG_SVG_SendToBack">
+  <message xml:lang="en">Send to back</message>
+  <message xml:lang="fr">Mettre en dessous</message></label>
+<label define="TMSG_SVG_BringForward">
+  <message xml:lang="en">One level up</message>
+  <message xml:lang="fr">Monter d'un niveau</message></label>
+<label define="TMSG_SVG_SendBackward">
+  <message xml:lang="en">One level down</message>
+  <message xml:lang="fr">Descendre d'un niveau</message></label>
+
+<label define="TMSG_SVG_RotateAntiClockwise">
+  <message xml:lang="en">90° left</message>
+  <message xml:lang="fr">90° à gauche</message>
+</label>
+<label define="TMSG_SVG_RotateClockwise">
+  <message xml:lang="en">90° right</message>
+  <message xml:lang="fr">90° à droite</message>
+</label>
+<label define="TMSG_SVG_Rotate">
+  <message xml:lang="en">Rotate</message>
+  <message xml:lang="fr">Tourner</message>
+</label>
+<label define="TMSG_SVG_FlipVertically">
+  <message xml:lang="en">Vertical symmetry</message>
+  <message xml:lang="fr">Symétrie verticale</message>
+</label>
+<label define="TMSG_SVG_FlipHorizontally">
+  <message xml:lang="en">Horizontal symmetry</message>
+  <message xml:lang="fr">Symétrie horizontale</message>
+</label>
+<label define="TMSG_SVG_Scale">
+  <message xml:lang="en">Scale</message>
+  <message xml:lang="fr">Redimensionner</message>
+</label>
+<label define="TMSG_SVG_Skew">
+  <message xml:lang="en">Skew</message>
+  <message xml:lang="fr">Incliner</message>
+</label>
+<label define="TMSG_SVG_Translate">
+  <message xml:lang="en">Move</message>
+  <message xml:lang="fr">Déplacer</message>
+</label>
+
 <label define="TMSG_SVG_ClosedBezier">
   <message xml:lang="en">Closed Bezier curve</message>
 </label>
@@ -4503,179 +4499,173 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
   <message xml:lang="fr">Canevas SVG</message>
 </label>
 <label define="TMSG_SVG_Text">
-	<message xml:lang="en">Text</message>
-	<message xml:lang="fr">Texte</message>
-	<message xml:lang="es">Texto</message>
-</label>
-
-<label define="TMSG_SVG_Group">
-	<message xml:lang="en">Group</message>
-	<message xml:lang="fr">Groupe</message>
-	<message xml:lang="es">Grupo</message>
+  <message xml:lang="en">Text</message>
+  <message xml:lang="fr">Texte</message>
+  <message xml:lang="es">Texto</message>
 </label>
 
 <label define="TMSG_SVG_Cone">
-	<message xml:lang="en">Cone</message>
-	<message xml:lang="fr">Cône</message>
+  <message xml:lang="en">Cone</message>
+  <message xml:lang="fr">Cône</message>
 </label>
 <label define="TMSG_SVG_Cube">
-	<message xml:lang="en">Cube</message>
-	<message xml:lang="fr">Cube</message>
-	<message xml:lang="es">Cubo</message>
+  <message xml:lang="en">Cube</message>
+  <message xml:lang="fr">Cube</message>
+  <message xml:lang="es">Cubo</message>
 </label>
 <label define="TMSG_SVG_Cylinder">
-	<message xml:lang="en">Cylinder</message>
-	<message xml:lang="fr">Cylindre</message>
-	<message xml:lang="es">Cilindro</message>
+  <message xml:lang="en">Cylinder</message>
+  <message xml:lang="fr">Cylindre</message>
+  <message xml:lang="es">Cilindro</message>
 </label>
 <label define="TMSG_SVG_Octahedron">
-	<message xml:lang="en">Octahedron</message>
-	<message xml:lang="fr">Octaèdre</message>
+  <message xml:lang="en">Octahedron</message>
+  <message xml:lang="fr">Octaèdre</message>
 </label>
 <label define="TMSG_SVG_Parallelepiped">
-	<message xml:lang="en">Parallelepiped</message>
-	<message xml:lang="fr">Parallèlépidède</message>
+  <message xml:lang="en">Parallelepiped</message>
+  <message xml:lang="fr">Parallèlépidède</message>
 </label>
 <label define="TMSG_SVG_Pyramid">
-	<message xml:lang="en">Pyramid</message>
-	<message xml:lang="fr">Pyramide</message>
+  <message xml:lang="en">Pyramid</message>
+  <message xml:lang="fr">Pyramide</message>
 </label>
 <label define="TMSG_SVG_Beaker">
-	<message xml:lang="en">Beaker</message>
-	<message xml:lang="fr">Bécher</message>
+  <message xml:lang="en">Beaker</message>
+  <message xml:lang="fr">Bécher</message>
 </label>
 <label define="TMSG_SVG_Buchner_flask">
-	<message xml:lang="en">Buchner flask</message>
-	<message xml:lang="fr">Fiole à vide</message>
+  <message xml:lang="en">Buchner flask</message>
+  <message xml:lang="fr">Fiole à vide</message>
 </label>
 <label define="TMSG_SVG_Boiling_flask">
-	<message xml:lang="en">Boiling flask</message>
-	<message xml:lang="fr">Ballon</message>
+  <message xml:lang="en">Boiling flask</message>
+  <message xml:lang="fr">Ballon</message>
 </label>
 <label define="TMSG_SVG_Burette">
-	<message xml:lang="en">Burette</message>
-	<message xml:lang="fr">Burette</message>
+  <message xml:lang="en">Burette</message>
+  <message xml:lang="fr">Burette</message>
 </label>
 <label define="TMSG_SVG_Erlenmeyer_flask">
-	<message xml:lang="en">Erlenmeyer flask</message>
-	<message xml:lang="fr">Erlenmeyer</message>
+  <message xml:lang="en">Erlenmeyer flask</message>
+  <message xml:lang="fr">Erlenmeyer</message>
 </label>
 <label define="TMSG_SVG_Test_tube">
-	<message xml:lang="en">Test tube</message>
-	<message xml:lang="fr">Tube à essai</message>
+  <message xml:lang="en">Test tube</message>
+  <message xml:lang="fr">Tube à essai</message>
 </label>
 <label define="TMSG_SVG_Pipette">
-	<message xml:lang="en">Pipette</message>
-	<message xml:lang="fr">Pipette</message>
+  <message xml:lang="en">Pipette</message>
+  <message xml:lang="fr">Pipette</message>
 </label>
 <label define="TMSG_SVG_Rectangular">
-	<message xml:lang="en">Rectangular</message>
-	<message xml:lang="fr">Rectangulaire</message>
+  <message xml:lang="en">Rectangular</message>
+  <message xml:lang="fr">Rectangulaire</message>
 </label>
 <label define="TMSG_SVG_Rounded_rectangular">
-	<message xml:lang="en">Rounded rectangular</message>
-	<message xml:lang="fr">À coins arrondis</message>
+  <message xml:lang="en">Rounded rectangular</message>
+  <message xml:lang="fr">À coins arrondis</message>
 </label>
 <label define="TMSG_SVG_Round">
-	<message xml:lang="en">Round</message>
-	<message xml:lang="fr">Ronde</message>
+  <message xml:lang="en">Round</message>
+  <message xml:lang="fr">Ronde</message>
 </label>
 <label define="TMSG_SVG_Scream">
-	<message xml:lang="en">Scream</message>
-	<message xml:lang="fr">Cri</message>
+  <message xml:lang="en">Scream</message>
+  <message xml:lang="fr">Cri</message>
 </label>
 <label define="TMSG_SVG_Thought">
-	<message xml:lang="en">Thought</message>
-	<message xml:lang="fr">Pensée</message>
+  <message xml:lang="en">Thought</message>
+  <message xml:lang="fr">Pensée</message>
 </label>
 <label define="TMSG_SVG_Capacitor">
-	<message xml:lang="en">Capacitor</message>
-	<message xml:lang="fr">Condensateur</message>
+  <message xml:lang="en">Capacitor</message>
+  <message xml:lang="fr">Condensateur</message>
 </label>
 <label define="TMSG_SVG_Current_source">
-	<message xml:lang="en">Current source</message>
-	<message xml:lang="fr">Source de courant</message>
+  <message xml:lang="en">Current source</message>
+  <message xml:lang="fr">Source de courant</message>
 </label>
 <label define="TMSG_SVG_Diode">
-	<message xml:lang="en">Diode</message>
-	<message xml:lang="fr">Diode</message>
+  <message xml:lang="en">Diode</message>
+  <message xml:lang="fr">Diode</message>
 </label>
 <label define="TMSG_SVG_Ground_point">
-	<message xml:lang="en">Ground Point</message>
-	<message xml:lang="fr">Terre</message>
+  <message xml:lang="en">Ground Point</message>
+  <message xml:lang="fr">Terre</message>
 </label>
 <label define="TMSG_SVG_Inductor">
-	<message xml:lang="en">Inductor</message>
-	<message xml:lang="fr">Inductance</message>
+  <message xml:lang="en">Inductor</message>
+  <message xml:lang="fr">Inductance</message>
 </label>
 <label define="TMSG_SVG_Led">
-	<message xml:lang="en">LED</message>
-	<message xml:lang="fr">DEL</message>
+  <message xml:lang="en">LED</message>
+  <message xml:lang="fr">DEL</message>
 </label>
 <label define="TMSG_SVG_Op_amp">
-	<message xml:lang="en">Op-amp</message>
-	<message xml:lang="fr">Ampli-op</message>
+  <message xml:lang="en">Op-amp</message>
+  <message xml:lang="fr">Ampli-op</message>
 </label>
 <label define="TMSG_SVG_Resistor">
-	<message xml:lang="en">Resistor</message>
-	<message xml:lang="fr">Résistance</message>
+  <message xml:lang="en">Resistor</message>
+  <message xml:lang="fr">Résistance</message>
 </label>
 <label define="TMSG_SVG_Switch">
-	<message xml:lang="en">Switch</message>
-	<message xml:lang="fr">Interrupteur</message>
+  <message xml:lang="en">Switch</message>
+  <message xml:lang="fr">Interrupteur</message>
 </label>
 <label define="TMSG_SVG_Transistor">
-	<message xml:lang="en">Transistor</message>
-	<message xml:lang="fr">Transistor</message>
+  <message xml:lang="en">Transistor</message>
+  <message xml:lang="fr">Transistor</message>
 </label>
 <label define="TMSG_SVG_Voltage_source">
-	<message xml:lang="en">Voltage source</message>
-	<message xml:lang="fr">Source de tension</message>
+  <message xml:lang="en">Voltage source</message>
+  <message xml:lang="fr">Source de tension</message>
 </label>
 <label define="TMSG_SVG_Zener_diode">
-	<message xml:lang="en">Zener diode</message>
-	<message xml:lang="fr">Diode Zener</message>
+  <message xml:lang="en">Zener diode</message>
+  <message xml:lang="fr">Diode Zener</message>
 </label>
 <label define="TMSG_SVG_Pentagon">
-	<message xml:lang="en">Pentagon</message>
-	<message xml:lang="fr">Pentagone</message>
+  <message xml:lang="en">Pentagon</message>
+  <message xml:lang="fr">Pentagone</message>
 </label>
 <label define="TMSG_SVG_Hexagon">
-	<message xml:lang="en">Hexagon</message>
-	<message xml:lang="fr">Hexagone</message>
+  <message xml:lang="en">Hexagon</message>
+  <message xml:lang="fr">Hexagone</message>
 </label>
 <label define="TMSG_SVG_Heptagon">
-	<message xml:lang="en">Heptagon</message>
-	<message xml:lang="fr">Heptagone</message>
+  <message xml:lang="en">Heptagon</message>
+  <message xml:lang="fr">Heptagone</message>
 </label>
 <label define="TMSG_SVG_Octogon">
-	<message xml:lang="en">Octogon</message>
-	<message xml:lang="fr">Octogone</message>
+  <message xml:lang="en">Octogon</message>
+  <message xml:lang="fr">Octogone</message>
 </label>
 <label define="TMSG_SVG_Star4">
-	<message xml:lang="en">Star (4 branches)</message>
-	<message xml:lang="fr">Étoile (4 branches)</message>
+  <message xml:lang="en">Star (4 branches)</message>
+  <message xml:lang="fr">Étoile (4 branches)</message>
 </label>
 <label define="TMSG_SVG_Star5">
-	<message xml:lang="en">Star (5 branches)</message>
-	<message xml:lang="fr">Étoile (5 branches)</message>
+  <message xml:lang="en">Star (5 branches)</message>
+  <message xml:lang="fr">Étoile (5 branches)</message>
 </label>
 <label define="TMSG_SVG_Star6">
-	<message xml:lang="en">Star (6 branches)</message>
-	<message xml:lang="fr">Étoile (6 branches)</message>
+  <message xml:lang="en">Star (6 branches)</message>
+  <message xml:lang="fr">Étoile (6 branches)</message>
 </label>
 
 <label define="TMSG_SVG_Cross">
-	<message xml:lang="en">Cross</message>
-	<message xml:lang="fr">Croix</message>
+  <message xml:lang="en">Cross</message>
+  <message xml:lang="fr">Croix</message>
 </label>
 <label define="TMSG_SVG_Frame">
-	<message xml:lang="en">Frame</message>
-	<message xml:lang="fr">Cadre</message>
+  <message xml:lang="en">Frame</message>
+  <message xml:lang="fr">Cadre</message>
 </label>
 <label define="TMSG_SVG_Ring">
-	<message xml:lang="en">Ring</message>
-	<message xml:lang="fr">Anneau</message>
+  <message xml:lang="en">Ring</message>
+  <message xml:lang="fr">Anneau</message>
 </label>
 <!-- end of SVG panel -->
 
