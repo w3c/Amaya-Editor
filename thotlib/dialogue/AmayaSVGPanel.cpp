@@ -40,14 +40,6 @@
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaSVGToolDef)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SELECT", "SVG_Select", LIB, TMSG_SEL)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_LEFT", "TransformSVG_DistributeLeft", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_CENTER", "TransformSVG_DistributeCenter", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_RIGHT", "TransformSVG_DistributeRight", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_TOP", "TransformSVG_DistributeTop", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_MIDDLE", "TransformSVG_DistributeMiddle", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_CENTER", "TransformSVG_DistributeCenter", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_HSPACING", "TransformSVG_DistributeHSpacing", wxID_ANY, wxID_ANY)
-  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_VSPACING", "TransformSVG_DistributeVSpacing", wxID_ANY, wxID_ANY)
   AMAYA_END_TOOLBAR_DEF_TABLE()
 
   AmayaSVGPanel::AmayaSVGPanel():
@@ -88,7 +80,6 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   m_tbar1 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_1", AmayaBaseToolBar);
   m_tbar2 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_2", AmayaBaseToolBar);
   m_tbar3 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_3", AmayaBaseToolBar);
-  m_tbar4 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_4", AmayaBaseToolBar);
 
   m_tbar1->Add(AmayaSVGToolDef);
   m_tbar1->Realize();
@@ -96,8 +87,6 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   m_tbar2->Realize();
   m_tbar3->Add(AmayaSVGToolDef);
   m_tbar3->Realize();
-  m_tbar4->Add(AmayaSVGToolDef);
-  m_tbar4->Realize();
   Fit();
   SetAutoLayout(true);
   
@@ -204,6 +193,19 @@ static svg_constructs list_of_constructs[] =
        {"bottom", TMSG_SVG_AlignBottom, "TransformSVG_AlignBottom"}
      }
     },
+
+    {"distribute", 8,
+     {
+       {"left", TMSG_SVG_DistributeLeft, "TransformSVG_DistributeLeft"},
+       {"center", TMSG_SVG_DistributeCenter, "TransformSVG_DistributeCenter"},
+       {"right", TMSG_SVG_DistributeRight, "TransformSVG_DistributeRight"},
+       {"top", TMSG_SVG_DistributeTop, "TransformSVG_DistributeTop"},
+       {"middle", TMSG_SVG_DistributeMiddle, "TransformSVG_DistributeMiddle"},
+       {"bottom", TMSG_SVG_DistributeBottom, "TransformSVG_DistributeBottom"},
+       {"horizontal_spacing", TMSG_SVG_DistributeHSpacing, "TransformSVG_DistributeHSpacing"},
+       {"vertical_spacing", TMSG_SVG_DistributeVSpacing, "TransformSVG_DistributeVSpacing"}
+     }
+    },
    
     {"3d", 6,
      {
@@ -290,12 +292,13 @@ EVT_TOOL(XRCID("wxID_MENU_SVG_CURVES"), AmayaSVGPanel::OnMenu3)
 EVT_TOOL(XRCID("wxID_MENU_SVG_LAYERS"), AmayaSVGPanel::OnMenu4)
 EVT_TOOL(XRCID("wxID_MENU_SVG_TRANSFORM"), AmayaSVGPanel::OnMenu5)
 EVT_TOOL(XRCID("wxID_MENU_SVG_ALIGN"), AmayaSVGPanel::OnMenu6)
-EVT_TOOL(XRCID("wxID_MENU_SVG_3D"), AmayaSVGPanel::OnMenu7)
-EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu8)
-EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu9)
-EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu10)
-EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu11)
-EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu12)
+EVT_TOOL(XRCID("wxID_MENU_SVG_DISTRIBUTE"), AmayaSVGPanel::OnMenu7)
+EVT_TOOL(XRCID("wxID_MENU_SVG_3D"), AmayaSVGPanel::OnMenu8)
+EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu9)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu10)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu11)
+EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu12)
+EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu13)
 
 EVT_MENU_RANGE(0, MAX_CONSTRUCTS_BY_DIRECTORY - 1,
 	       AmayaSVGPanel::OnInsertElement)

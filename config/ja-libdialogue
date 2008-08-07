@@ -272,87 +272,95 @@
 270 クラシック
 271 モダン
 272 テーマなし
-273 **Align bottom
-274 **Align center
-275 **Align left
-276 **Align middle
-277 **Align right
-278 **Align top
-279 **Square
-280 **Rounded Square
-281 **Rectangle
-282 **Rounded rectangle
-283 **Diamond
-284 **Parallelogram
-285 **Trapezium
-286 **Equilateral triangle
-287 **Isosceles triangle
-288 **Right triangle
-289 **Circle
-290 **Ellipse
-291 **Line
-292 **Arrow
-293 **Double Arrow
-294 **Zigzag
-295 **Group
-296 **Ungroup
-297 **Bring to front
-298 **Send to back
-299 **One level up
-300 **One level down
-301 **90� left
-302 **90� right
-303 **Rotate
-304 **Vertical symmetry
-305 **Horizontal symmetry
-306 **Scale
-307 **Skew
-308 **Move
-309 **Closed Bezier curve
-310 **Bezier curve
-311 **Polyline
-312 **Polygon
-313 **Foreign Object
-314 **Image
-315 **SVG Canvas
-316 **Text
-317 **Cone
-318 **Cube
-319 **Cylinder
-320 **Octahedron
-321 **Parallelepiped
-322 **Pyramid
-323 **Beaker
-324 **Buchner flask
-325 **Boiling flask
-326 **Burette
-327 **Erlenmeyer flask
-328 **Test tube
-329 **Pipette
-330 **Rectangular
-331 **Rounded rectangular
-332 **Round
-333 **Scream
-334 **Thought
-335 **Capacitor
-336 **Current source
-337 **Diode
-338 **Ground Point
-339 **Inductor
-340 **LED
-341 **Op-amp
-342 **Resistor
-343 **Switch
-344 **Transistor
-345 **Voltage source
-346 **Zener diode
-347 **Pentagon
-348 **Hexagon
-349 **Heptagon
-350 **Octogon
-351 **Star (4 branches)
-352 **Star (5 branches)
-353 **Star (6 branches)
-354 **Cross
-355 **Frame
-356 **Ring
+273 **Square
+274 **Rounded Square
+275 **Rectangle
+276 **Rounded rectangle
+277 **Diamond
+278 **Parallelogram
+279 **Trapezium
+280 **Equilateral triangle
+281 **Isosceles triangle
+282 **Right triangle
+283 **Circle
+284 **Ellipse
+285 **Line
+286 **Arrow
+287 **Double Arrow
+288 **Zigzag
+289 **Group
+290 **Ungroup
+291 **Bring to front
+292 **Send to back
+293 **One level up
+294 **One level down
+295 **90� left
+296 **90� right
+297 **Rotate
+298 **Vertical symmetry
+299 **Horizontal symmetry
+300 **Scale
+301 **Skew
+302 **Move
+303 **Align bottom
+304 **Align center
+305 **Align left
+306 **Align middle
+307 **Align right
+308 **Align top
+309 **Distribute bottom
+310 **Distribute center
+311 **Distribute left
+312 **Distribute middle
+313 **Distribute right
+314 **Distribute top
+315 **Distribute vertical spacing
+316 **Distribute horizontal spacing
+317 **Closed Bezier curve
+318 **Bezier curve
+319 **Polyline
+320 **Polygon
+321 **Foreign Object
+322 **Image
+323 **SVG Canvas
+324 **Text
+325 **Cone
+326 **Cube
+327 **Cylinder
+328 **Octahedron
+329 **Parallelepiped
+330 **Pyramid
+331 **Beaker
+332 **Buchner flask
+333 **Boiling flask
+334 **Burette
+335 **Erlenmeyer flask
+336 **Test tube
+337 **Pipette
+338 **Rectangular
+339 **Rounded rectangular
+340 **Round
+341 **Scream
+342 **Thought
+343 **Capacitor
+344 **Current source
+345 **Diode
+346 **Ground Point
+347 **Inductor
+348 **LED
+349 **Op-amp
+350 **Resistor
+351 **Switch
+352 **Transistor
+353 **Voltage source
+354 **Zener diode
+355 **Pentagon
+356 **Hexagon
+357 **Heptagon
+358 **Octogon
+359 **Star (4 branches)
+360 **Star (5 branches)
+361 **Star (6 branches)
+362 **Cross
+363 **Frame
+364 **Ring

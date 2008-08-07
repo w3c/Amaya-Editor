@@ -4329,25 +4329,6 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
  <message xml:lang="ja">テーマなし</message></label>
 
 <!-- SVG panel -->
-<label define="TMSG_SVG_AlignBottom">
-  <message xml:lang="en">Align bottom</message>
-</label>
-<label define="TMSG_SVG_AlignCenter">
-  <message xml:lang="en">Align center</message>
-</label>
-<label define="TMSG_SVG_AlignLeft">
-  <message xml:lang="en">Align left</message>
-</label>
-<label define="TMSG_SVG_AlignMiddle">
-  <message xml:lang="en">Align middle</message>
-</label>
-<label define="TMSG_SVG_AlignRight">
-  <message xml:lang="en">Align right</message>
-</label>
-<label define="TMSG_SVG_AlignTop">
-  <message xml:lang="en">Align top</message>
-</label>
-
 <label define="TMSG_SVG_Square">
   <message xml:lang="en">Square</message>
   <message xml:lang="fr">Carré</message>
@@ -4471,6 +4452,50 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 <label define="TMSG_SVG_Translate">
   <message xml:lang="en">Move</message>
   <message xml:lang="fr">Déplacer</message>
+</label>
+
+<label define="TMSG_SVG_AlignBottom">
+  <message xml:lang="en">Align bottom</message>
+</label>
+<label define="TMSG_SVG_AlignCenter">
+  <message xml:lang="en">Align center</message>
+</label>
+<label define="TMSG_SVG_AlignLeft">
+  <message xml:lang="en">Align left</message>
+</label>
+<label define="TMSG_SVG_AlignMiddle">
+  <message xml:lang="en">Align middle</message>
+</label>
+<label define="TMSG_SVG_AlignRight">
+  <message xml:lang="en">Align right</message>
+</label>
+<label define="TMSG_SVG_AlignTop">
+  <message xml:lang="en">Align top</message>
+</label>
+
+<label define="TMSG_SVG_DistributeBottom">
+  <message xml:lang="en">Distribute bottom</message>
+</label>
+<label define="TMSG_SVG_DistributeCenter">
+  <message xml:lang="en">Distribute center</message>
+</label>
+<label define="TMSG_SVG_DistributeLeft">
+  <message xml:lang="en">Distribute left</message>
+</label>
+<label define="TMSG_SVG_DistributeMiddle">
+  <message xml:lang="en">Distribute middle</message>
+</label>
+<label define="TMSG_SVG_DistributeRight">
+  <message xml:lang="en">Distribute right</message>
+</label>
+<label define="TMSG_SVG_DistributeTop">
+  <message xml:lang="en">Distribute top</message>
+</label>
+<label define="TMSG_SVG_DistributeVSpacing">
+  <message xml:lang="en">Distribute vertical spacing</message>
+</label>
+<label define="TMSG_SVG_DistributeHSpacing">
+  <message xml:lang="en">Distribute horizontal spacing</message>
 </label>
 
 <label define="TMSG_SVG_ClosedBezier">

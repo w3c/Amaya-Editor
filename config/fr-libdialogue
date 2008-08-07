@@ -272,87 +272,95 @@
 270 Classique
 271 Moderne
 272 Pas de thème
-273 **Align bottom
-274 **Align center
-275 **Align left
-276 **Align middle
-277 **Align right
-278 **Align top
-279 Carré
-280 **Rounded Square
-281 Rectangle
-282 **Rounded rectangle
-283 Losange
-284 **Parallelogram
-285 **Trapezium
-286 Triangle équilatéral
-287 Triangle isocèle
-288 Triangle rectangle
-289 Cercle
-290 Ellipse
-291 Ligne
-292 Flèche
-293 Flèche double
-294 **Zigzag
-295 Grouper
-296 Dégrouper
-297 Mettre au dessus
-298 Mettre en dessous
-299 Monter d'un niveau
-300 Descendre d'un niveau
-301 90° à gauche
-302 90° à droite
-303 Tourner
-304 Symétrie verticale
-305 Symétrie horizontale
-306 Redimensionner
-307 Incliner
-308 Déplacer
-309 **Closed Bezier curve
-310 **Bezier curve
-311 **Polyline
-312 **Polygon
-313 Objet étranger (<foreignObject/>)
-314 Image
-315 Canevas SVG
-316 Texte
-317 Cône
-318 Cube
-319 Cylindre
-320 Octaèdre
-321 Parallèlépidède
-322 Pyramide
-323 Bécher
-324 Fiole à vide
-325 Ballon
-326 Burette
-327 Erlenmeyer
-328 Tube à essai
-329 Pipette
-330 Rectangulaire
-331 À coins arrondis
-332 Ronde
-333 Cri
-334 Pensée
-335 Condensateur
-336 Source de courant
-337 Diode
-338 Terre
-339 Inductance
-340 DEL
-341 Ampli-op
-342 Résistance
-343 Interrupteur
-344 Transistor
-345 Source de tension
-346 Diode Zener
-347 Pentagone
-348 Hexagone
-349 Heptagone
-350 Octogone
-351 Étoile (4 branches)
-352 Étoile (5 branches)
-353 Étoile (6 branches)
-354 Croix
-355 Cadre
-356 Anneau
+273 Carré
+274 **Rounded Square
+275 Rectangle
+276 **Rounded rectangle
+277 Losange
+278 **Parallelogram
+279 **Trapezium
+280 Triangle équilatéral
+281 Triangle isocèle
+282 Triangle rectangle
+283 Cercle
+284 Ellipse
+285 Ligne
+286 Flèche
+287 Flèche double
+288 **Zigzag
+289 Grouper
+290 Dégrouper
+291 Mettre au dessus
+292 Mettre en dessous
+293 Monter d'un niveau
+294 Descendre d'un niveau
+295 90° à gauche
+296 90° à droite
+297 Tourner
+298 Symétrie verticale
+299 Symétrie horizontale
+300 Redimensionner
+301 Incliner
+302 Déplacer
+303 **Align bottom
+304 **Align center
+305 **Align left
+306 **Align middle
+307 **Align right
+308 **Align top
+309 **Distribute bottom
+310 **Distribute center
+311 **Distribute left
+312 **Distribute middle
+313 **Distribute right
+314 **Distribute top
+315 **Distribute vertical spacing
+316 **Distribute horizontal spacing
+317 **Closed Bezier curve
+318 **Bezier curve
+319 **Polyline
+320 **Polygon
+321 Objet étranger (<foreignObject/>)
+322 Image
+323 Canevas SVG
+324 Texte
+325 Cône
+326 Cube
+327 Cylindre
+328 Octaèdre
+329 Parallèlépidède
+330 Pyramide
+331 Bécher
+332 Fiole à vide
+333 Ballon
+334 Burette
+335 Erlenmeyer
+336 Tube à essai
+337 Pipette
+338 Rectangulaire
+339 À coins arrondis
+340 Ronde
+341 Cri
+342 Pensée
+343 Condensateur
+344 Source de courant
+345 Diode
+346 Terre
+347 Inductance
+348 DEL
+349 Ampli-op
+350 Résistance
+351 Interrupteur
+352 Transistor
+353 Source de tension
+354 Diode Zener
+355 Pentagone
+356 Hexagone
+357 Heptagone
+358 Octogone
+359 Étoile (4 branches)
+360 Étoile (5 branches)
+361 Étoile (6 branches)
+362 Croix
+363 Cadre
+364 Anneau
