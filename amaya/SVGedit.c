@@ -2994,9 +2994,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
   /* For distribution, allocate a table of positions */
   if(isDistribution)
+    {
     position = (int *)(TtaGetMemory(nb_selected * sizeof(int)));
-  if(position == NULL)
+    if(position == NULL)
       return;
+    }
 
   /* For some operations, the order of the selection is important */
   sortSelection = (entry == 11 || entry == 26 ||

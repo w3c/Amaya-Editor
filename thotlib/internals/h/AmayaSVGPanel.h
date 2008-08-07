@@ -36,6 +36,8 @@ protected:
   void OnMenu3(wxCommandEvent& event);
   void OnMenu4(wxCommandEvent& event);
   void OnMenu5(wxCommandEvent& event);
+  void OnMenu6(wxCommandEvent& event);
+  void OnMenu7(wxCommandEvent& event);
   void OnInsertElement(wxCommandEvent& event);
     
   AmayaBaseToolBar *m_tbar1, *m_tbar2, *m_tbar3, *m_tbar4, *m_tbar5,

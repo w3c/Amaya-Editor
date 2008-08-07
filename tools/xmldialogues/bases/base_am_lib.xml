@@ -4327,6 +4327,8 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
  <message xml:lang="de">Kein Motiv</message>
  <message xml:lang="hu">Téma nélkül</message>
  <message xml:lang="ja">テーマなし</message></label>
+
+
 <label define="TMSG_FORMATTOP">
 <message xml:lang="en">Align top</message>
  <message xml:lang="fr">Aligner en haut</message></label>
@@ -4379,6 +4381,87 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 <message xml:lang="en">Move</message>
  <message xml:lang="fr">Déplacer</message></label>
 
+<!-- SVG panel -->
+<label define="TMSG_SVG_AlignBottom">
+	<message xml:lang="en">Align bottom</message>
+</label>
+<label define="TMSG_SVG_AlignCenter">
+	<message xml:lang="en">Align center</message>
+</label>
+<label define="TMSG_SVG_AlignLeft">
+	<message xml:lang="en">Align left</message>
+</label>
+<label define="TMSG_SVG_AlignMiddle">
+	<message xml:lang="en">Align middle</message>
+</label>
+<label define="TMSG_SVG_AlignRight">
+	<message xml:lang="en">Align right</message>
+</label>
+<label define="TMSG_SVG_AlignTop">
+	<message xml:lang="en">Align top</message>
+</label>
+
+
+
+
+
+<label define="TMSG_SVG_Square">
+  <message xml:lang="en">Square</message>
+  <message xml:lang="fr">Carré</message>
+  <message xml:lang="es">Cuadrado</message>
+</label>
+<label define="TMSG_SVG_RoundedSquare">
+  <message xml:lang="en">Rounded Square</message>
+</label>
+<label define="TMSG_SVG_Rectangle">
+  <message xml:lang="en">Rectangle</message>
+  <message xml:lang="fr">Rectangle</message>
+  <message xml:lang="es">Rectángulo</message>
+</label>
+<label define="TMSG_SVG_RoundedRectangle">
+  <message xml:lang="en">Rounded rectangle</message>
+</label>
+<label define="TMSG_SVG_Diamond">
+  <message xml:lang="en">Diamond</message>
+  <message xml:lang="fr">Losange</message>
+  <message xml:lang="es">Rombo</message>
+</label>
+<label define="TMSG_SVG_Parallelogram">
+  <message xml:lang="en">Parallelogram</message>
+</label>
+<label define="TMSG_SVG_Trapezium">
+  <message xml:lang="en">Trapezium</message>
+</label>
+<label define="TMSG_SVG_EquilateralTriangle">
+  <message xml:lang="en">Equilateral triangle</message>
+  <message xml:lang="fr">Triangle équilatéral</message>
+  <message xml:lang="es">Triángulo</message>
+</label>
+<label define="TMSG_SVG_IsoscelesTriangle">
+  <message xml:lang="en">Isosceles triangle</message>
+  <message xml:lang="fr">Triangle isocèle</message>
+  <message xml:lang="es">Triángulo</message>
+</label>
+<label define="TMSG_SVG_RightTriangle">
+  <message xml:lang="en">Right triangle</message>
+  <message xml:lang="fr">Triangle rectangle</message>
+  <message xml:lang="es">Triángulo</message>
+</label>
+<label define="TMSG_SVG_Circle">
+  <message xml:lang="en">Circle</message>
+  <message xml:lang="fr">Ligne</message>
+  <message xml:lang="es">Círculo</message>
+</label>
+<label define="TMSG_SVG_Ellipse">
+  <message xml:lang="en">Ellipse</message>
+  <message xml:lang="fr">Ellipse</message>
+  <message xml:lang="es">Elipse</message>
+</label>
+
+
+
+
+
 <label define="TMSG_SVG_Line">
 	<message xml:lang="en">Line</message>
 	<message xml:lang="fr">Ligne</message>
@@ -4405,36 +4488,6 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 	<message xml:lang="es">Grupo</message>
 </label>
 
-<label define="TMSG_SVG_Square">
-	<message xml:lang="en">Square</message>
-	<message xml:lang="fr">Carré</message>
-	<message xml:lang="es">Cuadrado</message>
-</label>
-<label define="TMSG_SVG_Rectangle">
-	<message xml:lang="en">Rectangle</message>
-	<message xml:lang="fr">Rectangle</message>
-	<message xml:lang="es">Rectángulo</message>
-</label>
-<label define="TMSG_SVG_Diamond">
-  <message xml:lang="en">Diamond</message>
-  <message xml:lang="fr">Losange</message>
-  <message xml:lang="es">Rombo</message>
-</label>
-<label define="TMSG_SVG_IsoscelesTriangle">
-	<message xml:lang="en">Triangle</message>
-	<message xml:lang="fr">Triangle</message>
-	<message xml:lang="es">Triángulo</message>
-</label>
-<label define="TMSG_SVG_Circle">
-	<message xml:lang="en">Circle</message>
-	<message xml:lang="fr">Ligne</message>
-	<message xml:lang="es">Círculo</message>
-</label>
-<label define="TMSG_SVG_Ellipse">
-	<message xml:lang="en">Ellipse</message>
-	<message xml:lang="fr">Ellipse</message>
-	<message xml:lang="es">Elipse</message>
-</label>
 <label define="TMSG_SVG_Polyline">
 	<message xml:lang="en">Polyline</message>
 	<message xml:lang="fr">Multiligne</message>
@@ -4451,8 +4504,6 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 	<message xml:lang="en">Closed curve</message>
 	<message xml:lang="fr">Courbe fermée</message>
 </label>
-
-
 
 <label define="TMSG_SVG_Cone">
 	<message xml:lang="en">Cone</message>
@@ -4617,7 +4668,7 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 	<message xml:lang="en">Ring</message>
 	<message xml:lang="fr">Anneau</message>
 </label>
-
+<!-- end of SVG panel -->
 
 <label define="TMSG_LIB_MSG_MAX"></label></messages>
 <!--end of base --></base>

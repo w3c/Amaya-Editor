@@ -289,58 +289,70 @@
 287 **Scale
 288 **Skew
 289 **Move
-290 **Line
-291 **Arrow
-292 **Text
-293 **ForeignObject
-294 **Group
-295 **Square
-296 **Rectangle
-297 **Diamond
-298 **Triangle
-299 **Circle
-300 **Ellipse
-301 **Polyline
-302 **Polygon
-303 **Open curve
-304 **Closed curve
-305 **Cone
-306 **Cube
-307 **Cylinder
-308 **Octahedron
-309 **Parallelepiped
-310 **Pyramid
-311 **Beaker
-312 **Buchner flask
-313 **Boiling flask
-314 **Burette
-315 **Erlenmeyer flask
-316 **Test tube
-317 **Pipette
-318 **Rectangular
-319 **Rounded rectangular
-320 **Round
-321 **Scream
-322 **Thought
-323 **Capacitor
-324 **Current source
-325 **Diode
-326 **Ground Point
-327 **Inductor
-328 **LED
-329 **Op-amp
-330 **Resistor
-331 **Switch
-332 **Transistor
-333 **Voltage source
-334 **Zener diode
-335 **Pentagon
-336 **Hexagon
-337 **Heptagon
-338 **Octogon
-339 **Star (4 branches)
-340 **Star (5 branches)
-341 **Star (6 branches)
-342 **Cross
-343 **Frame
-344 **Ring
+290 **Align bottom
+291 **Align center
+292 **Align left
+293 **Align middle
+294 **Align right
+295 **Align top
+296 **Square
+297 **Rounded Square
+298 **Rectangle
+299 **Rounded rectangle
+300 **Diamond
+301 **Parallelogram
+302 **Trapezium
+303 **Equilateral triangle
+304 **Isosceles triangle
+305 **Right triangle
+306 **Circle
+307 **Ellipse
+308 **Line
+309 **Arrow
+310 **Text
+311 **ForeignObject
+312 **Group
+313 **Polyline
+314 **Polygon
+315 **Open curve
+316 **Closed curve
+317 **Cone
+318 **Cube
+319 **Cylinder
+320 **Octahedron
+321 **Parallelepiped
+322 **Pyramid
+323 **Beaker
+324 **Buchner flask
+325 **Boiling flask
+326 **Burette
+327 **Erlenmeyer flask
+328 **Test tube
+329 **Pipette
+330 **Rectangular
+331 **Rounded rectangular
+332 **Round
+333 **Scream
+334 **Thought
+335 **Capacitor
+336 **Current source
+337 **Diode
+338 **Ground Point
+339 **Inductor
+340 **LED
+341 **Op-amp
+342 **Resistor
+343 **Switch
+344 **Transistor
+345 **Voltage source
+346 **Zener diode
+347 **Pentagon
+348 **Hexagon
+349 **Heptagon
+350 **Octogon
+351 **Star (4 branches)
+352 **Star (5 branches)
+353 **Star (6 branches)
+354 **Cross
+355 **Frame
+356 **Ring

@@ -36,50 +36,29 @@
       </object>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_2" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_PANEL_SVG_SQUARE">
-            <bitmap>../icons/16x16/SVG_square.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ROUNDED_SQUARE">
-            <bitmap>../icons/16x16/SVG_rounded_square.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_RECTANGLE">
-            <bitmap>../icons/16x16/SVG_rectangle.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ROUNDED_RECTANGLE">
-            <bitmap>../icons/16x16/SVG_rounded_rectangle.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_DIAMOND">
-            <bitmap>../icons/16x16/SVG_diamond.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_PARALLELOGRAM">
-            <bitmap>../icons/16x16/SVG_parallelogram.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_TRAPEZIUM">
-            <bitmap>../icons/16x16/SVG_trapezium.png</bitmap>
-          </object>
+          
+          
+          
+          
+          
+          
+          
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
+          <object class="tool" name="wxID_MENU_SVG_BASIC_SHAPES">
+            <bitmap>../svg/basic_shapes/square.png</bitmap>
+          </object>
         </object>
       </object>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_3" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_PANEL_SVG_EQUILATERAL_TRIANGLE">
-            <bitmap>../icons/16x16/SVG_equilateral_triangle.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ISOSCELES_TRIANGLE">
-            <bitmap>../icons/16x16/SVG_isosceles_triangle.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_RECTANGLE_TRIANGLE">
-            <bitmap>../icons/16x16/SVG_rectangle_triangle.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_CIRCLE">
-            <bitmap>../icons/16x16/SVG_circle.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ELLIPSE">
-            <bitmap>../icons/16x16/SVG_ellipse.png</bitmap>
-          </object>
-          <object class="separator"/>
+          
+          
+          
+          
+          
+          
           <object class="tool" name="wxID_MENU_SVG_3D">
             <bitmap>../svg/3d/cube.png</bitmap>
           </object>
@@ -89,10 +68,6 @@
           <object class="tool" name="wxID_MENU_SVG_POLYGONS_AND_STARS">
             <bitmap>../svg/polygons_and_stars/star5.png</bitmap>
           </object>
-          
-          
-          
-          
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
@@ -197,26 +172,17 @@
       </object>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_7" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_PANEL_SVG_ALIGN_LEFT">
-            <bitmap>../icons/16x16/SVG_align_left.png</bitmap>
-          </object>
+          
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
-          <object class="tool" name="wxID_PANEL_SVG_ALIGN_CENTER">
-            <bitmap>../icons/16x16/SVG_align_center.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ALIGN_RIGHT">
-            <bitmap>../icons/16x16/SVG_align_right.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ALIGN_BOTTOM">
-            <bitmap>../icons/16x16/SVG_align_bottom.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ALIGN_MIDDLE">
-            <bitmap>../icons/16x16/SVG_align_middle.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ALIGN_TOP">
-            <bitmap>../icons/16x16/SVG_align_top.png</bitmap>
+          
+          
+          
+          
+          
+          <object class="tool" name="wxID_MENU_SVG_ALIGN">
+            <bitmap>../svg/align/left.png</bitmap>
           </object>
         </object>
       </object>

@@ -172,12 +172,34 @@ typedef struct svg_elements_
 
 static svg_elements svg_templates[] =
   {
-    /*    {"basic_shapes", 2,
+    {"basic_shapes", 11,
      {
        {"square", TMSG_SVG_Square, "CreateSVG_Square"},
-       {"rounded_square", TMSG_SVG_Square, "CreateSVG_RoundedSquare"}
+       {"rounded_square", TMSG_SVG_RoundedSquare, "CreateSVG_RoundedSquare"},
+       {"rectangle", TMSG_SVG_Rectangle, "CreateSVG_Rectangle"},
+       {"rounded_rectangle", TMSG_SVG_RoundedRectangle, "CreateSVG_RoundedRectangle"},
+       {"diamond", TMSG_SVG_Diamond, "CreateSVG_Diamond"},
+       {"parallelogram", TMSG_SVG_Parallelogram, "CreateSVG_Parallelogram"},
+       {"trapezium", TMSG_SVG_Trapezium, "CreateSVG_Trapezium"},
+       {"equilateral_triangle", TMSG_SVG_EquilateralTriangle, "CreateSVG_EquilateralTriangle"},
+       {"isosceles_triangle", TMSG_SVG_IsoscelesTriangle, "CreateSVG_IsoscelesTriangle"},
+       {"right_triangle", TMSG_SVG_RightTriangle, "CreateSVG_RightTriangle"},
+       {"circle", TMSG_SVG_Circle, "CreateSVG_Circle"},
+       {"ellipse", TMSG_SVG_Ellipse, "CreateSVG_Ellipse"}
      }
-     },*/
+    },
+
+    {"align", 6,
+     {
+       {"left", TMSG_SVG_AlignLeft, "TransformSVG_AlignLeft"},
+       {"center", TMSG_SVG_AlignCenter, "TransformSVG_AlignCenter"},
+       {"right", TMSG_SVG_AlignRight, "TransformSVG_AlignRight"},
+       {"top", TMSG_SVG_AlignTop, "TransformSVG_AlignTop"},
+       {"middle", TMSG_SVG_AlignMiddle, "TransformSVG_AlignMiddle"},
+       {"bottom", TMSG_SVG_AlignBottom, "TransformSVG_AlignBottom"},
+     }
+    },
+    
 
     {"3d", 6,
      {
@@ -357,18 +379,30 @@ void AmayaSVGPanel::OnMenu5(wxCommandEvent& event)
   DisplayMenu(5);
 }
 
+void AmayaSVGPanel::OnMenu6(wxCommandEvent& event)
+{
+  DisplayMenu(6);
+}
+
+void AmayaSVGPanel::OnMenu7(wxCommandEvent& event)
+{
+  DisplayMenu(7);
+}
+
 void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 {
   InsertElement(last_menu, event.GetId());
 }
 
 BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_3D"), AmayaSVGPanel::OnMenu0)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu1)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu2)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu3)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu4)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu5)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_BASIC_SHAPES"), AmayaSVGPanel::OnMenu0)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_ALIGN"), AmayaSVGPanel::OnMenu1)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_3D"), AmayaSVGPanel::OnMenu2)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu3)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu4)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu5)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu6)
+  EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu7)
 
   EVT_MENU_RANGE(0, MAX_BY_DIRECTORY - 1, AmayaSVGPanel::OnInsertElement)
 END_EVENT_TABLE()
