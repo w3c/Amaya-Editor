@@ -366,9 +366,16 @@
 #define TMSG_SVG_Star4		361
 #define TMSG_SVG_Star5		362
 #define TMSG_SVG_Star6		363
-#define TMSG_SVG_Cross		364
-#define TMSG_SVG_Frame		365
-#define TMSG_SVG_Ring		366
-#define TMSG_LIB_MSG_MAX		367
+#define TMSG_SVG_AND		364
+#define TMSG_SVG_NAND		365
+#define TMSG_SVG_OR		366
+#define TMSG_SVG_NOR		367
+#define TMSG_SVG_XOR		368
+#define TMSG_SVG_XNOR		369
+#define TMSG_SVG_NOT		370
+#define TMSG_SVG_Cross		371
+#define TMSG_SVG_Frame		372
+#define TMSG_SVG_Ring		373
+#define TMSG_LIB_MSG_MAX		374
 
 #endif

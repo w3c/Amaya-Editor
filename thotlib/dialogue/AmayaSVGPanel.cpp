@@ -279,6 +279,18 @@ static svg_constructs list_of_constructs[] =
      }
     },
 
+    {"logic_gates", 7,
+     {
+       {"and", TMSG_SVG_AND, NULL},
+       {"nand", TMSG_SVG_NAND, NULL},
+       {"or", TMSG_SVG_OR, NULL},
+       {"nor", TMSG_SVG_NOR, NULL},
+       {"xor", TMSG_SVG_XOR, NULL},
+       {"xnor", TMSG_SVG_XNOR, NULL},
+       {"not", TMSG_SVG_NOT, NULL}
+     }
+    },
+
     {"", 3,
      {
        {"cross", TMSG_SVG_Cross, NULL},
@@ -306,7 +318,8 @@ EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu9)
 EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu10)
 EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu11)
 EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu12)
-EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu13)
+EVT_TOOL(XRCID("wxID_MENU_SVG_LOGIC_GATES"), AmayaSVGPanel::OnMenu13)
+EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu14)
 
 EVT_MENU_RANGE(0, MAX_CONSTRUCTS_BY_DIRECTORY - 1,
 	       AmayaSVGPanel::OnInsertElement)
@@ -380,6 +393,11 @@ void AmayaSVGPanel::OnMenu12(wxCommandEvent& event)
 void AmayaSVGPanel::OnMenu13(wxCommandEvent& event)
 {
   DisplayMenu(13);
+}
+
+void AmayaSVGPanel::OnMenu14(wxCommandEvent& event)
+{
+  DisplayMenu(14);
 }
 
 void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)

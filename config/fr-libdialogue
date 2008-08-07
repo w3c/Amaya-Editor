@@ -363,6 +363,13 @@
 361 Étoile (4 branches)
 362 Étoile (5 branches)
 363 Étoile (6 branches)
-364 Croix
-365 Cadre
-366 Anneau
+364 **AND
+365 **NAND
+366 **OR
+367 **NOR
+368 **XOR
+369 **XNOR
+370 **NOT
+371 Croix
+372 Cadre
+373 Anneau

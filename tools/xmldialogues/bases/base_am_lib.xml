@@ -4711,6 +4711,28 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
   <message xml:lang="fr">Étoile (6 branches)</message>
 </label>
 
+<label define="TMSG_SVG_AND">
+  <message xml:lang="en">AND</message>
+</label>
+<label define="TMSG_SVG_NAND">
+  <message xml:lang="en">NAND</message>
+</label>
+<label define="TMSG_SVG_OR">
+  <message xml:lang="en">OR</message>
+</label>
+<label define="TMSG_SVG_NOR">
+  <message xml:lang="en">NOR</message>
+</label>
+<label define="TMSG_SVG_XOR">
+  <message xml:lang="en">XOR</message>
+</label>
+<label define="TMSG_SVG_XNOR">
+  <message xml:lang="en">XNOR</message>
+</label>
+<label define="TMSG_SVG_NOT">
+  <message xml:lang="en">NOT</message>
+</label>
+
 <label define="TMSG_SVG_Cross">
   <message xml:lang="en">Cross</message>
   <message xml:lang="fr">Croix</message>

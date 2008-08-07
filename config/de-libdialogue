@@ -364,6 +364,13 @@
 361 **Star (4 branches)
 362 **Star (5 branches)
 363 **Star (6 branches)
-364 **Cross
-365 **Frame
-366 **Ring
+364 **AND
+365 **NAND
+366 **OR
+367 **NOR
+368 **XOR
+369 **XNOR
+370 **NOT
+371 **Cross
+372 **Frame
+373 **Ring

@@ -64,15 +64,20 @@
       </object>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_3" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_MENU_SVG_CIRCUIT_DIAGRAM">
-            <bitmap>../svg/circuit_diagram/led.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_MENU_SVG_CHEMISTRY">
-            <bitmap>../svg/chemistry/erlenmeyer_flask.png</bitmap>
-          </object>
+          
+          
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
+          <object class="tool" name="wxID_MENU_SVG_CHEMISTRY">
+            <bitmap>../svg/chemistry/erlenmeyer_flask.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_CIRCUIT_DIAGRAM">
+            <bitmap>../svg/circuit_diagram/led.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_LOGIC_GATES">
+            <bitmap>../svg/logic_gates/or.png</bitmap>
+          </object>
         </object>
       </object>
     </object>
