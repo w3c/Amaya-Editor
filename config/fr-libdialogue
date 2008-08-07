@@ -289,43 +289,58 @@
 287 Redimensionner
 288 Incliner
 289 Déplacer
-290 Cône
-291 Cube
-292 Cylindre
-293 Octaèdre
-294 Parallèlépidède
-295 Pyramide
-296 Bécher
-297 Fiole à vide
-298 Ballon
-299 Burette
-300 Erlenmeyer
-301 Tube à essai
-302 Pipette
-303 Rectangulaire
-304 À coins arrondis
-305 Ronde
-306 Cri
-307 Pensée
-308 Condensateur
-309 Source de courant
-310 Diode
-311 Terre
-312 Inductance
-313 DEL
-314 Ampli-op
-315 Résistance
-316 Interrupteur
-317 Transistor
-318 Source de tension
-319 Diode Zener
-320 Pentagone
-321 Hexagone
-322 Heptagone
-323 Octogone
-324 Étoile (4 branches)
-325 Étoile (5 branches)
-326 Étoile (6 branches)
-327 Croix
-328 Cadre
-329 Anneau
+290 Ligne
+291 Flèche
+292 Texte
+293 ForeignObject
+294 Groupe
+295 Carré
+296 Rectangle
+297 Losange
+298 Triangle
+299 Ligne
+300 Ellipse
+301 Multiligne
+302 Polygone
+303 Courbe ouverte
+304 Courbe fermée
+305 Cône
+306 Cube
+307 Cylindre
+308 Octaèdre
+309 Parallèlépidède
+310 Pyramide
+311 Bécher
+312 Fiole à vide
+313 Ballon
+314 Burette
+315 Erlenmeyer
+316 Tube à essai
+317 Pipette
+318 Rectangulaire
+319 À coins arrondis
+320 Ronde
+321 Cri
+322 Pensée
+323 Condensateur
+324 Source de courant
+325 Diode
+326 Terre
+327 Inductance
+328 DEL
+329 Ampli-op
+330 Résistance
+331 Interrupteur
+332 Transistor
+333 Source de tension
+334 Diode Zener
+335 Pentagone
+336 Hexagone
+337 Heptagone
+338 Octogone
+339 Étoile (4 branches)
+340 Étoile (5 branches)
+341 Étoile (6 branches)
+342 Croix
+343 Cadre
+344 Anneau

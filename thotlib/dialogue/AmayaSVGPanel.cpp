@@ -99,8 +99,7 @@ AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_VSPACING", "TransformSVG_Distribute
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
 AmayaSVGPanel::AmayaSVGPanel():
-  wxPanel(),
-  last_menu(-1)  
+  wxPanel()
 {
 }
 
@@ -153,6 +152,7 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
 }
 
 /***************************************************************************
+  List of all SVG constructions.
   ****************************************************************************/
 #define MAX_BY_DIRECTORY 14
 
@@ -160,6 +160,7 @@ typedef struct svg_element_
   {
     const char *file_name;
     int  msg_id;
+    const char *function_name;
   } svg_element;
 
 typedef struct svg_elements_
@@ -171,126 +172,156 @@ typedef struct svg_elements_
 
 static svg_elements svg_templates[] =
   {
+    /*    {"basic_shapes", 2,
+     {
+       {"square", TMSG_SVG_Square, "CreateSVG_Square"},
+       {"rounded_square", TMSG_SVG_Square, "CreateSVG_RoundedSquare"}
+     }
+     },*/
+
     {"3d", 6,
      {
-       {"cone", TMSG_SVG_Cone},
-       {"cube", TMSG_SVG_Cube},
-       {"cylinder", TMSG_SVG_Cylinder},
-       {"octahedron", TMSG_SVG_Octahedron},
-       {"parallelepiped", TMSG_SVG_Parallelepiped},
-       {"pyramid", TMSG_SVG_Pyramid},
+       {"cone", TMSG_SVG_Cone, NULL},
+       {"cube", TMSG_SVG_Cube, NULL},
+       {"cylinder", TMSG_SVG_Cylinder, NULL},
+       {"octahedron", TMSG_SVG_Octahedron, NULL},
+       {"parallelepiped", TMSG_SVG_Parallelepiped, NULL},
+       {"pyramid", TMSG_SVG_Pyramid, NULL}
      }
     },
 
     {"balloons", 5,
      {
-       {"rectangular", TMSG_SVG_Rectangular},
-       {"round", TMSG_SVG_Round},
-       {"rounded_rectangular", TMSG_SVG_Rounded_rectangular},
-       {"scream", TMSG_SVG_Scream},
-       {"thought", TMSG_SVG_Thought},
+       {"rectangular", TMSG_SVG_Rectangular, NULL},
+       {"round", TMSG_SVG_Round, NULL},
+       {"rounded_rectangular", TMSG_SVG_Rounded_rectangular, NULL},
+       {"scream", TMSG_SVG_Scream, NULL},
+       {"thought", TMSG_SVG_Thought, NULL}
      }
     },
 
     {"chemistry", 7,
      {
-       {"beaker", TMSG_SVG_Beaker},
-       {"boiling_flask", TMSG_SVG_Boiling_flask},
-       {"buchner_flask", TMSG_SVG_Buchner_flask},
-       {"burette", TMSG_SVG_Burette},
-       {"erlenmeyer_flask", TMSG_SVG_Erlenmeyer_flask},
-       {"pipette", TMSG_SVG_Pipette},
-       {"test_tube", TMSG_SVG_Test_tube},
+       {"beaker", TMSG_SVG_Beaker, NULL},
+       {"boiling_flask", TMSG_SVG_Boiling_flask, NULL},
+       {"buchner_flask", TMSG_SVG_Buchner_flask, NULL},
+       {"burette", TMSG_SVG_Burette, NULL},
+       {"erlenmeyer_flask", TMSG_SVG_Erlenmeyer_flask, NULL},
+       {"pipette", TMSG_SVG_Pipette, NULL},
+       {"test_tube", TMSG_SVG_Test_tube, NULL}
      }
     },
 
     {"circuit_diagram", 14,
      {
-       {"current_source", TMSG_SVG_Current_source},
-       {"voltage_source", TMSG_SVG_Voltage_source},
-       {"ground_point", TMSG_SVG_Ground_point},
-       {"resistor", TMSG_SVG_Resistor},
-       {"resistor2", TMSG_SVG_Resistor},
-       {"switch", TMSG_SVG_Switch},
-       {"transistor", TMSG_SVG_Transistor},
-       {"capacitor", TMSG_SVG_Capacitor},
-       {"inductor", TMSG_SVG_Inductor},
-       {"op-amp", TMSG_SVG_Op_amp},
-       {"op-amp2", TMSG_SVG_Op_amp},
-       {"led", TMSG_SVG_Led},
-       {"diode", TMSG_SVG_Diode},
-       {"zener_diode", TMSG_SVG_Zener_diode},
+       {"current_source", TMSG_SVG_Current_source, NULL},
+       {"voltage_source", TMSG_SVG_Voltage_source, NULL},
+       {"ground_point", TMSG_SVG_Ground_point, NULL},
+       {"resistor", TMSG_SVG_Resistor, NULL},
+       {"resistor2", TMSG_SVG_Resistor, NULL},
+       {"switch", TMSG_SVG_Switch, NULL},
+       {"transistor", TMSG_SVG_Transistor, NULL},
+       {"capacitor", TMSG_SVG_Capacitor, NULL},
+       {"inductor", TMSG_SVG_Inductor, NULL},
+       {"op-amp", TMSG_SVG_Op_amp, NULL},
+       {"op-amp2", TMSG_SVG_Op_amp, NULL},
+       {"led", TMSG_SVG_Led, NULL},
+       {"diode", TMSG_SVG_Diode, NULL},
+       {"zener_diode", TMSG_SVG_Zener_diode, NULL}
      }
     },
 
     {"polygons_and_stars", 7,
      {
-       {"pentagon", TMSG_SVG_Pentagon},
-       {"hexagon", TMSG_SVG_Hexagon},
-       {"heptagon", TMSG_SVG_Heptagon},
-       {"octogon", TMSG_SVG_Octogon},
-       {"star4", TMSG_SVG_Star4},
-       {"star5", TMSG_SVG_Star5},
-       {"star6", TMSG_SVG_Star6},
+       {"pentagon", TMSG_SVG_Pentagon, NULL},
+       {"hexagon", TMSG_SVG_Hexagon, NULL},
+       {"heptagon", TMSG_SVG_Heptagon, NULL},
+       {"octogon", TMSG_SVG_Octogon, NULL},
+       {"star4", TMSG_SVG_Star4, NULL},
+       {"star5", TMSG_SVG_Star5, NULL},
+       {"star6", TMSG_SVG_Star6, NULL}
      }
     },
 
     {"", 3,
      {
-       {"cross", TMSG_SVG_Cross},
-       {"frame", TMSG_SVG_Frame},
-       {"ring", TMSG_SVG_Ring},
+       {"cross", TMSG_SVG_Cross, NULL},
+       {"frame", TMSG_SVG_Frame, NULL},
+       {"ring", TMSG_SVG_Ring, NULL}
      }
     }
     
   };
 
 /***************************************************************************
+  DisplayMenu
+    Display the i-th popup menu
   ****************************************************************************/
-void AmayaSVGPanel::DisplayMenu(int directory)
+void AmayaSVGPanel::DisplayMenu(int i)
 {
-  wxBitmap x;
-  wxMenu menu;
-  wxMenuItem *item;
-  svg_elements e = svg_templates[directory];
+  svg_elements e = svg_templates[i];
   int j;
   char name[MAX_LENGTH];
+  wxBitmap icon;
+  wxString path;
+  wxMenu menu;
+  wxMenuItem *item;
 
-  last_menu = directory;
+  /* Register the number of last popup menu */
+  last_menu = i;
 
   for(j = 0; j < e.length; j++)
     {
+      /* Create a new menu item */
+      item = new wxMenuItem(&menu, j,
+                      TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id)));
+
+      /* Add an icon if the png file exists  */
       sprintf(name, "%s/%s.png", e.directory, e.list[j].file_name);
-      item = new wxMenuItem(&menu, j, TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id)));
-      item->SetBitmap(wxBitmap(TtaGetResourcePathWX(WX_RESOURCES_SVG, name),
-       wxBITMAP_TYPE_PNG));
+      path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
+      if(icon.LoadFile(path, wxBITMAP_TYPE_PNG))
+	item->SetBitmap(icon);
+
+      /* Add the item in the menu */
       menu.Append(item);
       
     }
 
+  /* Display the menu */
   PopupMenu(&menu);
 }
 
 /***************************************************************************
+  InsertElement
+    i = menu number
+    j = submenu number
   ****************************************************************************/
-void AmayaSVGPanel::InsertElement(int directory, int file)
+void AmayaSVGPanel::InsertElement(int i, int j)
 {
   char name[MAX_LENGTH];
   wxString path;
 
   wxMenu menu;
-  svg_elements e = svg_templates[directory];
+  svg_elements e = svg_templates[i];
 
   Document doc;
   View view;
   TtaGiveActiveView( &doc, &view );
 
-  if(doc > 0 && file >= 0 && file < e.length)
+  if(doc > 0 && j >= 0 && j < e.length)
     {
-      sprintf(name, "%s/%s.svg", e.directory, e.list[file].file_name);
-      path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
-      LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
-      TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
+
+      if(e.list[j].function_name == NULL)
+	{
+	  /* No function name is given: call the creation of an svg template */
+	  sprintf(name, "%s/%s.svg", e.directory, e.list[j].file_name);
+	  path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
+	  LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
+	  TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
+	}
+      else
+	/* Call the function */
+	TtaExecuteMenuAction (e.list[j].function_name, doc, view, TRUE);
     }
 }
 
@@ -328,8 +359,7 @@ void AmayaSVGPanel::OnMenu5(wxCommandEvent& event)
 
 void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 {
-  if(last_menu != -1)
-    InsertElement(last_menu, event.GetId());
+  InsertElement(last_menu, event.GetId());
 }
 
 BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)

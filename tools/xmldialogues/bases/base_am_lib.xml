@@ -4379,6 +4379,80 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 <message xml:lang="en">Move</message>
  <message xml:lang="fr">Déplacer</message></label>
 
+<label define="TMSG_SVG_Line">
+	<message xml:lang="en">Line</message>
+	<message xml:lang="fr">Ligne</message>
+	<message xml:lang="es">Linea</message>
+</label>
+<label define="TMSG_SVG_SimpleArrow">
+	<message xml:lang="en">Arrow</message>
+	<message xml:lang="fr">Flèche</message>
+	<message xml:lang="es">Flecha</message>
+</label>
+<label define="TMSG_SVG_Text">
+	<message xml:lang="en">Text</message>
+	<message xml:lang="fr">Texte</message>
+	<message xml:lang="es">Texto</message>
+</label>
+<label define="TMSG_SVG_ForeignObject">
+	<message xml:lang="en">ForeignObject</message>
+	<message xml:lang="fr">ForeignObject</message>
+	<message xml:lang="es">ForeignObject</message>
+</label>
+<label define="TMSG_SVG_Group">
+	<message xml:lang="en">Group</message>
+	<message xml:lang="fr">Groupe</message>
+	<message xml:lang="es">Grupo</message>
+</label>
+
+<label define="TMSG_SVG_Square">
+	<message xml:lang="en">Square</message>
+	<message xml:lang="fr">Carré</message>
+	<message xml:lang="es">Cuadrado</message>
+</label>
+<label define="TMSG_SVG_Rectangle">
+	<message xml:lang="en">Rectangle</message>
+	<message xml:lang="fr">Rectangle</message>
+	<message xml:lang="es">Rectángulo</message>
+</label>
+<label define="TMSG_SVG_Diamond">
+  <message xml:lang="en">Diamond</message>
+  <message xml:lang="fr">Losange</message>
+  <message xml:lang="es">Rombo</message>
+</label>
+<label define="TMSG_SVG_IsoscelesTriangle">
+	<message xml:lang="en">Triangle</message>
+	<message xml:lang="fr">Triangle</message>
+	<message xml:lang="es">Triángulo</message>
+</label>
+<label define="TMSG_SVG_Circle">
+	<message xml:lang="en">Circle</message>
+	<message xml:lang="fr">Ligne</message>
+	<message xml:lang="es">Círculo</message>
+</label>
+<label define="TMSG_SVG_Ellipse">
+	<message xml:lang="en">Ellipse</message>
+	<message xml:lang="fr">Ellipse</message>
+	<message xml:lang="es">Elipse</message>
+</label>
+<label define="TMSG_SVG_Polyline">
+	<message xml:lang="en">Polyline</message>
+	<message xml:lang="fr">Multiligne</message>
+</label>
+<label define="TMSG_SVG_Polygon">
+	<message xml:lang="en">Polygon</message>
+	<message xml:lang="fr">Polygone</message>
+</label>
+<label define="TMSG_SVG_Spline">
+	<message xml:lang="en">Open curve</message>
+	<message xml:lang="fr">Courbe ouverte</message>
+</label>
+<label define="TMSG_SVG_Closed">
+	<message xml:lang="en">Closed curve</message>
+	<message xml:lang="fr">Courbe fermée</message>
+</label>
+
+
 
 <label define="TMSG_SVG_Cone">
 	<message xml:lang="en">Cone</message>

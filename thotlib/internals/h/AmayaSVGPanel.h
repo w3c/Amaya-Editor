@@ -27,8 +27,8 @@ public:
 protected:
   int last_menu;
 
-  void DisplayMenu(int directory);
-  void InsertElement(int directory, int file);
+  void DisplayMenu(int i);
+  void InsertElement(int i, int j);
 
   void OnMenu0(wxCommandEvent& event);
   void OnMenu1(wxCommandEvent& event);
