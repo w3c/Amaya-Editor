@@ -316,10 +316,10 @@
 314 Distribuer bords supérieurs
 315 Distribuer espacements verticaux
 316 Distribuer espacements horizontaux
-317 **Closed Bezier curve
-318 **Bezier curve
-319 **Polyline
-320 **Polygon
+317 Courbe de Bézier fermée
+318 Courbe de Bézier
+319 Segments de droite (<polyline/>)
+320 Polygone
 321 Objet étranger (<foreignObject/>)
 322 Image
 323 Canevas SVG

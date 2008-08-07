@@ -4519,15 +4519,19 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 
 <label define="TMSG_SVG_ClosedBezier">
   <message xml:lang="en">Closed Bezier curve</message>
+  <message xml:lang="fr">Courbe de Bézier fermée</message>
 </label>
 <label define="TMSG_SVG_Bezier">
   <message xml:lang="en">Bezier curve</message>
+  <message xml:lang="fr">Courbe de Bézier</message>
 </label>
 <label define="TMSG_SVG_Polyline">
   <message xml:lang="en">Polyline</message>
+  <message xml:lang="fr">Segments de droite (&lt;polyline/&gt;)</message>
 </label>
 <label define="TMSG_SVG_Polygon">
   <message xml:lang="en">Polygon</message>
+  <message xml:lang="fr">Polygone</message>
 </label>
 
 <label define="TMSG_SVG_ForeigObject">
