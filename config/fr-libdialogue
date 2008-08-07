@@ -273,12 +273,12 @@
 271 Moderne
 272 Pas de thème
 273 Carré
-274 **Rounded Square
+274 Carré à coins arrondis
 275 Rectangle
-276 **Rounded rectangle
+276 Rectangle à coins arrondis
 277 Losange
-278 **Parallelogram
-279 **Trapezium
+278 Parallelogramme
+279 Trapèze
 280 Triangle équilatéral
 281 Triangle isocèle
 282 Triangle rectangle
@@ -287,7 +287,7 @@
 285 Ligne
 286 Flèche
 287 Flèche double
-288 **Zigzag
+288 Zigzag
 289 Grouper
 290 Dégrouper
 291 Mettre au dessus
@@ -302,12 +302,12 @@
 300 Redimensionner
 301 Incliner
 302 Déplacer
-303 **Align bottom
-304 **Align center
-305 **Align left
-306 **Align middle
-307 **Align right
-308 **Align top
+303 Aligner bord inférieur
+304 Aligner axe vertical
+305 Aligner bord gauche
+306 Aligner axe horizontal
+307 Aligner bord droit
+308 Aligner bord supérieur
 309 **Distribute bottom
 310 **Distribute center
 311 **Distribute left
@@ -331,36 +331,38 @@
 329 Parallèlépidède
 330 Pyramide
 331 Bécher
-332 Fiole à vide
-333 Ballon
-334 Burette
-335 Erlenmeyer
-336 Tube à essai
-337 Pipette
-338 Rectangulaire
-339 À coins arrondis
-340 Ronde
-341 Cri
-342 Pensée
-343 Condensateur
-344 Source de courant
-345 Diode
-346 Terre
-347 Inductance
-348 DEL
-349 Ampli-op
-350 Résistance
-351 Interrupteur
-352 Transistor
-353 Source de tension
-354 Diode Zener
-355 Pentagone
-356 Hexagone
-357 Heptagone
-358 Octogone
-359 Étoile (4 branches)
-360 Étoile (5 branches)
-361 Étoile (6 branches)
-362 Croix
-363 Cadre
-364 Anneau
+332 Entonnoir
+333 Bec bunsen
+334 Fiole à vide
+335 Ballon
+336 Burette
+337 Erlenmeyer
+338 Tube à essai
+339 Pipette
+340 Rectangulaire
+341 À coins arrondis
+342 Ronde
+343 Cri
+344 Pensée
+345 Condensateur
+346 Source de courant
+347 Diode
+348 Terre
+349 Inductance
+350 DEL
+351 Ampli-op
+352 Résistance
+353 Interrupteur
+354 Transistor
+355 Source de tension
+356 Diode Zener
+357 Pentagone
+358 Hexagone
+359 Heptagone
+360 Octogone
+361 Étoile (4 branches)
+362 Étoile (5 branches)
+363 Étoile (6 branches)
+364 Croix
+365 Cadre
+366 Anneau

@@ -232,7 +232,7 @@ static svg_constructs list_of_constructs[] =
      }
     },
 
-    {"chemistry", 7,
+    {"chemistry", 9,
      {
        {"beaker", TMSG_SVG_Beaker, NULL},
        {"boiling_flask", TMSG_SVG_Boiling_flask, NULL},
@@ -240,7 +240,9 @@ static svg_constructs list_of_constructs[] =
        {"burette", TMSG_SVG_Burette, NULL},
        {"erlenmeyer_flask", TMSG_SVG_Erlenmeyer_flask, NULL},
        {"pipette", TMSG_SVG_Pipette, NULL},
-       {"test_tube", TMSG_SVG_Test_tube, NULL}
+       {"test_tube", TMSG_SVG_Test_tube, NULL},
+       {"funnel", TMSG_SVG_Funnel, NULL},
+       {"bunsen_burner", TMSG_SVG_Bunsen_burner, NULL}
      }
     },
 

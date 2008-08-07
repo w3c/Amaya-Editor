@@ -331,36 +331,38 @@
 329 Parallelepiped
 330 Pyramid
 331 Beaker
-332 Buchner flask
-333 Boiling flask
-334 Burette
-335 Erlenmeyer flask
-336 Test tube
-337 Pipette
-338 Rectangular
-339 Rounded rectangular
-340 Round
-341 Scream
-342 Thought
-343 Capacitor
-344 Current source
-345 Diode
-346 Ground Point
-347 Inductor
-348 LED
-349 Op-amp
-350 Resistor
-351 Switch
-352 Transistor
-353 Voltage source
-354 Zener diode
-355 Pentagon
-356 Hexagon
-357 Heptagon
-358 Octogon
-359 Star (4 branches)
-360 Star (5 branches)
-361 Star (6 branches)
-362 Cross
-363 Frame
-364 Ring
+332 Funnel
+333 Bunsen burner
+334 Buchner flask
+335 Boiling flask
+336 Burette
+337 Erlenmeyer flask
+338 Test tube
+339 Pipette
+340 Rectangular
+341 Rounded rectangular
+342 Round
+343 Scream
+344 Thought
+345 Capacitor
+346 Current source
+347 Diode
+348 Ground Point
+349 Inductor
+350 LED
+351 Op-amp
+352 Resistor
+353 Switch
+354 Transistor
+355 Voltage source
+356 Zener diode
+357 Pentagon
+358 Hexagon
+359 Heptagon
+360 Octogon
+361 Star (4 branches)
+362 Star (5 branches)
+363 Star (6 branches)
+364 Cross
+365 Frame
+366 Ring

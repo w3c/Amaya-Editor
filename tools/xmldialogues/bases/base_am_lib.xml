@@ -4336,6 +4336,7 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 </label>
 <label define="TMSG_SVG_RoundedSquare">
   <message xml:lang="en">Rounded Square</message>
+  <message xml:lang="fr">Carré à coins arrondis</message>
 </label>
 <label define="TMSG_SVG_Rectangle">
   <message xml:lang="en">Rectangle</message>
@@ -4344,6 +4345,7 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 </label>
 <label define="TMSG_SVG_RoundedRectangle">
   <message xml:lang="en">Rounded rectangle</message>
+  <message xml:lang="fr">Rectangle à coins arrondis</message>
 </label>
 <label define="TMSG_SVG_Diamond">
   <message xml:lang="en">Diamond</message>
@@ -4352,9 +4354,11 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 </label>
 <label define="TMSG_SVG_Parallelogram">
   <message xml:lang="en">Parallelogram</message>
+  <message xml:lang="fr">Parallelogramme</message>
 </label>
 <label define="TMSG_SVG_Trapezium">
   <message xml:lang="en">Trapezium</message>
+  <message xml:lang="fr">Trapèze</message>
 </label>
 <label define="TMSG_SVG_EquilateralTriangle">
   <message xml:lang="en">Equilateral triangle</message>
@@ -4399,6 +4403,7 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 </label>
 <label define="TMSG_SVG_Zigzag">
   <message xml:lang="en">Zigzag</message>
+  <message xml:lang="fr">Zigzag</message>
 </label>
 
 <label define="TMSG_SVG_Group">
@@ -4456,21 +4461,27 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 
 <label define="TMSG_SVG_AlignBottom">
   <message xml:lang="en">Align bottom</message>
+  <message xml:lang="fr">Aligner bord inférieur</message>
 </label>
 <label define="TMSG_SVG_AlignCenter">
   <message xml:lang="en">Align center</message>
+  <message xml:lang="fr">Aligner axe vertical</message>
 </label>
 <label define="TMSG_SVG_AlignLeft">
   <message xml:lang="en">Align left</message>
+  <message xml:lang="fr">Aligner bord gauche</message>
 </label>
 <label define="TMSG_SVG_AlignMiddle">
   <message xml:lang="en">Align middle</message>
+  <message xml:lang="fr">Aligner axe horizontal</message>
 </label>
 <label define="TMSG_SVG_AlignRight">
   <message xml:lang="en">Align right</message>
+  <message xml:lang="fr">Aligner bord droit</message>
 </label>
 <label define="TMSG_SVG_AlignTop">
   <message xml:lang="en">Align top</message>
+  <message xml:lang="fr">Aligner bord supérieur</message>
 </label>
 
 <label define="TMSG_SVG_DistributeBottom">
@@ -4558,6 +4569,14 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 <label define="TMSG_SVG_Beaker">
   <message xml:lang="en">Beaker</message>
   <message xml:lang="fr">Bécher</message>
+</label>
+<label define="TMSG_SVG_Funnel">
+  <message xml:lang="en">Funnel</message>
+  <message xml:lang="fr">Entonnoir</message>
+</label>
+<label define="TMSG_SVG_Bunsen_burner">
+  <message xml:lang="en">Bunsen burner</message>
+  <message xml:lang="fr">Bec bunsen</message>
 </label>
 <label define="TMSG_SVG_Buchner_flask">
   <message xml:lang="en">Buchner flask</message>
