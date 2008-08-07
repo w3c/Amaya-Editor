@@ -5,68 +5,43 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_1" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_PANEL_SVG_SVG">
-            <bitmap>../icons/16x16/document_svg.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_LINE">
-            <bitmap>../icons/16x16/SVG_line.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_SIMPLE_ARROW">
-            <bitmap>../icons/16x16/SVG_simple_arrow.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_DOUBLE_ARROW">
-            <bitmap>../icons/16x16/SVG_double_arrow.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_ZIGZAG">
-            <bitmap>../icons/16x16/SVG_zigzag.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_TEXT">
-            <bitmap>../icons/16x16/SVG_text.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_FOREIGN_OBJECT">
-            <bitmap>../icons/16x16/SVG_foreign_object.png</bitmap>
-          </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
-          <object class="tool" name="wxID_PANEL_SVG_IMAGE">
-            <bitmap>../icons/16x16/XHTML_Image.png</bitmap>
+          <object class="tool" name="wxID_MENU_SVG_SPECIAL_OBJECTS">
+            <bitmap>../svg/special_objects/svg_canvas.png</bitmap>
           </object>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_2" subclass="AmayaBaseToolBar">
-          
-          
-          
-          
-          
-          
-          
-          <bitmapsize>16,16</bitmapsize>
-          <margins>2,0</margins>
-          <style>wxTB_FLAT|wxTB_NODIVIDER</style>
+          <object class="tool" name="wxID_MENU_SVG_CONNECTORS">
+            <bitmap>../svg/connectors/line.png</bitmap>
+          </object>
           <object class="tool" name="wxID_MENU_SVG_BASIC_SHAPES">
             <bitmap>../svg/basic_shapes/square.png</bitmap>
           </object>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_3" subclass="AmayaBaseToolBar">
           
-          
-          
-          
-          
-          
+          <object class="tool" name="wxID_MENU_SVG_CURVES">
+            <bitmap>../svg/curves/bezier.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_POLYGONS_AND_STARS">
+            <bitmap>../svg/polygons_and_stars/star5.png</bitmap>
+          </object>
           <object class="tool" name="wxID_MENU_SVG_3D">
             <bitmap>../svg/3d/cube.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_BALLOONS">
             <bitmap>../svg/balloons/round.png</bitmap>
           </object>
-          <object class="tool" name="wxID_MENU_SVG_POLYGONS_AND_STARS">
-            <bitmap>../svg/polygons_and_stars/star5.png</bitmap>
+          <object class="tool" name="wxID_MENU_SVG_OTHERS">
+            <bitmap>../svg/cross.png</bitmap>
+          </object>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_2" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_MENU_SVG_CIRCUIT_DIAGRAM">
+            <bitmap>../svg/circuit_diagram/led.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_CHEMISTRY">
+            <bitmap>../svg/chemistry/erlenmeyer_flask.png</bitmap>
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
@@ -74,45 +49,7 @@
         </object>
       </object>
       <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_4" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_PANEL_SVG_POLYLINE">
-            <bitmap>../icons/16x16/SVG_polyline.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_POLYGON">
-            <bitmap>../icons/16x16/SVG_polygon.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_SPLINE">
-            <bitmap>../icons/16x16/SVG_spline.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_CLOSED">
-            <bitmap>../icons/16x16/SVG_closed.png</bitmap>
-          </object>
-          <object class="separator"/>
-          <object class="tool" name="wxID_MENU_SVG_CIRCUIT_DIAGRAM">
-            <bitmap>../svg/circuit_diagram/led.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_MENU_SVG_CHEMISTRY">
-            <bitmap>../svg/chemistry/erlenmeyer_flask.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_MENU_SVG_OTHERS">
-            <bitmap>../svg/cross.png</bitmap>
-          </object>
-          <!--          <bitmapsize>16,16</bitmapsize>
-          <margins>2,0</margins>
-          <style>wxTB_FLAT|wxTB_NODIVIDER</style>
--          <object class="tool" name="wxID_PANEL_SVG_CUBE">
-            <bitmap>../icons/16x16/SVG_cube.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_PARALLELEPIPED">
-            <bitmap>../icons/16x16/SVG_parallelepiped.png</bitmap>
-          </object>
-          <object class="tool" name="wxID_PANEL_SVG_CYLINDER">
-            <bitmap>../icons/16x16/SVG_cylinder.png</bitmap>
-          </object>-->
-        </object>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_5" subclass="AmayaBaseToolBar">
+        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_3" subclass="AmayaBaseToolBar">
           <object class="tool" name="wxID_PANEL_SVG_SELECT">
             <bitmap>../icons/16x16/SVG_select.png</bitmap>
           </object>
@@ -125,9 +62,6 @@
           <object class="tool" name="wxID_PANEL_SVG_SEND_TO_BACK">
             <bitmap>../icons/16x16/SVG_send_to_back.png</bitmap>
           </object>
-          <bitmapsize>16,16</bitmapsize>
-          <margins>2,0</margins>
-          <style>wxTB_FLAT|wxTB_NODIVIDER</style>
           <object class="tool" name="wxID_PANEL_SVG_SEND_BACKWARD">
             <bitmap>../icons/16x16/SVG_send_backward.png</bitmap>
           </object>
@@ -137,13 +71,13 @@
           <object class="tool" name="wxID_PANEL_SVG_BRING_TO_FRONT">
             <bitmap>../icons/16x16/SVG_bring_to_front.png</bitmap>
           </object>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_6" subclass="AmayaBaseToolBar">
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_4" subclass="AmayaBaseToolBar">
           <object class="tool" name="wxID_PANEL_SVG_FLIP_VERTICALLY">
             <bitmap>../icons/16x16/SVG_flip_vertically.png</bitmap>
           </object>
@@ -168,32 +102,26 @@
           <object class="tool" name="wxID_PANEL_SVG_TRANSLATE">
             <bitmap>../icons/16x16/SVG_translate.png</bitmap>
           </object>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_7" subclass="AmayaBaseToolBar">
-          
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
-          
-          
-          
-          
-          
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_5" subclass="AmayaBaseToolBar">
           <object class="tool" name="wxID_MENU_SVG_ALIGN">
             <bitmap>../svg/align/left.png</bitmap>
           </object>
-        </object>
-      </object>
-      <object class="sizeritem">
-        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_8" subclass="AmayaBaseToolBar">
-          <object class="tool" name="wxID_PANEL_SVG_DISTRIBUTE_LEFT">
-            <bitmap>../icons/16x16/SVG_distribute_left.png</bitmap>
-          </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
+        </object>
+      </object>
+      <object class="sizeritem">
+        <object class="wxToolBar" name="wxID_TOOLBAR_SVG_6" subclass="AmayaBaseToolBar">
+          <object class="tool" name="wxID_PANEL_SVG_DISTRIBUTE_LEFT">
+            <bitmap>../icons/16x16/SVG_distribute_left.png</bitmap>
+          </object>
           <object class="tool" name="wxID_PANEL_SVG_DISTRIBUTE_CENTER">
             <bitmap>../icons/16x16/SVG_distribute_center.png</bitmap>
           </object>
@@ -215,6 +143,9 @@
           <object class="tool" name="wxID_PANEL_SVG_DISTRIBUTE_VSPACING">
             <bitmap>../icons/16x16/SVG_distribute_vertical_spacing.png</bitmap>
           </object>
+          <bitmapsize>16,16</bitmapsize>
+          <margins>2,0</margins>
+          <style>wxTB_FLAT|wxTB_NODIVIDER</style>
         </object>
       </object>
     </object>

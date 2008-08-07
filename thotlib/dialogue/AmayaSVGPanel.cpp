@@ -39,72 +39,39 @@
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaSVGToolDef)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SVG",       "CreateSVG_Svg", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_LINE",       "CreateSVG_Line", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_RECTANGLE",       "CreateSVG_Rectangle", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROUNDED_RECTANGLE",       "CreateSVG_RoundedRectangle", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CIRCLE",       "CreateSVG_Circle", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ELLIPSE",       "CreateSVG_Ellipse", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_POLYLINE",       "CreateSVG_Polyline", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_POLYGON",       "CreateSVG_Polygon", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SPLINE",       "CreateSVG_Spline", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CLOSED",       "CreateSVG_Closed", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_FOREIGN_OBJECT",       "CreateSVG_ForeignObject", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_TEXT", "CreateSVG_Text", wxID_ANY, wxID_ANY)
 AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_GROUP", "CreateSVG_Group", LIB, TMSG_GROUP)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SIMPLE_ARROW", "CreateSVG_SimpleArrow", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DOUBLE_ARROW", "CreateSVG_DoubleArrow", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ZIGZAG", "CreateSVG_Zigzag", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SQUARE", "CreateSVG_Square", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROUNDED_SQUARE", "CreateSVG_RoundedSquare", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DIAMOND", "CreateSVG_Diamond", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_TRAPEZIUM", "CreateSVG_Trapezium", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_PARALLELOGRAM", "CreateSVG_Parallelogram", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_EQUILATERAL_TRIANGLE", "CreateSVG_EquilateralTriangle", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ISOSCELES_TRIANGLE", "CreateSVG_IsoscelesTriangle", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_RECTANGLE_TRIANGLE", "CreateSVG_RectangleTriangle", wxID_ANY, wxID_ANY)
-/*AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CUBE", "CreateSVG_Cube", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_PARALLELEPIPED", "CreateSVG_Parallelepiped", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_CYLINDER", "CreateSVG_Cylinder", wxID_ANY, wxID_ANY)*/
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_UNGROUP", "TransformSVG_Ungroup", LIB, TMSG_UNGROUP)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SELECT", "SVG_Select", LIB, TMSG_SEL)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_FLIP_VERTICALLY", "TransformSVG_FlipVertically", LIB, TMSG_VREVERSE)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_FLIP_HORIZONTALLY", "TransformSVG_FlipHorizontally", LIB, TMSG_HREVERSE)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_BRING_TO_FRONT", "TransformSVG_BringToFront", LIB, TMSG_TOFRONT)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_BRING_FORWARD", "TransformSVG_BringForward", LIB, TMSG_UP)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SEND_BACKWARD", "TransformSVG_SendBackward", LIB, TMSG_DOWN)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SEND_TO_BACK", "TransformSVG_SendToBack", LIB, TMSG_TOBACK)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROTATE_ANTICLOCKWISE", "TransformSVG_AntiClockWise", LIB, TMSG_TURNLEFT)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROTATE_CLOCKWISE", "TransformSVG_ClockWise", LIB, TMSG_TURNRIGHT)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ALIGN_LEFT", "TransformSVG_AlignLeft", LIB, TMSG_FORMATLEFT)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ALIGN_CENTER", "TransformSVG_AlignCenter", LIB, TMSG_FORMATCENTER)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ALIGN_RIGHT", "TransformSVG_AlignRight", LIB, TMSG_FORMATRIGHT)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ALIGN_BOTTOM", "TransformSVG_AlignBottom", LIB, TMSG_FORMATBOTTOM)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ALIGN_MIDDLE", "TransformSVG_AlignMiddle", LIB, TMSG_FORMATMIDDLE)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ALIGN_TOP", "TransformSVG_AlignTop", LIB, TMSG_FORMATTOP)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROTATE", "TransformSVG_Rotate", LIB, TMSG_ROTATE)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_IMAGE", "CreateSVG_Image", LIB, TMSG_BUTTON_IMG)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SKEW", "TransformSVG_Skew", LIB, TMSG_SKEW)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SCALE", "TransformSVG_Scale", LIB, TMSG_SCALE)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_TRANSLATE", "TransformSVG_Translate", LIB, TMSG_TRANSLATE)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_LEFT", "TransformSVG_DistributeLeft", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_CENTER", "TransformSVG_DistributeCenter", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_RIGHT", "TransformSVG_DistributeRight", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_TOP", "TransformSVG_DistributeTop", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_MIDDLE", "TransformSVG_DistributeMiddle", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_CENTER", "TransformSVG_DistributeCenter", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_HSPACING", "TransformSVG_DistributeHSpacing", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_VSPACING", "TransformSVG_DistributeVSpacing", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_UNGROUP", "TransformSVG_Ungroup", LIB, TMSG_UNGROUP)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SELECT", "SVG_Select", LIB, TMSG_SEL)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_FLIP_VERTICALLY", "TransformSVG_FlipVertically", LIB, TMSG_VREVERSE)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_FLIP_HORIZONTALLY", "TransformSVG_FlipHorizontally", LIB, TMSG_HREVERSE)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_BRING_TO_FRONT", "TransformSVG_BringToFront", LIB, TMSG_TOFRONT)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_BRING_FORWARD", "TransformSVG_BringForward", LIB, TMSG_UP)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SEND_BACKWARD", "TransformSVG_SendBackward", LIB, TMSG_DOWN)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SEND_TO_BACK", "TransformSVG_SendToBack", LIB, TMSG_TOBACK)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROTATE_ANTICLOCKWISE", "TransformSVG_AntiClockWise", LIB, TMSG_TURNLEFT)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROTATE_CLOCKWISE", "TransformSVG_ClockWise", LIB, TMSG_TURNRIGHT)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_ROTATE", "TransformSVG_Rotate", LIB, TMSG_ROTATE)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SKEW", "TransformSVG_Skew", LIB, TMSG_SKEW)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SCALE", "TransformSVG_Scale", LIB, TMSG_SCALE)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_TRANSLATE", "TransformSVG_Translate", LIB, TMSG_TRANSLATE)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_LEFT", "TransformSVG_DistributeLeft", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_CENTER", "TransformSVG_DistributeCenter", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_RIGHT", "TransformSVG_DistributeRight", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_TOP", "TransformSVG_DistributeTop", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_MIDDLE", "TransformSVG_DistributeMiddle", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_CENTER", "TransformSVG_DistributeCenter", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_HSPACING", "TransformSVG_DistributeHSpacing", wxID_ANY, wxID_ANY)
+  AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_DISTRIBUTE_VSPACING", "TransformSVG_DistributeVSpacing", wxID_ANY, wxID_ANY)
 
-AMAYA_END_TOOLBAR_DEF_TABLE()
+  AMAYA_END_TOOLBAR_DEF_TABLE()
 
-AmayaSVGPanel::AmayaSVGPanel():
+  AmayaSVGPanel::AmayaSVGPanel():
   wxPanel()
 {
 }
 
 AmayaSVGPanel::AmayaSVGPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
-    const wxSize& size, long style, const wxString& name, wxObject* extra):
+			     const wxSize& size, long style, const wxString& name, wxObject* extra):
   wxPanel()
 {
   Create(parent, id, pos, size, style, name, extra);
@@ -115,7 +82,7 @@ AmayaSVGPanel::~AmayaSVGPanel()
 }
 
 bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
-          const wxSize& size, long style, const wxString& name, wxObject* extra)
+			   const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_SVG")))
     return false;
@@ -126,8 +93,6 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   m_tbar4 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_4", AmayaBaseToolBar);
   m_tbar5 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_5", AmayaBaseToolBar);
   m_tbar6 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_6", AmayaBaseToolBar);
-  m_tbar7 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_7", AmayaBaseToolBar);
-  m_tbar8 = XRCCTRL(*this,"wxID_TOOLBAR_SVG_8", AmayaBaseToolBar);
 
   m_tbar1->Add(AmayaSVGToolDef);
   m_tbar1->Realize();
@@ -141,10 +106,6 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   m_tbar5->Realize();
   m_tbar6->Add(AmayaSVGToolDef);
   m_tbar6->Realize();
-  m_tbar7->Add(AmayaSVGToolDef);
-  m_tbar7->Realize();
-  m_tbar8->Add(AmayaSVGToolDef);
-  m_tbar8->Realize();
   Fit();
   SetAutoLayout(true);
   
@@ -153,26 +114,44 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
 
 /***************************************************************************
   List of all SVG constructions.
-  ****************************************************************************/
+****************************************************************************/
 #define MAX_BY_DIRECTORY 14
 
 typedef struct svg_element_
-  {
-    const char *file_name;
-    int  msg_id;
-    const char *function_name;
-  } svg_element;
+{
+  const char *file_name;
+  int  msg_id;
+  const char *function_name;
+} svg_element;
 
 typedef struct svg_elements_
-  {
-    const char* directory;
-    int length;
-    svg_element list[MAX_BY_DIRECTORY];
-  } svg_elements;
+{
+  const char* directory;
+  int length;
+  svg_element list[MAX_BY_DIRECTORY];
+} svg_elements;
 
 static svg_elements svg_templates[] =
   {
-    {"basic_shapes", 11,
+    {"special_objects", 4,
+     {
+       {"svg_canvas", TMSG_SVG_SvgCanvas, "CreateSVG_Svg"},
+       {"text", TMSG_SVG_Text, "CreateSVG_Text"},
+       {"foreign_object", TMSG_SVG_ForeigObject, "CreateSVG_ForeignObject"},
+       {"image", TMSG_SVG_Image, "CreateSVG_Image"},
+     }
+    },
+
+    {"connectors", 4,
+     {
+       {"line", TMSG_SVG_Line, "CreateSVG_Line"},
+       {"simple_arrow", TMSG_SVG_SimpleArrow, "CreateSVG_SimpleArrow"},
+       {"double_arrow", TMSG_SVG_DoubleArrow, "CreateSVG_DoubleArrow"},
+       {"zigzag", TMSG_SVG_Zigzag, "CreateSVG_Zigzag"},
+     }
+    },
+
+    {"basic_shapes", 12,
      {
        {"square", TMSG_SVG_Square, "CreateSVG_Square"},
        {"rounded_square", TMSG_SVG_RoundedSquare, "CreateSVG_RoundedSquare"},
@@ -189,6 +168,15 @@ static svg_elements svg_templates[] =
      }
     },
 
+    {"curves", 4,
+     {
+       {"polyline", TMSG_SVG_Polyline, "CreateSVG_Polyline"},
+       {"polygon", TMSG_SVG_Polygon, "CreateSVG_Polygon"},
+       {"closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed"},
+       {"bezier", TMSG_SVG_Bezier, "CreateSVG_Spline"},
+     }
+    },
+
     {"align", 6,
      {
        {"left", TMSG_SVG_AlignLeft, "TransformSVG_AlignLeft"},
@@ -200,7 +188,6 @@ static svg_elements svg_templates[] =
      }
     },
     
-
     {"3d", 6,
      {
        {"cone", TMSG_SVG_Cone, NULL},
@@ -276,79 +263,24 @@ static svg_elements svg_templates[] =
   };
 
 /***************************************************************************
-  DisplayMenu
-    Display the i-th popup menu
-  ****************************************************************************/
-void AmayaSVGPanel::DisplayMenu(int i)
-{
-  svg_elements e = svg_templates[i];
-  int j;
-  char name[MAX_LENGTH];
-  wxBitmap icon;
-  wxString path;
-  wxMenu menu;
-  wxMenuItem *item;
+  Event table and functions
+****************************************************************************/
+BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
+EVT_TOOL(XRCID("wxID_MENU_SVG_SPECIAL_OBJECTS"), AmayaSVGPanel::OnMenu0)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CONNECTORS"), AmayaSVGPanel::OnMenu1)
+EVT_TOOL(XRCID("wxID_MENU_SVG_BASIC_SHAPES"), AmayaSVGPanel::OnMenu2)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CURVES"), AmayaSVGPanel::OnMenu3)
+EVT_TOOL(XRCID("wxID_MENU_SVG_ALIGN"), AmayaSVGPanel::OnMenu4)
+EVT_TOOL(XRCID("wxID_MENU_SVG_3D"), AmayaSVGPanel::OnMenu5)
+EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu6)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu7)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu8)
+EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu9)
+EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu10)
 
-  /* Register the number of last popup menu */
-  last_menu = i;
+EVT_MENU_RANGE(0, MAX_BY_DIRECTORY - 1, AmayaSVGPanel::OnInsertElement)
+END_EVENT_TABLE()
 
-  for(j = 0; j < e.length; j++)
-    {
-      /* Create a new menu item */
-      item = new wxMenuItem(&menu, j,
-                      TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id)));
-
-      /* Add an icon if the png file exists  */
-      sprintf(name, "%s/%s.png", e.directory, e.list[j].file_name);
-      path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
-      if(icon.LoadFile(path, wxBITMAP_TYPE_PNG))
-	item->SetBitmap(icon);
-
-      /* Add the item in the menu */
-      menu.Append(item);
-      
-    }
-
-  /* Display the menu */
-  PopupMenu(&menu);
-}
-
-/***************************************************************************
-  InsertElement
-    i = menu number
-    j = submenu number
-  ****************************************************************************/
-void AmayaSVGPanel::InsertElement(int i, int j)
-{
-  char name[MAX_LENGTH];
-  wxString path;
-
-  wxMenu menu;
-  svg_elements e = svg_templates[i];
-
-  Document doc;
-  View view;
-  TtaGiveActiveView( &doc, &view );
-
-  if(doc > 0 && j >= 0 && j < e.length)
-    {
-
-      if(e.list[j].function_name == NULL)
-	{
-	  /* No function name is given: call the creation of an svg template */
-	  sprintf(name, "%s/%s.svg", e.directory, e.list[j].file_name);
-	  path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
-	  LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
-	  TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
-	}
-      else
-	/* Call the function */
-	TtaExecuteMenuAction (e.list[j].function_name, doc, view, TRUE);
-    }
-}
-
-/***************************************************************************
-  ****************************************************************************/
 void AmayaSVGPanel::OnMenu0(wxCommandEvent& event)
 {
   DisplayMenu(0);
@@ -389,22 +321,101 @@ void AmayaSVGPanel::OnMenu7(wxCommandEvent& event)
   DisplayMenu(7);
 }
 
+void AmayaSVGPanel::OnMenu8(wxCommandEvent& event)
+{
+  DisplayMenu(8);
+}
+
+void AmayaSVGPanel::OnMenu9(wxCommandEvent& event)
+{
+  DisplayMenu(9);
+}
+
+void AmayaSVGPanel::OnMenu10(wxCommandEvent& event)
+{
+  DisplayMenu(10);
+}
+
+void AmayaSVGPanel::OnMenu11(wxCommandEvent& event)
+{
+  DisplayMenu(11);
+}
+
+
 void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 {
   InsertElement(last_menu, event.GetId());
 }
 
-BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_BASIC_SHAPES"), AmayaSVGPanel::OnMenu0)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_ALIGN"), AmayaSVGPanel::OnMenu1)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_3D"), AmayaSVGPanel::OnMenu2)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu3)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu4)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu5)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu6)
-  EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu7)
+/***************************************************************************
+  DisplayMenu
+    Display the i-th popup menu
+****************************************************************************/
+void AmayaSVGPanel::DisplayMenu(int i)
+{
+  svg_elements e = svg_templates[i];
+  int j;
+  char name[MAX_LENGTH];
+  wxBitmap icon;
+  wxString path;
+  wxMenu menu;
+  wxMenuItem *item;
 
-  EVT_MENU_RANGE(0, MAX_BY_DIRECTORY - 1, AmayaSVGPanel::OnInsertElement)
-END_EVENT_TABLE()
+  /* Register the number of last popup menu */
+  last_menu = i;
 
+  for(j = 0; j < e.length; j++)
+    {
+      /* Create a new menu item */
+      item = new wxMenuItem(&menu, j,
+			    TtaConvMessageToWX(TtaGetMessage(LIB, e.list[j].msg_id)));
+
+      /* Add an icon if the png file exists  */
+      sprintf(name, "%s/%s.png", e.directory, e.list[j].file_name);
+      path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
+      if(icon.LoadFile(path, wxBITMAP_TYPE_PNG))
+	item->SetBitmap(icon);
+
+      /* Add the item in the menu */
+      menu.Append(item);
+      
+    }
+
+  /* Display the menu */
+  PopupMenu(&menu);
+}
+
+/***************************************************************************
+  InsertElement
+    i = menu number
+    j = submenu number
+****************************************************************************/
+void AmayaSVGPanel::InsertElement(int i, int j)
+{
+  char name[MAX_LENGTH];
+  wxString path;
+
+  wxMenu menu;
+  svg_elements e = svg_templates[i];
+
+  Document doc;
+  View view;
+  TtaGiveActiveView( &doc, &view );
+
+  if(doc > 0 && j >= 0 && j < e.length)
+    {
+
+      if(e.list[j].function_name == NULL)
+	{
+	  /* No function name is given: call the creation of an svg template */
+	  sprintf(name, "%s/%s.svg", e.directory, e.list[j].file_name);
+	  path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
+	  LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
+	  TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
+	}
+      else
+	/* Call the function */
+	TtaExecuteMenuAction (e.list[j].function_name, doc, view, TRUE);
+    }
+}
 #endif /* #ifdef _WX */

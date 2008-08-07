@@ -310,50 +310,54 @@
 307 **Ellipse
 308 **Line
 309 **Arrow
-310 **Text
-311 **ForeignObject
-312 **Group
-313 **Polyline
-314 **Polygon
-315 **Open curve
-316 **Closed curve
-317 **Cone
-318 **Cube
-319 **Cylinder
-320 **Octahedron
-321 **Parallelepiped
-322 **Pyramid
-323 **Beaker
-324 **Buchner flask
-325 **Boiling flask
-326 **Burette
-327 **Erlenmeyer flask
-328 **Test tube
-329 **Pipette
-330 **Rectangular
-331 **Rounded rectangular
-332 **Round
-333 **Scream
-334 **Thought
-335 **Capacitor
-336 **Current source
-337 **Diode
-338 **Ground Point
-339 **Inductor
-340 **LED
-341 **Op-amp
-342 **Resistor
-343 **Switch
-344 **Transistor
-345 **Voltage source
-346 **Zener diode
-347 **Pentagon
-348 **Hexagon
-349 **Heptagon
-350 **Octogon
-351 **Star (4 branches)
-352 **Star (5 branches)
-353 **Star (6 branches)
-354 **Cross
-355 **Frame
-356 **Ring
+310 **Double Arrow
+311 **Zigzag
+312 **Closed Bezier curve
+313 **Bezier curve
+314 **Polyline
+315 **Polygon
+316 **Foreign Object
+317 **Image
+318 **SVG Canvas
+319 **Text
+320 **Group
+321 **Cone
+322 **Cube
+323 **Cylinder
+324 **Octahedron
+325 **Parallelepiped
+326 **Pyramid
+327 **Beaker
+328 **Buchner flask
+329 **Boiling flask
+330 **Burette
+331 **Erlenmeyer flask
+332 **Test tube
+333 **Pipette
+334 **Rectangular
+335 **Rounded rectangular
+336 **Round
+337 **Scream
+338 **Thought
+339 **Capacitor
+340 **Current source
+341 **Diode
+342 **Ground Point
+343 **Inductor
+344 **LED
+345 **Op-amp
+346 **Resistor
+347 **Switch
+348 **Transistor
+349 **Voltage source
+350 **Zener diode
+351 **Pentagon
+352 **Hexagon
+353 **Heptagon
+354 **Octogon
+355 **Star (4 branches)
+356 **Star (5 branches)
+357 **Star (6 branches)
+358 **Cross
+359 **Frame
+360 **Ring

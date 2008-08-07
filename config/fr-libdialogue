@@ -305,54 +305,58 @@
 303 Triangle équilatéral
 304 Triangle isocèle
 305 Triangle rectangle
-306 Ligne
+306 Cercle
 307 Ellipse
 308 Ligne
 309 Flèche
-310 Texte
-311 ForeignObject
-312 Groupe
-313 Multiligne
-314 Polygone
-315 Courbe ouverte
-316 Courbe fermée
-317 Cône
-318 Cube
-319 Cylindre
-320 Octaèdre
-321 Parallèlépidède
-322 Pyramide
-323 Bécher
-324 Fiole à vide
-325 Ballon
-326 Burette
-327 Erlenmeyer
-328 Tube à essai
-329 Pipette
-330 Rectangulaire
-331 À coins arrondis
-332 Ronde
-333 Cri
-334 Pensée
-335 Condensateur
-336 Source de courant
-337 Diode
-338 Terre
-339 Inductance
-340 DEL
-341 Ampli-op
-342 Résistance
-343 Interrupteur
-344 Transistor
-345 Source de tension
-346 Diode Zener
-347 Pentagone
-348 Hexagone
-349 Heptagone
-350 Octogone
-351 Étoile (4 branches)
-352 Étoile (5 branches)
-353 Étoile (6 branches)
-354 Croix
-355 Cadre
-356 Anneau
+310 Flèche double
+311 **Zigzag
+312 **Closed Bezier curve
+313 **Bezier curve
+314 **Polyline
+315 **Polygon
+316 Objet étranger (<foreignObject/>)
+317 Image
+318 Canevas SVG
+319 Texte
+320 Groupe
+321 Cône
+322 Cube
+323 Cylindre
+324 Octaèdre
+325 Parallèlépidède
+326 Pyramide
+327 Bécher
+328 Fiole à vide
+329 Ballon
+330 Burette
+331 Erlenmeyer
+332 Tube à essai
+333 Pipette
+334 Rectangulaire
+335 À coins arrondis
+336 Ronde
+337 Cri
+338 Pensée
+339 Condensateur
+340 Source de courant
+341 Diode
+342 Terre
+343 Inductance
+344 DEL
+345 Ampli-op
+346 Résistance
+347 Interrupteur
+348 Transistor
+349 Source de tension
+350 Diode Zener
+351 Pentagone
+352 Hexagone
+353 Heptagone
+354 Octogone
+355 Étoile (4 branches)
+356 Étoile (5 branches)
+357 Étoile (6 branches)
+358 Croix
+359 Cadre
+360 Anneau
