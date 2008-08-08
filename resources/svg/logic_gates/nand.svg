@@ -3,6 +3,9 @@
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
   <title>NAND</title>
+  <!-- symbol -->
   <path
-        d="M 0,20 L 50,20 M 0,80 L 50,80 M 50,10 130,10 A 20,40 0 0 1 130,90 L 50,90 50,10 M 150,50 A 8,8 0 0 0 166,50 A 8,8 0 0 0 150,50 M 166,50 180,50"/>
+        d="M 0,20 L 50,20 M 0,80 L 50,80 M 50,10 130,10 A 20,40 0 0 1 130,90 L 50,90 50,10 M 166,50 180,50"/>
+  <!-- circle -->
+  <circle cx="158" cy="50" r="8"/>
 </svg>

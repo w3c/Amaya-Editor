@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" width="120" height="207" style="fill:none;stroke:#000000;">
+<svg xmlns="http://www.w3.org/2000/svg" style="fill:none;stroke:#000000;">
   <title>Erlenmeyer flask</title>
-  <g transform="translate(-11.3859,-20.1569) scale(0.474412,0.503922) ">
+ <g transform="translate(-11.3859,-20.1569) scale(0.474412,0.503922) ">
   <!-- flask -->
-  <path d="M 120,40 C 125,45 125,45 125,50 L 125,125 C 125,160 25,425 25,425 C 20,445 35,450 50,450 L 250,450 C 265,450 280,445 275,425 C 275,425 175,160 175,125 L 175,50 C 175,45 175,45 180,40"/>
+  <path
+        d="M 120,40 C 125,45 125,45 125,50 L 125,125 C 125,160 25,425 25,425 C 20,445 35,450 50,450 L 250,450 C 265,450 280,445 275,425 C 275,425 175,160 175,125 L 175,50 C 175,45 175,45 180,40"/>
+  <!-- liquid -->
+  <path
+        d="M 76,284 C 66,322 25,425 25,425 C 20,445 35,450 50,450 L 250,450 C 265,450 280,445 275,425 C 275,425 237,325 225,284 "
+        stroke="none"/>
   <!-- lines -->
   <line x1="270" y1="415" x2="205" y2="415"/>
   <line x1="240" y1="330" x2="215" y2="330"/>
-  </g>
+</g>
 </svg>

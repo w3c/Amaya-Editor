@@ -3,5 +3,8 @@
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" style="fill:none;stroke:#000000;">
   <title>Funnel</title>
-  <path d="M 68,0 L 40,28 40,70 M 27,70 L 27,28 0,0"/>
+  <!-- fill -->
+  <path d="M 68,0 L 40,28 40,70 L 27,70 L 27,28 0,0 z" stroke="none"/>
+  <!-- stroke -->
+  <path d="M 68,0 L 40,28 40,70 M 27,70 L 27,28 0,0" fill="none"/>
 </svg>
