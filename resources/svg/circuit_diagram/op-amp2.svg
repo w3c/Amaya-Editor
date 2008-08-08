@@ -7,10 +7,10 @@
   <path
         d="M 0,30 L 50,30 M 0,70 L 50,70 M 50,50 L 50,0 150,0 150,100 50,100 50,50 M 150,50 180,50"/>
   <!-- plus and minus signs -->
-  <text x="53px" y="20px">+</text>
-  <text x="53px" y="80px">-</text>
+  <text x="53px" y="20px" fill="black">+</text>
+  <text x="53px" y="80px" fill="black">-</text>
   <!-- triangle -->
   <polygon points="10.5,0 0,26 21,26" transform="scale(1,-1) rotate(90,77.5,48.5) "/>
   <!-- infinite sign -->
-  <text x="129px" y="20px">∞</text>
+  <text x="129px" y="20px" fill="black">∞</text>
 </svg>

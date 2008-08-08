@@ -7,6 +7,6 @@
   <path
         d="M 0,50 L 70,50 A 20,20 0 0 0 110,50 A 20,20 0 0 0 70,50 M 110,50 L 180,50"/>
   <!-- plus and minus signs -->
-  <text x="75" y="55">-</text>
-  <text x="95" y="55">+</text>
+  <text x="75" y="55" fill="black">-</text>
+  <text x="95" y="55" fill="black">+</text>
 </svg>
