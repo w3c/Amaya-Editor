@@ -319,6 +319,10 @@ Element CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
 
   PRule               rule;
   int w,h;
+  ThotBool             shape_recognition;
+
+  if(!TtaGetEnvBoolean ("ENABLE_SHAPE_RECOGNITION", &shape_recognition))
+    shape_recognition = TRUE;
 
   leaf = NULL;
   *closed = FALSE;
@@ -326,16 +330,20 @@ Element CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
   switch (elType.ElTypeNum)
     {
     case SVG_EL_rect:
-      rule = TtaGetPRule(el, PRWidth);
-      w = TtaGetPRuleValue (rule);
-      rule = TtaGetPRule(el, PRHeight);
-      h = TtaGetPRuleValue (rule);
+      if(shape_recognition)
+	{
+	  rule = TtaGetPRule(el, PRWidth);
+	  w = TtaGetPRuleValue (rule);
+	  rule = TtaGetPRule(el, PRHeight);
+	  h = TtaGetPRuleValue (rule);
 
-      if(w == h)
-	leaf = CreateGraphicalLeaf (1, el, doc);
+	  if(w == h)
+	    leaf = CreateGraphicalLeaf (1, el, doc);
+	  else
+	    leaf = CreateGraphicalLeaf ('C', el, doc);
+	}
       else
 	leaf = CreateGraphicalLeaf ('C', el, doc);
-
       *closed = TRUE;
       break;
 
@@ -1384,6 +1392,9 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
   SSchema	             SVGSSchema;
   char                 *href;
   ThotBool		         closedShape, ok;
+  ThotBool             shape_recognition;
+  if(!TtaGetEnvBoolean ("ENABLE_SHAPE_RECOGNITION", &shape_recognition))
+    shape_recognition = TRUE;
 
   *error = 0;
   doc = context->doc;
@@ -1610,8 +1621,8 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 
 	  
 	  /* Check the geometric properties of the leaf */
-	  if(elType.ElTypeNum == SVG_EL_polygon ||
-	     elType.ElTypeNum == SVG_EL_path)
+	  if(shape_recognition && (elType.ElTypeNum == SVG_EL_polygon ||
+				   elType.ElTypeNum == SVG_EL_path))
 	    {
 	      int w,h,rx = 0,ry = 0;
 	      PresentationContext  ctxt;
@@ -2134,7 +2145,11 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
   pval.typed_data.real = FALSE;
   TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
 
-  /*if (minX != 0)
+  /*
+    Append a translation rather than setting the presentation rules, otherwise
+    the transform data is incorrect - F.Wang
+
+    if (minX != 0)
     {
       pRule = TtaGetPRule (el, PRHorizPos);
       if (pRule)
@@ -2517,8 +2532,11 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
                 }
             }
         }
-      if (nbPoints > 0)
-        UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY);
+      /* This set the top left corner of the polyline to (0,0), and
+	 consequently added a translate attribute. Because the user may
+	 not want the XML structure to change, I removed it. - F.Wang
+	if (nbPoints > 0)
+        UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY); */
       TtaFreeMemory (text);
     }
 

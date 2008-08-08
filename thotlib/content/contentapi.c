@@ -2780,8 +2780,15 @@ extern void *TtaDecomposeTransform(void *transform)
   float coeff,coeff1, coeff2, theta1, theta2;
   float a,b,c,d,e,f,k;
   ThotBool RemoveTranslate = FALSE;
+  ThotBool decompose;
   
   if(matrix == NULL)return NULL;
+
+  if(!TtaGetEnvBoolean ("ENABLE_DECOMPOSE_TRANSFORM", &decompose))
+    decompose = TRUE;
+
+  /* Environnement variable set to false, simply return one matrix */
+  if(!decompose)return matrix;
 
   a = matrix->AMatrix;
   b = matrix->BMatrix;
@@ -3093,6 +3100,7 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
   ThotBool add;
   PtrTransform pPa;
   PtrTransform transform;
+  float a,b,c,d,e,f;
 
   if(!el)return NULL;
   transform = (PtrTransform)TtaDecomposeTransform(((PtrElement) el)->ElTransform);
@@ -3112,39 +3120,39 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
       switch(pPa->TransType)
         {
         case PtElTranslate:
-	  if(!(pPa -> XScale == 0 && pPa -> YScale == 0))
+	  if(!(pPa->XScale == 0 && pPa->YScale == 0))
 	    {
-	      if(pPa -> YScale == 0)
-		sprintf(buffer2, "translate(%g) ", pPa -> XScale);
+	      if(pPa->YScale == 0)
+		sprintf(buffer2, "translate(%g) ", pPa->XScale);
 	      else
-		sprintf(buffer2, "translate(%g,%g) ", pPa -> XScale, pPa -> YScale);
+		sprintf(buffer2, "translate(%g,%g) ", pPa->XScale, pPa->YScale);
 
 	      add = TRUE;
 	    }
           break;
 
         case PtElScale:
-	  if(!(pPa -> XScale == 1 && pPa -> YScale == 1))
+	  if(!(pPa->XScale == 1 && pPa->YScale == 1))
 	    {
-	      if(pPa -> XScale == pPa -> YScale)
-		sprintf(buffer2, "scale(%g) ", pPa -> XScale);
+	      if(pPa->XScale == pPa->YScale)
+		sprintf(buffer2, "scale(%g) ", pPa->XScale);
 	      else
-		sprintf(buffer2, "scale(%g,%g) ", pPa -> XScale, pPa -> YScale);
+		sprintf(buffer2, "scale(%g,%g) ", pPa->XScale, pPa->YScale);
 
 	      add = TRUE;
 	    }
           break;
 
         case PtElRotate:
-	  if(pPa -> TrAngle != 0)
+	  if(pPa->TrAngle != 0)
 	    {
-	      if(pPa -> XRotate == 0 && pPa -> YRotate == 0)
-		sprintf(buffer2, "rotate(%g) ", pPa -> TrAngle);
+	      if(pPa->XRotate == 0 && pPa->YRotate == 0)
+		sprintf(buffer2, "rotate(%g) ", pPa->TrAngle);
 	      else
 		sprintf(buffer2, "rotate(%g,%g,%g) ",
-			pPa -> TrAngle,
-			pPa -> XRotate,
-			pPa -> YRotate
+			pPa->TrAngle,
+			pPa->XRotate,
+			pPa->YRotate
 			);
 
 	      add = TRUE;
@@ -3152,20 +3160,30 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
           break;  
 
         case PtElSkewX:
-	  if(pPa -> TrFactor != 0)
+	  if(pPa->TrFactor != 0)
 	    {
-	      sprintf(buffer2, "skewX(%g) ", pPa -> TrFactor);
+	      sprintf(buffer2, "skewX(%g) ", pPa->TrFactor);
 	      add = TRUE;
 	    }
 	  break;
 
         case PtElSkewY:
-	  if(pPa -> TrFactor != 0)
+	  if(pPa->TrFactor != 0)
 	    {
-	      sprintf(buffer2, "skewY(%g) ", pPa -> TrFactor);
+	      sprintf(buffer2, "skewY(%g) ", pPa->TrFactor);
 	      add = TRUE;
 	    }          
 	  break;	  
+
+	case PtElMatrix:
+	  a = pPa->AMatrix;b = pPa->BMatrix;c = pPa->CMatrix;
+	  d = pPa->DMatrix;e = pPa->EMatrix;f = pPa->FMatrix;
+	  if(!(a == 1 && b == 0 && c == 0 && d == 1 && e == 0 && f == 0))
+	    {
+	      sprintf(buffer2, "matrix(%g,%g,%g,%g,%g,%g) ", a, b, c, d, e, f);  
+	      add = TRUE;
+	    }
+	  break;
 
 	default:
 	  break;
