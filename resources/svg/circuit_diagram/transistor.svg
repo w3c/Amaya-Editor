@@ -2,12 +2,11 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
-  <path
-        d="M 112.7778,75.000015 C 112.7778,92.550402 98.550402,106.7778 81.000015,106.7778 C 63.449628,106.7778 49.22223,92.550402 49.22223,75.000015 C 49.22223,57.449628 63.449628,43.22223 81.000015,43.22223 C 98.550402,43.22223 112.7778,57.449628 112.7778,75.000015 L 112.7778,75.000015 z "/>
-  <path d="M 4.5,0 L 0,9 9,9 z" style="fill: black;"
-        transform="rotate(-135,53.1439,18.6992) "/>
-  <path d="M 70,80 L 90,100 L 90,135"/>
-  <path d="M 70,70 L 90,50 L 90,15"/>
-  <path d="M 70,75 L 15,75"/>
-  <path d="M 70,55 L 70,95"/>
+  <title>transistor</title>
+  <!-- circle -->
+  <circle cx="80" cy="75" r="35"/>
+   <!-- lines -->
+  <path d="M 70,80 L 90,100 L 90,135 M 70,70 L 90,50 L 90,15 M 70,75 L 15,75 M 70,55 L 70,95"/>
+   <!-- arrow head -->
+  <path d="M 5,0 L 0,10 10,10 z" style="fill:black;" transform="rotate(-135,53,20) "/>
 </svg>

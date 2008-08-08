@@ -2,6 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>XOR</title>
   <path
         d="M 0,20 L 57,20 M 0,80 L 57,80 M 40,85 A 10 35 0 0 0 40,15 M 50,90 M 50,90 A 10 40 0 0 0 50,10 L 90,10 C 110,10 140,20 150,50 C 140,80 110,90 90,90 L 50,90 M 150,50 L 180,50 "/>
 </svg>

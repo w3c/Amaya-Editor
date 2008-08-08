@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" style="fill:none;stroke:#000000">
+  <title>scream balloon</title>
   <polygon
            points="0,5 57,19 89,0 113,22 157,1 165,34 192,47 164,84 189,129 130,105 128,138 89,94 10,193 55,94 7,86 33,51 "/>
 </svg>
