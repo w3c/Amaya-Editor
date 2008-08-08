@@ -2,10 +2,13 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" width="53" height="354" style="stroke:#000000; fill:none;">
+  <title>Burette</title>
   <g transform="translate(-194,-63) ">
+    <!-- burette -->
     <polygon
              points="0,0 10,10 10,290 17,297 17,350 24,350 24,297 32,291 32,11 42,0 "
              transform="translate(196,65)"/>
+    <!-- lines -->
     <line x1="201" y1="395" x2="245" y2="395"/>
     <line x1="235" y1="385" x2="235" y2="405"/>
     <line x1="215" y1="330" x2="228" y2="330"/>

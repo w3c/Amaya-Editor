@@ -2,6 +2,6 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" style="fill:none;stroke:#000000;">
-  <polyline points="68,0 40,28 40,70"/>
-  <polyline points="27,70 27,28 0,0"/>
+  <title>Funnel</title>
+  <path d="M 68,0 L 40,28 40,70 M 27,70 L 27,28 0,0"/>
 </svg>

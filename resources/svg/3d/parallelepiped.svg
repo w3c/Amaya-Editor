@@ -3,11 +3,18 @@
       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" style="stroke:black; fill:none;">
   <g transform="scale(1.5,1)">
-  <rect x="40" y="0" width="160" height="160" />
+  <title>parallelepiped</title>
+  <!-- Back face -->
+  <rect x="40" y="0" width="160" height="160"/>
+  <!-- Bottom face -->
   <path d="M 0,200 L 160,200 200,160 40,160 z"/>
+  <!-- Right face -->
   <path d="M 0,40 L 0,200 40,160 40,0 z"/>
+  <!-- Top face -->
   <path d="M 0,40 L 160,40 199,0 40,0 z"/>
+  <!-- Right face -->
   <path d="M 160,40 L 160,199 199,160 199,0 z"/>
-  <rect x="0" y="40" width="160" height="160" />
+  <!-- Front face -->
+  <rect x="0" y="40" width="160" height="160"/>
   </g>
 </svg>

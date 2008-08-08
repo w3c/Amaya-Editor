@@ -953,7 +953,8 @@ void DoStyleColor (char *color, ThotBool isBg)
   if(elType.ElSSchema == GetSVGSSchema (doc))
     {
       /* It's an SVG element */
-      if(elType.ElTypeNum == SVG_EL_rect ||
+      if(elType.ElTypeNum == SVG_EL_g ||
+	 elType.ElTypeNum == SVG_EL_rect ||
          elType.ElTypeNum == SVG_EL_circle_ ||
          elType.ElTypeNum == SVG_EL_ellipse ||
          elType.ElTypeNum == SVG_EL_polyline ||
