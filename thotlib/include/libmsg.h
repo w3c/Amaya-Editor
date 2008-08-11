@@ -376,6 +376,34 @@
 #define TMSG_SVG_Cross		371
 #define TMSG_SVG_Frame		372
 #define TMSG_SVG_Ring		373
-#define TMSG_LIB_MSG_MAX		374
+#define TMSG_SVG_Cloud		374
+#define TMSG_SVG_Scroll		375
+#define TMSG_SVG_Sun		376
+#define TMSG_SVG_Lightning_Bolt		377
+#define TMSG_SVG_Moon		378
+#define TMSG_SVG_Smiley		379
+#define TMSG_SVG_Heart		380
+#define TMSG_SVG_Flower		381
+#define TMSG_SVG_Prohibited		382
+#define TMSG_SVG_2_Way_Rounded_Arrow		383
+#define TMSG_SVG_3_Way_Arrow_Callout		384
+#define TMSG_SVG_3_Way_Arrow		385
+#define TMSG_SVG_4_Way_Arrow_Callout		386
+#define TMSG_SVG_4_Way_Arrow		387
+#define TMSG_SVG_Chevron		388
+#define TMSG_SVG_Circular_Arrow		389
+#define TMSG_SVG_Corner_Arrow		390
+#define TMSG_SVG_Corner_Double_Arrow_Callout		391
+#define TMSG_SVG_Corner_Double_Arrow		392
+#define TMSG_SVG_Double_Arrow_Callout		393
+#define TMSG_SVG_Double_Arrow		394
+#define TMSG_SVG_Notched_Arrow		395
+#define TMSG_SVG_Rounded_Arrow		396
+#define TMSG_SVG_Simple_Arrow_Callout		397
+#define TMSG_SVG_Simple_Arrow		398
+#define TMSG_SVG_Split_Arrow		399
+#define TMSG_SVG_S_Shape_Arrow		400
+#define TMSG_SVG_Striped_Arrow		401
+#define TMSG_LIB_MSG_MAX		402
 
 #endif

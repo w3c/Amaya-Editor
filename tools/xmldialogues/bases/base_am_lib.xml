@@ -4745,24 +4745,63 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
   <message xml:lang="en">Ring</message>
   <message xml:lang="fr">Anneau</message>
 </label>
+<label define="TMSG_SVG_Cloud">
+  <message xml:lang="en">Cloud</message>
+  <message xml:lang="fr">Nuage</message>
+</label>
+<label define="TMSG_SVG_Scroll">
+  <message xml:lang="en">Scroll</message>
+  <message xml:lang="fr">Parchemin</message>
+</label>
+<label define="TMSG_SVG_Sun">
+  <message xml:lang="en">Sun</message>
+  <message xml:lang="fr">Soleil</message>
+  <message xml:lang="es">Sol</message>
+</label>
+<label define="TMSG_SVG_Lightning_Bolt">
+  <message xml:lang="en">Lightning_Bolt</message>
+  <message xml:lang="fr">Éclair</message>
+</label>
+<label define="TMSG_SVG_Moon">
+  <message xml:lang="en">Moon</message>
+  <message xml:lang="fr">Lune</message>
+  <message xml:lang="es">Luna</message>
+</label>
+<label define="TMSG_SVG_Smiley">
+  <message xml:lang="en">Smiley</message>
+  <message xml:lang="fr">Frimousse</message>
+</label>
+<label define="TMSG_SVG_Heart">
+  <message xml:lang="en">Heart</message>
+  <message xml:lang="fr">Coeur</message>
+  <message xml:lang="es">Corazón</message>
+</label>
+<label define="TMSG_SVG_Flower">
+  <message xml:lang="en">Flower</message>
+  <message xml:lang="fr">Fleur</message>
+</label>
+<label define="TMSG_SVG_Prohibited">
+  <message xml:lang="en">Prohibited</message>
+  <message xml:lang="fr">Interdit</message>
+</label>
 
-<label define="TMSG_SVG_2-Way_Rounded_Arrow">
+<label define="TMSG_SVG_2_Way_Rounded_Arrow">
   <message xml:lang="en">2-Way Rounded Arrow</message>
   <message xml:lang="fr">Flèche courbe dans deux directions</message>
 </label>
-<label define="TMSG_SVG_3-Way_Arrow_Callout">
+<label define="TMSG_SVG_3_Way_Arrow_Callout">
   <message xml:lang="en">3-Way Arrow Callout</message>
   <message xml:lang="fr">Légende avec flèche dans 3 directions</message>
 </label>
-<label define="TMSG_SVG_3-Way_Arrow">
+<label define="TMSG_SVG_3_Way_Arrow">
   <message xml:lang="en">3-Way Arrow</message>
   <message xml:lang="fr">Flèche dans 3 directions</message>
 </label>
-<label define="TMSG_SVG_4-Way_Arrow_Callout">
+<label define="TMSG_SVG_4_Way_Arrow_Callout">
   <message xml:lang="en">4-Way_Arrow_Callout</message>
   <message xml:lang="fr">Légende avec flèche dans 4 directions</message>
 </label>
-<label define="TMSG_SVG_4-Way_Arrow">
+<label define="TMSG_SVG_4_Way_Arrow">
   <message xml:lang="en">4-Way Arrow</message>
   <message xml:lang="fr">Flèche dans 4 directions</message>
 </label>
@@ -4780,7 +4819,7 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 </label>
 <label define="TMSG_SVG_Corner_Double_Arrow_Callout">
   <message xml:lang="en">Corner Double Arrow Callout</message>
-  <message xml:lang="fr">Légende avec flèche double</message>
+  <message xml:lang="fr">Légende avec flèche double en angle</message>
 </label>
 <label define="TMSG_SVG_Corner_Double_Arrow">
   <message xml:lang="en">Corner Double Arrow</message>
@@ -4814,7 +4853,7 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
   <message xml:lang="en">Split Arrow</message>
   <message xml:lang="fr">Flèche en fourche</message>
 </label>
-<label define="TMSG_SVG_S-Shape_Arrow">
+<label define="TMSG_SVG_S_Shape_Arrow">
   <message xml:lang="en">S-Shape Arrow</message>
   <message xml:lang="fr">Flèche en S</message>
 </label>

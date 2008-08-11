@@ -248,35 +248,36 @@ static svg_constructs list_of_constructs[] =
        {"rounded_rectangular", TMSG_SVG_Rounded_rectangular, NULL},
        {"scream", TMSG_SVG_Scream, NULL},
        {"thought", TMSG_SVG_Thought, NULL},
-       {"cloud", TMSG_SVG_Thought, NULL}
+       {"cloud", TMSG_SVG_Cloud, NULL}
      }
     },
 
     {"block_arrows", 20,
      {
-       {"simple_arrow", TMSG_SVG_Thought, NULL},
-       {"double_arrow", TMSG_SVG_Thought, NULL},
-       {"3-way_arrow", TMSG_SVG_Thought, NULL},
-       {"4-way_arrow", TMSG_SVG_Thought, NULL},
-       {"corner_arrow", TMSG_SVG_Thought, NULL},
-       {"corner_double_arrow", TMSG_SVG_Thought, NULL},
+       {"simple_arrow", TMSG_SVG_Simple_Arrow, NULL},
+       {"double_arrow", TMSG_SVG_Double_Arrow, NULL},
+       {"3-way_arrow", TMSG_SVG_3_Way_Arrow, NULL},
+       {"4-way_arrow", TMSG_SVG_4_Way_Arrow, NULL},
+       {"corner_arrow", TMSG_SVG_Corner_Arrow, NULL},
+       {"corner_double_arrow", TMSG_SVG_Corner_Double_Arrow, NULL},
 
-       {"simple_arrow_callout", TMSG_SVG_Thought, NULL},
-       {"double_arrow_callout", TMSG_SVG_Thought, NULL},
-       {"3-way_arrow_callout", TMSG_SVG_Thought, NULL},
-       {"4-way_arrow_callout", TMSG_SVG_Thought, NULL},
-       {"corner_double_arrow_callout", TMSG_SVG_Thought, NULL},
+       {"simple_arrow_callout", TMSG_SVG_Simple_Arrow_Callout, NULL},
+       {"double_arrow_callout", TMSG_SVG_Double_Arrow_Callout, NULL},
+       {"3-way_arrow_callout", TMSG_SVG_3_Way_Arrow_Callout, NULL},
+       {"4-way_arrow_callout", TMSG_SVG_4_Way_Arrow_Callout, NULL},
+       {"corner_double_arrow_callout",
+	TMSG_SVG_Corner_Double_Arrow_Callout, NULL},
 
-       {"S-shape_arrow", TMSG_SVG_Thought, NULL},
-       {"rounded_arrow", TMSG_SVG_Thought, NULL},
-       {"circular_arrow", TMSG_SVG_Thought, NULL},
-       {"2-way_rounded_arrow", TMSG_SVG_Thought, NULL},
+       {"S-shape_arrow", TMSG_SVG_S_Shape_Arrow, NULL},
+       {"rounded_arrow", TMSG_SVG_Rounded_Arrow, NULL},
+       {"circular_arrow", TMSG_SVG_Circular_Arrow, NULL},
+       {"2-way_rounded_arrow", TMSG_SVG_2_Way_Rounded_Arrow, NULL},
 
-       {"split_arrow", TMSG_SVG_Thought, NULL},
-       {"pentagon", TMSG_SVG_Thought, NULL},
-       {"chevron", TMSG_SVG_Thought, NULL},
-       {"striped_arrow", TMSG_SVG_Thought, NULL},
-       {"notched_arrow", TMSG_SVG_Thought, NULL}
+       {"split_arrow", TMSG_SVG_Split_Arrow, NULL},
+       {"pentagon", TMSG_SVG_Pentagon, NULL},
+       {"chevron", TMSG_SVG_Chevron, NULL},
+       {"striped_arrow", TMSG_SVG_Striped_Arrow, NULL},
+       {"notched_arrow", TMSG_SVG_Notched_Arrow, NULL}
      }
     },
 
@@ -341,18 +342,18 @@ static svg_constructs list_of_constructs[] =
 
     {"", 12,
      {
-       {"scroll", TMSG_SVG_Ring, NULL},
-       {"sun", TMSG_SVG_Ring, NULL},
-       {"cloud", TMSG_SVG_Ring, NULL},
-       {"lightning_bolt", TMSG_SVG_Ring, NULL},
-       {"moon", TMSG_SVG_Ring, NULL},
-       {"smiley", TMSG_SVG_Ring, NULL},
-       {"heart", TMSG_SVG_Ring, NULL},
-       {"flower", TMSG_SVG_Ring, NULL},
+       {"scroll", TMSG_SVG_Scroll, NULL},
+       {"sun", TMSG_SVG_Sun, NULL},
+       {"cloud", TMSG_SVG_Cloud, NULL},
+       {"lightning_bolt", TMSG_SVG_Lightning_Bolt, NULL},
+       {"moon", TMSG_SVG_Moon, NULL},
+       {"smiley", TMSG_SVG_Smiley, NULL},
+       {"heart", TMSG_SVG_Heart, NULL},
+       {"flower", TMSG_SVG_Flower, NULL},
        {"cross", TMSG_SVG_Cross, NULL},
        {"frame", TMSG_SVG_Frame, NULL},
        {"ring", TMSG_SVG_Ring, NULL},
-       {"prohibited", TMSG_SVG_Ring, NULL}
+       {"prohibited", TMSG_SVG_Prohibited, NULL}
      }
     }
     
