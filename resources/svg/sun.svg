@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>sun</title>
+  <!-- circle -->
+  <circle cx="100" cy="100" r="50"/>
+
+  <!-- -->
+  <polygon points="100,0 90 40 110 40"/>
+  <polygon points="100,0 90 40 110 40" transform="rotate(45,100,100)"/>
+  <polygon points="100,0 90 40 110 40" transform="rotate(90,100,100)"/>
+  <polygon points="100,0 90 40 110 40" transform="rotate(135,100,100)"/>
+  <polygon points="100,0 90 40 110 40" transform="rotate(180,100,100)"/>
+  <polygon points="100,0 90 40 110 40" transform="rotate(225,100,100)"/>
+  <polygon points="100,0 90 40 110 40" transform="rotate(270,100,100)"/>
+  <polygon points="100,0 90 40 110 40" transform="rotate(315,100,100)"/>
+</svg>

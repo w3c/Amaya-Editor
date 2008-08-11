@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>flower</title>
+    <!-- -->
+    <path
+          d="M 164.9519052838329,62.5 A 37,37 60 0 0 100,25          A 37,37 120 0 0 35.0480947161671,62.5            A 37,37 180 0 0 35.0480947161671,137.5          A 37,37 240 0 0 100.0,175.0          A 37,37 300 0 0 164.9519052838329,137.5          A 37,37 0 0 0 164.9519052838329,62.5 "
+          transform="translate(10,5) "/>
+    <!-- circle -->
+    <circle cx="110" cy="105" r="35"/>
+</svg>

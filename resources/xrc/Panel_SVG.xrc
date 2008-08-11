@@ -9,16 +9,16 @@
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
           <object class="tool" name="wxID_MENU_SVG_SPECIAL_OBJECTS">
-            <bitmap>../svg/special_objects/svg_canvas.png</bitmap>
+            <bitmap>../icons/16x16/document_svg.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_CONNECTORS">
-            <bitmap>../svg/connectors/line.png</bitmap>
+            <bitmap>../icons/16x16/SVG_line.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_BASIC_SHAPES">
-            <bitmap>../svg/basic_shapes/square.png</bitmap>
+            <bitmap>../icons/16x16/SVG_square.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_CURVES">
-            <bitmap>../svg/curves/bezier.png</bitmap>
+            <bitmap>../icons/16x16/SVG_bezier.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_POLYGONS_AND_STARS">
             <bitmap>../svg/polygons_and_stars/star5.png</bitmap>
@@ -26,11 +26,14 @@
           <object class="tool" name="wxID_MENU_SVG_3D">
             <bitmap>../svg/3d/cube.png</bitmap>
           </object>
+          <object class="tool" name="wxID_MENU_SVG_BLOCK_ARROWS">
+            <bitmap>../svg/block_arrows/simple_arrow.png</bitmap>
+          </object>
           <object class="tool" name="wxID_MENU_SVG_BALLOONS">
             <bitmap>../svg/balloons/round.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_OTHERS">
-            <bitmap>../svg/cross.png</bitmap>
+            <bitmap>../svg/sun.png</bitmap>
           </object>
         </object>
       </object>
@@ -46,16 +49,16 @@
             <bitmap>../icons/16x16/SVG_ungroup.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_LAYERS">
-            <bitmap>../svg/layers/group.png</bitmap>
+            <bitmap>../icons/16x16/SVG_bring_to_front.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_TRANSFORM">
-            <bitmap>../svg/transform/rotate.png</bitmap>
+            <bitmap>../icons/16x16/SVG_rotate.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_ALIGN">
-            <bitmap>../svg/align/left.png</bitmap>
+            <bitmap>../icons/16x16/SVG_align_left.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_DISTRIBUTE">
-            <bitmap>../svg/distribute/left.png</bitmap>
+            <bitmap>../icons/16x16/SVG_distribute_left.png</bitmap>
           </object>
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
@@ -64,8 +67,6 @@
       </object>
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_3" subclass="AmayaBaseToolBar">
-          
-          
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>

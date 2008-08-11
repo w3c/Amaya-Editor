@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>heart</title>
+  <path d="M 130,220 L 230,120 C 330,20 130,-45 130,50 C 130,-45 -70,20 30,120 L 130,220 "/>
+</svg>

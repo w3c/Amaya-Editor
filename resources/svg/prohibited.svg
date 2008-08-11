@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>prohibited</title>
+  <path d="M 38.71644455048177,48.57699122507684 A 80,80 0 0 0 151.4230087749231,161.2835554495182 z M 161.2835554495182,151.4230087749231 A 80,80 0 0 0 48.57699122507685,38.71644455048176 z M 0,100 A 100,100 0 0 1 200,100 A 100,100 0 0 1 0,100"/>
+</svg>
