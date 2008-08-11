@@ -1502,7 +1502,7 @@ ThotBool ShapeCreation (int frame,
       else *y4 = *y1 + *ly;
 
       /* Check that the shape is not too small */
-#define MINSIZE 20
+#define MINSIZE 5
       created = (*lx >= MINSIZE && *ly >= MINSIZE);
     }
   else

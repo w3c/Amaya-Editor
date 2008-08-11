@@ -1037,6 +1037,7 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
 {
 #ifdef _GL
   double trans_matrix[16];
+  double tx, ty;
     
   if (IsTransformed (Trans))
     {
@@ -1050,23 +1051,34 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
               break;
             case PtElAnimTranslate:
             case PtElTranslate:
-              glTranslatef (ZoomedValue (Trans->XScale,
-                                         ViewFrameTable[frame - 1].FrMagnification),
-                            ZoomedValue (Trans->YScale, 
-                                         ViewFrameTable[frame - 1].FrMagnification),
-                            0);
+	      tx = ZoomedValue (Trans->XScale,
+				ViewFrameTable[frame - 1].FrMagnification);
+	      ty = ZoomedValue (Trans->YScale,
+				ViewFrameTable[frame - 1].FrMagnification);
+	      glTranslatef (tx, ty, 0);
               break;
             case PtElAnimRotate:
             case PtElRotate:
-              glTranslatef (Trans->XRotate, Trans->YRotate, 0);
+	      tx = ZoomedValue (Trans->XRotate,
+				ViewFrameTable[frame - 1].FrMagnification);
+	      ty = ZoomedValue (Trans->YRotate,
+				ViewFrameTable[frame - 1].FrMagnification);
+
+              glTranslatef (tx, ty , 0);
               glRotatef (Trans->TrAngle, 0, 0, 1);
-              glTranslatef (-Trans->XRotate, -Trans->YRotate, 0);
+              glTranslatef (-tx, -ty, 0);
               break;
             case PtElMatrix:
               /* Matrix 
                  GlMatrix is 4*4
                  Svg is 3*3 but 
                  only 2*3 is specified */
+	      tx = ZoomedValue (Trans->EMatrix,
+				ViewFrameTable[frame - 1].FrMagnification);
+	      ty = ZoomedValue (Trans->FMatrix,
+				ViewFrameTable[frame - 1].FrMagnification);
+	      glTranslatef (tx, ty , 0);	      
+
               trans_matrix[0] = Trans->AMatrix;
               trans_matrix[1] = Trans->BMatrix;
               trans_matrix[2] = 0;
@@ -1082,8 +1094,8 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
               trans_matrix[10] = 1;
               trans_matrix[11] = 0;
 
-              trans_matrix[12] = Trans->EMatrix;
-              trans_matrix[13] = Trans->FMatrix;	  
+              trans_matrix[12] = 0;
+              trans_matrix[13] = 0;
               trans_matrix[14] = 0;
               trans_matrix[15] = 1;
 

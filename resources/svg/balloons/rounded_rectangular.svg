@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
-       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
-  <title>rounded rectangular balloon</title>
-  <path d="M 0,20 A 20,20 0 0 1 20,0 L 180,0 A 20,20 0 0 1 200,20 L 200,80 A 20,20 0 0 1 180,100 L 75,100 10,200 25,100 20,100 A 20,20 0 0 1 0,80 z"/>
-</svg>

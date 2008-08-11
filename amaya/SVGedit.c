@@ -29,6 +29,7 @@
 #include "content.h"
 #include "document.h"
 #include <math.h>
+#include "svgedit.h"
 
 #include "SVG.h"
 #include "HTML.h"
@@ -2193,6 +2194,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePathDataAttribute (attr, newEl, doc, TRUE);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 13: /* Double Arrow */
@@ -2216,6 +2218,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePathDataAttribute (attr, newEl, doc, TRUE);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 14: /* Zigzag */
@@ -2230,6 +2233,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePointsAttribute (attr, newEl, doc);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		  /* Square */
@@ -2266,6 +2270,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 			  TtaAttachAttribute (newEl, attr, doc);
 			  TtaSetAttributeText (attr, "5px", newEl, doc);
 			  ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+			  SVGElementComplete (&context, newEl, &error);
 			}
 		    }
 		  else
@@ -2344,6 +2349,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePointsAttribute (attr, newEl, doc);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 19: /* parallelogram */
@@ -2358,6 +2364,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 			  );
 		  TtaSetAttributeText (attr, buffer, newEl, doc);
 		  ParsePointsAttribute (attr, newEl, doc);
+		  SVGElementComplete (&context, newEl, &error);
 		  break;
 
 		case 20: /* equilateral triangle */
@@ -3672,6 +3679,21 @@ void UpdateShapeElement(Document doc, Element el,
 
   TtaCloseUndoSequence (doc);
   TtaSetDisplayMode (doc, dispMode);
+}
+
+ThotBool IsEditableSVG(Document doc, Element el)
+{
+  Element parent;
+  SSchema      svgSchema = GetSVGSSchema (doc);
+  ElementType  elType, parentType;
+  
+  parent = TtaGetParent(el);
+  elType = TtaGetElementType (el);
+  parentType = TtaGetElementType (parent);
+
+  return (elType.ElSSchema == svgSchema &&
+	  parentType.ElSSchema == svgSchema &&
+	  parentType.ElTypeNum == SVG_EL_SVG);
 }
 
 /*----------------------------------------------------------------------

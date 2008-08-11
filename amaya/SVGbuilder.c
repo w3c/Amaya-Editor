@@ -625,16 +625,101 @@ static void CheckHrefAttr (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  NextWhiteSpace
+  ----------------------------------------------------------------------*/
+static void NextWhiteSpace(char **ptr)
+{
+  while (**ptr != EOS && **ptr != SPACE && **ptr != BSPACE &&
+	 **ptr != EOL && **ptr != TAB && **ptr != CR)
+    (*ptr)++;
+}
+
+/*----------------------------------------------------------------------
+  IsSupportedFeature, IsSupportedExtension
+  ----------------------------------------------------------------------*/
+#define CHECK(str) if (!strcmp (ptr, str)) return TRUE
+
+static ThotBool IsSupportedFeature(char *ptr)
+{
+  /* SVG 1.0 feature strings (deprecated) */
+  CHECK("org.w3c.svg");
+  CHECK("org.w3c.svg.static");
+
+  /* SVG 1.1 feature strings */
+  CHECK("http://www.w3.org/TR/SVG11/feature#SVG");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#SVGDOM");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#SVG-static");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#SVGDOM-static")
+  //CHECK("http://www.w3.org/TR/SVG11/feature#SVG-animation")
+  //CHECK("http://www.w3.org/TR/SVG11/feature#SVGDOM-animation")
+  //CHECK("http://www.w3.org/TR/SVG11/feature#SVG-dynamic");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#SVGDOM-dynamic");
+
+  CHECK("http://www.w3.org/TR/SVG11/feature#CoreAttribute");
+  CHECK("http://www.w3.org/TR/SVG11/feature#Structure");
+  CHECK("http://www.w3.org/TR/SVG11/feature#BasicStructure");
+  CHECK("http://www.w3.org/TR/SVG11/feature#ContainerAttribute");
+  CHECK("http://www.w3.org/TR/SVG11/feature#ConditionalProcessing");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Image");
+  CHECK("http://www.w3.org/TR/SVG11/feature#Style");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#ViewportAttribute");
+  CHECK("http://www.w3.org/TR/SVG11/feature#Shape");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Text");
+  CHECK("http://www.w3.org/TR/SVG11/feature#BasicText");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#PaintAttribute");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#BasicPaintAttribute");
+  CHECK("http://www.w3.org/TR/SVG11/feature#OpacityAttribute");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#GraphicsAttribute");
+  CHECK("http://www.w3.org/TR/SVG11/feature#BasicGraphicsAttribute");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Marker");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#ColorProfile");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Gradient");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Pattern");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Clip");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#BasicClip");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Mask");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Filter");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#BasicFilter");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#DocumentEventsAttribute");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#GraphicalEventsAttribute");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#AnimationEventsAttribute");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Cursor");
+  CHECK("http://www.w3.org/TR/SVG11/feature#Hyperlinking");
+  CHECK("http://www.w3.org/TR/SVG11/feature#XlinkAttribute");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#ExternalResourcesRequired");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#View");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Script");
+  CHECK("http://www.w3.org/TR/SVG11/feature#Animation");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#Font");
+  //CHECK("http://www.w3.org/TR/SVG11/feature#BasicFont");
+  CHECK("http://www.w3.org/TR/SVG11/feature#Extensibility");
+
+  return FALSE;
+}
+
+static ThotBool IsSupportedExtension(char *ptr)
+{
+  printf("%s\n", ptr);
+
+  /* only XHTML and MathML are considered as supported extensions*/
+  CHECK(XHTML_URI);
+  CHECK(MathML_URI);
+  return FALSE;
+}
+
+#undef CHECK
+
+/*----------------------------------------------------------------------
   EvaluateFeatures
   Evaluates the requiredFeatures attribute
   ----------------------------------------------------------------------*/
 static ThotBool EvaluateFeatures (Attribute attr)
 {
   int          length;
-  char         *text, *ptr;
-  ThotBool     ok, supported;
+  char         *text, *ptr, *ptr2;
+  ThotBool     supported;
 
-  ok = False;
+  supported = TRUE;
   length = TtaGetTextAttributeLength (attr);
   if (length > 0)
     {
@@ -643,28 +728,32 @@ static ThotBool EvaluateFeatures (Attribute attr)
         {
           TtaGiveTextAttributeValue (attr, text, &length);
           ptr = text;
-          ptr = (char*)TtaSkipBlanks (ptr);
-          supported = True;
+	  ptr = (char*)TtaSkipBlanks (ptr);
           while (*ptr != EOS && supported)
             {
-              /* only SVG static is supported in this version of Amaya */
-              if (strcmp (ptr, "org.w3c.svg") &&
-                  strcmp (ptr, "org.w3c.svg.static"))
-                supported = False;
-              if (supported)
-                /* this feature is supported. Check to the next one */
-                {
-                  while (*ptr != EOS && *ptr != SPACE && *ptr != BSPACE &&
-                         *ptr != EOL && *ptr != TAB && *ptr != CR)
-                    ptr++;
-                  ptr = (char*)TtaSkipBlanks (ptr);
-                }
+	      /* Move ptr2 to the next white space */
+	      ptr2 = ptr;
+	      NextWhiteSpace(&ptr2);
+
+	      if(*ptr2 == EOS)
+		{
+		  /* It's the end of the string */
+		  supported = IsSupportedFeature(ptr);
+		  break;
+		}
+
+	      /* Check if the feature is supported */
+	      *ptr2 = EOS; supported = IsSupportedFeature(ptr);
+
+	      /* Move to the next feature */
+	      *ptr2 = ' '; ptr = (char*)TtaSkipBlanks (ptr2);
             }
-          ok = supported;
           TtaFreeMemory (text);
         }
+      else
+	supported = FALSE;
     }
-  return ok;
+  return supported;
 }
 
 /*----------------------------------------------------------------------
@@ -674,10 +763,10 @@ static ThotBool EvaluateFeatures (Attribute attr)
 static ThotBool EvaluateExtensions (Attribute attr)
 {
   int          length;
-  char         *text, *ptr;
-  ThotBool     ok, supported;
+  char         *text, *ptr, *ptr2;
+  ThotBool     supported;
 
-  ok = False;
+  supported = TRUE;
   length = TtaGetTextAttributeLength (attr);
   if (length > 0)
     {
@@ -686,27 +775,32 @@ static ThotBool EvaluateExtensions (Attribute attr)
         {
           TtaGiveTextAttributeValue (attr, text, &length);
           ptr = text;
-          ptr = (char*)TtaSkipBlanks (ptr);
-          supported = True;
+	  ptr = (char*)TtaSkipBlanks (ptr);
           while (*ptr != EOS && supported)
             {
-              /* only XHTML and MathML are considered as supported extensions*/
-              if (strcmp (ptr, XHTML_URI) && strcmp (ptr, MathML_URI))
-                supported = False;
-              if (supported)
-                /* this feature is supported. Check to the next one */
-                {
-                  while (*ptr != EOS && *ptr != SPACE && *ptr != BSPACE &&
-                         *ptr != EOL && *ptr != TAB && *ptr != CR)
-                    ptr++;
-                  ptr = (char*)TtaSkipBlanks (ptr);
-                }
-            }
-          ok = supported;
+	      /* Move ptr2 to the next white space */
+	      ptr2 = ptr;
+	      NextWhiteSpace(&ptr2);
+
+	      if(*ptr2 == EOS)
+		{
+		  /* It's the end of the string */
+		  supported = IsSupportedExtension(ptr);
+		  break;
+		}
+
+	      /* Check if the extension is supported */
+	      *ptr2 = EOS; supported = IsSupportedExtension(ptr);
+
+	      /* Move to the next extension */
+	      *ptr2 = ' '; ptr = (char*)TtaSkipBlanks (ptr2);
+	    }
           TtaFreeMemory (text);
         }
+      else
+	supported = FALSE;
     }
-  return ok;
+  return supported;
 }
 
 /*----------------------------------------------------------------------

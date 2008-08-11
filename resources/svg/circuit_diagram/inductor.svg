@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
-       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
-  <title>inductor</title>
-  <path d="M 0,50 L 40,50 C 48,40 54,30 63,30 C 65,30 70,40 70,50 C 70,70 68,70 66,70 C 64,70, 35,70 70,50
-           C 78,40 84,30 93,30 C 95,30 100,40 100,50 C 100,70 98,70 96,70 C 94,70, 65,70 100,50
-           C 108,40 114,30 123,30 C 125,30 130,40 130,50 C 130,70 128,70 126,70 C 124,70, 95,70 130,50 L 180,50"/>
-</svg>

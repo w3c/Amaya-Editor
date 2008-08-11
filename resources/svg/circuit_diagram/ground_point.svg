@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
-       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
-  <title>ground point</title>
-  <path d="M 50,0 L 50,20 M 25,20 75,20 M 40,24 L 60,24 M 45,28 55,28"/>
-</svg>

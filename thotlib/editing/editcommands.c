@@ -29,6 +29,7 @@
 #include "appdialogue.h"
 #include "logdebug.h"
 #include "content.h"
+#include "svgedit.h"
 
 /* variables */
 #undef THOT_EXPORT
@@ -2168,19 +2169,6 @@ ThotBool AskSurroundingBox(
 
   return created;
 }
-
-/* TODO: move these declarations in a .h */
-extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
-					   Element *svgAncestor,
-					   Element *svgCanvas);
-extern void UpdateTransformMatrix(Document doc, Element el);
-extern void UpdatePointsOrPathAttribute(Document doc, Element el,
-					int w, int h);
-extern void UpdateShapeElement(Document doc, Element el,
-			       char shape,
-			       int x, int y, int width, int height,
-			       int rx, int ry);
-
 
 /*----------------------------------------------------------------------
   AskTransform

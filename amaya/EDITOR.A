@@ -239,8 +239,8 @@ MENUS
 	Types.SvgConstruct  button:BSVG_Ellipse -> CreateSVG_Ellipse icon:SVG_ellipse.png;
 	Types.SvgConstruct  button:BSVG_Polyline -> CreateSVG_Polyline icon:SVG_polyline.png;
 	Types.SvgConstruct  button:BSVG_Polygon -> CreateSVG_Polygon icon:SVG_polygon.png;
-	Types.SvgConstruct  button:BSVG_Spline -> CreateSVG_Spline icon:SVG_spline.png;
-	Types.SvgConstruct  button:BSVG_Closed -> CreateSVG_Closed icon:SVG_closed.png;
+	Types.SvgConstruct  button:BSVG_Spline -> CreateSVG_Spline icon:SVG_bezier.png;
+	Types.SvgConstruct  button:BSVG_Closed -> CreateSVG_Closed icon:SVG_closed_bezier.png;
 
 	Types.Form button:BForm -> CreateForm;
 	Types.Form Separator;

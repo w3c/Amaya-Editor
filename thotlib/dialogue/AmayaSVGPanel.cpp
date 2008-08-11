@@ -49,9 +49,9 @@ AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaSVGToolDef)
 {
 }
 
-/***************************************************************************
+/*----------------------------------------------------------------------------
   AmayaSVGPanel
-*****************************************************************************/
+  ----------------------------------------------------------------------------*/
 AmayaSVGPanel::AmayaSVGPanel(wxWindow* parent, wxWindowID id,
 			     const wxPoint& pos, 
 			     const wxSize& size, long style,
@@ -61,16 +61,16 @@ AmayaSVGPanel::AmayaSVGPanel(wxWindow* parent, wxWindowID id,
   Create(parent, id, pos, size, style, name, extra);
 }
 
-/***************************************************************************
+/*----------------------------------------------------------------------------
   ~AmayaSVGPanel
-*****************************************************************************/
+  ----------------------------------------------------------------------------*/
 AmayaSVGPanel::~AmayaSVGPanel()
 {
 }
 
-/***************************************************************************
+/*----------------------------------------------------------------------------
   Create the panel
-*****************************************************************************/
+  ----------------------------------------------------------------------------*/
 bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
 			   const wxSize& size, long style,
 			   const wxString& name, wxObject* extra)
@@ -95,12 +95,12 @@ bool AmayaSVGPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
-/***************************************************************************
+/*----------------------------------------------------------------------------
   SVG constructions.
-****************************************************************************/
+  ----------------------------------------------------------------------------*/
 
 /* Number maximum of constructs in one directory */
-#define MAX_CONSTRUCTS_BY_DIRECTORY 16
+#define MAX_CONSTRUCTS_BY_DIRECTORY 20
 
 /* Structure of an SVG contruct */
 typedef struct svg_construct_
@@ -121,93 +121,112 @@ typedef struct svg_constructs_
 /* list of all constructions */
 static svg_constructs list_of_constructs[] =
   {
-    {"special_objects", 4,
+    {"", 4,
      {
-       {"svg_canvas", TMSG_SVG_SvgCanvas, "CreateSVG_Svg"},
-       {"text", TMSG_SVG_Text, "CreateSVG_Text"},
-       {"foreign_object", TMSG_SVG_ForeigObject, "CreateSVG_ForeignObject"},
-       {"image", TMSG_SVG_Image, "CreateSVG_Image"}
+       {"document_svg", TMSG_SVG_SvgCanvas, "CreateSVG_Svg"},
+       {"SVG_text", TMSG_SVG_Text, "CreateSVG_Text"},
+       {"SVG_foreign_object", TMSG_SVG_ForeigObject, "CreateSVG_ForeignObject"},
+       {"document_image", TMSG_SVG_Image, "CreateSVG_Image"}
      }
     },
 
-    {"connectors", 4,
+    {"", 4,
      {
-       {"line", TMSG_SVG_Line, "CreateSVG_Line"},
-       {"simple_arrow", TMSG_SVG_SimpleArrow, "CreateSVG_SimpleArrow"},
-       {"double_arrow", TMSG_SVG_DoubleArrow, "CreateSVG_DoubleArrow"},
-       {"zigzag", TMSG_SVG_Zigzag, "CreateSVG_Zigzag"}
+       {"SVG_line", TMSG_SVG_Line, "CreateSVG_Line"},
+       {"SVG_simple_arrow", TMSG_SVG_SimpleArrow, "CreateSVG_SimpleArrow"},
+       {"SVG_double_arrow", TMSG_SVG_DoubleArrow, "CreateSVG_DoubleArrow"},
+       {"SVG_zigzag", TMSG_SVG_Zigzag, "CreateSVG_Zigzag"}
      }
     },
 
-    {"basic_shapes", 12,
+    {"", 12,
      {
-       {"square", TMSG_SVG_Square, "CreateSVG_Square"},
-       {"rounded_square", TMSG_SVG_RoundedSquare, "CreateSVG_RoundedSquare"},
-       {"rectangle", TMSG_SVG_Rectangle, "CreateSVG_Rectangle"},
-       {"rounded_rectangle", TMSG_SVG_RoundedRectangle, "CreateSVG_RoundedRectangle"},
-       {"diamond", TMSG_SVG_Diamond, "CreateSVG_Diamond"},
-       {"parallelogram", TMSG_SVG_Parallelogram, "CreateSVG_Parallelogram"},
-       {"trapezium", TMSG_SVG_Trapezium, "CreateSVG_Trapezium"},
-       {"equilateral_triangle", TMSG_SVG_EquilateralTriangle, "CreateSVG_EquilateralTriangle"},
-       {"isosceles_triangle", TMSG_SVG_IsoscelesTriangle, "CreateSVG_IsoscelesTriangle"},
-       {"right_triangle", TMSG_SVG_RightTriangle, "CreateSVG_RightTriangle"},
-       {"circle", TMSG_SVG_Circle, "CreateSVG_Circle"},
-       {"ellipse", TMSG_SVG_Ellipse, "CreateSVG_Ellipse"}
+       {"SVG_square", TMSG_SVG_Square, "CreateSVG_Square"},
+       {"SVG_rounded_square",
+	TMSG_SVG_RoundedSquare, "CreateSVG_RoundedSquare"},
+       {"SVG_rectangle", TMSG_SVG_Rectangle, "CreateSVG_Rectangle"},
+       {"SVG_rounded_rectangle",
+	TMSG_SVG_RoundedRectangle, "CreateSVG_RoundedRectangle"},
+       {"SVG_diamond", TMSG_SVG_Diamond, "CreateSVG_Diamond"},
+       {"SVG_parallelogram", TMSG_SVG_Parallelogram, "CreateSVG_Parallelogram"},
+       {"SVG_trapezium", TMSG_SVG_Trapezium, "CreateSVG_Trapezium"},
+       {"SVG_equilateral_triangle",
+	TMSG_SVG_EquilateralTriangle, "CreateSVG_EquilateralTriangle"},
+       {"SVG_isosceles_triangle",
+	TMSG_SVG_IsoscelesTriangle, "CreateSVG_IsoscelesTriangle"},
+       {"SVG_right_triangle",
+	TMSG_SVG_RightTriangle, "CreateSVG_RectangleTriangle"},
+       {"SVG_circle", TMSG_SVG_Circle, "CreateSVG_Circle"},
+       {"SVG_ellipse", TMSG_SVG_Ellipse, "CreateSVG_Ellipse"}
      }
     },
 
-    {"curves", 4,
+    {"", 4,
      {
-       {"polyline", TMSG_SVG_Polyline, "CreateSVG_Polyline"},
-       {"polygon", TMSG_SVG_Polygon, "CreateSVG_Polygon"},
-       {"bezier", TMSG_SVG_Bezier, "CreateSVG_Spline"},
-       {"closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed"}
+       {"SVG_polyline", TMSG_SVG_Polyline, "CreateSVG_Polyline"},
+       {"SVG_polygon", TMSG_SVG_Polygon, "CreateSVG_Polygon"},
+       {"SVG_bezier", TMSG_SVG_Bezier, "CreateSVG_Spline"},
+       {"SVG_closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed"}
      }
     },
 
-    {"layers", 4,
+    {"", 4,
      {
-       {"send_to_back", TMSG_SVG_SendToBack, "TransformSVG_SendToBack"},
-       {"send_backward", TMSG_SVG_SendBackward, "TransformSVG_SendBackward"},
-       {"bring_forward", TMSG_SVG_BringForward, "TransformSVG_BringForward"},
-       {"bring_to_front", TMSG_SVG_BringToFront, "TransformSVG_BringToFront"}
+       {"SVG_send_to_back", TMSG_SVG_SendToBack, "TransformSVG_SendToBack"},
+       {"SVG_send_backward",
+	TMSG_SVG_SendBackward, "TransformSVG_SendBackward"},
+       {"SVG_bring_forward",
+	TMSG_SVG_BringForward, "TransformSVG_BringForward"},
+       {"SVG_bring_to_front", TMSG_SVG_BringToFront, "TransformSVG_BringToFront"}
      }
     },
 
-    {"transform", 8,
+    {"", 8,
      {
-       {"flip_vertically", TMSG_SVG_FlipVertically, "TransformSVG_FlipVertically"},
-       {"flip_horizontally", TMSG_SVG_FlipHorizontally, "TransformSVG_FlipHorizontally"},
-       {"rotate_anticlockwise", TMSG_SVG_RotateAntiClockwise, "TransformSVG_RotateAntiClockwise"},
-       {"rotate_clockwise", TMSG_SVG_RotateClockwise, "TransformSVG_RotateClockwise"},
-       {"rotate", TMSG_SVG_Rotate, "TransformSVG_Rotate"},
-       {"scale", TMSG_SVG_Scale, "TransformSVG_Scale"},
-       {"skew", TMSG_SVG_Skew, "TransformSVG_Skew"},
-       {"translate", TMSG_SVG_Translate, "TransformSVG_Translate"}
+       {"SVG_flip_vertically",
+	TMSG_SVG_FlipVertically, "TransformSVG_FlipVertically"},
+       {"SVG_flip_horizontally",
+	TMSG_SVG_FlipHorizontally, "TransformSVG_FlipHorizontally"},
+       {"SVG_rotate_anticlockwise",
+	TMSG_SVG_RotateAntiClockwise, "TransformSVG_AntiClockWise"},
+       {"SVG_rotate_clockwise",
+	TMSG_SVG_RotateClockwise, "TransformSVG_ClockWise"},
+       {"SVG_rotate", TMSG_SVG_Rotate, "TransformSVG_Rotate"},
+       {"SVG_scale", TMSG_SVG_Scale, "TransformSVG_Scale"},
+       {"SVG_skew", TMSG_SVG_Skew, "TransformSVG_Skew"},
+       {"SVG_translate", TMSG_SVG_Translate, "TransformSVG_Translate"}
      }
     },
 
-    {"align", 6,
+    {"", 6,
      {
-       {"left", TMSG_SVG_AlignLeft, "TransformSVG_AlignLeft"},
-       {"center", TMSG_SVG_AlignCenter, "TransformSVG_AlignCenter"},
-       {"right", TMSG_SVG_AlignRight, "TransformSVG_AlignRight"},
-       {"top", TMSG_SVG_AlignTop, "TransformSVG_AlignTop"},
-       {"middle", TMSG_SVG_AlignMiddle, "TransformSVG_AlignMiddle"},
-       {"bottom", TMSG_SVG_AlignBottom, "TransformSVG_AlignBottom"}
+       {"SVG_align_left", TMSG_SVG_AlignLeft, "TransformSVG_AlignLeft"},
+       {"SVG_align_center", TMSG_SVG_AlignCenter, "TransformSVG_AlignCenter"},
+       {"SVG_align_right", TMSG_SVG_AlignRight, "TransformSVG_AlignRight"},
+       {"SVG_align_top", TMSG_SVG_AlignTop, "TransformSVG_AlignTop"},
+       {"SVG_align_middle", TMSG_SVG_AlignMiddle, "TransformSVG_AlignMiddle"},
+       {"SVG_align_bottom", TMSG_SVG_AlignBottom, "TransformSVG_AlignBottom"}
      }
     },
 
-    {"distribute", 8,
+    {"", 8,
      {
-       {"left", TMSG_SVG_DistributeLeft, "TransformSVG_DistributeLeft"},
-       {"center", TMSG_SVG_DistributeCenter, "TransformSVG_DistributeCenter"},
-       {"right", TMSG_SVG_DistributeRight, "TransformSVG_DistributeRight"},
-       {"top", TMSG_SVG_DistributeTop, "TransformSVG_DistributeTop"},
-       {"middle", TMSG_SVG_DistributeMiddle, "TransformSVG_DistributeMiddle"},
-       {"bottom", TMSG_SVG_DistributeBottom, "TransformSVG_DistributeBottom"},
-       {"horizontal_spacing", TMSG_SVG_DistributeHSpacing, "TransformSVG_DistributeHSpacing"},
-       {"vertical_spacing", TMSG_SVG_DistributeVSpacing, "TransformSVG_DistributeVSpacing"}
+       {"SVG_distribute_left",
+	TMSG_SVG_DistributeLeft, "TransformSVG_DistributeLeft"},
+       {"SVG_distribute_center",
+	TMSG_SVG_DistributeCenter, "TransformSVG_DistributeCenter"},
+       {"SVG_distribute_right",
+	TMSG_SVG_DistributeRight, "TransformSVG_DistributeRight"},
+       {"SVG_distribute_top",
+	TMSG_SVG_DistributeTop, "TransformSVG_DistributeTop"},
+       {"SVG_distribute_middle",
+	TMSG_SVG_DistributeMiddle, "TransformSVG_DistributeMiddle"},
+       {"SVG_distribute_bottom",
+	TMSG_SVG_DistributeBottom, "TransformSVG_DistributeBottom"},
+       {"SVG_distribute_horizontal_spacing",
+	TMSG_SVG_DistributeHSpacing, "TransformSVG_DistributeHSpacing"},
+       {"SVG_distribute_vertical_spacing",
+	TMSG_SVG_DistributeVSpacing, "TransformSVG_DistributeVSpacing"}
      }
     },
    
@@ -222,13 +241,42 @@ static svg_constructs list_of_constructs[] =
      }
     },
 
-    {"balloons", 5,
+    {"balloons", 6,
      {
        {"rectangular", TMSG_SVG_Rectangular, NULL},
        {"round", TMSG_SVG_Round, NULL},
        {"rounded_rectangular", TMSG_SVG_Rounded_rectangular, NULL},
        {"scream", TMSG_SVG_Scream, NULL},
-       {"thought", TMSG_SVG_Thought, NULL}
+       {"thought", TMSG_SVG_Thought, NULL},
+       {"cloud", TMSG_SVG_Thought, NULL}
+     }
+    },
+
+    {"block_arrows", 20,
+     {
+       {"simple_arrow", TMSG_SVG_Thought, NULL},
+       {"double_arrow", TMSG_SVG_Thought, NULL},
+       {"3-way_arrow", TMSG_SVG_Thought, NULL},
+       {"4-way_arrow", TMSG_SVG_Thought, NULL},
+       {"corner_arrow", TMSG_SVG_Thought, NULL},
+       {"corner_double_arrow", TMSG_SVG_Thought, NULL},
+
+       {"simple_arrow_callout", TMSG_SVG_Thought, NULL},
+       {"double_arrow_callout", TMSG_SVG_Thought, NULL},
+       {"3-way_arrow_callout", TMSG_SVG_Thought, NULL},
+       {"4-way_arrow_callout", TMSG_SVG_Thought, NULL},
+       {"corner_double_arrow_callout", TMSG_SVG_Thought, NULL},
+
+       {"S-shape_arrow", TMSG_SVG_Thought, NULL},
+       {"rounded_arrow", TMSG_SVG_Thought, NULL},
+       {"circular_arrow", TMSG_SVG_Thought, NULL},
+       {"2-way_rounded_arrow", TMSG_SVG_Thought, NULL},
+
+       {"split_arrow", TMSG_SVG_Thought, NULL},
+       {"pentagon", TMSG_SVG_Thought, NULL},
+       {"chevron", TMSG_SVG_Thought, NULL},
+       {"striped_arrow", TMSG_SVG_Thought, NULL},
+       {"notched_arrow", TMSG_SVG_Thought, NULL}
      }
     },
 
@@ -291,19 +339,30 @@ static svg_constructs list_of_constructs[] =
      }
     },
 
-    {"", 3,
+    {"", 12,
      {
+       {"scroll", TMSG_SVG_Ring, NULL},
+       {"sun", TMSG_SVG_Ring, NULL},
+       {"cloud", TMSG_SVG_Ring, NULL},
+       {"lightning_bolt", TMSG_SVG_Ring, NULL},
+       {"moon", TMSG_SVG_Ring, NULL},
+       {"smiley", TMSG_SVG_Ring, NULL},
+       {"heart", TMSG_SVG_Ring, NULL},
+       {"flower", TMSG_SVG_Ring, NULL},
        {"cross", TMSG_SVG_Cross, NULL},
        {"frame", TMSG_SVG_Frame, NULL},
-       {"ring", TMSG_SVG_Ring, NULL}
+       {"ring", TMSG_SVG_Ring, NULL},
+       {"prohibited", TMSG_SVG_Ring, NULL}
      }
     }
     
   };
 
-/***************************************************************************
+/*----------------------------------------------------------------------------
+  AmayaSVGPanel
+
   Event table and functions
-****************************************************************************/
+  ----------------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
 EVT_TOOL(XRCID("wxID_MENU_SVG_SPECIAL_OBJECTS"), AmayaSVGPanel::OnMenu0)
 EVT_TOOL(XRCID("wxID_MENU_SVG_CONNECTORS"), AmayaSVGPanel::OnMenu1)
@@ -315,11 +374,12 @@ EVT_TOOL(XRCID("wxID_MENU_SVG_ALIGN"), AmayaSVGPanel::OnMenu6)
 EVT_TOOL(XRCID("wxID_MENU_SVG_DISTRIBUTE"), AmayaSVGPanel::OnMenu7)
 EVT_TOOL(XRCID("wxID_MENU_SVG_3D"), AmayaSVGPanel::OnMenu8)
 EVT_TOOL(XRCID("wxID_MENU_SVG_BALLOONS"), AmayaSVGPanel::OnMenu9)
-EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu10)
-EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu11)
-EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu12)
-EVT_TOOL(XRCID("wxID_MENU_SVG_LOGIC_GATES"), AmayaSVGPanel::OnMenu13)
-EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu14)
+EVT_TOOL(XRCID("wxID_MENU_SVG_BLOCK_ARROWS"), AmayaSVGPanel::OnMenu10)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CHEMISTRY"), AmayaSVGPanel::OnMenu11)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CIRCUIT_DIAGRAM"), AmayaSVGPanel::OnMenu12)
+EVT_TOOL(XRCID("wxID_MENU_SVG_POLYGONS_AND_STARS"), AmayaSVGPanel::OnMenu13)
+EVT_TOOL(XRCID("wxID_MENU_SVG_LOGIC_GATES"), AmayaSVGPanel::OnMenu14)
+EVT_TOOL(XRCID("wxID_MENU_SVG_OTHERS"), AmayaSVGPanel::OnMenu15)
 
 EVT_MENU_RANGE(0, MAX_CONSTRUCTS_BY_DIRECTORY - 1,
 	       AmayaSVGPanel::OnInsertElement)
@@ -400,15 +460,20 @@ void AmayaSVGPanel::OnMenu14(wxCommandEvent& event)
   DisplayMenu(14);
 }
 
+void AmayaSVGPanel::OnMenu15(wxCommandEvent& event)
+{
+  DisplayMenu(15);
+}
+
 void AmayaSVGPanel::OnInsertElement(wxCommandEvent& event)
 {
   InsertElement(last_menu, event.GetId());
 }
 
-/***************************************************************************
+/*----------------------------------------------------------------------------
   DisplayMenu
     Display the i-th popup menu
-****************************************************************************/
+  ----------------------------------------------------------------------------*/
 void AmayaSVGPanel::DisplayMenu(int i)
 {
   svg_constructs e = list_of_constructs[i];
@@ -432,7 +497,14 @@ void AmayaSVGPanel::DisplayMenu(int i)
       if(e.list[j].file_name != NULL)
 	{
 	  sprintf(name, "%s/%s.png", e.directory, e.list[j].file_name);
-	  path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
+
+	  if(e.list[j].function_name == NULL)
+	    /* It's an SVG template: look in svg/ */
+	    path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
+	  else
+	    /* It's an SVG command: look in 16x16 */
+	    path = TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, name);
+
 	  if(icon.LoadFile(path, wxBITMAP_TYPE_PNG))
 	    item->SetBitmap(icon);
 	}
@@ -446,11 +518,11 @@ void AmayaSVGPanel::DisplayMenu(int i)
   PopupMenu(&menu);
 }
 
-/***************************************************************************
+/*----------------------------------------------------------------------------
   InsertElement
     i = menu number
     j = submenu number
-****************************************************************************/
+  ----------------------------------------------------------------------------*/
 void AmayaSVGPanel::InsertElement(int i, int j)
 {
   char name[MAX_LENGTH];

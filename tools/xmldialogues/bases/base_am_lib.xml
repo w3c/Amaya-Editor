@@ -4745,7 +4745,85 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
   <message xml:lang="en">Ring</message>
   <message xml:lang="fr">Anneau</message>
 </label>
-<!-- end of SVG panel -->
+
+<label define="TMSG_SVG_2-Way_Rounded_Arrow">
+  <message xml:lang="en">2-Way Rounded Arrow</message>
+  <message xml:lang="fr">Flèche courbe dans deux directions</message>
+</label>
+<label define="TMSG_SVG_3-Way_Arrow_Callout">
+  <message xml:lang="en">3-Way Arrow Callout</message>
+  <message xml:lang="fr">Légende avec flèche dans 3 directions</message>
+</label>
+<label define="TMSG_SVG_3-Way_Arrow">
+  <message xml:lang="en">3-Way Arrow</message>
+  <message xml:lang="fr">Flèche dans 3 directions</message>
+</label>
+<label define="TMSG_SVG_4-Way_Arrow_Callout">
+  <message xml:lang="en">4-Way_Arrow_Callout</message>
+  <message xml:lang="fr">Légende avec flèche dans 4 directions</message>
+</label>
+<label define="TMSG_SVG_4-Way_Arrow">
+  <message xml:lang="en">4-Way Arrow</message>
+  <message xml:lang="fr">Flèche dans 4 directions</message>
+</label>
+<label define="TMSG_SVG_Chevron">
+  <message xml:lang="en">Chevron</message>
+  <message xml:lang="fr">Chevron</message>
+</label>
+<label define="TMSG_SVG_Circular_Arrow">
+  <message xml:lang="en">Circular Arrow</message>
+  <message xml:lang="fr">Flèche en arc</message>
+</label>
+<label define="TMSG_SVG_Corner_Arrow">
+  <message xml:lang="en">Corner Arrow</message>
+  <message xml:lang="fr">Flèche en angle</message>
+</label>
+<label define="TMSG_SVG_Corner_Double_Arrow_Callout">
+  <message xml:lang="en">Corner Double Arrow Callout</message>
+  <message xml:lang="fr">Légende avec flèche double</message>
+</label>
+<label define="TMSG_SVG_Corner_Double_Arrow">
+  <message xml:lang="en">Corner Double Arrow</message>
+  <message xml:lang="fr">Flèche double en angle</message>
+</label>
+<label define="TMSG_SVG_Double_Arrow_Callout">
+  <message xml:lang="en">Double Arrow Callout</message>
+  <message xml:lang="fr">Légende avec flèche double</message>
+</label>
+<label define="TMSG_SVG_Double_Arrow">
+  <message xml:lang="en">Double Arrow</message>
+  <message xml:lang="fr">Flèche double</message>
+</label>
+<label define="TMSG_SVG_Notched_Arrow">
+  <message xml:lang="en">Notched Arrow</message>
+  <message xml:lang="fr">Flèche avec entailles</message>
+</label>
+<label define="TMSG_SVG_Rounded_Arrow">
+  <message xml:lang="en">Rounded Arrow</message>
+  <message xml:lang="fr">Flèche courbe</message>
+</label>
+<label define="TMSG_SVG_Simple_Arrow_Callout">
+  <message xml:lang="en">Simple Arrow Callout</message>
+  <message xml:lang="fr">Légende avec flèche simple</message>
+</label>
+<label define="TMSG_SVG_Simple_Arrow">
+  <message xml:lang="en">Simple Arrow</message>
+  <message xml:lang="fr">Flèche simple</message>
+</label>
+<label define="TMSG_SVG_Split_Arrow">
+  <message xml:lang="en">Split Arrow</message>
+  <message xml:lang="fr">Flèche en fourche</message>
+</label>
+<label define="TMSG_SVG_S-Shape_Arrow">
+  <message xml:lang="en">S-Shape Arrow</message>
+  <message xml:lang="fr">Flèche en S</message>
+</label>
+<label define="TMSG_SVG_Striped_Arrow">
+  <message xml:lang="en">Striped Arrow</message>
+  <message xml:lang="fr">Flèche avec bandes</message>
+</label>
+
+<!-- End of SVG panel -->
 
 <label define="TMSG_LIB_MSG_MAX"></label></messages>
 <!--end of base --></base>

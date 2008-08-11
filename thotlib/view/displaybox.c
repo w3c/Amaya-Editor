@@ -23,6 +23,7 @@
 #include "typemedia.h"
 #include "picture.h"
 #include "appdialogue.h"
+#include "svgedit.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
@@ -1201,16 +1202,23 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
         }
 
-      /* show the selection on the whole graphics */
-      if (selected && !pAb->AbPresentationBox)
-        {
-          if (pFrame->FrSelectOnePosition)
-            DisplayPointSelection (frame, pBox,
-                                   pFrame->FrSelectionBegin.VsIndBox, TRUE);
-          else
-            DisplayPointSelection (frame, pBox, 0,
-                                   pAb->AbSelected && TtaIsSelectionUnique ());
-        }
+      /*      if(pBox->BxAbstractBox &&
+	 IsEditableSVG(FrameTable[frame].FrDoc,
+	 (Element) pBox->BxAbstractBox->AbElement))
+	 {*/
+
+	  /* show the selection on the whole graphics */
+	  if (selected && !pAb->AbPresentationBox)
+	    {
+	      if (pFrame->FrSelectOnePosition)
+		DisplayPointSelection (frame, pBox,
+				       pFrame->FrSelectionBegin.VsIndBox, TRUE);
+	      else
+		DisplayPointSelection (frame, pBox, 0,
+				       pAb->AbSelected &&
+				       TtaIsSelectionUnique ());
+	    }
+	  /*	}*/
     }
 }
 
