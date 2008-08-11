@@ -703,7 +703,7 @@ HelpSVG
 &TransformSVG_AlignMiddle
 &TransformSVG_AlignBottom
 &TransformSVG_Rotate
-&SVG_Select
+&EditSVG_Select
 &CreateSVG_Image
 &TransformSVG_Skew
 &TransformSVG_Scale

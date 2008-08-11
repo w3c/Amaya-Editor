@@ -4273,6 +4273,331 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
 }
 
 /*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+static char *GetElementData(Element el, SSchema sschema, int el_type_num)
+{
+  Element child;
+  ElementType       elType;
+  Language       lang;
+  int len;
+  char *text;
+
+  if(el_type_num != SVG_EL_title &&
+     el_type_num != SVG_EL_desc)
+    return NULL;
+
+  elType = TtaGetElementType (el);
+  if(elType.ElSSchema != sschema)
+    return NULL;
+
+  child = TtaGetFirstChild(el);
+  while(child)
+    {
+      elType = TtaGetElementType (child);
+      if(elType.ElSSchema == sschema && 
+	 elType.ElTypeNum == el_type_num)
+	break;
+     
+      TtaNextSibling(&child);
+    }
+
+  if(child == NULL)
+    return NULL;
+
+  child = TtaGetFirstChild(child);
+  elType = TtaGetElementType (child);
+  if(elType.ElTypeNum == SVG_EL_TEXT_UNIT)
+    {
+      len = TtaGetTextLength(child);
+      if(len == 0)return NULL;
+      text = (char *)TtaGetMemory (len);
+      TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
+      return text;
+    }
+  return NULL;
+}
+
+typedef struct object_
+{
+  Element el;
+  char *title;
+  float cx, cy;
+  float w, h;
+} object;
+
+const char *GetAbsolutePosition(object el, float w, float h)
+{
+  float px = el.cx / w;
+  float py = el.cy / h;
+
+  printf("(%g,%g)", px, py);
+
+  if(px < .3)
+    {
+      if(py < .3)
+	return "at the top left corner";
+      else if(py > .6)
+	return "at the bottom left corner";
+      else
+	return "on the left";
+    }
+  else if (px > .6)
+    {
+      if(py < .3)
+	return "at the top right corner";
+      else if(py > .6)
+	return "at the bottom right corner";
+      else
+	return "on the right";
+    }
+  else
+    {
+      if(py < .3)
+	return "at the top";
+      else if(py > .6)
+	return "at the bottom";
+      else
+	return "in the center";
+    }
+
+  return NULL;
+}
+
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+const char *GetRelativePosition(object ref, object obj)
+{
+  int dx, dy;
+
+  if(ref.cx+.5*ref.w < obj.cx)
+    dx = +1;
+  else if(ref.cx - .5*ref.w > obj.cx)
+    dx = -1;
+  else dx = 0;
+
+  if(ref.cy + .5*ref.h < obj.cy)
+    dy = +1;
+  else if(ref.cy - .5*ref.h > obj.cy)
+    dy = -1;
+  else dy = 0;
+
+  if(dx == -1)
+    {
+      if(dy == -1)
+	return "to the left and above";
+      else if(dy == 1)
+	return "to the left and below";
+      else
+	return "to the left of";
+    }
+  else if(dx == +1)
+    {
+      if(dy == -1)
+	return "to the right and above";
+      else if(dy == 1)
+	return "to the right and below";
+      else
+	return "to the right of";
+    }
+  else if(dx == 0)
+    {
+      if(dy == -1)
+	return "above";
+      else if(dy == 1)
+	return "below";
+      else
+	return "in front of";
+    }
+
+  return NULL;
+}
+
+static ThotBool StrCat(char **desc, int *max_length, int *length, char *buffer)
+{
+  *length += strlen(buffer);
+  if(*length >= *max_length)
+    {
+      *max_length += MAX_LENGTH;
+      *desc = (char *)realloc ( *desc, (size_t)max_length );
+      if(*desc == NULL)
+	return FALSE;
+    }
+  strcat ( *desc, buffer);
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+static float GetDistanceBetweenCenters(object a, object b)
+{
+  float dx, dy;
+  dx = a.cx - b.cx;
+  dy = a.cy - b.cy;
+  return sqrt(dx*dx + dy*dy);
+}
+
+/*----------------------------------------------------------------------
+  GenerateDesc
+  ----------------------------------------------------------------------*/
+void GenerateDesc (Document doc, View view, Element el)
+{
+  Element first;
+  int dummy1, dummy2;
+  float w, h;
+  
+  ElementType       elType;
+  SSchema	    svgSchema = GetSVGSSchema (doc);
+  Element child;
+  int i, j, j_nearest, nb;
+  float r_nearest, r;
+
+  object *children;
+  
+  char *desc;
+  int length = 0;
+  int max_length = MAX_LENGTH;
+  char buffer[MAX_LENGTH];
+  ThotBool still;
+
+  printf("-------- GenerateDesc -----------\n");
+
+  /* Check that a document is selected */
+  if (doc == 0)
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
+
+  TtaGiveFirstSelectedElement (doc, &first, &dummy1, &dummy2);
+  if(!first)
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
+
+  /***************/
+    
+  el = first;
+  elType = TtaGetElementType (el);
+
+  if (elType.ElSSchema != svgSchema)
+    return;
+
+  /* Get the size of the element */
+   TtaGiveBoxSize (el, doc, 1, UnPixel, &dummy1, &dummy2);
+   w = (float)(dummy1);
+   h = (float)(dummy2);
+
+   /* Count how manu children there are */
+   child = TtaGetFirstChild(el);
+   nb = 0;
+   while(child)
+     {
+       nb++;
+       TtaNextSibling(&child);
+     }
+
+   if(nb == 0)return;
+
+   desc = (char *)malloc(max_length);
+   if(desc == NULL)return;
+   *desc = '\0';
+
+   /* Get information on the children */
+   children = (object *)TtaGetMemory(sizeof(object) * nb);
+   if(children == NULL)return;
+
+   for(child = TtaGetFirstChild(el), i = 0;
+       child;
+       TtaNextSibling(&child))
+     {
+       children[i].title = GetElementData(child, svgSchema,
+					  SVG_EL_title);
+       
+       if(children[i].title != NULL)
+	 {
+	   /* This child has a title, take it into account */
+	   children[i].el = child;
+	   GetPositionAndSizeInParentSpace(doc,
+					   children[i].el,
+					   &(children[i].cx),
+					   &(children[i].cy),
+					   &(children[i].w),
+					   &(children[i].h));
+	   
+	   children[i].cx += (children[i].w/2);
+	   children[i].cy += (children[i].h/2);
+	   
+	   i++;
+	 }      
+     }
+   
+   nb = i;
+
+   if(nb > 0)
+     {
+       sprintf(buffer, "There are %d objects: ", nb);
+       still = StrCat(&desc, &max_length, &length, buffer);
+
+       for(i = 0; i < nb && still; i++)
+	 {
+
+	   /* Give absolute position */
+	   sprintf(buffer, "[%s] which is %s",
+		   children[i].title,
+		   GetAbsolutePosition(children[i], w, h)
+		   );
+	   still = StrCat(&desc, &max_length, &length, buffer);
+	   if(!still)break;
+	   
+	   if(i > 0)
+	     {
+	       strcpy(buffer, ", ");
+	       still = StrCat(&desc, &max_length, &length, buffer);
+	       if(!still)break;
+	       
+	       /* Search for the nearest object */
+	       j_nearest = 0;
+	       r_nearest = GetDistanceBetweenCenters(children[0], children[i]);
+	       for(j = 1; j < i; j++)
+		 {
+		   r = GetDistanceBetweenCenters(children[j], children[i]);
+		   if(r < r_nearest)
+		     {
+		       j_nearest = j;
+		       r_nearest = r;
+		     }
+		 }
+	       
+	       /* Give the relative position */
+	       sprintf(buffer, "%s [%s]",
+		       GetRelativePosition(children[j_nearest], children[i]),
+		       children[j_nearest].title);
+	       still = StrCat(&desc, &max_length, &length, buffer);
+	       if(!still)break;
+	     }
+	   
+	   
+	   strcpy(buffer, ". ");
+	   StrCat(&desc, &max_length, &length, buffer);
+	 }
+     
+
+       /* Free the memory */
+       for(i = 0; i < nb; i++)
+	 TtaFreeMemory(children[i].title);
+     }
+   
+   TtaFreeMemory(children);
+
+
+   printf("\ndesc=[%s]\n", desc);
+   free(desc);
+
+  printf("---------------------------------\n");
+}
+
+/*----------------------------------------------------------------------
   CreateSVG_Template
   ----------------------------------------------------------------------*/
 void CreateSVG_Template (Document document, View view)
@@ -4381,6 +4706,7 @@ void CreateSVG_Text (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Group (Document document, View view)
 {
+  //GenerateDesc (document, view, NULL);
   TransformGraphicElement (document, view, 11);
 }
 
@@ -4625,9 +4951,9 @@ void TransformSVG_Rotate (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  SVG_Select
+  EditSVG_Select
   ----------------------------------------------------------------------*/
-void SVG_Select (Document document, View view)
+void EditSVG_Select (Document document, View view)
 {
   SelectGraphicElement (document, view);
 }
@@ -4728,3 +5054,19 @@ void TransformSVG_DistributeVSpacing (Document document, View view)
 {
   TransformGraphicElement (document, view, 53);
 }
+
+/* /\*---------------------------------------------------------------------- */
+/*   EditSVG_TitleAndDescription */
+/*   ----------------------------------------------------------------------*\/ */
+/* void EditSVG_TitleAndDescription (Document document, View view) */
+/* { */
+/*   TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_AVAILABLE); */
+/* } */
+
+/* /\*---------------------------------------------------------------------- */
+/*   EditSVG_GenerateDescription */
+/*   ----------------------------------------------------------------------*\/ */
+/* void EditSVG_GenerateDescription (Document document, View view) */
+/* { */
+/*   TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_AVAILABLE); */
+/* } */
