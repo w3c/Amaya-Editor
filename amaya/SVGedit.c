@@ -4273,6 +4273,7 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
 }
 
 /*----------------------------------------------------------------------
+  GetElementData
   -----------------------------------------------------------------------*/
 static char *GetElementData(Element el, SSchema sschema, int el_type_num)
 {
@@ -4325,45 +4326,47 @@ typedef struct object_
   float w, h;
 } object;
 
+/*----------------------------------------------------------------------
+  GetAbsolutePosition
+  -----------------------------------------------------------------------*/
 const char *GetAbsolutePosition(object el, float w, float h)
 {
   float px = el.cx / w;
   float py = el.cy / h;
 
-  printf("(%g,%g)", px, py);
-
   if(px < .3)
     {
       if(py < .3)
-	return "at the top left corner";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_TOP_LEFT);
       else if(py > .6)
-	return "at the bottom left corner";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_BOTTOM_LEFT);
       else
-	return "on the left";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_LEFT);
     }
   else if (px > .6)
     {
       if(py < .3)
-	return "at the top right corner";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_TOP_RIGHT);
       else if(py > .6)
-	return "at the bottom right corner";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_BOTTOM_RIGHT);
       else
-	return "on the right";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_RIGHT);
     }
   else
     {
       if(py < .3)
-	return "at the top";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_TOP);
       else if(py > .6)
-	return "at the bottom";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_BOTTOM);
       else
-	return "in the center";
+	return TtaGetMessage(AMAYA, AM_SVG_ABSOLUTE_CENTER);
     }
 
   return NULL;
 }
 
 /*----------------------------------------------------------------------
+  GetRelativePosition
   -----------------------------------------------------------------------*/
 const char *GetRelativePosition(object ref, object obj)
 {
@@ -4384,29 +4387,29 @@ const char *GetRelativePosition(object ref, object obj)
   if(dx == -1)
     {
       if(dy == -1)
-	return "to the left and above";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_LEFT_ABOVE);
       else if(dy == 1)
-	return "to the left and below";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_LEFT_BELOW);
       else
-	return "to the left of";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_LEFT);
     }
   else if(dx == +1)
     {
       if(dy == -1)
-	return "to the right and above";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_RIGHT_ABOVE);
       else if(dy == 1)
-	return "to the right and below";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_RIGHT_BELOW);
       else
-	return "to the right of";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_RIGHT);
     }
   else if(dx == 0)
     {
       if(dy == -1)
-	return "above";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_ABOVE);
       else if(dy == 1)
-	return "below";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_BELOW);
       else
-	return "in front of";
+	return TtaGetMessage(AMAYA, AM_SVG_RELATIVE_IN_FRONT_OF);
     }
 
   return NULL;
@@ -4536,14 +4539,14 @@ void GenerateDesc (Document doc, View view, Element el)
 
    if(nb > 0)
      {
-       sprintf(buffer, "There are %d objects: ", nb);
+       sprintf(buffer, TtaGetMessage(AMAYA, AM_SVG_THERE_ARE), nb);
        still = StrCat(&desc, &max_length, &length, buffer);
 
        for(i = 0; i < nb && still; i++)
 	 {
 
 	   /* Give absolute position */
-	   sprintf(buffer, "[%s] which is %s",
+	   sprintf(buffer, "[%s] %s",
 		   children[i].title,
 		   GetAbsolutePosition(children[i], w, h)
 		   );

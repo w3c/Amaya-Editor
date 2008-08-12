@@ -7253,6 +7253,85 @@
 	<message xml:lang="en">Component is used, you can not remove it.</message>
 	<message xml:lang="fr">Ce composant est utilisé, vous ne pouvez le détruire.</message>
 </label>
+
+<label define="AM_SVG_ABSOLUTE_TOP_LEFT">
+	<message xml:lang="en">at the top left corner</message>
+	<message xml:lang="fr">dans le coin supérieur gauche</message>
+</label>
+<label define="AM_SVG_ABSOLUTE_BOTTOM_LEFT">
+	<message xml:lang="en">at the bottom left corner</message>
+	<message xml:lang="fr">dans le coin inférieur gauche</message>
+</label>
+<label define="AM_SVG_ABSOLUTE_LEFT">
+	<message xml:lang="en">on the left</message>
+	<message xml:lang="fr">à gauche</message>
+</label>
+<label define="AM_SVG_ABSOLUTE_TOP_RIGHT">
+	<message xml:lang="en">at the top right corner</message>
+	<message xml:lang="fr">dans le coin supérieur droit</message>
+</label>
+<label define="AM_SVG_ABSOLUTE_BOTTOM_RIGHT">
+	<message xml:lang="en">at the bottom right corner</message>
+	<message xml:lang="fr">dans le coin inférieur droit</message>
+</label>
+<label define="AM_SVG_ABSOLUTE_RIGHT">
+	<message xml:lang="en">on the right</message>
+	<message xml:lang="fr">à droite</message>
+</label>
+<label define="AM_SVG_ABSOLUTE_TOP">
+	<message xml:lang="en">at the top</message>
+	<message xml:lang="fr">en haut</message>
+</label>
+<label define="AM_SVG_ABSOLUTE_BOTTOM">
+	<message xml:lang="en">at the bottom</message>
+	<message xml:lang="fr">en bas</message>
+</label>
+<label define="AM_SVG_ABSOLUTE_CENTER">
+	<message xml:lang="en">in the center</message>
+	<message xml:lang="fr">au centre</message>
+</label>
+
+<label define="AM_SVG_RELATIVE_LEFT_ABOVE">
+	<message xml:lang="en">to the left and above</message>
+	<message xml:lang="fr">à gauche et au dessus de</message>
+</label>
+<label define="AM_SVG_RELATIVE_LEFT_BELOW">
+	<message xml:lang="en">to the left and below</message>
+	<message xml:lang="fr">à gauche et en dessous de</message>
+</label>
+<label define="AM_SVG_RELATIVE_LEFT">
+	<message xml:lang="en">to the left</message>
+	<message xml:lang="fr">à gauche de</message>
+</label>
+<label define="AM_SVG_RELATIVE_RIGHT_ABOVE">
+	<message xml:lang="en">to the right and above</message>
+	<message xml:lang="fr">à droite et au dessus de</message>
+</label>
+<label define="AM_SVG_RELATIVE_RIGHT_BELOW">
+	<message xml:lang="en">to the right and below</message>
+	<message xml:lang="fr">à droite et en dessous de</message>
+</label>
+<label define="AM_SVG_RELATIVE_RIGHT">
+	<message xml:lang="en">to the right</message>
+	<message xml:lang="fr">à droite de</message>
+</label>
+<label define="AM_SVG_RELATIVE_ABOVE">
+	<message xml:lang="en">above</message>
+	<message xml:lang="fr">au dessus de</message>
+</label>
+<label define="AM_SVG_RELATIVE_BELOW">
+	<message xml:lang="en">below</message>
+	<message xml:lang="fr">en dessous de</message>
+</label>
+<label define="AM_SVG_RELATIVE_IN_FRONT_OF">
+	<message xml:lang="en">in front of</message>
+	<message xml:lang="fr">devant</message>
+</label>
+<label define="AM_SVG_THERE_ARE">
+	<message xml:lang="en">There are %d objects: </message>
+	<message xml:lang="fr">Il y a %d objets : </message>
+</label>
+
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

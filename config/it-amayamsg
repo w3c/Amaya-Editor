@@ -485,3 +485,22 @@
 482 **Repeat element
 483 **New component
 484 **Component is used, you can not remove it.
+485 **at the top left corner
+486 **at the bottom left corner
+487 **on the left
+488 **at the top right corner
+489 **at the bottom right corner
+490 **on the right
+491 **at the top
+492 **at the bottom
+493 **in the center
+494 **to the left and above
+495 **to the left and below
+496 **to the left
+497 **to the right and above
+498 **to the right and below
+499 **to the right
+500 **above
+501 **below
+502 **in front of
+503 **There are %d objects: 
