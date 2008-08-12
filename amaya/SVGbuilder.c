@@ -719,13 +719,14 @@ static ThotBool EvaluateFeatures (Attribute attr)
   char         *text, *ptr, *ptr2;
   ThotBool     supported;
 
-  supported = TRUE;
+  supported = FALSE;
   length = TtaGetTextAttributeLength (attr);
   if (length > 0)
     {
       text = (char *)TtaGetMemory (length + 2);
       if (text)
         {
+	  supported = TRUE;
           TtaGiveTextAttributeValue (attr, text, &length);
           ptr = text;
 	  ptr = (char*)TtaSkipBlanks (ptr);
@@ -750,8 +751,6 @@ static ThotBool EvaluateFeatures (Attribute attr)
             }
           TtaFreeMemory (text);
         }
-      else
-	supported = FALSE;
     }
   return supported;
 }
@@ -766,13 +765,14 @@ static ThotBool EvaluateExtensions (Attribute attr)
   char         *text, *ptr, *ptr2;
   ThotBool     supported;
 
-  supported = TRUE;
+  supported = FALSE;
   length = TtaGetTextAttributeLength (attr);
   if (length > 0)
     {
       text = (char *)TtaGetMemory (length + 2);
       if (text)
         {
+	  supported = TRUE;
           TtaGiveTextAttributeValue (attr, text, &length);
           ptr = text;
 	  ptr = (char*)TtaSkipBlanks (ptr);
@@ -797,8 +797,6 @@ static ThotBool EvaluateExtensions (Attribute attr)
 	    }
           TtaFreeMemory (text);
         }
-      else
-	supported = FALSE;
     }
   return supported;
 }
