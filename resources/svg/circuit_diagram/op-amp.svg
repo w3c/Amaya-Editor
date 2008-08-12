@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>op-amp</title>
+  <!-- symbol -->
+  <path
+        d="M 0,30 L 50,30 M 0,70 L 50,70 M 50,50 L 50,0 150,50 50,100 50,50 M 150,50 180,50"/>
+  <!-- Plus and minus signs -->
+  <text x="53px" y="20px" fill="black">+</text>
+  <text x="53px" y="80px" fill="black">-</text>
+</svg>

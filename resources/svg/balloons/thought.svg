@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" id="svg2"
+     style="fill:none;stroke:#000000">
+  <title>thought balloon</title>
+  <!-- balloon -->
+  <ellipse cx="100px" cy="50px" rx="100px" ry="50px"/>
+  <!-- small ellipses -->
+  <ellipse cx="60px" cy="118px" rx="24px" ry="12px"/>
+  <ellipse cx="40px" cy="147px" rx="12px" ry="6px"/>
+  <ellipse cx="20px" cy="164px" rx="6px" ry="3px"/>
+</svg>

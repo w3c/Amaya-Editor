@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>cylinder</title>
+  <!-- Bottom -->
+  <ellipse cx="100" cy="208" rx="100" ry="42"/>
+  <!-- Top -->
+  <ellipse cx="100" cy="42" rx="100" ry="42"/>
+  <!-- Front -->
+  <path d="M 1,42 L 1,208 A 99,41 0 0 0 200,208 L 200,42 A 99,41 0 0 1 1,42 "/>
+</svg>

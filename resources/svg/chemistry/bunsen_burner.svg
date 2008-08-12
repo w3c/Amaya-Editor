@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="fill:none;stroke:#000000;">
+  <title>Bunsen burner</title>
+  <!-- Bunsen burner -->
+  <g>
+    <path
+          d="M 0,120 L 25,115 25,70 35,70 35,115 60,120 M 20,90 L 50,90 M 50,85 L 50,95 z"/>
+    <rect x="20" y="65" width="20" height="5"/>
+  </g>
+
+  <!-- Flame -->
+  <path d="M 28,65 C 15,60 28,0 30,0 C 40,0 35,60 32,65"/>
+</svg>

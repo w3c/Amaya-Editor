@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="fill:none;stroke:#000000;">
+  <title>beaker</title>
+  <!-- beaker -->
+  <path
+        d="M 2,11 L 13,15 L 13,139 A 10 10 0 0 0 23,149 L 92,149 A 10 10 0 0 0 102,139 L 102,10 A 10 5 0 0 0 105,4 L 20,4 L 2,11 "
+        />
+  <!-- liquid -->
+  <path
+        d="M 13,120 13,139 A 10 10 0 0 0 23,149 L 92,149 A 10 10 0 0 0 102,139 L 102,120"
+        stroke="none"/>
+  <!-- lines -->
+  <g>
+    <line x1="102" y1="130" x2="90" y2="130"/>
+    <line x1="102" y1="100" x2="90" y2="100"/>
+    <line x1="102" y1="70" x2="90" y2="70"/>
+  </g>
+</svg>

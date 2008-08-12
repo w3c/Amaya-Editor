@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>Simple Arrow callout</title>
+  <polygon
+        points="0,0 130,0 130,25 150,25 150,0 250,50 150,100 150,75 130,75 130,100 0,100" />
+</svg>

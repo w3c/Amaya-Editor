@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>Split arrow</title>
+  <polygon points="0,60 100,60 150,10 140,0 190,0 190,50 180,40 135,85 180,130 190,120 190,170 140,170 150,160 100,110 0,110 "/>
+</svg>

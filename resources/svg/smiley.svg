@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>smiley</title>
+  <!-- face -->
+  <circle cx="100" cy="100" r="100"/>
+  <!-- left eye -->
+  <ellipse cx="70" cy="65" rx="8px" ry="16px"/>
+  <!-- right eye -->
+  <ellipse cx="130" cy="65" rx="8px" ry="16px"/>
+  <!-- mooth -->
+  <path d="M 40,130 A 60,30 0 0 0 160,130" fill="none" />
+</svg>

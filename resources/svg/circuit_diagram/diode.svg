@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>diode</title>
+  <path d="M 0,50 L 80,50 L 80,30 110,50 80,70 80,50 M 110,30 L 110,70 M 110,50 180,50"/>
+</svg>

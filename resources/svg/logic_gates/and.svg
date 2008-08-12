@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+  <title>AND</title>
+  <path
+        d="M 0,20 L 50,20 M 0,80 L 50,80 M 50,10 130,10 A 20,40 0 0 1 130,90 L 50,90 50,10 M 150,50 180,50"/>
+</svg>
