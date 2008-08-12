@@ -716,6 +716,8 @@ FUNCTIONS
   TransformSVG_DistributeVSpacing,
   TransformSVG_DistributeHSpacing,
   EditSVG_Select,
+  EditSVG_Information,
+  EditSVG_GenerateDescription,
   DoSelectOpacity,
   DoSelectStrokeOpacity,
   DoSelectFillOpacity,

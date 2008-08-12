@@ -17,6 +17,9 @@ extern void CreateGraphicElement ( Document doc,
                                    int entry );
 extern void SelectGraphicElement ( Document doc,
                                    View view );
+extern void EditGraphicElement ( Document doc,
+                                 View view,
+                                 int entry );
 extern void TransformGraphicElement ( Document doc,
                                       View view,
                                       int entry );
@@ -67,6 +70,9 @@ extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
+extern ThotBool GenerateDesc ( Document doc,
+                               View view,
+                               Element el );
 extern void CreateSVG_Template ( Document document,
                                  View view );
 extern void CreateSVG_Svg ( Document document,
@@ -149,8 +155,8 @@ extern void TransformSVG_AlignBottom ( Document document,
                                        View view );
 extern void TransformSVG_Rotate ( Document document,
                                   View view );
-extern void SVG_Select ( Document document,
-                         View view );
+extern void EditSVG_Select ( Document document,
+                             View view );
 extern void CreateSVG_Image ( Document document,
                               View view );
 extern void TransformSVG_Skew ( Document document,
@@ -175,6 +181,8 @@ extern void TransformSVG_DistributeHSpacing ( Document document,
                                               View view );
 extern void TransformSVG_DistributeVSpacing ( Document document,
                                               View view );
+extern void EditSVG_GenerateDescription ( Document document,
+                                          View view );
 
 #else /* __STDC__ */
 
@@ -189,6 +197,9 @@ extern void CreateGraphicElement ( Document doc,
                                      int entry );
 extern void SelectGraphicElement ( Document doc,
                                      View view );
+extern void EditGraphicElement ( Document doc,
+                                   View view,
+                                   int entry );
 extern void TransformGraphicElement ( Document doc,
                                         View view,
                                         int entry );
@@ -239,6 +250,9 @@ extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
 extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
+extern ThotBool GenerateDesc ( Document doc,
+                                 View view,
+                                 Element el );
 extern void CreateSVG_Template ( Document document,
                                    View view );
 extern void CreateSVG_Svg ( Document document,
@@ -321,8 +335,8 @@ extern void TransformSVG_AlignBottom ( Document document,
                                          View view );
 extern void TransformSVG_Rotate ( Document document,
                                     View view );
-extern void SVG_Select ( Document document,
-                           View view );
+extern void EditSVG_Select ( Document document,
+                               View view );
 extern void CreateSVG_Image ( Document document,
                                 View view );
 extern void TransformSVG_Skew ( Document document,
@@ -347,6 +361,8 @@ extern void TransformSVG_DistributeHSpacing ( Document document,
                                                 View view );
 extern void TransformSVG_DistributeVSpacing ( Document document,
                                                 View view );
+extern void EditSVG_GenerateDescription ( Document document,
+                                            View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

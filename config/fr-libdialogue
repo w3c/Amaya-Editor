@@ -272,132 +272,134 @@
 270 Classique
 271 Moderne
 272 Pas de thème
-273 Carré
-274 Carré à coins arrondis
-275 Rectangle
-276 Rectangle à coins arrondis
-277 Losange
-278 Parallelogramme
-279 Trapèze
-280 Triangle équilatéral
-281 Triangle isocèle
-282 Triangle rectangle
-283 Cercle
-284 Ellipse
-285 Ligne
-286 Flèche
-287 Flèche double
-288 Zigzag
-289 Grouper
-290 Dégrouper
-291 Mettre au dessus
-292 Mettre en dessous
-293 Monter d'un niveau
-294 Descendre d'un niveau
-295 90° à gauche
-296 90° à droite
-297 Tourner
-298 Symétrie verticale
-299 Symétrie horizontale
-300 Redimensionner
-301 Incliner
-302 Déplacer
-303 Aligner bord inférieur
-304 Aligner axe vertical
-305 Aligner bord gauche
-306 Aligner axe horizontal
-307 Aligner bord droit
-308 Aligner bord supérieur
-309 Distribuer bords inférieurs
-310 Distribuer axes verticaux
-311 Distribuer bords gauches
+273 Information
+274 Générer une descripion
+275 Carré
+276 Carré à coins arrondis
+277 Rectangle
+278 Rectangle à coins arrondis
+279 Losange
+280 Parallelogramme
+281 Trapèze
+282 Triangle équilatéral
+283 Triangle isocèle
+284 Triangle rectangle
+285 Cercle
+286 Ellipse
+287 Ligne
+288 Flèche
+289 Flèche double
+290 Zigzag
+291 Grouper
+292 Dégrouper
+293 Mettre au dessus
+294 Mettre en dessous
+295 Monter d'un niveau
+296 Descendre d'un niveau
+297 90° à gauche
+298 90° à droite
+299 Tourner
+300 Symétrie verticale
+301 Symétrie horizontale
+302 Redimensionner
+303 Incliner
+304 Déplacer
+305 Aligner bord inférieur
+306 Aligner axe vertical
+307 Aligner bord gauche
+308 Aligner axe horizontal
+309 Aligner bord droit
+310 Aligner bord supérieur
+311 Distribuer bords inférieurs
 312 Distribuer axes verticaux
-313 Distribuer bords droits
-314 Distribuer bords supérieurs
-315 Distribuer espacements verticaux
-316 Distribuer espacements horizontaux
-317 Courbe de Bézier fermée
-318 Courbe de Bézier
-319 Segments de droite (<polyline/>)
-320 Polygone
-321 Objet étranger (<foreignObject/>)
-322 Image
-323 Canevas SVG
-324 Texte
-325 Cône
-326 Cube
-327 Cylindre
-328 Octaèdre
-329 Parallèlépidède
-330 Pyramide
-331 Bécher
-332 Entonnoir
-333 Bec bunsen
-334 Fiole à vide
-335 Ballon
-336 Burette
-337 Erlenmeyer
-338 Tube à essai
-339 Pipette
-340 Rectangulaire
-341 À coins arrondis
-342 Ronde
-343 Cri
-344 Pensée
-345 Condensateur
-346 Source de courant
-347 Diode
-348 Terre
-349 Inductance
-350 DEL
-351 Ampli-op
-352 Résistance
-353 Interrupteur
-354 Transistor
-355 Source de tension
-356 Diode Zener
-357 Pentagone
-358 Hexagone
-359 Heptagone
-360 Octogone
-361 Étoile (4 branches)
-362 Étoile (5 branches)
-363 Étoile (6 branches)
-364 **AND
-365 **NAND
-366 **OR
-367 **NOR
-368 **XOR
-369 **XNOR
-370 **NOT
-371 Croix
-372 Cadre
-373 Anneau
-374 Nuage
-375 Parchemin
-376 Soleil
-377 Éclair
-378 Lune
-379 Frimousse
-380 Coeur
-381 Fleur
-382 Interdit
-383 Flèche courbe dans deux directions
-384 Légende avec flèche dans 3 directions
-385 Flèche dans 3 directions
-386 Légende avec flèche dans 4 directions
-387 Flèche dans 4 directions
-388 Chevron
-389 Flèche en arc
-390 Flèche en angle
-391 Légende avec flèche double en angle
-392 Flèche double en angle
-393 Légende avec flèche double
-394 Flèche double
-395 Flèche avec entailles
-396 Flèche courbe
-397 Légende avec flèche simple
-398 Flèche simple
-399 Flèche en fourche
-400 Flèche en S
-401 Flèche avec bandes
+313 Distribuer bords gauches
+314 Distribuer axes verticaux
+315 Distribuer bords droits
+316 Distribuer bords supérieurs
+317 Distribuer espacements verticaux
+318 Distribuer espacements horizontaux
+319 Courbe de Bézier fermée
+320 Courbe de Bézier
+321 Segments de droite (<polyline/>)
+322 Polygone
+323 Objet étranger (<foreignObject/>)
+324 Image
+325 Canevas SVG
+326 Texte
+327 Cône
+328 Cube
+329 Cylindre
+330 Octaèdre
+331 Parallèlépidède
+332 Pyramide
+333 Bécher
+334 Entonnoir
+335 Bec bunsen
+336 Fiole à vide
+337 Ballon
+338 Burette
+339 Erlenmeyer
+340 Tube à essai
+341 Pipette
+342 Rectangulaire
+343 À coins arrondis
+344 Ronde
+345 Cri
+346 Pensée
+347 Condensateur
+348 Source de courant
+349 Diode
+350 Terre
+351 Inductance
+352 DEL
+353 Ampli-op
+354 Résistance
+355 Interrupteur
+356 Transistor
+357 Source de tension
+358 Diode Zener
+359 Pentagone
+360 Hexagone
+361 Heptagone
+362 Octogone
+363 Étoile (4 branches)
+364 Étoile (5 branches)
+365 Étoile (6 branches)
+366 **AND
+367 **NAND
+368 **OR
+369 **NOR
+370 **XOR
+371 **XNOR
+372 **NOT
+373 Croix
+374 Cadre
+375 Anneau
+376 Nuage
+377 Parchemin
+378 Soleil
+379 Éclair
+380 Lune
+381 Frimousse
+382 Coeur
+383 Fleur
+384 Interdit
+385 Flèche courbe dans deux directions
+386 Légende avec flèche dans 3 directions
+387 Flèche dans 3 directions
+388 Légende avec flèche dans 4 directions
+389 Flèche dans 4 directions
+390 Chevron
+391 Flèche en arc
+392 Flèche en angle
+393 Légende avec flèche double en angle
+394 Flèche double en angle
+395 Légende avec flèche double
+396 Flèche double
+397 Flèche avec entailles
+398 Flèche courbe
+399 Légende avec flèche simple
+400 Flèche simple
+401 Flèche en fourche
+402 Flèche en S
+403 Flèche avec bandes

@@ -704,6 +704,8 @@ HelpSVG
 &TransformSVG_AlignBottom
 &TransformSVG_Rotate
 &EditSVG_Select
+&EditSVG_Information
+&EditSVG_GenerateDescription
 &CreateSVG_Image
 &TransformSVG_Skew
 &TransformSVG_Scale

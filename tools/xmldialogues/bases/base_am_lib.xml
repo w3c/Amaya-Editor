@@ -4329,6 +4329,15 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
  <message xml:lang="ja">テーマなし</message></label>
 
 <!-- SVG panel -->
+<label define="TMSG_SVG_Information">
+  <message xml:lang="en">Information</message>
+  <message xml:lang="fr">Information</message>
+</label>
+<label define="TMSG_SVG_GenerateDescription">
+  <message xml:lang="en">Generate a description</message>
+  <message xml:lang="fr">Générer une descripion</message>
+</label>
+
 <label define="TMSG_SVG_Square">
   <message xml:lang="en">Square</message>
   <message xml:lang="fr">Carré</message>

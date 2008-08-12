@@ -121,12 +121,14 @@ typedef struct svg_constructs_
 /* list of all constructions */
 static svg_constructs list_of_constructs[] =
   {
-    {"", 4,
+    {"", 6,
      {
        {"document_svg", TMSG_SVG_SvgCanvas, "CreateSVG_Svg"},
        {"SVG_text", TMSG_SVG_Text, "CreateSVG_Text"},
        {"SVG_foreign_object", TMSG_SVG_ForeigObject, "CreateSVG_ForeignObject"},
-       {"document_image", TMSG_SVG_Image, "CreateSVG_Image"}
+       {"document_image", TMSG_SVG_Image, "CreateSVG_Image"},
+       {NULL, TMSG_SVG_Information, "EditSVG_Information"},
+       {NULL, TMSG_SVG_GenerateDescription, "EditSVG_GenerateDescription"}
      }
     },
 

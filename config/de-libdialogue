@@ -273,132 +273,134 @@
 270 Klassisch
 271 Modern
 272 Kein Motiv
-273 **Square
-274 **Rounded Square
-275 **Rectangle
-276 **Rounded rectangle
-277 **Diamond
-278 **Parallelogram
-279 **Trapezium
-280 **Equilateral triangle
-281 **Isosceles triangle
-282 **Right triangle
-283 **Circle
-284 **Ellipse
-285 **Line
-286 **Arrow
-287 **Double Arrow
-288 **Zigzag
-289 **Group
-290 **Ungroup
-291 **Bring to front
-292 **Send to back
-293 **One level up
-294 **One level down
-295 **90° left
-296 **90° right
-297 **Rotate
-298 **Vertical symmetry
-299 **Horizontal symmetry
-300 **Scale
-301 **Skew
-302 **Move
-303 **Align bottom
-304 **Align center
-305 **Align left
-306 **Align middle
-307 **Align right
-308 **Align top
-309 **Distribute bottom
-310 **Distribute center
-311 **Distribute left
-312 **Distribute middle
-313 **Distribute right
-314 **Distribute top
-315 **Distribute vertical spacing
-316 **Distribute horizontal spacing
-317 **Closed Bezier curve
-318 **Bezier curve
-319 **Polyline
-320 **Polygon
-321 **Foreign Object
-322 **Image
-323 **SVG Canvas
-324 **Text
-325 **Cone
-326 **Cube
-327 **Cylinder
-328 **Octahedron
-329 **Parallelepiped
-330 **Pyramid
-331 **Beaker
-332 **Funnel
-333 **Bunsen burner
-334 **Buchner flask
-335 **Boiling flask
-336 **Burette
-337 **Erlenmeyer flask
-338 **Test tube
-339 **Pipette
-340 **Rectangular
-341 **Rounded rectangular
-342 **Round
-343 **Scream
-344 **Thought
-345 **Capacitor
-346 **Current source
-347 **Diode
-348 **Ground Point
-349 **Inductor
-350 **LED
-351 **Op-amp
-352 **Resistor
-353 **Switch
-354 **Transistor
-355 **Voltage source
-356 **Zener diode
-357 **Pentagon
-358 **Hexagon
-359 **Heptagon
-360 **Octogon
-361 **Star (4 branches)
-362 **Star (5 branches)
-363 **Star (6 branches)
-364 **AND
-365 **NAND
-366 **OR
-367 **NOR
-368 **XOR
-369 **XNOR
-370 **NOT
-371 **Cross
-372 **Frame
-373 **Ring
-374 **Cloud
-375 **Scroll
-376 **Sun
-377 **Lightning_Bolt
-378 **Moon
-379 **Smiley
-380 **Heart
-381 **Flower
-382 **Prohibited
-383 **2-Way Rounded Arrow
-384 **3-Way Arrow Callout
-385 **3-Way Arrow
-386 **4-Way_Arrow_Callout
-387 **4-Way Arrow
-388 **Chevron
-389 **Circular Arrow
-390 **Corner Arrow
-391 **Corner Double Arrow Callout
-392 **Corner Double Arrow
-393 **Double Arrow Callout
-394 **Double Arrow
-395 **Notched Arrow
-396 **Rounded Arrow
-397 **Simple Arrow Callout
-398 **Simple Arrow
-399 **Split Arrow
-400 **S-Shape Arrow
-401 **Striped Arrow
+273 **Information
+274 **Generate a description
+275 **Square
+276 **Rounded Square
+277 **Rectangle
+278 **Rounded rectangle
+279 **Diamond
+280 **Parallelogram
+281 **Trapezium
+282 **Equilateral triangle
+283 **Isosceles triangle
+284 **Right triangle
+285 **Circle
+286 **Ellipse
+287 **Line
+288 **Arrow
+289 **Double Arrow
+290 **Zigzag
+291 **Group
+292 **Ungroup
+293 **Bring to front
+294 **Send to back
+295 **One level up
+296 **One level down
+297 **90° left
+298 **90° right
+299 **Rotate
+300 **Vertical symmetry
+301 **Horizontal symmetry
+302 **Scale
+303 **Skew
+304 **Move
+305 **Align bottom
+306 **Align center
+307 **Align left
+308 **Align middle
+309 **Align right
+310 **Align top
+311 **Distribute bottom
+312 **Distribute center
+313 **Distribute left
+314 **Distribute middle
+315 **Distribute right
+316 **Distribute top
+317 **Distribute vertical spacing
+318 **Distribute horizontal spacing
+319 **Closed Bezier curve
+320 **Bezier curve
+321 **Polyline
+322 **Polygon
+323 **Foreign Object
+324 **Image
+325 **SVG Canvas
+326 **Text
+327 **Cone
+328 **Cube
+329 **Cylinder
+330 **Octahedron
+331 **Parallelepiped
+332 **Pyramid
+333 **Beaker
+334 **Funnel
+335 **Bunsen burner
+336 **Buchner flask
+337 **Boiling flask
+338 **Burette
+339 **Erlenmeyer flask
+340 **Test tube
+341 **Pipette
+342 **Rectangular
+343 **Rounded rectangular
+344 **Round
+345 **Scream
+346 **Thought
+347 **Capacitor
+348 **Current source
+349 **Diode
+350 **Ground Point
+351 **Inductor
+352 **LED
+353 **Op-amp
+354 **Resistor
+355 **Switch
+356 **Transistor
+357 **Voltage source
+358 **Zener diode
+359 **Pentagon
+360 **Hexagon
+361 **Heptagon
+362 **Octogon
+363 **Star (4 branches)
+364 **Star (5 branches)
+365 **Star (6 branches)
+366 **AND
+367 **NAND
+368 **OR
+369 **NOR
+370 **XOR
+371 **XNOR
+372 **NOT
+373 **Cross
+374 **Frame
+375 **Ring
+376 **Cloud
+377 **Scroll
+378 **Sun
+379 **Lightning_Bolt
+380 **Moon
+381 **Smiley
+382 **Heart
+383 **Flower
+384 **Prohibited
+385 **2-Way Rounded Arrow
+386 **3-Way Arrow Callout
+387 **3-Way Arrow
+388 **4-Way_Arrow_Callout
+389 **4-Way Arrow
+390 **Chevron
+391 **Circular Arrow
+392 **Corner Arrow
+393 **Corner Double Arrow Callout
+394 **Corner Double Arrow
+395 **Double Arrow Callout
+396 **Double Arrow
+397 **Notched Arrow
+398 **Rounded Arrow
+399 **Simple Arrow Callout
+400 **Simple Arrow
+401 **Split Arrow
+402 **S-Shape Arrow
+403 **Striped Arrow

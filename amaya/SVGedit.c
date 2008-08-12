@@ -2922,6 +2922,63 @@ void SelectGraphicElement (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  EditGraphicElement
+  entry is the number of the entry chosen by the user in the Graphics
+  palette.
+  ----------------------------------------------------------------------*/
+void EditGraphicElement (Document doc, View view, int entry)
+{
+#ifdef _SVG
+  DisplayMode      dispMode;
+  int		   c1, c2;
+  ThotBool done;
+  Element first, parent;
+
+  /* Check that a document is selected */
+  if (doc == 0)return;
+
+  TtaGiveFirstSelectedElement (doc, &first, &c1, &c2);
+  if (first)
+    {
+      parent = TtaGetParent (first);
+      if (TtaIsReadOnly (parent))
+        /* do modify read-only element */
+        {
+          TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
+          return;
+        }
+    }
+  else
+    /* no selection */
+    return;
+
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  dispMode = TtaGetDisplayMode (doc);
+  /* ask Thot to stop displaying changes made in the document */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  switch (entry)
+    {
+    case 55:
+      done = GenerateDesc (doc, view, first);
+      break;
+    default:
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_AVAILABLE);
+      break;
+    }
+  
+  TtaCloseUndoSequence (doc);
+  if (!done)
+    /* no change done */
+    TtaCancelLastRegisteredSequence (doc);
+  /* ask Thot to display changes made in the document */
+  TtaSetDisplayMode (doc, dispMode);
+  TtaSetDocumentModified (doc);
+#endif /* _SVG */
+}
+
+/*----------------------------------------------------------------------
   TransformGraphicElement
   Apply a transformation to a Graphics element.
   entry is the number of the entry chosen by the user in the Graphics
@@ -4275,7 +4332,8 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
 /*----------------------------------------------------------------------
   GetElementData
   -----------------------------------------------------------------------*/
-static char *GetElementData(Element el, SSchema sschema, int el_type_num)
+static char *GetElementData(Document doc, Element el,
+			    SSchema sschema, int el_type_num)
 {
   Element child;
   ElementType       elType;
@@ -4307,15 +4365,66 @@ static char *GetElementData(Element el, SSchema sschema, int el_type_num)
 
   child = TtaGetFirstChild(child);
   elType = TtaGetElementType (child);
-  if(elType.ElTypeNum == SVG_EL_TEXT_UNIT)
+  if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)return NULL;
+
+  len = TtaGetTextLength(child);
+  if(len == 0)return NULL;
+  text = (char *)TtaGetMemory (len);
+  TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
+  return text;
+}
+
+/*----------------------------------------------------------------------
+  SetElementData
+  -----------------------------------------------------------------------*/
+static ThotBool SetElementData(Document doc, Element el,
+			       SSchema sschema, int el_type_num,
+			       char *value)
+{
+  Element child, text_unit;
+  ElementType       elType;
+
+  if(el_type_num != SVG_EL_title &&
+     el_type_num != SVG_EL_desc)
+    return NULL;
+
+  elType = TtaGetElementType (el);
+  if(elType.ElSSchema != sschema)
+    return NULL;
+
+  child = TtaGetFirstChild(el);
+  while(child)
     {
-      len = TtaGetTextLength(child);
-      if(len == 0)return NULL;
-      text = (char *)TtaGetMemory (len);
-      TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
-      return text;
+      elType = TtaGetElementType (child);
+      if(elType.ElSSchema == sschema && 
+	 elType.ElTypeNum == el_type_num)
+	break;
+     
+      TtaNextSibling(&child);
     }
-  return NULL;
+
+  if(child == NULL)
+    {
+      /* No element found, insert one */
+      elType.ElSSchema = sschema;
+      elType.ElTypeNum = el_type_num;
+      child = TtaNewElement (doc, elType);
+      TtaInsertFirstChild(&child, el, doc);
+      elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+      text_unit = TtaNewElement (doc, elType);
+      TtaInsertFirstChild(&text_unit, child, doc);
+    }
+  else
+    {
+      text_unit = TtaGetFirstChild(child);
+      elType = TtaGetElementType (text_unit);
+      if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)
+	return FALSE;
+    }
+
+  TtaSetTextContent(text_unit, (unsigned char *)value,
+		    TtaGetDefaultLanguage (), doc);
+  return TRUE;
 }
 
 typedef struct object_
@@ -4329,7 +4438,7 @@ typedef struct object_
 /*----------------------------------------------------------------------
   GetAbsolutePosition
   -----------------------------------------------------------------------*/
-const char *GetAbsolutePosition(object el, float w, float h)
+static const char *GetAbsolutePosition(object el, float w, float h)
 {
   float px = el.cx / w;
   float py = el.cy / h;
@@ -4368,7 +4477,7 @@ const char *GetAbsolutePosition(object el, float w, float h)
 /*----------------------------------------------------------------------
   GetRelativePosition
   -----------------------------------------------------------------------*/
-const char *GetRelativePosition(object ref, object obj)
+static const char *GetRelativePosition(object ref, object obj)
 {
   int dx, dy;
 
@@ -4430,6 +4539,7 @@ static ThotBool StrCat(char **desc, int *max_length, int *length, char *buffer)
 }
 
 /*----------------------------------------------------------------------
+  GetDistanceBetweenCenters
   -----------------------------------------------------------------------*/
 static float GetDistanceBetweenCenters(object a, object b)
 {
@@ -4442,9 +4552,8 @@ static float GetDistanceBetweenCenters(object a, object b)
 /*----------------------------------------------------------------------
   GenerateDesc
   ----------------------------------------------------------------------*/
-void GenerateDesc (Document doc, View view, Element el)
+ThotBool GenerateDesc (Document doc, View view, Element el)
 {
-  Element first;
   int dummy1, dummy2;
   float w, h;
   
@@ -4462,29 +4571,12 @@ void GenerateDesc (Document doc, View view, Element el)
   char buffer[MAX_LENGTH];
   ThotBool still;
 
-  printf("-------- GenerateDesc -----------\n");
+  if(doc == 0 || el == NULL)
+    return FALSE;
 
-  /* Check that a document is selected */
-  if (doc == 0)
-    {
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-      return;
-    }
-
-  TtaGiveFirstSelectedElement (doc, &first, &dummy1, &dummy2);
-  if(!first)
-    {
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
-      return;
-    }
-
-  /***************/
-    
-  el = first;
   elType = TtaGetElementType (el);
-
   if (elType.ElSSchema != svgSchema)
-    return;
+    return FALSE;
 
   /* Get the size of the element */
    TtaGiveBoxSize (el, doc, 1, UnPixel, &dummy1, &dummy2);
@@ -4500,21 +4592,21 @@ void GenerateDesc (Document doc, View view, Element el)
        TtaNextSibling(&child);
      }
 
-   if(nb == 0)return;
+   if(nb == 0)return FALSE;
 
    desc = (char *)malloc(max_length);
-   if(desc == NULL)return;
+   if(desc == NULL)return FALSE;
    *desc = '\0';
 
    /* Get information on the children */
    children = (object *)TtaGetMemory(sizeof(object) * nb);
-   if(children == NULL)return;
+   if(children == NULL)return FALSE;
 
    for(child = TtaGetFirstChild(el), i = 0;
        child;
        TtaNextSibling(&child))
      {
-       children[i].title = GetElementData(child, svgSchema,
+       children[i].title = GetElementData(doc, child, svgSchema,
 					  SVG_EL_title);
        
        if(children[i].title != NULL)
@@ -4593,11 +4685,12 @@ void GenerateDesc (Document doc, View view, Element el)
    
    TtaFreeMemory(children);
 
+   if(nb > 0)
+     SetElementData(doc, el, svgSchema, SVG_EL_desc, desc);
 
-   printf("\ndesc=[%s]\n", desc);
    free(desc);
 
-  printf("---------------------------------\n");
+   return (nb > 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4709,7 +4802,6 @@ void CreateSVG_Text (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateSVG_Group (Document document, View view)
 {
-  //GenerateDesc (document, view, NULL);
   TransformGraphicElement (document, view, 11);
 }
 
@@ -5058,18 +5150,18 @@ void TransformSVG_DistributeVSpacing (Document document, View view)
   TransformGraphicElement (document, view, 53);
 }
 
-/* /\*---------------------------------------------------------------------- */
-/*   EditSVG_TitleAndDescription */
-/*   ----------------------------------------------------------------------*\/ */
-/* void EditSVG_TitleAndDescription (Document document, View view) */
-/* { */
-/*   TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_AVAILABLE); */
-/* } */
+/*----------------------------------------------------------------------
+  EditSVG_TitleAndDescription
+  ----------------------------------------------------------------------*/
+void EditSVG_Information (Document document, View view)
+{
+  EditGraphicElement (document, view, 54);
+}
 
-/* /\*---------------------------------------------------------------------- */
-/*   EditSVG_GenerateDescription */
-/*   ----------------------------------------------------------------------*\/ */
-/* void EditSVG_GenerateDescription (Document document, View view) */
-/* { */
-/*   TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_AVAILABLE); */
-/* } */
+/*----------------------------------------------------------------------
+  EditSVG_GenerateDescription
+  ----------------------------------------------------------------------*/
+void EditSVG_GenerateDescription (Document document, View view)
+{
+  EditGraphicElement (document, view, 55);
+}
