@@ -2963,6 +2963,7 @@ void EditGraphicElement (Document doc, View view, int entry)
     case 55:
       done = GenerateDesc (doc, view, first);
       break;
+
     default:
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_AVAILABLE);
       break;
