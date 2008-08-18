@@ -3900,21 +3900,6 @@ void UpdateShapeElement(Document doc, Element el,
   TtaSetDisplayMode (doc, dispMode);
 }
 
-ThotBool IsEditableSVG(Document doc, Element el)
-{
-  Element parent;
-  SSchema      svgSchema = GetSVGSSchema (doc);
-  ElementType  elType, parentType;
-  
-  parent = TtaGetParent(el);
-  elType = TtaGetElementType (el);
-  parentType = TtaGetElementType (parent);
-
-  return (elType.ElSSchema == svgSchema &&
-	  parentType.ElSSchema == svgSchema &&
-	  parentType.ElTypeNum == SVG_EL_SVG);
-}
-
 /*----------------------------------------------------------------------
   RotateElementInParentSpace
   ----------------------------------------------------------------------*/

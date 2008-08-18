@@ -1202,23 +1202,17 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
         }
 
-      /*      if(pBox->BxAbstractBox &&
-	 IsEditableSVG(FrameTable[frame].FrDoc,
-	 (Element) pBox->BxAbstractBox->AbElement))
-	 {*/
-
-	  /* show the selection on the whole graphics */
-	  if (selected && !pAb->AbPresentationBox)
-	    {
-	      if (pFrame->FrSelectOnePosition)
-		DisplayPointSelection (frame, pBox,
-				       pFrame->FrSelectionBegin.VsIndBox, TRUE);
-	      else
-		DisplayPointSelection (frame, pBox, 0,
-				       pAb->AbSelected &&
-				       TtaIsSelectionUnique ());
-	    }
-	  /*	}*/
+      /* show the selection on the whole graphics */
+      if (selected && !pAb->AbPresentationBox)
+	{
+	  if (pFrame->FrSelectOnePosition)
+	    DisplayPointSelection (frame, pBox,
+				   pFrame->FrSelectionBegin.VsIndBox, TRUE);
+	  else
+	    DisplayPointSelection (frame, pBox, 0,
+				   pAb->AbSelected &&
+				   TtaIsSelectionUnique ());
+	}
     }
 }
 

@@ -41,8 +41,6 @@ extern void UpdateShapeElement(Document doc, Element el,
 			       int x, int y, int width, int height,
 			       int rx, int ry);
 
-extern ThotBool IsEditableSVG(Document doc, Element el);
-
 #endif /* #ifndef __SVGEDIT_H__ */
 
 #endif /* _WX */

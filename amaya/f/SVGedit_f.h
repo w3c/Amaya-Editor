@@ -38,8 +38,6 @@ extern void UpdateShapeElement ( Document doc,
                                  int height,
                                  int rx,
                                  int ry );
-extern ThotBool IsEditableSVG ( Document doc,
-                                Element el );
 extern void RotateElementInParentSpace ( Document doc,
                                          Element el,
                                          float theta );
@@ -220,8 +218,6 @@ extern void UpdateShapeElement ( Document doc,
                                    int height,
                                    int rx,
                                    int ry );
-extern ThotBool IsEditableSVG ( Document doc,
-                                  Element el );
 extern void RotateElementInParentSpace ( Document doc,
                                            Element el,
                                            float theta );
