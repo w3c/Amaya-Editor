@@ -168,6 +168,10 @@ extern void QueryStringFromUser ( const char *label,
                                   const char *title,
                                   char* res,
                                   int sz );
+extern ThotBool QueryTitleAndDescFromUser ( char* title,
+                                            int titleSz,
+                                            char* desc,
+                                            int descSz );
 
 #else /* __STDC__ */
 
@@ -333,6 +337,10 @@ extern void QueryStringFromUser ( const char *label,
                                     const char *title,
                                     char* res,
                                     int sz );
+extern ThotBool QueryTitleAndDescFromUser ( char* title,
+                                              int titleSz,
+                                              char* desc,
+                                              int descSz );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

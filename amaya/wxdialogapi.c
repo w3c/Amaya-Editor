@@ -1,5 +1,6 @@
 #ifdef _WX
 #include "wx/wx.h"
+#include "wx/xrc/xmlres.h"
 #include "file_filters.h"
 #include "registry_wx.h"
 #endif /* _WX */
@@ -16,7 +17,6 @@
 #include "HTMLsave_f.h"
 #include "styleparser_f.h"
 #include "containers.h"
-
 
 #ifdef _WX
   #include "wxdialog/AuthentDlgWX.h"
@@ -333,7 +333,6 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
                               DocumentType doc_type, int doc, ThotBool newfile)
 {
 #ifdef _WX
-
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
@@ -1355,3 +1354,34 @@ void QueryStringFromUser(const char *label, const char *title, char* res, int sz
   wxString str = wxGetTextFromUser(TtaConvMessageToWX(label), TtaConvMessageToWX(title));
   strncpy(res, (const char*)str.mb_str(wxConvUTF8), sz);
 }
+
+/*----------------------------------------------------------------------
+  QueryTitleAndDescFromUser
+  Query a title and a description to the user and return them.
+  Return false if the user cancels or if an error occurs.
+  ----------------------------------------------------------------------*/
+ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc, int descSz)
+{
+  wxDialog   dialog;
+  wxTextCtrl *titleWidget, *descWidget;
+  
+  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("GraphicsInfoDlgWX")))
+    {
+      titleWidget = XRCCTRL(dialog, "wxID_TITLE", wxTextCtrl);
+      descWidget  = XRCCTRL(dialog, "wxID_DESC", wxTextCtrl);
+      
+      // TODO Setup labels and tooltips.
+      
+      if(titleWidget && descWidget)
+        {
+          if(dialog.ShowModal()==wxID_OK)
+            {
+              strncpy(title, (const char*)titleWidget->GetValue().mb_str(wxConvUTF8), titleSz-1);
+              strncpy(desc, (const char*)descWidget->GetValue().mb_str(wxConvUTF8), descSz-1);
+              return TRUE;
+            }
+        }
+    }
+  return FALSE;
+}
+
