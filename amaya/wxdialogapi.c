@@ -1372,6 +1372,9 @@ ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc, int des
       
       // TODO Setup labels and tooltips.
       
+      titleWidget->SetValue(TtaConvMessageToWX(title));
+      descWidget->SetValue(TtaConvMessageToWX(desc));
+      
       if(titleWidget && descWidget)
         {
           if(dialog.ShowModal()==wxID_OK)
