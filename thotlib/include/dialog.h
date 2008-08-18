@@ -28,6 +28,7 @@ extern int  Current_StrokeOpacity;
 extern int  Current_StrokeWidth;
 
 extern char *LastSVGelement;
+extern char *LastSVGelementTitle;
 
 #endif /* _WX */
 

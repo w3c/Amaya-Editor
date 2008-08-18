@@ -61,7 +61,9 @@
 extern XmlEntity *pMathEntityTable;
 #include "appdialogue_wx.h"
 
+/* SVG Templates */
 char *LastSVGelement = NULL;
+char *LastSVGelementTitle = NULL;
 
 /* SVG Style panel */
 int  Current_Opacity = 100;

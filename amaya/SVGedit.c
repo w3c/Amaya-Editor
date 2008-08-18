@@ -1619,6 +1619,104 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
 #endif /* _SVG */
 
 /*----------------------------------------------------------------------
+  GetElementData
+  -----------------------------------------------------------------------*/
+static char *GetElementData(Document doc, Element el,
+			    SSchema sschema, int el_type_num)
+{
+  Element child;
+  ElementType       elType;
+  Language       lang;
+  int len;
+  char *text;
+
+  if(el_type_num != SVG_EL_title &&
+     el_type_num != SVG_EL_desc)
+    return NULL;
+
+  elType = TtaGetElementType (el);
+  if(elType.ElSSchema != sschema)
+    return NULL;
+
+  child = TtaGetFirstChild(el);
+  while(child)
+    {
+      elType = TtaGetElementType (child);
+      if(elType.ElSSchema == sschema && 
+	 elType.ElTypeNum == el_type_num)
+	break;
+     
+      TtaNextSibling(&child);
+    }
+
+  if(child == NULL)
+    return NULL;
+
+  child = TtaGetFirstChild(child);
+  elType = TtaGetElementType (child);
+  if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)return NULL;
+
+  len = TtaGetTextLength(child);
+  if(len == 0)return NULL;
+  text = (char *)TtaGetMemory (len);
+  TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
+  return text;
+}
+
+/*----------------------------------------------------------------------
+  SetElementData
+  -----------------------------------------------------------------------*/
+static ThotBool SetElementData(Document doc, Element el,
+			       SSchema sschema, int el_type_num,
+			       char *value)
+{
+  Element child, text_unit;
+  ElementType       elType;
+
+  if(el_type_num != SVG_EL_title &&
+     el_type_num != SVG_EL_desc)
+    return NULL;
+
+  elType = TtaGetElementType (el);
+  if(elType.ElSSchema != sschema)
+    return NULL;
+
+  child = TtaGetFirstChild(el);
+  while(child)
+    {
+      elType = TtaGetElementType (child);
+      if(elType.ElSSchema == sschema && 
+	 elType.ElTypeNum == el_type_num)
+	break;
+     
+      TtaNextSibling(&child);
+    }
+
+  if(child == NULL)
+    {
+      /* No element found, insert one */
+      elType.ElSSchema = sschema;
+      elType.ElTypeNum = el_type_num;
+      child = TtaNewElement (doc, elType);
+      TtaInsertFirstChild(&child, el, doc);
+      elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+      text_unit = TtaNewElement (doc, elType);
+      TtaInsertFirstChild(&text_unit, child, doc);
+    }
+  else
+    {
+      text_unit = TtaGetFirstChild(child);
+      elType = TtaGetElementType (text_unit);
+      if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)
+	return FALSE;
+    }
+
+  TtaSetTextContent(text_unit, (unsigned char *)value,
+		    TtaGetDefaultLanguage (), doc);
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
   GetAncestorCanvasAndObject
   Get all the Elements necessary to draw SVG:
   
@@ -2092,6 +2190,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  TtaRemoveDocumentReference (tmpDoc);
 
 	  selEl = newEl;
+
+	  /* Update the title */
+	  SetElementData(doc, newEl,
+			 svgSchema, SVG_EL_title,
+			 LastSVGelementTitle);
+	  TtaFreeMemory(LastSVGelementTitle);
 	}
       if(!newSVG && entry == -1)
 	{
@@ -4328,104 +4432,6 @@ void Timeline_cross_prule_modified (NotifyPresentation *event)
 #ifdef _SVG
 	Key_position_defined (event->document, event->element);
 #endif /* _SVG */
-}
-
-/*----------------------------------------------------------------------
-  GetElementData
-  -----------------------------------------------------------------------*/
-static char *GetElementData(Document doc, Element el,
-			    SSchema sschema, int el_type_num)
-{
-  Element child;
-  ElementType       elType;
-  Language       lang;
-  int len;
-  char *text;
-
-  if(el_type_num != SVG_EL_title &&
-     el_type_num != SVG_EL_desc)
-    return NULL;
-
-  elType = TtaGetElementType (el);
-  if(elType.ElSSchema != sschema)
-    return NULL;
-
-  child = TtaGetFirstChild(el);
-  while(child)
-    {
-      elType = TtaGetElementType (child);
-      if(elType.ElSSchema == sschema && 
-	 elType.ElTypeNum == el_type_num)
-	break;
-     
-      TtaNextSibling(&child);
-    }
-
-  if(child == NULL)
-    return NULL;
-
-  child = TtaGetFirstChild(child);
-  elType = TtaGetElementType (child);
-  if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)return NULL;
-
-  len = TtaGetTextLength(child);
-  if(len == 0)return NULL;
-  text = (char *)TtaGetMemory (len);
-  TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
-  return text;
-}
-
-/*----------------------------------------------------------------------
-  SetElementData
-  -----------------------------------------------------------------------*/
-static ThotBool SetElementData(Document doc, Element el,
-			       SSchema sschema, int el_type_num,
-			       char *value)
-{
-  Element child, text_unit;
-  ElementType       elType;
-
-  if(el_type_num != SVG_EL_title &&
-     el_type_num != SVG_EL_desc)
-    return NULL;
-
-  elType = TtaGetElementType (el);
-  if(elType.ElSSchema != sschema)
-    return NULL;
-
-  child = TtaGetFirstChild(el);
-  while(child)
-    {
-      elType = TtaGetElementType (child);
-      if(elType.ElSSchema == sschema && 
-	 elType.ElTypeNum == el_type_num)
-	break;
-     
-      TtaNextSibling(&child);
-    }
-
-  if(child == NULL)
-    {
-      /* No element found, insert one */
-      elType.ElSSchema = sschema;
-      elType.ElTypeNum = el_type_num;
-      child = TtaNewElement (doc, elType);
-      TtaInsertFirstChild(&child, el, doc);
-      elType.ElTypeNum = SVG_EL_TEXT_UNIT;
-      text_unit = TtaNewElement (doc, elType);
-      TtaInsertFirstChild(&text_unit, child, doc);
-    }
-  else
-    {
-      text_unit = TtaGetFirstChild(child);
-      elType = TtaGetElementType (text_unit);
-      if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)
-	return FALSE;
-    }
-
-  TtaSetTextContent(text_unit, (unsigned char *)value,
-		    TtaGetDefaultLanguage (), doc);
-  return TRUE;
 }
 
 typedef struct object_

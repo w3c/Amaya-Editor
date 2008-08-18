@@ -547,6 +547,7 @@ void AmayaSVGPanel::InsertElement(int i, int j)
 	  sprintf(name, "%s/%s.svg", e.directory, e.list[j].file_name);
 	  path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
 	  LastSVGelement = TtaStrdup(path.mb_str(wxConvUTF8));
+	  LastSVGelementTitle = TtaStrdup(TtaGetMessage(LIB, e.list[j].msg_id));
 	  TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
 	}
       else
