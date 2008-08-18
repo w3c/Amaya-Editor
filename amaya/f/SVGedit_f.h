@@ -181,6 +181,8 @@ extern void TransformSVG_DistributeHSpacing ( Document document,
                                               View view );
 extern void TransformSVG_DistributeVSpacing ( Document document,
                                               View view );
+extern void EditSVG_Information ( Document document,
+                                  View view );
 extern void EditSVG_GenerateDescription ( Document document,
                                           View view );
 
@@ -361,6 +363,8 @@ extern void TransformSVG_DistributeHSpacing ( Document document,
                                                 View view );
 extern void TransformSVG_DistributeVSpacing ( Document document,
                                                 View view );
+extern void EditSVG_Information ( Document document,
+                                    View view );
 extern void EditSVG_GenerateDescription ( Document document,
                                             View view );
 

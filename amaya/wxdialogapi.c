@@ -1360,23 +1360,44 @@ void QueryStringFromUser(const char *label, const char *title, char* res, int sz
   Query a title and a description to the user and return them.
   Return false if the user cancels or if an error occurs.
   ----------------------------------------------------------------------*/
-ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc, int descSz)
+ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc,
+				   int descSz)
 {
   wxDialog   dialog;
   wxTextCtrl *titleWidget, *descWidget;
-  
+  wxStaticText *titleLabel, *descLabel;
+  wxButton *cancel, *confirm;
+
   if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("GraphicsInfoDlgWX")))
     {
+      titleLabel = XRCCTRL(dialog, "wxID_LABEL_TITLE", wxStaticText);
       titleWidget = XRCCTRL(dialog, "wxID_TITLE", wxTextCtrl);
+      descLabel = XRCCTRL(dialog, "wxID_LABEL_DESC", wxStaticText);
       descWidget  = XRCCTRL(dialog, "wxID_DESC", wxTextCtrl);
-      
-      // TODO Setup labels and tooltips.
-      
-      titleWidget->SetValue(TtaConvMessageToWX(title));
-      descWidget->SetValue(TtaConvMessageToWX(desc));
-      
-      if(titleWidget && descWidget)
+      cancel = XRCCTRL(dialog, "wxID_CANCEL", wxButton);
+      confirm = XRCCTRL(dialog, "wxID_OK", wxButton);
+       
+      if(titleLabel && titleWidget && descWidget && descLabel
+	 && cancel && confirm)
         {
+	  titleLabel->SetLabel(TtaConvMessageToWX(TtaGetMessage
+						  (AMAYA, AM_BM_TITLE) ));
+	  titleWidget->SetToolTip(TtaConvMessageToWX(TtaGetMessage
+						  (AMAYA, AM_TITLE) ));
+	  titleWidget->SetValue(TtaConvMessageToWX(title));
+
+	  descLabel->SetLabel(TtaConvMessageToWX(TtaGetMessage
+						 (AMAYA, AM_BM_DESCRIPTION) ));
+	  descWidget->SetToolTip(TtaConvMessageToWX(TtaGetMessage
+						    (AMAYA, AM_BM_DESCRIPTION) ));
+	  descWidget->SetValue(TtaConvMessageToWX(desc));
+
+	  cancel->SetLabel(TtaConvMessageToWX(TtaGetMessage
+					      (LIB, TMSG_CANCEL) ));
+	  confirm->SetLabel(TtaConvMessageToWX(TtaGetMessage
+					       (LIB, TMSG_LIB_CONFIRM) ));
+
+
           if(dialog.ShowModal()==wxID_OK)
             {
               strncpy(title, (const char*)titleWidget->GetValue().mb_str(wxConvUTF8), titleSz-1);

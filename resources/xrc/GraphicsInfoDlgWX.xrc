@@ -5,7 +5,7 @@
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
-            <object class="wxStaticText" name="wx8ID_LABEL_TITLE">
+            <object class="wxStaticText" name="wxID_LABEL_TITLE">
               <label>*Title:*</label>
             </object>
             <flag>wxALIGN_CENTRE_VERTICAL</flag>

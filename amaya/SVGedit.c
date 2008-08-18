@@ -53,6 +53,7 @@
 #include "Xmlbuilder_f.h"
 #include "styleparser_f.h"
 #include "registry_wx.h"
+#include "wxdialogapi_f.h"
 
 static ThotIcon   iconGraph;
 static ThotIcon   iconGraphNo;
@@ -1672,6 +1673,7 @@ static ThotBool SetElementData(Document doc, Element el,
 {
   Element child, text_unit;
   ElementType       elType;
+  ThotBool remove;
 
   if(el_type_num != SVG_EL_title &&
      el_type_num != SVG_EL_desc)
@@ -1692,19 +1694,35 @@ static ThotBool SetElementData(Document doc, Element el,
       TtaNextSibling(&child);
     }
 
+  remove = (value == NULL || *value == '\0');
+
   if(child == NULL)
     {
+      /* Nothing to remove */
+      if(remove)
+	return TRUE;
+
       /* No element found, insert one */
       elType.ElSSchema = sschema;
       elType.ElTypeNum = el_type_num;
       child = TtaNewElement (doc, elType);
       TtaInsertFirstChild(&child, el, doc);
+      TtaRegisterElementCreate (child, doc);
+
       elType.ElTypeNum = SVG_EL_TEXT_UNIT;
       text_unit = TtaNewElement (doc, elType);
       TtaInsertFirstChild(&text_unit, child, doc);
+      TtaRegisterElementCreate (text_unit, doc);
     }
   else
     {
+      if(remove)
+	{
+	  TtaRegisterElementDelete (child, doc);
+	  TtaDeleteTree(child, doc);
+	  return TRUE;
+	}
+
       text_unit = TtaGetFirstChild(child);
       elType = TtaGetElementType (text_unit);
       if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)
@@ -3037,9 +3055,16 @@ void EditGraphicElement (Document doc, View view, int entry)
   int		   c1, c2;
   ThotBool done;
   Element first, parent;
+  SSchema      svgSchema;
+
+#define MAX_TITLE 50
+  char title[MAX_TITLE];
+  char desc[MAX_LENGTH];
+  char *title_, *desc_;
 
   /* Check that a document is selected */
   if (doc == 0)return;
+  svgSchema = GetSVGSSchema (doc);
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &c2);
   if (first)
@@ -3066,6 +3091,38 @@ void EditGraphicElement (Document doc, View view, int entry)
     {
     case 55:
       done = GenerateDesc (doc, view, first);
+      break;
+
+    case 54:
+      /* Get the current title */
+      title_ = GetElementData(doc, first, svgSchema, SVG_EL_title);
+      if(title_)
+	{
+	  strncpy(title, title_, MAX_TITLE-1);
+	  TtaFreeMemory(title_);
+	}
+      else
+	*title = '\0';
+
+      /* Get the current title */
+      desc_ = GetElementData(doc, first, svgSchema, SVG_EL_desc);
+      if(desc_)
+	{
+	  strncpy(desc, desc_, MAX_LENGTH-1);
+	  TtaFreeMemory(desc_);
+	}
+      else
+	*desc = '\0';
+
+      /* Dialog box */
+      done = QueryTitleAndDescFromUser(title, MAX_TITLE,
+				       desc, MAX_LENGTH);
+      if(done)
+	{
+	  SetElementData(doc, first, svgSchema, SVG_EL_title, title);
+	  SetElementData(doc, first, svgSchema, SVG_EL_desc, desc);
+	}
+
       break;
 
     default:
