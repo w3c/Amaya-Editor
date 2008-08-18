@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
-      "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" width="220" height="100">
- <g id="Arrow5">
-  <polygon
-           points="159,0 209,51 159,100 159,55 103,55 58,101 0,101 50,51 0,0 58,0 103,45 159,45" />
- </g>
-</svg>

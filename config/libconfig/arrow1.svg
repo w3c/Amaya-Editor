@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
-      "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-
-<svg xmlns="http://www.w3.org/2000/svg" width="250" height="150">
- <g id="Arrow1">  <polygon transform="translate(-50,-150)" points="202,150,270,201,202,252,202,221,61,221,61,180,202,180" /> </g>
-  <desc>long black arrow</desc>
-  <text id="fle" x="80" y="125" style="font-size:16pt">long black arrow</text>
-</svg>
