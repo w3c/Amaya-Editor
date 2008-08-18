@@ -317,67 +317,64 @@
 315 **&Add/Update table of contents
 316 Kitap yap
 317 **Insert time stamp
-318 **Graphics
-319 SVG kütüphanesini göster
-320 SVG kütüphanesine seçili alanı ekle
-321 &Eklemeler
-322 Seçili alan ekleme
-323 Doküman eklemek
-324 Seçili alanı taşı
-325 seçilen alanı XPointer gibi kaydet
-326 Xpointer\'daki birikenleri taşı
-327 Tekrar ekle
-328 Server\'e kaydet
-329 Sil
-330 Yükle
-331 Kişisel ayarlama...
-332 Sabit filitre...
-333 &Birlikte çalışmak
-334 Tekrar okumayı kitle...
-335 Tekrar okumayı kilidi aç...
-336 Tekrar okuma ayarlarını göster...
-337 kilitli bilgileri kopyala...
-338 kitli mi?
-339 **Templates
-340 **Create template from current document...
-341 **Create a text box
-342 **Create and use a component
-343 **Create a free editing box
-344 **Create a repeated component
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 Amaya hakkında
-352 W3C deki Amaya hakkında
-353 Içerik
-354 Tarama
-355 Görünümler
-356 Seç
-357 Döküman
-358 Yarat
-359 Tarz tanımları
-360 karakterler
-361 **Templates
-362 Yeniden yapılandırma
-363 Bağlantılar
-364 Tablolar
-365 Aktif alan
-366 Matematik
-367 Grafik
-368 XML desteği
-369 Görüntü haritaları
-370 Yazı hataları arama
-371 Yazı hataları düzeltmek
-372 Bastırma
-373 Birlikte çalışmak
-374 Sayfa yerleştirme
-375 Numaralandır
-376 Kitap oluşturma
-377 Not ekleme
-378 Yapılandırması
-379 Kısalmalar
-380 Amaya\'ya ulaşmak
-381 **Tip of the day...
+318 &Eklemeler
+319 Seçili alan ekleme
+320 Doküman eklemek
+321 Seçili alanı taşı
+322 seçilen alanı XPointer gibi kaydet
+323 Xpointer\'daki birikenleri taşı
+324 Tekrar ekle
+325 Server\'e kaydet
+326 Sil
+327 Yükle
+328 Kişisel ayarlama...
+329 Sabit filitre...
+330 &Birlikte çalışmak
+331 Tekrar okumayı kitle...
+332 Tekrar okumayı kilidi aç...
+333 Tekrar okuma ayarlarını göster...
+334 kilitli bilgileri kopyala...
+335 kitli mi?
+336 **Templates
+337 **Create template from current document...
+338 **Create a text box
+339 **Create and use a component
+340 **Create a free editing box
+341 **Create a repeated component
+342 &Javascript/DOM
+343 **Enable/Disable
+344 **Execute a command
+345 **Execute an external script
+346 **Add an external script
+347 **Insert a script
+348 Amaya hakkında
+349 W3C deki Amaya hakkında
+350 Içerik
+351 Tarama
+352 Görünümler
+353 Seç
+354 Döküman
+355 Yarat
+356 Tarz tanımları
+357 karakterler
+358 **Templates
+359 Yeniden yapılandırma
+360 Bağlantılar
+361 Tablolar
+362 Aktif alan
+363 Matematik
+364 Grafik
+365 XML desteği
+366 Görüntü haritaları
+367 Yazı hataları arama
+368 Yazı hataları düzeltmek
+369 Bastırma
+370 Birlikte çalışmak
+371 Sayfa yerleştirme
+372 Numaralandır
+373 Kitap oluşturma
+374 Not ekleme
+375 Yapılandırması
+376 Kısalmalar
+377 Amaya\'ya ulaşmak
+378 **Tip of the day...

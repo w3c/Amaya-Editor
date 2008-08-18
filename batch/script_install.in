@@ -53,6 +53,15 @@ if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/icons ; then $MKDIR $PREFIX/$AM
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/icons/16x16 ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/icons/16x16 ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/icons/22x22 ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/icons/22x22 ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/icons/misc ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/icons/misc ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/svg ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/svg ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/svg/3d ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/svg/3d ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/svg/balloons ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/svg/balloons ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/svg/block_arrows ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/svg/block_arrows ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/svg/chemistry ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/svg/chemistry ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/svg/circuit_diagram ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/svg/circuit_diagram ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/svg/logic_gates ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/svg/logic_gates ; fi
+if test ! -d $PREFIX/$AMAYA_INSTALLDIR/resources/svg/polygons_and_stars ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/resources/svg/polygons_and_stars ; fi
+
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/config ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/config ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/annotlib ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/annotlib ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/fonts ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/fonts ; fi
@@ -61,7 +70,6 @@ if test ! -d $PREFIX/$AMAYA_INSTALLDIR/doc ; then $MKDIR $PREFIX/$AMAYA_INSTALLD
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin ; fi
 if test ! -d $PREFIX/$AMAYA_INSTALLDIR/davlib ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/davlib ; fi
-if test ! -d $PREFIX/$AMAYA_INSTALLDIR/config/libconfig ; then $MKDIR $PREFIX/$AMAYA_INSTALLDIR/config/libconfig ; fi
 
 # install binaries
 $ECHO "--> Installing binaries"
@@ -73,12 +81,12 @@ $LN_S $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya $BINDIR/amaya
 $ECHO "--> Installing data"
 AMAYAFILES="*.STR *.conf *.trans* *.en *.gif *.png *.PRS *.TRA AmayaPage.html AmayaPage.html.* AmayaPage_WX.html AmayaPage_WX.html.* *.css Amaya.svg COPYRIGHT"
 CONFIGFILES="XKeysymDB unix-thot.rc amaya.keyboard amaya.kb amaya.kb-mac amaya.profiles *-amayadialogue *-amayamsg *-libdialogue amaya.emacs annot.schemas *.rdf *.css fonts.* *.dat gtkrc"
-LIBCONFIGFILES="*.css *.png *.lhtml *.svg"
 ANNOTFILES="*.STR *.PRS *.TRA *.en *.gif *.png"
 DICOFILES="*.ptn *.dic alphabet clavier"
 RESOURCE_XRC_FILES="*.xrc"
 RESOURCE_ICONS_FILES="*.png *.ico *.gif"
 RESOURCE_PNG_FILES="*.png"
+RESOURCE_SVG_FILES="*.png *.svg"
 FONTSFILES="Families.list fonts.dir icones* *.ttf *.TTF"
 
 $ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/amaya"
@@ -94,14 +102,6 @@ cd $AMAYA_SOURCEBINDIR/../../config
 for i in $CONFIGFILES ; do
 	  for file in `$ECHO $i` ; do
 	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/config ;
-	  done ;
-done ;
-cd - > /dev/null
-$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/config/libconfig"
-cd $AMAYA_SOURCEBINDIR/../../config/libconfig
-for i in $LIBCONFIGFILES ; do
-	  for file in `$ECHO $i` ; do
-	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/config/libconfig ;
 	  done ;
 done ;
 cd - > /dev/null
@@ -141,6 +141,7 @@ for i in $FONTSFILES ; do
 	  done ;
 done ;
 cd - > /dev/null
+
 $ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/icons/..."
 cd $AMAYA_SOURCEBINDIR/../../resources/icons/16x16
 for i in $RESOURCE_ICONS_FILES ; do
@@ -160,6 +161,64 @@ cd $AMAYA_SOURCEBINDIR/../../resources/icons/misc
 for i in $RESOURCE_ICONS_FILES ; do
 	  for file in `$ECHO $i` ; do
 	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/icons/misc ;
+	  done ;
+done ;
+cd - > /dev/null
+
+$ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/svg/..."
+cd $AMAYA_SOURCEBINDIR/../../resources/svg
+for i in $RESOURCE_SVG_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/svg ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/svg/3d
+for i in $RESOURCE_SVG_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/svg/3d ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/svg/balloons
+for i in $RESOURCE_SVG_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/svg/balloons ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/svg/block_arrows
+for i in $RESOURCE_SVG_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/svg/block_arrows ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/svg/chemistry
+for i in $RESOURCE_SVG_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/svg/chemistry ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/svg/circuit_diagram
+for i in $RESOURCE_SVG_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/svg/circuit_diagram ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/svg/logic_gates
+for i in $RESOURCE_SVG_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/svg/logic_gates ;
+	  done ;
+done ;
+cd - > /dev/null
+cd $AMAYA_SOURCEBINDIR/../../resources/svg/polygons_and_stars
+for i in $RESOURCE_SVG_FILES ; do
+	  for file in `$ECHO $i` ; do
+	    $INSTALL_DATA $file $PREFIX/$AMAYA_INSTALLDIR/resources/svg/polygons_and_stars ;
 	  done ;
 done ;
 cd - > /dev/null

@@ -317,67 +317,64 @@
 315 Genera Indice
 316 Crea libro
 317 Inserisci timestamp
-318 Grafica
-319 Mostri librería SVG
-320 Aggiunga nella librería SVG
-321 A&nnotazioni
-322 Annota la selezione
-323 Annota il documento
-324 Muovi sulla selezione
-325 Salva la selezione come XPointer
-326 Muovi sull'Xpointer memorizzato
-327 Rispondi all'annotazione
-328 Registra
-329 Elimina
-330 Carica
-331 Personalizza la richiesta
-332 Filtro locale...
-333 &Cooperazione
-334 Lock resource...
-335 Unlock resource...
-336 Informazioni per il lock...
-337 Copia delle informazioni per il lock...
-338 Lock?
-339 **Templates
-340 **Create template from current document...
-341 **Create a text box
-342 **Create and use a component
-343 **Create a free editing box
-344 **Create a repeated component
-345 &Javascript/DOM
-346 Attiva/Disattiva
-347 Esegui un comando
-348 Esegui un comando
-349 Aggiungi uno script esterno
-350 Inserisci uno script
-351 Informazioni su Amaya
-352 Informazioni su Amaya al W3C
-353 Indice
-354 Navigazione
-355 Viste
-356 Selezione
-357 Documento
-358 Creazione elementi
-359 Attributi
-360 Caratteri
-361 Modelli
-362 Ristrutturazione
-363 Collegamenti
-364 Tabelle
-365 Immagine
-366 Matematica
-367 Graphics
-368 Supporto XML
-369 Fogli di stile
-370 Ricerca
-371 Controllo ortografico
-372 Pubblicazione
-373 Cooperazione
-374 Stampa
-375 Numerazione
-376 Creare un libro
-377 Annotazioni
-378 Configurazione
-379 Scelte rapide
-380 Accessibilità in Amaya
-381 Suggerimenti del giorno...
+318 A&nnotazioni
+319 Annota la selezione
+320 Annota il documento
+321 Muovi sulla selezione
+322 Salva la selezione come XPointer
+323 Muovi sull'Xpointer memorizzato
+324 Rispondi all'annotazione
+325 Registra
+326 Elimina
+327 Carica
+328 Personalizza la richiesta
+329 Filtro locale...
+330 &Cooperazione
+331 Lock resource...
+332 Unlock resource...
+333 Informazioni per il lock...
+334 Copia delle informazioni per il lock...
+335 Lock?
+336 **Templates
+337 **Create template from current document...
+338 **Create a text box
+339 **Create and use a component
+340 **Create a free editing box
+341 **Create a repeated component
+342 &Javascript/DOM
+343 Attiva/Disattiva
+344 Esegui un comando
+345 Esegui un comando
+346 Aggiungi uno script esterno
+347 Inserisci uno script
+348 Informazioni su Amaya
+349 Informazioni su Amaya al W3C
+350 Indice
+351 Navigazione
+352 Viste
+353 Selezione
+354 Documento
+355 Creazione elementi
+356 Attributi
+357 Caratteri
+358 Modelli
+359 Ristrutturazione
+360 Collegamenti
+361 Tabelle
+362 Immagine
+363 Matematica
+364 Graphics
+365 Supporto XML
+366 Fogli di stile
+367 Ricerca
+368 Controllo ortografico
+369 Pubblicazione
+370 Cooperazione
+371 Stampa
+372 Numerazione
+373 Creare un libro
+374 Annotazioni
+375 Configurazione
+376 Scelte rapide
+377 Accessibilità in Amaya
+378 Suggerimenti del giorno...

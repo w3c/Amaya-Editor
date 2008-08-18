@@ -34,7 +34,6 @@
 #include "SVG.h"
 #include "HTML.h"
 
-#include "libmanag_f.h"
 #include "anim_f.h"
 #include "Mathedit_f.h"
 #include "SVGedit_f.h"

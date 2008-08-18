@@ -317,67 +317,64 @@
 315 &Vytvoriť obsah
 316 &Zostaviť knihu
 317 Vložiť dnešný dátum
-318 **Graphics
-319 Zobraziť SVG knižnicu
-320 Pridať do SVG knižnice
-321 &Komentáre
-322 Okomentovať výber
-323 Okomentovať dokument
-324 Presunúť k výberu
-325 Uložiť výber ako &XPointer
-326 Presunúť k uloženému XPointeru
-327 Reagovať na komentár
-328 Odoslať na server
-329 Odstrániť komentár
-330 Nahrať komentár
-331 Zadefinovať požiadavku...
-332 Filtrovať komentáre...
-333 Sp&olupráca
-334 Uzamknúť zdrojový súbor...
-335 Odomknúť zdrojový súbor...
-336 Zobraziť vlastnosti zdroja...
-337 Kopírovať informácie o uzamknutí...
-338 Zamknutý?
-339 **Templates
-340 **Create template from current document...
-341 **Create a text box
-342 **Create and use a component
-343 **Create a free editing box
-344 **Create a repeated component
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 O programe Amaya
-352 Domoská stránka programu Amaya
-353 Témy pomocníka
-354 Prehliadanie
-355 Zobrazenia
-356 Označovanie
-357 Vytváranie dokumentu
-358 Vkladanie prvkov
-359 Atribúty
-360 Vkladanie znakov
-361 Šablóny
-362 Úprava dokumentu
-363 Prepojenia
-364 Tabuľky
-365 Oblasti obrázkov
-366 Vzorce
-367 Úprava SVG grafiky
-368 XML podpora
-369 Kaskádové štýly
-370 Vyhľadávanie
-371 Kontrola pravopisu
-372 Publikovanie
-373 Spolupráca
-374 Tlač
-375 Číslovanie podkapitol
-376 Vytváranie kníh
-377 Komentáre
-378 Nastavenia programu
-379 Klávesové skratky
-380 Zjednodušenie ovládania
-381 **Tip of the day...
+318 &Komentáre
+319 Okomentovať výber
+320 Okomentovať dokument
+321 Presunúť k výberu
+322 Uložiť výber ako &XPointer
+323 Presunúť k uloženému XPointeru
+324 Reagovať na komentár
+325 Odoslať na server
+326 Odstrániť komentár
+327 Nahrať komentár
+328 Zadefinovať požiadavku...
+329 Filtrovať komentáre...
+330 Sp&olupráca
+331 Uzamknúť zdrojový súbor...
+332 Odomknúť zdrojový súbor...
+333 Zobraziť vlastnosti zdroja...
+334 Kopírovať informácie o uzamknutí...
+335 Zamknutý?
+336 **Templates
+337 **Create template from current document...
+338 **Create a text box
+339 **Create and use a component
+340 **Create a free editing box
+341 **Create a repeated component
+342 &Javascript/DOM
+343 **Enable/Disable
+344 **Execute a command
+345 **Execute an external script
+346 **Add an external script
+347 **Insert a script
+348 O programe Amaya
+349 Domoská stránka programu Amaya
+350 Témy pomocníka
+351 Prehliadanie
+352 Zobrazenia
+353 Označovanie
+354 Vytváranie dokumentu
+355 Vkladanie prvkov
+356 Atribúty
+357 Vkladanie znakov
+358 Šablóny
+359 Úprava dokumentu
+360 Prepojenia
+361 Tabuľky
+362 Oblasti obrázkov
+363 Vzorce
+364 Úprava SVG grafiky
+365 XML podpora
+366 Kaskádové štýly
+367 Vyhľadávanie
+368 Kontrola pravopisu
+369 Publikovanie
+370 Spolupráca
+371 Tlač
+372 Číslovanie podkapitol
+373 Vytváranie kníh
+374 Komentáre
+375 Nastavenia programu
+376 Klávesové skratky
+377 Zjednodušenie ovládania
+378 **Tip of the day...

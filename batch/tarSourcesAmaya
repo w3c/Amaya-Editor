@@ -255,11 +255,6 @@ ${AMAYADIR}/config/*.dat \
 ${AMAYADIR}/config/*.css \
 ${AMAYADIR}/config/annot.schemas \
 ${AMAYADIR}/config/fonts.* \
-${AMAYADIR}/config/lib_files.dat \
-${AMAYADIR}/config/libconfig/*.css \
-${AMAYADIR}/config/libconfig/*.png \
-${AMAYADIR}/config/libconfig/*.lhtml \
-${AMAYADIR}/config/libconfig/*.svg \
 ${AMAYADIR}/cpp/winnt/*.bat \
 ${AMAYADIR}/cpp/*.c \
 ${AMAYADIR}/cpp/*.h \

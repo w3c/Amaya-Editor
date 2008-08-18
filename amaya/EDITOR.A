@@ -357,8 +357,6 @@ MENUS
 	Tools button:BMakeBook -> MakeBook;
 	Tools button:BDate -> CreateDate icon:XHTML_date.png;
 	Tools Separator;
-        Tools.Graphics button:BShowLibrary -> ShowLibrary;
-	Tools.Graphics button:BAddNewModel -> AddNewModelIntoLibraryForm;
 	Tools.Annotations_ button:BAnnotateSelection -> AnnotateSelection;
 	Tools.Annotations_ button:BAnnotateDocument -> AnnotateDocument;
 	Tools.Annotations_ Separator;
@@ -435,9 +433,7 @@ FUNCTIONS
   PreviousLinkOrFormElement,
   StopTransfer,
   GoToHome,
-  ShowLibrary,
   UpdateShowError,
-  AddNewModelIntoLibraryForm,
   ApplyClass,
   DoCreateTable,
   DoSelectFontFamilly,

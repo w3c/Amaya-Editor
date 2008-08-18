@@ -317,67 +317,64 @@
 315 &Ajouter/Actualiser la table des matières
 316 &Construire un livre
 317 Insérer la date de mise à jour
-318 Graphiques
-319 Montrer la librairie SVG
-320 Ajouter à la librairie SVG
-321 A&nnotations
-322 Annoter la sélection
-323 Annoter le document
-324 Déplacer sur la sélection
-325 Enregistrer la sélection comme &XPointer
-326 Déplacer sur le XPointer enregistré
-327 Répondre à l'annotation
-328 Enregister sur le serveur
-329 Supprimer
-330 Charger annotations
-331 Personnaliser la requête...
-332 Filtrer local...
-333 C&oopération
-334 Verrouiller la ressource...
-335 Déverrouiller la ressource...
-336 Visualiser les propriétés de la ressource...
-337 Copier les informations du verrou...
-338 Verrouillé ?
-339 Modèles
-340 Créer un modèle depuis le document courant...
-341 Créer une zone de texte
-342 Créer et utiliser un composant
-343 Créer une zone d'édition libre
-344 Créer un composant répétée
-345 &Javascript/DOM
-346 Activer/Désactiver
-347 Exécuter une commande
-348 Exécuter un script externe
-349 Ajouter un script externe
-350 Inserer un script
-351 À propos de Amaya
-352 À propos d'Amaya au W3C
-353 Index
-354 Navigation
-355 Vues
-356 Sélection
-357 Documents
-358 Création d'éléments
-359 Attributs
-360 Caractères
-361 Modèles
-362 Restructuration
-363 Liens
-364 Tableaux
-365 Images
-366 Math
-367 Graphiques
-368 Support XML
-369 Feuilles de style
-370 Recherche
-371 Vérification orthographique
-372 Enregistrement
-373 Coopération
-374 Impression
-375 Numérotation
-376 Construction de livre
-377 Annotations
-378 Configuration
-379 Raccourcis clavier
-380 Accessibilité d'Amaya
-381 Conseil du jour...
+318 A&nnotations
+319 Annoter la sélection
+320 Annoter le document
+321 Déplacer sur la sélection
+322 Enregistrer la sélection comme &XPointer
+323 Déplacer sur le XPointer enregistré
+324 Répondre à l'annotation
+325 Enregister sur le serveur
+326 Supprimer
+327 Charger annotations
+328 Personnaliser la requête...
+329 Filtrer local...
+330 C&oopération
+331 Verrouiller la ressource...
+332 Déverrouiller la ressource...
+333 Visualiser les propriétés de la ressource...
+334 Copier les informations du verrou...
+335 Verrouillé ?
+336 Modèles
+337 Créer un modèle depuis le document courant...
+338 Créer une zone de texte
+339 Créer et utiliser un composant
+340 Créer une zone d'édition libre
+341 Créer un composant répétée
+342 &Javascript/DOM
+343 Activer/Désactiver
+344 Exécuter une commande
+345 Exécuter un script externe
+346 Ajouter un script externe
+347 Inserer un script
+348 À propos de Amaya
+349 À propos d'Amaya au W3C
+350 Index
+351 Navigation
+352 Vues
+353 Sélection
+354 Documents
+355 Création d'éléments
+356 Attributs
+357 Caractères
+358 Modèles
+359 Restructuration
+360 Liens
+361 Tableaux
+362 Images
+363 Math
+364 Graphiques
+365 Support XML
+366 Feuilles de style
+367 Recherche
+368 Vérification orthographique
+369 Enregistrement
+370 Coopération
+371 Impression
+372 Numérotation
+373 Construction de livre
+374 Annotations
+375 Configuration
+376 Raccourcis clavier
+377 Accessibilité d'Amaya
+378 Conseil du jour...

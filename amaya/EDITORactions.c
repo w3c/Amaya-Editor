@@ -64,7 +64,6 @@
 #define WEBDAV_EXPORT extern
 #include "davlib_f.h"
 #endif /* DAV */
-#include "libmanag_f.h"
 #ifdef _JAVA
   #include "javascript_f.h"
 #endif /* _JAVA */

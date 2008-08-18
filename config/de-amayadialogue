@@ -317,67 +317,64 @@
 315 Inhaltsverzeichnis erzeugen
 316 Buch erstellen
 317 Zeitstempel einfügen
-318 Grafiken
-319 SVG-Bibliothek anzeigen...
-320 Markierung in SVG-Bibliothek
-321 A&nmerkungen
-322 Zur Markierung
-323 Zum Dokument
-324 Auf Markierung verschieben
-325 Als XPointer speichern
-326 Auf XPointer verschieben
-327 Beantworten
-328 Veröffentlichen
-329 Löschen
-330 Laden
-331 Abfrage bearbeiten...
-332 Filter...
-333 &Kooperation
-334 Resource sperren...
-335 Resource entsperren...
-336 Resourceeigenschaften anzeigen...
-337 Sperrinformation kopieren...
-338 Gesperrt?
-339 **Templates
-340 **Create template from current document...
-341 **Create a text box
-342 **Create and use a component
-343 **Create a free editing box
-344 **Create a repeated component
-345 &Javascript/DOM
-346 Java-Unterstützung ein-/ausschalten
-347 Befehl ausführen
-348 externes Skript ausführen
-349 externes Skript hinzufügen
-350 Skript einfügen
-351 Info
-352 Über Amaya
-353 Index
-354 Browsen
-355 Ansichten
-356 Markieren
-357 Dokuments
-358 Elemente
-359 Attribute
-360 Zeichen
-361 Vorlagen
-362 Transformieren
-363 Verweise
-364 Tabellen
-365 Bild
-366 Formeln
-367 Grafiken
-368 XML
-369 Formate/Formatvorlagen
-370 Suchen/Ersetzen
-371 Rechtschreibprüfung
-372 Speichern/Veröffentlichen
-373 Kooperation
-374 Drucken
-375 Abschnitte numerieren
-376 Buch erstellen
-377 Anmerkungen
-378 Konfiguration
-379 Tastenkürzel
-380 Benutzerfreundlichkeit
-381 Tip des Tages...
+318 A&nmerkungen
+319 Zur Markierung
+320 Zum Dokument
+321 Auf Markierung verschieben
+322 Als XPointer speichern
+323 Auf XPointer verschieben
+324 Beantworten
+325 Veröffentlichen
+326 Löschen
+327 Laden
+328 Abfrage bearbeiten...
+329 Filter...
+330 &Kooperation
+331 Resource sperren...
+332 Resource entsperren...
+333 Resourceeigenschaften anzeigen...
+334 Sperrinformation kopieren...
+335 Gesperrt?
+336 **Templates
+337 **Create template from current document...
+338 **Create a text box
+339 **Create and use a component
+340 **Create a free editing box
+341 **Create a repeated component
+342 &Javascript/DOM
+343 Java-Unterstützung ein-/ausschalten
+344 Befehl ausführen
+345 externes Skript ausführen
+346 externes Skript hinzufügen
+347 Skript einfügen
+348 Info
+349 Über Amaya
+350 Index
+351 Browsen
+352 Ansichten
+353 Markieren
+354 Dokuments
+355 Elemente
+356 Attribute
+357 Zeichen
+358 Vorlagen
+359 Transformieren
+360 Verweise
+361 Tabellen
+362 Bild
+363 Formeln
+364 Grafiken
+365 XML
+366 Formate/Formatvorlagen
+367 Suchen/Ersetzen
+368 Rechtschreibprüfung
+369 Speichern/Veröffentlichen
+370 Kooperation
+371 Drucken
+372 Abschnitte numerieren
+373 Buch erstellen
+374 Anmerkungen
+375 Konfiguration
+376 Tastenkürzel
+377 Benutzerfreundlichkeit
+378 Tip des Tages...

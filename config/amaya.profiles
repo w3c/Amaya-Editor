@@ -655,8 +655,6 @@ SelectColumn
 [svg]
 ShowGraphicsPalette
 Anim_Play
-ShowLibrary
-AddNewModelIntoLibraryForm
 HelpSVG
 *AmayaSVGToolPanel
 &CreateSVG_Template

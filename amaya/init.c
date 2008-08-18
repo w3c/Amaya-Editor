@@ -128,7 +128,6 @@ static int          Loading_method = CE_INIT;
 #include "XPointer_f.h"
 #include "anim_f.h"
 #include "animbuilder_f.h"
-#include "libmanag_f.h"
 #ifdef ANNOTATIONS
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
@@ -2505,16 +2504,6 @@ View InitView(Document oldDoc, Document doc,
   
   /* do we have to redraw buttons and menus? */
   reinitialized = (docType != DocumentTypes[doc]);
-  if (docType == docLog || docType == docLibrary || docType == docSource)
-    {
-#ifdef _SVG
-      if (docType == docLibrary)
-        /* Initialize SVG Library Buffer string */
-        TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-                        FALSE, (Proc)OpenLibraryCallback, SVGlib_list);
-#endif /* _SVG */
-    }
-  
   return mainView;
 }
 
@@ -2642,11 +2631,7 @@ void PostInitView(Document doc, DocumentType docType, int visibility,
           TtaSetMenuOff (doc, 1, Types);
           TtaSetMenuOff (doc, 1, Links);
           if (DocumentTypes[doc] == docMath)
-            {
-              TtaSetItemOff (doc, 1, Tools, BShowLibrary);
-              TtaSetItemOff (doc, 1, Tools, BAddNewModel);
-              TtaSetMenuOn (doc, 1, Views);
-            }
+            TtaSetMenuOn (doc, 1, Views);
           else
             {
               if (DocumentTypes[doc] != docSource)
@@ -3293,13 +3278,6 @@ Document LoadDocument (Document doc, char *pathname,
           unknown = FALSE;
         }
 #endif /* XML_GENERIC */
-#ifdef _SVG
-      else if (IsLibraryName (pathname))
-        {
-          docType = docLibrary;
-          unknown = FALSE;
-        }
-#endif /* _SVG */
       else if (docProfile != L_Other || IsHTMLName (pathname))
         {
           /* it seems to be an HTML document */
@@ -3827,10 +3805,7 @@ Document LoadDocument (Document doc, char *pathname,
             {
 #ifdef _SVG
               if (DocumentTypes[newdoc] == docLibrary)
-                {
-                  SelectLibraryFromPath (DocumentURLs[newdoc]);
-                  TtaSetTextZone (newdoc, 1, SVGlib_list);
-                }
+                TtaSetTextZone (newdoc, 1, SVGlib_list);
               else
 #endif /* _SVG */
                 TtaSetTextZone (newdoc, 1, URL_list);
@@ -4826,7 +4801,6 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
               if (DocumentTypes[newdoc] == docLibrary)
                 {
 #ifdef _SVG
-                  SelectLibraryFromPath (DocumentURLs[newdoc]);
                   TtaSetTextZone (newdoc, 1, SVGlib_list);
 #endif /* _SVG */
                 }
@@ -5021,10 +4995,6 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
         CheckDocHeader(temp_url, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown, &parsingLevel, 
 		       &doc_charset, charsetname, (DocumentType*)&docType, &extraProfile);
     }
-#ifdef _SVG
-  else if (IsLibraryName (documentname))
-    docType = docLibrary;
-#endif /* _SVG */
   else if (method == CE_CSS)
     docType = docCSS;
   else if (method == CE_LOG)
@@ -6997,8 +6967,6 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _SVG
   InitSVG ();
   InitSVGAnim ();
-  /*InitSVGLibraryManagerStructure ();*/
-  InitLibrary();
 #endif /* _SVG */
   /* MKP: disable "Cooperation" menu if DAV is not defined or
    *      initialize davlib module otherwise */
@@ -7409,9 +7377,6 @@ void CheckAmayaClosed ()
     {
       /* remove images loaded by shared CSS style sheets */
       RemoveDocumentImages (0);
-#ifdef _SVG
-      SVGLIB_FreeDocumentResource ();
-#endif /* _SVG */
 #ifdef  _JAVA
       DestroyJavascript ();
 #endif /* _JAVA */

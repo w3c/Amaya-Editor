@@ -317,67 +317,64 @@
 315 **&Add/Update table of contents
 316 Construir livro
 317 **Insert time stamp
-318 **Graphics
-319 **Show SVG library
-320 **Add to SVG library
-321 A&notações
-322 Anotar seleção
-323 Anotar documento
-324 Mover até a seleção
-325 Salvar seleção como XPointer
-326 Mover para o XPointer memorizado
-327 Responder à anotação
-328 Registrar
-329 Apagar
-330 Carregar
-331 Personalizar consulta...
-332 Filtro local...
-333 &Cooperação
-334 Travar o recurso
-335 Destravar o recurso
-336 Exibir as propriedades do recurso
-337 Copiar a informação da trava...
-338 Travado?
-339 **Templates
-340 **Create template from current document...
-341 **Create a text box
-342 **Create and use a component
-343 **Create a free editing box
-344 **Create a repeated component
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 Sobre Amaya
-352 Sobre Amaya no W3C
-353 Índice
-354 Navegar
-355 Vistas
-356 Selecionar
-357 Documento
-358 Criar elementos
-359 Atributos
-360 Caracteres
-361 **Templates
-362 Reestruturar
-363 Enlaces
-364 Tabelas
-365 Imagem
-366 Matemática
-367 Gráficos
-368 Suporte à XML
-369 Folhas de estilo
-370 Achar...
-371 Verificar ortografia
-372 Publicar
-373 Cooperação
-374 Imprimir
-375 Numberar
-376 Criar livros
-377 Anotações
-378 Configurar
-379 Atalhos
-380 Accessibilidade em Amaya
-381 **Tip of the day...
+318 A&notações
+319 Anotar seleção
+320 Anotar documento
+321 Mover até a seleção
+322 Salvar seleção como XPointer
+323 Mover para o XPointer memorizado
+324 Responder à anotação
+325 Registrar
+326 Apagar
+327 Carregar
+328 Personalizar consulta...
+329 Filtro local...
+330 &Cooperação
+331 Travar o recurso
+332 Destravar o recurso
+333 Exibir as propriedades do recurso
+334 Copiar a informação da trava...
+335 Travado?
+336 **Templates
+337 **Create template from current document...
+338 **Create a text box
+339 **Create and use a component
+340 **Create a free editing box
+341 **Create a repeated component
+342 &Javascript/DOM
+343 **Enable/Disable
+344 **Execute a command
+345 **Execute an external script
+346 **Add an external script
+347 **Insert a script
+348 Sobre Amaya
+349 Sobre Amaya no W3C
+350 Índice
+351 Navegar
+352 Vistas
+353 Selecionar
+354 Documento
+355 Criar elementos
+356 Atributos
+357 Caracteres
+358 **Templates
+359 Reestruturar
+360 Enlaces
+361 Tabelas
+362 Imagem
+363 Matemática
+364 Gráficos
+365 Suporte à XML
+366 Folhas de estilo
+367 Achar...
+368 Verificar ortografia
+369 Publicar
+370 Cooperação
+371 Imprimir
+372 Numberar
+373 Criar livros
+374 Anotações
+375 Configurar
+376 Atalhos
+377 Accessibilidade em Amaya
+378 **Tip of the day...

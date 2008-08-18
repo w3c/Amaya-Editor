@@ -317,67 +317,64 @@
 315 生成内容列表(&G)
 316 制作书籍(&M)
 317 插入时间戳
-318 **Graphics
-319 显示图形库
-320 添加选中图形
-321 注释
-322 为选择区作注释
-323 为文档作注释
-324 移动到选择区
-325 存储选择区为 XPointer(&X)
-326 移动到已存储的 XPointer
-327 答复注释
-328 提交到服务器
-329 删除
-330 载入
-331 自定义查询...
-332 本地过滤器...
-333 协作(&O)
-334 锁定资源...
-335 取消锁定资源...
-336 查看资源属性...
-337 复制锁定信息...
-338 锁定了吗?
-339 **Templates
-340 **Create template from current document...
-341 **Create a text box
-342 **Create and use a component
-343 **Create a free editing box
-344 **Create a repeated component
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 关于 Amaya
-352 关于 Amaya at W3C
-353 索引
-354 Browsing
-355 Views
-356 Selecting
-357 Document
-358 Creating elements
-359 Attributes
-360 Characters
-361 **Templates
-362 Restructuring
-363 Links
-364 Tables
-365 Images
-366 Math
-367 Graphics
-368 XML support
-369 Style sheets
-370 Searching
-371 Spell Checking
-372 Publishing
-373 协作
-374 Printing
-375 Numbering
-376 Making books
-377 Annotations
-378 Configuring
-379 Shortcuts
-380 Accessibility in Amaya
-381 **Tip of the day...
+318 注释
+319 为选择区作注释
+320 为文档作注释
+321 移动到选择区
+322 存储选择区为 XPointer(&X)
+323 移动到已存储的 XPointer
+324 答复注释
+325 提交到服务器
+326 删除
+327 载入
+328 自定义查询...
+329 本地过滤器...
+330 协作(&O)
+331 锁定资源...
+332 取消锁定资源...
+333 查看资源属性...
+334 复制锁定信息...
+335 锁定了吗?
+336 **Templates
+337 **Create template from current document...
+338 **Create a text box
+339 **Create and use a component
+340 **Create a free editing box
+341 **Create a repeated component
+342 &Javascript/DOM
+343 **Enable/Disable
+344 **Execute a command
+345 **Execute an external script
+346 **Add an external script
+347 **Insert a script
+348 关于 Amaya
+349 关于 Amaya at W3C
+350 索引
+351 Browsing
+352 Views
+353 Selecting
+354 Document
+355 Creating elements
+356 Attributes
+357 Characters
+358 **Templates
+359 Restructuring
+360 Links
+361 Tables
+362 Images
+363 Math
+364 Graphics
+365 XML support
+366 Style sheets
+367 Searching
+368 Spell Checking
+369 Publishing
+370 协作
+371 Printing
+372 Numbering
+373 Making books
+374 Annotations
+375 Configuring
+376 Shortcuts
+377 Accessibility in Amaya
+378 **Tip of the day...

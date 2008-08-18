@@ -4703,45 +4703,6 @@
 	<message xml:lang="sk">Vložiť dnešný dátum</message>
 	<message xml:lang="ja">現在の日付を挿入</message>
 </label>
-<label define="Graphics">
-	<message xml:lang="en">Graphics</message>
-	<message xml:lang="fr">Graphiques</message>
-	<message xml:lang="es">Gráficos</message>
-	<message xml:lang="it">Grafica</message>
-	<message xml:lang="de">Grafiken</message>
-	<message xml:lang="hu"></message>
-	<message xml:lang="ja">グラフィックス(Graphics)</message>
-</label>
-<label define="BShowLibrary">
-	<message xml:lang="en">Show SVG library</message>
-	<message xml:lang="fr">Montrer la librairie SVG</message>
-	<message xml:lang="it">Mostri librería SVG</message>
-	<message xml:lang="es">&amp;Ver Biblioteca SVG</message>
-	<message xml:lang="de">SVG-Bibliothek anzeigen...</message>
-	<message xml:lang="tr">SVG kütüphanesini göster</message>
-	<message xml:lang="ru">Показать SVG библиотеку</message>
-	<message xml:lang="hu">&amp;Képtár mutatása</message>
-	<message xml:lang="ka">გრაფიკული ბიბლიოთეკის ჩვენება</message>
-	<message xml:lang="cn">显示图形库</message>
-	<message xml:lang="tw">顯示圖形庫</message>
-	<message xml:lang="sk">Zobraziť SVG knižnicu</message>
-	<message xml:lang="ja">SVG ライブラリを表示</message>
-</label>
-<label define="BAddNewModel">
-	<message xml:lang="en">Add to SVG library</message>
-	<message xml:lang="fr">Ajouter à la librairie SVG</message>
-	<message xml:lang="it">Aggiunga nella librería SVG</message>
-	<message xml:lang="es">&amp;Añadir a la Biblioteca SVG</message>
-	<message xml:lang="de">Markierung in SVG-Bibliothek</message>
-	<message xml:lang="tr">SVG kütüphanesine seçili alanı ekle</message>
-	<message xml:lang="ru">Добавить в SVG библиотеку</message>
-	<message xml:lang="hu">Kijelölt kép &amp;beillesztése</message>
-	<message xml:lang="ka">შერჩეული გრაფიკის ბიბლიოთეკაში დამატება</message>
-	<message xml:lang="cn">添加选中图形</message>
-	<message xml:lang="tw">添加選中圖形</message>
-	<message xml:lang="sk">Pridať do SVG knižnice</message>
-	<message xml:lang="ja">SVG ライブラリに追加</message>
-</label>
 <label define="Annotations_">
 	<message xml:lang="en">A&amp;nnotations</message>
 	<message xml:lang="fr">A&amp;nnotations</message>

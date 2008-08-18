@@ -317,67 +317,64 @@
 315 **&Add/Update table of contents
 316 Valmista kooste
 317 **Insert time stamp
-318 **Graphics
-319 **Show SVG library
-320 **Add to SVG library
-321 Mer&kinnät
-322 Valinnan lisätiedot
-323 Dokumentin lisätiedot
-324 Siirrä valintaan
-325 Tallenna valinta XPointer:iin
-326 Siirrä XPointer:iin
-327 Vastaa merkintään
-328 Lähetä palvelimelle
-329 Poista
-330 Lataa
-331 Mukauta tiedustelu...
-332 Paikalliset rajoitukset...
-333 Yht&eistyö
-334 Lukitse objekti...
-335 Vapauta objekti...
-336 Näytä objektin ominaisuudet...
-337 Kopioi lukitustiedot...
-338 Lukittu?
-339 **Templates
-340 **Create template from current document...
-341 **Create a text box
-342 **Create and use a component
-343 **Create a free editing box
-344 **Create a repeated component
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 Tietoja Amayasta
-352 Lisätietoa Amayasta W3C:ssä
-353 Hakemisto
-354 Selaaminen
-355 Näkymät
-356 Valinta
-357 Dokumentti
-358 Elementtien luominen
-359 Asetukset
-360 Fontit
-361 **Templates
-362 Rakenteen muunto
-363 Linkit
-364 Taulukot
-365 Kuvakartat
-366 Matematiikka
-367 Grafiikka
-368 XML-tuki
-369 Tyylitiedostot
-370 Etsiminen
-371 Oikeinkirjoituksen tarkastus
-372 Julkaisu
-373 Yhteistyö
-374 Tulostus
-375 Numerointi
-376 Koosteen valmistus
-377 Merkinnät
-378 Asetuksien määritys
-379 Näppäinkomennot
-380 Amayan helppokäyttötoiminnot
-381 **Tip of the day...
+318 Mer&kinnät
+319 Valinnan lisätiedot
+320 Dokumentin lisätiedot
+321 Siirrä valintaan
+322 Tallenna valinta XPointer:iin
+323 Siirrä XPointer:iin
+324 Vastaa merkintään
+325 Lähetä palvelimelle
+326 Poista
+327 Lataa
+328 Mukauta tiedustelu...
+329 Paikalliset rajoitukset...
+330 Yht&eistyö
+331 Lukitse objekti...
+332 Vapauta objekti...
+333 Näytä objektin ominaisuudet...
+334 Kopioi lukitustiedot...
+335 Lukittu?
+336 **Templates
+337 **Create template from current document...
+338 **Create a text box
+339 **Create and use a component
+340 **Create a free editing box
+341 **Create a repeated component
+342 &Javascript/DOM
+343 **Enable/Disable
+344 **Execute a command
+345 **Execute an external script
+346 **Add an external script
+347 **Insert a script
+348 Tietoja Amayasta
+349 Lisätietoa Amayasta W3C:ssä
+350 Hakemisto
+351 Selaaminen
+352 Näkymät
+353 Valinta
+354 Dokumentti
+355 Elementtien luominen
+356 Asetukset
+357 Fontit
+358 **Templates
+359 Rakenteen muunto
+360 Linkit
+361 Taulukot
+362 Kuvakartat
+363 Matematiikka
+364 Grafiikka
+365 XML-tuki
+366 Tyylitiedostot
+367 Etsiminen
+368 Oikeinkirjoituksen tarkastus
+369 Julkaisu
+370 Yhteistyö
+371 Tulostus
+372 Numerointi
+373 Koosteen valmistus
+374 Merkinnät
+375 Asetuksien määritys
+376 Näppäinkomennot
+377 Amayan helppokäyttötoiminnot
+378 **Tip of the day...

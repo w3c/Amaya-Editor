@@ -317,67 +317,64 @@
 315 &Add/Update table of contents
 316 &Make book
 317 Insert time stamp
-318 Graphics
-319 Show SVG library
-320 Add to SVG library
-321 A&nnotations
-322 Annotate selection
-323 Annotate document
-324 Move to selection
-325 Store selection as &XPointer
-326 Move to stored XPointer
-327 Reply to annotation
-328 Post to server
-329 Delete
-330 Load
-331 Customize query...
-332 Local filter...
-333 C&ooperation
-334 Lock resource...
-335 Unlock resource...
-336 View resource properties...
-337 Copy lock information...
-338 Locked?
-339 Templates
-340 Create template from current document...
-341 Create a text box
-342 Create and use a component
-343 Create a free editing box
-344 Create a repeated component
-345 &Javascript/DOM
-346 Enable/Disable
-347 Execute a command
-348 Execute an external script
-349 Add an external script
-350 Insert a script
-351 About Amaya
-352 About Amaya at W3C
-353 Index
-354 Browsing
-355 Views
-356 Selecting
-357 Documents
-358 Creating elements
-359 Attributes
-360 Characters
-361 Templates
-362 Restructuring
-363 Links
-364 Tables
-365 Images
-366 Math
-367 Graphics
-368 XML support
-369 Style sheets
-370 Searching
-371 Spell checking
-372 Publishing
-373 Cooperation
-374 Printing
-375 Numbering
-376 Making books
-377 Annotations
-378 Configuring
-379 Shortcuts
-380 Accessibility in Amaya
-381 Tip of the day...
+318 A&nnotations
+319 Annotate selection
+320 Annotate document
+321 Move to selection
+322 Store selection as &XPointer
+323 Move to stored XPointer
+324 Reply to annotation
+325 Post to server
+326 Delete
+327 Load
+328 Customize query...
+329 Local filter...
+330 C&ooperation
+331 Lock resource...
+332 Unlock resource...
+333 View resource properties...
+334 Copy lock information...
+335 Locked?
+336 Templates
+337 Create template from current document...
+338 Create a text box
+339 Create and use a component
+340 Create a free editing box
+341 Create a repeated component
+342 &Javascript/DOM
+343 Enable/Disable
+344 Execute a command
+345 Execute an external script
+346 Add an external script
+347 Insert a script
+348 About Amaya
+349 About Amaya at W3C
+350 Index
+351 Browsing
+352 Views
+353 Selecting
+354 Documents
+355 Creating elements
+356 Attributes
+357 Characters
+358 Templates
+359 Restructuring
+360 Links
+361 Tables
+362 Images
+363 Math
+364 Graphics
+365 XML support
+366 Style sheets
+367 Searching
+368 Spell checking
+369 Publishing
+370 Cooperation
+371 Printing
+372 Numbering
+373 Making books
+374 Annotations
+375 Configuring
+376 Shortcuts
+377 Accessibility in Amaya
+378 Tip of the day...

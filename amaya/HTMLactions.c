@@ -54,7 +54,6 @@
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
 #include "html2thot_f.h"
-#include "libmanag_f.h"
 #include "Mathedit_f.h"
 #include "selection.h"
 #include "styleparser_f.h"
@@ -2511,34 +2510,6 @@ ThotBool SimpleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool SimpleLClick (NotifyElement *event)
 {
-#ifdef _SVG
-  ElementType       elType;
-  ThotBool usedouble;
-
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
-  if (DocumentTypes[event->document] == docLibrary)
-    {
-      /* Check the sschema of the document (HTML) */
-      elType.ElSSchema = TtaGetDocumentSSchema (event->document);
-      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-        {
-          /* check the element type */
-          elType = TtaGetElementType (event->element);
-          if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-            /* Activate Library dialogue because he has selected picture into the document */
-            /* Now we are going to browse the document tree to take the url models */
-            {
-              /* Browse the document tree to save model url */
-              SaveSVGURL (event->document, event->element);
-              /* Browse the document tree to view line selected */
-              ChangeSVGLibraryLinePresentation (event->document, event->element);
-              /* Show Drop dialog option */
-              CopyOrReference (event->document, 1);
-              return TRUE;
-            }
-        }
-    }
-#endif /* _SVG */
   /* let Thot perform normal operation */
   return FALSE;
 }
@@ -2820,10 +2791,6 @@ void FreeDocumentResource (Document doc)
           /* remove the Parsing errors file */
           RemoveParsingErrors (doc);
           ClearMathFrame (doc);
-#ifdef _SVG
-          if (DocumentTypes[doc] == docLibrary)
-            CloseLibrary (doc);
-#endif /* _SVG */
 #ifdef ANNOTATIONS
           ANNOT_FreeDocumentResource (doc);
 #endif /* ANNOTATIONS */
