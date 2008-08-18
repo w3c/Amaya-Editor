@@ -590,7 +590,10 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   else if (pFrom->AbElement == NULL ||
            (FrameTable[frame].FrView == 1 &&
             TypeHasException (ExcNoShowBox, pFrom->AbElement->ElTypeNumber,
-                              pFrom->AbElement->ElStructSchema)))
+                              pFrom->AbElement->ElStructSchema)
+
+
+))
     return;
   
   pFrame = &ViewFrameTable[frame - 1];
@@ -1689,88 +1692,103 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
  #ifdef _GL
               if (pAb->AbElement && not_g_opacity_displayed)
                 {
-                  if (formatted && IfPushMatrix (pAb))
-                    {
-                      /* If the coord sys origin is translated, 
-                         it must be before any other transformation */
-                      if (pAb->AbElement->ElSystemOrigin)
-                        DisplayBoxTransformation (pAb->AbElement->ElTransform, 
-                                                  pFrame->FrXOrg, pFrame->FrYOrg);
-                      /* Normal transformation*/
-                      if (pAb->AbElement->ElTransform)
-                        DisplayTransformation (frame,
-                                               pAb->AbElement->ElTransform, 
-                                               pBox->BxWidth, pBox->BxHeight);
-                      if (pAb->AbElement->ElSystemOrigin &&
-                          /* skip boxes already managed */
-                          !IsParentBox (systemOriginRoot, pAb->AbBox))
-                        {
-                          systemOriginRoot = pAb->AbBox;
-                          /*Need to Get REAL computed COORD ORIG
-                            instead of Computing Bounding Boxes forever...
-                            As it's an "optimisation it'll come later :
-                            if computed, no more compute, use synbounding, 
-                            else compute if near screen"*/
-                          if (pFrame->FrXOrg || pFrame->FrYOrg)
-                            {
-                              pFrame->OldFrXOrg = pFrame->FrXOrg;
-                              pFrame->OldFrYOrg = pFrame->FrYOrg;
-                              xOrg = pFrame->FrXOrg;
-                              yOrg = pFrame->FrYOrg;
-                              pFrame->FrXOrg = 0;
-                              pFrame->FrYOrg = 0;
-                              ComputeBoundingBoxes (frame, x_min, x_max,
-                                                    y_min, y_max, pAb,
-                                                    show_bgimage);
-                              clipXOfFirstCoordSys = pBox->BxClipX;
-                              clipYOfFirstCoordSys = pBox->BxClipY;
-                            }
-                          else
-                            ComputeBoundingBoxes (frame, x_min, x_max,
-                                                  y_min, y_max, pAb,
-                                                  show_bgimage);
-                        }
+		  if(formatted)
+		    {
+		      if(pAb->AbSelected && TypeHasException (ExcIsGroup,
+							      pAb->AbElement->ElTypeNumber,
+						       pAb->AbElement->ElStructSchema) )
+			DrawRectangle (frame, 1, 5,
+				       pBox->BxClipX,
+				       pBox->BxClipY,
+				       pBox->BxClipW,
+				       pBox->BxClipH,
+				       TtaGetThotColor(255, 0, 0), 0, 0);
 
-                      if (pAb->AbOpacity != 1000 &&  not_in_feedback)
-                        {
-                          if (TypeHasException (ExcIsGroup,
-                                                pAb->AbElement->ElTypeNumber,
-                                                pAb->AbElement->ElStructSchema) )
-                            {
-                              if (pAb->AbOpacity == 0 ||
-                                  (NoBoxModif (pAb) &&
-                                   pAb->AbBox->Post_computed_Pic != NULL))
-                                {
-                                  not_g_opacity_displayed = FALSE;
-                                  continue;
-                                }
-                              else
-                                {
-                                  if (pAb->AbBox->Post_computed_Pic)
-                                    {
-                                      FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
-                                      TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
-                                      pAb->AbBox->Post_computed_Pic = NULL; 
-                                    }
-                                  OpaqueGroupTexturize (pAb, frame,
-                                                        x_min, x_max,
-                                                        y_min, y_max, TRUE);
-                                  ClearOpaqueGroup (pAb, frame, x_min, x_max,
-                                                    y_min, y_max);
-                                }
-                            }
-                          else if (pAb->AbFirstEnclosed)
-                            {
-                              pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;
-                              pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity;
-                            }
-                          else 
-                            {
-                              pAb->AbFillOpacity = pAb->AbOpacity;      
-                              pAb->AbStrokeOpacity = pAb->AbOpacity; 
-                            }
-                        }
-                    }
+
+		      if (IfPushMatrix (pAb))
+			{
+
+			  /* If the coord sys origin is translated, 
+			     it must be before any other transformation */
+			  if (pAb->AbElement->ElSystemOrigin)
+			    DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+						      pFrame->FrXOrg, pFrame->FrYOrg);
+			  /* Normal transformation*/
+			  if (pAb->AbElement->ElTransform)
+			    DisplayTransformation (frame,
+						   pAb->AbElement->ElTransform, 
+						   pBox->BxWidth, pBox->BxHeight);
+			  if (pAb->AbElement->ElSystemOrigin &&
+			      /* skip boxes already managed */
+			      !IsParentBox (systemOriginRoot, pAb->AbBox))
+			    {
+			      systemOriginRoot = pAb->AbBox;
+			      /*Need to Get REAL computed COORD ORIG
+				instead of Computing Bounding Boxes forever...
+				As it's an "optimisation it'll come later :
+				if computed, no more compute, use synbounding, 
+				else compute if near screen"*/
+			      if (pFrame->FrXOrg || pFrame->FrYOrg)
+				{
+				  pFrame->OldFrXOrg = pFrame->FrXOrg;
+				  pFrame->OldFrYOrg = pFrame->FrYOrg;
+				  xOrg = pFrame->FrXOrg;
+				  yOrg = pFrame->FrYOrg;
+				  pFrame->FrXOrg = 0;
+				  pFrame->FrYOrg = 0;
+				  ComputeBoundingBoxes (frame, x_min, x_max,
+							y_min, y_max, pAb,
+							show_bgimage);
+				  clipXOfFirstCoordSys = pBox->BxClipX;
+				  clipYOfFirstCoordSys = pBox->BxClipY;
+				}
+			      else
+				ComputeBoundingBoxes (frame, x_min, x_max,
+						      y_min, y_max, pAb,
+						      show_bgimage);
+			    }
+
+			  if (pAb->AbOpacity != 1000 &&  not_in_feedback)
+			    {
+			      if (TypeHasException (ExcIsGroup,
+						    pAb->AbElement->ElTypeNumber,
+						    pAb->AbElement->ElStructSchema) )
+				{
+				  if (pAb->AbOpacity == 0 ||
+				      (NoBoxModif (pAb) &&
+				       pAb->AbBox->Post_computed_Pic != NULL))
+				    {
+				      not_g_opacity_displayed = FALSE;
+				      continue;
+				    }
+				  else
+				    {
+				      if (pAb->AbBox->Post_computed_Pic)
+					{
+					  FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
+					  TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
+					  pAb->AbBox->Post_computed_Pic = NULL; 
+					}
+				      OpaqueGroupTexturize (pAb, frame,
+							    x_min, x_max,
+							    y_min, y_max, TRUE);
+				      ClearOpaqueGroup (pAb, frame, x_min, x_max,
+							y_min, y_max);
+				    }
+				}
+			      else if (pAb->AbFirstEnclosed)
+				{
+				  pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;
+				  pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity;
+				}
+			      else 
+				{
+				  pAb->AbFillOpacity = pAb->AbOpacity;      
+				  pAb->AbStrokeOpacity = pAb->AbOpacity; 
+				}
+			    }
+			}
+		    }
 #endif /* _GL */
 
                   if (pAb->AbLeafType == LtCompound)
