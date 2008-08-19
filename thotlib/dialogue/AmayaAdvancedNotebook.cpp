@@ -375,10 +375,6 @@ AmayaWindow * AmayaAdvancedNotebook::GetAmayaWindow()
 
 void AmayaAdvancedNotebook::OnMouseRightDown(wxAuiNotebookEvent& event)
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaAdvancedNotebook::OnMouseRightDown - (x,y)=(%d,%d)"),
-                 event.GetPosition().x,
-                 event.GetPosition().y );
-
   int page_id   = GetSelection();
 
   /* Specific wxAuiNotebook protected code : */
