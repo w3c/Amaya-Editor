@@ -3276,7 +3276,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
       group = TtaNewElement (doc, elType);
 
       /* insert the new group element */
-      TtaInsertSibling (group, selected[0], FALSE, doc);
+      TtaInsertSibling (group, selected[nb_selected - 1], FALSE, doc);
       TtaRegisterElementCreate (group, doc);
 
       for (i = 0; i < nb_selected; i++)
