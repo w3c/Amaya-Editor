@@ -49,7 +49,7 @@
 #include "buildlines_f.h"
 #include "memory_f.h"
 #include "selectionapi_f.h"
-
+#include "presentation.h"
 #include "registry.h"
 
 #ifdef _GL
@@ -1697,12 +1697,18 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 		      if(pAb->AbSelected && TypeHasException (ExcIsGroup,
 							      pAb->AbElement->ElTypeNumber,
 						       pAb->AbElement->ElStructSchema) )
-			DrawRectangle (frame, 1, 5,
-				       pBox->BxClipX,
-				       pBox->BxClipY,
-				       pBox->BxClipW,
-				       pBox->BxClipH,
-				       TtaGetThotColor(255, 0, 0), 0, 0);
+			{
+			  int x0, y0;
+			  x0 = pBox->BxClipX - (pAb->AbEnclosing->AbBox->BxXOrg - pFrame->FrXOrg);
+			  y0 = pBox->BxClipY - (pAb->AbEnclosing->AbBox->BxYOrg - pFrame->FrYOrg);
+			  /* Draw the bounding box */
+			  DrawRectangle (frame, 1, 5,
+					 clipXOfFirstCoordSys + x0,
+					 clipYOfFirstCoordSys + y0,
+					 pBox->BxClipW,
+					 pBox->BxClipH,
+					 TtaGetThotColor(255, 0, 0), 0, 0);
+			}
 
 
 		      if (IfPushMatrix (pAb))
