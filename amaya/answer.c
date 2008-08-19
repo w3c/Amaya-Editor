@@ -205,7 +205,12 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_AUTHENTICATION_CONFIRM));
       break;
     case HT_MSG_REDIRECTION:
-      InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
+      if (me)
+        {
+          TtaSetStatus (0, 1, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM), NULL);
+          if (!SafePut_query(me->urlName))
+            InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
+        }
       break;
     case HT_MSG_FILE_REPLACE:
       tmp_buf = (char *)TtaGetMemory (strlen (me ? me->urlName : "") + strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 10); /*a bit more than enough memory */

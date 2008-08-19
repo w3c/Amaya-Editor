@@ -892,7 +892,7 @@ static void SafePut_delete (void)
   returns true if the domain to which the URL belongs accepts an automatic
   PUT redirect.
   ----------------------------------------------------------------------*/
-static ThotBool SafePut_query (char *url)
+ThotBool SafePut_query (char *url)
 {
   HTList   *cur;
   char     *me;

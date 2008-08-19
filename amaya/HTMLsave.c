@@ -2403,14 +2403,10 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
         {
           DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
           ResetStop (doc);
-          if (AmayaLastHTTPErrorMsg[0] != EOS)
-            InitInfo ("", AmayaLastHTTPErrorMsg);
-          else
-            {
+          if (AmayaLastHTTPErrorMsg[0] == EOS)
               sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
                        DocumentURLs[doc]);
-              InitInfo ("", AmayaLastHTTPErrorMsg);
-            }
+          InitInfo ("", AmayaLastHTTPErrorMsg);
           res = -1;
         }
 

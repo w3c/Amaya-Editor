@@ -17,6 +17,7 @@ extern char *HTTP_headers ( AHTHeaders *me,
 extern AHTReqContext *AHTReqContext_new ( int docid );
 extern ThotBool AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
+extern ThotBool SafePut_query ( char *url );
 extern int AHTLoadTerminate_handler ( HTRequest *request,
                                       HTResponse *response,
                                       void *param,
@@ -79,6 +80,7 @@ extern char *HTTP_headers ( AHTHeaders *me,
 extern AHTReqContext *AHTReqContext_new ( int docid );
 extern ThotBool AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
+extern ThotBool SafePut_query ( char *url );
 extern int AHTLoadTerminate_handler ( HTRequest *request,
                                         HTResponse *response,
                                         void *param,
