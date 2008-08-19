@@ -66,7 +66,7 @@ int     PngTransparentColor;
 #define	ReadOK(file, buffer, len)	(fread(buffer, len, 1, file) > 0)
 #define LM_to_uint(a,b)		(((b) << 8) | (a))
 
-struct {
+typedef struct {
   unsigned int        Width;
   unsigned int        Height;
   unsigned char       ColorMap[3][MAXCOLORMAPSIZE];
@@ -74,7 +74,10 @@ struct {
   unsigned int        ColorResolution;
   unsigned int        Background;
   unsigned int        AspectRatio;
-} GifScreen;
+} GifScreen_;
+
+
+GifScreen_ GifScreen;
 
 int                 ZeroDataBlock = FALSE;
 
