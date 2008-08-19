@@ -171,15 +171,13 @@ void AmayaStyleToolPanel::RaiseDoctypePanels(int doctype)
   
   switch(doctype)
   {
-    case WXAMAYA_DOCTYPE_XHTML:
-      GetSizer()->Show((size_t)0);
-      break;
     case WXAMAYA_DOCTYPE_SVG:
       GetSizer()->Show((size_t)1);
       break;      
+    case WXAMAYA_DOCTYPE_XHTML:
     default:
-      GetSizer()->Show((size_t)2);
-      break;      
+      GetSizer()->Show((size_t)0);
+      break;
   }
   Layout();
 }
