@@ -2283,7 +2283,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
   if (minY != 0)
     TranslateElement (el, doc, minY, unit, FALSE, TRUE);
 
-  TtaAppendTransform (el, TtaNewTransformTranslate(minX, minY), doc);
+  TtaAppendTransform (el, TtaNewTransformTranslate((float)minX, (float)minY), doc);
 }
 
 /*----------------------------------------------------------------------

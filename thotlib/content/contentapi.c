@@ -2368,7 +2368,7 @@ void TtaRemoveTransform (Document document, Element element)
 extern void *TtaSimplifyTransformMatrix(void *transform)
 {
   PtrTransform result, pPa;
-  float T, cosT,sinT, tanT, a, b, c, d, e, f;
+  double T, cosT,sinT, tanT, a, b, c, d, e, f;
 
   if(transform == NULL)
     /* Nothing to do */
@@ -2417,7 +2417,7 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
 	    result->DMatrix*pPa->YRotate;
 
 	  /* rotate(TrAngle,0,0) */
-	  T = pPa->TrAngle * M_PI / 180;
+	  T = (pPa->TrAngle * M_PI / 180);
 	  cosT = cos(T);
 	  sinT = sin(T);
 
@@ -2428,10 +2428,10 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
 	  e = result->EMatrix;
 	  f = result->FMatrix;
 
-	  result->AMatrix = a*cosT + c*sinT;
-	  result->CMatrix = -a*sinT + c*cosT;
-	  result->BMatrix = b*cosT + d*sinT;
-	  result->DMatrix = -b*sinT + d*cosT;
+	  result->AMatrix = (float)(a*cosT + c*sinT);
+	  result->CMatrix = (float)(-a*sinT + c*cosT);
+	  result->BMatrix = (float)(b*cosT + d*sinT);
+	  result->DMatrix = (float)(-b*sinT + d*cosT);
 
 	  /* tranlate(-XRotate,-YRotate) */
 	  result->EMatrix -= result->AMatrix*pPa->XRotate +
@@ -2448,28 +2448,28 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
 	  e = result->EMatrix;
 	  f = result->FMatrix;
 
-	  result->AMatrix = a*pPa->AMatrix + c*pPa->BMatrix;
-	  result->CMatrix = a*pPa->CMatrix + c*pPa->DMatrix;
-	  result->BMatrix = b*pPa->AMatrix + d*pPa->BMatrix;
-	  result->DMatrix = b*pPa->CMatrix + d*pPa->DMatrix;
-	  result->EMatrix += a*pPa->EMatrix + c*pPa->FMatrix;
-	  result->FMatrix += b*pPa->EMatrix + d*pPa->FMatrix;
+	  result->AMatrix = (float)(a*pPa->AMatrix + c*pPa->BMatrix);
+	  result->CMatrix = (float)(a*pPa->CMatrix + c*pPa->DMatrix);
+	  result->BMatrix = (float)(b*pPa->AMatrix + d*pPa->BMatrix);
+	  result->DMatrix = (float)(b*pPa->CMatrix + d*pPa->DMatrix);
+	  result->EMatrix += (float)(a*pPa->EMatrix + c*pPa->FMatrix);
+	  result->FMatrix += (float)(b*pPa->EMatrix + d*pPa->FMatrix);
           break;	  
 
         case PtElSkewX:
 	  T = pPa->TrAngle * M_PI / 180;
 	  tanT = tan(T);
 
-	  result->CMatrix += tanT*result->AMatrix;
-	  result->DMatrix += tanT*result->BMatrix;
+	  result->CMatrix += (float)(tanT*result->AMatrix);
+	  result->DMatrix += (float)(tanT*result->BMatrix);
 	  break;
 
         case PtElSkewY:
 	  T = pPa->TrAngle * M_PI / 180;
 	  tanT = tan(T);
 
-	  result->AMatrix += tanT*result->CMatrix;
-	  result->BMatrix += tanT*result->DMatrix;
+	  result->AMatrix += (float)(tanT*result->CMatrix);
+	  result->BMatrix += (float)(tanT*result->DMatrix);
           break;	  
 
         default:
@@ -2563,7 +2563,7 @@ extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
 extern void *TtaInverseTransform (void *transform)
 {
   PtrTransform result, pPa;
-  float a,b,c,d,e,f,a2,b2,c2,d2,e2,f2, cosA, sinA, tanA, det;
+  double a,b,c,d,e,f,a2,b2,c2,d2,e2,f2, cosA, sinA, tanA, det;
   
   result = (Transform*)TtaNewTransformMatrix (1, 0, 0, 1, 0, 0);
   pPa = (Transform*)transform;
@@ -2610,12 +2610,12 @@ extern void *TtaInverseTransform (void *transform)
 	  d = result->CMatrix * sinA + result->DMatrix * cosA;
 	  f = result->EMatrix * sinA + result->FMatrix * cosA;
 
-	  result->AMatrix = a;
-	  result->BMatrix = b;
-	  result->CMatrix = c;
-	  result->DMatrix = d;
-	  result->EMatrix = e;
-	  result->FMatrix = f;
+	  result->AMatrix = (float)a;
+	  result->BMatrix = (float)b;
+	  result->CMatrix = (float)c;
+	  result->DMatrix = (float)d;
+	  result->EMatrix = (float)e;
+	  result->FMatrix = (float)f;
 
 	  /* Multiply result by the inverse of translate(+XRotate,+YRotate) */
 	  result->EMatrix += pPa -> XRotate;
@@ -2647,26 +2647,26 @@ extern void *TtaInverseTransform (void *transform)
 	  d2 = b*result->CMatrix + d*result->DMatrix;
 	  f2 = b*result->EMatrix + d*result->FMatrix + f;
 
-	  result->AMatrix = a2;
-	  result->BMatrix = b2;
-	  result->CMatrix = c2;
-	  result->DMatrix = d2;
-	  result->EMatrix = e2;
-	  result->FMatrix = f2;
+	  result->AMatrix = (float)a2;
+	  result->BMatrix = (float)b2;
+	  result->CMatrix = (float)c2;
+	  result->DMatrix = (float)d2;
+	  result->EMatrix = (float)e2;
+	  result->FMatrix = (float)f2;
 
           break;	  
         case PtElSkewX:
 	  /* Multiply result by the inverse of skewX(TrFactor) */
 	  tanA = tan(pPa->TrFactor);
-	  result->AMatrix -= result->BMatrix * tanA;
-	  result->CMatrix -= result->DMatrix * tanA;
-	  result->EMatrix -= result->FMatrix * tanA;
+	  result->AMatrix -= (float)(result->BMatrix * tanA);
+	  result->CMatrix -= (float)(result->DMatrix * tanA);
+	  result->EMatrix -= (float)(result->FMatrix * tanA);
         case PtElSkewY:
 	  /* Multiply result by the inverse of skewX(TrFactor) */
 	  tanA = tan(pPa->TrFactor);
-	  result->BMatrix -= result->AMatrix * tanA;
-	  result->DMatrix -= result->CMatrix * tanA;
-	  result->FMatrix -= result->EMatrix * tanA;
+	  result->BMatrix -= (float)(result->AMatrix * tanA);
+	  result->DMatrix -= (float)(result->CMatrix * tanA);
+	  result->FMatrix -= (float)(result->EMatrix * tanA);
           break;	  
         default:
           break;
@@ -2777,8 +2777,8 @@ extern void *TtaDecomposeTransform(void *transform)
 {
   PtrTransform result = NULL, cursor;
   PtrTransform matrix = (PtrTransform)TtaSimplifyTransformMatrix(transform);
-  float coeff,coeff1, coeff2, theta1, theta2;
-  float a,b,c,d,e,f,k;
+  double coeff,coeff1, coeff2, theta1, theta2;
+  double a,b,c,d,e,f,k;
   ThotBool RemoveTranslate = FALSE;
   ThotBool decompose;
   
@@ -2814,7 +2814,7 @@ extern void *TtaDecomposeTransform(void *transform)
   /* Add the non-lineary part of the transform
      Translate(e, f)
   */
-  result = (PtrTransform)TtaNewTransformTranslate(e, f);
+  result = (PtrTransform)TtaNewTransformTranslate((float)e, (float)f);
   cursor = result;
 
   if(b == 0 && c == 0)
@@ -2828,7 +2828,7 @@ extern void *TtaDecomposeTransform(void *transform)
 
       /* Add the scale if it is not the identity */
       if(!(a == 1 && d == 1))
-	cursor -> Next = (PtrTransform)TtaNewTransformScale(a, d);
+	cursor -> Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
     }
   else if(a == 0 && d == 0)
     {
@@ -2846,12 +2846,12 @@ extern void *TtaDecomposeTransform(void *transform)
       RemoveTranslate = TRUE;
       e/=2;
       f/=2;
-      cursor -> Next = (PtrTransform)TtaNewTransformRotate(90,e-f,e+f);
+      cursor -> Next = (PtrTransform)TtaNewTransformRotate(90,(float)(e-f),(float)(e+f));
       cursor = cursor -> Next;
 
       /* Add the scale if it is not the identity */
       if(!(b == 1 && -c == 1))
-	cursor -> Next = (PtrTransform)TtaNewTransformScale(b,-c);
+	cursor -> Next = (PtrTransform)TtaNewTransformScale((float)b,(float)(-c));
     }
   else if(a == d && b == -c)
     {
@@ -2885,15 +2885,15 @@ extern void *TtaDecomposeTransform(void *transform)
 	  theta1 *= (180 / M_PI);
 	  e/=2;
 	  f/=2;
-	  cursor -> Next = (PtrTransform)TtaNewTransformRotate(theta1,
-							       e - k*f,
-							       k*e + f);
+	  cursor -> Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
+							       (float)(e - k*f),
+							       (float)(k*e + f));
 	  cursor = cursor -> Next;
 	}
 
       /* Add the scale if it is not the identity */
       if(coeff != 1)
-	cursor -> Next = (PtrTransform)TtaNewTransformScale(coeff, coeff);
+	cursor -> Next = (PtrTransform)TtaNewTransformScale((float)coeff, (float)coeff);
     }
   else if(a*b + c*d == 0 && ((b!=0 && c!=0) || (a!=0 && d!=0)))
 	{
@@ -2934,7 +2934,7 @@ extern void *TtaDecomposeTransform(void *transform)
 	  /* case coeff1 == coeff2 == 1
 	     has already been treated in II/
 	     so the following scale is never useless */
-	  cursor -> Next = (PtrTransform)TtaNewTransformScale(coeff1, coeff2);
+	  cursor -> Next = (PtrTransform)TtaNewTransformScale((float)coeff1, (float)coeff2);
 	  cursor = cursor -> Next;
 
 	  /* Group the rotate with the translate if it is possible */
@@ -2952,9 +2952,9 @@ extern void *TtaDecomposeTransform(void *transform)
 	      theta1 *= (180 / M_PI);
 	      e/=2;
 	      f/=2;
-	      cursor -> Next = (PtrTransform)TtaNewTransformRotate(theta1,
-								   e - k*f,
-								   k*e + f);
+	      cursor -> Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
+								   (float)(e - k*f),
+								   (float)(k*e + f));
 	    }
 	}
   else if(a*c + b*d == 0 && ((b!=0 && c!=0) || (a!=0 && d!=0)))
@@ -3001,9 +3001,9 @@ extern void *TtaDecomposeTransform(void *transform)
 	      theta1 *= (180 / M_PI);
 	      e/=2;
 	      f/=2;
-	      cursor -> Next = (PtrTransform)TtaNewTransformRotate(theta1,
-								   e - k*f,
-								   k*e + f);
+	      cursor -> Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
+								   (float)(e - k*f),
+								   (float)(k*e + f));
 	      cursor = cursor -> Next;
 	    }
 
@@ -3011,7 +3011,7 @@ extern void *TtaDecomposeTransform(void *transform)
 	  /* case coeff1 == coeff2 == 1
 	     has already been treated in III/
 	     so the following scale is never useless */
-	  cursor -> Next = (PtrTransform)TtaNewTransformScale(coeff1,coeff2);
+	  cursor -> Next = (PtrTransform)TtaNewTransformScale((float)coeff1,(float)coeff2);
 	}
   else if(a != 0)
     {
@@ -3028,20 +3028,20 @@ extern void *TtaDecomposeTransform(void *transform)
       /* Add the skew if it is not the identity */
       if(theta1 != 0)
 	{
-	  cursor -> Next = (PtrTransform)TtaNewTransformSkewY(theta1);
+	  cursor -> Next = (PtrTransform)TtaNewTransformSkewY((float)theta1);
 	  cursor = cursor -> Next;
 	}
       
       /* Add the scale if it is not the identity */
       if(!(a == 1 && d == 1))
 	{
-	  cursor -> Next = (PtrTransform)TtaNewTransformScale(a, d);
+	  cursor -> Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
 	  cursor = cursor -> Next;
 	}
       
       /* Add the skew if it is not the identity */
       if(theta2 != 0)
-	cursor -> Next = (PtrTransform)TtaNewTransformSkewX(theta2);
+	cursor -> Next = (PtrTransform)TtaNewTransformSkewX((float)theta2);
     }
   else if(d != 0)
     {
@@ -3058,20 +3058,20 @@ extern void *TtaDecomposeTransform(void *transform)
       /* Add the skew if it is not the identity */
       if(theta1 != 0)
 	{
-	  cursor -> Next = (PtrTransform)TtaNewTransformSkewX(theta1);
+	  cursor -> Next = (PtrTransform)TtaNewTransformSkewX((float)theta1);
 	  cursor = cursor -> Next;
 	}
 
       /* Add the scale if it is not the identity */
       if(!(a == 1 && d == 1))
 	{
-	  cursor -> Next = (PtrTransform)TtaNewTransformScale(a, d);
+	  cursor -> Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
 	  cursor = cursor -> Next;
 	}
 
       /* Add the skew if it is not the identity */
       if(theta2 != 0)
-	cursor -> Next = (PtrTransform)TtaNewTransformSkewY(theta2);
+	cursor -> Next = (PtrTransform)TtaNewTransformSkewY((float)theta2);
     }
     
   if(RemoveTranslate || (e == 0 && f == 0))
@@ -4147,29 +4147,29 @@ int TtaGetPageView (Element pageElement)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static ThotBool IsNull(float dx1, float dy1)
+static ThotBool IsNull(double dx1, double dy1)
 {
   return (dx1 == 0 && dy1 == 0);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static float Norm(float dx1, float dy1)
+static double Norm(double dx1, double dy1)
 {
   return sqrt(dx1*dx1+dy1*dy1);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static float UnsignedAngle(float dx1, float dy1,
-			   float dx2, float dy2)
+static double UnsignedAngle(double dx1, double dy1,
+				double dx2, double dy2)
 {
   /*       (dx1) (dx2)
        s = (dy1).(dy2) = r1*r2*cosA
 
    */
 
-  float s, r1, r2, cosA;
+  double s, r1, r2, cosA;
   s = dx1*dx2 + dy1*dy2;
   r1 = Norm(dx1, dy1);
   r2 = Norm(dx2, dy2);
@@ -4189,10 +4189,10 @@ static float UnsignedAngle(float dx1, float dy1,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static ThotBool AlmostOrthogonalVectors(float dx1, float dy1,
-					float dx2, float dy2)
+static ThotBool AlmostOrthogonalVectors(double dx1, double dy1,
+					double dx2, double dy2)
 {
-  float epsilon;
+  double epsilon;
 
   if(IsNull(dx1, dy1) || IsNull(dx2, dy2))return TRUE;
   
@@ -4204,11 +4204,11 @@ static ThotBool AlmostOrthogonalVectors(float dx1, float dy1,
   AlmostColinearVectors
   same = vectors are indentically oriented
   ----------------------------------------------------------------------*/
-static ThotBool AlmostColinearVectors(float dx1, float dy1,
-				      float dx2, float dy2,
+static ThotBool AlmostColinearVectors(double dx1, double dy1,
+				      double dx2, double dy2,
 				      ThotBool same)
 {
-  float angle;
+  double angle;
 
   if(IsNull(dx1, dy1) || IsNull(dx2, dy2))return TRUE;
 
@@ -4219,14 +4219,14 @@ static ThotBool AlmostColinearVectors(float dx1, float dy1,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static ThotBool AlmostEqualAngle(float ax, float ay,
-				 float bx, float by,
-				 float cx, float cy,
-				 float dx, float dy,
-				 float ex, float ey,
-				 float fx, float fy)
+static ThotBool AlmostEqualAngle(double ax, double ay,
+				 double bx, double by,
+				 double cx, double cy,
+				 double dx, double dy,
+				 double ex, double ey,
+				 double fx, double fy)
 {
-  float angle1, angle2;
+  double angle1, angle2;
 
   if(IsNull(ax - bx, ay - by) || IsNull(cx - bx, cy - by) ||
      IsNull(dx - ex, dy - ey) || IsNull(fx - ex, fy - ey))
@@ -4279,17 +4279,17 @@ static void CircularPermutationOnQuadrilateral(int *x1, int *y1,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static ThotBool IsAcuteAngle(float x1, float y1, float x2, float y2,
-			     float x3, float y3)
+static ThotBool IsAcuteAngle(double x1, double y1, double x2, double y2,
+			     double x3, double y3)
 {
   return (UnsignedAngle(x1 - x2, y1 - y2, x3 - x2, y3 - y2) <= M_PI/2);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void GiveIntersectionPoint(float x1, float y1, float dx1, float dy1,
-				  float x2, float y2, float dx2, float dy2,
-				  float *x0, float *y0)
+static void GiveIntersectionPoint(double x1, double y1, double dx1, double dy1,
+				  double x2, double y2, double dx2, double dy2,
+				  double *x0, double *y0)
 {
   /*                   2
    *                    \
@@ -4300,8 +4300,8 @@ static void GiveIntersectionPoint(float x1, float y1, float dx1, float dy1,
    *                         v                  (y2) + u(dy2) = (y0)
    *
    */
-  float t;
-  float a, b, c, d, e, f, det;
+  double t;
+  double a, b, c, d, e, f, det;
   
   a = -dx1;
   b = dx2;
@@ -4379,9 +4379,9 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
   int x1,y1,x2,y2,x3,y3,x4,y4;
   int nbPoints;
   int shape = -1;
-  float w, h;
-  float a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
-  float x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
+  double w, h;
+  double a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
+  double x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
   ThotBool doAnalyse = FALSE;
 
   if(pLeaf->ElLeafType == LtPolyLine && pLeaf->ElPolyLineType == 'p')
@@ -4592,7 +4592,8 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 		    {
 		      /* A parallelogram which is not a rectangle/diamond:
 			 make (4,1,2) a obtuse */
-		      if(IsAcuteAngle(x4, y4, x1, y1, x2, y2))
+		      if(IsAcuteAngle(x4, y4, x1,
+						      y1, x2, y2))
 			CircularPermutationOnQuadrilateral(&x1, &y1, &x2, &y2,
 							   &x3, &y3, &x4, &y4);
 		    }
@@ -4625,12 +4626,12 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	case EQUILATERAL_TRIANGLE:
 	case ISOSCELES_TRIANGLE:
 	  w = Norm(x2 - x3, y2 - y3);
-	  h = Norm(((float) x2+x3)/2 - x1, ((float) y2+y3)/2 - y1);
+	  h = Norm(((double) x2+x3)/2 - x1, ((double) y2+y3)/2 - y1);
 	  if(w == 0 || h == 0)
 	    return FALSE;
 
-	  e = ((float) 2*x1 + x3 - x2)/2;
-	  f = ((float) 2*y1 + y3 - y2)/2;
+	  e = ((double) 2*x1 + x3 - x2)/2;
+	  f = ((double) 2*y1 + y3 - y2)/2;
 
 	  a = (x2 - x3)/w;
 	  b = (y2 - y3)/w;
@@ -4767,7 +4768,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
 	  e = x1_;
 	  f = y1_;
 	  TtaSetGraphicsShape (leaf, 2, doc);
-	  *rx = x1 - x1_;
+	  *rx = (int)(x1 - x1_);
 	  break;
 
 	case DIAMOND:
@@ -4810,7 +4811,7 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
       if(shape != -1)
 	{
 	  TtaAppendTransform (TtaGetParent(leaf),
-			      TtaNewTransformMatrix(a, b, c, d, e, f),
+			      TtaNewTransformMatrix((float)a, (float)b, (float)c, (float)d, (float)e, (float)f),
 			      doc);
       
 	  *width = (int)(w);
