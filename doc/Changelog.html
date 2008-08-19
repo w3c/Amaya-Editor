@@ -39,7 +39,6 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 10.0</a>).</p>
         generates the namespace declarations defined in the RDFa
       Preference.</li>
     </ul>
-    <p>====&gt; since snapshot 10.1-pre</p>
   </li>
   <li>Shift+wheel scrolls the document horizontally</li>
   <li>Support direct resizing of images</li>
@@ -51,7 +50,10 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 10.0</a>).</p>
     declarations that will be attached to the root element for a new XHTML+RDFa
     document</li>
   <li>Support of SVG editing (work in progress)</li>
-  <li>Support of template editing (work in progress)</li>
+  <li>Support of template editing (work in progress)
+    <p>====&gt; since snapshot 10.1-pre3</p>
+  </li>
+  <li>Move to wxWidgets 2.8.8</li>
 </ul>
 
 <h3>Bug fixes</h3>
@@ -67,9 +69,7 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 10.0</a>).</p>
   <li>Documents are now scrolled page by page</li>
   <li>On Mac OS X the focus could be lost when a dialog is closed</li>
   <li>On Mac OS X, Ctrl Enter didn't insert a &lt;br&gt;</li>
-  <li>Improvement of MathML editing 
-    <p>====&gt; since snapshot 10.1-pre</p>
-  </li>
+  <li>Improvement of MathML editing </li>
   <li>It was impossible to extend the selection outside a table</li>
   <li>&lt;br&gt; elements were not copied/pasted</li>
   <li>All attributes in MathML expressions were considered invalid</li>
@@ -82,13 +82,17 @@ href="http://www.w3.org/Amaya/User/New.html">Amaya 10.0</a>).</p>
   <li>Improvement of XML document saving</li>
   <li>On Mac OS X, the default charset was set to us-ascii by error</li>
   <li>Amaya now uses the Content Location to save a remote document without
-    suffix (instead of redirecting to the Save As dialog)</li>
+    suffix (instead of redirecting to the Save As dialog)
+    <p>====&gt; since snapshot 10.1-pre3</p>
+  </li>
+  <li>Avoid to display a redirection confirm message when the domain is within
+    the list of of automatic PUT redirections</li>
 </ul>
 
 <p></p>
 <hr />
 <address>
-  last revised Date: <!--$date=-->2008-07-02<!--$-->
+  last revised Date: <!--$date=-->2008-08-19<!--$-->
 
 </address>
 </body>
