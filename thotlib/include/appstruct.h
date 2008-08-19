@@ -74,7 +74,7 @@ extern void         TteAddMenuItem (int menuID, int subMenuID, int itemID, const
 
 extern void         TteAddAction (const char* actionName, Proc doIt);
 extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, const char* actionName);
-extern PtrEventsSet TteGetEventsSet (char *name);
+extern PtrEventsSet TteGetEventsSet (const char *name);
 extern PtrEventsSet TteNewEventsSet (int structureId, const char *name);
 extern void         TtcStandardPresentation (Document document, View view);
 extern void         TtcStandardGeometry (Document document, View view);

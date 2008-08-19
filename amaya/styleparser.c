@@ -4074,7 +4074,7 @@ static char *ParseCSSMaxWidth (Element element, PSchema tsch,
       CSSParseError ("Invalid width value", ptr, cssRule);
   else if (DoDialog)
     DisplayStyleValue ("max-width", ptr, cssRule);
-  else if (DoApply)
+  /*else if (DoApply)*/
     /* install the new presentation */
     /*TtaSetStylePresentation (PRWidth, element, tsch, context, val)*/;
   return (cssRule);
@@ -4110,7 +4110,7 @@ static char *ParseCSSMinWidth (Element element, PSchema tsch,
     CSSParseError ("Invalid width value", ptr, cssRule);
   else if (DoDialog)
     DisplayStyleValue ("min-width", ptr, cssRule);
-  else if (DoApply)
+  /*else if (DoApply)*/
     /* install the new presentation */
     /*TtaSetStylePresentation (PRWidth, element, tsch, context, val)*/;
   return (cssRule);

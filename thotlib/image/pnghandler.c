@@ -662,7 +662,11 @@ ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *b_w, int *b_h,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-  ThotColorStruct *colrs = NULL;
+#ifndef _GL
+	ThotPixmap pixmap = (ThotPixmap) NULL;
+#endif
+
+	ThotColorStruct *colrs = NULL;
 #if defined (_WINGUI) && !defined (_GL)
   unsigned short   red, green, blue;
 #endif /* _WINGUI */
