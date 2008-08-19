@@ -94,8 +94,10 @@ protected:
 #ifdef __WXDEBUG__
   void OnPageChanging(wxAuiNotebookEvent& event);
 #endif /* __WXDEBUG__ */
+  
+  void OnMouseRightDown(wxAuiNotebookEvent& event);
+  
   void OnPageChanged(wxAuiNotebookEvent& event);
-  void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
   
   void OnClose(wxCloseEvent& event);

@@ -371,11 +371,11 @@ AmayaWindow * AmayaAdvancedNotebook::GetAmayaWindow()
   return wxDynamicCast(wxGetTopLevelParent(this), AmayaWindow);
 } 
 
-/*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
-void AmayaAdvancedNotebook::OnContextMenu( wxContextMenuEvent & event )
+
+
+void AmayaAdvancedNotebook::OnMouseRightDown(wxAuiNotebookEvent& event)
 {
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaAdvancedNotebook::OnContextMenu - (x,y)=(%d,%d)"),
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaAdvancedNotebook::OnMouseRightDown - (x,y)=(%d,%d)"),
                  event.GetPosition().x,
                  event.GetPosition().y );
 
@@ -383,18 +383,19 @@ void AmayaAdvancedNotebook::OnContextMenu( wxContextMenuEvent & event )
 
   /* Specific wxAuiNotebook protected code : */
   wxWindow* wnd;
-  wxPoint pos = ScreenToClient(event.GetPosition());
+  wxPoint pos = ScreenToClient(wxGetMousePosition());
   wxAuiTabCtrl* tab = GetTabCtrlFromPoint(pos);
   if(tab)
     {
-      pos = tab->ScreenToClient(event.GetPosition());
+      pos = tab->ScreenToClient(wxGetMousePosition());
       if (tab->TabHitTest(pos.x, pos.y, &wnd))
       {
         page_id = GetPageIndex(wnd);
       }
     }
   int window_id = GetAmayaWindow()->GetWindowId();
-  wxPoint point = event.GetPosition();
+  wxPoint point = wxGetMousePosition();
+  
 
   // store the aimed frame, it's possible that it is not the current active one
   if (page_id >= 0)
@@ -403,7 +404,7 @@ void AmayaAdvancedNotebook::OnContextMenu( wxContextMenuEvent & event )
       wxMenu * p_menu = TtaGetContextMenu ( window_id );
       if(p_menu)
         PopupMenu (p_menu, ScreenToClient(point));
-    }
+    }  
 }
 
 /*----------------------------------------------------------------------
@@ -416,7 +417,7 @@ BEGIN_EVENT_TABLE(AmayaAdvancedNotebook, wxAuiNotebook)
 #ifdef __WXDEBUG__  
   EVT_AUINOTEBOOK_PAGE_CHANGING( -1, AmayaAdvancedNotebook::OnPageChanging )
 #endif /* __WXDEBUG__ */
-  EVT_CONTEXT_MENU(               AmayaAdvancedNotebook::OnContextMenu )
+  EVT_AUINOTEBOOK_TAB_RIGHT_DOWN( -1, AmayaAdvancedNotebook::OnMouseRightDown )
 END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */
