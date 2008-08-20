@@ -1698,16 +1698,17 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 							      pAb->AbElement->ElTypeNumber,
 						       pAb->AbElement->ElStructSchema) )
 			{
-			  int x0, y0;
-			  x0 = pBox->BxClipX - (pAb->AbEnclosing->AbBox->BxXOrg - pFrame->FrXOrg);
-			  y0 = pBox->BxClipY - (pAb->AbEnclosing->AbBox->BxYOrg - pFrame->FrYOrg);
 			  /* Draw the bounding box */
-			  DrawRectangle (frame, 1, 5,
-					 clipXOfFirstCoordSys + x0,
-					 clipYOfFirstCoordSys + y0,
+			  glPushMatrix ();
+			  glLoadIdentity();
+			  DrawRectangle (frame, 0, 5,
+					 pBox->BxClipX,
+					 pBox->BxClipY,
 					 pBox->BxClipW,
 					 pBox->BxClipH,
-					 TtaGetThotColor(255, 0, 0), 0, 0);
+					 TtaGetThotColor(255, 100, 100), 0, 4);
+
+			  glPopMatrix();
 			}
 
 
