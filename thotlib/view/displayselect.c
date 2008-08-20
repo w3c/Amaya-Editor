@@ -505,6 +505,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    break;
 
 	  case 2: /* Parallelogram */
+	    thick+=2;
 	    rx = pBox->BxRx;
 	    DrawHandle(ROUNDED_HANDLE, frame, thick, leftX+rx, topY);
 	    DrawHandle(h, frame, thick, rightX, topY);
@@ -526,6 +527,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    break;
 
 	  case 3: /* Trapezium */
+	    thick+=2;
 	    rx = pBox->BxRx;
 	    ry = pBox->BxRy;
 
@@ -565,6 +567,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 
 	  case 4: /* Equilateral triangle */
 	  case 5: /* Isosceles triangle */
+	    thick+=2;
             /* control points */
 	    DrawHandle(h, frame, thick, middleX, topY);
 	    DrawHandle(h, frame, thick, leftX, bottomY);
@@ -579,6 +582,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 	    break;
 
 	  case 6: /* rectangle triangle */
+	    thick+=2;
             /* control points */
 	    DrawHandle(h, frame, thick, leftX, topY);
 	    DrawHandle(h, frame, thick, leftX, bottomY);
@@ -592,6 +596,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 
 	  case 7: /* square */
           case 8: /* rectangle */
+	    thick+=2;
 	    DrawHandle(h, frame, thick, middleX, topY);
 	    DrawHandle(h, frame, thick, leftX, middleY);
 	    DrawHandle(h, frame, thick, middleX, bottomY);
