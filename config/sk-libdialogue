@@ -132,8 +132,8 @@
 130 Neznámy atribút
 131 Zrušiť
 132 Chyba v PostScriptovom preklade
-133 Príkaz odmietnutý tlačiarňou  " %s "
-134 Nedá sa vytvoriť  " %s "
+133 Príkaz odmietnutý tlačiarňou "%s"
+134 Nedá sa vytvoriť "%s"
 135 Pruh nad
 136 Formát dokumentu
 137 Odstániť atribút
@@ -155,8 +155,8 @@
 153 Chyba súboru s parametrami
 154 Neexistuje súbor klávesnice
 155 Slovník sa nedá uložiť
-156 Nesprávne slovo  " %s "  bolo zamietnuté v tomto slovníku
-157 Slovo  " %s "  bolo pridané do slovníka
+156 Nesprávne slovo "%s" bolo zamietnuté v tomto slovníku
+157 Slovo "%s" bolo pridané do slovníka
 158 Koniec kontroly pravopisu
 159 Kontrola pravopisu prerušená
 160 Prosím vyberte dokument
@@ -197,7 +197,7 @@
 195 Silno zvýrazniť On/Off
 196 Zdrojový kód On/Off
 197 Obrázok (img)
-198 Nadpis ú rovne 1
+198 Nadpis úrovne 1
 199 Nadpis úrovne 2
 200 Nadpis úrovne 3
 201 Nadpis úrovne 4
@@ -272,10 +272,10 @@
 270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 **Classic
 278 **Modern
 279 **No theme

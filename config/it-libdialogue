@@ -132,8 +132,8 @@
 130 Attributo sconosciuto
 131 Annulla
 132 Errore nella traduzione in PostScript
-133 Comando rifiutato dallo spooler  " %s "
-134 Impossibile creare  " %s "
+133 Comando rifiutato dallo spooler "%s"
+134 Impossibile creare "%s"
 135 Soprassegnato
 136 Formato del documento
 137 Rimuovi l\'attributo
@@ -155,8 +155,8 @@
 153 Errore nel file dei parametri
 154 Il file della tastiera non esiste
 155 Impossibile salvare il dizionario del documento
-156 Parola scorretta  " %s "  rifiutata in questo dizionario
-157 Parola  " %s "  aggiunta nel dizionario del documento
+156 Parola scorretta "%s" rifiutata in questo dizionario
+157 Parola "%s" aggiunta nel dizionario del documento
 158 Fine controllo ortografico
 159 Controllo ortografico interrotto
 160 Seleziona un documento
@@ -272,10 +272,10 @@
 270 Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 Classico
 278 Moderno
 279 Senza tema

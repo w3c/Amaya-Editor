@@ -132,8 +132,8 @@
 130 Ismeretlen attribútum
 131 Mégsem
 132 HIba a PostScript fordításban
-133 A parancsot visszautasította a sorkezelő  " %s "
-134 " %s "  nem hozható létre
+133 A parancsot visszautasította a sorkezelő "%s"
+134 "%s" nem hozható létre
 135 Felülvonás
 136 Dokumentum formátum
 137 Attribútum eltávolítása
@@ -201,7 +201,7 @@
 199 2. szint
 200 3. szint
 201 4. szint
-202 & Bekezdés
+202 &Bekezdés
 203 Listajeles lista
 204 Számozott lista
 205 Meghatározás lista
@@ -215,9 +215,9 @@
 213 Dobozok
 214 Felosztás
 215 Célpont
-216 & Beillesztés On/Off
-217 & Törlés On/Off
-218 & Alsó index On/Off
+216 &Beillesztés On/Off
+217 &Törlés On/Off
+218 &Alsó index On/Off
 219 Felső index On/Off
 220 Szócikk
 221 Meghatározás
@@ -248,12 +248,12 @@
 246 Elem kijelölése kattintással
 247 Szerkesztési mód váltása kattintással
 248 Egyesítés
-249 Shrink  & horizontal extend
-250 Shrink  & vertical extend
-251 Sor  & beillesztése
-252 Sor  & hozzáadása
-253 Oszlop be & illesztése
-254 Oszlop hozzá & adása
+249 Shrink &horizontal extend
+250 Shrink &vertical extend
+251 Sor &beillesztése
+252 Sor &hozzáadása
+253 Oszlop be&illesztése
+254 Oszlop hozzá&adása
 255 A nap tippje
 256 Tipp mutatása a program indulásakor
 257 **Previous tip
@@ -272,10 +272,10 @@
 270 A dokumentumfüleken lévő nyíl gomb megnyásakor megjelenő menü segítségével átválthatunk másik fülre.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 Klasszikus
 278 Modern
 279 Téma nélkül

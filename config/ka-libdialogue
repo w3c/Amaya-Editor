@@ -132,8 +132,8 @@
 130 უცნობი ატრიბუტი
 131 გაუქმება
 132 შეცდომა PostScript გარდაქმნაში
-133 ბრძანება უარყოფილია ბუფერის მიერ  " %s "
-134 ვერ იქმნება  " %s "
+133 ბრძანება უარყოფილია ბუფერის მიერ "%s"
+134 ვერ იქმნება "%s"
 135 ზედა ხაზი
 136 დოკუმენტის ფორმატი
 137 ატრიბუტის ამოღება
@@ -155,8 +155,8 @@
 153 პარამეტრის ფაილის შეცდომა
 154 კლავიატურის ფაილი არაა
 155 დოკუმენტის სიტყვარის შენახვა ვერ ხერხდება
-156 მცდარი სიტყვა  " %s "  ამ სიტყვარში უარყოფილია
-157 სიტყვა  " %s "  დოკუმე ნტის სიტყვარს დაემატა
+156 მცდარი სიტყვა "%s" ამ სიტყვარში უარყოფილია
+157 სიტყვა "%s" დოკუმენტის სიტყვარს დაემატა
 158 მართლწერის შემოწმების დასრულება
 159 მართლწერის შემოწმება შეწყდა
 160 გთხოვთ შეარჩიოთ დოკუმენტი
@@ -272,10 +272,10 @@
 270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 **Classic
 278 **Modern
 279 **No theme

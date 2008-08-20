@@ -132,8 +132,8 @@
 130 Неизвестный атрибут
 131 Отмена
 132 Ошибка PostScript преобразования
-133 Команда отвергнута спулером  " %s "
-134 Невозможно создать  " %s "
+133 Команда отвергнута спулером "%s"
+134 Невозможно создать "%s"
 135 Надстрочное
 136 Тип документа
 137 Удалить атрибут
@@ -155,8 +155,8 @@
 153 Ошибка параметра файла
 154 Отсутствует файл клавиатуры (Amaya-*.*/config/amaya.kb)
 155 Невозможно сохранить словарь документа
-156 Неправильное слово  " %s "  не будет добавлено в словарь
-157 Слово  " %s "  добавлено в словарь документа
+156 Неправильное слово "%s" не будет добавлено в словарь
+157 Слово "%s" добавлено в словарь документа
 158 Конец проверки правописания
 159 Проверка правописания прервана
 160 Выберите документ
@@ -272,10 +272,10 @@
 270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 **Classic
 278 **Modern
 279 **No theme

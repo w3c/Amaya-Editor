@@ -1,26 +1,26 @@
 # encoding= utf8
-0 & Súbor
+0 &Súbor
 1 Kontext
 2 Kontext
-3 & Upraviť
-4 & Zobrazenia
+3 &Upraviť
+4 &Zobrazenia
 5 Vložiť
-6 Š & týl
-7 P & repojenia
+6 Š&týl
+7 P&repojenia
 8 Atribúty
-9 **& Tools
-10 & Pomocník
+9 **&Tools
+10 &Pomocník
 11 Nová karta
-12 Nový  & dokument...
+12 Nový &dokument...
 13 Nový
-14 Nový  & dokument...
-15 Nový  & MathML dokument...
-16 Nový SV & G dokument...
-17 Nový súbor  & CSS pravidiel...
-18 & Otvoriť dokument...
-19 & Súbor
-20 Otvoriť v novom o & kne...
-21 & Aktualizovať dokument
+14 Nový &dokument...
+15 Nový &MathML dokument...
+16 Nový SV&G dokument...
+17 Nový súbor &CSS pravidiel...
+18 &Otvoriť dokument...
+19 &Súbor
+20 Otvoriť v novom o&kne...
+21 &Aktualizovať dokument
 22 Načítať s kódovaním
 23 Unicode (UTF-8)
 24 Západné (ISO-8859-1)
@@ -46,18 +46,18 @@
 44 Japonské (ISO-2022-JP)
 45 Japonské (EUC-JP)
 46 Japonské (Shift-JIS)
-47 & Späť
-48 & Dopredu
-49 & Uložiť
-50 Uložiť  & ako...
+47 &Späť
+48 &Dopredu
+49 &Uložiť
+50 Uložiť &ako...
 51 **Save all
-52 S & ynchronizovať
+52 S&ynchronizovať
 53 Odoslať mailom ...
-54 T & lačiť...
-55 T & lačiť
-56 & Zavrieť kartu
-57 Zav & rieť okno
-58 U & končiť
+54 T&lačiť...
+55 T&lačiť
+56 &Zavrieť kartu
+57 Zav&rieť okno
+58 U&končiť
 59 Nová karta
 60 Aktualizovať kartu
 61 Aktualizovať všetky karty
@@ -77,39 +77,39 @@
 75 Vymazať
 76 Vložiť pred
 77 Vložiť za
-78 & Späť
-79 & Opakovať
-80 & Vystrihnúť
-81 & Kopírovať
-82 & Prilepiť
-83 Vy & mazať
-84 Vložiť pre & d
-85 Vložiť  & za
+78 &Späť
+79 &Opakovať
+80 &Vystrihnúť
+81 &Kopírovať
+82 &Prilepiť
+83 Vy&mazať
+84 Vložiť pre&d
+85 Vložiť &za
 86 **Select all
 87 Prejsť na...
 88 Rodičovský prvok
 89 Prvý potomok
 90 Predchazajúci prvok
 91 Nasledujúci prvok
-92 & Hľadať
-93 & Možnosti
+92 &Hľadať
+93 &Možnosti
 94 **Show/Hide toolbars
-95 **& Browsing
-96 **& Editing
-97 Panel s  & nástrojmi
-98 Oblasti  & obrázkov
-99 & Záložky
-100 & Normálne zobrazenie
-101 & Štruktúru
+95 **&Browsing
+96 **&Editing
+97 Panel s &nástrojmi
+98 Oblasti &obrázkov
+99 &Záložky
+100 &Normálne zobrazenie
+101 &Štruktúru
 102 Zdrojový kód stránky
 103 Hypertextové odkazy
 104 Len text
 105 Obsah
 106 Rozdeliť okno horizontálne
 107 Rozdeliť okno vertikálne
-108 & Vlastnosti...
+108 &Vlastnosti...
 109 Zobraziť chyby
-110 & Celá obrazovka
+110 &Celá obrazovka
 111 Zväčšiť veľkosť textu
 112 Zmenšiť veľkosť textu
 113 **Normal zoom
@@ -162,14 +162,14 @@
 160 Hlavička tabuľky (thead)
 161 Telo tabuľky (tbody)
 162 Päta tabuľky (tfoot)
-163 & Math
+163 &Math
 164 Vložiť vzorec
 165 Text (mtext)
 166 Identifikátor (mi)
 167 Číslo (mn)
 168 Operátor (mo)
 169 Medzera (mspace)
-170 Znaky ( & xxx;)
+170 Znaky (&xxx;)
 171 Neviditeľný multiplikátor (InvisibleTimes)
 172 Aplikovanie funkcie (ApplyFunction)
 173 Odmocnina (mroot)
@@ -267,24 +267,24 @@
 265 Znaky
 266 **Select a font...
 267 **Default
-268 CSS  & pravidlá...
-269 Vytvoriť  & pravidlo...
+268 CSS &pravidlá...
+269 Vytvoriť &pravidlo...
 270 Zobraziť použité štýly...
 271 Kaskádové štýly
 272 Pripojiť súbor s CSS...
 273 Otvoriť súbor s CSS...
 274 Vypnuť CSS pravidlá...
-275 & Zapnúť CSS pravidlá...
+275 &Zapnúť CSS pravidlá...
 276 Ostrániť súbor s CSS...
 277 Kopírovať adresu odkazu
 278 Prilepiť adresu odkazu
-279 & Prepojiť s predošlou záložkou
-280 & Vytvoriť alebo zmeniť odkaz...
-281 Vytvoriť  & záložku
-282 O & dstrániť odkaz/záložku
-283 & Pridať/odstrániť ID...
-284 Kontrola pravopi & su
-285 T & ransformovať
+279 &Prepojiť s predošlou záložkou
+280 &Vytvoriť alebo zmeniť odkaz...
+281 Vytvoriť &záložku
+282 O&dstrániť odkaz/záložku
+283 &Pridať/odstrániť ID...
+284 Kontrola pravopi&su
+285 T&ransformovať
 286 **Code clean up
 287 **Edit table
 288 Zmeniť na bunku s dátami
@@ -313,15 +313,15 @@
 311 **Change to XHTML+RDFa
 312 Zmeniť na HTML 4.01 Transitional
 313 Zmeniť na HTML 4.01 Strict
-314 & Očíslovať podkapitoly
-315 & Vytvoriť obsah
-316 & Zostaviť knihu
+314 &Očíslovať podkapitoly
+315 &Vytvoriť obsah
+316 &Zostaviť knihu
 317 Vložiť dnešný dátum
-318 & Komentáre
+318 &Komentáre
 319 Okomentovať výber
 320 Okomentovať dokument
 321 Presunúť k výberu
-322 Uložiť výber ako  & XPointer
+322 Uložiť výber ako &XPointer
 323 Presunúť k uloženému XPointeru
 324 Reagovať na komentár
 325 Odoslať na server
@@ -329,7 +329,7 @@
 327 Nahrať komentár
 328 Zadefinovať požiadavku...
 329 Filtrovať komentáre...
-330 Sp & olupráca
+330 Sp&olupráca
 331 Uzamknúť zdrojový súbor...
 332 Odomknúť zdrojový súbor...
 333 Zobraziť vlastnosti zdroja...
@@ -341,7 +341,7 @@
 339 **Create and use a component
 340 **Create a free editing box
 341 **Create a repeated component
-342 & Javascript/DOM
+342 &Javascript/DOM
 343 **Enable/Disable
 344 **Execute a command
 345 **Execute an external script

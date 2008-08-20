@@ -132,8 +132,8 @@
 130 未知の属性
 131 キャンセル
 132 ポストスクリプト翻訳におけるエラー
-133 スプーラ " %s " によってコマンドが拒否されました
-134 " %s " を作成できません
+133 スプーラ"%s"によってコマンドが拒否されました
+134 "%s"を作成できません
 135 オーバライン
 136 ドキュメント形式
 137 属性の消去
@@ -155,8 +155,8 @@
 153 パラメータファイルエラー
 154 キーボードファイルがありません
 155 このドキュメントディクショナリは保存できません
-156 不正な単語  " %s "  がこのディクショナリに拒否されました
-157 単語  " %s "  がドキュメントディクショナリに追加されました
+156 不正な単語 "%s" がこのディクショナリに拒否されました
+157 単語 "%s" がドキュメントディクショナリに追加されました
 158 スペルチェックが完了しました
 159 スペルチェックが中断されました
 160 ドキュメントを選択してください
@@ -272,10 +272,10 @@
 270 文書タブ右にあるボタンで、表示されているメニューの異なるタブへ移動することができます
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 クラシック
 278 モダン
 279 テーマなし

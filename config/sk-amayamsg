@@ -179,7 +179,7 @@
 177 Farba textu menu
 178 Farba pozadia menu
 179 Nedá sa spustiť Cache. Asi ste zadali neplatný priečinok pre dočasné súbory Cache alebo ho uzamkol iný používateľ.
-180 Zoznam uprednostňovaných jazykov napr.:  " sk, cs, en " :
+180 Zoznam uprednostňovaných jazykov napr.: "sk, cs, en":
 181 Táto zmena sa neprejaví pokým program Amaya nebude reštartovaný
 182 Povoliť automatické presmerovanie metódy PUT pre tieto domény
 183 Ignorovať pravidlá CSS
@@ -211,7 +211,7 @@
 209 Skúste zvoliť 'Súbor/Načítať s kódovaním'
 210 Neplatný znak
 211 Profil dokumentu:
-212 Nájdené chyby - pozri Súbor  >  Skontrolovať chyby
+212 Nájdené chyby - pozri Súbor > Skontrolovať chyby
 213 Kódovanie tohto dokumentu nie je podporované programom Amaya
 214 Úpravou a uložením tohto dokumentu zmeníte jeho typ
 215 Nedostupné
@@ -342,7 +342,7 @@
 340 Popis:
 341 Vyberte prvok
 342 Všetky CSS pravidlá
-343 CSS pravidlá aplikované na  < %s >  prvok\n
+343 CSS pravidlá aplikované na <%s> prvok\n
 344 Modré riadky sú prepojenia aktivovateľné dvojitým (alebo jednoduchým) kliknutím\n
 345 Načítať objekty (object, embed, iframe)
 346 Pre tento prvok nie sú definované CSS pravidlá
@@ -354,7 +354,7 @@
 352 Dĺžka dokumentu
 353 Umiestnenie obsahu
 354 Možnosti
-355 Znak ( & xxx;)
+355 Znak (&xxx;)
 356 Vytvoriť objekt
 357 Priečinok
 358 Súbor
@@ -461,7 +461,7 @@
 459 **With caption
 460 **Size
 461 **Position
-462 **XM L editing mode
+462 **XML editing mode
 463 **List of style sheets
 464 **Add a style sheet...
 465 **Remove selected style sheets

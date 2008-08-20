@@ -58,9 +58,9 @@
             <object class="wxChoice" name="wxID_CHOICE_PROFILE">
               <content>
                 <item>Lite</item>
-                <item>Lite+Math</item>
-                <item>Lite+Math+Web</item>
-                <item>Lite+Math+Web+CSS</item>
+                <item>Lite+Math_Graphics</item>
+                <item>Lite+Math_Graphics+Web</item>
+                <item>Lite+Math_Graphics+Web+CSS</item>
                 <item>Advanced</item>
               </content>
             </object>

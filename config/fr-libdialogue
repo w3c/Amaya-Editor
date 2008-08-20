@@ -132,8 +132,8 @@
 130 Attribut inconnu
 131 Annuler
 132 Erreur dans la traduction en PostScript
-133 Commande refusée par le spooler  " %s "
-134 Impossible de créer  " %s "
+133 Commande refusée par le spooler "%s"
+134 Impossible de créer "%s"
 135 Surligné
 136 Format de document
 137 Retirer l'attribut
@@ -155,12 +155,12 @@
 153 Erreur dans le fichier des paramètres
 154 Absence de fichier clavier
 155 Impossible d\'enregistrer le dictionnaire du document
-156 Mot  " %s "  incorrect refusé dans ce dictionnaire
-157 Mot  " %s "  ajouté dans le dictionnaire du document
+156 Mot "%s" incorrect refusé dans ce dictionnaire
+157 Mot "%s" ajouté dans le dictionnaire du document
 158 Correction terminée
 159 Correction interrompue
 160 Sélectionnez un document
-161 Sauvegarde du dictionnaire  " %s "
+161 Sauvegarde du dictionnaire "%s"
 162 Pas disponible dans cette version
 163 Activer/Desactiver palette
 164 Outils
@@ -272,10 +272,10 @@
 270 Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.
 271 Si vous activez "Voir les cibles" dans le menu "Vues", des cibles sont affichées en vue formatée. Cela est pratique pour la création de lien : une cible peut être choisie en cliquant dessus.
 272 Lors de la rotation d'un objet SVG, le centre est indiqué par une croix. Il peut être déplacé à l'aide de la souris.
-273 Les figures élémentaires SVG ont des poignées qui peuvent être utilisées pour les éditer. Des triangles bleus ou des carrés verts permettent de changer leur taille. Pour les éléments  < rect/ > , des ronds rouges donnent un controle sur les rayons des coins arrondis.
+273 Les figures élémentaires SVG ont des poignées qui peuvent être utilisées pour les éditer. Des triangles bleus ou des carrés verts permettent de changer leur taille. Pour les éléments <rect/>, des ronds rouges donnent un controle sur les rayons des coins arrondis.
 274 Pour les dessins SVG, les lignes sont dessinées avec une précision de 15° si vous pressez le bouton shift. Cela est utile si vous souhaitez dessiner des lignes droites.
 275 Lors du redimensionnement d'une image ou d'un objet SVG, l'appui de la touche shift permet de préserver le rapport des dimensions.
-276 Utilisez Édition > Préférences > Langue des dialogues pour choisir la langue de l'interface utilisateur.
+276 Utilisez Édition>Préférences>Langue des dialogues pour choisir la langue de l'interface utilisateur.
 277 Classique
 278 Moderne
 279 Pas de thème
@@ -324,12 +324,12 @@
 322 Distribuer bords droits
 323 Distribuer bords supérieurs
 324 Distribuer espacements verticaux
-325 Distribuer espa cements horizontaux
+325 Distribuer espacements horizontaux
 326 Courbe de Bézier fermée
 327 Courbe de Bézier
-328 Segments de droite ( < polyline/ > )
+328 Segments de droite (<polyline/>)
 329 Polygone
-330 Objet étranger ( < foreignObject/ > )
+330 Objet étranger (<foreignObject/>)
 331 Image
 332 Canevas SVG
 333 Texte

@@ -132,8 +132,8 @@
 130 Atributo desconocido
 131 Cancelar
 132 Error en traducción PostScript
-133 Orden rechazada por el spooler  " %s "
-134 No puedo crear  " %s "
+133 Orden rechazada por el spooler "%s"
+134 No puedo crear "%s"
 135 Suprarayado
 136 Formato de documento
 137 Eliminar atributo
@@ -155,8 +155,8 @@
 153 Error en archivo de parámetro
 154 No hay archivo de teclado
 155 No puedo guardar el diccionario del documento
-156 Palabra incorrecta  " %s "  rechazada en este diccionario
-157 Palabra  " %s "  añadida al diccionario del documento
+156 Palabra incorrecta "%s" rechazada en este diccionario
+157 Palabra "%s" añadida al diccionario del documento
 158 Fin de la corrección ortográfica
 159 Corrección ortográfica abortada
 160 Por favor, seleccione un documento
@@ -239,8 +239,8 @@
 237 Aritmética, operaciones, complejos y constantes
 238 Análisis, álgebra lineal y estadística
 239 Trigonometría y logaritmos
-240 & Aumentar tamaño de texto
-241 & Reducir tamaño de texto
+240 &Aumentar tamaño de texto
+241 &Reducir tamaño de texto
 242 Tema
 243 XML
 244 Texto
@@ -260,8 +260,8 @@
 258 Siguiente sugerencia
 259 ¿Sabía que...?
 260 **Close
-261 Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar  >  Preferencias.
-262 Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar  >  Preferencias.
+261 Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar > Preferencias.
+262 Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar > Preferencias.
 263 Con la tecla F2 o Escape se puede seleccionar el elemento padre del elemento seleccionado para aplicarle funciones de edición (copiar, pegar, atributos, etc).
 264 Puede mostrar dos o más documentos simultáneamente arrastrando la pestaña de un documento a uno de los bordes del documento visible.
 265 En el modo Personalizable, puede arrastrar los paneles de herramientas para cambiar su orden o mantenerlos flotantes.
@@ -272,10 +272,10 @@
 270 Puede cambiar de pestaña de documento mediante el menú que se despliega haciendo clic en el botón en forma de flecha situado en el extremo derecho de las pestañas de documentos.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 Clásico
 278 Moderno
 279 Sin tema

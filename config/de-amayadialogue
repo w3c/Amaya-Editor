@@ -1,26 +1,26 @@
 # encoding= latin1
-0 & Datei
+0 &Datei
 1 Context
 2 Context
-3 & Bearbeiten
-4 & Ansicht
-5 & Einfügen
-6 Forma & te
-7 & Verweis
+3 &Bearbeiten
+4 &Ansicht
+5 &Einfügen
+6 Forma&te
+7 &Verweis
 8 Attribute
-9 & Extras
-10 & Hilfe
+9 &Extras
+10 &Hilfe
 11 Eine neue Registerkarte erstellen
-12 & Dokument...
+12 &Dokument...
 13 Neu
-14 & Dokument...
-15 & MathML...
+14 &Dokument...
+15 &MathML...
 16 SVG...
-17 Forma & tvorlage...
-18 Öffnen( & O)...
-19 & Datei
+17 Forma&tvorlage...
+18 Öffnen(&O)...
+19 &Datei
 20 Öffnen (neues Fenster)...
-21 Aktualisie & ren
+21 Aktualisie&ren
 22 Lies als
 23 Unicode (UTF-8)
 24 Western (ISO-8859-1)
@@ -48,12 +48,12 @@
 46 Japanisch (Shift-JIS)
 47 Zurück
 48 Vorwärts
-49 & Speichern
+49 &Speichern
 50 Speichern unter...
 51 Alles speichern
-52 S & ynchronisieren
+52 S&ynchronisieren
 53 Per E-Mail senden...
-54 Dr & uckoptionen...
+54 Dr&uckoptionen...
 55 Drucken
 56 Registerkarte schließen
 57 Schließen
@@ -83,8 +83,8 @@
 81 Kopieren
 82 Einfügen
 83 Löschen
-84 & Einfügen (davor)
-85 & Inzufügen (danach)
+84 &Einfügen (davor)
+85 &Inzufügen (danach)
 86 Wählen Sie alle
 87 Wählen Sie
 88 Vorfahrenelement
@@ -94,9 +94,9 @@
 92 Suchen/Ersetzen...
 93 Einstellungen
 94 Werkzeugleisten anzeigen/ausblenden
-95 & Durchsuchen
-96 & Bearbeiten
-97 & Hilfsmittel anzeigen
+95 &Durchsuchen
+96 &Bearbeiten
+97 &Hilfsmittel anzeigen
 98 Aktive Bildbereiche
 99 Anker anzeigen
 100 Layoutansicht
@@ -107,9 +107,9 @@
 105 Inhaltsverzeichnis
 106 Ansicht horizontal teilen
 107 Ansicht vertikal teilen
-108 & info
+108 &info
 109 Parserfehler anzeigen
-110 & Vollbildanzeige
+110 &Vollbildanzeige
 111 Schrift vergrößern
 112 Schrift verkleinern
 113 **Normal zoom
@@ -162,14 +162,14 @@
 160 Kopf (thead)
 161 Körper (tbody)
 162 Fußzeile (tfoot)
-163 & Math
+163 &Math
 164 Abbildung formel
 165 Text (mtext)
 166 Bezeichner (mi)
 167 Zahl (mn)
 168 Operator (mo)
 169 Leerzeichen (mspace)
-170 Zeichen ( & xxx;)
+170 Zeichen (&xxx;)
 171 Unsichtbare Multiplikation
 172 Angewendete Funktion
 173 Wurzel (mroot)
@@ -267,7 +267,7 @@
 265 Schriftart
 266 Schriftart wählen...
 267 Voreinstellung
-268 & Stil editieren
+268 &Stil editieren
 269 Regel erzeugen...
 270 Zugewiesenes Format anzeigen...
 271 Formate/Formatvorlagen
@@ -317,7 +317,7 @@
 315 Inhaltsverzeichnis erzeugen
 316 Buch erstellen
 317 Zeitstempel einfügen
-318 A & nmerkungen
+318 A&nmerkungen
 319 Zur Markierung
 320 Zum Dokument
 321 Auf Markierung verschieben
@@ -329,7 +329,7 @@
 327 Laden
 328 Abfrage bearbeiten...
 329 Filter...
-330 & Kooperation
+330 &Kooperation
 331 Resource sperren...
 332 Resource entsperren...
 333 Resourceeigenschaften anzeigen...
@@ -341,7 +341,7 @@
 339 **Create and use a component
 340 **Create a free editing box
 341 **Create a repeated component
-342 & Javascript/DOM
+342 &Javascript/DOM
 343 Java-Unterstützung ein-/ausschalten
 344 Befehl ausführen
 345 externes Skript ausführen

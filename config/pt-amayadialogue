@@ -1,26 +1,26 @@
 # encoding= latin1
-0 & Arquivo
+0 &Arquivo
 1 Context
 2 Context
-3 & Editar
-4 & Vistas
-5 **& Insert
-6 E & stilo
-7 En & laces
+3 &Editar
+4 &Vistas
+5 **&Insert
+6 E&stilo
+7 En&laces
 8 Atributos
-9 **& Tools
-10 A & juda
+9 **&Tools
+10 A&juda
 11 **New tab
-12 Novo  & documento...
+12 Novo &documento...
 13 Novo
-14 Novo  & documento...
-15 Novo documento  & MathML...
-16 Novo documento SV & G...
-17 Nova folha de es & tilo CSS...
-18 Abrir d & ocumento...
-19 & Arquivo
+14 Novo &documento...
+15 Novo documento &MathML...
+16 Novo documento SV&G...
+17 Nova folha de es&tilo CSS...
+18 Abrir d&ocumento...
+19 &Arquivo
 20 Abrir em nova janela...
-21 & Recarregar documento
+21 &Recarregar documento
 22 **Read as
 23 Unicode (UTF-8)
 24 Western (ISO-8859-1)
@@ -48,14 +48,14 @@
 46 Japanese (Shift-JIS)
 47 Voltar
 48 Avançar
-49 & Salvar
-50 S & alvar como...
+49 &Salvar
+50 S&alvar como...
 51 **Save all
 52 Sincronizar
 53 **Send by mail ...
-54 Config & urar e imprimir...
-55 Im & primir
-56 **& Close tab
+54 Config&urar e imprimir...
+55 Im&primir
+56 **&Close tab
 57 Fechar janela
 58 Sair de Amaya
 59 **New tab
@@ -83,8 +83,8 @@
 81 Copiar
 82 Colar
 83 Apagar
-84 **& Insert
-85 & Adicionar
+84 **&Insert
+85 &Adicionar
 86 **Select all
 87 **Select
 88 **Parent element
@@ -94,12 +94,12 @@
 92 Achar...
 93 Preferências
 94 **Show/Hide toolbars
-95 **& Browsing
-96 **& Editing
-97 **Show  & tools
+95 **&Browsing
+96 **&Editing
+97 **Show &tools
 98 Exibir áreas de mapa
 99 Exibir destinos
-100 **Show  & formatted view
+100 **Show &formatted view
 101 Exibir estrutura
 102 Exibir source
 103 Exibir enlaces (links)
@@ -107,9 +107,9 @@
 105 Exibir índice de conteúdos
 106 **Split view horizontally
 107 **Split view vertically
-108 & Info sobre documento
+108 &Info sobre documento
 109 Exibir erros de gramática (parsing)
-110 **& Full screen
+110 **&Full screen
 111 Ampliar (Zoom in)
 112 Reduzir (Zoom out)
 113 **Normal zoom
@@ -162,14 +162,14 @@
 160 Cabeçalho (thead)
 161 Corpo (tbody)
 162 Rodapé (tfoot)
-163 **& Math
+163 **&Math
 164 Nova fórmula
 165 Texto puro (mtext)
 166 Identificador (mi)
 167 Número (mn)
 168 Operador (mo)
 169 Espaço (mspace)
-170 Carácter ( & xxx;)
+170 Carácter (&xxx;)
 171 Multiplicação Invisível (InvisibleTimes)
 172 Aplicar função (ApplyFunction)
 173 Raiz (mroot)
@@ -267,7 +267,7 @@
 265 Carácter
 266 **Select a font...
 267 **Default
-268 **& Style editor...
+268 **&Style editor...
 269 Criar regra...
 270 **Show applied style...
 271 Folhas de estilo
@@ -314,10 +314,10 @@
 312 Alterar doctype para HTML 4.01 Transitional
 313 Alterar doctype para HTML 4.01 Strict
 314 Numeração de seção
-315 **& Add/Update table of contents
+315 **&Add/Update table of contents
 316 Construir livro
 317 **Insert time stamp
-318 A & notações
+318 A&notações
 319 Anotar seleção
 320 Anotar documento
 321 Mover até a seleção
@@ -329,7 +329,7 @@
 327 Carregar
 328 Personalizar consulta...
 329 Filtro local...
-330 & Cooperação
+330 &Cooperação
 331 Travar o recurso
 332 Destravar o recurso
 333 Exibir as propriedades do recurso
@@ -341,7 +341,7 @@
 339 **Create and use a component
 340 **Create a free editing box
 341 **Create a repeated component
-342 & Javascript/DOM
+342 &Javascript/DOM
 343 **Enable/Disable
 344 **Execute a command
 345 **Execute an external script

@@ -1,26 +1,26 @@
 # encoding= latin1
-0 & File
+0 &File
 1 Context
 2 Context
-3 & Edit
-4 & Views
-5 & Insert
-6 F & ormat
-7 & Links
+3 &Edit
+4 &Views
+5 &Insert
+6 F&ormat
+7 &Links
 8 Attributes
-9 & Tools
-10 & Help
+9 &Tools
+10 &Help
 11 New tab
-12 New  & document...
+12 New &document...
 13 New
-14 New  & document...
-15 New  & formula...
-16 New  & Drawing...
-17 New s & tyle sheet...
-18 & Open document...
-19 & File
-20 Open in new  & window...
-21 & Reload document
+14 New &document...
+15 New &formula...
+16 New &Drawing...
+17 New s&tyle sheet...
+18 &Open document...
+19 &File
+20 Open in new &window...
+21 &Reload document
 22 Read as
 23 Unicode (UTF-8)
 24 Western (ISO-8859-1)
@@ -46,18 +46,18 @@
 44 Japanese (ISO-2022-JP)
 45 Japanese (EUC-JP)
 46 Japanese (Shift-JIS)
-47 & Back
-48 & Forward
-49 & Save
-50 Save  & as...
+47 &Back
+48 &Forward
+49 &Save
+50 Save &as...
 51 Save all
-52 S & ynchronize
+52 S&ynchronize
 53 Send by mail ...
-54 Set & up and print...
-55 & Print
-56 & Close tab
-57 Close  & window
-58 E & xit Amaya
+54 Set&up and print...
+55 &Print
+56 &Close tab
+57 Close &window
+58 E&xit Amaya
 59 New tab
 60 Refresh tab
 61 Refresh all tabs
@@ -77,39 +77,39 @@
 75 Delete
 76 Insert
 77 Append
-78 & Undo
-79 & Redo
-80 Cu & t
-81 & Copy
-82 & Paste
-83 & Delete
-84 & Insert
-85 & Append
+78 &Undo
+79 &Redo
+80 Cu&t
+81 &Copy
+82 &Paste
+83 &Delete
+84 &Insert
+85 &Append
 86 Select all
 87 Select
 88 Parent element
 89 First child
 90 Previous element
 91 Next element
-92 & Find...
-93 & Preferences
+92 &Find...
+93 &Preferences
 94 Show/Hide toolbars
-95 & Browsing
-96 & Editing
-97 Show  & tools
-98 Show  & map areas
-99 Show  & targets
-100 Show  & formatted view
-101 Show  & structure
-102 Show so & urce
-103 Show lin & ks
-104 Show  & alternate
-105 Show table  & of contents
+95 &Browsing
+96 &Editing
+97 Show &tools
+98 Show &map areas
+99 Show &targets
+100 Show &formatted view
+101 Show &structure
+102 Show so&urce
+103 Show lin&ks
+104 Show &alternate
+105 Show table &of contents
 106 Split view horizontally
 107 Split view vertically
-108 Document  & info
+108 Document &info
 109 Show parsing errors
-110 & Full screen
+110 &Full screen
 111 Zoom in
 112 Zoom out
 113 Normal zoom
@@ -162,14 +162,14 @@
 160 thead
 161 tbody
 162 tfoot
-163 & Math
+163 &Math
 164 Insert a formula
 165 Plain text (mtext)
 166 Identifier (mi)
 167 Number (mn)
 168 Operator (mo)
 169 Space (mspace)
-170 Character ( & xxx;)
+170 Character (&xxx;)
 171 InvisibleTimes
 172 ApplyFunction
 173 Root (mroot)
@@ -267,8 +267,8 @@
 265 Character
 266 Select a font...
 267 Default
-268 & Style editor...
-269 Create  & rule...
+268 &Style editor...
+269 Create &rule...
 270 Show applied style...
 271 Style sheets
 272 Link...
@@ -278,13 +278,13 @@
 276 Remove...
 277 Copy location
 278 Paste location
-279 & Link to previous target
-280 & Create or change link...
-281 Create  & target
-282 & Delete link or target
-283 & Add/Remove IDs...
-284 Chec & k spelling...
-285 Transfor & m...
+279 &Link to previous target
+280 &Create or change link...
+281 Create &target
+282 &Delete link or target
+283 &Add/Remove IDs...
+284 Chec&k spelling...
+285 Transfor&m...
 286 Code clean up
 287 Edit table
 288 Change to data cell
@@ -313,15 +313,15 @@
 311 Change to XHTML+RDFa
 312 Change to HTML 4.01 Transitional
 313 Change to HTML 4.01 Strict
-314 & Section numbering
-315 & Add/Update table of contents
-316 & Make book
+314 &Section numbering
+315 &Add/Update table of contents
+316 &Make book
 317 Insert time stamp
-318 A & nnotations
+318 A&nnotations
 319 Annotate selection
 320 Annotate document
 321 Move to selection
-322 Store selection as  & XPointer
+322 Store selection as &XPointer
 323 Move to stored XPointer
 324 Reply to annotation
 325 Post to server
@@ -329,7 +329,7 @@
 327 Load
 328 Customize query...
 329 Local filter...
-330 C & ooperation
+330 C&ooperation
 331 Lock resource...
 332 Unlock resource...
 333 View resource properties...
@@ -341,7 +341,7 @@
 339 Create and use a component
 340 Create a free editing box
 341 Create a repeated component
-342 & Javascript/DOM
+342 &Javascript/DOM
 343 Enable/Disable
 344 Execute a command
 345 Execute an external script

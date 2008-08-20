@@ -179,7 +179,7 @@
 177 Couleur des menus
 178 Couleur de fond des menus
 179 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en même-temps.
-180 Liste des langues préférées comme  " fr, en "  :
+180 Liste des langues préférées comme "fr, en" :
 181 Ces changements seront effectifs lors du prochain démarrage.
 182 Autoriser la redirection automatique du PUT vers ces domaines
 183 Sans feuilles de style
@@ -211,7 +211,7 @@
 209 Essayer l'entrée "Fichier/Lire comme"
 210 Caractères invalides
 211 Profil du document :
-212 Erreurs détectées - voir Fichier  >  Montrer les erreurs
+212 Erreurs détectées - voir Fichier > Montrer les erreurs
 213 Le codage de ce document n'est pas supporté par Amaya
 214 Editer et enregistrer ce document changera son type
 215 Non disponible
@@ -342,7 +342,7 @@
 340 Description:
 341 Sélectionnez un élément
 342 Toutes les CSS
-343 Règles de style CSS appliqué l'élément  < %s >  \n
+343 Règles de style CSS appliqué l'élément <%s> \n
 344 Les lignes bleues sont des liens activés par un double (ou simple) click\n
 345 Charger les objets (object, embed, iframe)
 346 Pas de règle de style pour cet élément
@@ -354,7 +354,7 @@
 352 Taille du contenu
 353 Provenance
 354 Préférences
-355 Caractère ( & xxx;)
+355 Caractère (&xxx;)
 356 Création d'un objet
 357 Répertoire
 358 Fichier

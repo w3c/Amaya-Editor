@@ -272,7 +272,7 @@ sub end_hndl { #	do the modification if necessary
 	
 	if ( $end_tag eq "message" ) {
 #			print @text_patches ;
-			$string = join ( ' ',@text_patches );
+			$string = join ( '',@text_patches );
 			if ( $current_language eq "en") { # to reparate/fill the lakes
 				$english_text_reference= "$reference_value " .  "**" . $string ;
 			}				
@@ -342,7 +342,7 @@ sub char_hndl {
 	my $data = Unicode::String->new( shift ) ;
 	my $fh;
 	
-	if  ($data ne "" && $data =~ /[^\n\t]/ ) {
+	if  ($data ne "") {
 		if ( $current_element eq "language") {
 		   $data =~ s/\s+// ; 
 			if ( length ($data) > 1) {
@@ -353,6 +353,8 @@ sub char_hndl {
 		elsif ( $current_element eq "message" && length ($data) >= 1) {
 			$data =~ s/&amp;/&/g;
 			$data	=~ s/&lt;/</g;
+			$data	=~ s/\t/ /g;
+			$data	=~ s/\n/ /g;
 			push (@text_patches, $data);				
 		}
 	}

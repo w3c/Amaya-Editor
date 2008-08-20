@@ -132,8 +132,8 @@
 130 为之属性
 131 取消
 132 转换为 PostScript 时发生错误
-133 命令被拒绝  " %s "
-134 无法创建  " %s "
+133 命令被拒绝 "%s"
+134 无法创建 "%s"
 135 Overline
 136 文档格式
 137 移除属性
@@ -155,8 +155,8 @@
 153 参数文件错误
 154 无键盘文件
 155 无法保存文档字典
-156 错误词语  " %s "  已被本字典拒绝
-157 词语  " %s "  已加入字典
+156 错误词语 "%s" 已被本字典拒绝
+157 词语 "%s" 已加入字典
 158 拼写检查完成
 159 拼写检查已终止
 160 请选择文档
@@ -272,10 +272,10 @@
 270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 **Classic
 278 **Modern
 279 **No theme
