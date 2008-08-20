@@ -333,7 +333,8 @@ ShowEditingBar
 &DoSelectFontFamilly
 &DoSelectFontSize
 *AmayaToolBarEditing
-*AmayaXHTMLToolPanel
+*AmayaXHTMLPanel
+*AmayaTemplatePanel
 *AmayaElementToolPanel
 *AmayaStyleToolPanel
 *AmayaExplorerToolPanel
@@ -373,7 +374,8 @@ HelpXml
 &Synchronize
 HelpAttributes
 *AmayaAttributeToolPanel
-*AmayaXMLToolPanel
+*AmayaXMLPanel
+
 
 ######### advanced-edit
 [advanced-edit]
@@ -387,7 +389,8 @@ TtcNextElement
 HelpChanging
 HelpTables
 HelpMath
-*AmayaMathMLToolPanel
+*AmayaMathMLPanel
+*AmayaSVGPanel
 
 ######### doctype
 [doctype]

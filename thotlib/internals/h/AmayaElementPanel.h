@@ -42,6 +42,7 @@ public:
   
   virtual void SendDataToPanel(int panel_type, AmayaParams& params );
   
+  int PanelTypeToDocType(int panel_type)const;
   int PanelTypeToIndex(int panel_type)const;
   void RaisePanel(int panel_type);
   int DocTypeToIndex(int doctype)const;
@@ -53,6 +54,7 @@ protected:
   wxAuiNotebook* m_notebook;
   
   AmayaXMLPanel* m_xml;
+  int            m_panelIndexes[WXAMAYA_DOCTYPE_NUMBER];
  
 };
 
