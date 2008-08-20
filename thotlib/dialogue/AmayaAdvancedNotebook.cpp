@@ -73,12 +73,14 @@ AmayaAdvancedNotebook::~AmayaAdvancedNotebook()
 bool AmayaAdvancedNotebook::InsertPage(size_t index, AmayaPage* page,
 				       const wxString& text, bool select, int imageId)
 {
+#ifndef _MACOS
   if (imageId >= 0)
     {
       wxBitmap bmp(m_imageList->GetIcon(imageId));
       return wxAuiNotebook::InsertPage(index, page, text, select, bmp);
     }
   else
+#endif /* _MACOS */
     return wxAuiNotebook::InsertPage(index, page, text, select, wxNullBitmap);
 }
 
@@ -90,12 +92,14 @@ bool AmayaAdvancedNotebook::InsertPage(size_t index, AmayaPage* page,
  -----------------------------------------------------------------------*/
 bool AmayaAdvancedNotebook::SetPageImage(size_t page, int image)
 {
+#ifndef _MACOS
   if(m_imageList && image!=wxID_ANY && image<m_imageList->GetImageCount())
     {
       wxBitmap bmp(m_imageList->GetIcon(image));
       SetPageBitmap(page, bmp);
       return true;
     }
+#endif /* _MACOS */
   return false;
 }
 
