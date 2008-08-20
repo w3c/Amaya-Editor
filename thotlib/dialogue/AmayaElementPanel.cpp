@@ -57,6 +57,10 @@ AmayaElementToolPanel::AmayaElementToolPanel():
 
 AmayaElementToolPanel::~AmayaElementToolPanel()
 {
+	// Windows : delete notebook pages now to prevent a crash
+	if(m_notebook)
+		while(m_notebook->GetPageCount()>0)
+			m_notebook->DeletePage(0);
 }
 
 bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
