@@ -625,7 +625,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -cx, -bottom);
 	       sy = ((float)y2)/y1;
 
-	       if(shift) 
+	       if(!shift) 
 		 sx = 1;
 	       else
 		 /* Preserve aspect ratio */
@@ -654,7 +654,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -cx, -top);
 	       sy = ((float)y2)/y1;
 
-	       if(shift) 
+	       if(!shift) 
 		 sx = 1;
 	       else
 		 /* Preserve aspect ratio */
@@ -683,7 +683,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -right, -cy);
 	       sx = ((float)x2)/x1;
 
-	       if(shift) 
+	       if(!shift) 
 		 sy = 1;
 	       else
 		 /* Preserve aspect ratio */
@@ -712,7 +712,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -left, -cy);
 	       sx = ((float)x2)/x1;
 
-	       if(shift) 
+	       if(!shift) 
 		 sy = 1;
 	       else
 		 /* Preserve aspect ratio */
@@ -745,7 +745,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       sx = ((float)x2)/x1;
 	       sy = ((float)y2)/y1;
 
-	       if(!shift) 
+	       if(shift) 
 		 /* Preserve aspect ratio */
 		 {
 		   if(sx < sy)
@@ -783,7 +783,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       sx = ((float)x2)/x1;
 	       sy = ((float)y2)/y1;
 
-	       if(!shift) 
+	       if(shift) 
 		 /* Preserve aspect ratio */
 		 {
 		   if(sx < sy)
@@ -821,7 +821,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       sx = ((float)x2)/x1;
 	       sy = ((float)y2)/y1;
 
-	       if(!shift) 
+	       if(shift) 
 		 /* Preserve aspect ratio */
 		 {
 		   if(sx < sy)
@@ -859,7 +859,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 	       sx = ((float)x2)/x1;
 	       sy = ((float)y2)/y1;
 
-	       if(!shift) 
+	       if(shift) 
 		 /* Preserve aspect ratio */
 		 {
 		   if(sx < sy)
