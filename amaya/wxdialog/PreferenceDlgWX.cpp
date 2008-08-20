@@ -26,6 +26,7 @@
 #include "HTMLhistory_f.h"
 
 bool PreferenceDlgWX::m_OnApplyLock = FALSE;
+extern bool WarnRestart;
 static int MyRef = 0;
 
 
@@ -105,7 +106,8 @@ END_EVENT_TABLE()
   m_UrlList = url_list;
   m_RDFaNSList = rdfa_list;
   MyRef = ref;
-
+  // no warn requested by default
+  WarnRestart = false;
   m_book = new wxListBoxBook(this, XRCID("wxID_NOTEBOOK"));
   GetSizer()->Prepend(m_book, 1, wxEXPAND);
   
@@ -460,6 +462,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
       if (prof == NULL || strcmp (prof, buffer))
         {
           // change the Amaya profile
+          WarnRestart = true;
           TtaSetEnvString ("CURRENT_PROFILE", buffer, TRUE);
           // Avoid to save previous "AUI_DECORATION"
           SavePANEL_PREFERENCES = 0;

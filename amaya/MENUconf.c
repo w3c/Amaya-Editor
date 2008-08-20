@@ -68,6 +68,7 @@
 
 /* ======> Preference dialog (contains eache sub dialog into tabs) */
 #ifdef _WX
+bool       WarnRestart = false;
 /* Preference dialog (contains eache sub dialog into tabs) */
 static int PreferenceBase;
 #endif /* _WX */
@@ -1115,7 +1116,7 @@ void SetGeneralConf (void)
 {
   int         oldVal;
   char       *ptr;
-  ThotBool    old, value, warn = FALSE;
+  ThotBool    old, value;
 
   TtaGetEnvInt ("FontZoom", &oldVal);
   if (oldVal != GProp_General.Zoom)
@@ -1160,7 +1161,7 @@ void SetGeneralConf (void)
   if (strcmp (ptr, GProp_General.DialogueLang))
     {
       // the dialog language changes
-      warn = TRUE;
+      WarnRestart = true;
       TtaSetEnvString ("LANG", GProp_General.DialogueLang, TRUE);
     }
   if (GProp_General.AccesskeyMod == 0)
@@ -1185,27 +1186,30 @@ void SetGeneralConf (void)
       TtaGetEnvBoolean ("ADVANCE_USER_INTERFACE", &value);
       if (value)
         {
-          warn = TRUE;
+          WarnRestart = true;
           TtaSetEnvBoolean ("ADVANCE_USER_INTERFACE", FALSE, TRUE);
         }
       ptr = TtaGetEnvString ("TOOLPANEL_LAYOUT");
       if (GProp_General.ToolPanelLayout == 0 && strcmp (ptr, "LEFT"))
         {
-          warn = TRUE;
+          WarnRestart = true;
           TtaSetEnvString ("TOOLPANEL_LAYOUT", "LEFT", TRUE);
         }
       else if (strcmp (ptr, "RIGHT"))
         {
-          warn = TRUE;
+          WarnRestart = true;
           TtaSetEnvString ("TOOLPANEL_LAYOUT", "RIGHT", TRUE);
         }
     }
 
   TtaUpdateToolPanelLayout();
   TtaSaveAppRegistry ();
-  if (warn)
-    // warn the user that he has to restart the application
-     TtaDisplayMessage (CONFIRM, TtaGetMessage (AMAYA, AM_PROFILE_CHANGE), NULL);
+  if (WarnRestart)
+    {
+      // warn the user that he has to restart the application
+      WarnRestart = false;
+      TtaDisplayMessage (CONFIRM, TtaGetMessage (AMAYA, AM_PROFILE_CHANGE), NULL);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1260,7 +1264,7 @@ void GetDefaultGeneralConf ()
   TtaGetDefEnvInt ("FontMenuSize", &(GProp_General.FontMenuSize));
   
   TtaGetDefEnvBoolean("ADVANCE_USER_INTERFACE", &aui);
-  if(aui)
+  if (aui)
     GProp_General.ToolPanelLayout = 2;
   else
     {
