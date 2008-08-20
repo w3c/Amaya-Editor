@@ -430,6 +430,15 @@ void AmayaToolPanel::SetColor (int color)
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaToolPanel::SetColor"));
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+bool AmayaToolPanel::Layout()
+{
+  wxPanel::Layout();
+  wxGetTopLevelParent(this)->Layout();
+  return true;
+}
+
 
 /**
  * Function to register a new AmayaToolPanel class.

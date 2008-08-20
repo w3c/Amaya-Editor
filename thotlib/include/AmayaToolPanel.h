@@ -74,6 +74,10 @@ public:
    */
   void SetWindow(AmayaNormalWindow* window){m_window = window;}
   
+  /**
+   * Force the layout update.
+   */
+  bool Layout();
   
 protected:
   /**
