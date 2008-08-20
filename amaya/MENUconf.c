@@ -1114,7 +1114,8 @@ static void UpdateShowTargets ()
 void SetGeneralConf (void)
 {
   int         oldVal;
-  ThotBool    old;
+  char       *ptr;
+  ThotBool    old, value, warn = FALSE;
 
   TtaGetEnvInt ("FontZoom", &oldVal);
   if (oldVal != GProp_General.Zoom)
@@ -1155,30 +1156,56 @@ void SetGeneralConf (void)
   TtaSetEnvBoolean ("INSERT_NBSP", GProp_General.S_NBSP, TRUE);
 
   TtaSetEnvString ("HOME_PAGE", GProp_General.HomePage, TRUE);
-  TtaSetEnvString ("LANG", GProp_General.DialogueLang, TRUE);
+  ptr = TtaGetEnvString ("LANG");
+  if (strcmp (ptr, GProp_General.DialogueLang))
+    {
+      // the dialog language changes
+      warn = TRUE;
+      TtaSetEnvString ("LANG", GProp_General.DialogueLang, TRUE);
+    }
   if (GProp_General.AccesskeyMod == 0)
     TtaSetEnvString ("ACCESSKEY_MOD", "Alt", TRUE);
   else if (GProp_General.AccesskeyMod == 1)
     TtaSetEnvString ("ACCESSKEY_MOD", "Ctrl", TRUE);
   else
     TtaSetEnvString ("ACCESSKEY_MOD", "None", TRUE);
-#ifndef _WX
-  TtaSetEnvInt ("FontMenuSize", GProp_General.FontMenuSize, TRUE);
-#endif /* _WX */
 
-  if(GProp_General.ToolPanelLayout==2)
-    TtaSetEnvBoolean("ADVANCE_USER_INTERFACE", TRUE, TRUE);
+  if (GProp_General.ToolPanelLayout == 2)
+    {
+      // test the previous value
+      TtaGetEnvBoolean ("ADVANCE_USER_INTERFACE", &value);
+      if (!value)
+        {
+          // new user interface
+          TtaSetEnvBoolean("ADVANCE_USER_INTERFACE", TRUE, TRUE);
+        }
+    }
   else
     {
-      TtaSetEnvBoolean("ADVANCE_USER_INTERFACE", FALSE, TRUE);
-      if(GProp_General.ToolPanelLayout==0)
-        TtaSetEnvString ("TOOLPANEL_LAYOUT", "LEFT", TRUE);
-      else
-        TtaSetEnvString ("TOOLPANEL_LAYOUT", "RIGHT", TRUE);
+      TtaGetEnvBoolean ("ADVANCE_USER_INTERFACE", &value);
+      if (value)
+        {
+          warn = TRUE;
+          TtaSetEnvBoolean ("ADVANCE_USER_INTERFACE", FALSE, TRUE);
+        }
+      ptr = TtaGetEnvString ("TOOLPANEL_LAYOUT");
+      if (GProp_General.ToolPanelLayout == 0 && strcmp (ptr, "LEFT"))
+        {
+          warn = TRUE;
+          TtaSetEnvString ("TOOLPANEL_LAYOUT", "LEFT", TRUE);
+        }
+      else if (strcmp (ptr, "RIGHT"))
+        {
+          warn = TRUE;
+          TtaSetEnvString ("TOOLPANEL_LAYOUT", "RIGHT", TRUE);
+        }
     }
 
   TtaUpdateToolPanelLayout();
   TtaSaveAppRegistry ();
+  if (warn)
+    // warn the user that he has to restart the application
+     TtaDisplayMessage (CONFIRM, TtaGetMessage (AMAYA, AM_PROFILE_CHANGE), NULL);
 }
 
 /*----------------------------------------------------------------------
