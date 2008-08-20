@@ -1415,7 +1415,12 @@ void TtaCloseWindow( int window_id )
   TtaHandlePendingEvents ();
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window)
+  {
+	// Windows : prevent sending size event when closing window
+	p_window->Hide();
+
     p_window->Close();
+  }
 }
 
 /*----------------------------------------------------------------------
