@@ -31,22 +31,28 @@
 
 static const int s_tips[] = 
 {
+    LIB, TIP_LANGUAGES,
     LIB, TIP_AMAYA_PROFILES,
     LIB, TIP_PANEL_MODES,
+    LIB, TIP_SVG_SHAPE_EDIT,
     LIB, TIP_PARENT_SELECTION,
     LIB, TIP_SPLIT_NOTEBOOK,
+    LIB, TIP_SVG_ROTATE,
     LIB, TIP_MOVE_PANELS,
     LIB, TIP_MANY_COLUMNS,
+    LIB, TIP_LINK_TARGET,
     LIB, TIP_EDITING_MODE,
     LIB, TIP_ERROR_BUTTON,
+    LIB, TIP_SVG_LINES,
     LIB, TIP_PATH_CONTROL,
-    LIB, TIP_DOCUMENT_LIST_MENU
+    LIB, TIP_DOCUMENT_LIST_MENU,
+    LIB, TIP_SVG_ASPECT_RATIO
 };
 
 //  TtaGetEnvInt
 
 static const int s_tipsCount = sizeof(s_tips)/sizeof(int)/2;
-
+static int delta = 0;
 
 
 /*----------------------------------------------------------------------
@@ -66,23 +72,22 @@ AmayaTipProvider::~AmayaTipProvider()
  -----------------------------------------------------------------------*/
 wxString AmayaTipProvider::GetTip()
 {
-  int num = m_currentTip++;
-   m_currentTip %= s_tipsCount;
-
+  int num = (m_currentTip+delta+s_tipsCount)%s_tipsCount;
+  m_currentTip = num;
   return TtaConvMessageToWX(TtaGetMessage(s_tips[num*2],
                                           s_tips[num*2+1]));
 }
-
-
 
 // ----------------------------------------------------------------------------
 // wxTipDialog
 // ----------------------------------------------------------------------------
 
 static const int wxID_NEXT_TIP = 32000;  // whatever
+static const int wxID_PREVIOUS_TIP = 32001;  // whatever
 
 BEGIN_EVENT_TABLE(AmayaTipDialog, wxDialog)
     EVT_BUTTON(XRCID("wxID_TIP_NEXT"), AmayaTipDialog::OnNextTip)
+    EVT_BUTTON(XRCID("wxID_TIP_PREVIOUS"), AmayaTipDialog::OnPreviousTip)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -105,6 +110,8 @@ AmayaTipDialog::AmayaTipDialog(wxWindow *parent,
     m_checkbox->SetValue(showAtStartup);
 
     wxButton *btnNext = new wxButton(this, XRCID("wxID_TIP_NEXT"), TtaConvMessageToWX(TtaGetMessage(LIB, TIP_DIALOG_NEXT_TIP)));
+
+    wxButton *btnPrevious = new wxButton(this, XRCID("wxID_TIP_PREVIOUS"), TtaConvMessageToWX(TtaGetMessage(LIB, TIP_DIALOG_PREVIOUS_TIP)));
 
     wxStaticText *text = new wxStaticText(this, wxID_ANY, TtaConvMessageToWX(TtaGetMessage(LIB, TIP_DIALOG_DID_YOU_KNOW)));
 
@@ -143,6 +150,7 @@ AmayaTipDialog::AmayaTipDialog(wxWindow *parent,
     bottom->Add( m_checkbox, 0, wxCENTER );
 
     bottom->Add( 10,10,1 );
+    bottom->Add( btnPrevious, 0, wxCENTER | wxLEFT, 10 );
     bottom->Add( btnNext, 0, wxCENTER | wxLEFT, 10 );
     bottom->Add( btnClose, 0, wxCENTER | wxLEFT, 10 );
 
@@ -212,3 +220,22 @@ void TtaSetShowTipOfTheDayAtStartup(ThotBool show)
 {
   TtaSetEnvBoolean("TIP_OF_THE_DAY_STARTUP", show, TRUE);
 }
+
+// the tip dialog has "Show tips on startup" checkbox - return true if it
+// was checked (or wasn't unchecked)
+bool AmayaTipDialog::ShowTipsOnStartup() const
+{ return m_checkbox->GetValue(); }
+
+// sets the (next) tip text
+void AmayaTipDialog::SetTipText()
+{ m_text->SetValue(m_tipProvider->GetTip()); }
+
+// "Next" button handler
+void AmayaTipDialog::OnNextTip(wxCommandEvent& WXUNUSED(event)) {
+  delta = +1;
+  SetTipText(); }
+
+// "Previous" button handler
+void AmayaTipDialog::OnPreviousTip(wxCommandEvent& WXUNUSED(event)) {
+  delta = -1;
+  SetTipText(); }

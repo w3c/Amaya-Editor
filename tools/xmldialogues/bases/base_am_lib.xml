@@ -4093,6 +4093,10 @@ Konstante</message>
  <message xml:lang="hu">Tipp mutatása a program indulásakor</message>
  <message xml:lang="ja">スタートアップ時にTips
 を表示</message></label>
+<label define="TIP_DIALOG_PREVIOUS_TIP">
+<message xml:lang="en">Previous tip</message>
+ <message xml:lang="fr">Conseil précédent</message>
+</label>
 <label define="TIP_DIALOG_NEXT_TIP">
 <message xml:lang="en">Next tip</message>
  <message xml:lang="fr">Conseil suivant</message>
@@ -4303,6 +4307,37 @@ del documento.</message>
 megjelenő menü segítségével átválthatunk másik fülre.</message>
  <message
 xml:lang="ja">文書タブ右にあるボタンで、表示されているメニューの異なるタブへ移動することができます</message></label>
+
+<label define="TIP_LINK_TARGET">
+<message xml:lang="en">If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.</message>
+<message xml:lang="fr">Si vous activez "Voir les cibles" dans le menu "Vues", des cibles sont affichées en vue formatée. Cela est pratique pour la création de lien : une cible peut être choisie en cliquant dessus.</message>
+</label>
+
+<label define="TIP_SVG_ROTATE">
+<message xml:lang="en">When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.</message>
+<message xml:lang="fr">Lors de la rotation d'un objet SVG, le centre est indiqué par une croix. Il peut être déplacé à l'aide de la souris.</message>
+</label>
+
+<label define="TIP_SVG_SHAPE_EDIT">
+<message xml:lang="en">Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For &lt;rect/&gt; element, red circles give a control on radius of rounded corners.</message>
+<message xml:lang="fr">Les figures élémentaires SVG ont des poignées qui peuvent être utilisées pour les éditer. Des triangles bleus ou des carrés verts permettent de changer leur taille. Pour les éléments &lt;rect/&gt;, des ronds rouges donnent un controle sur les rayons des coins arrondis.</message>
+</label>
+
+<label define="TIP_SVG_LINES">
+<message xml:lang="en">For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.</message>
+<message xml:lang="fr">Pour les dessins SVG, les lignes sont dessinées avec une précision de 15° si vous pressez le bouton shift. Cela est utile si vous souhaitez dessiner des lignes droites.</message>
+</label>
+
+<label define="TIP_SVG_ASPECT_RATIO">
+<message xml:lang="en">When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.</message>
+<message xml:lang="fr">Lors du redimensionnement d'une image ou d'un objet SVG, l'appui de la touche shift permet de préserver le rapport des dimensions.</message>
+</label>
+
+<label define="TIP_LANGUAGES">
+<message xml:lang="en">Use Edit-&gt;Preferences-&gt;Dialogue Language to choose the language of the user interface.</message>
+<message xml:lang="fr">Utilisez Édition-&gt;Préférences-&gt;Langue des dialogues pour choisir la langue de l'interface utilisateur.</message>
+</label>
+
 <label define="Classic">
 <message xml:lang="en">Classic</message>
  <message xml:lang="fr">Classique</message>

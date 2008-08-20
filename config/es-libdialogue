@@ -256,150 +256,157 @@
 254 Añadir columna detrás
 255 Sugerencia del día
 256 Mostrar sugerencia al iniciar el programa
-257 Siguiente sugerencia
-258 ¿Sabía que...?
-259 **Close
-260 Amaya puede adaptarse a sus necesidades: incorporacinco perfiles distintos con diferentes opcionesde menús y paneles. Véase el menú Editar > Preferencias.
-261 Las ventanas de herramientas pueden mostrarse todasjuntas a izquierda o derecha o por separado de forma personalizada. Véase elmenú Editar > Preferencias.
-262 Con la tecla F2 o Escape se puede seleccionar elelemento padre del elemento seleccionado para aplicarle funciones de edición(copiar, pegar, atributos, etc).
-263 Puede mostrar dos o más documentos simultáneamentearrastrando la pestaña de un documento a uno de los bordes del documentovisible.
-264 En el modo Personalizable, puede arrastrar los panelesde herramientas para cambiar su orden o mantenerlos flotantes.
-265 En el modo Personalizable, puede colocar los paneles deherramientas uno al lado del otro vertical u horizontalmente.
-266 Puede cambiar el modo de edición (Texto/XML) haciendoclic en el botón situado en la parte derecha de la barra de estado.
-267 Cuando se muestra un botón rojo en el extremo derechode la barra de estado, puede ver los errores de la página haciendo clic enél.
-268 Puede seleccionar directamente un elemento (o en suselementos padres) haciendo clic en su nombre que se muestra en la ruta decontrol situada en la parte izquierda de la barra de estado.
-269 Puede cambiar de pestaña de documento mediante elmenú que se despliega haciendo clic en el botón en forma de flecha situado enel extremo derecho de las pestañas de documentos.
-270 Clásico
-271 Moderno
-272 Sin tema
-273 **Information
-274 **Generate a description
-275 Cuadrado
-276 **Rounded Square
-277 Rectángulo
-278 **Rounded rectangle
-279 Rombo
-280 **Parallelogram
-281 **Trapezium
-282 Triángulo
-283 Triángulo
-284 Triángulo
-285 Círculo
-286 Elipse
-287 Linea
-288 Flecha
-289 Flecha
-290 **Zigzag
-291 **Group
-292 **Ungroup
-293 **Bring to front
-294 **Send to back
-295 **One level up
-296 **One level down
-297 **90° left
-298 **90° right
-299 **Rotate
-300 **Vertical symmetry
-301 **Horizontal symmetry
-302 **Scale
-303 **Skew
-304 **Move
-305 **Align bottom
-306 **Align center
-307 **Align left
-308 **Align middle
-309 **Align right
-310 **Align top
-311 **Distribute bottom
-312 **Distribute center
-313 **Distribute left
-314 **Distribute middle
-315 **Distribute right
-316 **Distribute top
-317 **Distribute vertical spacing
-318 **Distribute horizontal spacing
-319 **Closed Bezier curve
-320 **Bezier curve
-321 **Polyline
-322 **Polygon
-323 **Foreign Object
-324 **Image
-325 **SVG Canvas
-326 Texto
-327 **Cone
-328 Cubo
-329 Cilindro
-330 **Octahedron
-331 **Parallelepiped
-332 **Pyramid
-333 **Beaker
-334 **Funnel
-335 **Bunsen burner
-336 **Buchner flask
-337 **Boiling flask
-338 **Burette
-339 **Erlenmeyer flask
-340 **Test tube
-341 **Pipette
-342 **Rectangular
-343 **Rounded rectangular
-344 **Round
-345 **Scream
-346 **Thought
-347 **Capacitor
-348 **Current source
-349 **Diode
-350 **Ground Point
-351 **Inductor
-352 **LED
-353 **Op-amp
-354 **Resistor
-355 **Switch
-356 **Transistor
-357 **Voltage source
-358 **Zener diode
-359 **Pentagon
-360 **Hexagon
-361 **Heptagon
-362 **Octogon
-363 **Star (4 branches)
-364 **Star (5 branches)
-365 **Star (6 branches)
-366 **AND
-367 **NAND
-368 **OR
-369 **NOR
-370 **XOR
-371 **XNOR
-372 **NOT
-373 **Cross
-374 **Frame
-375 **Ring
-376 **Cloud
-377 **Scroll
-378 Sol
-379 **Lightning_Bolt
-380 Luna
-381 **Smiley
-382 Corazón
-383 **Flower
-384 **Prohibited
-385 **2-Way Rounded Arrow
-386 **3-Way Arrow Callout
-387 **3-Way Arrow
-388 **4-Way_Arrow_Callout
-389 **4-Way Arrow
-390 **Chevron
-391 **Circular Arrow
-392 **Corner Arrow
-393 **Corner Double Arrow Callout
-394 **Corner Double Arrow
-395 **Double Arrow Callout
-396 **Double Arrow
-397 **Notched Arrow
-398 **Rounded Arrow
-399 **Simple Arrow Callout
-400 **Simple Arrow
-401 **Split Arrow
-402 **S-Shape Arrow
-403 **Striped Arrow
+257 **Previous tip
+258 Siguiente sugerencia
+259 ¿Sabía que...?
+260 **Close
+261 Amaya puede adaptarse a sus necesidades: incorporacinco perfiles distintos con diferentes opcionesde menús y paneles. Véase el menú Editar > Preferencias.
+262 Las ventanas de herramientas pueden mostrarse todasjuntas a izquierda o derecha o por separado de forma personalizada. Véase elmenú Editar > Preferencias.
+263 Con la tecla F2 o Escape se puede seleccionar elelemento padre del elemento seleccionado para aplicarle funciones de edición(copiar, pegar, atributos, etc).
+264 Puede mostrar dos o más documentos simultáneamentearrastrando la pestaña de un documento a uno de los bordes del documentovisible.
+265 En el modo Personalizable, puede arrastrar los panelesde herramientas para cambiar su orden o mantenerlos flotantes.
+266 En el modo Personalizable, puede colocar los paneles deherramientas uno al lado del otro vertical u horizontalmente.
+267 Puede cambiar el modo de edición (Texto/XML) haciendoclic en el botón situado en la parte derecha de la barra de estado.
+268 Cuando se muestra un botón rojo en el extremo derechode la barra de estado, puede ver los errores de la página haciendo clic enél.
+269 Puede seleccionar directamente un elemento (o en suselementos padres) haciendo clic en su nombre que se muestra en la ruta decontrol situada en la parte izquierda de la barra de estado.
+270 Puede cambiar de pestaña de documento mediante elmenú que se despliega haciendo clic en el botón en forma de flecha situado enel extremo derecho de las pestañas de documentos.
+271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
+272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
+274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
+275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
+276 **Use Edit->Preferences->Dialogue Language to choose the language of the user interface.
+277 Clásico
+278 Moderno
+279 Sin tema
+280 **Information
+281 **Generate a description
+282 Cuadrado
+283 **Rounded Square
+284 Rectángulo
+285 **Rounded rectangle
+286 Rombo
+287 **Parallelogram
+288 **Trapezium
+289 Triángulo
+290 Triángulo
+291 Triángulo
+292 Círculo
+293 Elipse
+294 Linea
+295 Flecha
+296 Flecha
+297 **Zigzag
+298 **Group
+299 **Ungroup
+300 **Bring to front
+301 **Send to back
+302 **One level up
+303 **One level down
+304 **90° left
+305 **90° right
+306 **Rotate
+307 **Vertical symmetry
+308 **Horizontal symmetry
+309 **Scale
+310 **Skew
+311 **Move
+312 **Align bottom
+313 **Align center
+314 **Align left
+315 **Align middle
+316 **Align right
+317 **Align top
+318 **Distribute bottom
+319 **Distribute center
+320 **Distribute left
+321 **Distribute middle
+322 **Distribute right
+323 **Distribute top
+324 **Distribute vertical spacing
+325 **Distribute horizontal spacing
+326 **Closed Bezier curve
+327 **Bezier curve
+328 **Polyline
+329 **Polygon
+330 **Foreign Object
+331 **Image
+332 **SVG Canvas
+333 Texto
+334 **Cone
+335 Cubo
+336 Cilindro
+337 **Octahedron
+338 **Parallelepiped
+339 **Pyramid
+340 **Beaker
+341 **Funnel
+342 **Bunsen burner
+343 **Buchner flask
+344 **Boiling flask
+345 **Burette
+346 **Erlenmeyer flask
+347 **Test tube
+348 **Pipette
+349 **Rectangular
+350 **Rounded rectangular
+351 **Round
+352 **Scream
+353 **Thought
+354 **Capacitor
+355 **Current source
+356 **Diode
+357 **Ground Point
+358 **Inductor
+359 **LED
+360 **Op-amp
+361 **Resistor
+362 **Switch
+363 **Transistor
+364 **Voltage source
+365 **Zener diode
+366 **Pentagon
+367 **Hexagon
+368 **Heptagon
+369 **Octogon
+370 **Star (4 branches)
+371 **Star (5 branches)
+372 **Star (6 branches)
+373 **AND
+374 **NAND
+375 **OR
+376 **NOR
+377 **XOR
+378 **XNOR
+379 **NOT
+380 **Cross
+381 **Frame
+382 **Ring
+383 **Cloud
+384 **Scroll
+385 Sol
+386 **Lightning_Bolt
+387 Luna
+388 **Smiley
+389 Corazón
+390 **Flower
+391 **Prohibited
+392 **2-Way Rounded Arrow
+393 **3-Way Arrow Callout
+394 **3-Way Arrow
+395 **4-Way_Arrow_Callout
+396 **4-Way Arrow
+397 **Chevron
+398 **Circular Arrow
+399 **Corner Arrow
+400 **Corner Double Arrow Callout
+401 **Corner Double Arrow
+402 **Double Arrow Callout
+403 **Double Arrow
+404 **Notched Arrow
+405 **Rounded Arrow
+406 **Simple Arrow Callout
+407 **Simple Arrow
+408 **Split Arrow
+409 **S-Shape Arrow
+410 **Striped Arrow

@@ -31,15 +31,10 @@ public:
                 wxTipProvider *tipProvider,
                 bool showAtStartup);
 
-    // the tip dialog has "Show tips on startup" checkbox - return true if it
-    // was checked (or wasn't unchecked)
-    bool ShowTipsOnStartup() const { return m_checkbox->GetValue(); }
-
-    // sets the (next) tip text
-    void SetTipText() { m_text->SetValue(m_tipProvider->GetTip()); }
-
-    // "Next" button handler
-    void OnNextTip(wxCommandEvent& WXUNUSED(event)) { SetTipText(); }
+  bool ShowTipsOnStartup() const;
+  void SetTipText();
+  void OnNextTip(wxCommandEvent& WXUNUSED(event));
+  void OnPreviousTip(wxCommandEvent& WXUNUSED(event));
 
 private:
     wxTipProvider *m_tipProvider;
