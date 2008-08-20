@@ -1233,29 +1233,35 @@ void Template_FillFromDocument (Document doc)
   XTigerTemplate t = GetXTigerTemplate (DocumentURLs[doc]);
   Element        root;
   
+#ifdef AMAYA_DEBUG
   printf("Template_FillFromDocument\n");
-  
-  if(t)
+#endif
+  if (t)
     {
+#ifdef AMAYA_DEBUG
       printf("plop : %d\n", t->state);
+#endif
       SetTemplateDocument (t, doc);
 
       Template_PrepareTemplate(t);
       
       if(IsTemplateInstanceDocument(doc))
         {
+#ifdef AMAYA_DEBUG
           printf("  > instance\n");
+#endif
           // fix all access rights in the instance
           root = TtaGetRootElement (doc);
           TtaSetAccessRight (root, ReadOnly, doc);
           Template_FixAccessRight (t, root, doc);
           TtaUpdateAccessRightInViews (doc, root);
         }
+#ifdef AMAYA_DEBUG
       else if(t->state&templLibraryFlag)
         printf("  > library\n");
       else if(t->state&templTemplate)
         printf("  > template\n");
-      
+#endif      
       // Mark loaded
       t->state |= templloaded;
       TtaSetDocumentUnmodified (doc);
@@ -1277,20 +1283,21 @@ ThotBool Template_CheckAndPrepareTemplate(char* docURL)
 {
 #ifdef TEMPLATES
   XTigerTemplate t = NULL; //GetXTigerTemplate(docURL);
-  
+
+#ifdef AMAYA_DEBUG
   printf("Template_CheckAndPrepareTemplate %s\n", docURL);
-  
-  if(IsXTiger(docURL))
+#endif
+  if (IsXTiger(docURL))
     {
       t = LookForXTigerTemplate(docURL);
       t->state |= templTemplate;
     }
-  else if(IsXTigerLibrary(docURL))
+  else if (IsXTigerLibrary(docURL))
     {
       t = LookForXTigerLibrary(docURL);
       t->state |= templLibrary;
     }
-  return t!=NULL;
+  return t != NULL;
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -1455,8 +1462,9 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   if(event->info==1)
     return FALSE;
 
+#ifdef AMAYA_DEBUG
   printf("TemplateElementWillBeCreated\n");
-  
+#endif
   if (!TtaGetDocumentAccessMode(event->document))
     return TRUE;
 
