@@ -179,7 +179,7 @@
 177 Menü színe
 178 Menu háttérszíne
 179 A gyorstár nem indítható. Érvénytelen gyorstár mappát adott meg, vagy az Amaya egy másik példánya használja a gyorstárat.
-180 Kedvenc nyelvek listája, például "hu, en, fr":
+180 Kedvenc nyelvek listája, például  " hu, en, fr " :
 181 Ezek a változások nem lépnek életbe, míg újra nem indítja az Amayát
 182 Önműködő PUT átirányítások engedélyezése ehhez a tartományhoz
 183 Stíluslapok figyelmen kívül hagyása
@@ -211,7 +211,7 @@
 209 Próbálja a 'Fájl/Kényszerített karakter kódolás' menüt
 210 Érvénytelen karakterek
 211 Dokumentum profile:
-212 Néhány elem/attribútum figyelmen kívül hagyva - see Fájl > Elemzési hibák mutatása
+212 Néhány elem/attribútum figyelmen kívül hagyva - see Fájl  >  Elemzési hibák mutatása
 213 Ezen dokumentum kódolását az Amaya nem támogatja
 214 Ezen dokumentum szerkesztése és mentés megváltoztatja a dokumentum típusát
 215 Nem elérhető
@@ -342,7 +342,7 @@
 340 Leírás:
 341 Adjon meg egy elemet
 342 Minden CSS
-343 CSS stílus szabályok alkalmazása a(z) <%s> elemre\n
+343 CSS stílus szabályok alkalmazása a(z)  < %s >  elemre\n
 344 A kék sorok dupla (vagy egyszeres) kattintással aktiválható kapcsok\n
 345 Objektumok betöltése (object, embed, iframe)
 346 Ehhez az elemhez nem tartokzik stílus szabály
@@ -354,7 +354,7 @@
 352 Tartalom hossza
 353 Tartalom helye
 354 Beállítások
-355 Karakter (&xxx;)
+355 Karakter ( & xxx;)
 356 Objektum létrehozása
 357 Mappa
 358 Fájl

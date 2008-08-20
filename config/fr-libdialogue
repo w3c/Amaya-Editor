@@ -6,7 +6,7 @@
 4 Schémas incompatibles. Recompiler %s
 5 Erreur fatale : fontes inaccessibles
 6 Manque de mémoire
-7 Erreur fatale : connexion au serveur Ximpossible
+7 Erreur fatale : connexion au serveur X impossible
 8 La vue est modifiée avant création.
 9 Table des règles saturée.
 10 Fichier incorrect : %s.STR
@@ -44,7 +44,7 @@
 42 Format du papier
 43 Fermer
 44 Répertoires
-45 Le document %s existe déjà. Voulez-vous l'écraser?
+45 Le document %s existe déjà. Voulez-vous l'écraser ?
 46 Appliquer la couleur du texte
 47 Appliquer la couleur du fond
 48 Police
@@ -132,8 +132,8 @@
 130 Attribut inconnu
 131 Annuler
 132 Erreur dans la traduction en PostScript
-133 Commande refusée par le spooler"%s"
-134 Impossible de créer "%s"
+133 Commande refusée par le spooler  " %s "
+134 Impossible de créer  " %s "
 135 Surligné
 136 Format de document
 137 Retirer l'attribut
@@ -154,17 +154,17 @@
 152 incluant des chiffres
 153 Erreur dans le fichier des paramètres
 154 Absence de fichier clavier
-155 Impossible d\'enregistrer le dictionnaire dudocument
-156 Mot "%s" incorrect refusé dans cedictionnaire
-157 Mot "%s" ajouté dans le dictionnaire dudocument
+155 Impossible d\'enregistrer le dictionnaire du document
+156 Mot  " %s "  incorrect refusé dans ce dictionnaire
+157 Mot  " %s "  ajouté dans le dictionnaire du document
 158 Correction terminée
 159 Correction interrompue
 160 Sélectionnez un document
-161 Sauvegarde du dictionnaire "%s"
+161 Sauvegarde du dictionnaire  " %s "
 162 Pas disponible dans cette version
 163 Activer/Desactiver palette
 164 Outils
-165 Cet attribut est obligatoire, il ne peut pas êtresupprimé
+165 Cet attribut est obligatoire, il ne peut pas être supprimé
 166 Actualiser
 167 Aligner à gauche
 168 Aligner à droite
@@ -207,7 +207,7 @@
 205 Liste de définitions
 206 Lien
 207 Tableau
-208 Etes vous certain de vouloir fermer %donglets?
+208 Etes vous certain de vouloir fermer %d onglets?
 209 M'avertir quand je ferme plusieurs onglets
 210 Fermer les onglets
 211 Aucune erreur détectée
@@ -236,7 +236,7 @@
 234 Constructions diverses
 235 Relations, ordre et logique
 236 Ensembles et fonctions
-237 Arithmétique, opérations, complexes etconstantes
+237 Arithmétique, opérations, complexes et constantes
 238 Analyse, algèbre linéaire et statistiques
 239 Trigonométrie et logarithmes
 240 Grossir
@@ -260,22 +260,22 @@
 258 Conseil suivant
 259 Saviez vous...
 260 Fermer
-261 Amaya s'adapte à vos besoins : cinq profils sontfournis avec différents ensembles de menus et de barres d'outils. Voir lesPréférences.
-262 Les panneaux d'outils peuvent être affichés à gaucheou à droite ou à votre convenance panneau par panneau. Voir lesPréférences.
-263 Avec la touche F2 ou Escape vous pouvez sélectionnerla structure englobante, pour appliquer les fonctions d'édition (copier,coller, attributs, etc.) à ces éléments.
-264 Vous pouvez afficher deux documents côte à côte dansla même fenêtre en déplaçant un onglet de document sur un bord du documentaffiché.
-265 En mode paramétrable, vous pouvez déplacer lespanneaux d'outils pour en changer l'ordre ou les rendre flottants.
-266 En mode paramétrable, vous pouvez placer plusieursbarres d'outils de chaque côté de la fenêtre en déplaçant les panneauxd'outils.
-267 Vous pouvez changer de mode d'édition (Texte/XML) encliquant sur le bouton correspondant dans le coin inférieur droit.
-268 Quand il y a un bouton rouge dans le coin inférieurdroit, vous pouvez afficher les erreurs en cliquant dessus.
-269 Vous pouvez sélectionner un ancêtre de la sélectioncourante en cliquant sur son nom dans le cheminaffiché en bas de la fenêtre.
-270 Vous pouvez changer d'onglet avec le menu affiché parle bouton flèche à droite des onglets.
+261 Amaya s'adapte à vos besoins : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.
+262 Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.
+263 Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.
+264 Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.
+265 En mode paramétrable, vous pouvez déplacer les panneaux d'outils pour en changer l'ordre ou les rendre flottants.
+266 En mode paramétrable, vous pouvez placer plusieurs barres d'outils de chaque côté de la fenêtre en déplaçant les panneaux d'outils.
+267 Vous pouvez changer de mode d'édition (Texte/XML) en cliquant sur le bouton correspondant dans le coin inférieur droit.
+268 Quand il y a un bouton rouge dans le coin inférieur droit, vous pouvez afficher les erreurs en cliquant dessus.
+269 Vous pouvez sélectionner un ancêtre de la sélection courante en cliquant sur son nom dans le chemin affiché en bas de la fenêtre.
+270 Vous pouvez changer d'onglet avec le menu affiché par le bouton flèche à droite des onglets.
 271 Si vous activez "Voir les cibles" dans le menu "Vues", des cibles sont affichées en vue formatée. Cela est pratique pour la création de lien : une cible peut être choisie en cliquant dessus.
 272 Lors de la rotation d'un objet SVG, le centre est indiqué par une croix. Il peut être déplacé à l'aide de la souris.
-273 Les figures élémentaires SVG ont des poignées qui peuvent être utilisées pour les éditer. Des triangles bleus ou des carrés verts permettent de changer leur taille. Pour les éléments <rect/>, des ronds rouges donnent un controle sur les rayons des coins arrondis.
+273 Les figures élémentaires SVG ont des poignées qui peuvent être utilisées pour les éditer. Des triangles bleus ou des carrés verts permettent de changer leur taille. Pour les éléments  < rect/ > , des ronds rouges donnent un controle sur les rayons des coins arrondis.
 274 Pour les dessins SVG, les lignes sont dessinées avec une précision de 15° si vous pressez le bouton shift. Cela est utile si vous souhaitez dessiner des lignes droites.
 275 Lors du redimensionnement d'une image ou d'un objet SVG, l'appui de la touche shift permet de préserver le rapport des dimensions.
-276 Utilisez Édition->Préférences->Langue des dialogues pour choisir la langue de l'interface utilisateur.
+276 Utilisez Édition > Préférences > Langue des dialogues pour choisir la langue de l'interface utilisateur.
 277 Classique
 278 Moderne
 279 Pas de thème
@@ -324,12 +324,12 @@
 322 Distribuer bords droits
 323 Distribuer bords supérieurs
 324 Distribuer espacements verticaux
-325 Distribuer espacements horizontaux
+325 Distribuer espa cements horizontaux
 326 Courbe de Bézier fermée
 327 Courbe de Bézier
-328 Segments de droite (<polyline/>)
+328 Segments de droite ( < polyline/ > )
 329 Polygone
-330 Objet étranger (<foreignObject/>)
+330 Objet étranger ( < foreignObject/ > )
 331 Image
 332 Canevas SVG
 333 Texte

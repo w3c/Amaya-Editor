@@ -19,7 +19,7 @@
 17 %s
 18 Nedostatok pamäte
 19 *** Amaya: Neopraviteľná chyba ***
-20 ak dajaké dokumenty boli zmenené, budúuložené
+20 ak dajaké dokumenty boli zmenené, budú uložené
 21 Nesprávny .TRA súbor: %s
 22 %s nie je platným súrodencom pre %s (%s)
 23 %s nie je platným rodičom pre %s (%s)
@@ -132,8 +132,8 @@
 130 Neznámy atribút
 131 Zrušiť
 132 Chyba v PostScriptovom preklade
-133 Príkaz odmietnutý tlačiarňou"%s"
-134 Nedá sa vytvoriť "%s"
+133 Príkaz odmietnutý tlačiarňou  " %s "
+134 Nedá sa vytvoriť  " %s "
 135 Pruh nad
 136 Formát dokumentu
 137 Odstániť atribút
@@ -155,8 +155,8 @@
 153 Chyba súboru s parametrami
 154 Neexistuje súbor klávesnice
 155 Slovník sa nedá uložiť
-156 Nesprávne slovo "%s" bolo zamietnuté vtomto slovníku
-157 Slovo "%s" bolo pridané doslovníka
+156 Nesprávne slovo  " %s "  bolo zamietnuté v tomto slovníku
+157 Slovo  " %s "  bolo pridané do slovníka
 158 Koniec kontroly pravopisu
 159 Kontrola pravopisu prerušená
 160 Prosím vyberte dokument
@@ -164,7 +164,7 @@
 162 Nie je prístupné v tejto verzii
 163 Vysunúť/zasunúť nástrojovú lištu
 164 Nástroje
-165 Toto je povinný atribút, ktorý nemôže byťodstránený
+165 Toto je povinný atribút, ktorý nemôže byť odstránený
 166 Obnoviť
 167 Doľava
 168 Doprava
@@ -197,7 +197,7 @@
 195 Silno zvýrazniť On/Off
 196 Zdrojový kód On/Off
 197 Obrázok (img)
-198 Nadpis úrovne 1
+198 Nadpis ú rovne 1
 199 Nadpis úrovne 2
 200 Nadpis úrovne 3
 201 Nadpis úrovne 4
@@ -207,8 +207,8 @@
 205 Zoznam definícií (dl)
 206 Hypertextový odkaz
 207 Tabuľka (table)
-208 Chystáte sa zatoriť niekoľko otvorených kariet(%d). Chcete naozaj pokračovať?
-209 Varovať vždy, ak sa pokúšam zavrieť viac karietnaraz
+208 Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?
+209 Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz
 210 Zatvoriť karty
 211 Žiadne chyby neboli nájdené
 212 Zobraziť nájdené chyby
@@ -260,22 +260,22 @@
 258 **Next tip
 259 **Did you know...
 260 **Close
-261 **Amaya can be adapted to your own needs: five profilesare provided with different sets of menus andpanels. See Preferences/General.
-262 **Panels can be displayed on the left or on the right sideof the window or even customized panel by panel. See Preferences.
-263 **With the F2 or Escape key you can select the parentelement in the document structure, to apply editing functions (copy, paste,attributes, style, etc.) to the right element.
-264 **You can display two documents side by side in the windowby dragging a document tab to the left or right side of the displayeddocument.
-265 **In customizable mode, you can drag panels to changetheir order or to make them floating.
-266 **With the customizable mode, you can move panels on bothsides of the window just by dragging.
-267 **You can switch editing mode (Text/XML) by clicking onthe corresponding button in the bottom right corner.
-268 **When there is red button in the bottom right corner, youcan display errors by clicking on it.
-269 **You can select an ancestor of the current selection byclicking on its name on the path control displayed at the bottom of thewindow.
-270 **You can move to another tab with the menu displayed bythe arrow button at right of document tabs.
+261 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
+262 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
+263 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
+264 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
+265 **In customizable mode, you can drag panels to change their order or to make them floating.
+266 **With the customizable mode, you can move panels on both sides of the window just by dragging.
+267 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
+268 **When there is red button in the bottom right corner, you can display errors by clicking on it.
+269 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
+270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit->Preferences->Dialogue Language to choose the language of the user interface.
+276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
 277 **Classic
 278 **Modern
 279 **No theme

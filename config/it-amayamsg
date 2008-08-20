@@ -179,7 +179,7 @@
 177 Colore in primo piano nei menu
 178 Colore dello sfondo nei menu
 179 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
-180 Lista delle lingue preferite, come "it, en, fr":
+180 Lista delle lingue preferite, come  " it, en, fr " :
 181 Queste modifiche saranno effettive alla prossima esecuzione
 182 Consenti la redirezione automatica dei PUT su questi domini
 183 Ignora gli stili CSS
@@ -211,7 +211,7 @@
 209 Prova la voce 'File/Forza codifica caratteri'
 210 Caratteri non validi
 211 Profilo di documento:
-212 Errore - vedi File > Mostra le errore
+212 Errore - vedi File  >  Mostra le errore
 213 La codifica per questo documento non e` supportata da Amaya
 214 Editando e salvando questo documento il suo tipo verrà cambiato
 215 Non disponibile
@@ -342,7 +342,7 @@
 340 Descrizione :
 341 Selezionare un elemento
 342 Tutti i CSS
-343 Regole di stile CSS applicate all'elemento <%s>\n
+343 Regole di stile CSS applicate all'elemento  < %s > \n
 344 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
 345 Carica oggetti (object, embed, iframe)
 346 Nessuna regola di stile per questo elemento
@@ -354,7 +354,7 @@
 352 Content Length
 353 Content Location
 354 Preferenze
-355 Carattere (&xxx;)
+355 Carattere ( & xxx;)
 356 Crea oggetto
 357 Directory
 358 File

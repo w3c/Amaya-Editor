@@ -46,8 +46,8 @@
 44 %s kaydediliyor
 45 %s kaydedilemedi
 46 Türkçe sistem hata mesajları
-47 <a> tanımlaması bu unsurları içeremez
-48 <a> tanımlaması içinde bir başka <a> tanımı yer alamaz
+47 < a >  tanımlaması bu unsurları içeremez
+48 < a >  tanımlaması içinde bir başka  < a >  tanımı yer alamaz
 49 %s tipi URL\'ler için GET desteği henüz yok, üzgünüm
 50 %s tipi URL\'ler için PUT desteği henüz yok, üzgünüm
 51 Amaya\'nın bu sürümü, bu özelliği desteklemiyor
@@ -179,7 +179,7 @@
 177 Menünün ön-plan rengi
 178 Menünün arka-plan rengi
 179 Gizli bölümü sıfırlama imkansızdır. Belkide geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya kullandınız
-180 Istenilen dillerin listesi (mesela "en, fr"):
+180 Istenilen dillerin listesi (mesela  " en, fr " ):
 181 Bu değişiklikler yeniden Amaya\'yı açtığınız taktirde geçerli olurlar
 182 Bu alanlarda PUT otomatik olarak yeniden yönlerdirmesini kabul edin
 183 Sayfasız
@@ -211,7 +211,7 @@
 209 **Try the 'File/Read as' entry
 210 Yanlış karakter
 211 Belgenin profili:
-212 Hata - Dosya > Hataları göster bakın
+212 Hata - Dosya  >  Hataları göster bakın
 213 Bu belgenin kodlaması Amaya tarafından yapılamıyor
 214 Yazmak ve kaydetmek bu belgenin tipini değiştirir
 215 Kullanıma hazır değil
@@ -342,7 +342,7 @@
 340 **Description:
 341 **Please select an element
 342 **All CSS
-343 **CSS style rules applied to the <%s> element\n
+343 **CSS style rules applied to the  < %s >  element\n
 344 **Blue lines are links activated by a double (or a single) click\n
 345 **Load objects (object, embed, iframe)
 346 **No style rule for this element
@@ -354,7 +354,7 @@
 352 **Content Length
 353 **Content Location
 354 Tercih
-355 Karakter (&xxx;)
+355 Karakter ( & xxx;)
 356 **Create Object
 357 **Directory
 358 **File
@@ -461,7 +461,7 @@
 459 **With caption
 460 **Size
 461 **Position
-462 **XML editing mode
+462 **XM L editing mode
 463 **List of style sheets
 464 **Add a style sheet...
 465 **Remove selected style sheets

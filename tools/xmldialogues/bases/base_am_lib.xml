@@ -99,17 +99,14 @@ xml:lang="ja">新規ビューは古いビューと置換できません</message
  <message xml:lang="es">Esquemas incompatibles. Recompile %s</message>
  <message xml:lang="pt">Esquemas incompatíveis. Recompile %s</message>
  <message xml:lang="fi">Ei-yhteensopivia malleja. Koosta uudelleen %s</message>
- <message xml:lang="ru">Несовместимые схемы.
-Перекомпилируйте %s</message>
- <message xml:lang="hu">Összegyeztethetetlen leírók. %s
-újrafordítása</message>
+ <message xml:lang="ru">Несовместимые схемы. Перекомпилируйте %s</message>
+ <message xml:lang="hu">Összegyeztethetetlen leírók. %s újrafordítása</message>
  <message xml:lang="ka">შეუთავსებელი
 სქემები. გადააკომპილეთ %s</message>
  <message xml:lang="cn">不兼容的 schemas. 重新编译 %s</message>
  <message xml:lang="tw">不兼容的 schemas. 重新編譯 %s</message>
  <message xml:lang="sk">Nekompatibilná schéma. Prekompilujte %s</message>
- <message xml:lang="ja">スキーマに互換性がありません。 %s
-をリコンパイルします。</message></label>
+ <message xml:lang="ja">スキーマに互換性がありません。 %s をリコンパイルします。</message></label>
 <label define="TMSG_MISSING_FONT">
 <message xml:lang="en">Fatal Error: fonts not found</message>
  <message xml:lang="fr">Erreur fatale : fontes inaccessibles</message>
@@ -119,17 +116,14 @@ xml:lang="ja">新規ビューは古いビューと置換できません</message
  <message xml:lang="es">Error Fatal: Fuentes no encontradas</message>
  <message xml:lang="pt">Erro fatal: Tipos (fonts) não encontrados</message>
  <message xml:lang="fi">Virhe: fontteja ei löydetty</message>
- <message xml:lang="ru">Неисправимая ошибка: не
-найдены шрифты</message>
- <message xml:lang="hu">Végzetes huba: a betűkészlet nem
-található</message>
+ <message xml:lang="ru">Неисправимая ошибка: не найдены шрифты</message>
+ <message xml:lang="hu">Végzetes huba: a betűkészlet nem található</message>
  <message xml:lang="ka">კრიტიკული შეცდომა:
 შრიფტები ვერ მოიძებნა</message>
  <message xml:lang="cn">致命错误: 字体未找到</message>
  <message xml:lang="tw">致命錯誤: 字體未找到</message>
  <message xml:lang="sk">Kritická chyba: fonty neboli nájdené</message>
- <message xml:lang="ja">致命的なエラー:
-フォントが見つかりません</message></label>
+ <message xml:lang="ja">致命的なエラー: フォントが見つかりません</message></label>
 <label define="TMSG_NO_MEMORY">
 <message xml:lang="en">Memory exhausted</message>
  <message xml:lang="fr">Manque de mémoire</message>
@@ -141,8 +135,7 @@ található</message>
  <message xml:lang="fi">Muisti loppunut</message>
  <message xml:lang="ru">Ресурсы памяти исчерпаны</message>
  <message xml:lang="hu">A memória megtelt</message>
- <message xml:lang="ka">მახსიერება
-გადაივსო</message>
+ <message xml:lang="ka">მახსიერება გადაივსო</message>
  <message xml:lang="cn">内存耗尽</message>
  <message xml:lang="tw">內存耗盡</message>
  <message xml:lang="sk">Pamäť vyčerpaná</message>
@@ -157,32 +150,25 @@ impossible</message>
  <message xml:lang="es">Error Fatal: No puedo conectar a X</message>
  <message xml:lang="pt">Erro fatal: Incapaz de conectar a X</message>
  <message xml:lang="fi">Virhe: Ei voida yhdistää X:ään</message>
- <message xml:lang="ru">Неисправимая ошибка:
-Невозможно соединиться с X</message>
+ <message xml:lang="ru">Неисправимая ошибка: Невозможно соединиться с X</message>
  <message xml:lang="hu">Végzetes hiba: Nem lehet csatlakozni X-hez</message>
- <message xml:lang="ka">კრიტიკული შეცდომა:
-X-თან დაკავშირება ვერ
-ხერხდება</message>
+ <message xml:lang="ka">კრიტიკული შეცდომა: X-თან დაკავშირება ვერ ხერხდება</message>
  <message xml:lang="cn">致命错误: 无法连接 X 服务器</message>
  <message xml:lang="tw">致命錯誤: 無法連接 X 服務器</message>
  <message xml:lang="sk">Nedá sa pripojiť k X</message>
- <message xml:lang="ja">致命的なエラー: X
-に接続できません</message></label>
+ <message xml:lang="ja">致命的なエラー: X に接続できません</message></label>
 <label define="TMSG_VIEW_MODIFIED_BEFORE_CREATION">
 <message xml:lang="en">View is modified before creation</message>
  <message xml:lang="fr">La vue est modifiée avant création.</message>
  <message xml:lang="de">Ansicht wird vor der Erzeugung modifiziert</message>
  <message xml:lang="it">Vista modificata prima della creazione</message>
- <message xml:lang="tr">Görünüm dosya yaratmadan önce
-değiştirildi</message>
+ <message xml:lang="tr">Görünüm dosya yaratmadan önce değiştirildi</message>
  <message xml:lang="es">La vista se modifica antes de la creación</message>
  <message xml:lang="pt">A vista está modificada antes de ser criada</message>
  <message xml:lang="fi">Näkymää muutettu ennen luontia</message>
- <message xml:lang="ru">Перед созданием,
-представление было изменено</message>
+ <message xml:lang="ru">Перед созданием, представление было изменено</message>
  <message xml:lang="hu">A nézet módosult létrehozása előtt</message>
- <message xml:lang="ka">შექმნამდე ხედი
-შეიცვალა</message>
+ <message xml:lang="ka">შექმნამდე ხედი შეიცვალა</message>
  <message xml:lang="cn">视图已改变</message>
  <message xml:lang="tw">視圖已改變</message>
  <message xml:lang="sk">Zobrazenie bolo vytvorené pred vytvorením</message>
@@ -197,11 +183,9 @@ xml:lang="ja">ビューは作成される前に修正されています。</mess
  <message xml:lang="es">Tabla de reglas completa</message>
  <message xml:lang="pt">Tabela de regras cheia.</message>
  <message xml:lang="fi">Rules-taulukko täynnä.</message>
- <message xml:lang="ru">Таблица правил
-заполнена.</message>
+ <message xml:lang="ru">Таблица правил заполнена.</message>
  <message xml:lang="hu">Szabályok tábla megtelt.</message>
- <message xml:lang="ka">წესების ცხრილი
-შევსებულია.</message>
+ <message xml:lang="ka">წესების ცხრილი შევსებულია.</message>
  <message xml:lang="cn">规则表已满</message>
  <message xml:lang="tw">規則表已滿</message>
  <message xml:lang="sk">Tabuľka pravidiel je plná.</message>
@@ -346,8 +330,7 @@ xml:lang="ja">ビューは作成される前に修正されています。</mess
  <message xml:lang="fi">Ei ole tarpeeksi muistia</message>
  <message xml:lang="ru">Недостаточно памяти</message>
  <message xml:lang="hu">kevés a memória</message>
- <message xml:lang="ka">მეხსიერების
-უკმარისობა</message>
+ <message xml:lang="ka">მეხსიერების უკმარისობა</message>
  <message xml:lang="cn">内存不足</message>
  <message xml:lang="tw">內存不足</message>
  <message xml:lang="sk">Nedostatok pamäte</message>
@@ -361,36 +344,28 @@ xml:lang="ja">ビューは作成される前に修正されています。</mess
  <message xml:lang="es">*** Amaya: Error Irrecuperable ***</message>
  <message xml:lang="pt">*** Amaya: Erro irrecuperável ***</message>
  <message xml:lang="fi">*** Amaya: Peruuttamaton virhe ***</message>
- <message xml:lang="ru">*** Amaya: Неисправимая ошибка
-***</message>
+ <message xml:lang="ru">*** Amaya: Неисправимая ошибка ***</message>
  <message xml:lang="hu">*** Amaya: helyreállíthatatlan hiba ***</message>
- <message xml:lang="ka">*** Amaya: კრიტიკული
-შეცდომა ***</message>
+ <message xml:lang="ka">*** Amaya: კრიტიკული შეცდომა ***</message>
  <message xml:lang="cn">*** Amaya: 无法修复的错误 ***</message>
  <message xml:lang="tw">*** Amaya: 無法修復的錯誤 ***</message>
  <message xml:lang="sk">*** Amaya: Neopraviteľná chyba ***</message>
- <message xml:lang="ja">*** Amaya: 回復できないエラーです
-***</message></label>
+ <message xml:lang="ja">*** Amaya: 回復できないエラーです ***</message></label>
 <label define="TMSG_DEBUG_SAV_FILES">
 <message xml:lang="en">modified documents, if any, will be saved</message>
  <message xml:lang="fr">les documents modifiés vont être sauvés \n</message>
  <message xml:lang="de">Geänderte Dokumente werden gespeichert</message>
- <message xml:lang="it">i documenti modificati, se ve ne sono, saranno
-salvati</message>
+ <message xml:lang="it">i documenti modificati, se ve ne sono, saranno salvati</message>
  <message xml:lang="tr">değiştirilen belgeler varsa kaydedilecek</message>
  <message xml:lang="es">si hay documentos modificados, se guardarán</message>
  <message xml:lang="pt">Quaisquer documentos modificados serão salvos</message>
  <message xml:lang="fi">muokatut dokumentit, jos on, tallennetaan</message>
- <message xml:lang="ru">если имеются изменённые
-документы, они будут сохранены</message>
+ <message xml:lang="ru">если имеются изменённые документы, они будут сохранены</message>
  <message xml:lang="hu">A módosult dokumentumok (ha van) mentése</message>
- <message xml:lang="ka">თუ შეცვლილი
-დოკუმენტები არსებობს, ისინი
-შეინახება</message>
+ <message xml:lang="ka">თუ შეცვლილი დოკუმენტები არსებობს, ისინი შეინახება</message>
  <message xml:lang="cn">所有被更改的文档将被保存</message>
  <message xml:lang="tw">所有被更改的文檔將被保存</message>
- <message xml:lang="sk">ak dajaké dokumenty boli zmenené, budú
-uložené</message>
+ <message xml:lang="sk">ak dajaké dokumenty boli zmenené, budú uložené</message>
  <message xml:lang="ja">変更を保存します</message></label>
 <label define="TMSG_TRA_FILE_INCORRECT">
 <message xml:lang="en">Incorrect .TRA file: %s</message>
@@ -417,17 +392,13 @@ uložené</message>
  <message xml:lang="es">%s no es un hermano válido para %s (%s)</message>
  <message xml:lang="pt">%s não é um irmão válido para %s (%s)</message>
  <message xml:lang="fi">%s ei ole käypä sisarus tälle: %s (%s)</message>
- <message xml:lang="ru">%s не является правильным
-одноуровневым узлом для %s (%s)</message>
+ <message xml:lang="ru">%s не является правильным одноуровневым узлом для %s (%s)</message>
  <message xml:lang="hu">%s érvénytelen testvére ennek: %s (%s)</message>
- <message xml:lang="ka">%s მცდარი
-ქვეელემემტია %s (%s)
-ელემენტისთვის</message>
+ <message xml:lang="ka">%s მცდარი ქვეელემემტია %s (%s) ელემენტისთვის</message>
  <message xml:lang="cn">%s is not a valid sibling for %s (%s)</message>
  <message xml:lang="tw">%s is not a valid sibling for %s (%s)</message>
  <message xml:lang="sk">%s nie je platným súrodencom pre %s (%s)</message>
- <message xml:lang="ja">%s は %s
-(%s)　と正当な兄弟関係ではありません</message></label>
+ <message xml:lang="ja">%s は %s (%s)　と正当な兄弟関係ではありません</message></label>
 <label define="TMSG_INVALID_CHILD">
 <message xml:lang="en">%s is not a valid child for %s (%s)</message>
  <message xml:lang="fr">%s est un fils invalide pour %s (%s%)</message>
@@ -437,17 +408,13 @@ uložené</message>
  <message xml:lang="es">%s no es un hijo válido para %s (%s)</message>
  <message xml:lang="pt">%s não é um filho válido para %s (%s)</message>
  <message xml:lang="fi">%s ei ole käypä lapsi tälle:%s (%s)</message>
- <message xml:lang="ru">%s не является правильным
-потомком для %s (%s)</message>
- <message xml:lang="hu">%s érvénytelen utóda ennek az elődnek: %s
-(%s)</message>
- <message xml:lang="ka">%s არ გახლავთ %s (%s)
-ელემენტის ქვეელემენტი</message>
+ <message xml:lang="ru">%s не является правильным потомком для %s (%s)</message>
+ <message xml:lang="hu">%s érvénytelen utóda ennek az elődnek: %s (%s)</message>
+ <message xml:lang="ka">%s არ გახლავთ %s (%s) ელემენტის ქვეელემენტი</message>
  <message xml:lang="cn">%s 不是有效的 %s 子节点 (%s)</message>
  <message xml:lang="tw">%s 不是有效的 %s 子節點 (%s)</message>
  <message xml:lang="sk">%s nie je platným rodičom pre %s (%s)</message>
- <message xml:lang="ja">%s は %s
-(%s)　と正当な子関係ではありません</message></label>
+ <message xml:lang="ja">%s は %s (%s)　と正当な子関係ではありません</message></label>
 <label define="TMSG_PAGE">
 <message xml:lang="en">%s, page %d</message>
  <message xml:lang="fr">%s, page %d</message>
@@ -505,11 +472,9 @@ uložené</message>
  <message xml:lang="es">Presentación estándar</message>
  <message xml:lang="pt">Apresentação padrão</message>
  <message xml:lang="fi">Vakio esitys</message>
- <message xml:lang="ru">Стандартная
-демонстрация</message>
+ <message xml:lang="ru">Стандартная демонстрация</message>
  <message xml:lang="hu">Szabványos bemutató</message>
- <message xml:lang="ka">სტანდარტული
-წარმოდეგნა</message>
+ <message xml:lang="ka">სტანდარტული წარმოდეგნა</message>
  <message xml:lang="cn">标准布局</message>
  <message xml:lang="tw">標準布局</message>
  <message xml:lang="sk">Štandardná prezentácia</message>
@@ -650,8 +615,7 @@ uložené</message>
  <message xml:lang="de">Druckvorgang läuft</message>
  <message xml:lang="it">Stampa in corso</message>
  <message xml:lang="hu">Nyomtatás folyamatban</message>
- <message xml:lang="ka">მიმდინარეობს
-ბეჭდვა</message>
+ <message xml:lang="ka">მიმდინარეობს ბეჭდვა</message>
  <message xml:lang="cn">正在打印</message>
  <message xml:lang="tw">正在打印</message>
  <message xml:lang="sk">Prebieha tlač</message>
@@ -785,31 +749,21 @@ uložené</message>
  <message xml:lang="sk">Priečinky</message>
  <message xml:lang="ja">ディレクトリ</message></label>
 <label define="TMSG_FILE_EXIST">
-<message xml:lang="en">The document %s already exists. Do you want to overwrite
-it?</message>
- <message xml:lang="fr">Le document %s existe déjà. Voulez-vous l'écraser
-?</message>
+<message xml:lang="en">The document %s already exists. Do you want to overwrite it?</message>
+ <message xml:lang="fr">Le document %s existe déjà. Voulez-vous l'écraser ?</message>
  <message xml:lang="de">%s existiert bereits. Überschreiben?</message>
- <message xml:lang="it">Il documento %s esiste già. Vuoi
-sovrascriverlo?</message>
- <message xml:lang="tr">%s belgesi zaten var, üzerine yazmak ister
-misiniz?</message>
- <message xml:lang="es">El documento %s ya existe. ¿Quiere
-sobreescribirlo?</message>
- <message xml:lang="pt">O documento %s já exist. Quer gravar por cima
-dele?</message>
+ <message xml:lang="it">Il documento %s esiste già. Vuoi sovrascriverlo?</message>
+ <message xml:lang="tr">%s belgesi zaten var, üzerine yazmak ister misiniz?</message>
+ <message xml:lang="es">El documento %s ya existe. ¿Quiere sobreescribirlo?</message>
+ <message xml:lang="pt">O documento %s já exist. Quer gravar por cima dele?</message>
  <message xml:lang="fi">Dokumentti %s on jo olemassa. Korvataanko?</message>
- <message xml:lang="ru">Документ %s уже существует.
-Перезаписать его?</message>
+ <message xml:lang="ru">Документ %s уже существует. Перезаписать его?</message>
  <message xml:lang="hu">A dokumentum (%s) már létezik. Felülírjuk?</message>
- <message xml:lang="ka">დოკუმენტი %s უკვე
-არსებობს. გნებავთ მისი
-ჩანაცვლება?</message>
+ <message xml:lang="ka">დოკუმენტი %s უკვე არსებობს. გნებავთ მისი ჩანაცვლება?</message>
  <message xml:lang="cn">%s 文档已存在，确认要覆盖吗?</message>
  <message xml:lang="tw">%s 文檔已存在，確認要覆蓋嗎?</message>
  <message xml:lang="sk">Dokument %s už existuje. Chcete ho nahradiť?</message>
- <message xml:lang="ja">このドキュメント %s
-はすでに存在します。上書きしますか？</message></label>
+ <message xml:lang="ja">このドキュメント %s はすでに存在します。上書きしますか？</message></label>
 <label define="TMSG_BUTTON_1">
 <message xml:lang="en">Set the text color</message>
  <message xml:lang="fr">Appliquer la couleur du texte</message>
@@ -1046,8 +1000,7 @@ dele?</message>
  <message xml:lang="fi">Tallenna dokumentti</message>
  <message xml:lang="ru">Сохранить документ</message>
  <message xml:lang="hu">Dokumentum mentése</message>
- <message xml:lang="ka">დოკუმენტის
-შენახვა</message>
+ <message xml:lang="ka">დოკუმენტის შენახვა</message>
  <message xml:lang="cn">保存文档</message>
  <message xml:lang="tw">保存文檔</message>
  <message xml:lang="sk">Uložiť dokument</message>
@@ -1063,8 +1016,7 @@ dele?</message>
  <message xml:lang="fi">Sulje, älä tallenna</message>
  <message xml:lang="ru">Закрыть, не сохранять</message>
  <message xml:lang="hu">Bezárás mentés nélkül</message>
- <message xml:lang="ka">დახურვა შენახვის
-გარეშე</message>
+ <message xml:lang="ka">დახურვა შენახვის გარეშე</message>
  <message xml:lang="cn">不保存直接关闭</message>
  <message xml:lang="tw">不保存直接關閉</message>
  <message xml:lang="sk">Zatvoriť bez uloženia</message>
@@ -1200,11 +1152,9 @@ dele?</message>
  <message xml:lang="tr">BÜYÜK HARF = küçük harf</message>
  <message xml:lang="pt">Ignore o caso</message>
  <message xml:lang="fi">ISOLLA = pienellä</message>
- <message xml:lang="ru">Не учитывать регистр
-букв</message>
+ <message xml:lang="ru">Не учитывать регистр букв</message>
  <message xml:lang="hu">Ignore case</message>
- <message xml:lang="ka">მთავრულის
-გაუთვალისწინებლად</message>
+ <message xml:lang="ka">მთავრულის გაუთვალისწინებლად</message>
  <message xml:lang="cn">忽略大小写</message>
  <message xml:lang="tw">忽略大小寫</message>
  <message xml:lang="sk">Nerozlišovať veľkosť písmen</message>
@@ -1253,8 +1203,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Älä korvaa</message>
  <message xml:lang="ru">Не замещать</message>
  <message xml:lang="hu">Nincs csere</message>
- <message xml:lang="ka">ჩანაცვლების
-გარეშე</message>
+ <message xml:lang="ka">ჩანაცვლების გარეშე</message>
  <message xml:lang="cn">无替换</message>
  <message xml:lang="tw">無替換</message>
  <message xml:lang="sk">Nič nenahrádzať</message>
@@ -1270,8 +1219,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Korvaa pyynnöstä</message>
  <message xml:lang="ru">Замещать по запросу</message>
  <message xml:lang="hu">Csere kérésre</message>
- <message xml:lang="ka">ჩანაცვლება
-მოთხოვნით</message>
+ <message xml:lang="ka">ჩანაცვლება მოთხოვნით</message>
  <message xml:lang="cn">询问是否替换</message>
  <message xml:lang="tw">詢問是否替換</message>
  <message xml:lang="sk">Potrvrdzovať nahradenie</message>
@@ -1287,8 +1235,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Automaattinen korvus</message>
  <message xml:lang="ru">Замещать автоматически</message>
  <message xml:lang="hu">Automatikus csere</message>
- <message xml:lang="ka">ავტომატური
-ჩანაცვლება</message>
+ <message xml:lang="ka">ავტომატური ჩანაცვლება</message>
  <message xml:lang="cn">自动替换</message>
  <message xml:lang="tw">自動替換</message>
  <message xml:lang="sk">Automaticky nahradiť</message>
@@ -1352,8 +1299,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Valinnan jälkeen</message>
  <message xml:lang="ru">После выбранного</message>
  <message xml:lang="hu">Kijelölés után</message>
- <message xml:lang="ka">მონიშნულის
-შემდეგ</message>
+ <message xml:lang="ka">მონიშნულის შემდეგ</message>
  <message xml:lang="cn">选定区域后</message>
  <message xml:lang="tw">選定區域后</message>
  <message xml:lang="sk">Za výberom</message>
@@ -1385,8 +1331,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Älä korvaa</message>
  <message xml:lang="ru">Не замещать</message>
  <message xml:lang="hu">Ne cseréljen</message>
- <message xml:lang="ka">უცვლელად
-დატოვება</message>
+ <message xml:lang="ka">უცვლელად დატოვება</message>
  <message xml:lang="cn">不替换</message>
  <message xml:lang="tw">不替換</message>
  <message xml:lang="sk">Nenahrádzať</message>
@@ -1418,8 +1363,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Sulje dokumentti</message>
  <message xml:lang="ru">Закрыть документ</message>
  <message xml:lang="hu">Dokumentum bezárása</message>
- <message xml:lang="ka">დოკუმენტის
-დახურვა</message>
+ <message xml:lang="ka">დოკუმენტის დახურვა</message>
  <message xml:lang="cn">关闭文档</message>
  <message xml:lang="tw">關閉文檔</message>
  <message xml:lang="sk">Zatvoriť dokumetn</message>
@@ -1435,8 +1379,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Matemaattiset symbolit</message>
  <message xml:lang="ru">Математические символы</message>
  <message xml:lang="hu">Matematikai szimbólumok</message>
- <message xml:lang="ka">მათემატიკური
-სიმბოლოები</message>
+ <message xml:lang="ka">მათემატიკური სიმბოლოები</message>
  <message xml:lang="cn">数学符号</message>
  <message xml:lang="tw">數學符號</message>
  <message xml:lang="sk">Matematické symboly</message>
@@ -1802,11 +1745,9 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="es">Elemento de sólo lectura</message>
  <message xml:lang="pt">elemento somente de leitura</message>
  <message xml:lang="fi">Vain lukuelementti</message>
- <message xml:lang="ru">Элемент Только для
-чтения</message>
+ <message xml:lang="ru">Элемент Только для чтения</message>
  <message xml:lang="hu">Csak olvasható elem</message>
- <message xml:lang="ka">მხოლოდ კითხვადი
-ელემენტი</message>
+ <message xml:lang="ka">მხოლოდ კითხვადი ელემენტი</message>
  <message xml:lang="cn">只读元素</message>
  <message xml:lang="tw">只讀元素</message>
  <message xml:lang="sk">Prvok iba na čítanie</message>
@@ -1822,8 +1763,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Ei korvattavaa</message>
  <message xml:lang="ru">Ничего не замещено</message>
  <message xml:lang="hu">Nincs mit cserélni</message>
- <message xml:lang="ka">არაფერია
-შესაცვლელი</message>
+ <message xml:lang="ka">არაფერია შესაცვლელი</message>
  <message xml:lang="cn">未替换</message>
  <message xml:lang="tw">未替換</message>
  <message xml:lang="sk">Nie je čo nahrádzať</message>
@@ -1839,8 +1779,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Vakiomerkit</message>
  <message xml:lang="ru">Стандартные символы</message>
  <message xml:lang="hu">Szabványos karakterek</message>
- <message xml:lang="ka">სტანდარტული
-სიმბოლოები</message>
+ <message xml:lang="ka">სტანდარტული სიმბოლოები</message>
  <message xml:lang="cn">标准字符</message>
  <message xml:lang="tw">標準字符</message>
  <message xml:lang="sk">Štandardné znaky</message>
@@ -1856,8 +1795,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Vakiografiikka</message>
  <message xml:lang="ru">Стандартная графика</message>
  <message xml:lang="hu">Szabványos grafika</message>
- <message xml:lang="ka">სტანდარტული
-გრაფიკა</message>
+ <message xml:lang="ka">სტანდარტული გრაფიკა</message>
  <message xml:lang="cn">标准图形</message>
  <message xml:lang="tw">標準圖形</message>
  <message xml:lang="sk">Štandardná grafika</message>
@@ -1873,8 +1811,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Vakiomuoto</message>
  <message xml:lang="ru">Стандартный формат</message>
  <message xml:lang="hu">Szabványos formátum</message>
- <message xml:lang="ka">სტანდარტული
-ფორმატი</message>
+ <message xml:lang="ka">სტანდარტული ფორმატი</message>
  <message xml:lang="cn">标准格式</message>
  <message xml:lang="tw">標準格式</message>
  <message xml:lang="sk">Štandardný formát</message>
@@ -1890,8 +1827,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Vakiogeometria</message>
  <message xml:lang="ru">Стандартная геометрия</message>
  <message xml:lang="hu">Szabványos elhelyezkedés</message>
- <message xml:lang="ka">სტანდარტული
-გეომეტრია</message>
+ <message xml:lang="ka">სტანდარტული გეომეტრია</message>
  <message xml:lang="cn">Standard geometry</message>
  <message xml:lang="tw">Standard geometry</message>
  <message xml:lang="sk">Štandardné rozmery</message>
@@ -2001,11 +1937,9 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="es">Ir a página número:</message>
  <message xml:lang="pt">Ir à página número:</message>
  <message xml:lang="fi">Siirry sivulle:</message>
- <message xml:lang="ru">Перейти на страницу
-номер:</message>
+ <message xml:lang="ru">Перейти на страницу номер:</message>
  <message xml:lang="hu">Ugrás oldalszámra:</message>
- <message xml:lang="ka">გადასვლა
-გვერდზე:</message>
+ <message xml:lang="ka">გადასვლა გვერდზე:</message>
  <message xml:lang="cn">跳转到:</message>
  <message xml:lang="tw">跳轉到:</message>
  <message xml:lang="sk">Prejsť na stranu číslo:</message>
@@ -2037,8 +1971,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Määre etsintään</message>
  <message xml:lang="ru">Атрибут поиска</message>
  <message xml:lang="hu">Keresendő attribútum</message>
- <message xml:lang="ka">საძიებელი
-ატრიბუტი</message>
+ <message xml:lang="ka">საძიებელი ატრიბუტი</message>
  <message xml:lang="cn">搜索属性</message>
  <message xml:lang="tw">搜索屬性</message>
  <message xml:lang="sk">Hľadať atribút</message>
@@ -2054,8 +1987,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Tyyppi etsintään</message>
  <message xml:lang="ru">Введите для поиска</message>
  <message xml:lang="hu">Keresendő típus</message>
- <message xml:lang="ka">მიუთითეთ
-საძიებლად</message>
+ <message xml:lang="ka">მიუთითეთ საძიებლად</message>
  <message xml:lang="cn">搜索类型</message>
  <message xml:lang="tw">搜索類型</message>
  <message xml:lang="sk">Hľadať typ</message>
@@ -2119,8 +2051,7 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="fi">Määreen arvo</message>
  <message xml:lang="ru">Величина атрибута:</message>
  <message xml:lang="hu">Attribútum érték</message>
- <message xml:lang="ka">ატრიბუტის
-მნიშვნელობა</message>
+ <message xml:lang="ka">ატრიბუტის მნიშვნელობა</message>
  <message xml:lang="cn">属性值</message>
  <message xml:lang="tw">屬性值</message>
  <message xml:lang="sk">Hodnota atríbútu</message>
@@ -2166,11 +2097,9 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
  <message xml:lang="es">Error en traducción PostScript</message>
  <message xml:lang="pt">Erro em tradução PostScript</message>
  <message xml:lang="fi">Virhe PostScript käännöksessä</message>
- <message xml:lang="ru">Ошибка PostScript
-преобразования</message>
+ <message xml:lang="ru">Ошибка PostScript преобразования</message>
  <message xml:lang="hu">HIba a PostScript fordításban</message>
- <message xml:lang="ka">შეცდომა PostScript
-გარდაქმნაში</message>
+ <message xml:lang="ka">შეცდომა PostScript გარდაქმნაში</message>
  <message xml:lang="cn">转换为 PostScript 时发生错误</message>
  <message xml:lang="tw">轉換為 PostScript 時發生錯誤</message>
  <message xml:lang="sk">Chyba v PostScriptovom preklade</message>
@@ -2178,26 +2107,19 @@ xml:lang="ja">大文字と小文字を区別しない</message></label>
 xml:lang="ja">ポストスクリプト翻訳におけるエラー</message></label>
 <label define="TMSG_UNKNOWN_PRINTER">
 <message xml:lang="en">Command refused by the spooler &quot;%s&quot;</message>
- <message xml:lang="fr">Commande refusée par le spooler
-&quot;%s&quot;</message>
- <message xml:lang="de">Auftrag vom Druckspooler &quot;%s&quot;
-zurückgewiesen</message>
+ <message xml:lang="fr">Commande refusée par le spooler &quot;%s&quot;</message>
+ <message xml:lang="de">Auftrag vom Druckspooler &quot;%s&quot; zurückgewiesen</message>
  <message xml:lang="it">Comando rifiutato dallo spooler &quot;%s&quot;</message>
  <message xml:lang="tr">Komut &quot;%s&quot; tarafından reddedildi.</message>
  <message xml:lang="es">Orden rechazada por el spooler &quot;%s&quot;</message>
  <message xml:lang="pt">Comando recusado pelo spooler &quot;%s&quot;</message>
- <message xml:lang="fi">Kirjoitinajuri hylkäsi komennon
-&quot;%s&quot;</message>
- <message xml:lang="ru">Команда отвергнута спулером
-&quot;%s&quot;</message>
- <message xml:lang="hu">A parancsot visszautasította a sorkezelő
-&quot;%s&quot;</message>
- <message xml:lang="ka">ბრძანება უარყოფილია
-ბუფერის მიერ &quot;%s&quot;</message>
+ <message xml:lang="fi">Kirjoitinajuri hylkäsi komennon &quot;%s&quot;</message>
+ <message xml:lang="ru">Команда отвергнута спулером &quot;%s&quot;</message>
+ <message xml:lang="hu">A parancsot visszautasította a sorkezelő &quot;%s&quot;</message>
+ <message xml:lang="ka">ბრძანება უარყოფილია ბუფერის მიერ &quot;%s&quot;</message>
  <message xml:lang="cn">命令被拒绝 &quot;%s&quot;</message>
  <message xml:lang="tw">命令被拒絕 &quot;%s&quot;</message>
- <message xml:lang="sk">Príkaz odmietnutý tlačiarňou
-&quot;%s&quot;</message>
+ <message xml:lang="sk">Príkaz odmietnutý tlačiarňou &quot;%s&quot;</message>
  <message
 xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否されました</message></label>
 <label define="TMSG_CANNOT_CREATE_PS">
@@ -2209,8 +2131,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="es">No puedo crear &quot;%s&quot;</message>
  <message xml:lang="pt">Não é possível criar &quot;%s&quot;</message>
  <message xml:lang="fi">Ei voi luoda &quot;%s&quot;</message>
- <message xml:lang="ru">Невозможно создать
-&quot;%s&quot;</message>
+ <message xml:lang="ru">Невозможно создать &quot;%s&quot;</message>
  <message xml:lang="hu">&quot;%s&quot; nem hozható létre</message>
  <message xml:lang="ka">ვერ იქმნება &quot;%s&quot;</message>
  <message xml:lang="cn">无法创建 &quot;%s&quot;</message>
@@ -2244,8 +2165,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">Dokumentin muoto</message>
  <message xml:lang="ru">Тип документа</message>
  <message xml:lang="hu">Dokumentum formátum</message>
- <message xml:lang="ka">დოკუმენტის
-ფორმატი</message>
+ <message xml:lang="ka">დოკუმენტის ფორმატი</message>
  <message xml:lang="cn">文档格式</message>
  <message xml:lang="tw">文檔格式</message>
  <message xml:lang="sk">Formát dokumentu</message>
@@ -2261,8 +2181,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="tr">Özeliği sil</message>
  <message xml:lang="ru">Удалить атрибут</message>
  <message xml:lang="hu">Attribútum eltávolítása</message>
- <message xml:lang="ka">ატრიბუტის
-ამოღება</message>
+ <message xml:lang="ka">ატრიბუტის ამოღება</message>
  <message xml:lang="cn">移除属性</message>
  <message xml:lang="tw">移除屬性</message>
  <message xml:lang="sk">Odstániť atribút</message>
@@ -2299,11 +2218,9 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="es">Seleccione una estructura genérica</message>
  <message xml:lang="de">Wählen Sie eine generische XML-Struktur</message>
  <message xml:lang="it">Scegli una struttura XML generica</message>
- <message xml:lang="ru">Выбрать generic (основную)
-структуру XML</message>
+ <message xml:lang="ru">Выбрать generic (основную) структуру XML</message>
  <message xml:lang="hu">Adjon meg egy általános XML szerkezetet</message>
- <message xml:lang="ka">საზოგადო XML
-სტრუქტურის შექმნა</message>
+ <message xml:lang="ka">საზოგადო XML სტრუქტურის შექმნა</message>
  <message xml:lang="cn">选择一般性 XML 框架</message>
  <message xml:lang="tw">選擇一般性 XML 框架</message>
  <message xml:lang="sk">Vybrať základnú štruktúru XML</message>
@@ -2351,8 +2268,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">Korvaa (+ dic)</message>
  <message xml:lang="ru">Заместить (+словарь)</message>
  <message xml:lang="hu">Csere (+ dic)</message>
- <message xml:lang="ka">ჩანაცვლება (+
-სიტყვარი)</message>
+ <message xml:lang="ka">ჩანაცვლება (+ სიტყვარი)</message>
  <message xml:lang="cn">替换 (+ dic)</message>
  <message xml:lang="tw">替換 (+ dic)</message>
  <message xml:lang="sk">Nahradiť (+ slovník)</message>
@@ -2368,8 +2284,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">Korvaa ja seuraava</message>
  <message xml:lang="ru">Заместить и следующий</message>
  <message xml:lang="hu">Csere és következő</message>
- <message xml:lang="ka">ჩანაცვლება და
-შემდეგზე გადასვლა</message>
+ <message xml:lang="ka">ჩანაცვლება და შემდეგზე გადასვლა</message>
  <message xml:lang="cn">更正并查找写一个</message>
  <message xml:lang="tw">更正并查找寫一個</message>
  <message xml:lang="sk">Nahradiť a nájsť ďalšie</message>
@@ -2401,8 +2316,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">Hylkää (+ dic)</message>
  <message xml:lang="ru">Обучить</message>
  <message xml:lang="hu">Kihagyás (+ dic)</message>
- <message xml:lang="ka">გამოტოვება (+
-სიტყვარი)</message>
+ <message xml:lang="ka">გამოტოვება (+ სიტყვარი)</message>
  <message xml:lang="cn">学习</message>
  <message xml:lang="tw">學習</message>
  <message xml:lang="sk">Pridať do slovníka</message>
@@ -2418,8 +2332,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">sanat, joissa:</message>
  <message xml:lang="ru">слова содержащие:</message>
  <message xml:lang="hu">ha tartalmazza:</message>
- <message xml:lang="ka">სიტყვები, რომლებიც
-შეიცავენ:</message>
+ <message xml:lang="ka">სიტყვები, რომლებიც შეიცავენ:</message>
  <message xml:lang="cn">包含词语:</message>
  <message xml:lang="tw">包含詞語:</message>
  <message xml:lang="sk">slová obsahujúce:</message>
@@ -2435,8 +2348,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">Oikeinkirjoituksen tarkistus ...</message>
  <message xml:lang="ru">Проверка правописания ...</message>
  <message xml:lang="hu">Szóellenőrző...</message>
- <message xml:lang="ka">მართლწერის
-შემოწმება ...</message>
+ <message xml:lang="ka">მართლწერის შემოწმება ...</message>
  <message xml:lang="cn">拼写检查 ...</message>
  <message xml:lang="tw">拼寫檢查 ...</message>
  <message xml:lang="sk">Kontrola pravopisu ...</message>
@@ -2485,8 +2397,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">sanat, joissa kaikki isolla</message>
  <message xml:lang="ru">слова из заглавных букв</message>
  <message xml:lang="hu">csupa nagybetűs szavak</message>
- <message xml:lang="ka">სიტყვები
-მთავრულით</message>
+ <message xml:lang="ka">სიტყვები მთავრულით</message>
  <message xml:lang="cn">全为大写的词语</message>
  <message xml:lang="tw">全為大寫的詞語</message>
  <message xml:lang="sk">slová napísané VEĽKÝMI písmenami</message>
@@ -2502,8 +2413,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">sanat, joissa numeroita</message>
  <message xml:lang="ru">слова с цифрами</message>
  <message xml:lang="hu">számokat tartalmazó szavak</message>
- <message xml:lang="ka">სიტყვები
-ციფრებით</message>
+ <message xml:lang="ka">სიტყვები ციფრებით</message>
  <message xml:lang="cn">含数字的词语</message>
  <message xml:lang="tw">含數字的詞語</message>
  <message xml:lang="sk">slová s číslami</message>
@@ -2519,8 +2429,7 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="fi">Parametritiedosto virhe</message>
  <message xml:lang="ru">Ошибка параметра файла</message>
  <message xml:lang="hu">Parameter fájl hiba</message>
- <message xml:lang="ka">პარამეტრის ფაილის
-შეცდომა</message>
+ <message xml:lang="ka">პარამეტრის ფაილის შეცდომა</message>
  <message xml:lang="cn">参数文件错误</message>
  <message xml:lang="tw">參數文件錯誤</message>
  <message xml:lang="sk">Chyba súboru s parametrami</message>
@@ -2534,11 +2443,9 @@ xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否され�
  <message xml:lang="es">No hay archivo de teclado</message>
  <message xml:lang="pt">Não há arquivo de teclado</message>
  <message xml:lang="fi">Ei näppäimistötiedostoa</message>
- <message xml:lang="ru">Отсутствует файл клавиатуры
-(Amaya-*.*/config/amaya.kb)</message>
+ <message xml:lang="ru">Отсутствует файл клавиатуры (Amaya-*.*/config/amaya.kb)</message>
  <message xml:lang="hu">Nincs billentyűzet fájl</message>
- <message xml:lang="ka">კლავიატურის ფაილი
-არაა</message>
+ <message xml:lang="ka">კლავიატურის ფაილი არაა</message>
  <message xml:lang="cn">无键盘文件</message>
  <message xml:lang="tw">無鍵盤文件</message>
  <message xml:lang="sk">Neexistuje súbor klávesnice</message>
@@ -2547,86 +2454,52 @@ xml:lang="ja">キーボードファイルがありません</message></label>
 <label define="TMSG_NO_SAVE">
 <message xml:lang="en">Cannot save the document dictionary</message>
  <message xml:lang="de">Kann das Dokumentwörterbuch nicht speichern</message>
- <message xml:lang="fr">Impossible d\'enregistrer le dictionnaire du
-document</message>
- <message xml:lang="it">Impossibile salvare il dizionario del
-documento</message>
+ <message xml:lang="fr">Impossible d\'enregistrer le dictionnaire du document</message>
+ <message xml:lang="it">Impossibile salvare il dizionario del documento</message>
  <message xml:lang="tr">Belge sözlüğü kaydedilemiyor</message>
  <message xml:lang="es">No puedo guardar el diccionario del documento</message>
- <message xml:lang="pt">Não é possível salvar o dicionário do
-documento</message>
+ <message xml:lang="pt">Não é possível salvar o dicionário do documento</message>
  <message xml:lang="fi">Dokumentin sanastoa ei voi tallentaa</message>
- <message xml:lang="ru">Невозможно сохранить словарь
-документа</message>
+ <message xml:lang="ru">Невозможно сохранить словарь документа</message>
  <message xml:lang="hu">A dokumentum szótár nem menthető</message>
- <message xml:lang="ka">დოკუმენტის
-სიტყვარის შენახვა ვერ
-ხერხდება</message>
+ <message xml:lang="ka">დოკუმენტის სიტყვარის შენახვა ვერ ხერხდება</message>
  <message xml:lang="cn">无法保存文档字典</message>
  <message xml:lang="tw">無法保存文檔字典</message>
  <message xml:lang="sk">Slovník sa nedá uložiť</message>
  <message
 xml:lang="ja">このドキュメントディクショナリは保存できません</message></label>
 <label define="TMSG_REFUSE_WORD">
-<message xml:lang="en">Incorrect word &quot;%s&quot; refused in this
-dictionary</message>
- <message xml:lang="de">Fehlerhaftes Wort &quot;%s&quot; im Wörterbuch
-zurückgewiesen</message>
- <message xml:lang="fr">Mot &quot;%s&quot; incorrect refusé dans ce
-dictionnaire</message>
- <message xml:lang="it">Parola scorretta &quot;%s&quot; rifiutata in questo
-dizionario</message>
- <message xml:lang="tr">Yanlış sözcük &quot;%s&quot; bu sözlükte kabul
-edilmiyor</message>
- <message xml:lang="es">Palabra incorrecta &quot;%s&quot; rechazada en este
-diccionario</message>
- <message xml:lang="pt">Palavra incorreta &quot;%s&quot; recusada neste
-dicionário</message>
- <message xml:lang="fi">Kelpaamaton sana &quot;%s&quot;, ei ole hyväksytty
-tässä sanastossa</message>
- <message xml:lang="ru">Неправильное слово &quot;%s&quot; не
-будет добавлено в словарь</message>
- <message xml:lang="hu">Ezt az érvénytelen szót (%s) elutasította a
-szótár</message>
- <message xml:lang="ka">მცდარი სიტყვა &quot;%s&quot;
-ამ სიტყვარში უარყოფილია</message>
- <message xml:lang="cn">错误词语 &quot;%s&quot;
-已被本字典拒绝</message>
- <message xml:lang="tw">錯誤詞語 &quot;%s&quot;
-已被本字典拒絕</message>
- <message xml:lang="sk">Nesprávne slovo &quot;%s&quot; bolo zamietnuté v
-tomto slovníku</message>
- <message xml:lang="ja">不正な単語 &quot;%s&quot;
-がこのディクショナリに拒否されました</message></label>
+<message xml:lang="en">Incorrect word &quot;%s&quot; refused in this dictionary</message>
+ <message xml:lang="de">Fehlerhaftes Wort &quot;%s&quot; im Wörterbuch zurückgewiesen</message>
+ <message xml:lang="fr">Mot &quot;%s&quot; incorrect refusé dans ce dictionnaire</message>
+ <message xml:lang="it">Parola scorretta &quot;%s&quot; rifiutata in questo dizionario</message>
+ <message xml:lang="tr">Yanlış sözcük &quot;%s&quot; bu sözlükte kabul edilmiyor</message>
+ <message xml:lang="es">Palabra incorrecta &quot;%s&quot; rechazada en este diccionario</message>
+ <message xml:lang="pt">Palavra incorreta &quot;%s&quot; recusada neste dicionário</message>
+ <message xml:lang="fi">Kelpaamaton sana &quot;%s&quot;, ei ole hyväksytty tässä sanastossa</message>
+ <message xml:lang="ru">Неправильное слово &quot;%s&quot; не будет добавлено в словарь</message>
+ <message xml:lang="hu">Ezt az érvénytelen szót (%s) elutasította a szótár</message>
+ <message xml:lang="ka">მცდარი სიტყვა &quot;%s&quot; ამ სიტყვარში უარყოფილია</message>
+ <message xml:lang="cn">错误词语 &quot;%s&quot; 已被本字典拒绝</message>
+ <message xml:lang="tw">錯誤詞語 &quot;%s&quot; 已被本字典拒絕</message>
+ <message xml:lang="sk">Nesprávne slovo &quot;%s&quot; bolo zamietnuté v tomto slovníku</message>
+ <message xml:lang="ja">不正な単語 &quot;%s&quot; がこのディクショナリに拒否されました</message></label>
 <label define="TMSG_ADD_WORD">
-<message xml:lang="en">Word &quot;%s&quot; added in the document
-dictionary</message>
- <message xml:lang="de">Wort &quot;%s&quot; zum Dokumentwörterbuch
-hinzugefügt</message>
- <message xml:lang="fr">Mot &quot;%s&quot; ajouté dans le dictionnaire du
-document</message>
- <message xml:lang="it">Parola &quot;%s&quot; aggiunta nel dizionario del
-documento</message>
- <message xml:lang="tr">&quot;%s&quot; sözcüğü belge sözlüğüne
-eklendi</message>
- <message xml:lang="es">Palabra &quot;%s&quot; añadida al diccionario del
-documento</message>
- <message xml:lang="pt">Palavra &quot;%s&quot; adicionada ao dicionário do
-documento</message>
- <message xml:lang="fi">Sana &quot;%s&quot; lisätty dokumentin
-sanastoon</message>
- <message xml:lang="ru">Слово &quot;%s&quot; добавлено в
-словарь документа</message>
+<message xml:lang="en">Word &quot;%s&quot; added in the document dictionary</message>
+ <message xml:lang="de">Wort &quot;%s&quot; zum Dokumentwörterbuch hinzugefügt</message>
+ <message xml:lang="fr">Mot &quot;%s&quot; ajouté dans le dictionnaire du document</message>
+ <message xml:lang="it">Parola &quot;%s&quot; aggiunta nel dizionario del documento</message>
+ <message xml:lang="tr">&quot;%s&quot; sözcüğü belge sözlüğüne eklendi</message>
+ <message xml:lang="es">Palabra &quot;%s&quot; añadida al diccionario del documento</message>
+ <message xml:lang="pt">Palavra &quot;%s&quot; adicionada ao dicionário do documento</message>
+ <message xml:lang="fi">Sana &quot;%s&quot; lisätty dokumentin sanastoon</message>
+ <message xml:lang="ru">Слово &quot;%s&quot; добавлено в словарь документа</message>
  <message xml:lang="hu">Szó (%s) hozzáadva a dokumentum szótárhoz</message>
- <message xml:lang="ka">სიტყვა &quot;%s&quot;
-დოკუმენტის სიტყვარს
-დაემატა</message>
+ <message xml:lang="ka">სიტყვა &quot;%s&quot; დოკუმენტის სიტყვარს დაემატა</message>
  <message xml:lang="cn">词语 &quot;%s&quot; 已加入字典</message>
  <message xml:lang="tw">詞語 &quot;%s&quot; 已加入字典</message>
- <message xml:lang="sk">Slovo &quot;%s&quot; bolo pridané do
-slovníka</message>
- <message xml:lang="ja">単語 &quot;%s&quot;
-がドキュメントディクショナリに追加されました</message></label>
+ <message xml:lang="sk">Slovo &quot;%s&quot; bolo pridané do slovníka</message>
+ <message xml:lang="ja">単語 &quot;%s&quot; がドキュメントディクショナリに追加されました</message></label>
 <label define="TMSG_END_CHECK">
 <message xml:lang="en">End of spell checking</message>
  <message xml:lang="de">Rechtschreibprüfung beendet</message>
@@ -2636,11 +2509,9 @@ slovníka</message>
  <message xml:lang="es">Fin de la corrección ortográfica</message>
  <message xml:lang="pt">Fim da verificação ortográfica</message>
  <message xml:lang="fi">Oikeinkirjoitustarkistus valmis!</message>
- <message xml:lang="ru">Конец проверки
-правописания</message>
+ <message xml:lang="ru">Конец проверки правописания</message>
  <message xml:lang="hu">Szóellenőrzés vége</message>
- <message xml:lang="ka">მართლწერის
-შემოწმების დასრულება</message>
+ <message xml:lang="ka">მართლწერის შემოწმების დასრულება</message>
  <message xml:lang="cn">拼写检查完成</message>
  <message xml:lang="tw">拼寫檢查完成</message>
  <message xml:lang="sk">Koniec kontroly pravopisu</message>
@@ -2655,11 +2526,9 @@ xml:lang="ja">スペルチェックが完了しました</message></label>
  <message xml:lang="es">Corrección ortográfica abortada</message>
  <message xml:lang="pt">Abortada a verificação ortográfica</message>
  <message xml:lang="fi">Oikeinkirjoitustarkistus keskeytetty!</message>
- <message xml:lang="ru">Проверка правописания
-прервана</message>
+ <message xml:lang="ru">Проверка правописания прервана</message>
  <message xml:lang="hu">Szóellenőrzés megszakadt</message>
- <message xml:lang="ka">მართლწერის
-შემოწმება შეწყდა</message>
+ <message xml:lang="ka">მართლწერის შემოწმება შეწყდა</message>
  <message xml:lang="cn">拼写检查已终止</message>
  <message xml:lang="tw">拼寫檢查已終止</message>
  <message xml:lang="sk">Kontrola pravopisu prerušená</message>
@@ -2676,8 +2545,7 @@ xml:lang="ja">スペルチェックが中断されました</message></label>
  <message xml:lang="fi">Valitse dokumentti</message>
  <message xml:lang="ru">Выберите документ</message>
  <message xml:lang="hu">Adjon meg egy dokumentumot</message>
- <message xml:lang="ka">გთხოვთ შეარჩიოთ
-დოკუმენტი</message>
+ <message xml:lang="ka">გთხოვთ შეარჩიოთ დოკუმენტი</message>
  <message xml:lang="cn">请选择文档</message>
  <message xml:lang="tw">請選擇文檔</message>
  <message xml:lang="sk">Prosím vyberte dokument</message>
@@ -2692,16 +2560,13 @@ xml:lang="ja">ドキュメントを選択してください</message></label>
  <message xml:lang="es">Diccionario del documento guardado: %s</message>
  <message xml:lang="pt">Dicionário do documento salvo: %s</message>
  <message xml:lang="fi">Dokumentin sanasto tallennettu: %s</message>
- <message xml:lang="ru">Словарь документа сохранён в:
-%s</message>
+ <message xml:lang="ru">Словарь документа сохранён в: %s</message>
  <message xml:lang="hu">Dokumentum szótár mentve: %s</message>
- <message xml:lang="ka">დოკუმენტის სიტყვარი
-შენახულია: %s</message>
+ <message xml:lang="ka">დოკუმენტის სიტყვარი შენახულია: %s</message>
  <message xml:lang="cn">文档字典已保存: %s</message>
  <message xml:lang="tw">文檔字典已保存: %s</message>
  <message xml:lang="sk">Slovník bol uložený</message>
- <message xml:lang="ja">ドキュメント辞書を保存しました:
-%s</message></label>
+ <message xml:lang="ja">ドキュメント辞書を保存しました: %s</message></label>
 <label define="TMSG_NOT_AVAILABLE">
 <message xml:lang="en">Not available in this version</message>
  <message xml:lang="fr">Pas disponible dans cette version</message>
@@ -2710,8 +2575,7 @@ xml:lang="ja">ドキュメントを選択してください</message></label>
  <message xml:lang="it">Non disponibile in questa versione</message>
  <message xml:lang="ru">Недоступно в этой версии</message>
  <message xml:lang="hu">Ebben a változatban nem elérhető</message>
- <message xml:lang="ka">ამ ვერსიაში
-მიუწვდომელია</message>
+ <message xml:lang="ka">ამ ვერსიაში მიუწვდომელია</message>
  <message xml:lang="cn">此版本尚未提供此功能</message>
  <message xml:lang="tw">此版本尚未提供此功能</message>
  <message xml:lang="sk">Nie je prístupné v tejto verzii</message>
@@ -2723,11 +2587,9 @@ xml:lang="ja">このバージョンでは利用できません</message></label>
  <message xml:lang="es">Activar/Desactivar paleta</message>
  <message xml:lang="de">Palette aktivieren/deaktivieren</message>
  <message xml:lang="it">Abilita/Disabilita la paletta colori</message>
- <message xml:lang="ru">Показать/Скрыть плавающую
-панель</message>
+ <message xml:lang="ru">Показать/Скрыть плавающую панель</message>
  <message xml:lang="hu">Dokkoló rögzítése/úsztatása</message>
- <message xml:lang="ka">პალიტრის
-ჩართვა/ამორთვა</message>
+ <message xml:lang="ka">პალიტრის ჩართვა/ამორთვა</message>
  <message xml:lang="cn">启用/禁用小面板</message>
  <message xml:lang="tw">啟用/禁用小面板</message>
  <message xml:lang="sk">Vysunúť/zasunúť nástrojovú lištu</message>
@@ -2747,22 +2609,16 @@ xml:lang="ja">このバージョンでは利用できません</message></label>
  <message xml:lang="ja">ツール</message></label>
 <label define="TMSG_ATTR_MANDATORY">
 <message xml:lang="en">Mandatory attribute, it can't be removed</message>
- <message xml:lang="fr">Cet attribut est obligatoire, il ne peut pas être
-supprimé</message>
+ <message xml:lang="fr">Cet attribut est obligatoire, il ne peut pas être supprimé</message>
  <message xml:lang="es">Atributo obligatorio, no puede eliminarse</message>
- <message xml:lang="de">Obligatorisches Attribut, kann nicht entfernt
-werden</message>
+ <message xml:lang="de">Obligatorisches Attribut, kann nicht entfernt werden</message>
  <message xml:lang="it">Attributo obbligatorio, non si pu rimuovere</message>
- <message xml:lang="ru">Обязательный атрибут, он не
-может быть удалён</message>
+ <message xml:lang="ru">Обязательный атрибут, он не может быть удалён</message>
  <message xml:lang="hu">Kötelező attribútum, nem távolítható el</message>
- <message xml:lang="ka">აუცილებელი
-ატრიბუტი, მისი ამოღება
-შესაძლებელია</message>
+ <message xml:lang="ka">აუცილებელი ატრიბუტი, მისი ამოღება შესაძლებელია</message>
  <message xml:lang="cn">无法移出强制性属性</message>
  <message xml:lang="tw">無法移出強制性屬性</message>
- <message xml:lang="sk">Toto je povinný atribút, ktorý nemôže byť
-odstránený</message>
+ <message xml:lang="sk">Toto je povinný atribút, ktorý nemôže byť odstránený</message>
  <message
 xml:lang="ja">義務的な属性。それを取り除くことができません</message></label>
 <label define="TMSG_REFRESH">
@@ -2841,8 +2697,7 @@ xml:lang="ja">義務的な属性。それを取り除くことができません
  <message xml:lang="fi">Käytä luokkaa</message>
  <message xml:lang="ru">Применить класс</message>
  <message xml:lang="hu">Osztály alkalmazása</message>
- <message xml:lang="ka">კლასის
-გამოყენება</message>
+ <message xml:lang="ka">კლასის გამოყენება</message>
  <message xml:lang="cn">应用 class</message>
  <message xml:lang="tw">應用 class</message>
  <message xml:lang="sk">Aplikovať triedu (class)</message>
@@ -2856,11 +2711,9 @@ xml:lang="ja">義務的な属性。それを取り除くことができません
  <message xml:lang="es">Seleccionar una clase o seudo-clase</message>
  <message xml:lang="pt">Selecionar uma classe ou pseudo-classe</message>
  <message xml:lang="fi">Valitse luokka tai valeluokka</message>
- <message xml:lang="ru">Выбрать класс или
-псевдо-класс</message>
+ <message xml:lang="ru">Выбрать класс или псевдо-класс</message>
  <message xml:lang="hu">Adja meg az osztályt vagy álosztályt</message>
- <message xml:lang="ka">კლასის ან
-ფსევდოკლასის შერჩევა</message>
+ <message xml:lang="ka">კლასის ან ფსევდოკლასის შერჩევა</message>
  <message xml:lang="cn">选择一个 class 或 pseudo-class</message>
  <message xml:lang="tw">選擇一個 class 或 pseudo-class</message>
  <message xml:lang="sk">Vyberte triedu alebo pseudotriedu</message>
@@ -2931,8 +2784,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="it">Relazioni binarie</message>
  <message xml:lang="ru">Символы равенства</message>
  <message xml:lang="hu">Bináris műveletek</message>
- <message xml:lang="ka">ორობითი
-კავშირები</message>
+ <message xml:lang="ka">ორობითი კავშირები</message>
  <message xml:lang="cn">二元关系</message>
  <message xml:lang="tw">二元關系</message>
  <message xml:lang="sk">Relačné operátory</message>
@@ -2945,8 +2797,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="it">Relazioni binarie di negazione</message>
  <message xml:lang="ru">Символы неравенства</message>
  <message xml:lang="hu">Bináris műveletek vagy negálás</message>
- <message xml:lang="ka">გამოკლების ორობითი
-კავშირები</message>
+ <message xml:lang="ka">გამოკლების ორობითი კავშირები</message>
  <message xml:lang="cn">负二元关系</message>
  <message xml:lang="tw">負二元關系</message>
  <message xml:lang="sk">Negované relačné operátory</message>
@@ -2970,11 +2821,9 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="es">Alfabeto griego (mayúsculas)</message>
  <message xml:lang="de">Griechisches Alphabet (Großbuchstaben)</message>
  <message xml:lang="it">Alfabeto greco (maiuscolo)</message>
- <message xml:lang="ru">Греческий алфавит
-(заглавные)</message>
+ <message xml:lang="ru">Греческий алфавит (заглавные)</message>
  <message xml:lang="hu">Görög ábécé (nagybetűs)</message>
- <message xml:lang="ka">ბერძნული ანბანი
-(მთავრული)</message>
+ <message xml:lang="ka">ბერძნული ანბანი (მთავრული)</message>
  <message xml:lang="cn">希腊字母(大写)</message>
  <message xml:lang="tw">希臘字母(大寫)</message>
  <message xml:lang="sk">Grácka abeceda (veľké)</message>
@@ -3000,8 +2849,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="it">Caratteri speciali</message>
  <message xml:lang="hu">Különleges karakterek</message>
  <message xml:lang="ru">Спецсимволы</message>
- <message xml:lang="ka">სპეციალური
-სიმბოლოები</message>
+ <message xml:lang="ka">სპეციალური სიმბოლოები</message>
  <message xml:lang="cn">特殊字符</message>
  <message xml:lang="tw">特殊字符</message>
  <message xml:lang="sk">Špeciálne znaky</message>
@@ -3017,8 +2865,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="fi">Keskeytä tiedonsiirto</message>
  <message xml:lang="ru">Прервать передачу данных</message>
  <message xml:lang="hu">Átvitel megszakítása</message>
- <message xml:lang="ka">გადაცემის
-შეწყვეტა</message>
+ <message xml:lang="ka">გადაცემის შეწყვეტა</message>
  <message xml:lang="cn">终止传输</message>
  <message xml:lang="tw">終止傳輸</message>
  <message xml:lang="sk">Prerušiť prenos</message>
@@ -3050,8 +2897,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="fi">Seuraava dokumentti</message>
  <message xml:lang="ru">Следующий документ</message>
  <message xml:lang="hu">Következő dokumentum</message>
- <message xml:lang="ka">შემდეგი
-დოკუმენტი</message>
+ <message xml:lang="ka">შემდეგი დოკუმენტი</message>
  <message xml:lang="cn">下一文档</message>
  <message xml:lang="tw">下一文檔</message>
  <message xml:lang="sk">Nasledujúci dokument</message>
@@ -3067,8 +2913,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="fi">Päivitä</message>
  <message xml:lang="ru">Перезагрузить документ</message>
  <message xml:lang="hu">Újratöltés</message>
- <message xml:lang="ka">ხელახლა
-ჩატვირთვა</message>
+ <message xml:lang="ka">ხელახლა ჩატვირთვა</message>
  <message xml:lang="cn">重新载入</message>
  <message xml:lang="tw">重新載入</message>
  <message xml:lang="sk">Načítať najnovšiu verziu stránky</message>
@@ -3132,8 +2977,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="fi">Avaa dokumentti</message>
  <message xml:lang="ru">Открыть документ</message>
  <message xml:lang="hu">Dokumentum megnyitása</message>
- <message xml:lang="ka">დოკუმენტის
-გახსნა...</message>
+ <message xml:lang="ka">დოკუმენტის გახსნა...</message>
  <message xml:lang="cn">打开文档</message>
  <message xml:lang="tw">打開文檔</message>
  <message xml:lang="sk">Otvoriť dokument</message>
@@ -3195,8 +3039,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="es">Énfasis On/Off</message>
  <message xml:lang="pt">Ênfase On/Off</message>
  <message xml:lang="fi">Korosta On/Off</message>
- <message xml:lang="ru">Обычное выделение
-Вкл./Выкл.</message>
+ <message xml:lang="ru">Обычное выделение Вкл./Выкл.</message>
  <message xml:lang="hu">Hangsúlyozott On/Off</message>
  <message xml:lang="ka">აქცენტირება On/Off</message>
  <message xml:lang="cn">强调 On/Off</message>
@@ -3212,8 +3055,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="es">Enérgico (strong) On/Off</message>
  <message xml:lang="pt">Forte On/Off</message>
  <message xml:lang="fi">Lihavoi On/Off</message>
- <message xml:lang="ru">Особое выделение
-Вкл./Выкл.</message>
+ <message xml:lang="ru">Особое выделение Вкл./Выкл.</message>
  <message xml:lang="hu">Vastag On/Off</message>
  <message xml:lang="ka">გაძლიერება On/Off</message>
  <message xml:lang="cn">加强 On/Off</message>
@@ -3229,8 +3071,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="es">Código (code) On/Off</message>
  <message xml:lang="pt">Código On/Off</message>
  <message xml:lang="fi">Koodi On/Off</message>
- <message xml:lang="ru">Выделение компьютерного кода
-Вкл./Выкл.</message>
+ <message xml:lang="ru">Выделение компьютерного кода Вкл./Выкл.</message>
  <message xml:lang="hu">Kód On/Off</message>
  <message xml:lang="ka">კოდი On/Off</message>
  <message xml:lang="cn">代码 On/Off</message>
@@ -3246,8 +3087,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="es">Imagen</message>
  <message xml:lang="pt">Inserir imagem</message>
  <message xml:lang="fi">Syötä kuva</message>
- <message xml:lang="ru">Вставить/Заместить
-изображение</message>
+ <message xml:lang="ru">Вставить/Заместить изображение</message>
  <message xml:lang="hu">Kép beillesztése</message>
  <message xml:lang="ka">ნახატის ჩამატება</message>
  <message xml:lang="cn">插入图片</message>
@@ -3377,8 +3217,7 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="fi">Määrittelyluettelo</message>
  <message xml:lang="ru">Список определения</message>
  <message xml:lang="hu">Meghatározás lista</message>
- <message xml:lang="ka">განსაზღვრებათა
-სია</message>
+ <message xml:lang="ka">განსაზღვრებათა სია</message>
  <message xml:lang="cn">定义性列表</message>
  <message xml:lang="tw">定義性列表</message>
  <message xml:lang="sk">Zoznam definícií (dl)</message>
@@ -3416,50 +3255,32 @@ xml:lang="ja">クラスまたは擬似クラスを選択</message></label>
  <message xml:lang="sk">Tabuľka (table)</message>
  <message xml:lang="ja">表</message></label>
 <label define="TMSG_LIB_WARNCTAB_INFO">
-<message xml:lang="en">You are about to close %d open tabs. Are you sure you
-want to continue?</message>
- <message xml:lang="fr">Etes vous certain de vouloir fermer %d
-onglets?</message>
- <message xml:lang="es">Va a cerrar %d pestañas abiertas. ¿Seguro que desea
-continuar?</message>
- <message xml:lang="de">Sie sind dabei, %d geöffnete Seiten zu schließen.
-Sind Sie sicher, dass Sie fortfahren möchten?</message>
- <message xml:lang="it">Stai per chiudere %d tab aperti. Vuoi proprio
-proseguire?</message>
- <message xml:lang="hu">%d lap bezárására készül. Valóban folytatni
-kívánja?</message>
- <message xml:lang="ru">Сейчас будут закрыты %d панели.
-Продолжить и закрыть их?</message>
- <message xml:lang="ka">თქვენ აპირებთ
-დახუროთ %d გახსნილი დაფა.
-ნამდვილად გსურთ
-გაგრძელება?</message>
+<message xml:lang="en">You are about to close %d open tabs. Are you sure you want to continue?</message>
+ <message xml:lang="fr">Etes vous certain de vouloir fermer %d onglets?</message>
+ <message xml:lang="es">Va a cerrar %d pestañas abiertas. ¿Seguro que desea continuar?</message>
+ <message xml:lang="de">Sie sind dabei, %d geöffnete Seiten zu schließen. Sind Sie sicher, dass Sie fortfahren möchten?</message>
+ <message xml:lang="it">Stai per chiudere %d tab aperti. Vuoi proprio proseguire?</message>
+ <message xml:lang="hu">%d lap bezárására készül. Valóban folytatni kívánja?</message>
+ <message xml:lang="ru">Сейчас будут закрыты %d панели. Продолжить и закрыть их?</message>
+ <message xml:lang="ka">თქვენ აპირებთ დახუროთ %d გახსნილი დაფა. ნამდვილად გსურთ გაგრძელება?</message>
  <message
 xml:lang="cn">正要关闭%d个标签页,确定要这么做吗?</message>
  <message
 xml:lang="tw">正要關閉%d個標簽頁,確定要這么做嗎?</message>
- <message xml:lang="sk">Chystáte sa zatoriť niekoľko otvorených kariet
-(%d). Chcete naozaj pokračovať?</message>
- <message xml:lang="ja">このウィンドウでは %d
-個のタブが開かれています。すべてのタブを閉じてよろしいですか？</message></label>
+ <message xml:lang="sk">Chystáte sa zatoriť niekoľko otvorených kariet (%d). Chcete naozaj pokračovať?</message>
+ <message xml:lang="ja">このウィンドウでは %d 個のタブが開かれています。すべてのタブを閉じてよろしいですか？</message></label>
 <label define="TMSG_LIB_WARNCTAB_CHECK">
 <message xml:lang="en">Warn me when I attempt to close multiple tabs</message>
  <message xml:lang="fr">M'avertir quand je ferme plusieurs onglets</message>
- <message xml:lang="es">Avisarme cuando intente cerrar múltiples
-pestañas</message>
- <message xml:lang="de">Warnung anzeigen, wenn mehrere Seiten geschlossen
-werden sollen</message>
+ <message xml:lang="es">Avisarme cuando intente cerrar múltiples pestañas</message>
+ <message xml:lang="de">Warnung anzeigen, wenn mehrere Seiten geschlossen werden sollen</message>
  <message xml:lang="it">Avvisami quando cerco di chiudere pi tab</message>
  <message xml:lang="hu">Figyelmeztessen több lap bezárásakor</message>
- <message xml:lang="ru">Предупреждать о попытке
-закрытия нескольких панелей</message>
- <message xml:lang="ka">გაფრთხილება
-რამდენიმე დაფის ერთდროულად
-დახურვისას</message>
+ <message xml:lang="ru">Предупреждать о попытке закрытия нескольких панелей</message>
+ <message xml:lang="ka">გაფრთხილება რამდენიმე დაფის ერთდროულად დახურვისას</message>
  <message xml:lang="cn">关闭多个标签页的时候显示警告</message>
  <message xml:lang="tw">關閉多個標簽頁的時候顯示警告</message>
- <message xml:lang="sk">Varovať vždy, ak sa pokúšam zavrieť viac kariet
-naraz</message>
+ <message xml:lang="sk">Varovať vždy, ak sa pokúšam zavrieť viac kariet naraz</message>
  <message
 xml:lang="ja">一度に複数のタブを閉じるときに警告する</message></label>
 <label define="TMSG_LIB_CLOSETABS">
@@ -3483,8 +3304,7 @@ xml:lang="ja">一度に複数のタブを閉じるときに警告する</message
  <message xml:lang="it">Nessun errore trovato</message>
  <message xml:lang="hu">Nincs hiba</message>
  <message xml:lang="ru">Ошибок не обнаружено</message>
- <message xml:lang="ka">შეცდომების
-გარეშე</message>
+ <message xml:lang="ka">შეცდომების გარეშე</message>
  <message xml:lang="cn">没有检测到错误</message>
  <message xml:lang="tw">沒有檢測到錯誤</message>
  <message xml:lang="sk">Žiadne chyby neboli nájdené</message>
@@ -3501,8 +3321,7 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
  <message xml:lang="tr">Pars hatalarını göster</message>
  <message xml:lang="ru">Показать разбор ошибок</message>
  <message xml:lang="hu">Elemzési hibák mutatása</message>
- <message xml:lang="ka">დამუშავების
-შეცდომების ჩვენება</message>
+ <message xml:lang="ka">დამუშავების შეცდომების ჩვენება</message>
  <message xml:lang="cn">显示解析错误</message>
  <message xml:lang="tw">顯示解析錯誤</message>
  <message xml:lang="sk">Zobraziť nájdené chyby</message>
@@ -3590,8 +3409,7 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
  <message xml:lang="es">Subíndice (sub) On/Off</message>
  <message xml:lang="pt">Índice On/Off</message>
  <message xml:lang="fi">Alaindeksi On/Off</message>
- <message xml:lang="ru">Подстрочный индекс
-Вкл./Выкл.</message>
+ <message xml:lang="ru">Подстрочный индекс Вкл./Выкл.</message>
  <message xml:lang="hu">&amp;Alsó index On/Off</message>
  <message xml:lang="ka">ქვედა ინდექსი On/Off</message>
  <message xml:lang="cn">桥表 On/Off</message>
@@ -3607,8 +3425,7 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
  <message xml:lang="es">Superíndice (sup) On/Off</message>
  <message xml:lang="pt">Expoente On/Off</message>
  <message xml:lang="fi">Yläindeksi On/Off</message>
- <message xml:lang="ru">Надстрочный индекс
-Вкл./Выкл.</message>
+ <message xml:lang="ru">Надстрочный индекс Вкл./Выкл.</message>
  <message xml:lang="hu">Felső index On/Off</message>
  <message xml:lang="ka">ზედა ინდექსი On/Off</message>
  <message xml:lang="cn">上标 On/Off</message>
@@ -3671,8 +3488,7 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
  <message xml:lang="hu">Stílus</message>
  <message xml:lang="de">Stil</message>
  <message xml:lang="ka">Style</message>
- <message xml:lang="ru">Настройка каскадной таблицы
-стиля</message>
+ <message xml:lang="ru">Настройка каскадной таблицы стиля</message>
  <message xml:lang="cn">样式</message>
  <message xml:lang="tw">樣式</message>
  <message xml:lang="sk">Pravidlá</message>
@@ -3700,10 +3516,8 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
  <message xml:lang="de">Ansicht horizontal teilen</message>
  <message xml:lang="it">Dividi la vista in orizzontale</message>
  <message xml:lang="hu">Vízszintes felosztás</message>
- <message xml:lang="ka">ხედის ჰორიზონტალური
-გაყოფა</message>
- <message xml:lang="ru">Деление/Отмена деления окна
-по горизонтали</message>
+ <message xml:lang="ka">ხედის ჰორიზონტალური გაყოფა</message>
+ <message xml:lang="ru">Деление/Отмена деления окна по горизонтали</message>
  <message xml:lang="cn">水平排列视图</message>
  <message xml:lang="tw">水平排列視圖</message>
  <message xml:lang="sk">Rozdeliť okno horizontálne</message>
@@ -3715,10 +3529,8 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
  <message xml:lang="de">Ansicht vertikal teilen</message>
  <message xml:lang="it">Dividi la vista in verticale</message>
  <message xml:lang="hu">Függőleges felosztás</message>
- <message xml:lang="ka">ხედის ვერტიკალური
-გაყოფა</message>
- <message xml:lang="ru">Деление/Отмена деления окна
-по вертикали</message>
+ <message xml:lang="ka">ხედის ვერტიკალური გაყოფა</message>
+ <message xml:lang="ru">Деление/Отмена деления окна по вертикали</message>
  <message xml:lang="cn">垂直排列视图</message>
  <message xml:lang="tw">垂直排列視圖</message>
  <message xml:lang="sk">Rozdeliť okno vertikálne</message>
@@ -3729,11 +3541,9 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
  <message xml:lang="es">Ventana de herramientas</message>
  <message xml:lang="de">Hilfsmittel anzeigen</message>
  <message xml:lang="it">Mostra strumenti</message>
- <message xml:lang="ru">Показать/Скрыть панель
-инструментов</message>
+ <message xml:lang="ru">Показать/Скрыть панель инструментов</message>
  <message xml:lang="hu">Eszközsor mutatása</message>
- <message xml:lang="ka">ხელსაწყოების
-ჩვენება</message>
+ <message xml:lang="ka">ხელსაწყოების ჩვენება</message>
  <message xml:lang="cn">显示工具栏</message>
  <message xml:lang="tw">顯示工具欄</message>
  <message xml:lang="sk">Zobraziť/skryť nástroje</message>
@@ -3829,8 +3639,7 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
  <message xml:lang="fi">Tarkista oikeinkirjoitus</message>
  <message xml:lang="ru">Проверка правописания</message>
  <message xml:lang="hu">Szóelemző</message>
- <message xml:lang="ka">მართლწერის
-შემოწმება</message>
+ <message xml:lang="ka">მართლწერის შემოწმება</message>
  <message xml:lang="cn">拼写检查</message>
  <message xml:lang="tw">拼寫檢查</message>
  <message xml:lang="sk">Kontrola pravopisu</message>
@@ -3847,8 +3656,7 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
 <message xml:lang="en">Relations, orders and logic</message>
  <message xml:lang="es">Relaciones, orden y lógica</message>
  <message xml:lang="fr">Relations, ordre et logique</message>
- <message xml:lang="de">Abhängigkeiten, Aufträge und
-Verknüpfungssteuerungen</message>
+ <message xml:lang="de">Abhängigkeiten, Aufträge und Verknüpfungssteuerungen</message>
  <message xml:lang="hu">Relációk, rendek és logika</message>
  <message xml:lang="it">Relazioni, ordine e logica</message>
  <message xml:lang="ja">道理と論理の関係</message></label>
@@ -3862,14 +3670,10 @@ Verknüpfungssteuerungen</message>
  <message xml:lang="ja">集合と関数</message></label>
 <label define="TMSG_MATH_PANEL_4">
 <message xml:lang="en">Arithmetic, operations, complexes and constants</message>
- <message xml:lang="es">Aritmética, operaciones, complejos y
-constantes</message>
- <message xml:lang="fr">Arithmétique, opérations, complexes et
-constantes</message>
- <message xml:lang="de">arithmetisch, Abläufe, Verzweigungen und
-Konstante</message>
- <message xml:lang="hu">Számelmélet, műveletek, komplexek és
-állandók</message>
+ <message xml:lang="es">Aritmética, operaciones, complejos y constantes</message>
+ <message xml:lang="fr">Arithmétique, opérations, complexes et constantes</message>
+ <message xml:lang="de">arithmetisch, Abläufe, Verzweigungen und Konstante</message>
+ <message xml:lang="hu">Számelmélet, műveletek, komplexek és állandók</message>
  <message xml:lang="it">Arihmetica, operazioni, complessi e costanti</message>
  <message xml:lang="ja">複素数と定数の計算、演算</message></label>
 <label define="TMSG_MATH_PANEL_5">
@@ -4000,8 +3804,7 @@ Konstante</message>
  <message xml:lang="it">Riduci l'estensione orizzontale</message>
  <message xml:lang="de">Verkleinern der Breite</message>
  <message xml:lang="es">Reducir extensión horizontal</message>
- <message xml:lang="ru">Уменьшить расширение по
-горизонтали</message>
+ <message xml:lang="ru">Уменьшить расширение по горизонтали</message>
  <message xml:lang="hu">Shrink &amp;horizontal extend</message>
  <message xml:lang="ka">განივი შეკუმშვა</message>
  <message xml:lang="cn">收缩水平范围</message>
@@ -4014,8 +3817,7 @@ Konstante</message>
  <message xml:lang="it">Riduci l'estensione verticale</message>
  <message xml:lang="de">Verkleinern der Breite</message>
  <message xml:lang="es">Reducir extensión vertical</message>
- <message xml:lang="ru">Уменьшить расширение по
-вертикали</message>
+ <message xml:lang="ru">Уменьшить расширение по вертикали</message>
  <message xml:lang="hu">Shrink &amp;vertical extend</message>
  <message xml:lang="ka">მართობი შეკუმშვა</message>
  <message xml:lang="cn">收缩垂直范围</message>
@@ -4030,8 +3832,7 @@ Konstante</message>
  <message xml:lang="es">Insertar fila delante</message>
  <message xml:lang="ru">Вставить строку</message>
  <message xml:lang="hu">Sor &amp;beillesztése</message>
- <message xml:lang="ka">მწკრივის
-ჩამატება</message>
+ <message xml:lang="ka">მწკრივის ჩამატება</message>
  <message xml:lang="cn">插入新行</message>
  <message xml:lang="tw">插入新行</message>
  <message xml:lang="sk">Vložiť riadok nad</message>
@@ -4044,8 +3845,7 @@ Konstante</message>
  <message xml:lang="es">Añadir fila detrás</message>
  <message xml:lang="ru">Добавить строку</message>
  <message xml:lang="hu">Sor &amp;hozzáadása</message>
- <message xml:lang="ka">მწკრივის
-დამატება</message>
+ <message xml:lang="ka">მწკრივის დამატება</message>
  <message xml:lang="cn">附加一行</message>
  <message xml:lang="tw">附加一行</message>
  <message xml:lang="sk">Vložiť riadok pod</message>
@@ -4091,8 +3891,7 @@ Konstante</message>
  <message xml:lang="de">Tips bei Programmstart anzeigen</message>
  <message xml:lang="it">Visualizza il suggerimento all'avvio</message>
  <message xml:lang="hu">Tipp mutatása a program indulásakor</message>
- <message xml:lang="ja">スタートアップ時にTips
-を表示</message></label>
+ <message xml:lang="ja">スタートアップ時にTips を表示</message></label>
 <label define="TIP_DIALOG_PREVIOUS_TIP">
 <message xml:lang="en">Previous tip</message>
  <message xml:lang="fr">Conseil précédent</message>
@@ -4118,74 +3917,34 @@ Konstante</message>
  <message xml:lang="fr">Fermer</message>
  <message xml:lang="ja">閉じる</message></label>
 <label define="TIP_AMAYA_PROFILES">
-<message xml:lang="en">Amaya can be adapted to your own needs: five profiles
-are provided with different sets of menus and
-panels. See Preferences/General.</message>
- <message xml:lang="fr">Amaya s'adapte à vos besoins : cinq profils sont
-fournis avec différents ensembles de menus et de barres d'outils. Voir les
-Préférences.</message>
- <message xml:lang="es">Amaya puede adaptarse a sus necesidades: incorpora
-cinco perfiles distintos con diferentes opciones
-de menús y paneles. Véase el menú Editar &gt; Preferencias.</message>
- <message xml:lang="de">Amaya kann auf Ihre Bedürfnisse angepasst werden:
-fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen
-und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in
-die Einstellungen.</message>
- <message xml:lang="it">Amaya può adattarsi al tuo uso: ci sono cinque diversi
-profili con un insieme differente di voci di
-menu e pannelli. Vedi Preferenze.</message>
- <message xml:lang="hu">Az Amaya testreszabható: öt különböző profilban
-különböző menü- készletek és panelkészlet áll rendelkezésére. Lásd
-a Beállításokban.</message>
- <message xml:lang="ja">Amaya
-はあなたの要求に適応できます：5つのパラメータがメニューとパネルの異なる組み合わせで実現できます。詳しくは「編集」→「設定」→「一般」を参照してください。</message></label>
+<message xml:lang="en">Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.</message>
+ <message xml:lang="fr">Amaya s'adapte à vos besoins : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
+ <message xml:lang="es">Amaya puede adaptarse a sus necesidades: incorpora cinco perfiles distintos con diferentes opciones de menús y paneles. Véase el menú Editar &gt; Preferencias.</message>
+ <message xml:lang="de">Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.</message>
+ <message xml:lang="it">Amaya può adattarsi al tuo uso: ci sono cinque diversi profili con un insieme differente di voci di menu e pannelli. Vedi Preferenze.</message>
+ <message xml:lang="hu">Az Amaya testreszabható: öt különböző profilban különböző menü- készletek és panelkészlet áll rendelkezésére. Lásd a Beállításokban.</message>
+ <message xml:lang="ja">Amaya はあなたの要求に適応できます：5つのパラメータがメニューとパネルの異なる組み合わせで実現できます。詳しくは「編集」→「設定」→「一般」を参照してください。</message></label>
 <label define="TIP_PANEL_MODES">
-<message xml:lang="en">Panels can be displayed on the left or on the right side
-of the window or even customized panel by panel. See Preferences.</message>
- <message xml:lang="fr">Les panneaux d'outils peuvent être affichés à gauche
-ou à droite ou à votre convenance panneau par panneau. Voir les
-Préférences.</message>
- <message xml:lang="es">Las ventanas de herramientas pueden mostrarse todas
-juntas a izquierda o derecha o por separado de forma personalizada. Véase el
-menú Editar &gt; Preferencias.</message>
- <message xml:lang="de">Bedienelemente können links, rechts oder
-benutzerdefiniert angezeigt werden. Siehe Einstellungen.</message>
- <message xml:lang="it">I panelli possono essere visualizzati a sinistra o a
-destra o personalizzati pannello per pannello.
-Vedi Preferenze.</message>
- <message xml:lang="hu">A panelek az ablak bal vagy jobb szélére
-helyezhetők, vagy akár panelenként beállíthatók. Lásd a
-Beállításokban.</message>
+<message xml:lang="en">Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.</message>
+ <message xml:lang="fr">Les panneaux d'outils peuvent être affichés à gauche ou à droite ou à votre convenance panneau par panneau. Voir les Préférences.</message>
+ <message xml:lang="es">Las ventanas de herramientas pueden mostrarse todas juntas a izquierda o derecha o por separado de forma personalizada. Véase el menú Editar &gt; Preferencias.</message>
+ <message xml:lang="de">Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.</message>
+ <message xml:lang="it">I panelli possono essere visualizzati a sinistra o a destra o personalizzati pannello per pannello. Vedi Preferenze.</message>
+ <message xml:lang="hu">A panelek az ablak bal vagy jobb szélére helyezhetők, vagy akár panelenként beállíthatók. Lásd a Beállításokban.</message>
  <message
 xml:lang="ja">パネルの表示位置はウィンドウの左右から選ぶか、もしくはカスタマイズできます。「設定」を参照してください。</message></label>
 <label define="TIP_PARENT_SELECTION">
-<message xml:lang="en">With the F2 or Escape key you can select the parent
-element in the document structure, to apply editing functions (copy, paste,
-attributes, style, etc.) to the right element.</message>
- <message xml:lang="fr">Avec la touche F2 ou Escape vous pouvez sélectionner
-la structure englobante, pour appliquer les fonctions d'édition (copier,
-coller, attributs, etc.) à ces éléments.</message>
- <message xml:lang="es">Con la tecla F2 o Escape se puede seleccionar el
-elemento padre del elemento seleccionado para aplicarle funciones de edición
-(copiar, pegar, atributos, etc).</message>
- <message xml:lang="de">Mit F2 oder der Escape Taste können Sie das
-Elternelement in der Struktur auswählen und Editier Funktionen (kopieren,
-einfügen,Attribute usw.) auf dieses Element anzuwenden.</message>
- <message xml:lang="it">Con il tasto F2 o Escape si può selezionare l'elemento
-genitore nella struttura, per applicare a questi elementi le funzioni di
-editing (copia, incolla, attributi, etc.).</message>
- <message xml:lang="hu">Az F2 vagy Esc billentyűvel kijelölhetjük a
-szerkezeti elem elődelemét, amivel ezután szerkesztési műveletek
-(másolás, beillesztés, tulajdonságok stb.) végezhetők.</message>
+<message xml:lang="en">With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.</message>
+ <message xml:lang="fr">Avec la touche F2 ou Escape vous pouvez sélectionner la structure englobante, pour appliquer les fonctions d'édition (copier, coller, attributs, etc.) à ces éléments.</message>
+ <message xml:lang="es">Con la tecla F2 o Escape se puede seleccionar el elemento padre del elemento seleccionado para aplicarle funciones de edición (copiar, pegar, atributos, etc).</message>
+ <message xml:lang="de">Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.</message>
+ <message xml:lang="it">Con il tasto F2 o Escape si può selezionare l'elemento genitore nella struttura, per applicare a questi elementi le funzioni di editing (copia, incolla, attributi, etc.).</message>
+ <message xml:lang="hu">Az F2 vagy Esc billentyűvel kijelölhetjük a szerkezeti elem elődelemét, amivel ezután szerkesztési műveletek (másolás, beillesztés, tulajdonságok stb.) végezhetők.</message>
  <message
 xml:lang="ja">F2もしくはエスケープキーで、編集機能（コピー、ペースト、属性、スタイルなど）に適応させるために文書中の現在の要素を選択できます。</message></label>
 <label define="TIP_SPLIT_NOTEBOOK">
-<message xml:lang="en">You can display two documents side by side in the window
-by dragging a document tab to the left or right side of the displayed
-document.</message>
- <message xml:lang="fr">Vous pouvez afficher deux documents côte à côte dans
-la même fenêtre en déplaçant un onglet de document sur un bord du document
-affiché.</message>
+<message xml:lang="en">You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.</message>
+ <message xml:lang="fr">Vous pouvez afficher deux documents côte à côte dans la même fenêtre en déplaçant un onglet de document sur un bord du document affiché.</message>
  <message xml:lang="es">Puede mostrar dos o más documentos simultáneamente
 arrastrando la pestaña de un documento a uno de los bordes del documento
 visible.</message>
@@ -4334,8 +4093,8 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 </label>
 
 <label define="TIP_LANGUAGES">
-<message xml:lang="en">Use Edit-&gt;Preferences-&gt;Dialogue Language to choose the language of the user interface.</message>
-<message xml:lang="fr">Utilisez Édition-&gt;Préférences-&gt;Langue des dialogues pour choisir la langue de l'interface utilisateur.</message>
+<message xml:lang="en">Use Edit&gt;Preferences&gt;Dialogue Language to choose the language of the user interface.</message>
+<message xml:lang="fr">Utilisez Édition&gt;Préférences&gt;Langue des dialogues pour choisir la langue de l'interface utilisateur.</message>
 </label>
 
 <label define="Classic">

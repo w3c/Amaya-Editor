@@ -211,7 +211,7 @@
 209 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
 210 Ungültige Zeichen
 211 Dokumenttyp:
-212 Anzeigen - siehe Datei > Parserfehler anzeigen
+212 Anzeigen - siehe Datei  >  Parserfehler anzeigen
 213 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
 214 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
 215 Nicht verfügbar
@@ -342,7 +342,7 @@
 340 Beschreibung:
 341 Wählen Sie bitte ein Element aus
 342 CSS komplett
-343 CSS-Regeln, die für <%s> gelten\n
+343 CSS-Regeln, die für  < %s >  gelten\n
 344 Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
 345 Objekte laden (object, embed, iframe)
 346 Für dieses Element gibt es keine Formatvorlage
@@ -354,7 +354,7 @@
 352 Content Length
 353 Content Location
 354 Einstellungen
-355 Zeichen (&xxx;)
+355 Zeichen ( & xxx;)
 356 Objekt erzeugen
 357 Verzeichnis
 358 Datei

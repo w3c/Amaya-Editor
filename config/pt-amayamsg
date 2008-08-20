@@ -6,7 +6,7 @@
 4 Nova folha de estilo CSS
 5 Do gabarito
 6 **In new tab
-7 >Abrir em nova janela
+7 > Abrir em nova janela
 8 Apagar
 9 Clique
 10 Documento salvo: %s
@@ -179,7 +179,7 @@
 177 Cor do plano frontal do menu
 178 Cor de fundo do menu
 179 Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.
-180 Lista de idiomas preferidos como "pt, en":
+180 Lista de idiomas preferidos como  " pt, en " :
 181 Estas modificações não serão modificadas até que se reinicialize Amaya.
 182 Permitir redirecionamentos PUT automáticos nestes domínios
 183 Ignorar folhas de estilo
@@ -211,7 +211,7 @@
 209 **Try the 'File/Read as' entry
 210 Caracteres inválidos
 211 Perfil del documento:
-212 Erros - veja Arquivo > Exibir erros de gramática (parsing)
+212 Erros - veja Arquivo  >  Exibir erros de gramática (parsing)
 213 A codificação deste documento não é suportada porAmaya
 214 Editar ou salvar este documento vai mudar seu tipo
 215 Indisponível
@@ -342,7 +342,7 @@
 340 **Description:
 341 **Please select an element
 342 **All CSS
-343 **CSS style rules applied to the <%s> element\n
+343 **CSS style rules applied to the  < %s >  element\n
 344 **Blue lines are links activated by a double (or a single) click\n
 345 **Load objects (object, embed, iframe)
 346 **No style rule for this element
@@ -354,7 +354,7 @@
 352 **Content Length
 353 **Content Location
 354 Preferências
-355 Carácter (&xxx;)
+355 Carácter ( & xxx;)
 356 **Create Object
 357 **Directory
 358 **File
@@ -461,7 +461,7 @@
 459 **With caption
 460 **Size
 461 **Position
-462 **XML editing mode
+462 **XM L editing mode
 463 **List of style sheets
 464 **Add a style sheet...
 465 **Remove selected style sheets

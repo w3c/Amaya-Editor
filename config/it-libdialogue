@@ -19,7 +19,7 @@
 17 %s
 18 Memoria insufficiente
 19 *** Amaya: Errore non recuperabile ***
-20 i documenti modificati, se ve ne sono, sarannosalvati
+20 i documenti modificati, se ve ne sono, saranno salvati
 21 File .TRA incorretto: %s
 22 %s non è un fratello valido per %s (%s)
 23 %s non è un figlio valido per %s (%s)
@@ -44,7 +44,7 @@
 42 Formato della carta
 43 Chiudi
 44 Directory
-45 Il documento %s esiste già. Vuoisovrascriverlo?
+45 Il documento %s esiste già. Vuoi sovrascriverlo?
 46 Impostare il colore del testo
 47 Impostare il colore dello sfondo
 48 Famiglia
@@ -132,8 +132,8 @@
 130 Attributo sconosciuto
 131 Annulla
 132 Errore nella traduzione in PostScript
-133 Comando rifiutato dallo spooler "%s"
-134 Impossibile creare "%s"
+133 Comando rifiutato dallo spooler  " %s "
+134 Impossibile creare  " %s "
 135 Soprassegnato
 136 Formato del documento
 137 Rimuovi l\'attributo
@@ -154,9 +154,9 @@
 152 parole contenenti cifre
 153 Errore nel file dei parametri
 154 Il file della tastiera non esiste
-155 Impossibile salvare il dizionario deldocumento
-156 Parola scorretta "%s" rifiutata in questodizionario
-157 Parola "%s" aggiunta nel dizionario deldocumento
+155 Impossibile salvare il dizionario del documento
+156 Parola scorretta  " %s "  rifiutata in questo dizionario
+157 Parola  " %s "  aggiunta nel dizionario del documento
 158 Fine controllo ortografico
 159 Controllo ortografico interrotto
 160 Seleziona un documento
@@ -207,7 +207,7 @@
 205 Lista di definizioni
 206 Collegamento
 207 Tabella
-208 Stai per chiudere %d tab aperti. Vuoi proprioproseguire?
+208 Stai per chiudere %d tab aperti. Vuoi proprio proseguire?
 209 Avvisami quando cerco di chiudere pi tab
 210 Chiudi tab
 211 Nessun errore trovato
@@ -260,22 +260,22 @@
 258 Prossimo suggerimento
 259 Sapevi che...
 260 **Close
-261 Amaya può adattarsi al tuo uso: ci sono cinque diversiprofili con un insieme differente di voci dimenu e pannelli. Vedi Preferenze.
-262 I panelli possono essere visualizzati a sinistra o adestra o personalizzati pannello per pannello.Vedi Preferenze.
-263 Con il tasto F2 o Escape si può selezionare l'elementogenitore nella struttura, per applicare a questi elementi le funzioni diediting (copia, incolla, attributi, etc.).
-264 Si possono visualizzare due documenti uno accantoall'altro nella finestra trascinando il tab del documento al margine deldocumento visualizzato.
-265 Con il modo personalizzato, si può trascinare ipannelli per cambiare il loro ordine o per renderlimobili.
-266 Con il modo personalizzato, si possono generare diversebarre di pannelli su ogni lato trascinando pannelli.
-267 Si può cambiare il modo di editing (Text/XML)cliccando sul corrispondente pulsante nella barra di stato.
-268 Quando c'è un pulsante rosso nella barra di stato, sipossono vedere gli errori cliccandoci sopra .
-269 Si può selezionare un antenato della selezionecorrente clicccando sul suo nome nel path di controllo visualizzato nella barradi stato.
-270 Ci si può muovere in un altro tab con il menuvisualizzato dal pulsante freccia alla destra dei tabdel documento.
+261 Amaya può adattarsi al tuo uso: ci sono cinque diversi profili con un insieme differente di voci di menu e pannelli. Vedi Preferenze.
+262 I panelli possono essere visualizzati a sinistra o a destra o personalizzati pannello per pannello. Vedi Preferenze.
+263 Con il tasto F2 o Escape si può selezionare l'elemento genitore nella struttura, per applicare a questi elementi le funzioni di editing (copia, incolla, attributi, etc.).
+264 Si possono visualizzare due documenti uno accanto all'altro nella finestra trascinando il tab del documento al margine del documento visualizzato.
+265 Con il modo personalizzato, si può trascinare i pannelli per cambiare il loro ordine o per renderli mobili.
+266 Con il modo personalizzato, si possono generare diverse barre di pannelli su ogni lato trascinando pannelli.
+267 Si può cambiare il modo di editing (Text/XML) cliccando sul corrispondente pulsante nella barra di stato.
+268 Quando c'è un pulsante rosso nella barra di stato, si possono vedere gli errori cliccandoci sopra .
+269 Si può selezionare un antenato della selezione corrente clicccando sul suo nome nel path di controllo visualizzato nella barra di stato.
+270 Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit->Preferences->Dialogue Language to choose the language of the user interface.
+276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
 277 Classico
 278 Moderno
 279 Senza tema

@@ -1,27 +1,27 @@
 # encoding= latin1
-0 &Archivo
+0 & Archivo
 1 Context
 2 Context
-3 &Editar
-4 &Ver
-5 &Insertar
-6 E&stilo
-7 En&laces
+3 & Editar
+4 & Ver
+5 & Insertar
+6 E & stilo
+7 En & laces
 8 Atributos
-9 &Herramientas
-10 A&yuda
+9 & Herramientas
+10 A & yuda
 11 Nueva pestaña
-12 Nuevo &documento...
-13 &Nuevo
-14 Nuevo &documento...
-15 Nuevo documento &MathML...
-16 Nuevo documento SV&G...
-17 Nueva hoja de es&tilo CSS...
-18 A&brir documento...
-19 &Archivo
+12 Nuevo  & documento...
+13 & Nuevo
+14 Nuevo  & documento...
+15 Nuevo documento  & MathML...
+16 Nuevo documento SV & G...
+17 Nueva hoja de es & tilo CSS...
+18 A & brir documento...
+19 & Archivo
 20 Abrir en ventana nueva...
-21 Actuali&zar
-22 &Leído como
+21 Actuali & zar
+22 & Leído como
 23 Unicode (UTF-8)
 24 Occidental (ISO-8859-1)
 25 Occidental (ISO-8859-15)
@@ -46,18 +46,18 @@
 44 Japonés (ISO-2022-JP)
 45 Japonés (EUC-JP)
 46 Japonés (Shift-JIS)
-47 A&trás
-48 A&delante
-49 &Guardar
-50 G&uardar como...
+47 A & trás
+48 A & delante
+49 & Guardar
+50 G & uardar como...
 51 Guardar todo
-52 Sinc&ronizar
-53 &Enviar por correo electrónico ...
-54 C&onfigurar e imprimir...
-55 &Imprimir
-56 &Cerrar pestaña
-57 Cerrar &ventana
-58 &Salir de Amaya
+52 Sinc & ronizar
+53 & Enviar por correo electrónico ...
+54 C & onfigurar e imprimir...
+55 & Imprimir
+56 & Cerrar pestaña
+57 Cerrar  & ventana
+58 & Salir de Amaya
 59 Nueva pestaña
 60 Actualizar pestaña
 61 Actualizar todas las pestañas
@@ -77,41 +77,41 @@
 75 Borrar
 76 Insertar delante
 77 Añadir detrás
-78 &Deshacer
-79 &Rehacer
-80 Cor&tar
-81 &Copiar
-82 &Pegar
-83 &Borrar
-84 &Insertar delante
-85 &Añadir detrás
+78 & Deshacer
+79 & Rehacer
+80 Cor & tar
+81 & Copiar
+82 & Pegar
+83 & Borrar
+84 & Insertar delante
+85 & Añadir detrás
 86 Seleccionar todo
 87 Seleccionar
 88 Elemento padre
 89 Primer hijo
 90 Elemento anterior
 91 Siguiente elemento
-92 &Buscar...
-93 &Preferencias
+92 & Buscar...
+93 & Preferencias
 94 Barras de herramientas
-95 &Navegación
-96 &Edición
-97 Ventana de &herramientas
-98 Áreas de &mapas
-99 &Destinos
-100 &Vista formateada
-101 Es&tructura
-102 Código &fuente
-103 &Enlaces
-104 A&lternativo
-105 Tabla de &contenidos
+95 & Navegación
+96 & Edición
+97 Ventana de  & herramientas
+98 Áreas de  & mapas
+99 & Destinos
+100 & Vista formateada
+101 Es & tructura
+102 Código  & fuente
+103 & Enlaces
+104 A & lternativo
+105 Tabla de  & contenidos
 106 Dividir vista horizontalmente
 107 Dividir vista verticalmente
-108 &Propiedades del documento
-109 &Mostrar errores sintácticos
-110 &Pantalla completa
-111 &Aumentar tamaño de texto
-112 &Reducir tamaño de texto
+108 & Propiedades del documento
+109 & Mostrar errores sintácticos
+110 & Pantalla completa
+111 & Aumentar tamaño de texto
+112 & Reducir tamaño de texto
 113 **Normal zoom
 114 Párrafo (p)
 115 Encabezado (heading)
@@ -162,14 +162,14 @@
 160 thead
 161 tbody
 162 tfoot
-163 &Math
+163 & Math
 164 Insertar fórmula
 165 Texto simple (mtext)
 166 Identificador (mi)
 167 Número (mn)
 168 Operador (mo)
 169 Espacio (mspace)
-170 Carácter (&xxx;)
+170 Carácter ( & xxx;)
 171 InvisibleTimes
 172 ApplyFunction
 173 Raíz (mroot)
@@ -228,7 +228,7 @@
 226 Rectángulo (area)
 227 Estructura
 228 Estilo (style)
-229 C&omentario
+229 C & omentario
 230 base
 231 meta
 232 Enlace (link)
@@ -267,24 +267,24 @@
 265 Fuente
 266 Seleccionar Fuente...
 267 Predeterminado
-268 &Estilo...
-269 Crear &regla...
-270 &Mostrar estilo aplicado...
+268 & Estilo...
+269 Crear  & regla...
+270 & Mostrar estilo aplicado...
 271 Hojas de estilo
 272 Enlazar hoja de estilo...
 273 Abrir hoja de estilo enlazada...
 274 Desactivar hoja de estilo enlazada...
-275 Acti&var hoja de estilo enlazada...
+275 Acti & var hoj a de estilo enlazada...
 276 Borrar enlace a hoja de estilo...
 277 Copiar localización
 278 Pegar localización
-279 Enlazar último destino &creado
-280 Crear o cambiar &enlace...
-281 Crear &destino (a / id)
-282 &Borrar ancla (a)
-283 &Crear/Borrar atributos id...
-284 &Revisar ortografía...
-285 &Transformar...
+279 Enlazar último destino  & creado
+280 Crear o cambiar  & enlace...
+281 Crear  & destino (a / id)
+282 & Borrar ancla (a)
+283 & Crear/Borrar atributos id...
+284 & Revisar ortografía...
+285 & Transformar...
 286 **Code clean up
 287 Editar tabla
 288 Cambiar a celda de datos
@@ -303,33 +303,33 @@
 301 Pegar delante
 302 Pegar detrás
 303 Título (title) ...
-304 Cambiar doct&ype
-305 &Borrar doctype
+304 Cambiar doct & ype
+305 & Borrar doctype
 306 Añadir doctype
 307 Cambiar a XHTML 1.1
 308 Cambiar a XHTML 1.0 Transitional
-309 Cambiar a XHTML 1.0 &Strict
+309 Cambiar a XHTML 1.0  & Strict
 310 Cambiar a XHTML 1.0 Basic
 311 Cambiar a XHTML+RDFa
 312 Cambiar a HTML 4.01 Transitional
 313 Cambiar a HTML 4.01 Strict
-314 &Numerar encabezados
-315 &Generar índice de materias
-316 &Hacer libro
+314 & Numerar encabezados
+315 & Generar índice de materias
+316 & Hacer libro
 317 Insertar fecha y hora actual
-318 A&notaciones
-319 Anotar &selección
-320 Anotar &documento
-321 &Mover a selección
-322 Guardar selección como &XPointer
-323 Mover a &XPointer guardado
-324 &Responder a anotación
-325 &Enviar al servidor
-326 &Borrar
-327 &Cargar
-328 &Personalizar consulta...
-329 &Filtro local...
-330 &Cooperación
+318 A & notaciones
+319 Anotar  & selección
+320 Anotar  & documento
+321 & Mover a selección
+322 Guardar selección como  & XPointer
+323 Mover a  & XPointer guardado
+324 & Responder a anotación
+325 & Enviar al servidor
+326 & Borrar
+327 & Cargar
+328 & Personalizar consulta...
+329 & Filtro local...
+330 & Cooperación
 331 Bloquear recurso
 332 Desbloquear recurso...
 333 Ver propiedades del recurso...
@@ -341,7 +341,7 @@
 339 **Create and use a component
 340 **Create a free editing box
 341 **Create a repeated component
-342 &Javascript/DOM
+342 & Javascript/DOM
 343 Activar/Desactivar
 344 Ejecutar un comando
 345 Ejecutar un script externo

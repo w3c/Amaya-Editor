@@ -183,7 +183,7 @@
 177 Menu foreground color
 178 Menu background color
 179 Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
-180 List of preferred languages like "en, fr":
+180 List of preferred languages like  " en, fr " :
 181 These changes won't be effective until Amaya is restarted
 182 Allow automatic PUT redirections to these domains
 183 Ignore style sheets
@@ -198,7 +198,7 @@
 192 Language Negotiation
 193 Annotations
 194 Link
-195 Annotation and bookmark user
+195 Annotation a nd bookmark user
 196 Annotation post server
 197 Annotation servers
 198 Autoload local annotations
@@ -215,7 +215,7 @@
 209 Try the 'File/Read as' entry
 210 Invalid characters
 211 Document profile:
-212 Errors detected - see File > Show parsing errors
+212 Errors detected - see File  >  Show parsing errors
 213 The encoding of this document is not supported by Amaya
 214 Editing and saving this document will change its type
 215 Not available
@@ -346,7 +346,7 @@
 340 Description:
 341 Please select an element
 342 All CSS
-343 CSS style rules applied to the <%s> element\n
+343 CSS style rules applied to the  < %s >  element\n
 344 Blue lines are links activated by a double (or a single) click\n
 345 Load objects (object, embed, iframe)
 346 No style rule for this element
@@ -358,7 +358,7 @@
 352 Content Length
 353 Content Location
 354 Preferences
-355 Character (&xxx;)
+355 Character ( & xxx;)
 356 Create Object
 357 Directory
 358 File
@@ -465,7 +465,7 @@
 459 With caption
 460 Size
 461 Position
-462 XML editing mode
+462 XM L editing mode
 463 List of style sheets
 464 Add a style sheet...
 465 Remove selected style sheets

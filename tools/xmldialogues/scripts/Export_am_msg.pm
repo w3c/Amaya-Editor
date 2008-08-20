@@ -272,7 +272,7 @@ sub end_hndl { #	do the modification if necessary
 	
 	if ( $end_tag eq "message" ) {
 #			print @text_patches ;
-			$string = join ( '',@text_patches );
+			$string = join ( ' ',@text_patches );
 			if ( $current_language eq "en") { # to reparate/fill the lakes
 				$english_text_reference= "$reference_value " .  "**" . $string ;
 			}				

@@ -132,8 +132,8 @@
 130 為之屬性
 131 取消
 132 轉換為 PostScript 時發生錯誤
-133 命令被拒絕 "%s"
-134 無法創建 "%s"
+133 命令被拒絕  " %s "
+134 無法創建  " %s "
 135 Overline
 136 文檔格式
 137 移除屬性
@@ -155,8 +155,8 @@
 153 參數文件錯誤
 154 無鍵盤文件
 155 無法保存文檔字典
-156 錯誤詞語 "%s"已被本字典拒絕
-157 詞語 "%s" 已加入字典
+156 錯誤詞語  " %s "  已被本字典拒絕
+157 詞語  " %s "  已加入字典
 158 拼寫檢查完成
 159 拼寫檢查已終止
 160 請選擇文檔
@@ -260,22 +260,22 @@
 258 **Next tip
 259 **Did you know...
 260 **Close
-261 **Amaya can be adapted to your own needs: five profilesare provided with different sets of menus andpanels. See Preferences/General.
-262 **Panels can be displayed on the left or on the right sideof the window or even customized panel by panel. See Preferences.
-263 **With the F2 or Escape key you can select the parentelement in the document structure, to apply editing functions (copy, paste,attributes, style, etc.) to the right element.
-264 **You can display two documents side by side in the windowby dragging a document tab to the left or right side of the displayeddocument.
-265 **In customizable mode, you can drag panels to changetheir order or to make them floating.
-266 **With the customizable mode, you can move panels on bothsides of the window just by dragging.
-267 **You can switch editing mode (Text/XML) by clicking onthe corresponding button in the bottom right corner.
-268 **When there is red button in the bottom right corner, youcan display errors by clicking on it.
-269 **You can select an ancestor of the current selection byclicking on its name on the path control displayed at the bottom of thewindow.
-270 **You can move to another tab with the menu displayed bythe arrow button at right of document tabs.
+261 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
+262 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
+263 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
+264 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
+265 **In customizable mode, you can drag panels to change their order or to make them floating.
+266 **With the customizable mode, you can move panels on both sides of the window just by dragging.
+267 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
+268 **When there is red button in the bottom right corner, you can display errors by clicking on it.
+269 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
+270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For  < rect/ >  element, red circles give a control on radius of rounded corners.
 274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit->Preferences->Dialogue Language to choose the language of the user interface.
+276 **Use Edit > Preferences > Dialogue Language to choose the language of the user interface.
 277 **Classic
 278 **Modern
 279 **No theme

@@ -1,26 +1,26 @@
 # encoding= latin1
-0 &Tiedosto
+0 & Tiedosto
 1 Context
 2 Context
-3 &Muokkaa
-4 &Näytä
-5 **&Insert
-6 T&yyli
-7 &Linkit
+3 & Muokkaa
+4 & Näytä
+5 **& Insert
+6 T & yyli
+7 & Linkit
 8 Asetukset
-9 **&Tools
-10 &Ohje
+9 **& Tools
+10 & Ohje
 11 **New tab
-12 Uusi &dokumentti...
+12 Uusi  & dokumentti...
 13 Uusi
-14 Uusi &dokumentti...
-15 Uusi &MathML dokumentti...
-16 Uusi SV&G dokumentti...
-17 Uusi CSS &tyylitiedosto...
-18 Avaa d&okumentti...
-19 &Tiedosto
+14 Uusi  & dokumentti...
+15 Uusi  & MathML dokumentti...
+16 Uusi SV & G dokumentti...
+17 Uusi CSS  & tyylitiedosto...
+18 Avaa d & okumentti...
+19 & Tiedosto
 20 Avaa uudessa ikkunassa...
-21 Päivitä dokumentti(&R)
+21 Päivitä dokumentti( & R)
 22 **Read as
 23 Unicode (UTF-8)
 24 Western (ISO-8859-1)
@@ -49,13 +49,13 @@
 47 Takaisin
 48 Eteenpäin
 49 Tallenna
-50 T&allenna nimellä...
+50 T & allenna nimellä...
 51 **Save all
 52 Päivitä
 53 **Send by mail ...
-54 T&ulostusasetukset...
+54 T & ulostusasetukset...
 55 Tulosta
-56 **&Close tab
+56 **& Close tab
 57 Sulje ikkuna
 58 Sulje Amaya
 59 **New tab
@@ -83,8 +83,8 @@
 81 Kopioi
 82 Liitä
 83 Poista
-84 **&Insert
-85 &Lisää
+84 **& Insert
+85 & Lisää
 86 **Select all
 87 **Select
 88 **Parent element
@@ -94,12 +94,12 @@
 92 Etsi...
 93 Asetukset
 94 **Show/Hide toolbars
-95 **&Browsing
-96 **&Editing
-97 **Show &tools
+95 **& Browsing
+96 **& Editing
+97 **Show  & tools
 98 Näytä kartta alueet
 99 Näytä kohteet
-100 **Show &formatted view
+100 **Show  & formatted view
 101 Näytä rakenne
 102 Näytä lähdekoodi
 103 Näytä linkit
@@ -107,9 +107,9 @@
 105 Näytä sisällysluettelo
 106 **Split view horizontally
 107 **Split view vertically
-108 T&ietoja dokumentista
+108 T & ietoja dokumentista
 109 Näytä käännösvirheet
-110 **&Full screen
+110 **& Full screen
 111 Lähennä
 112 Loitonna
 113 **Normal zoom
@@ -162,14 +162,14 @@
 160 Taulukon otsikko
 161 Taulukon sisältö
 162 Taulukon alaotsikko
-163 **&Math
+163 **& Math
 164 Uusi kaava
 165 Teksti (mtext)
 166 Tunniste (mi)
 167 Numero (mn)
 168 Operaattori (mo)
 169 Välilyönti (mspace)
-170 Merkki (&xxx;)
+170 Merkki ( & xxx;)
 171 InvisibleTimes
 172 Käytä funktiota
 173 Juuri (mroot)
@@ -267,7 +267,7 @@
 265 Merkki
 266 **Select a font...
 267 **Default
-268 **&Style editor...
+268 **& Style editor...
 269 Tee sääntö...
 270 **Show applied style...
 271 Tyylitiedostot
@@ -314,10 +314,10 @@
 312 Aseta tyypiksi HTML 4.01 Transitional
 313 Aseta tyypiksi HTML 4.01 Strict
 314 Osien numerointi
-315 **&Add/Update table of contents
+315 **& Add/Update table of contents
 316 Valmista kooste
 317 **Insert time stamp
-318 Mer&kinnät
+318 Mer & kinnät
 319 Valinnan lisätiedot
 320 Dokumentin lisätiedot
 321 Siirrä valintaan
@@ -329,7 +329,7 @@
 327 Lataa
 328 Mukauta tiedustelu...
 329 Paikalliset rajoitukset...
-330 Yht&eistyö
+330 Yht & eistyö
 331 Lukitse objekti...
 332 Vapauta objekti...
 333 Näytä objektin ominaisuudet...
@@ -341,7 +341,7 @@
 339 **Create and use a component
 340 **Create a free editing box
 341 **Create a repeated component
-342 &Javascript/DOM
+342 & Javascript/DOM
 343 **Enable/Disable
 344 **Execute a command
 345 **Execute an external script

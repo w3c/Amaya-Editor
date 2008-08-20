@@ -1,26 +1,26 @@
 # encoding= utf8
-0 &Dosya
+0 & Dosya
 1 Context
 2 Context
-3 D&üzenle
-4 &Görünümler
-5 **&Insert
-6 &Tarz
-7 &Bağlantılar
+3 D & üzenle
+4 & Görünümler
+5 **& Insert
+6 & Tarz
+7 & Bağlantılar
 8 Özellik
-9 **&Tools
-10 &Yardım
+9 **& Tools
+10 & Yardım
 11 **New tab
-12 Yeni &dosyası...
+12 Yeni  & dosyası...
 13 Yeni
-14 Yeni &dosyası...
-15 Yeni &MathML dosyası...
-16 Yeni SV&G dosyası...
-17 Yeni CSS düz dizayn(&T)...
-18 Belge aç(&O)...
-19 &Dosya
+14 Yeni  & dosyası...
+15 Yeni  & MathML dosyası...
+16 Yeni SV & G dosyası...
+17 Yeni CSS düz dizayn( & T)...
+18 Belge aç( & O)...
+19 & Dosya
 20 Yeni pencerede aç...
-21 Belgeyi yeniden yükle(&R)
+21 Belgeyi yeniden yükle( & R)
 22 **Read as
 23 Unicode (UTF-8)
 24 Western (ISO-8859-1)
@@ -49,13 +49,13 @@
 47 Geri
 48 Ileri
 49 Kaydet
-50 Isimle k&aydet...
+50 Isimle k & aydet...
 51 **Save all
 52 Eşlemek
 53 **Send by mail ...
-54 K&ur ve yazdır
-55 Ya&pılandır ve yazdır
-56 **&Close tab
+54 K & ur ve yazdır
+55 Ya & pılandır ve yazdır
+56 **& Close tab
 57 Belgeyi kapat
 58 Çıkış
 59 **New tab
@@ -83,8 +83,8 @@
 81 Kopyala
 82 Yapıştır
 83 Temizle
-84 **&Insert
-85 &Ekle
+84 **& Insert
+85 & Ekle
 86 **Select all
 87 **Select
 88 **Parent element
@@ -94,12 +94,12 @@
 92 Ara...
 93 Tercih
 94 **Show/Hide toolbars
-95 **&Browsing
-96 **&Editing
-97 **Show &tools
+95 **& Browsing
+96 **& Editing
+97 **Show  & tools
 98 Yakınlaştır
 99 Hedefi göster
-100 **Show &formatted view
+100 **Show  & formatted view
 101 Yapıyı göster
 102 kaynak göster
 103 Bağlantıları göster
@@ -107,9 +107,9 @@
 105 Içindekileri göster
 106 **Split view horizontally
 107 **Split view vertically
-108 Doküman b&ilgisi
+108 Doküman b & ilgisi
 109 Pars hatalarını göster
-110 **&Full screen
+110 **& Full screen
 111 Uzaklaştır
 112 Harita alanlarını göster
 113 **Normal zoom
@@ -162,14 +162,14 @@
 160 thead……
 161 tbody ……..
 162 tfoot………..
-163 **&Math
+163 **& Math
 164 Yeni formül
 165 Düz yazı (mtext)
 166 Teşhis eden (mi)
 167 Numara (mn)
 168 Oparatör (mo)
 169 Boşluk (mspace)
-170 Karakter (&xxx;)
+170 Karakter ( & xxx;)
 171 Kayip zaman
 172 Fonksiyonu onayla
 173 Kök (mroot)
@@ -267,7 +267,7 @@
 265 Karakter
 266 **Select a font...
 267 **Default
-268 **&Style editor...
+268 **& Style editor...
 269 Kural yarat...
 270 **Show applied style...
 271 Görüntü haritaları
@@ -314,10 +314,10 @@
 312 HTML 4.01 Transitional doctype
 313 HTML 4.01 Strict doctype
 314 Bölüm numaralandırması
-315 **&Add/Update table of contents
+315 **& Add/Update table of contents
 316 Kitap yap
 317 **Insert time stamp
-318 &Eklemeler
+318 & Eklemeler
 319 Seçili alan ekleme
 320 Doküman eklemek
 321 Seçili alanı taşı
@@ -329,7 +329,7 @@
 327 Yükle
 328 Kişisel ayarlama...
 329 Sabit filitre...
-330 &Birlikte çalışmak
+330 & Birlikte çalışmak
 331 Tekrar okumayı kitle...
 332 Tekrar okumayı kilidi aç...
 333 Tekrar okuma ayarlarını göster...
@@ -341,7 +341,7 @@
 339 **Create and use a component
 340 **Create a free editing box
 341 **Create a repeated component
-342 &Javascript/DOM
+342 & Javascript/DOM
 343 **Enable/Disable
 344 **Execute a command
 345 **Execute an external script

@@ -179,7 +179,7 @@
 177 Color del menú
 178 Color de fondo del menú
 179 No pude iniciar la caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
-180 Lista de idiomas preferidos (p.e. "es, en, fr"):
+180 Lista de idiomas preferidos (p.e.  " es, en, fr " ):
 181 Estos cambios no serán efectivos hasta que se reinicie Amaya.
 182 Permitir redirecciones PUT automáticas a estos dominios:
 183 Ignorar hojas de estilo
@@ -208,10 +208,10 @@
 206 Mantener espaciado múltiple
 207 Error/es en el código fuente
 208 Error fatal - Corrija el código fuente para continuar
-209 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
+209 Utiliza el menú 'Archivo  >  Forzar codificación de caracteres'
 210 Caracteres inválidos
 211 Perfil de este documento:
-212 Eerrores - vea Archivo > Mostrar errores sintácticos
+212 Eerrores - vea Archivo  >  Mostrar errores sintácticos
 213 La codificación de este documento no está soportada por Amaya
 214 Al editar y guardar este documento se cambiará su tipo
 215 No disponible
@@ -342,7 +342,7 @@
 340 Descripción:
 341 Por favor, seleccione un elemento
 342 Todos las hojas de estilo
-343 Reglas de estilo aplicadas al elemento <%s>\n
+343 Reglas de estilo aplicadas al elemento  < %s > \n
 344 Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
 345 Cargar objetos (object, embed, iframe)
 346 No hay regla de estilo para este elemento
@@ -354,7 +354,7 @@
 352 Longitud del contenido:
 353 Ubicación del contenido:
 354 Preferencias
-355 Carácter (&xxx;)
+355 Carácter ( & xxx;)
 356 Crear Objeto
 357 Carpeta
 358 Archivo

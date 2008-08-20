@@ -1,26 +1,26 @@
 # encoding= latin1
-0 &File
+0 & File
 1 Context
 2 Context
-3 &Edita
-4 &Viste
-5 &Inserisci
-6 &Stile
-7 &Collegamenti
+3 & Edita
+4 & Viste
+5 & Inserisci
+6 & Stile
+7 & Collegamenti
 8 Attributi
-9 S&trumenti
-10 A&iuto
+9 S & trumenti
+10 A & iuto
 11 Nuovo tab
-12 Nuovo &documento...
+12 Nuovo  & documento...
 13 Nuovo
-14 Nuovo &documento...
-15 Nuovo documento &MathML...
-16 Nuovo documento SV&G...
-17 Nuovo s&tile CSS...
+14 Nuovo  & documento...
+15 Nuovo documento  & MathML...
+16 Nuovo documento SV & G...
+17 Nuovo s & tile CSS...
 18 Apri documento...
-19 &File
+19 & File
 20 Apri in una nuova finestra...
-21 &Ricarica documento
+21 & Ricarica documento
 22 Forza una codifica carattere
 23 Unicode (UTF-8)
 24 Western (ISO-8859-1)
@@ -48,14 +48,14 @@
 46 Japanese (Shift-JIS)
 47 Precedente
 48 Successivo
-49 &Salva
-50 S&alva con nome...
+49 & Salva
+50 S & alva con nome...
 51 Salva tutto
 52 Sincronizza
 53 Invia per email ...
 54 Imposta e stampa...
-55 Stam&pa
-56 &Chiudi tab
+55 Stam & pa
+56 & Chiudi tab
 57 Chiudi
 58 Esci
 59 Nuovo tab
@@ -83,8 +83,8 @@
 81 Copia
 82 Incolla
 83 Cancella
-84 &Inserisci
-85 &Aggiungi
+84 & Inserisci
+85 & Aggiungi
 86 Seleziona tutto
 87 Seleziona
 88 Elemento padre
@@ -94,8 +94,8 @@
 92 Trova...
 93 Preferenze
 94 Mostra/Nascodi la barra degli strumenti
-95 &Browsing
-96 &Modifica
+95 & Browsing
+96 & Modifica
 97 Mostra strumenti
 98 Mostra le zone attive
 99 Mostra obiettivi
@@ -107,7 +107,7 @@
 105 Mostra sommario
 106 Dividi la vista in orizzontale
 107 Dividi la vista in verticale
-108 &Info sul documento
+108 & Info sul documento
 109 Mostra le errore
 110 Schermo intero
 111 Ingrandisci
@@ -162,14 +162,14 @@
 160 Intestazione (thead)
 161 Corpo (tbody)
 162 Piede (tfoot)
-163 &Math
+163 & Math
 164 Inserisci una formula
 165 Testo (mtext)
 166 Identificatore (mi)
 167 Numero (mn)
 168 Operatore (mo)
 169 Spazio (mspace)
-170 Carattere (&xxx;)
+170 Carattere ( & xxx;)
 171 InvisibleTimes
 172 ApplyFunction
 173 Radice (mroot)
@@ -267,7 +267,7 @@
 265 Carattere
 266 Selezionare un tipo di carattere...
 267 Default
-268 &Style...
+268 & Style...
 269 Crea una regola...
 270 Mostra lo stile applicato...
 271 Fogli di stile
@@ -317,7 +317,7 @@
 315 Genera Indice
 316 Crea libro
 317 Inserisci timestamp
-318 A&nnotazioni
+318 A & nnotazioni
 319 Annota la selezione
 320 Annota il documento
 321 Muovi sulla selezione
@@ -329,7 +329,7 @@
 327 Carica
 328 Personalizza la richiesta
 329 Filtro locale...
-330 &Cooperazione
+330 & Cooperazione
 331 Lock resource...
 332 Unlock resource...
 333 Informazioni per il lock...
@@ -341,7 +341,7 @@
 339 **Create and use a component
 340 **Create a free editing box
 341 **Create a repeated component
-342 &Javascript/DOM
+342 & Javascript/DOM
 343 Attiva/Disattiva
 344 Esegui un comando
 345 Esegui un comando

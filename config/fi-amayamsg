@@ -179,7 +179,7 @@
 177 Valikon piirtoväri
 178 Valikon taustaväri
 179 Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.
-180 Luettelo valituista kielistä "fi, en":
+180 Luettelo valituista kielistä  " fi, en " :
 181 Muutokset tulevat voimaan Amayan uudelleenkäynnistämisen jälkeen.
 182 Salli automaattinen PUT-komentojen välitys näissä domaineissa
 183 Ohita tyylitiedostot
@@ -211,7 +211,7 @@
 209 **Try the 'File/Read as' entry
 210 Virheellisiä merkkejä
 211 Dokumentin profiili:
-212 Virhe - katso Tiedosto > Näytä käännösvirheet
+212 Virhe - katso Tiedosto  >  Näytä käännösvirheet
 213 Amaya ei tue dokumentin tyyppiä
 214 Muokkaus ja tallennus muuttavat dokumentin tyypin
 215 Ei saatavilla
@@ -342,7 +342,7 @@
 340 **Description:
 341 **Please select an element
 342 **All CSS
-343 **CSS style rules applied to the <%s> element\n
+343 **CSS style rules applied to the  < %s >  element\n
 344 **Blue lines are links activated by a double (or a single) click\n
 345 **Load objects (object, embed, iframe)
 346 **No style rule for this element
@@ -354,7 +354,7 @@
 352 **Content Length
 353 **Content Location
 354 Asetukset
-355 Merkki (&xxx;)
+355 Merkki ( & xxx;)
 356 **Create Object
 357 **Directory
 358 **File
@@ -461,7 +461,7 @@
 459 **With caption
 460 **Size
 461 **Position
-462 **XML editing mode
+462 **XM L editing mode
 463 **List of style sheets
 464 **Add a style sheet...
 465 **Remove selected style sheets

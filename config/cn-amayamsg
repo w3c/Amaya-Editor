@@ -179,7 +179,7 @@
 177 菜单前景色
 178 菜单背景色
 179 无法启用缓存, 你可能使用了无效的缓存目录或有其他 Amaya 实例在使用该缓存
-180 语言偏好 (如 "en, fr"):
+180 语言偏好 (如  " en, fr " ):
 181 当前改变会在重启Amaya后生效
 182 允许以下域的自动实用 PUT 转向
 183 忽略样式表
@@ -211,7 +211,7 @@
 209 Try the 'File/Read as' entry
 210 Invalid characters
 211 Document profile:
-212 Errors detected - see File > Show parsing errors
+212 Errors detected - see File  >  Show parsing errors
 213 The encoding of this document is not supported by Amaya
 214 Editing and saving this document will change its type
 215 Not available
@@ -342,7 +342,7 @@
 340 描述:
 341 Please select an element
 342 所有 CSS 样式表
-343 CSS样式被应用于 <%s> 元素\n
+343 CSS样式被应用于  < %s >  元素\n
 344 Blue lines are links activated by a double (or a single) click\n
 345 载入对象 (object, embed, iframe)
 346 No style rule for this element
@@ -354,7 +354,7 @@
 352 Content Length
 353 Content Location
 354 使用偏好
-355 Character (&xxx;)
+355 Character ( & xxx;)
 356 创建对象
 357 目录
 358 文件
@@ -461,7 +461,7 @@
 459 **With caption
 460 **Size
 461 **Position
-462 **XML editing mode
+462 **XM L editing mode
 463 **List of style sheets
 464 **Add a style sheet...
 465 **Remove selected style sheets
