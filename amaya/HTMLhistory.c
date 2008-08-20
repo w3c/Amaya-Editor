@@ -753,7 +753,9 @@ void AddDocHistory (Document doc, char *url, char *initial_url,
 void HelpAmaya (Document document, View view)
 {
   char  localname[MAX_LENGTH];
+#ifndef _MACOS
   char *s = TtaGetEnvString ("THOTDIR");
+#endif /* _MACOS */
   wxString str;
   
 #ifdef AMAYA_CRASH

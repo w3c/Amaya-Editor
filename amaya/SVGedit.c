@@ -1676,11 +1676,11 @@ static ThotBool SetElementData(Document doc, Element el,
 
   if(el_type_num != SVG_EL_title &&
      el_type_num != SVG_EL_desc)
-    return NULL;
+    return FALSE;
 
   elType = TtaGetElementType (el);
   if(elType.ElSSchema != sschema)
-    return NULL;
+    return FALSE;
 
   child = TtaGetFirstChild(el);
   while(child)
@@ -3518,28 +3518,28 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	  switch(entry)
 	    {
 	    case 46:   /* DistributeLeft */
-	      position[i] = x;
+	      position[i] = (int)x;
 	      break;
 	    case 47:   /* DistributeCenter */
 	    case 52:
-	      position[i] = x+width/2;
+	      position[i] = (int)(x+width/2);
 	      break;
 
 	    case 48:   /* DistributeRight */
-	      position[i] = x+width;
+	      position[i] = (int)(x+width);
 	      break;
 
 	    case 49:   /* DistributeTop */
-	      position[i] = y;
+	      position[i] = (int)y;
 	      break;
 
 	    case 50:   /* DistributeMiddle */
 	    case 53:
-	      position[i] = y+height/2;
+	      position[i] = (int)(y+height/2);
 	      break;
 
 	    case 51:   /* DistributeBottom */
-	      position[i] = y+height;
+	      position[i] = (int)(y+height);
 	      break;
 	    }
 
@@ -3585,17 +3585,17 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	      switch(entry)
 		{
 		case 52:
-		  if(i == 0) { k = -x; j = x; }
-		  else if(i == nb_selected - 1)k+=(x+width);
+		  if(i == 0) { k = (int)(-x); j = (int)x; }
+		  else if(i == nb_selected - 1)k+=(int)(x+width);
 
-		  k-=width;
+		  k-=(int)width;
 		  break;
 
 		case 53:
-		  if(i == 0) { k = -y; j = y; }
-		  else if(i == nb_selected - 1)k+=(y+height);
+		  if(i == 0) { k = (int)(-y); j = (int)y; }
+		  else if(i == nb_selected - 1)k+=(int)(y+height);
 
-		  k-=height;
+		  k-=(int)height;
 		  break;
 		}
 	    }
@@ -3658,8 +3658,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
 	    }
 
 	  /* For distribution according to space, update the origin */
-	  if(entry == 52)j+=width;
-	  else if(entry == 53)j+=height;
+	  if(entry == 52)j+=(int)width;
+	  else if(entry == 53)j+=(int)height;
 
 	}
       

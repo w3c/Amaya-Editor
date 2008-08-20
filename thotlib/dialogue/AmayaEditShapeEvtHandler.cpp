@@ -52,16 +52,16 @@ static void apply_deltas(int *x, int *y, int *lx, int *ly,
 	{
 	  /* Vertical resize */
 	  (*ly)+=sy*dy;
-	  dx = (*lx - (*ly)/ratio)/2;
-	  (*lx)=(*ly)/ratio;
+	  dx = (int)((*lx - (*ly)/ratio)/2);
+	  (*lx)=(int)((*ly)/ratio);
 	  sx = -1; // Force the change of coordinates
 	}
       else if(sy == 0)
 	{
 	  /* Horizontal resize */
 	  (*lx)+=sx*dx;
-	  dy = (*ly - (*lx)*ratio)/2;
-	  (*ly)=(*lx)*ratio;
+	  dy = (int)((*ly - (*lx)*ratio)/2);
+	  (*ly)=(int)((*lx)*ratio);
 	  sy = -1; // Force the change of coordinates
 	}
       else if(dx*dy*sx*sy <= 0)
@@ -76,15 +76,15 @@ static void apply_deltas(int *x, int *y, int *lx, int *ly,
 	    {
 	      /* Choose the horizontal delta */
 	      (*lx)+=sx*dx;
-	      dy = sy*((*lx)*ratio - *ly);
-	      (*ly)=(*lx)*ratio;
+	      dy = (int)(sy*((*lx)*ratio - *ly));
+	      (*ly)=(int)((*lx)*ratio);
 	    }
 	  else
 	    {
 	      /* Choose the vertical delta */
 	      (*ly)+=sy*dy;
-	      dx = sx*((*ly)/ratio - *lx);
-	      (*lx)=(*ly)/ratio;
+	      dx = (int)(sx*((*ly)/ratio - *lx));
+	      (*lx)=(int)((*ly)/ratio);
 	    }
 
 	}
