@@ -453,7 +453,8 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 	  
 	      ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 
-	      if(nChars > 0 && Selecting != NULL && el &&
+	      if(FrameTable[frame].FrView == 1 &&
+		 nChars > 0 && Selecting != NULL && el &&
 		 el->ElParent && IsSVGComponent(el->ElParent))
 		{
 		  if(el->ElLeafType == LtGraphics &&
@@ -477,7 +478,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		      if(AskShapeEdit(doc,
 				      (Element)(el->ElParent), nChars))
 			{
-			  /* The user has moved an SVG element */
+			  /* The user has edited an SVG element */
 			  TtaSetDocumentModified(doc);
 			  return FALSE;
 			}
@@ -497,7 +498,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		      if(AskPathEdit(doc,
 				     0, (Element)(el->ElParent), nChars))
 			{
-			  /* The user has moved an SVG element */
+			  /* The user has edited an SVG element */
 			  TtaSetDocumentModified(doc);
 			  return FALSE;
 			}
@@ -518,7 +519,8 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 		{
 		  el = pBox->BxAbstractBox->AbElement;
 
-		  if(Selecting != NULL && el &&
+		  if(FrameTable[frame].FrView == 1 &&
+		     Selecting != NULL && el &&
 		     el->ElLeafType != LtText &&
 		     el->ElParent && IsSVGComponent(el->ElParent))
 		    {
