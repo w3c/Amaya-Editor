@@ -28,6 +28,7 @@
 #include "content_f.h"
 #include "windowdisplay_f.h"
 #include "viewapi_f.h"
+#include "content.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -279,13 +280,13 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       
       /* Convert Quadratic Bezier to Cubic */
       if(pPaCurrent && pPaCurrent->PaShape == PtQuadraticBezier)
-	pPaCurrent->PaShape = PtCubicBezier;
-	  
+	TtaQuadraticToCubicPathSeg ((void *)pPaCurrent);
+
       if(pPaNext && pPaNext->PaShape == PtQuadraticBezier)
-	pPaNext->PaShape = PtCubicBezier;
+	TtaQuadraticToCubicPathSeg ((void *)pPaNext);
 
       if(pPaPrevious && pPaPrevious->PaShape == PtQuadraticBezier)
-	pPaPrevious->PaShape = PtCubicBezier;
+	TtaQuadraticToCubicPathSeg ((void *)pPaPrevious);
     }
   else 
     {

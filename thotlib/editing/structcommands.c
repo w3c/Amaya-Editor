@@ -38,6 +38,7 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
+#include "viewapi_f.h"
 
 /* isomorphism description */
 typedef struct _IsomorphDesc *PtrIsomorphDesc;
@@ -3487,15 +3488,89 @@ ThotBool TtaInsertElement (ElementType elementType, Document document)
   return done;
 }
 
+static void getPathSegment (PtrPathSeg pPa, int point_number,
+			    PtrPathSeg *prev, PtrPathSeg *next)
+{
+  /* TODO... */
+  *prev = pPa;
+  if(pPa)*next = pPa->PaNext;
+}
+
 static void InsertPoint (Document doc, Element el,
 			 ThotBool before, int point_number)
 {
-  if(!before)
-    point_number++;
-  
+  PtrPathSeg pPaPrevious = NULL, pPaNext = NULL, segment;
+  PtrElement pElAsc;
+  int newx, newy;
+
   if(((PtrElement) el)->ElLeafType == LtPolyLine)
     {
+      if(!before)
+	point_number++;
       TtaAddPointInPolyline (el, point_number, UnPixel, 1, 1, doc, TRUE);
+    }
+  else if(((PtrElement) el)->ElLeafType == LtPath)
+    {
+      getPathSegment(((PtrElement)el)->ElFirstPathSeg, point_number,
+		     &pPaPrevious, &pPaNext);
+      if(pPaPrevious && pPaNext)
+	{
+	  if(pPaPrevious->PaShape == PtQuadraticBezier)
+	    TtaQuadraticToCubicPathSeg ((void *)pPaPrevious);
+
+	  if(pPaPrevious->PaShape == PtCubicBezier)
+	    {
+	      newx = (pPaPrevious->XStart +
+		      3*pPaPrevious->XCtrlStart +
+		      3*pPaPrevious->XCtrlEnd +
+		      pPaPrevious->XEnd)/8;
+	      newy = (pPaPrevious->YStart +
+		      3*pPaPrevious->YCtrlStart +
+		      3*pPaPrevious->YCtrlEnd +
+		      pPaPrevious->YEnd)/8;
+
+	      segment = (PtrPathSeg)TtaNewPathSegCubic (newx,
+							newy,
+							pPaPrevious->XEnd,
+							pPaPrevious->YEnd,
+							newx,
+							newy,
+							pPaPrevious->XCtrlEnd,
+							pPaPrevious->YCtrlEnd,
+							FALSE);
+
+
+	      /* TODO: tangents */
+	    }
+	  else
+	    {
+	      newx = (pPaPrevious->XStart + pPaPrevious->XEnd)/2;
+	      newy = (pPaPrevious->YStart + pPaPrevious->YEnd)/2;
+	      segment = (PtrPathSeg)TtaNewPathSegLine (newx,
+						       newy,
+						       pPaPrevious->XEnd,
+						       pPaPrevious->YEnd,
+						       FALSE);
+	    }
+
+	  pPaPrevious->XEnd = newx;
+	  pPaPrevious->YEnd = newy;
+	  pPaPrevious->PaNext = segment;
+	  pPaNext->PaPrevious = segment;
+	  segment->PaNext = pPaNext;
+	  segment->PaPrevious = pPaPrevious;
+
+	  /* Updates the volumes of ancestors */
+	  pElAsc = (PtrElement) el;
+	  while (pElAsc != NULL)
+	    {
+	      pElAsc->ElVolume++;
+	      pElAsc = pElAsc->ElParent;
+	    }
+#ifndef NODISPLAY
+	  RedisplayLeaf ((PtrElement) el, doc, 1);
+#endif
+	}
     }
 }
 

@@ -95,6 +95,7 @@ extern PathSegment TtaNewPathSegQuadratic ( int xstart,
                                             int xctrl,
                                             int yctrl,
                                             ThotBool newSubpath );
+extern void TtaQuadraticToCubicPathSeg ( PtrPathSeg pPa );
 extern PathSegment TtaNewPathSegArc ( int xstart,
                                       int ystart,
                                       int xend,
@@ -342,6 +343,7 @@ extern PathSegment TtaNewPathSegQuadratic ( int xstart,
                                               int xctrl,
                                               int yctrl,
                                               ThotBool newSubpath );
+extern void TtaQuadraticToCubicPathSeg ( PtrPathSeg pPa );
 extern PathSegment TtaNewPathSegArc ( int xstart,
                                         int ystart,
                                         int xend,

@@ -727,6 +727,7 @@ extern ThotBool CheckGeometricProperties(Document doc, Element leaf,
 					 int *width, int *height,
 					 int *rx, int *ry);
 
+extern void TtaQuadraticToCubicPathSeg (void *quadratic_segment);
 #endif /* __CEXTRACT__ */
 
 #endif

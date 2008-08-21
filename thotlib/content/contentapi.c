@@ -1869,6 +1869,28 @@ PathSegment TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend,
 }
 
 /*----------------------------------------------------------------------
+  TtaQuadraticToCubicPathSeg
+  ---------------------------------------------------------------------- */
+void TtaQuadraticToCubicPathSeg (void *quadratic_segment)
+{
+  PtrPathSeg       pPa = (PtrPathSeg)quadratic_segment;
+
+  int x0, y0, x1, y1, x2, y2;
+  x0 = pPa->XStart;
+  y0 = pPa->YStart;
+  x1 = pPa->XCtrlStart;
+  y1 = pPa->YCtrlStart;
+  x2 = pPa->XEnd;
+  y2 = pPa->YEnd;
+
+  pPa->PaShape = PtCubicBezier;
+  pPa->XCtrlStart = (x0 + 2*x1)/3;
+  pPa->YCtrlStart = (y0 + 2*y1)/3;
+  pPa->XCtrlEnd = (2*x1 + 1*x2)/3;
+  pPa->YCtrlEnd = (2*y1 + 1*y2)/3;
+}
+
+/*----------------------------------------------------------------------
   TtaNewPathSegArc
 
   Creates a new path segment of type elliptical arc.
