@@ -4529,15 +4529,15 @@ static const char *GetRelativePosition(object ref, object obj)
 {
   int dx, dy;
 
-  if(ref.cx+.5*ref.w < obj.cx)
+  if(ref.cx+.5*ref.w <= obj.cx-.5*obj.w)
     dx = +1;
-  else if(ref.cx - .5*ref.w > obj.cx)
+  else if(ref.cx-.5*ref.w >= obj.cx+.5*obj.w)
     dx = -1;
   else dx = 0;
 
-  if(ref.cy + .5*ref.h < obj.cy)
+  if(ref.cy+.5*ref.h <= obj.cy-.5*obj.h)
     dy = +1;
-  else if(ref.cy - .5*ref.h > obj.cy)
+  else if(ref.cy-.5*ref.h >= obj.cy+.5*obj.h)
     dy = -1;
   else dy = 0;
 
