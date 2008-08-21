@@ -49,7 +49,8 @@ extern void TtaAddPointInPolyline ( Element element,
                                     TypeUnit unit,
                                     int x,
                                     int y,
-                                    Document document );
+                                    Document document,
+                                    ThotBool IsBarycenter );
 extern void TtaDeletePointInPolyline ( Element element,
                                        int rank,
                                        Document document );
@@ -295,7 +296,8 @@ extern void TtaAddPointInPolyline ( Element element,
                                       TypeUnit unit,
                                       int x,
                                       int y,
-                                      Document document );
+                                      Document document,
+                                      ThotBool IsBarycenter );
 extern void TtaDeletePointInPolyline ( Element element,
                                          int rank,
                                          Document document );

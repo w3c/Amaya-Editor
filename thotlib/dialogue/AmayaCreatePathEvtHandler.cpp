@@ -624,7 +624,7 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
 			    NULL,
 			    TRUE, &x1, &y1);
 
-      TtaAddPointInPolyline (leaf, nb_points, UnPixel, x1, y1, document);
+      TtaAddPointInPolyline (leaf, nb_points, UnPixel, x1, y1, document, FALSE);
       nb_points++;
     }
   else if(shape == 7 || shape == 8)

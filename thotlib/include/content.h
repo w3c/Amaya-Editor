@@ -198,9 +198,13 @@ extern void TtaSetSymbolCode (Element element, wchar_t code, Document document);
    the upper left corner of the box. x and y
    must be positive or null.
    unit: UnPixel or UnPoint.
+   IsBarycenter: indicates if (x, y) are the actual coordinates of the new point
+                 or the coefficients that allows to defined this point as a
+		 barycenter.
   ----------------------------------------------------------------------*/
 extern void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
-				   int x, int y, Document document);
+				   int x, int y, Document document,
+				   ThotBool IsBarycenter);
 
 /*----------------------------------------------------------------------
    TtaDeletePointInPolyline

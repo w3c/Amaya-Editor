@@ -159,7 +159,7 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem,
             for (rank = 1; rank <= len; rank++)
               { 
                 TtaGivePolylinePoint (oldElem, rank, UnPoint, &x, &y);
-                TtaAddPointInPolyline (newElem, rank, UnPoint, x, y, doc);
+                TtaAddPointInPolyline (newElem, rank, UnPoint, x, y, doc, FALSE);
               }
             break;
           default : break;

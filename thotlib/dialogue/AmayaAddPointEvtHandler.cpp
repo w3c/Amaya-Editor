@@ -186,12 +186,12 @@ void AmayaAddPointEvtHandler::OnMouseUp( wxMouseEvent& event )
   newy = LogicalValue (m_LastY - m_Y, UnPixel, NULL,
 		       ViewFrameTable[m_FrameId - 1].FrMagnification);
 
-  AddPointInPolyline (m_Bbuffer, m_Point, newx, newy);
+  AddPointInPolyline (m_Bbuffer, m_Point, newx, newy, FALSE);
 
   /* update the abstract box buffer */
   newx1 = (int) ((float) newx * m_RatioX);
   newy1 = (int) ((float) newy * m_RatioY);
-  AddPointInPolyline (m_Pbuffer, m_Point, newx1, newy1);
+  AddPointInPolyline (m_Pbuffer, m_Point, newx1, newy1, FALSE);
 
   TTALOGDEBUG_4( TTA_LOG_SVGEDIT, _T("AmayaAddPointEvtHandler::OnMouseUp newx=%d newy=%d newx1=%d newy1=%d"),
 		 newx, newy, newx1, newy1 );

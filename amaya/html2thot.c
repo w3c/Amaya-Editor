@@ -695,7 +695,8 @@ void ParseAreaCoords (Element element, Document document)
             sscanf (ptr3, "%d", &y1);
           ptr3 = SkipInt (ptr3);
           ptr3 = SkipSep (ptr3);
-          TtaAddPointInPolyline (element, length, UnPixel, x1, y1,document);
+          TtaAddPointInPolyline (element, length, UnPixel, x1, y1,document,
+				 FALSE);
           length++;
         }
     }

@@ -1231,7 +1231,8 @@ static ThotBool PolylineOK (Element element, Document document)
   unit: UnPixel or UnPoint.
   ----------------------------------------------------------------------*/
 void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
-                            int x, int y, Document document)
+                            int x, int y, Document document,
+			    ThotBool IsBarycenter)
 {
   PtrTextBuffer       firstBuffer;
   PtrElement          pEl;
@@ -1248,7 +1249,7 @@ void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
         {
           firstBuffer = ((PtrElement) element)->ElPolyLineBuffer;
           /* adds the point to the polyline */
-          AddPointInPolyline (firstBuffer, rank, x, y);
+          AddPointInPolyline (firstBuffer, rank, x, y, IsBarycenter);
           ((PtrElement) element)->ElNPoints++;
           /* Updates the volumes of ancestors */
           pEl = ((PtrElement) element)->ElParent;

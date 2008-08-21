@@ -2615,7 +2615,8 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
               if (!error)
                 {
                   nbPoints++;
-                  TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc);
+                  TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc,
+					 FALSE);
                   if (*ptr == ',')
                     {
                       ptr++;
