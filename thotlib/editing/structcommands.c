@@ -3490,7 +3490,9 @@ ThotBool TtaInsertElement (ElementType elementType, Document document)
 static void InsertPoint (Document doc, Element el,
 			 ThotBool before, int point_number)
 {
- 
+  if(!before)
+    point_number++;
+  
   if(((PtrElement) el)->ElLeafType == LtPolyLine)
     {
       TtaAddPointInPolyline (el, point_number, UnPixel, 1, 1, doc, TRUE);
@@ -3561,11 +3563,11 @@ void TtaInsertAnyElement (Document document, ThotBool before)
       if(firstSel == lastSel && firstSel->ElTerminal &&
 	 (firstSel->ElLeafType == LtPolyLine || 
 	  firstSel->ElLeafType == LtPath)
-	 && firstChar > 1)
+	 && firstChar >= 1)
 	{
 	  /* Insert a point in a polyline/path */
-	  /*InsertPoint (document, (Element)firstSel, before, firstChar);
-	    return;*/
+	  InsertPoint (document, (Element)firstSel, before, firstChar);
+	  return;
 	}
 
       if (before)

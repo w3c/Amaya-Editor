@@ -1236,6 +1236,7 @@ void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
 {
   PtrTextBuffer       firstBuffer;
   PtrElement          pEl;
+  ThotBool IsClosed;
 
   if (PolylineOK (element, document))
     {
@@ -1247,12 +1248,14 @@ void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
         TtaError (ERR_invalid_parameter);
       else
         {
-          firstBuffer = ((PtrElement) element)->ElPolyLineBuffer;
+	  pEl = (PtrElement) element;
+	  IsClosed = (pEl->ElPolyLineType == 'p');
+          firstBuffer = pEl->ElPolyLineBuffer;
           /* adds the point to the polyline */
-          AddPointInPolyline (firstBuffer, rank, x, y, IsBarycenter);
-          ((PtrElement) element)->ElNPoints++;
+          AddPointInPolyline (firstBuffer, rank, x, y, IsBarycenter, IsClosed);
+          pEl->ElNPoints++;
           /* Updates the volumes of ancestors */
-          pEl = ((PtrElement) element)->ElParent;
+          pEl = pEl->ElParent;
           while (pEl != NULL)
             {
               pEl->ElVolume++;

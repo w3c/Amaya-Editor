@@ -46,7 +46,8 @@ extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
                                  int rank,
                                  int x,
                                  int y,
-                                 ThotBool IsBarycenter );
+                                 ThotBool IsBarycenter,
+                                 ThotBool IsClosed );
 extern void DeletePointInPolyline ( PtrTextBuffer * firstBuffer,
                                     int rank );
 extern void ModifyPointInPolyline ( PtrTextBuffer firstBuffer,
@@ -135,7 +136,8 @@ extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
                                    int rank,
                                    int x,
                                    int y,
-                                   ThotBool IsBarycenter );
+                                   ThotBool IsBarycenter,
+                                   ThotBool IsClosed );
 extern void DeletePointInPolyline ( PtrTextBuffer * firstBuffer,
                                       int rank );
 extern void ModifyPointInPolyline ( PtrTextBuffer firstBuffer,

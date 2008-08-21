@@ -857,19 +857,34 @@ void ClearText (PtrTextBuffer pBuf)
   On saute le point 0 (coordonnees du point limite).      
   ----------------------------------------------------------------------*/
 void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
-			 ThotBool IsBarycenter)
+			 ThotBool IsBarycenter, ThotBool IsClosed)
 {
-  PtrTextBuffer       pBuf, pNextBuf;
+  PtrTextBuffer       pBuf, pNextBuf, pBufEnd;
   int                 i, j;
   PolyLinePoint       savePoint = {0,0}, oldSavePoint = {0,0};
   ThotBool            stop;
+  ThotBool            addAtEnd = FALSE;
 
-  /* If the barycenter is ill-defined, take the center as a default point */
-  if(IsBarycenter && x + y == 0)
-    x = y = 1;
+  PolyLinePoint previousPoint = {0, 0}, nextPoint = {0, 0};
+  float coeff1, coeff2;
+
+  if(IsBarycenter)
+    {
+      if(x + y == 0)
+      /* The barycenter is ill-defined, take the center as a default point */
+	x = y = 1;
+
+      if(firstBuffer->BuLength - 1 < 2)
+	{
+	  /* We need at least two points to define a barycenter */
+	  IsBarycenter = FALSE;
+	  x = y = 0;
+    	}
+    }
 
   /* cherche le buffer contenant le point de rang rank */
   pBuf = firstBuffer;
+
   /* on saute le point 0 (coordonnees du point limite) */
   rank++;
   while (rank > pBuf->BuLength && pBuf->BuNext != NULL)
@@ -877,10 +892,100 @@ void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
       rank -= pBuf->BuLength;
       pBuf = pBuf->BuNext;
     }
-  if (rank > pBuf->BuLength)
-    /* on va ajouter le nouveau point en derniere position */
+
+  /* Is rank greater than the number of points? */
+  if(rank > pBuf->BuLength)
     {
       rank = pBuf->BuLength + 1;
+      addAtEnd = TRUE;
+    }
+
+  if(IsBarycenter)
+    {
+      /* Get the last buffer */
+      for(pBufEnd = pBuf; pBufEnd->BuNext; pBufEnd = pBufEnd->BuNext);
+
+      if(pBuf == firstBuffer && rank - 1 == 1)
+	{
+	  /*  we want to insert a point at the first position
+	      O = position of the new point
+	   */
+	  if(IsClosed)
+	    {
+	      /*
+		[LastPoint]---O----[FirstPoint]
+		|                    |
+		.--.--.--.--.--.--.--.
+               */
+	      addAtEnd = TRUE;
+	      rank = pBufEnd->BuLength + 1;
+	      pBuf = pBufEnd;
+	      previousPoint.XCoord = pBufEnd->BuPoints[pBufEnd->BuLength - 1].XCoord;
+	      previousPoint.YCoord = pBufEnd->BuPoints[pBufEnd->BuLength - 1].YCoord;
+	      nextPoint.XCoord = firstBuffer->BuPoints[1].XCoord;
+	      nextPoint.YCoord = firstBuffer->BuPoints[1].YCoord;
+	    }
+	  else
+	    {
+	      /* 
+		      O--[FirstPoint]--.--.--
+	       */
+	      x = 1;
+	      y = 0;
+	      previousPoint.XCoord = 2*firstBuffer->BuPoints[1].XCoord
+		- firstBuffer->BuPoints[2].XCoord;
+
+	      previousPoint.YCoord = 2*firstBuffer->BuPoints[1].YCoord
+		- firstBuffer->BuPoints[2].YCoord;
+	    }
+	}
+      else if(addAtEnd)
+	{
+	  /*  we want to insert a point at the last position
+	      O = position of the new point
+	   */
+	  if(IsClosed)
+	    {
+	      /*
+		[FirstPoint]--O---[LastPoint]
+		|                    |
+		.--.--.--.--.--.--.--.
+               */
+	      rank = 2;
+	      previousPoint.XCoord = firstBuffer->BuPoints[1].XCoord;
+	      previousPoint.YCoord = firstBuffer->BuPoints[1].YCoord;
+	      addAtEnd = FALSE;
+	    }
+	  else
+	    {
+	      /* 
+		      --.--.--[LastPoint]--O
+	       */
+	      x = 0;
+	      y = 1;
+	      if(pBufEnd->BuLength > 2)
+		{
+		  savePoint.XCoord = pBufEnd->BuPoints[pBufEnd->BuLength - 2].XCoord;
+		  savePoint.YCoord = pBufEnd->BuPoints[pBufEnd->BuLength - 2].YCoord;
+		}
+	      else
+		{
+		  savePoint.XCoord = pBufEnd->BuPrevious->BuPoints[pBufEnd->BuPrevious->BuLength - 1].XCoord;
+		  savePoint.YCoord = pBufEnd->BuPrevious->BuPoints[pBufEnd->BuPrevious->BuLength - 1].YCoord;
+		}
+
+	      previousPoint.XCoord = pBufEnd->BuPoints[pBufEnd->BuLength - 1].XCoord;
+	      previousPoint.YCoord = pBufEnd->BuPoints[pBufEnd->BuLength - 1].YCoord;
+	      nextPoint.XCoord = 2*previousPoint.XCoord - savePoint.XCoord;
+	      nextPoint.YCoord = 2*previousPoint.YCoord - savePoint.YCoord;
+	    }
+	}
+      }
+
+  if (addAtEnd)
+    /* on va ajouter le nouveau point en derniere position */
+    {
+      
       if ((unsigned)rank > MAX_POINT_POLY)
         /* le dernier buffer est plein, on en ajoute un */
         {
@@ -941,15 +1046,44 @@ void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
       while (!stop);
     }
 
-  /* met le nouveau point a sa place */
-  
+  /* The point is a barycenter: compute the coordinates (x,y) */
+  if(IsBarycenter)
+    {
+      coeff1 = x;
+      coeff2 = y;
 
+      if(!addAtEnd)
+	{
+	  /* The next point is at position rank */
+	  nextPoint.XCoord = pBuf->BuPoints[rank].XCoord;
+	  nextPoint.YCoord = pBuf->BuPoints[rank].YCoord;
+
+	  if((pBuf == firstBuffer && rank > 2) ||
+	     (pBuf != firstBuffer && rank >= 2))
+	    {
+	      /* the previous point is at rank - 2 */
+	      previousPoint.XCoord = pBuf->BuPoints[rank - 2].XCoord;
+	      previousPoint.YCoord = pBuf->BuPoints[rank - 2].YCoord;
+	    }
+	  else if(pBuf != firstBuffer)
+	    {
+	      /* the previous point is at the end of the previous buffer */
+	      previousPoint.XCoord = pBuf->BuPrevious->BuPoints[pBuf->BuPrevious->BuLength - 1].XCoord;
+	      previousPoint.YCoord = pBuf->BuPrevious->BuPoints[pBuf->BuPrevious->BuLength - 1].YCoord;
+	    }
+	}
+
+      x = (int)(((coeff1*previousPoint.XCoord +
+		  coeff2*nextPoint.XCoord)/(coeff2+coeff1)));
+      
+      y = (int)((coeff1*previousPoint.YCoord +
+		 coeff2*nextPoint.YCoord)/(coeff2+coeff1));
+    }
+
+  /* met le nouveau point a sa place */
   pBuf->BuPoints[rank - 1].XCoord = x;
   pBuf->BuPoints[rank - 1].YCoord = y;
-
   
-  
-
   /* verifie le point limite */
   if (x > firstBuffer->BuPoints[0].XCoord)
     firstBuffer->BuPoints[0].XCoord = x;
