@@ -2349,7 +2349,7 @@ void TtaPopupDocContextMenu(int document, int view, int window, void* win,
 			    int x, int y)
 {
   if (s_PopupDocContextMenuFuction && win)
-    s_PopupDocContextMenuFuction (view, document, window, win, x, y);
+    s_PopupDocContextMenuFuction (document, view, window, win, x, y);
 }
 #endif /* _WX */
 
