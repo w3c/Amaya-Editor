@@ -576,15 +576,35 @@ AmayaSpeChar filtre_relations_binaires_negation[] =
 
 AmayaSpeChar filtre_divers[] =
   {
-    
+    {0x0025, "percent"}, /* % */
+    {0x003F, "question mark"}, /* ? */
+    {0x0021, "exclamation mark"}, /* ! */
+    {0x2234, "counterbore"},
+    {0x0027, "apostrophe"},
+    {0x0022, "quotation"},
+    {0x00AB, "left guillemet"}, /* , */
+    {0x00BB, "right guillemet"}, /* ; */
+    {0x201C, "left double quotation mark"}, /* , */
+    {0x201D, "right double quotation mark"}, /* ; */
+    {0x00B0, "degree sign"},
+    {0x00BF, "inverted question mark"},
+    {0x0152, "oe"},
+    {0x0153, "OE"},
+    {0x00E6, "ae"},
+    {0x00C6, "AE"},
+    {0x20AC, "euro"},
+    {0x00A2, "cent"},
+    {0x00A3, "pound"},
+    {0x00A5, "yen"},
+    {0x0024, "dollar"},
+    {0x00A4, "currency"},
+    {0x0040, "commercial at"},
+    {0x2020, "dagger"},
     {0x2605, "black star"},
     {0x2606, "white star"},
     {0x24C8, "circled S"},
     {0x24C7, "circled R"},
     {0x2460, "circled 1"},
-    {0x0025, "percent"}, /* % */
-    {0x003F, "question mark"}, /* ? */
-    {0x0021, "exclamation mark"}, /* ! */
     {0x2663, "black club suit"},
     {0x2666, "black diamond suit"},
     {0x2665, "black heart suit"},
@@ -592,7 +612,6 @@ AmayaSpeChar filtre_divers[] =
     {0x2122, "trade mark"},
     {0x25ca, "lozenge"},
     {0x25A0, "black square"},
-    {0x00B0, "degree sign"},
     {0x25A1, "white square"},
     {0x25B2, "black up-pointing triangle"},
     {0x25B3, "white up-pointing triangle"},
@@ -610,31 +629,20 @@ AmayaSpeChar filtre_divers[] =
     {0x271D, "latin cross"},
     {0x2702, "black scissors"},
     {0x2710, "upper right pencil"},
-    {0x20AC, "euro"},
-    {0x00A2, "cent"},
-    {0x00A3, "pound"},
-    {0x00A5, "yen"},
-    {0x0024, "dollar"},
-    {0x0040, "commercial at"},
-    {0x00A4, "currency"},
     {0x00A7, "section"},
     {0x00A9, "copyright"},
     {0x00AE, "registered"},
+    {0x00D8, "O slash"},
     {0x00A6, "broken bar"},
     {0x2014, "em dash"},
-    {0x21b5, "downwards arrow with corner leftwards"},
     {0x2236, "I-beam"},
-    {0x003B, "semicolon"}, /* ; */
     {0x002C, "comma"}, /* , */
-    {0x2234, "counterbore"},
-    {0x0027, "apostrophe"},
-    {0x0022, "quotation"},
+    {0x003B, "semicolon"}, /* ; */
     {-1, ""}
   };
 
 AmayaSpeChar filtre_fleches[] =
   {
-    
     {0x2190, "leftwards"},
     {0x2191, "upwards"},
     {0x2192, "rightwards"},
