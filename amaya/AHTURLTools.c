@@ -101,8 +101,8 @@ char *EscapeURL (const char *url)
       url_len =  strlen (url);
       buffer_free_mem = url_len + 20;
       // a patch for sweetwiki
-      server = "http://sweetwiki.inria.fr/";
-      param = "?templateoff=true"; //&xslname=queryoff";
+      server = TtaStrdup ("http://sweetwiki.inria.fr/");
+      param = TtaStrdup ("?templateoff=true"); //&xslname=queryoff";
       len = strlen(server);
       par_len = strlen (param);
       if (strncmp (url, server, len) ||
@@ -175,6 +175,8 @@ char *EscapeURL (const char *url)
             }
         }
       buffer[buffer_len] = EOS;
+      TtaFreeMemory (server);
+      TtaFreeMemory (param);
     }
   else
     buffer = NULL;
@@ -1679,8 +1681,8 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
         {
           length = strlen (tempOrgName);
           for (ndx = 0; ndx < length; ndx++)
-            if (tempOrgName [ndx] == '/')
-              tempOrgName [ndx] = '\\';
+            if (tempOrgName[ndx] == '/')
+              tempOrgName[ndx] = '\\';
         }
 #endif /* _WINDOWS */
       ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
@@ -1885,11 +1887,11 @@ static void scan (char *name, HTURI *parts)
   char *   p;
   char *   after_access = name;
 
-  memset (parts, '\0', sizeof (HTURI));
+  memset (parts, 0, sizeof (HTURI));
   /* Look for fragment identifier */
   if ((p = strchr(name, '#')) != NULL)
     {
-      *p++ = '\0';
+      *p++ = EOS;
       parts->fragment = p;
     }
     
@@ -2001,7 +2003,7 @@ char   *AmayaParseUrl (const char *aName, const char *relatedName, int wanted)
     if (access)
       {
         strcat (result, access);
-        if(wanted & AMAYA_PARSE_PUNCTUATION)
+        if (wanted & AMAYA_PARSE_PUNCTUATION)
           strcat (result, ":");
       }
   
@@ -2016,9 +2018,9 @@ char   *AmayaParseUrl (const char *aName, const char *relatedName, int wanted)
       }
   
   if (wanted & AMAYA_PARSE_HOST)
-    if(given.host || related.host)
+    if (given.host || related.host)
       {
-        if(wanted & AMAYA_PARSE_PUNCTUATION)
+        if (wanted & AMAYA_PARSE_PUNCTUATION)
           strcat (result, "//");
         strcat (result, given.host ? given.host : related.host);
       }
@@ -2456,16 +2458,17 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
       if (strncmp (&src[start_index], "//localhost/", 12) == 0)
         start_index += 11;
        
+#ifdef _IV
       /* remove the first two slashes in / / /path */
       while (src[start_index] &&
              src[start_index] == '/' 
              && src[start_index + 1] == '/')
         start_index++;
+#endif /* IV */
 
-#ifdef _WINDOWS
+#ifdef _IV
       /* remove any extra slash before the drive name */
-      if (src[start_index] == '/'
-          &&src[start_index+2] == ':')
+      if (src[start_index] == '/' &&src[start_index+2] == ':')
         start_index++;
 #endif /* _WINDOWS */
 
@@ -2486,6 +2489,7 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
       CleanCopyFileURL (target, src, convertion);
     }
 #ifdef _WINDOWS
+#ifdef IV
   else if (src[0] == DIR_SEP && src[1] == DIR_SEP)
     {
       s = getenv ("HOMEDRIVE");
@@ -2494,6 +2498,7 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
       strcpy (&target[i], &src[1]);
       change = TRUE;	    
     }
+#endif /* IV */
 #else /* _WINDOWS */
   else if (src[0] == '~')
     {
