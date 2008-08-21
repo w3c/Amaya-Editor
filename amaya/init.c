@@ -164,7 +164,8 @@ TypeBrowserFile WidgetParent;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
+static int AmayaPopupDocContextMenu(int doc, int view, int window,
+				    wxWindow* win,
 				    int x, int y)
 {
   wxMenu     *p_menu = TtaGetDocContextMenu ( window );
@@ -221,7 +222,7 @@ static int AmayaPopupDocContextMenu(int doc, int window, wxWindow* win,
 	{
 	  svgSchema = GetSVGSSchema (doc);
 	  elementType = TtaGetElementType(el);
-	  if(elementType.ElSSchema == svgSchema)
+	  if(elementType.ElSSchema == svgSchema && view == 1)
 	    {
 	      if(!TtaIsLeaf(elementType))
 		/* Display the SVG transforms the a non-terminal SVG element

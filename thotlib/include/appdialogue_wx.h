@@ -68,10 +68,10 @@ extern void TtaSendStatsInfo();
 
 
 /* Function prototype to show a context menu.*/
-typedef int(*PopupDocContextMenuFuction)(int document, int window, void* win, int x, int y);
+typedef int(*PopupDocContextMenuFuction)(int document, int view, int window, void* win, int x, int y);
 
 void TtaSetPopupDocContextMenuFunction(PopupDocContextMenuFuction fn);
-void TtaPopupDocContextMenu(int document, int window, void* win, int x, int y);
+void TtaPopupDocContextMenu(int document, int view, int window, void* win, int x, int y);
 
 #endif /* _WX */
 

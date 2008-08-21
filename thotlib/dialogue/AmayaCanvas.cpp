@@ -492,7 +492,7 @@ void AmayaCanvas::OnContextMenu( wxContextMenuEvent & event )
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::OnContextMenu - page_id=%d"), page_id);
 
   if (page_id >= 0 && document)
-      TtaPopupDocContextMenu(document, window_id, this, point.x, point.y);
+    TtaPopupDocContextMenu(document, view, window_id, this, point.x, point.y);
   event.Skip();
 }
 

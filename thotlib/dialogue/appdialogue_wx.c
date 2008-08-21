@@ -2345,10 +2345,11 @@ void TtaSetPopupDocContextMenuFunction(PopupDocContextMenuFuction fn)
   TtaPopupDocContextMenu(int, wxWindow*)
   Popup a context menu
   ----------------------------------------------------------------------*/
-void TtaPopupDocContextMenu(int document, int window, void* win, int x, int y)
+void TtaPopupDocContextMenu(int document, int view, int window, void* win,
+			    int x, int y)
 {
   if (s_PopupDocContextMenuFuction && win)
-    s_PopupDocContextMenuFuction (document, window, win, x, y);
+    s_PopupDocContextMenuFuction (view, document, window, win, x, y);
 }
 #endif /* _WX */
 
