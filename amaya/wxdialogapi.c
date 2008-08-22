@@ -1439,7 +1439,14 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
       XRCCTRL(dialog, "wxID_OK", wxButton)->
             SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));      
       
+      wxSizer* sz = dialog.GetSizer();
       box = XRCCTRL(dialog, "wxID_LIST_TYPES", wxCheckListBox);
+      box->Hide();
+      
+      box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
+      sz->Insert(2, box, 1, wxEXPAND);
+      
+      
       box->Append(arr);
       
       if(dialog.ShowModal()==wxID_OK)
