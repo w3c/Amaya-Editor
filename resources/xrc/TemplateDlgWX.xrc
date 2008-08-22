@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  
+  <object class="wxDialog" name="TemplateNewUseDlgWX">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_LABEL">
+              <label>Label:</label>
+            </object>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+          <object class="spacer">
+            <size>8,8</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxTextCtrl" name="wxID_TEXT_LABEL"/>
+            <option>1</option>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxCheckBox" name="wxID_CHECK_OPTIONAL">
+          <label>*Optional*</label>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxListBox" name="wxID_LIST_TYPES" subclass="wxCheckListBox">
+          <size>180,300</size>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+        <border>0</border>
+        <minsize>120,120</minsize>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_OK">
+              <label>CONFIRMBUTTON</label>
+              <default>1</default>
+              <focused>1</focused>
+            </object>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>CANCELBUTTON</label>
+            </object>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <border>4</border>
+      </object>
+    </object>
+    <size>200,320</size>
+    <title>*New use*</title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+  </object>
+</resource>

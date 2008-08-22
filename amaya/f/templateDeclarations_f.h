@@ -28,6 +28,11 @@ extern int Declaration_CompareToString ( Declaration dec,
                                          const char* name );
 extern void Declaration_CalcBlockLevel ( Declaration dec );
 extern void Template_CalcBlockLevel ( XTigerTemplate t );
+extern char* Template_GetBlockLevelDeclarations ( XTigerTemplate t,
+                                                  ThotBool addAny );
+extern char* Template_GetInlineLevelDeclarations ( XTigerTemplate t,
+                                                   ThotBool addAny,
+                                                   ThotBool addSimple );
 extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                    const char *name,
                                                    SimpleTypeType xtype );
@@ -152,6 +157,11 @@ extern int Declaration_CompareToString ( Declaration dec,
                                            const char* name );
 extern void Declaration_CalcBlockLevel ( Declaration dec );
 extern void Template_CalcBlockLevel ( XTigerTemplate t );
+extern char* Template_GetBlockLevelDeclarations ( XTigerTemplate t,
+                                                    ThotBool addAny );
+extern char* Template_GetInlineLevelDeclarations ( XTigerTemplate t,
+                                                     ThotBool addAny,
+                                                     ThotBool addSimple );
 extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                      const char *name,
                                                      SimpleTypeType xtype );

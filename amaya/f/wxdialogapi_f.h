@@ -172,6 +172,10 @@ extern ThotBool QueryTitleAndDescFromUser ( char* title,
                                             int titleSz,
                                             char* desc,
                                             int descSz );
+extern ThotBool QueryNewUseFromUser ( const char* proposed,
+                                      char** label,
+                                      char**types,
+                                      ThotBool* option );
 
 #else /* __STDC__ */
 
@@ -341,6 +345,10 @@ extern ThotBool QueryTitleAndDescFromUser ( char* title,
                                               int titleSz,
                                               char* desc,
                                               int descSz );
+extern ThotBool QueryNewUseFromUser ( const char* proposed,
+                                        char** label,
+                                        char**types,
+                                        ThotBool* option );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

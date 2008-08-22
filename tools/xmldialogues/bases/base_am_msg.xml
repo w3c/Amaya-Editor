@@ -7331,7 +7331,14 @@
 	<message xml:lang="en">There are %d objects: </message>
 	<message xml:lang="fr">Il y a %d objets : </message>
 </label>
-
+<label define="AM_TEMPLATE_NEWUSE">
+	<message xml:lang="en">New use</message>
+	<message xml:lang="fr">Nouvelle utilisation</message>
+</label>
+<label define="AM_TEMPLATE_OPTIONAL">
+	<message xml:lang="en">Optional use</message>
+	<message xml:lang="fr">Utilisation optionnelle</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

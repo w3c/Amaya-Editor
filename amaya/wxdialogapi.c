@@ -1,6 +1,9 @@
 #ifdef _WX
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"
+#include "wx/xrc/xmlres.h"
+#include "wx/tokenzr.h"
+
 #include "file_filters.h"
 #include "registry_wx.h"
 #endif /* _WX */
@@ -1406,6 +1409,63 @@ ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc,
             }
         }
     }
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  QueryNewUseFromUser
+  Query the label, the types and the option value for a new xt:use
+  to a user.
+  Return FALSE if user cancel the query or an error occurs.
+  ----------------------------------------------------------------------*/
+ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, ThotBool* option)
+{
+#ifdef TEMPLATES
+  unsigned int i, n;
+  wxDialog dialog;
+  wxString strs = TtaConvMessageToWX(proposed);
+  wxArrayString arr = wxStringTokenize(strs);
+  wxCheckListBox* box;
+  
+  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
+    {
+      dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_NEWUSE)));
+      XRCCTRL(dialog, "wxID_LABEL_LABEL", wxStaticText)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_LABEL)));
+      XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_OPTIONAL)));
+      XRCCTRL(dialog, "wxID_CANCEL", wxButton)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL) ));
+      XRCCTRL(dialog, "wxID_OK", wxButton)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));      
+      
+      box = XRCCTRL(dialog, "wxID_LIST_TYPES", wxCheckListBox);
+      box->Append(arr);
+      
+      if(dialog.ShowModal()==wxID_OK)
+        {
+          strs.Clear();
+          n = box->GetCount();
+          for(i=0; i<n; i++)
+            {
+              if(box->IsChecked(i))
+                {
+                  strs += box->GetString(i);
+                  strs += wxT(" ");
+                }
+            }
+          strs.Trim();
+          
+          if(label)
+            *label = TtaStrdup((const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8));
+          if(types)
+            *types = TtaStrdup((const char*)strs.mb_str(wxConvUTF8));
+          if(option)
+            *option = XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->GetValue();
+          return TRUE;
+        }
+    }
+#endif /* TEMPLATES */
   return FALSE;
 }
 
