@@ -3248,7 +3248,11 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
 
                       /* prepare the clipping area */
                       DefBoxRegion (frame, pSelBox, xx, xx, -1, -1);
-
+                      if (pViewSel->VsLine)
+                        // take into account sibling boxes in the line
+                        UpdateBoxRegion (frame, pSelBox, 0,
+                                         -pViewSel->VsLine->LiHorizRef, 0,
+                                         pViewSel->VsLine->LiHeight);
                       /* Est-on au debut d'une boite entiere ou coupee ? */
                       pBox = pAb->AbBox->BxNexChild;
                       if ((pBox == NULL || pSelBox == pBox) &&
