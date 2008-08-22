@@ -242,7 +242,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
   SynchronizeAppliedStyle (event);
   UnFrameMath ();
 
-  UpdateXmlElementListTool(event->element,event->document);
+  //UpdateXmlElementListTool(event->element,event->document);
   TtaSetStatusSelectedElement(event->document, 1, event->element);
   TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_SVG);
 }

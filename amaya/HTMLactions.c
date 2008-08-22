@@ -3967,7 +3967,7 @@ void SelectionChanged (NotifyElement *event)
   Element             child, el = event->element;
   ElementType         elType;
   Document            doc = event->document;
-  char                message[50];
+  char                message[50], *s;
   int                 i, index = 0;
 
   if (SelectionChanging)
@@ -3992,7 +3992,11 @@ void SelectionChanged (NotifyElement *event)
             // no current text insertion
             CheckPromptIndicator (el, doc);
 #endif /* TEMPLATES */
-          TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_XHTML);
+          TtaGiveFirstSelectedElement (doc, &child, &index, &i);
+          elType = TtaGetElementType (el);
+          s = TtaGetSSchemaName (elType.ElSSchema);
+          if (!strcmp (s, "HTML"))
+            TtaRaiseDoctypePanels (WXAMAYA_DOCTYPE_XHTML);
         }
 #ifdef _WX
       else

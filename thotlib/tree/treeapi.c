@@ -1110,6 +1110,8 @@ void TtaInsertFirstChild (Element *newElement, Element parent, Document document
     {
       pDoc = LoadedDocument[document - 1];
       pParent = (PtrElement) parent;
+      if (pParent->ElStructSchema == NULL)
+        return;
       if (pParent->ElStructSchema->SsRule->SrElem[pParent->ElTypeNumber - 1]->SrConstruct == CsChoice)
         {
 #ifndef NODISPLAY

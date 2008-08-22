@@ -50,27 +50,34 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaElementToolPanel, AmayaToolPanel)
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 AmayaElementToolPanel::AmayaElementToolPanel():
   AmayaToolPanel(),
   m_xml(NULL)
 {
-  for(int i=0; i<WXAMAYA_DOCTYPE_NUMBER; i++)
+  for (int i = 0; i < WXAMAYA_DOCTYPE_NUMBER; i++)
     m_panelIndexes[i] = wxNOT_FOUND;
-  
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 AmayaElementToolPanel::~AmayaElementToolPanel()
 {
 	// Windows : delete notebook pages now to prevent a crash
-	if(m_notebook)
-		while(m_notebook->GetPageCount()>0)
+	if (m_notebook)
+		while (m_notebook->GetPageCount() > 0)
 			m_notebook->DeletePage(0);
 }
 
-bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
-          const wxSize& size, long style, const wxString& name, wxObject* extra)
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id,
+                                   const wxPoint& pos, 
+                                   const wxSize& size, long style,
+                                   const wxString& name, wxObject* extra)
 {
-  if(! wxPanel::Create(parent, id, pos, size, style, name))
+  if (! wxPanel::Create(parent, id, pos, size, style, name))
     return false;
 
   m_notebook = new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TOP);
@@ -80,35 +87,37 @@ bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoin
 
   wxWindow* win;
   
-  if(Prof_ShowGUI("AmayaXHTMLPanel"))
+  if (Prof_ShowGUI("AmayaXHTMLPanel"))
     {
       m_notebook->AddPage(win = new AmayaXHTMLPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_html.png"), wxBITMAP_TYPE_PNG));
       m_panelIndexes[WXAMAYA_DOCTYPE_XHTML] = m_notebook->GetPageIndex(win);
     }
-  if(Prof_ShowGUI("AmayaMathMLPanel"))
+  if (Prof_ShowGUI("AmayaMathMLPanel"))
     {
       m_notebook->AddPage(win = new AmayaMathMLPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_math.png"), wxBITMAP_TYPE_PNG));
       m_panelIndexes[WXAMAYA_DOCTYPE_MATHML] = m_notebook->GetPageIndex(win);      
     }
-  if(Prof_ShowGUI("AmayaSVGPanel"))
+  if (Prof_ShowGUI("AmayaSVGPanel"))
     {
       m_notebook->AddPage(win = new AmayaSVGPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_svg.png"), wxBITMAP_TYPE_PNG));
       m_panelIndexes[WXAMAYA_DOCTYPE_SVG] = m_notebook->GetPageIndex(win);
     }
-  if(Prof_ShowGUI("AmayaTemplatePanel"))
+  if (Prof_ShowGUI("AmayaTemplatePanel"))
     {
       m_notebook->AddPage(win = new AmayaTemplatePanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_template.png"), wxBITMAP_TYPE_PNG));
       m_panelIndexes[WXAMAYA_DOCTYPE_XTIGER] = m_notebook->GetPageIndex(win);
     }
-  if(Prof_ShowGUI("AmayaXMLPanel"))
+  if (Prof_ShowGUI("AmayaXMLPanel"))
     {
       m_notebook->AddPage(m_xml = new AmayaXMLPanel(m_notebook, wxID_ANY), wxT(""), false, wxBitmap(TtaGetResourcePathWX( WX_RESOURCES_ICON_16X16, "document_xml.png"), wxBITMAP_TYPE_PNG));
-      m_panelIndexes[WXAMAYA_DOCTYPE_XTIGER] = m_notebook->GetPageIndex(m_xml);
+      m_panelIndexes[WXAMAYA_DOCTYPE_XML] = m_notebook->GetPageIndex(m_xml);
     }
-  
+ 
   return true;
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 wxString AmayaElementToolPanel::GetToolPanelName()const
 {
   return TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ELEMENTS));
@@ -181,7 +190,10 @@ int AmayaElementToolPanel::PanelTypeToIndex(int panel_type)const
   -----------------------------------------------------------------------*/
 int AmayaElementToolPanel::DocTypeToIndex(int doctype)const
 {
-  return doctype>=0&&doctype<WXAMAYA_DOCTYPE_NUMBER?m_panelIndexes[doctype]:wxNOT_FOUND;
+  if (doctype >= 0 && doctype < WXAMAYA_DOCTYPE_NUMBER)
+    return m_panelIndexes[doctype];
+  else
+    return wxNOT_FOUND;
 }
 
 
@@ -193,7 +205,7 @@ int AmayaElementToolPanel::DocTypeToIndex(int doctype)const
 void AmayaElementToolPanel::RaisePanel(int panel_type)
 {
   int index = PanelTypeToIndex(panel_type);
-  if(index!=wxNOT_FOUND)
+  if(index != wxNOT_FOUND)
     m_notebook->SetSelection(index);
 }
 
@@ -206,7 +218,7 @@ void AmayaElementToolPanel::RaisePanel(int panel_type)
 void AmayaElementToolPanel::RaiseDoctypePanels(int doctype)
 {
   int index = DocTypeToIndex(doctype);
-  if(index!=wxNOT_FOUND)
+  if (index != wxNOT_FOUND)
     m_notebook->SetSelection(index);
 
 }
