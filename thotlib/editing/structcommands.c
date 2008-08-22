@@ -3488,9 +3488,72 @@ ThotBool TtaInsertElement (ElementType elementType, Document document)
   return done;
 }
 
-static void getPathSegment (PtrPathSeg *pPa, int point_number)
+static void getPathSegment (PtrPathSeg *pPa_, int pointselect, ThotBool before)
 {
-  /* TODO... */
+  PtrPathSeg  pPa, pPaStart;
+  int i = 1;
+
+  pPa = *pPa_;
+  *pPa_ = NULL;
+  if(pointselect == 0)
+    return;
+
+  while (pPa)
+    {
+      if ((pPa->PaNewSubpath || !pPa->PaPrevious))
+	{
+	  /* this path segment starts a new subpath */
+	  pPaStart = pPa;
+	  
+	  if(pointselect == i || /* Current point selected */
+	     
+	     (pointselect == i+1 && /* Next control point selected*/
+	      (pPa->PaShape == PtCubicBezier ||
+	       pPa->PaShape == PtQuadraticBezier))
+	     )
+	    {
+	      /* draw the start point of this path segment */
+	      if(before)
+		*pPa_ = pPa->PaPrevious;
+	      else
+		*pPa_ = pPa;
+		
+	      return;
+	    }
+	  i++;
+	}
+
+      if(pPa->PaShape == PtCubicBezier ||
+	 pPa->PaShape == PtQuadraticBezier)
+	{
+	  /* Skip Bezier handles */
+	  i+=2;
+	}
+
+      if(pointselect == i || /* Current point selected */
+
+	 (pointselect == i-1 && /* Previous control point selected*/
+	  (pPa->PaShape == PtCubicBezier ||
+	   pPa->PaShape == PtQuadraticBezier)) ||
+
+	 (pointselect == i+1 && /* Next control point selected */
+	  pPa->PaNext && !(pPa->PaNext->PaNewSubpath)
+	  && (pPa->PaNext->PaShape == PtCubicBezier ||
+	      pPa->PaNext->PaShape == PtQuadraticBezier)  )
+	 )
+	{
+	/* Draw the end point of the path segment */
+	  if(before)
+	    *pPa_ = pPa;
+	  else 
+	    *pPa_ = pPa->PaNext;
+
+	  return; 
+	}
+	
+      pPa = pPa->PaNext;
+      i++;
+    }
   return;
  }
 
@@ -3508,7 +3571,7 @@ static void InsertPoint (Document doc, Element el,
   else if(((PtrElement) el)->ElLeafType == LtPath)
     {
       pPa = ((PtrElement)el)->ElFirstPathSeg;
-      getPathSegment(&pPa, point_number);
+      getPathSegment(&pPa, point_number, before);
       TtaSplitPathSeg ((void *)pPa, doc, el);
     }
 }
