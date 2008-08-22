@@ -244,16 +244,17 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
           j = 1;
           for (i = 1; pBuffer; i++)
             {
-              if (pointselect == 0 || pointselect == i)
-                {
                   x = leftX + PixelValue (pBuffer->BuPoints[j].XCoord,
                                           UnPixel, NULL,
                                           ViewFrameTable[frame - 1].FrMagnification);
                   y = topY + PixelValue (pBuffer->BuPoints[j].YCoord,
                                          UnPixel, NULL,
                                          ViewFrameTable[frame - 1].FrMagnification);
-		  DrawHandle(h, frame, thick, x, y);
-                }
+
+              if (pointselect == i)
+		DrawHandle(FRAME_HANDLE, frame, thick+2, x, y);
+	      else
+		DrawHandle(FRAME_HANDLE, frame, thick, x, y);
 	      
               j++;
               if (j == pBuffer->BuLength)
@@ -297,7 +298,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		  pPaStart = pPa;
 		  i_start = i;
 
-                  if(pointselect == 0 || /* The whole path is selected */
+                  if(
 		     pointselect == i || /* Current point selected */
 
 		     (pointselect == i+1 && /* Next control point selected*/
@@ -307,7 +308,10 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		     )
 
 		    /* draw the start point of this path segment */
+		    DrawHandle(FRAME_HANDLE, frame, thick+2, xstart, ystart);
+		  else
 		    DrawHandle(FRAME_HANDLE, frame, thick, xstart, ystart);
+
 		  i++;
                 }
 
@@ -360,7 +364,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		  i++;
 		}
 
-	      if(pointselect == 0 || /* The whole path is selected */
+	      if(
 		 pointselect == i || /* Current point selected */
 
 		 (pointselect == i-1 && /* Previous control point selected*/
@@ -373,6 +377,8 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
 		      pPa->PaNext->PaShape == PtQuadraticBezier)  )
 		 )
 		/* Draw the end point of the path segment */
+		DrawHandle(FRAME_HANDLE, frame, thick+2, xend, yend);
+	      else
 		DrawHandle(FRAME_HANDLE, frame, thick, xend, yend);
 	
 	      if(pointselect > 0 && pPaStart && (!pPa->PaNext || pPa->PaNext->PaNewSubpath))
