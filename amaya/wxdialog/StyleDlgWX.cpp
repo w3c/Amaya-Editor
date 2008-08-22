@@ -94,6 +94,7 @@ BEGIN_EVENT_TABLE(StyleDlgWX, AmayaDialog)
   EVT_TEXT( XRCID("wxID_COMBO_BOTTOM"),   StyleDlgWX::OnValueChanged ) 
   EVT_TEXT( XRCID("wxID_COMBO_LEFT"),     StyleDlgWX::OnValueChanged ) 
   EVT_TEXT( XRCID("wxID_COMBO_RIGHT"),    StyleDlgWX::OnValueChanged ) 
+  EVT_TEXT( XRCID("wxID_ZINDEX"),         StyleDlgWX::OnValueChanged ) 
   END_EVENT_TABLE()
 
 
@@ -587,6 +588,7 @@ void StyleDlgWX::InitValues ()
   XRCCTRL(*this, "wxID_COMBO_BOTTOM", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_COMBO_LEFT", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_COMBO_RIGHT", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+  XRCCTRL(*this, "wxID_ZINDEX", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
   // ------------------
   XRCCTRL(*this, "wxID_CHOICE_STYLE", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_CHOICE_WEIGHT", wxChoice)->SetStringSelection(TtaConvMessageToWX( "" ));
@@ -1436,6 +1438,21 @@ void StyleDlgWX::OnValueChanged( wxCommandEvent& event )
             }
         }
     }
+  else if (id == wxXmlResource::GetXRCID(_T("wxID_ZINDEX")))
+    {
+      // check values
+      value = XRCCTRL(*this, "wxID_ZINDEX", wxComboBox)->GetValue();
+      if (value.Len() > 0)
+        {
+          strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), 50);
+          if (strcmp (buffer, "auto") && strcmp (buffer, "inherit") &&
+              !CheckValue (buffer, FALSE, FALSE, FALSE, TRUE, FALSE))
+            {
+              XRCCTRL(*this, "wxID_ZINDEX", wxComboBox)->SetValue(TtaConvMessageToWX( "" ));
+              XRCCTRL(*this, "wxID_ZINDEX", wxComboBox)->SetInsertionPoint (0);
+            }
+        }
+    }
 }
 
 
@@ -2131,6 +2148,16 @@ void StyleDlgWX::GetValueDialog_Format()
     {
       strcpy (&Buffer[Index], "visibility: ");
       strcat (&Buffer[Index], (const char*)value.mb_str(wxConvUTF8));
+      strcat (&Buffer[Index], End_rule);
+      Index += strlen (&Buffer[Index]);
+    }
+
+  //Z-Index
+  value = XRCCTRL(*this, "wxID_ZINDEX", wxComboBox)->GetValue();
+  if (value.Len() > 0)
+    {
+      strcpy (&Buffer[Index], "z-index: ");
+      CopyValueOrZero (&Buffer[Index], value.mb_str(wxConvUTF8));
       strcat (&Buffer[Index], End_rule);
       Index += strlen (&Buffer[Index]);
     }

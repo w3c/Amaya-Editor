@@ -9,7 +9,7 @@
       <object class="sizeritem">
         <object class="wxNotebook" name="wxID_NOTEBOOK">
           <usenotebooksizer>1</usenotebooksizer>
-          <style platform="unix"></style>
+          <style platform="unix"/>
           <focused>1</focused>
           <object class="notebookpage">
             <label>*Text*</label>
@@ -44,7 +44,8 @@
                                   <item>Times New Roman,Times,serif</item>
                                   <item>Arial,Helvetica,sans-serif</item>
                                   <item>Courier New,Courier,monospace</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                </content>
                                 <size>200,-1</size>
                                 <focused>1</focused>
                               </object>
@@ -79,7 +80,8 @@
                                   <item>normal</item>
                                   <item>italic</item>
                                   <item>oblique</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                </content>
                                 <size>120,-1</size>
                               </object>
                               <flag>wxLEFT</flag>
@@ -122,7 +124,8 @@
                                   <item>900</item>
                                   <item>lighter</item>
                                   <item>bolder</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                </content>
                                 <size>120,-1</size>
                               </object>
                             </object>
@@ -153,7 +156,8 @@
                                   <item/>
                                   <item>normal</item>
                                   <item>small-caps</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                </content>
                                 <size>120,-1</size>
                               </object>
                             </object>
@@ -194,7 +198,8 @@
                                   <item>underline</item>
                                   <item>overline</item>
                                   <item>line-through</item>
-                                  <item>blink</item></content>
+                                  <item>blink</item>
+                                </content>
                                 <size>120,-1</size>
                               </object>
                             </object>
@@ -226,7 +231,8 @@
                                   <item>none</item>
                                   <item>capitalize</item>
                                   <item>uppercase</item>
-                                  <item>lowercase</item></content>
+                                  <item>lowercase</item>
+                                </content>
                                 <size>120,-1</size>
                               </object>
                             </object>
@@ -259,7 +265,8 @@
                                   <item>right</item>
                                   <item>center</item>
                                   <item>justify</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                </content>
                                 <size>120,-1</size>
                               </object>
                             </object>
@@ -313,7 +320,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                                 <size>150,-1</size>
                               </object>
                             </object>
@@ -353,7 +361,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                                 <size>150,-1</size>
                               </object>
                             </object>
@@ -390,7 +399,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                                 <size>150,-1</size>
                               </object>
                             </object>
@@ -427,7 +437,8 @@
                                   <item>middle</item>
                                   <item>bottom</item>
                                   <item>text-bottom</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                                 <size>150,-1</size>
                               </object>
                             </object>
@@ -461,7 +472,8 @@
                                   <item>nowrap</item>
                                   <item>pre-wrap</item>
                                   <item>pre-line</item>
-                                  <item>inherit</item></content>
+                                  <item>inherit</item>
+                                </content>
                                 <size>150,-1</size>
                               </object>
                             </object>
@@ -499,7 +511,8 @@
                                   <item>0mm</item>
                                   <item>0cm</item>
                                   <item>0em</item>
-                                  <item>0ex</item></content>
+                                  <item>0ex</item>
+                                </content>
                                 <size>150,-1</size>
                               </object>
                             </object>
@@ -537,7 +550,8 @@
                                   <item>0mm</item>
                                   <item>0cm</item>
                                   <item>0em</item>
-                                  <item>0ex</item></content>
+                                  <item>0ex</item>
+                                </content>
                                 <size>150,-1</size>
                               </object>
                             </object>
@@ -590,7 +604,8 @@
                               <item>Black</item>
                               <item>White</item>
                               <item>Grey</item>
-                              <item>Red</item></content>
+                              <item>Red</item>
+                            </content>
                             <size>150,-1</size>
                             <style>wxCB_READONLY</style>
                             <focused>1</focused>
@@ -620,7 +635,8 @@
                           <object class="wxComboBox" name="wxID_BGIMAGE">
                             <content>
                               <item/>
-                              <item>none</item></content>
+                              <item>none</item>
+                            </content>
                             <size>200,-1</size>
                           </object>
                           <option>1</option>
@@ -752,7 +768,8 @@
                             <content>
                               <item/>
                               <item>scroll</item>
-                              <item>fixed</item></content>
+                              <item>fixed</item>
+                            </content>
                           </object>
                         </object>
                         <object class="spacer">
@@ -761,7 +778,7 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_BGPOSITION">
                             <label>background-position</label>
-                            <size></size>
+                            <size/>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -783,7 +800,8 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>0%</item></content>
+                              <item>0%</item>
+                            </content>
                           </object>
                         </object>
                         <object class="spacer">
@@ -804,7 +822,8 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>0%</item></content>
+                              <item>0%</item>
+                            </content>
                           </object>
                         </object>
                       </object>
@@ -860,7 +879,8 @@
                               <item>0mm</item>
                               <item>0cm</item>
                               <item>0em</item>
-                              <item>0ex</item></content>
+                              <item>0ex</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -887,7 +907,8 @@
                               <item>groove</item>
                               <item>ridge</item>
                               <item>inset</item>
-                              <item>outset</item></content>
+                              <item>outset</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -911,7 +932,8 @@
                                   <item>Black</item>
                                   <item>White</item>
                                   <item>Grey</item>
-                                  <item>Red</item></content>
+                                  <item>Red</item>
+                                </content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
                               </object>
@@ -965,7 +987,8 @@
                               <item>0mm</item>
                               <item>0cm</item>
                               <item>0em</item>
-                              <item>0ex</item></content>
+                              <item>0ex</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -992,7 +1015,8 @@
                               <item>groove</item>
                               <item>ridge</item>
                               <item>inset</item>
-                              <item>outset</item></content>
+                              <item>outset</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1016,7 +1040,8 @@
                                   <item>Black</item>
                                   <item>White</item>
                                   <item>Grey</item>
-                                  <item>Red</item></content>
+                                  <item>Red</item>
+                                </content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
                               </object>
@@ -1071,7 +1096,8 @@
                               <item>0mm</item>
                               <item>0cm</item>
                               <item>0em</item>
-                              <item>0ex</item></content>
+                              <item>0ex</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1098,7 +1124,8 @@
                               <item>groove</item>
                               <item>ridge</item>
                               <item>inset</item>
-                              <item>outset</item></content>
+                              <item>outset</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1122,7 +1149,8 @@
                                   <item>Black</item>
                                   <item>White</item>
                                   <item>Grey</item>
-                                  <item>Red</item></content>
+                                  <item>Red</item>
+                                </content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
                               </object>
@@ -1177,7 +1205,8 @@
                               <item>0mm</item>
                               <item>0cm</item>
                               <item>0em</item>
-                              <item>0ex</item></content>
+                              <item>0ex</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1204,7 +1233,8 @@
                               <item>groove</item>
                               <item>ridge</item>
                               <item>inset</item>
-                              <item>outset</item></content>
+                              <item>outset</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1228,7 +1258,8 @@
                                   <item>Black</item>
                                   <item>White</item>
                                   <item>Grey</item>
-                                  <item>Red</item></content>
+                                  <item>Red</item>
+                                </content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
                               </object>
@@ -1282,7 +1313,8 @@
                               <item>0mm</item>
                               <item>0cm</item>
                               <item>0em</item>
-                              <item>0ex</item></content>
+                              <item>0ex</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1309,7 +1341,8 @@
                               <item>groove</item>
                               <item>ridge</item>
                               <item>inset</item>
-                              <item>outset</item></content>
+                              <item>outset</item>
+                            </content>
                           </object>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                         </object>
@@ -1333,7 +1366,8 @@
                                   <item>Black</item>
                                   <item>White</item>
                                   <item>Grey</item>
-                                  <item>Red</item></content>
+                                  <item>Red</item>
+                                </content>
                                 <size>150,-1</size>
                                 <style>wxCB_READONLY</style>
                               </object>
@@ -1407,7 +1441,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                                 <focused>1</focused>
                               </object>
                             </object>
@@ -1440,7 +1475,8 @@
                                       <item>0cm</item>
                                       <item>0em</item>
                                       <item>0ex</item>
-                                      <item>0%</item></content>
+                                      <item>0%</item>
+                                    </content>
                                   </object>
                                 </object>
                               </object>
@@ -1483,7 +1519,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                               </object>
                             </object>
                             <object class="spacer">
@@ -1515,7 +1552,8 @@
                                       <item>0cm</item>
                                       <item>0em</item>
                                       <item>0ex</item>
-                                      <item>0%</item></content>
+                                      <item>0%</item>
+                                    </content>
                                   </object>
                                 </object>
                               </object>
@@ -1558,7 +1596,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                               </object>
                             </object>
                             <object class="spacer">
@@ -1590,7 +1629,8 @@
                                       <item>0cm</item>
                                       <item>0em</item>
                                       <item>0ex</item>
-                                      <item>0%</item></content>
+                                      <item>0%</item>
+                                    </content>
                                   </object>
                                 </object>
                               </object>
@@ -1633,7 +1673,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                               </object>
                             </object>
                             <object class="spacer">
@@ -1665,7 +1706,8 @@
                                       <item>0cm</item>
                                       <item>0em</item>
                                       <item>0ex</item>
-                                      <item>0%</item></content>
+                                      <item>0%</item>
+                                    </content>
                                   </object>
                                 </object>
                               </object>
@@ -1708,7 +1750,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                               </object>
                             </object>
                             <object class="spacer">
@@ -1740,7 +1783,8 @@
                                       <item>0cm</item>
                                       <item>0em</item>
                                       <item>0ex</item>
-                                      <item>0%</item></content>
+                                      <item>0%</item>
+                                    </content>
                                   </object>
                                 </object>
                               </object>
@@ -1790,7 +1834,8 @@
                                   <item>0cm</item>
                                   <item>0em</item>
                                   <item>0ex</item>
-                                  <item>0%</item></content>
+                                  <item>0%</item>
+                                </content>
                               </object>
                             </object>
                             <object class="spacer">
@@ -1823,7 +1868,8 @@
                                       <item>0cm</item>
                                       <item>0em</item>
                                       <item>0ex</item>
-                                      <item>0%</item></content>
+                                      <item>0%</item>
+                                    </content>
                                   </object>
                                 </object>
                               </object>
@@ -1862,8 +1908,8 @@
                     </object>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_DISPLAY">
+                        <size>100,-1</size>
                         <label>display</label>
-                        <size>105,-1</size>
                       </object>
                       <option>0</option>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1877,18 +1923,19 @@
                           <item>inline-block</item>
                           <item>list-item</item>
                           <item>none</item>
-                          <item>inherit</item></content>
+                          <item>inherit</item>
+                        </content>
                         <size>100,-1</size>
                         <focused>1</focused>
                       </object>
                     </object>
                     <object class="spacer">
-                      <size>110,0</size>
+                      <size>50,0</size>
                     </object>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_VISIBILITY">
+                        <size>80,-1</size>
                         <label>visibility</label>
-                        <size>120,-1</size>
                       </object>
                       <option>0</option>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1900,8 +1947,30 @@
                           <item>visible</item>
                           <item>hidden</item>
                           <item>collapse</item>
-                          <item>inherit</item></content>
+                          <item>inherit</item>
+                        </content>
                         <size>110,-1</size>
+                        <focused>1</focused>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>50,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_ZINDEX">
+                        <size>70,-1</size>
+                        <label>z-index</label>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxComboBox" name="wxID_ZINDEX">
+                        <size>70,-1</size>
+                        <content>
+                          <item></item>
+                          <item>auto</item>
+                          <item>inherit</item>
+                        </content>
                         <focused>1</focused>
                       </object>
                     </object>
@@ -1918,8 +1987,8 @@
                     </object>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_FLOAT">
+                        <size>100,-1</size>
                         <label>float</label>
-                        <size>105,-1</size>
                       </object>
                       <option>0</option>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1929,18 +1998,19 @@
                         <content>
                           <item/>
                           <item>left</item>
-                          <item>right</item></content>
+                          <item>right</item>
+                        </content>
                         <size>100,-1</size>
                         <focused>1</focused>
                       </object>
                     </object>
                     <object class="spacer">
-                      <size>110,0</size>
+                      <size>50,0</size>
                     </object>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_CLEAR">
+                        <size>80,-1</size>
                         <label>clear</label>
-                        <size>120,-1</size>
                       </object>
                       <option>0</option>
                       <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -1951,7 +2021,8 @@
                           <item/>
                           <item>left</item>
                           <item>right</item>
-                          <item>both</item></content>
+                          <item>both</item>
+                        </content>
                         <size>110,-1</size>
                         <focused>1</focused>
                       </object>
@@ -2012,12 +2083,12 @@
                           <border>5</border>
                         </object>
                         <object class="spacer">
-                          <size>130,0</size>
+                          <size>70,0</size>
                         </object>
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_POSITION">
+                            <size>80,-1</size>
                             <label>position</label>
-                            <size>120,-1</size>
                           </object>
                           <option>0</option>
                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -2029,7 +2100,8 @@
                               <item>absolute</item>
                               <item>fixed</item>
                               <item>relative</item>
-                              <item>static</item></content>
+                              <item>static</item>
+                            </content>
                             <size>110,-1</size>
                             <focused>1</focused>
                           </object>
@@ -2070,7 +2142,8 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>0%</item></content>
+                              <item>0%</item>
+                            </content>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -2116,7 +2189,8 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>0%</item></content>
+                              <item>0%</item>
+                            </content>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -2159,7 +2233,8 @@
                               <item>0cm</item>
                               <item>0em</item>
                               <item>0ex</item>
-                              <item>0%</item></content>
+                              <item>0%</item>
+                            </content>
                             <size>70,-1</size>
                             <focused>1</focused>
                           </object>
@@ -2167,7 +2242,7 @@
                         </object>
                       </object>
                     </object>
-                    <label></label>
+                    <label/>
                   </object>
                   <flag>wxEXPAND</flag>
                   <border>0</border>
@@ -2189,7 +2264,8 @@
                       <object class="wxComboBox" name="wxID_LIST_IMAGE">
                         <content>
                           <item/>
-                          <item>none</item></content>
+                          <item>none</item>
+                        </content>
                         <size>200,-1</size>
                         <focused>1</focused>
                       </object>
@@ -2236,13 +2312,14 @@
                           <item>lower-roman</item>
                           <item>upper-roman</item>
                           <item>lower-alpha</item>
-                          <item>upper-alpha</item></content>
+                          <item>upper-alpha</item>
+                        </content>
                         <size>115,-1</size>
                         <focused>1</focused>
                       </object>
                     </object>
                     <object class="spacer">
-                      <size>95,0</size>
+                      <size>35,0</size>
                     </object>
                     <object class="sizeritem">
                       <object class="wxStaticText" name="wxID_LABEL_LIST_POSITION">
@@ -2256,7 +2333,8 @@
                         <content>
                           <item/>
                           <item>inside</item>
-                          <item>outside</item></content>
+                          <item>outside</item>
+                        </content>
                         <size>105,-1</size>
                         <focused>1</focused>
                       </object>
@@ -2283,7 +2361,7 @@
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <object class="wxCheckBox" name="wx_CHECK_CLOSE">
-              <label></label>
+              <label/>
               <checked>1</checked>
             </object>
             <flag>wxALIGN_CENTRE_VERTICAL</flag>
