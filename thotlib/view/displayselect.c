@@ -920,8 +920,8 @@ void DisplayStringSelection (int frame, int leftX, int rightX, int t,
     }
   if (pBox->BxAbstractBox != NULL)
     {
-      topY = pBox->BxYOrg + t + pBox->BxTMargin + pBox->BxTBorder +
-        pBox->BxTPadding - pFrame->FrYOrg;
+      topY = pBox->BxYOrg + t - pFrame->FrYOrg;
+      topY += pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
       h = pBox->BxH;
 
       /* limit to the scrolling zone */
@@ -953,7 +953,9 @@ void DisplayStringSelection (int frame, int leftX, int rightX, int t,
         }
 
       /* don't take into account margins and borders */
-      l = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      l = pBox->BxXOrg;
+      if (!pBox->BxAbstractBox->AbPresentationBox)
+        l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       leftX = leftX + l - pFrame->FrXOrg;
       if (leftX > width)
         width = 0;

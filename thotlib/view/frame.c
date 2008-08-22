@@ -328,7 +328,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 
       x1 = pBox->BxXOrg;
       x2 = x1;
-      if (xstart == -1 && xstop == -1)
+      if ((xstart == -1 && xstop == -1) || pBox->BxAbstractBox->AbPresentationBox)
         {
           /* take into account the negative left margin */
           if (pBox->BxLMargin < 0)
@@ -340,6 +340,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
       else
         {
           x1 += xstart;
+          if (pBox->BxLMargin < 0)
+            x1 += pBox->BxLMargin;
           x2 += xstop;
         }
       if (pFlow)
@@ -349,7 +351,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
         }
       y1 = pBox->BxYOrg;
       y2 = y1;
-      if (ystart == -1 && ystop == -1)
+      if ((ystart == -1 && ystop == -1) || pBox->BxAbstractBox->AbPresentationBox)
         {
           if (pBox->BxTMargin < 0)
             y1 += pBox->BxTMargin;
@@ -360,6 +362,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
       else
         {
           y1 += ystart;
+          if (pBox->BxTMargin < 0)
+            y1 += pBox->BxTMargin;
           y2 += ystop;
         }
       if (pFlow)
