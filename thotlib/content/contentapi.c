@@ -2120,12 +2120,15 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
   newSeg->PaNext = pPa->PaNext;
   pPa->PaNext = newSeg;
 
-  if(newSeg->PaNext && !(newSeg->PaNext->PaNewSubpath))
+  if(newSeg->PaNext)
     {
       /* Update the information of the successor, if it exists */
       newSeg->PaNext->PaPrevious = newSeg;
-      newSeg->PaNext->XStart = newSeg->XEnd;
-      newSeg->PaNext->YStart = newSeg->YEnd;
+      if(!(newSeg->PaNext->PaNewSubpath))
+	{
+	  newSeg->PaNext->XStart = newSeg->XEnd;
+	  newSeg->PaNext->YStart = newSeg->YEnd;
+	}
     }
 
   /* Updates the volumes of ancestors */

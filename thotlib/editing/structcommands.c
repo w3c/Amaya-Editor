@@ -3567,7 +3567,7 @@ static void getPathSegment (PtrPathSeg *pPa_, int pointselect, ThotBool before)
 		/* check whether the subpath is closed */
 		  if(pPaStart->XStart == pPa->XEnd &&
 		     pPaStart->YStart == pPa->YEnd)
-		    *pPa_ = pPa;
+		    *pPa_ = pPaStart;
 		  else
 		    *pPa_ = NULL;
 		}
