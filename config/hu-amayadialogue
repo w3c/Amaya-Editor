@@ -338,43 +338,45 @@
 336 **Templates
 337 **Create template from current document...
 338 **Create a text box
-339 **Create and use a component
-340 **Create a free editing box
-341 **Create a repeated component
-342 &Javascript/DOM
-343 Engedélyezés/tiltás
-344 Parancs végrehajtása
-345 Külső szkript végrehajtása
-346 Külső szkript hozzáadása
-347 Szkript beillesztése
-348 Amaya &névjegye
-349 Az Amaya a W3C &webhelyen
-350 &Betűrendes mutató
-351 Böngészés
-352 &Nézetek
-353 Kijelölés
-354 Dokumentum
-355 Elemek létrehozása
-356 &Attribútumok
-357 Karakterek
-358 Sablonok
-359 Szerkezetátalakítás
-360 Kapcsok
-361 Táblázatok
-362 Térképek
-363 Matematika
-364 Grafika
-365 XML támogatás
-366 &Stíluslapok
-367 Keresés
-368 &Szóellenőrzés
-369 &Kiadás
-370 Együttműködés
-371 Nyomtatás
-372 Számozás
-373 Kötetek
-374 Jegyzetek
-375 Beállítása
-376 Gyorsbillentyűk
-377 Kisegítő lehetőségek az Amayában
-378 A nap tippje
+339 **Use a component or a language element
+340 **Create and use a component
+341 **Repeat a component or a language element
+342 **Create a repeated component
+343 **Create a free editing box
+344 &Javascript/DOM
+345 Engedélyezés/tiltás
+346 Parancs végrehajtása
+347 Külső szkript végrehajtása
+348 Külső szkript hozzáadása
+349 Szkript beillesztése
+350 Amaya &névjegye
+351 Az Amaya a W3C &webhelyen
+352 &Betűrendes mutató
+353 Böngészés
+354 &Nézetek
+355 Kijelölés
+356 Dokumentum
+357 Elemek létrehozása
+358 &Attribútumok
+359 Karakterek
+360 Sablonok
+361 Szerkezetátalakítás
+362 Kapcsok
+363 Táblázatok
+364 Térképek
+365 Matematika
+366 Grafika
+367 XML támogatás
+368 &Stíluslapok
+369 Keresés
+370 &Szóellenőrzés
+371 &Kiadás
+372 Együttműködés
+373 Nyomtatás
+374 Számozás
+375 Kötetek
+376 Jegyzetek
+377 Beállítása
+378 Gyorsbillentyűk
+379 Kisegítő lehetőségek az Amayában
+380 A nap tippje

@@ -338,43 +338,45 @@
 336 **Templates
 337 **Create template from current document...
 338 **Create a text box
-339 **Create and use a component
-340 **Create a free editing box
-341 **Create a repeated component
-342 &Javascript/DOM
-343 **Enable/Disable
-344 **Execute a command
-345 **Execute an external script
-346 **Add an external script
-347 **Insert a script
-348 Amaya hakkında
-349 W3C deki Amaya hakkında
-350 Içerik
-351 Tarama
-352 Görünümler
-353 Seç
-354 Döküman
-355 Yarat
-356 Tarz tanımları
-357 karakterler
-358 **Templates
-359 Yeniden yapılandırma
-360 Bağlantılar
-361 Tablolar
-362 Aktif alan
-363 Matematik
-364 Grafik
-365 XML desteği
-366 Görüntü haritaları
-367 Yazı hataları arama
-368 Yazı hataları düzeltmek
-369 Bastırma
-370 Birlikte çalışmak
-371 Sayfa yerleştirme
-372 Numaralandır
-373 Kitap oluşturma
-374 Not ekleme
-375 Yapılandırması
-376 Kısalmalar
-377 Amaya\'ya ulaşmak
-378 **Tip of the day...
+339 **Use a component or a language element
+340 **Create and use a component
+341 **Repeat a component or a language element
+342 **Create a repeated component
+343 **Create a free editing box
+344 &Javascript/DOM
+345 **Enable/Disable
+346 **Execute a command
+347 **Execute an external script
+348 **Add an external script
+349 **Insert a script
+350 Amaya hakkında
+351 W3C deki Amaya hakkında
+352 Içerik
+353 Tarama
+354 Görünümler
+355 Seç
+356 Döküman
+357 Yarat
+358 Tarz tanımları
+359 karakterler
+360 **Templates
+361 Yeniden yapılandırma
+362 Bağlantılar
+363 Tablolar
+364 Aktif alan
+365 Matematik
+366 Grafik
+367 XML desteği
+368 Görüntü haritaları
+369 Yazı hataları arama
+370 Yazı hataları düzeltmek
+371 Bastırma
+372 Birlikte çalışmak
+373 Sayfa yerleştirme
+374 Numaralandır
+375 Kitap oluşturma
+376 Not ekleme
+377 Yapılandırması
+378 Kısalmalar
+379 Amaya\'ya ulaşmak
+380 **Tip of the day...

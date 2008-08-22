@@ -11,17 +11,26 @@
           <object class="tool" name="wxID_TEMPLATE_USE_BOX">
             <bitmap>../icons/16x16/TEMPLATE_use.png</bitmap>
           </object>
-          <object class="tool" name="wxID_TEMPLATE_FREE_BOX">
-            <bitmap>../icons/16x16/TEMPLATE_bag.png</bitmap>
+          <object class="tool" name="wxID_TEMPLATE_USECOMP_BOX">
+            <bitmap>../icons/16x16/TEMPLATE_usecomp.png</bitmap>
           </object>
           <object class="tool" name="wxID_TEMPLATE_REPEAT_SECTION">
             <bitmap>../icons/16x16/TEMPLATE_repeat.png</bitmap>
           </object>
+          <object class="tool" name="wxID_TEMPLATE_REPEATCOMP_SECTION">
+            <bitmap>../icons/16x16/TEMPLATE_repeatcomp.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TEMPLATE_FREE_BOX">
+            <bitmap>../icons/16x16/TEMPLATE_bag.png</bitmap>
+          </object>
+          
+          
           <bitmapsize>16,16</bitmapsize>
           <margins>2,0</margins>
           <style>wxTB_FLAT|wxTB_NODIVIDER</style>
         </object>
       </object>
+    
     </object>
     <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
   </object>

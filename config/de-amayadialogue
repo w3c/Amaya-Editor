@@ -338,43 +338,45 @@
 336 **Templates
 337 **Create template from current document...
 338 **Create a text box
-339 **Create and use a component
-340 **Create a free editing box
-341 **Create a repeated component
-342 &Javascript/DOM
-343 Java-Unterstützung ein-/ausschalten
-344 Befehl ausführen
-345 externes Skript ausführen
-346 externes Skript hinzufügen
-347 Skript einfügen
-348 Info
-349 Über Amaya
-350 Index
-351 Browsen
-352 Ansichten
-353 Markieren
-354 Dokuments
-355 Elemente
-356 Attribute
-357 Zeichen
-358 Vorlagen
-359 Transformieren
-360 Verweise
-361 Tabellen
-362 Bild
-363 Formeln
-364 Grafiken
-365 XML
-366 Formate/Formatvorlagen
-367 Suchen/Ersetzen
-368 Rechtschreibprüfung
-369 Speichern/Veröffentlichen
-370 Kooperation
-371 Drucken
-372 Abschnitte numerieren
-373 Buch erstellen
-374 Anmerkungen
-375 Konfiguration
-376 Tastenkürzel
-377 Benutzerfreundlichkeit
-378 Tip des Tages...
+339 **Use a component or a language element
+340 **Create and use a component
+341 **Repeat a component or a language element
+342 **Create a repeated component
+343 **Create a free editing box
+344 &Javascript/DOM
+345 Java-Unterstützung ein-/ausschalten
+346 Befehl ausführen
+347 externes Skript ausführen
+348 externes Skript hinzufügen
+349 Skript einfügen
+350 Info
+351 Über Amaya
+352 Index
+353 Browsen
+354 Ansichten
+355 Markieren
+356 Dokuments
+357 Elemente
+358 Attribute
+359 Zeichen
+360 Vorlagen
+361 Transformieren
+362 Verweise
+363 Tabellen
+364 Bild
+365 Formeln
+366 Grafiken
+367 XML
+368 Formate/Formatvorlagen
+369 Suchen/Ersetzen
+370 Rechtschreibprüfung
+371 Speichern/Veröffentlichen
+372 Kooperation
+373 Drucken
+374 Abschnitte numerieren
+375 Buch erstellen
+376 Anmerkungen
+377 Konfiguration
+378 Tastenkürzel
+379 Benutzerfreundlichkeit
+380 Tip des Tages...

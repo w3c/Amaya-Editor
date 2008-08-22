@@ -5025,19 +5025,29 @@
 	<message xml:lang="ja">Create a text box</message>
 </label>
 <label define="BTemplateCreateUseBox">
+	<message xml:lang="en">Use a component or a language element</message>
+	<message xml:lang="fr">Utiliser un composant ou un élément du langage</message>
+	<message xml:lang="ja">Use a component or a language element</message>
+</label>
+<label define="BTemplateCreateUseCompBox">
 	<message xml:lang="en">Create and use a component</message>
 	<message xml:lang="fr">Créer et utiliser un composant</message>
 	<message xml:lang="ja">Create and use a component</message>
+</label>
+<label define="BTemplateCreateRepeat">
+	<message xml:lang="en">Repeat a component or a language element</message>
+	<message xml:lang="fr">Répète un composant ou un élément du langage</message>
+	<message xml:lang="ja">Repeat a component or a language element</message>
+</label>
+<label define="BTemplateCreateRepeatComp">
+	<message xml:lang="en">Create a repeated component</message>
+	<message xml:lang="fr">Créer un composant répétée</message>
+	<message xml:lang="ja">Create a repeated component</message>
 </label>
 <label define="BTemplateCreateFreeBox">
 	<message xml:lang="en">Create a free editing box</message>
 	<message xml:lang="fr">Créer une zone d'édition libre</message>
 	<message xml:lang="ja">Create a free editing box</message>
-</label>
-<label define="BTemplateCreateRepeat">
-	<message xml:lang="en">Create a repeated component</message>
-	<message xml:lang="fr">Créer un composant répétée</message>
-	<message xml:lang="ja">Create a repeated component</message>
 </label>
 <label define="JavascriptDom_">
 	<message xml:lang="en">&amp;Javascript/DOM</message>

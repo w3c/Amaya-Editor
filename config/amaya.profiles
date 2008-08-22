@@ -792,8 +792,10 @@ ConfigTemplates
 CreateTemplateFromDocument
 TemplateCreateTextBox
 TemplateCreateUseBox
-TemplateCreateFreeBox
+TemplateCreateUseCompBox
 TemplateCreateRepeat
+TemplateCreateRepeatComp
+TemplateCreateFreeBox
 
 [spell]
 SpellCheck

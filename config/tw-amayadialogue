@@ -338,43 +338,45 @@
 336 **Templates
 337 **Create template from current document...
 338 **Create a text box
-339 **Create and use a component
-340 **Create a free editing box
-341 **Create a repeated component
-342 &Javascript/DOM
-343 **Enable/Disable
-344 **Execute a command
-345 **Execute an external script
-346 **Add an external script
-347 **Insert a script
-348 關于 Amaya
-349 關于 Amaya at W3C
-350 索引
-351 Browsing
-352 Views
-353 Selecting
-354 Document
-355 Creating elements
-356 Attributes
-357 Characters
-358 **Templates
-359 Restructuring
-360 Links
-361 Tables
-362 Images
-363 Math
-364 Graphics
-365 XML support
-366 Style sheets
-367 Searching
-368 Spell Checking
-369 Publishing
-370 協作
-371 Printing
-372 Numbering
-373 Making books
-374 Annotations
-375 Configuring
-376 Shortcuts
-377 Accessibility in Amaya
-378 **Tip of the day...
+339 **Use a component or a language element
+340 **Create and use a component
+341 **Repeat a component or a language element
+342 **Create a repeated component
+343 **Create a free editing box
+344 &Javascript/DOM
+345 **Enable/Disable
+346 **Execute a command
+347 **Execute an external script
+348 **Add an external script
+349 **Insert a script
+350 關于 Amaya
+351 關于 Amaya at W3C
+352 索引
+353 Browsing
+354 Views
+355 Selecting
+356 Document
+357 Creating elements
+358 Attributes
+359 Characters
+360 **Templates
+361 Restructuring
+362 Links
+363 Tables
+364 Images
+365 Math
+366 Graphics
+367 XML support
+368 Style sheets
+369 Searching
+370 Spell Checking
+371 Publishing
+372 協作
+373 Printing
+374 Numbering
+375 Making books
+376 Annotations
+377 Configuring
+378 Shortcuts
+379 Accessibility in Amaya
+380 **Tip of the day...

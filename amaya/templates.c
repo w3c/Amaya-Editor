@@ -1678,8 +1678,10 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOff (doc, 1, Tools, BCreateTemplateFromDocument);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateTextBox);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateUseBox);
-      TtaSetItemOff (doc, 1, Tools, BTemplateCreateFreeBox);
+      TtaSetItemOff (doc, 1, Tools, BTemplateCreateUseCompBox);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeat);
+      TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeatComp);
+      TtaSetItemOff (doc, 1, Tools, BTemplateCreateFreeBox);
     }
   else if (DocumentURLs[doc] && IsXTiger (DocumentURLs[doc]))
     {
@@ -1687,8 +1689,10 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOff (doc, 1, Tools, BCreateTemplateFromDocument);
       TtaSetItemOn (doc, 1, Tools, BTemplateCreateTextBox);
       TtaSetItemOn (doc, 1, Tools, BTemplateCreateUseBox);
-      TtaSetItemOn (doc, 1, Tools, BTemplateCreateFreeBox);      
+      TtaSetItemOn (doc, 1, Tools, BTemplateCreateUseCompBox);
       TtaSetItemOn (doc, 1, Tools, BTemplateCreateRepeat);
+      TtaSetItemOn (doc, 1, Tools, BTemplateCreateRepeatComp);
+      TtaSetItemOn (doc, 1, Tools, BTemplateCreateFreeBox);      
     }
   else
     {
@@ -1696,8 +1700,10 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOn (doc, 1, Tools, BCreateTemplateFromDocument);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateTextBox);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateUseBox);
-      TtaSetItemOff (doc, 1, Tools, BTemplateCreateFreeBox);
+      TtaSetItemOff (doc, 1, Tools, BTemplateCreateUseCompBox);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeat);
+      TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeatComp);
+      TtaSetItemOff (doc, 1, Tools, BTemplateCreateFreeBox);
     }
 }
 
@@ -2011,12 +2017,32 @@ void TemplateCreateRepeat(Document doc, View view)
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  TemplateCreateRepeatComp
+  Create a xt:repeat around the selection.
+  ----------------------------------------------------------------------*/
+void TemplateCreateRepeatComp(Document doc, View view)
+{
+  
+}
+
 
 /*----------------------------------------------------------------------
   TemplateCreateUseBox
   Create a xt:use around the selection.
   ----------------------------------------------------------------------*/
 void TemplateCreateUseBox(Document doc, View view)
+{
+#ifdef TEMPLATES
+  Template_CreateUseFromSelection(doc);
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  TemplateCreateUseCompBox
+  Create a xt:use around the selection.
+  ----------------------------------------------------------------------*/
+void TemplateCreateUseCompBox(Document doc, View view)
 {
 #ifdef TEMPLATES
   Template_CreateUseFromSelection(doc);
