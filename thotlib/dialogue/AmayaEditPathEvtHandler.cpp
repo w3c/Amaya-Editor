@@ -277,16 +277,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 		pPaNext = pPaStart;
 	    }
 	}
-      
-      /* Convert Quadratic Bezier to Cubic */
-      if(pPaCurrent && pPaCurrent->PaShape == PtQuadraticBezier)
-	TtaQuadraticToCubicPathSeg ((void *)pPaCurrent);
-
-      if(pPaNext && pPaNext->PaShape == PtQuadraticBezier)
-	TtaQuadraticToCubicPathSeg ((void *)pPaNext);
-
-      if(pPaPrevious && pPaPrevious->PaShape == PtQuadraticBezier)
-	TtaQuadraticToCubicPathSeg ((void *)pPaPrevious);
+     
     }
   else 
     {
@@ -387,6 +378,20 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
 
   if((abs(mouse_x -lastX) + abs(mouse_y - lastY) > DELTA))
     {
+
+      if(!(*hasBeenTransformed))
+	{
+	  /* Convert Quadratic Bezier to Cubic */
+	  if(pPaCurrent && pPaCurrent->PaShape == PtQuadraticBezier)
+	    TtaQuadraticToCubicPathSeg ((void *)pPaCurrent);
+	  
+	  if(pPaNext && pPaNext->PaShape == PtQuadraticBezier)
+	    TtaQuadraticToCubicPathSeg ((void *)pPaNext);
+	  
+	  if(pPaPrevious && pPaPrevious->PaShape == PtQuadraticBezier)
+	    TtaQuadraticToCubicPathSeg ((void *)pPaPrevious);
+	}
+
       /* The user is pressing the mouse button and moving */
       x1 = lastX;
       y1 = lastY;
