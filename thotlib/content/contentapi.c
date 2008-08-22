@@ -1869,28 +1869,6 @@ PathSegment TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend,
 }
 
 /*----------------------------------------------------------------------
-  TtaQuadraticToCubicPathSeg
-  ---------------------------------------------------------------------- */
-void TtaQuadraticToCubicPathSeg (void *quadratic_segment)
-{
-  PtrPathSeg       pPa = (PtrPathSeg)quadratic_segment;
-
-  int x0, y0, x1, y1, x2, y2;
-  x0 = pPa->XStart;
-  y0 = pPa->YStart;
-  x1 = pPa->XCtrlStart;
-  y1 = pPa->YCtrlStart;
-  x2 = pPa->XEnd;
-  y2 = pPa->YEnd;
-
-  pPa->PaShape = PtCubicBezier;
-  pPa->XCtrlStart = (x0 + 2*x1)/3;
-  pPa->YCtrlStart = (y0 + 2*y1)/3;
-  pPa->XCtrlEnd = (2*x1 + 1*x2)/3;
-  pPa->YCtrlEnd = (2*y1 + 1*y2)/3;
-}
-
-/*----------------------------------------------------------------------
   TtaNewPathSegArc
 
   Creates a new path segment of type elliptical arc.
@@ -1931,6 +1909,145 @@ PathSegment TtaNewPathSegArc (int xstart, int ystart, int xend, int yend,
   pPa->Sweep = sweep;
   return ((PathSegment) pPa);
 }
+
+/*----------------------------------------------------------------------
+  TtaQuadraticToCubicPathSeg
+  ---------------------------------------------------------------------- */
+void TtaQuadraticToCubicPathSeg (void *quadratic_segment)
+{
+  PtrPathSeg       pPa = (PtrPathSeg)quadratic_segment;
+
+  int x0, y0, x1, y1, x2, y2;
+  x0 = pPa->XStart;
+  y0 = pPa->YStart;
+  x1 = pPa->XCtrlStart;
+  y1 = pPa->YCtrlStart;
+  x2 = pPa->XEnd;
+  y2 = pPa->YEnd;
+
+  pPa->PaShape = PtCubicBezier;
+  pPa->XCtrlStart = (x0 + 2*x1)/3;
+  pPa->YCtrlStart = (y0 + 2*y1)/3;
+  pPa->XCtrlEnd = (2*x1 + 1*x2)/3;
+  pPa->YCtrlEnd = (2*y1 + 1*y2)/3;
+}
+
+/*----------------------------------------------------------------------
+  TtaSplitPathSeg
+  ---------------------------------------------------------------------- */
+void TtaSplitPathSeg (void *segment, Document doc, Element el)
+{
+  PtrPathSeg       pPa = (PtrPathSeg)segment;
+  PtrPathSeg       newSeg;
+  int x0, y0, x1, y1, x2, y2, x3, y3;
+  PtrElement pElAsc;
+
+  if(pPa == NULL)
+    return;
+
+  switch(pPa->PaShape)
+    {
+    case PtLine:
+      x0 = pPa->XStart;
+      y0 = pPa->YStart;
+      x1 = pPa->XEnd;
+      y1 = pPa->YEnd;
+
+      newSeg = (PtrPathSeg)TtaNewPathSegLine ((x0+x1)/2,
+					      (y0+y1)/2,
+					      x1,y1,
+					      FALSE);
+      break;
+
+    case PtQuadraticBezier:
+      x0 = pPa->XStart;
+      y0 = pPa->YStart;
+      x1 = pPa->XCtrlStart;
+      y1 = pPa->YCtrlStart;
+      x2 = pPa->XEnd;
+      y2 = pPa->YEnd;
+
+      newSeg = (PtrPathSeg)TtaNewPathSegQuadratic((x0+2*x1+x2)/4,
+						  (y0+2*y1+y2)/4,
+						  x2,y2,
+						  (x1+x2)/2,
+						  (y1+y2)/2,
+						  FALSE);
+
+      pPa->XCtrlStart = (x0+x1)/2;
+      pPa->YCtrlStart = (y0+y1)/2;
+      pPa->XCtrlEnd = pPa->XCtrlStart;
+      pPa->YCtrlEnd = pPa->YCtrlStart;
+      break;
+
+    case PtCubicBezier:
+      x0 = pPa->XStart;
+      y0 = pPa->YStart;
+      x1 = pPa->XCtrlStart;
+      y1 = pPa->YCtrlStart;
+      x2 = pPa->XCtrlEnd;
+      y2 = pPa->YCtrlEnd;
+      x3 = pPa->XEnd;
+      y3 = pPa->YEnd;
+
+      newSeg = (PtrPathSeg)TtaNewPathSegCubic((x0+3*x1+3*x2+x3)/8,
+					      (y0+3*y1+3*y2+y3)/8,
+					      x3,y3,
+					      (x1+2*x2+x3)/4,
+					      (y1+2*y2+y3)/4,
+					      (x2+x3)/2,
+					      (y2+y3)/2,
+					      FALSE);
+      pPa->XCtrlStart = (x0+x1)/2;
+      pPa->YCtrlStart = (y0+y1)/2;
+      pPa->XCtrlEnd = (x0+2*x1+x2)/4;
+      pPa->YCtrlEnd = (y0+2*y1+y2)/4;
+      break;
+
+      
+    case PtEllipticalArc:
+      /* TODO...*/
+      /*pPa->XRadius
+	pPa->YRadius
+	pPa->XAxisRotation
+	pPa->LargeArc
+	pPa->Sweep
+	pPa->XEnd
+	pPa->YEnd*/
+      return;
+      break;
+      
+    default:
+	break;
+    }
+
+  /* Insert the new segment */
+  pPa->XEnd = newSeg->XStart;
+  pPa->YEnd = newSeg->YStart;
+  newSeg->PaPrevious = pPa;
+  newSeg->PaNext = pPa->PaNext;
+  pPa->PaNext = newSeg;
+
+  if(newSeg->PaNext)
+    {
+      /* Update the information of the successor, if it exists */
+      newSeg->PaNext->PaPrevious = newSeg;
+      newSeg->PaNext->XStart = newSeg->XEnd;
+      newSeg->PaNext->YStart = newSeg->YEnd;
+    }
+
+  /* Updates the volumes of ancestors */
+  pElAsc = (PtrElement) el;
+  while (pElAsc != NULL)
+    {
+      pElAsc->ElVolume++;
+      pElAsc = pElAsc->ElParent;
+    }
+#ifndef NODISPLAY
+  RedisplayLeaf ((PtrElement) el, doc, 1);
+#endif
+}
+
 
 /*----------------------------------------------------------------------
   TtaAppendPathSeg
@@ -4367,6 +4484,8 @@ enum shapes
   };
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 ThotBool PathIsPolygon(PtrPathSeg pPa, int nbPoints)
 {
   int nb = 0;
