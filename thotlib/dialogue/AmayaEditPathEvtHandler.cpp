@@ -379,7 +379,7 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
   if((abs(mouse_x -lastX) + abs(mouse_y - lastY) > DELTA))
     {
 
-      if(!(*hasBeenTransformed))
+      if(!(*hasBeenTransformed) && type != 6)
 	{
 	  /* Convert Quadratic Bezier to Cubic */
 	  if(pPaCurrent && pPaCurrent->PaShape == PtQuadraticBezier)
