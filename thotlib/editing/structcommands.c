@@ -3517,7 +3517,17 @@ static void getPathSegment (PtrPathSeg *pPa_, int pointselect, ThotBool before)
 	    {
 	      /* draw the start point of this path segment */
 	      if(before)
-		*pPa_ = pPa->PaPrevious;
+		{
+		/* check whether the subpath is closed */
+		  while(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		    pPa = pPa->PaNext;
+		  
+		  if(pPaStart->XStart == pPa->XEnd &&
+		     pPaStart->YStart == pPa->YEnd)
+		    *pPa_ = pPa;
+		  else
+		    *pPa_ = NULL;
+		}
 	      else
 		*pPa_ = pPa;
 		
@@ -3549,7 +3559,20 @@ static void getPathSegment (PtrPathSeg *pPa_, int pointselect, ThotBool before)
 	  if(before)
 	    *pPa_ = pPa;
 	  else 
-	    *pPa_ = pPa->PaNext;
+	    {
+	      if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		*pPa_ = pPa->PaNext;
+	      else
+		{
+		/* check whether the subpath is closed */
+		  if(pPaStart->XStart == pPa->XEnd &&
+		     pPaStart->YStart == pPa->YEnd)
+		    *pPa_ = pPa;
+		  else
+		    *pPa_ = NULL;
+		}
+	    
+	    }
 
 	  return; 
 	}

@@ -2081,9 +2081,6 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
 	  else if(pPa->Sweep && dtheta < 0)
 	    dtheta += 2*M_PI;
 
-	  printf("cx=%g, cy=%g, dtheta=%g, theta1=%g\n", cx, cy, dtheta, theta1);
-
-
 	  /****************************************************************/
 
 	  /* Now we choose a new point (x3, y3) at theta = dtheta/2
@@ -2123,7 +2120,7 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
   newSeg->PaNext = pPa->PaNext;
   pPa->PaNext = newSeg;
 
-  if(newSeg->PaNext)
+  if(newSeg->PaNext && !(newSeg->PaNext->PaNewSubpath))
     {
       /* Update the information of the successor, if it exists */
       newSeg->PaNext->PaPrevious = newSeg;
