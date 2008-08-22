@@ -39,6 +39,7 @@
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
 #include "viewapi_f.h"
+#include "svgedit.h"
 
 /* isomorphism description */
 typedef struct _IsomorphDesc *PtrIsomorphDesc;
@@ -3488,6 +3489,8 @@ ThotBool TtaInsertElement (ElementType elementType, Document document)
   return done;
 }
 
+/* ----------------------------------------------------------------------
+   ---------------------------------------------------------------------- */
 static void getPathSegment (PtrPathSeg *pPa_, int pointselect, ThotBool before)
 {
   PtrPathSeg  pPa, pPaStart;
@@ -3557,7 +3560,9 @@ static void getPathSegment (PtrPathSeg *pPa_, int pointselect, ThotBool before)
   return;
  }
 
-static void InsertPoint (Document doc, Element el,
+/* ----------------------------------------------------------------------
+   ---------------------------------------------------------------------- */
+static ThotBool InsertPoint (Document doc, Element el,
 			 ThotBool before, int point_number)
 {
   PtrPathSeg pPa;
@@ -3567,13 +3572,19 @@ static void InsertPoint (Document doc, Element el,
       if(!before)
 	point_number++;
       TtaAddPointInPolyline (el, point_number, UnPixel, 1, 1, doc, TRUE);
+      return TRUE;
     }
   else if(((PtrElement) el)->ElLeafType == LtPath)
     {
       pPa = ((PtrElement)el)->ElFirstPathSeg;
       getPathSegment(&pPa, point_number, before);
-      TtaSplitPathSeg ((void *)pPa, doc, el);
+      if(pPa)
+	{
+	TtaSplitPathSeg ((void *)pPa, doc, el);
+	return TRUE;
+	}
     }
+  return FALSE;
 }
 
 /* ----------------------------------------------------------------------
@@ -3599,6 +3610,8 @@ void TtaInsertAnyElement (Document document, ThotBool before)
   PtrSSchema      pSS;
   ThotBool        isList, optional, histOpen;;
   NotifyElement   notifyEl;
+
+  ThotBool newPointCreated;
 
   UserErrorCode = 0;
   if (document < 1 || document > MAX_DOCUMENTS)
@@ -3642,8 +3655,12 @@ void TtaInsertAnyElement (Document document, ThotBool before)
 	  firstSel->ElLeafType == LtPath)
 	 && firstChar >= 1)
 	{
-	  /* Insert a point in a polyline/path */
-	  InsertPoint (document, (Element)firstSel, before, firstChar);
+	  newPointCreated = InsertPoint (document,
+					 (Element)firstSel, before, firstChar);
+	  /* Update the attribute */
+	  if(newPointCreated)
+	    UpdatePointsOrPathAttribute(document,
+					TtaGetParent((Element)firstSel), 0, 0);
 	  return;
 	}
 
