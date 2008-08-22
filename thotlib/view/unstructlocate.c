@@ -286,8 +286,9 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                        pAb->AbEnclosing->AbBox->BxType == BoColumn))
                     {
 #ifdef _GL
-		      /*                      if (bx <= x && bx + pBox->BxClipW >= x &&
-					      by <= y && by + pBox->BxClipH >= y)*/
+		      if(pAb->AbLeafType == LtPath ||
+		      (bx <= x && bx + pBox->BxClipW >= x &&
+		       by <= y && by + pBox->BxClipH >= y))
 #endif  /* _GL */
                         {
                           if (pAb->AbLeafType == LtPicture &&
