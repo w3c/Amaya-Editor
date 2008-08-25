@@ -1176,6 +1176,8 @@ char *UpdateDocumentCharset (Document doc)
           TtaSetStructureChecking (oldStructureChecking, doc);
         }
     }
+  else if (charset == UNDEFINED_CHARSET)
+     strcat (charsetname, TtaGetEnvString ("DOCUMENT_CHARSET"));
   return charsetname;
 }
 

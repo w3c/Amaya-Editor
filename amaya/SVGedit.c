@@ -1814,7 +1814,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
   Document          tmpDoc;
-  Element           svgAncestor, svgCanvas;
+  Element           svgAncestor, svgCanvas, root;
   Element	          first, newEl, sibling, selEl, next;
   Element           child, parent, elem, switch_, foreignObj, altText, leaf;
   ElementType       elType, selType, newType, childType;
@@ -1824,22 +1824,17 @@ void CreateGraphicElement (Document doc, View view, int entry)
   DisplayMode       dispMode;
   Language          lang;
   int		            c1, i, dir, svgDir;
-  int               docModified;
+  int               docModified, error;
+  int               x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
+  int               tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
+  unsigned short    red, green, blue;
+  _ParserData       context;
+  char              buffer[500], buffer2[200];
+  char              stroke_color[10], fill_color[10];
   ThotBool	        found, newSVG = FALSE, replaceGraph = FALSE;
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
-  ThotBool          isFilled, isFormattedView, closed;
-    
-  int x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
-  int tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
-  unsigned short      red, green, blue;
-
-  _ParserData context;
-
-  int error;
-
-  char buffer[500], buffer2[200];
-  char stroke_color[10], fill_color[10];
+  ThotBool          isFilled, isFormattedView, closed;   
 
   /* Check that a document is selected */
   if (doc == 0)
@@ -1847,9 +1842,15 @@ void CreateGraphicElement (Document doc, View view, int entry)
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
       return;
     }
-
+  if (DocumentMeta[doc] && !DocumentMeta[doc]->xmlformat)
+    {
+      // the document becomes a XML document
+      DocumentMeta[doc]->xmlformat = TRUE;
+      root = TtaGetRootElement (doc);
+      TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+      DocumentMeta[doc]->compound = TRUE;
+    }
   context.doc = doc;
-
   /* Check that whether we are in formatted or strutured view. */
   if (view == 1)
     isFormattedView = TRUE;
