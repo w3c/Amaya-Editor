@@ -1803,6 +1803,62 @@ void HighlightVisibleAncestor (PtrElement pEl)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void DecorationAfterSeletion (ThotBool withPath)
+{
+#ifdef _WX
+  AmayaParams         p;
+  PtrAbstractBox      pAb = NULL;
+  PtrElement          pEl;
+  int                 doc;
+  int                 size, family, val;
+  TypeUnit            unit;
+
+  if (SelectedDocument == NULL && DocSelectedAttr == NULL)
+    return;
+
+  if (SelectedDocument)
+    {
+      doc = IdentDocument (SelectedDocument);
+      pEl = FirstSelectedElement;
+    }
+  else
+    {
+      doc = IdentDocument (DocSelectedAttr);
+      pEl = AbsBoxSelectedAttr->AbElement;
+    }
+
+  if (pEl && pEl->ElStructSchema &&
+      strcmp (pEl->ElStructSchema->SsName, "TextFile"))
+    {
+      // update the current font
+      TtaGiveBoxFontInfo ((Element)pEl, doc, 1,
+                          &size, &unit, &family);
+      pAb = AbsBoxOfEl (pEl, 1);
+     if (size > 0 && pAb)
+        {
+          if (unit == UnPoint)
+            Current_FontSize = size;
+          else
+            {
+              if (unit != UnPixel)
+                val = PixelValue (size, unit, pAb, 0);
+              else
+                val = size;
+              Current_FontSize = LogicalValue (size, UnPoint, pAb, 0);
+            }
+        }
+      Current_FontFamily = family;
+      p.param1 = doc;
+      TtaSendDataToPanel (WXAMAYA_PANEL_STYLE, p );
+    }
+  if (withPath)
+    // update the status bar
+    TtaSetStatusSelectedElement (doc, 1, (Element) pEl);
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
   SelectStringInAttr
   The new current selection is now the character string contained
   in the text buffer of abstract box pAb, starting at rank firstChar
@@ -1868,52 +1924,11 @@ void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
         (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
         (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
-    }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static void DecorationAfterSeletion (ThotBool withPath)
-{
 #ifdef _WX
-  AmayaParams         p;
-  PtrAbstractBox      pAb = NULL;
-  int                 doc;
-  int                 size, family, val;
-  TypeUnit            unit;
-
-  if (SelectedDocument == NULL)
-    return;
-
-  doc = IdentDocument (SelectedDocument);
-  if (FirstSelectedElement && FirstSelectedElement->ElStructSchema &&
-      strcmp (FirstSelectedElement->ElStructSchema->SsName, "TextFile"))
-    {
-      // update the current font
-      TtaGiveBoxFontInfo ((Element)FirstSelectedElement, doc, 1,
-                          &size, &unit, &family);
-      pAb = AbsBoxOfEl (FirstSelectedElement, 1);
-     if (size > 0 && pAb)
-        {
-          if (unit == UnPoint)
-            Current_FontSize = size;
-          else
-            {
-              if (unit != UnPixel)
-                val = PixelValue (size, unit, pAb, 0);
-              else
-                val = size;
-              Current_FontSize = LogicalValue (size, UnPoint, pAb, 0);
-            }
-        }
-      Current_FontFamily = family;
-      p.param1 = doc;
-      TtaSendDataToPanel (WXAMAYA_PANEL_STYLE, p );
-    }
-  if (withPath)
-    // update the status bar
-    TtaSetStatusSelectedElement (doc, 1, (Element) FirstSelectedElement);
+          // update the status bar and style panel
+          DecorationAfterSeletion (TRUE);
 #endif /* _WX */
+    }
 }
 
 /*----------------------------------------------------------------------
