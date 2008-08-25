@@ -2554,6 +2554,24 @@ ThotBool TtaDeletePointInCurve (Document doc, Element el,
 		{
 		  pPaNext->XStart = pPaPrevious->XEnd;
 		  pPaNext->YStart = pPaPrevious->YEnd;
+
+		  if((pPaNext->PaShape == PtCubicBezier ||
+		      pPaNext->PaShape == PtQuadraticBezier) &&
+		     (pPa->PaShape == PtCubicBezier || 
+		      pPa->PaShape == PtQuadraticBezier))
+		    {
+		      pPaNext->XCtrlStart = pPaNext->XStart +
+			(pPa->XCtrlStart - pPa->XStart);
+		      pPaNext->YCtrlStart = pPaNext->YStart +
+			(pPa->YCtrlStart - pPa->YStart);
+
+		      if(pPaNext->PaShape == PtQuadraticBezier)
+			{
+			  pPaNext->XCtrlEnd = pPaNext->XCtrlStart;
+			  pPaNext->YCtrlEnd = pPaNext->YCtrlStart;
+			}
+		    }
+	    
 		}
 	      else
 		pPaNext->PaNewSubpath = TRUE;
