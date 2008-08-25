@@ -105,6 +105,8 @@ static ThotBool     NewInsert;
 #include "glwindowdisplay.h"
 #endif /*_GL*/
 
+extern int SelectedPointInPolyline;
+
 /*----------------------------------------------------------------------
   TtaIsTextInserting returns the TextInserting status
   ----------------------------------------------------------------------*/
@@ -2493,6 +2495,7 @@ ThotBool ContentEditing (int editType)
   ThotBool            still, ok, textPasted;
   ThotBool            defaultWidth, defaultHeight;
   ThotBool            show, graphEdit, open, selNext = FALSE;
+  ThotBool            pointDeleted;
 
   pCell = NULL;
   textPasted = FALSE;
@@ -2580,11 +2583,14 @@ ThotBool ContentEditing (int editType)
             }
         }
 
-      /****************************************************/
-      /* A specific treatment for polyline/path - F.Wang
+      pFrame = &ViewFrameTable[frame - 1];
+      doc = FrameTable[frame].FrDoc;
+      pDoc = LoadedDocument[doc - 1];
+      if (pDoc == NULL)
+        return selNext;
 
-	 For the moment, it's only to prevent crashes with
-	 some commands */
+      /****************************************************/
+      /* A specific treatment for polyline/path - F.Wang */
       if(FirstSelectedElement &&
 	 FirstSelectedElement == LastSelectedElement &&
 	 FirstSelectedElement->ElTerminal)
@@ -2593,8 +2599,18 @@ ThotBool ContentEditing (int editType)
 	    {
 	      if(editType == TEXT_DEL)
 		{
-		  TtaDisplayMessage(CONFIRM, "Not available yet... :-(");
-		  /* TODO: removing a point in a path */
+		  if(SelectedPointInPolyline >= 1 &&
+		     FirstSelectedElement->ElVolume > 1)
+		    {
+			  pointDeleted = TtaDeletePointInCurve (doc,
+								(Element)FirstSelectedElement,
+								SelectedPointInPolyline);
+			  /* Update the attribute */
+			  if(pointDeleted)
+			    UpdatePointsOrPathAttribute(doc,
+							TtaGetParent((Element)FirstSelectedElement), 0, 0);
+			  
+		    }
 		  return FALSE;
 		}
 	      else
@@ -2613,11 +2629,6 @@ ThotBool ContentEditing (int editType)
         /* Il faut peut-etre deplacer la selection courante */
         SetInsert (&pAb, &frame, ClipboardType, FALSE);
 
-      pFrame = &ViewFrameTable[frame - 1];
-      doc = FrameTable[frame].FrDoc;
-      pDoc = LoadedDocument[doc - 1];
-      if (pDoc == NULL)
-        return selNext;
       open = !pDoc->DocEditSequence;
       pViewSel = &pFrame->FrSelectionBegin;
       show = (documentDisplayMode[doc - 1] == DisplayImmediately);

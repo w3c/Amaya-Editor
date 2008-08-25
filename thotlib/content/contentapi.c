@@ -2512,22 +2512,70 @@ static void getPathSegment (PtrPathSeg *pPa_, int pointselect,
 ThotBool TtaDeletePointInCurve (Document doc, Element el,
 				int point_number)
 {
-  PtrPathSeg pPa;
+  PtrPathSeg pPa, pPaPrevious = NULL, pPaNext = NULL;
+  PtrElement pElAsc, pEl = (PtrElement) el;
 
-  if(((PtrElement) el)->ElLeafType == LtPolyLine)
+  if(pEl == NULL)
+    return FALSE;
+
+  if(pEl->ElLeafType == LtPolyLine)
     {
       TtaDeletePointInPolyline (el, point_number, doc);
       return TRUE;
     }
-  else if(((PtrElement) el)->ElLeafType == LtPath)
+  else if(pEl->ElLeafType == LtPath)
     {
-      pPa = ((PtrElement)el)->ElFirstPathSeg;
+      pPa = pEl->ElFirstPathSeg;
       getPathSegment(&pPa, point_number, TRUE);
       if(pPa)
 	{
-	  /* TODO */
+	  /* we want to delete the first segment */
+	  if(pPa == pEl->ElFirstPathSeg)
+	    pEl->ElFirstPathSeg = pPa->PaNext;
+
+	  /* Remove the references to pPa */
+	  if(pPa->PaPrevious)
+	    pPa->PaPrevious->PaNext = pPa->PaNext;
+
+	  if(pPa->PaNext)
+	    pPa->PaNext->PaPrevious = pPa->PaPrevious;
+
+	  /* Check if the previous/next segment are in the same subpath */
+	  if(pPa->PaPrevious && !(pPa->PaNewSubpath))
+	    pPaPrevious = pPa->PaPrevious;
+
+	  if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+	     pPaNext = pPa->PaNext;
+
+	  /* Update points and handles */
+	  if(pPaNext)
+	    {
+	      if(pPaPrevious)
+		{
+		  pPaNext->XStart = pPaPrevious->XEnd;
+		  pPaNext->YStart = pPaPrevious->YEnd;
+		}
+	      else
+		pPaNext->PaNewSubpath = TRUE;
+	    }
+
+	  /* Remove the segment containing the point */
+	  FreePathSeg (pPa);
+
+	  /* Updates the volumes of ancestors */
+	  pElAsc = (PtrElement) el;
+	  while (pElAsc != NULL)
+	    {
+	      pElAsc->ElVolume--;
+	      pElAsc = pElAsc->ElParent;
+	    }
+#ifndef NODISPLAY
+	  RedisplayLeaf ((PtrElement) el, doc, 1);
+#endif
+	  
 	  return TRUE;
 	}
+
     }
   return FALSE;
 }
