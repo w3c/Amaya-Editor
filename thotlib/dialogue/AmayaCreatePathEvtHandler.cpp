@@ -286,7 +286,7 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 
   if(event.ShiftDown())
     {
-      if(*created && (shape == 5 || shape == 6))
+      if(nb_points >= 2 && (shape == 5 || shape == 6))
 	ApproximateAngleOfLine(15, lastX1, lastY1, &currentX, &currentY);
     }
 
