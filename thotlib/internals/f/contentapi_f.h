@@ -95,7 +95,6 @@ extern PathSegment TtaNewPathSegQuadratic ( int xstart,
                                             int xctrl,
                                             int yctrl,
                                             ThotBool newSubpath );
-extern void TtaQuadraticToCubicPathSeg ( PtrPathSeg pPa );
 extern PathSegment TtaNewPathSegArc ( int xstart,
                                       int ystart,
                                       int xend,
@@ -106,6 +105,10 @@ extern PathSegment TtaNewPathSegArc ( int xstart,
                                       ThotBool largearc,
                                       ThotBool sweep,
                                       ThotBool newSubpath );
+extern void TtaQuadraticToCubicPathSeg ( void *quadratic_segment );
+extern void TtaSplitPathSeg ( void *segment,
+                              Document doc,
+                              Element el );
 extern void TtaAppendPathSeg ( Element element,
                                PathSegment segment,
                                Document document );
@@ -131,6 +134,13 @@ extern void TtaSetStopColorGradient ( unsigned short red,
                                       Element el );
 extern void TtaSetStopOffsetColorGradient ( float offset,
                                             Element el );
+extern ThotBool TtaDeletePointInCurve ( Document doc,
+                                        Element el,
+                                        int point_number );
+extern ThotBool TtaInsertPointInCurve ( Document doc,
+                                        Element el,
+                                        ThotBool before,
+                                        int point_number );
 extern void TtaAppendTransform ( Element element,
                                  void *transform,
                                  Document document );
@@ -243,8 +253,6 @@ extern void TtaGivePolylinePoint ( Element element,
                                    int *y );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
-extern ThotBool PathIsPolygon ( PtrPathSeg pPa,
-                                int nbPoints );
 extern ThotBool CheckGeometricProperties ( Document doc,
                                            Element leaf,
                                            int *width,
@@ -343,7 +351,6 @@ extern PathSegment TtaNewPathSegQuadratic ( int xstart,
                                               int xctrl,
                                               int yctrl,
                                               ThotBool newSubpath );
-extern void TtaQuadraticToCubicPathSeg ( PtrPathSeg pPa );
 extern PathSegment TtaNewPathSegArc ( int xstart,
                                         int ystart,
                                         int xend,
@@ -354,6 +361,10 @@ extern PathSegment TtaNewPathSegArc ( int xstart,
                                         ThotBool largearc,
                                         ThotBool sweep,
                                         ThotBool newSubpath );
+extern void TtaQuadraticToCubicPathSeg ( void *quadratic_segment );
+extern void TtaSplitPathSeg ( void *segment,
+                                Document doc,
+                                Element el );
 extern void TtaAppendPathSeg ( Element element,
                                  PathSegment segment,
                                  Document document );
@@ -379,6 +390,13 @@ extern void TtaSetStopColorGradient ( unsigned short red,
                                         Element el );
 extern void TtaSetStopOffsetColorGradient ( float offset,
                                               Element el );
+extern ThotBool TtaDeletePointInCurve ( Document doc,
+                                          Element el,
+                                          int point_number );
+extern ThotBool TtaInsertPointInCurve ( Document doc,
+                                          Element el,
+                                          ThotBool before,
+                                          int point_number );
 extern void TtaAppendTransform ( Element element,
                                    void *transform,
                                    Document document );
@@ -491,8 +509,6 @@ extern void TtaGivePolylinePoint ( Element element,
                                      int *y );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
-extern ThotBool PathIsPolygon ( PtrPathSeg pPa,
-                                  int nbPoints );
 extern ThotBool CheckGeometricProperties ( Document doc,
                                              Element leaf,
                                              int *width,

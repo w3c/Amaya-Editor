@@ -729,6 +729,10 @@ extern ThotBool CheckGeometricProperties(Document doc, Element leaf,
 
 extern void TtaQuadraticToCubicPathSeg (void *quadratic_segment);
 extern void TtaSplitPathSeg (void *segment, Document doc, Element el);
+extern ThotBool TtaInsertPointInCurve (Document doc, Element el,
+				       ThotBool before, int point_number);
+extern ThotBool TtaDeletePointInCurve (Document doc, Element el,
+				       int point_number);
 #endif /* __CEXTRACT__ */
 
 #endif

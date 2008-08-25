@@ -2409,6 +2409,156 @@ void TtaSetStopOffsetColorGradient (float offset, Element el)
 }
 
 
+/* ----------------------------------------------------------------------
+   getPathSegment
+   ---------------------------------------------------------------------- */
+static void getPathSegment (PtrPathSeg *pPa_, int pointselect,
+			    ThotBool before)
+{
+  PtrPathSeg  pPa, pPaStart;
+  int i = 1;
+
+  pPa = *pPa_;
+  *pPa_ = NULL;
+  if(pointselect == 0)
+    return;
+
+  while (pPa)
+    {
+      if ((pPa->PaNewSubpath || !pPa->PaPrevious))
+	{
+	  /* this path segment starts a new subpath */
+	  pPaStart = pPa;
+	  
+	  if(pointselect == i || /* Current point selected */
+	     
+	     (pointselect == i+1 && /* Next control point selected*/
+	      (pPa->PaShape == PtCubicBezier ||
+	       pPa->PaShape == PtQuadraticBezier))
+	     )
+	    {
+	      /* draw the start point of this path segment */
+	      if(before)
+		{
+		/* check whether the subpath is closed */
+		  while(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		    pPa = pPa->PaNext;
+		  
+		  if(pPaStart->XStart == pPa->XEnd &&
+		     pPaStart->YStart == pPa->YEnd)
+		    *pPa_ = pPa;
+		  else
+		    *pPa_ = NULL;
+		}
+	      else
+		*pPa_ = pPa;
+		
+	      return;
+	    }
+	  i++;
+	}
+
+      if(pPa->PaShape == PtCubicBezier ||
+	 pPa->PaShape == PtQuadraticBezier)
+	{
+	  /* Skip Bezier handles */
+	  i+=2;
+	}
+
+      if(pointselect == i || /* Current point selected */
+
+	 (pointselect == i-1 && /* Previous control point selected*/
+	  (pPa->PaShape == PtCubicBezier ||
+	   pPa->PaShape == PtQuadraticBezier)) ||
+
+	 (pointselect == i+1 && /* Next control point selected */
+	  pPa->PaNext && !(pPa->PaNext->PaNewSubpath)
+	  && (pPa->PaNext->PaShape == PtCubicBezier ||
+	      pPa->PaNext->PaShape == PtQuadraticBezier)  )
+	 )
+	{
+	/* Draw the end point of the path segment */
+	  if(before)
+	    *pPa_ = pPa;
+	  else 
+	    {
+	      if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		*pPa_ = pPa->PaNext;
+	      else
+		{
+		/* check whether the subpath is closed */
+		  if(pPaStart->XStart == pPa->XEnd &&
+		     pPaStart->YStart == pPa->YEnd)
+		    *pPa_ = pPaStart;
+		  else
+		    *pPa_ = NULL;
+		}
+	    
+	    }
+
+	  return; 
+	}
+	
+      pPa = pPa->PaNext;
+      i++;
+    }
+  return;
+ }
+
+
+/* ----------------------------------------------------------------------
+   TtaDeletePointInCurve
+   ---------------------------------------------------------------------- */
+ThotBool TtaDeletePointInCurve (Document doc, Element el,
+				int point_number)
+{
+  PtrPathSeg pPa;
+
+  if(((PtrElement) el)->ElLeafType == LtPolyLine)
+    {
+      TtaDeletePointInPolyline (el, point_number, doc);
+      return TRUE;
+    }
+  else if(((PtrElement) el)->ElLeafType == LtPath)
+    {
+      pPa = ((PtrElement)el)->ElFirstPathSeg;
+      getPathSegment(&pPa, point_number, TRUE);
+      if(pPa)
+	{
+	  /* TODO */
+	  return TRUE;
+	}
+    }
+  return FALSE;
+}
+
+/* ----------------------------------------------------------------------
+   TtaInsertPointInCurve
+   ---------------------------------------------------------------------- */
+ThotBool TtaInsertPointInCurve (Document doc, Element el,
+				ThotBool before, int point_number)
+{
+  PtrPathSeg pPa;
+
+  if(((PtrElement) el)->ElLeafType == LtPolyLine)
+    {
+      if(!before)
+	point_number++;
+      TtaAddPointInPolyline (el, point_number, UnPixel, 1, 1, doc, TRUE);
+      return TRUE;
+    }
+  else if(((PtrElement) el)->ElLeafType == LtPath)
+    {
+      pPa = ((PtrElement)el)->ElFirstPathSeg;
+      getPathSegment(&pPa, point_number, before);
+      if(pPa)
+	{
+	TtaSplitPathSeg ((void *)pPa, doc, el);
+	return TRUE;
+	}
+    }
+  return FALSE;
+}
 
 /*----------------------------------------------------------------------
   TtaAppendTransform
