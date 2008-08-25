@@ -267,7 +267,12 @@ void  EllipticSplit2 (int frame, int x, int y,
   double   x3, y3, theta, deltatheta, inveangle, thetabegin;
 
   if (xradius == 0 || yradius == 0)
+    {
+      MeshNewPoint ((double) x1, (double) y1, mesh); 
+      MeshNewPoint ((double) x2, (double) y2, mesh); 
       return;
+    }
+
   xradius = (xradius<0)? fabs (xradius):xradius;
   yradius = (yradius<0)? fabs (yradius):yradius;
   
@@ -344,6 +349,11 @@ void  EllipticSplit2 (int frame, int x, int y,
   ythetaprim = (double) (-yprim - cyprim) / yradius;
   inveangle =  (double) (xtheta*xthetaprim + ytheta*ythetaprim) /  
     (double) (sqrt (P2 (xtheta) + P2 (ytheta))* sqrt (P2 (xthetaprim) + P2 (ythetaprim)) );
+
+  /* I add this to be sure that inveangle is in [-1; 1] - F. Wang */
+  if(inveangle < -1)inveangle = -1;
+  else if(inveangle > 1)inveangle = 1;
+
   cprim = ( xtheta*ythetaprim - ytheta*xthetaprim < 0) ? -1 : 1;
   deltatheta = fmod (cprim * DACOS (inveangle), M_PI_DOUBLE);
   if (sweep && deltatheta < 0)
@@ -475,7 +485,11 @@ void  EllipticSplit (int frame, int x, int y,
     thetabegin;
 
   if (xradius == 0 || yradius == 0)
+    {
+      PolyNewPoint (x1, y1, points, npoints, maxpoints); 
+      PolyNewPoint (x2, y2, points, npoints, maxpoints); 
       return;
+    }
   xradius = (xradius<0)? fabs (xradius):xradius;
   yradius = (yradius<0)? fabs (yradius):yradius;
   
@@ -553,6 +567,11 @@ void  EllipticSplit (int frame, int x, int y,
   ythetaprim = (double) (-yprim - cyprim) / yradius;
   inveangle =  (double) (xtheta*xthetaprim + ytheta*ythetaprim) /  
     (double) (sqrt (P2 (xtheta) + P2 (ytheta))* sqrt (P2 (xthetaprim) + P2 (ythetaprim)) );
+
+  /* I add this to be sure that inveangle is in [-1; 1] - F. Wang */
+  if(inveangle < -1)inveangle = -1;
+  else if(inveangle > 1)inveangle = 1;
+
   cprim = ( xtheta*ythetaprim - ytheta*xthetaprim < 0) ? -1 : 1;
   deltatheta = fmod (cprim * DACOS (inveangle), M_PI_DOUBLE);
   if (sweep && deltatheta < 0)
