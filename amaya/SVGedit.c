@@ -1946,7 +1946,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
                 attr = TtaNewAttribute (attrType);
                 TtaAttachAttribute (svgCanvas, attr, doc);
                 TtaSetAttributeText (attr, SVG_VERSION, svgCanvas, doc);*/
-
+              // set the new Coordinate System
+              TtaSetElCoordinateSystem (svgCanvas);
               attrType.AttrTypeNum = SVG_ATTR_width_;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (svgCanvas, attr, doc);
