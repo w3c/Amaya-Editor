@@ -25,7 +25,6 @@
 #include "boxlocate_f.h"
 #include "geom_f.h"
 #include "font_f.h"
-//#include "content_f.h"
 #include "content.h"
 
 #ifdef _GL
@@ -287,7 +286,7 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 
   if(event.ShiftDown())
     {
-      if(shape == 5 || shape == 6)
+      if(*created && (shape == 5 || shape == 6))
 	ApproximateAngleOfLine(15, lastX1, lastY1, &currentX, &currentY);
     }
 
