@@ -529,6 +529,13 @@ void StyleDlgWX::SetValue (const char *property, const char *value)
       else
         notfound = TRUE;
     }
+  else if (*property == 'z')
+    {
+      if (!strncmp (property, "z-index", 7))
+        SetComboValue (XRCCTRL(*this, "wxID_ZINDEX", wxComboBox), value);
+      else
+        notfound = TRUE;
+    }
   else
     notfound = TRUE;
   if (notfound)
