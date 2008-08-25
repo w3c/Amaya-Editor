@@ -10,6 +10,8 @@
  *
  * Authors: V. Quint (INRIA)
  *          I. Vatton (INRIA) - Polylines
+ *          F. Wang - More operations on transform matrix and paths/polyline,
+ *                    shape recognition.
  *
  */
 #include "thot_gui.h"
@@ -1054,9 +1056,17 @@ void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
 
       if(!addAtEnd)
 	{
-	  /* The next point is at position rank */
-	  nextPoint.XCoord = pBuf->BuPoints[rank].XCoord;
-	  nextPoint.YCoord = pBuf->BuPoints[rank].YCoord;
+	  if(rank < pBuf->BuLength)
+	    {
+	      /* The next point is at position rank */
+	      nextPoint.XCoord = pBuf->BuPoints[rank].XCoord;
+	      nextPoint.YCoord = pBuf->BuPoints[rank].YCoord;
+	    }
+	  else
+	    {
+	      nextPoint.XCoord = pBuf->BuNext->BuPoints[0].XCoord;
+	      nextPoint.YCoord = pBuf->BuNext->BuPoints[0].YCoord;
+	    }
 
 	  if((pBuf == firstBuffer && rank > 2) ||
 	     (pBuf != firstBuffer && rank >= 2))

@@ -10,7 +10,8 @@
  *
  * Authors: V. Quint (INRIA)
  *          I. Vatton (INRIA) - Polylines
- *          F. Wang - Operations on transform matrix, geometric properties
+ *          F. Wang - More operations on transform matrix and paths/polyline,
+ *                    shape recognition.
  */
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -1942,7 +1943,7 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
   int x0, y0, x1, y1, x2, y2, x3, y3;
   PtrElement pElAsc;
   double x1_, y1_, cx, cy, cx_, cy_, rx, ry, theta1, dtheta, f, g;
-  double sinf, cosf, k1, k2, k3, k4;
+  double sinf, cosf, k1, k2, k3, k4, k5;
 
   if(pPa == NULL)
     return;
@@ -2051,8 +2052,10 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
 	      ry *= g;
 	    }
 
+	  k5 = rx*rx*y1_*y1_+ry*ry*x1_*x1_;
+	  if(k5 == 0)return;
 	  k1 = sqrt(fabs((rx*rx*ry*ry - rx*rx*y1_*y1_ - ry*ry*x1_*x1_)
-			 /(rx*rx*y1_*y1_+ry*ry*x1_*x1_)));
+			 /k5));
 
 	  if(pPa->LargeArc == pPa->Sweep)
 	    k1 = -k1;
@@ -2068,12 +2071,23 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
 	  k3 = (-x1_ - cx_)/rx;
 	  k4 = (-y1_ - cy_)/ry;
 
-	  theta1 = acos(k1/
-			sqrt(fabs(k1*k1+k2*k2)));
+	  k5 = sqrt(fabs(k1*k1+k2*k2));
+	  if(k5 == 0)return;
+	  k5 = k1/k5;
+	  if(k5 < -1)k5 = -1;
+	  else if(k5 > 1)k5 = 1;
+
+	  theta1 = acos(k5);
 	  if(k2 < 0)theta1 = - theta1;
 
-	  dtheta = acos((k1*k3+k2*k4)
-			/sqrt(fabs((k1*k1+k2*k2)*(k3*k3+k4*k4))));
+	  k5 = sqrt(fabs((k1*k1+k2*k2)*(k3*k3+k4*k4)));
+	  if(k5 == 0)return;
+
+	  k5 = (k1*k3+k2*k4)/k5;
+	  if(k5 < -1)k5 = -1;
+	  else if(k5 > 1)k5 = 1;
+
+	  dtheta = acos(k5);
 	  if(k1*k4-k3*k2 < 0)dtheta = -dtheta;
 
 	  if(!pPa->Sweep && dtheta > 0)
@@ -4384,6 +4398,7 @@ int TtaGetPageView (Element pageElement)
 #define EPSILON_MAX M_PI/180
 
 /*----------------------------------------------------------------------
+  IsNull
   ----------------------------------------------------------------------*/
 static ThotBool IsNull(double dx1, double dy1)
 {
@@ -4391,6 +4406,7 @@ static ThotBool IsNull(double dx1, double dy1)
 }
 
 /*----------------------------------------------------------------------
+  Norm
   ----------------------------------------------------------------------*/
 static double Norm(double dx1, double dy1)
 {
@@ -4398,9 +4414,10 @@ static double Norm(double dx1, double dy1)
 }
 
 /*----------------------------------------------------------------------
+  UnsignedAngle
   ----------------------------------------------------------------------*/
 static double UnsignedAngle(double dx1, double dy1,
-				double dx2, double dy2)
+			    double dx2, double dy2)
 {
   /*       (dx1) (dx2)
        s = (dy1).(dy2) = r1*r2*cosA
@@ -4426,6 +4443,7 @@ static double UnsignedAngle(double dx1, double dy1,
 }
 
 /*----------------------------------------------------------------------
+  AlmostOrthogonalVectors
   ----------------------------------------------------------------------*/
 static ThotBool AlmostOrthogonalVectors(double dx1, double dy1,
 					double dx2, double dy2)
@@ -4456,6 +4474,7 @@ static ThotBool AlmostColinearVectors(double dx1, double dy1,
 }
 
 /*----------------------------------------------------------------------
+  AlmostEqualAngle
   ----------------------------------------------------------------------*/
 static ThotBool AlmostEqualAngle(double ax, double ay,
 				 double bx, double by,
@@ -4477,6 +4496,7 @@ static ThotBool AlmostEqualAngle(double ax, double ay,
 }
 
 /*----------------------------------------------------------------------
+  CircularPermutationOnTriangle
   ----------------------------------------------------------------------*/
 static void CircularPermutationOnTriangle(int *x1, int *y1,
 					  int *x2, int *y2,
@@ -4500,6 +4520,7 @@ static void CircularPermutationOnTriangle(int *x1, int *y1,
 }
 
 /*----------------------------------------------------------------------
+  CircularPermutationOnQuadrilateral
   ----------------------------------------------------------------------*/
 static void CircularPermutationOnQuadrilateral(int *x1, int *y1,
 					       int *x2, int *y2,
@@ -4516,6 +4537,7 @@ static void CircularPermutationOnQuadrilateral(int *x1, int *y1,
 }
 
 /*----------------------------------------------------------------------
+  IsAcuteAngle
   ----------------------------------------------------------------------*/
 static ThotBool IsAcuteAngle(double x1, double y1, double x2, double y2,
 			     double x3, double y3)
@@ -4524,6 +4546,7 @@ static ThotBool IsAcuteAngle(double x1, double y1, double x2, double y2,
 }
 
 /*----------------------------------------------------------------------
+  GiveIntersectionPoint
   ----------------------------------------------------------------------*/
 static void GiveIntersectionPoint(double x1, double y1, double dx1, double dy1,
 				  double x2, double y2, double dx2, double dy2,
@@ -4580,8 +4603,9 @@ enum shapes
 
 
 /*----------------------------------------------------------------------
+  PathIsPolygon
   ----------------------------------------------------------------------*/
-ThotBool PathIsPolygon(PtrPathSeg pPa, int nbPoints)
+static ThotBool PathIsPolygon(PtrPathSeg pPa, int nbPoints)
 {
   int nb = 0;
   int x0, y0;

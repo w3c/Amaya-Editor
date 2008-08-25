@@ -2463,8 +2463,11 @@ ThotBool AskShapeEdit (Document doc,
 }
 
 /*----------------------------------------------------------------------
-  ContentEditing manages Cut, Paste, Copy, Remvoe, and Insert commands.
+  ContentEditing manages Cut, Paste, Copy, Remove, and Insert commands.
   Return TRUE if a Cut command moved the selection to a next element.
+
+  TEXT_CUT, TEXT_PASTE, TEXT_X_PASTE, TEXT_COPY, TEXT_DEL, TEXT_SUP,
+  TEXT_INSERT.
   ----------------------------------------------------------------------*/
 ThotBool ContentEditing (int editType)
 {
@@ -2576,6 +2579,35 @@ ThotBool ContentEditing (int editType)
                 }
             }
         }
+
+      /****************************************************/
+      /* A specific treatment for polyline/path - F.Wang
+
+	 For the moment, it's only to prevent crashes with
+	 some commands */
+      if(FirstSelectedElement &&
+	 FirstSelectedElement == LastSelectedElement &&
+	 FirstSelectedElement->ElTerminal)
+	{
+	  if(FirstSelectedElement->ElLeafType == LtPath)
+	    {
+	      if(editType == TEXT_DEL)
+		{
+		  TtaDisplayMessage(CONFIRM, "Not available yet... :-(");
+		  /* TODO: removing a point in a path */
+		  return FALSE;
+		}
+	      else
+		  return FALSE;
+	    }
+	  else if(FirstSelectedElement->ElLeafType == LtPolyLine)
+	    {
+	      if(editType != TEXT_DEL)
+		return FALSE;
+	    }
+	}
+      /****************************************************/
+
       /*-- La commande coller concerne le mediateur --*/
       if (editType == TEXT_PASTE && !NewInsert)
         /* Il faut peut-etre deplacer la selection courante */
