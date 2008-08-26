@@ -2421,22 +2421,23 @@ void TtaSetStopOffsetColorGradient (float offset, Element el)
 /* ----------------------------------------------------------------------
    getPathSegment
    ---------------------------------------------------------------------- */
-static void getPathSegment (PtrPathSeg *pPa_, int pointselect,
+static int getPathSegment (PtrPathSeg *pPa_, int pointselect,
 			    ThotBool before)
 {
   PtrPathSeg  pPa, pPaStart;
-  int i = 1;
+  int i = 1, i_start;
 
   pPa = *pPa_;
   *pPa_ = NULL;
   if(pointselect == 0)
-    return;
+    return 0;
 
   while (pPa)
     {
       if ((pPa->PaNewSubpath || !pPa->PaPrevious))
 	{
 	  /* this path segment starts a new subpath */
+	  i_start = i;
 	  pPaStart = pPa;
 	  
 	  if(pointselect == i || /* Current point selected */
@@ -2450,19 +2451,45 @@ static void getPathSegment (PtrPathSeg *pPa_, int pointselect,
 	      if(before)
 		{
 		/* check whether the subpath is closed */
+		  i++;
+
 		  while(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
-		    pPa = pPa->PaNext;
+		    {
+		      if(pPa->PaShape == PtCubicBezier ||
+			 pPa->PaShape == PtQuadraticBezier)
+			{
+			  /* Skip Bezier handles */
+			  i+=2;
+			}
+
+		      pPa = pPa->PaNext;
+		      i++;
+		    }
+
+		  if(pPa->PaShape == PtCubicBezier ||
+		     pPa->PaShape == PtQuadraticBezier)
+		    {
+		      /* Skip Bezier handles */
+		      i+=2;
+		    }
 		  
 		  if(pPaStart->XStart == pPa->XEnd &&
 		     pPaStart->YStart == pPa->YEnd)
-		    *pPa_ = pPa;
+		    {
+		      *pPa_ = pPa;
+		      return i;
+		    }
 		  else
-		    *pPa_ = NULL;
+		    {
+		      *pPa_ = NULL;
+		      return 0;
+		    }
 		}
 	      else
-		*pPa_ = pPa;
-		
-	      return;
+		{
+		  *pPa_ = pPa;
+		  return i;
+		}
 	    }
 	  i++;
 	}
@@ -2488,30 +2515,41 @@ static void getPathSegment (PtrPathSeg *pPa_, int pointselect,
 	{
 	/* Draw the end point of the path segment */
 	  if(before)
-	    *pPa_ = pPa;
+	    {
+	      *pPa_ = pPa;
+	      return i;
+	    }
 	  else 
 	    {
 	      if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
-		*pPa_ = pPa->PaNext;
+		{
+		  *pPa_ = pPa->PaNext;
+		  return (i+1);
+		}
 	      else
 		{
 		/* check whether the subpath is closed */
 		  if(pPaStart->XStart == pPa->XEnd &&
 		     pPaStart->YStart == pPa->YEnd)
-		    *pPa_ = pPaStart;
+		    {
+		      *pPa_ = pPaStart;
+		      return i_start;
+		    }
 		  else
-		    *pPa_ = NULL;
+		    {
+		      *pPa_ = NULL;
+		      return 0;
+		    }
 		}
 	    
 	    }
 
-	  return; 
 	}
 	
       pPa = pPa->PaNext;
       i++;
     }
-  return;
+  return 0;
  }
 
 
@@ -2625,7 +2663,7 @@ ThotBool TtaInsertPointInCurve (Document doc, Element el,
   else if(((PtrElement) el)->ElLeafType == LtPath)
     {
       pPa = ((PtrElement)el)->ElFirstPathSeg;
-      getPathSegment(&pPa, p, before);
+      p = getPathSegment(&pPa, p, before);
       if(pPa)
 	{
 	  /* Add a new path segment */
