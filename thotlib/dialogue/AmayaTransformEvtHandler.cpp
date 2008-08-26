@@ -1109,7 +1109,7 @@ void AmayaTransformEvtHandler::DrawScalingArrows()
  *----------------------------------------------------------------------*/
 bool AmayaTransformEvtHandler::IsNear(int x, int y)
 {
-  return (abs(mouse_x - x) + abs(mouse_y - y) <= CURSOR_SIZE);
+  return (abs(mouse_x - x) + abs(mouse_y - y) <= CURSOR_SIZE*1.5);
 }
 
 /*----------------------------------------------------------------------
