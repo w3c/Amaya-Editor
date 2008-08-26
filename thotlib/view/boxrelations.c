@@ -529,12 +529,25 @@ int GetPixelValue (int val, TypeUnit unit, int size, PtrAbstractBox pAb,
 void ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 {
   PtrBox              pBox;
+  int zoom = ViewFrameTable[frame - 1].FrMagnification;
 
   pBox = pAb->AbBox;
   if (horizRef)
-    pBox->BxRx = GetPixelValue (pAb->AbRx, pAb->AbRxUnit, pBox->BxW, pAb, 0);
+    {
+      if(pAb->AbRx == -1)
+	pBox->BxRx = -1;
+      else
+	pBox->BxRx = GetPixelValue (pAb->AbRx, pAb->AbRxUnit,
+				    pBox->BxW, pAb, zoom);
+    }
   else
-    pBox->BxRy = GetPixelValue (pAb->AbRy, pAb->AbRyUnit, pBox->BxH, pAb, 0);
+    {
+      if(pAb->AbRy == -1)
+	pBox->BxRy = -1;
+      else
+	pBox->BxRy = GetPixelValue (pAb->AbRy, pAb->AbRyUnit,
+				    pBox->BxH, pAb, zoom);
+    }
 }
 
 
