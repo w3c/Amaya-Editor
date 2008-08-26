@@ -3452,6 +3452,38 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar,
 }
 
 /*----------------------------------------------------------------------
+  GetParentGroup returns the top enclosing IsGroup element or NULL
+  ----------------------------------------------------------------------*/
+PtrAbstractBox GetParentGroup (PtrAbstractBox pAb)
+{
+  PtrAbstractBox      pParent, pFound = NULL;
+  ThotBool            found;
+
+  /* check parents */
+  found = FALSE;
+  if (pAb == NULL)
+    return NULL;
+  pParent = pAb->AbEnclosing;
+  while (pParent && !found)
+    {
+      if (pParent->AbElement &&
+          TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
+                            pParent->AbElement->ElStructSchema))
+        {
+          found = TRUE;
+          while (pParent)
+            {
+              pFound = pParent;
+              pParent = GetParentGroup (pParent);
+            }
+        }
+      else
+        pParent = pParent->AbEnclosing;
+    }
+  return (pFound);
+}
+
+/*----------------------------------------------------------------------
   ChangeSelection
   The user wants to make a new selection or an extension to the current
   selection, according to parameter extension.
@@ -3474,6 +3506,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   PtrSSchema          pSS;
   PtrElement          pEl, pParent;
   PtrAttribute        pAttr;
+  PtrAbstractBox      pGroup;
   NotifyElement       notifyEl;
   Document            doc;
   int                 view;
@@ -3481,40 +3514,47 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   ThotBool            graphSel, result;
 
   pEl = NULL;
+  result = FALSE;
+  if (pAb == NULL || pAb->AbElement == NULL)
+    return result;
   /* search the document and the view corresponding to the window */
   GetDocAndView (frame, &pDoc, &view);
   doc = IdentDocument (pDoc);
   /* by default Thot applies its editing changes */
-  result = FALSE;
-  if (doubleClick && pAb)
+  if (doubleClick)
     {
+      /* send event TteElemActivate.Pre to the application */
       pEl = pAb->AbElement;
-      if (pEl)
+      notifyEl.event = TteElemActivate;
+      notifyEl.document = doc;
+      notifyEl.element = (Element) pEl;
+      notifyEl.info = 0; /* not sent by undo */
+      notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+      notifyEl.position = 0;
+      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+        /* the application asks Thot to do nothing */
+        return TRUE;
+      if (pEl->ElHolophrast)
         {
-          /* send event TteElemActivate.Pre to the application */
-          notifyEl.event = TteElemActivate;
-          notifyEl.document = doc;
-          notifyEl.element = (Element) pEl;
-          notifyEl.info = 0; /* not sent by undo */
-          notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-          notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-          notifyEl.position = 0;
-          if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-            /* the application asks Thot to do nothing */
-            return TRUE;
-          if (pEl->ElHolophrast)
-            {
-              /* avoid to rebuild menus. It will be done by */
-              /* SelectElement */
-              SelectedDocument = NULL;
-              /* switch off the previous selection */
-              CancelSelection ();
-              DeHolophrast (pEl, pDoc);
-              SelectElementWithEvent (pDoc, pEl, TRUE, FALSE);
-              return result;
-            }
+          /* avoid to rebuild menus. It will be done by */
+          /* SelectElement */
+          SelectedDocument = NULL;
+          /* switch off the previous selection */
+          CancelSelection ();
+          DeHolophrast (pEl, pDoc);
+          SelectElementWithEvent (pDoc, pEl, TRUE, FALSE);
+          return result;
         }
     }
+  else if (view == 1)
+    {
+      // do we have to move the selection to an emclosing SVG group
+      pGroup = GetParentGroup (pAb);
+      if (pGroup)
+        pAb = pGroup;
+    }
+  pEl = pAb->AbElement;
 
   error = FALSE;
   doubleClickRef = FALSE;
@@ -3762,7 +3802,6 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
             /* attribute value */
             {
               CancelSelection ();
-              /*if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)*/
               SelectStringInAttr (pDoc, pAb, rank, rank, FALSE);
               FixedChar = rank;
             }

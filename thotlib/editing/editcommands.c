@@ -2095,16 +2095,13 @@ ThotBool AskShapePoints (Document doc,
   Ask the user the position and size of the surrounding box or the extremities
   of a line.
   --------------------------------------------------------------------*/
-ThotBool AskSurroundingBox(
-		       Document doc,
-		       Element svgAncestor,
-		       Element svgCanvas,
-		       int shape,
-		       int *x1, int *y1,
-		       int *x2, int *y2,
-		       int *x3, int *y3,
-		       int *x4, int *y4,
-		       int *lx, int *ly)
+ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
+                            Element svgCanvas, int shape,
+                            int *x1, int *y1,
+                            int *x2, int *y2,
+                            int *x3, int *y3,
+                            int *x4, int *y4,
+                            int *lx, int *ly)
 {
   PtrAbstractBox pAb;
   PtrBox pBox;
@@ -2115,18 +2112,15 @@ ThotBool AskSurroundingBox(
   ThotBool created = FALSE;
 
   frame = ActiveFrame;
-
-  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return FALSE;
+  if (frame <= 0 || svgCanvas == NULL || svgAncestor == NULL)
+    return FALSE;
 
   *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = *x4 = *y4 = *lx = * ly = 0;
-  
   /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
 
   if(CTM == NULL)
-    {
-      inverse = NULL;
-    }
+    inverse = NULL;
   else
     {
       /* Get the inverse of the CTM and free the CTM */
@@ -2134,12 +2128,11 @@ ThotBool AskSurroundingBox(
       TtaFreeTransform(CTM);
 
       if(inverse == NULL)
-	/* Transform not inversible */
-	return FALSE;
+        /* Transform not inversible */
+        return FALSE;
     }
 
   pFrame = &ViewFrameTable[frame - 1];
-
   /* Get the size of the SVG Canvas */
   TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
 
@@ -2153,17 +2146,16 @@ ThotBool AskSurroundingBox(
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
   
   /* Call the interactive module */
-  created = ShapeCreation (frame,
-			   doc,
-			   (void *)inverse,
-			   ancestorX, ancestorY,
-			   canvasWidth, canvasHeight,
-			   shape,
-			   x1, y1,
-			   x2, y2,
-			   x3, y3,
-			   x4, y4,
-			   lx, ly);
+  created = ShapeCreation (frame, doc,
+                           (void *)inverse,
+                           ancestorX, ancestorY,
+                           canvasWidth, canvasHeight,
+                           shape,
+                           x1, y1,
+                           x2, y2,
+                           x3, y3,
+                           x4, y4,
+                           lx, ly);
 
   /* Free the inverse of the CTM */
   if(inverse != NULL)
@@ -2175,13 +2167,10 @@ ThotBool AskSurroundingBox(
 /*----------------------------------------------------------------------
   AskTransform
   --------------------------------------------------------------------*/
-ThotBool AskTransform(Document doc,
-		      Element svgAncestor,
-		      Element svgCanvas,
-		      int transform_type, Element el)
+ThotBool AskTransform (Document doc, Element svgAncestor,
+                       Element svgCanvas,
+                       int transform_type, Element el)
 {
-
-
   PtrAbstractBox pAb;
   PtrBox pBox;
   ViewFrame          *pFrame;
@@ -2191,11 +2180,11 @@ ThotBool AskTransform(Document doc,
   ThotBool transformApplied;
 
   frame = ActiveFrame;
-
-  if(frame <= 0)return FALSE;
+  if(frame <= 0)
+    return FALSE;
 
   /* The svgCanvas and ancestor are not explicitly given */
-  if(svgCanvas == NULL || svgAncestor == NULL)
+  if (svgCanvas == NULL || svgAncestor == NULL)
     {
       if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
 	/* Can not find the <svg> elements */
@@ -2260,7 +2249,6 @@ ThotBool AskTransform(Document doc,
 ThotBool AskPathEdit (Document doc,
 		      int edit_type, Element el, int point)
 {
-
   Element svgCanvas = NULL, svgAncestor = NULL, el2;
   PtrAbstractBox pAb;
   PtrBox pBox;
