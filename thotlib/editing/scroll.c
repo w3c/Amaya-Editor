@@ -688,8 +688,20 @@ ThotBool IsScrolled (int frame, int selection)
   pBo1 = pFrame->FrSelectionBegin.VsBox;
   if (pBo1 == NULL)
     return TRUE;
-  x = pBo1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
-  y = pBo1->BxYOrg;
+
+#ifdef _GL
+          if (pBo1->BxBoundinBoxComputed)
+            {
+              x = pBo1->BxClipX + pFrame->FrXOrg;
+              y = pBo1->BxClipY + pFrame->FrYOrg;
+            }
+          else
+#endif /* _GL*/
+            {
+	      x = pBo1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
+	      y = pBo1->BxYOrg;
+            }
+
   h = pBo1->BxHeight;
   GetSizesFrame (frame, &dx, &dy);
   xmin = pFrame->FrXOrg;
