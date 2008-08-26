@@ -3463,6 +3463,9 @@ PtrAbstractBox GetParentGroup (PtrAbstractBox pAb)
   found = FALSE;
   if (pAb == NULL)
     return NULL;
+  if (pAb->AbElement == NULL || pAb->AbElement->ElStructSchema == NULL ||
+      strcmp (pAb->AbElement->ElStructSchema->SsName, "SVG"))
+    return NULL;
   pParent = pAb->AbEnclosing;
   while (pParent && !found)
     {

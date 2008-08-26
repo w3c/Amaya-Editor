@@ -1958,7 +1958,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               attrType.AttrTypeNum = SVG_ATTR_height_;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (svgCanvas, attr, doc);
-              TtaSetAttributeText (attr, "200", svgCanvas, doc);
+              TtaSetAttributeText (attr, "300", svgCanvas, doc);
               ParseWidthHeightAttribute (attr, svgCanvas, doc, FALSE);
               // point to this default selection
               selEl = svgCanvas;
@@ -2215,6 +2215,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
           /* Update the title */
           SetElementData(doc, newEl, svgSchema, SVG_EL_title,
                          LastSVGelementTitle);
+          // mark the new Coordinate System
+          TtaSetElCoordinateSystem (newEl);
           TtaFreeMemory(LastSVGelementTitle);
         }
 

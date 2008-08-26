@@ -1266,8 +1266,8 @@ void getboundingbox (int size, float *buffer, int frame,
   
   x = (double) *xorig;
   y = (double) *yorig;
-  w = (double) *xorig + *worig;
-  h = (double) *yorig + *horig;  
+  w = (double) *xorig + 1/**worig*/;
+  h = (double) *yorig + 1/**horig*/;  
   TotalHeight = (double) FrameTable[frame].FrHeight;  
   count = size;
   while (count > 0) 

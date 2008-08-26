@@ -1533,7 +1533,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
   if (clipx != -1)
     pBox->BxClipX = clipx;	  
   if (clipy != -1)
-    pBox->BxClipY = clipy; 
+    pBox->BxClipY = clipy;
   pBox->BxClipW = clipw; 
   pBox->BxClipH = cliph; 
   if (pBox->BxClipW && pBox->BxClipH)

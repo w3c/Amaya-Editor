@@ -1579,6 +1579,10 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           TtaSetElCoordinateSystem (el);
           break;
 
+        case SVG_EL_g:
+          TtaSetElCoordinateSystem (el);
+          break;
+
         case SVG_EL_SVG:
           TtaSetElCoordinateSystem (el);
           /* if the SVG element has a UnresolvedRef attribute, process all

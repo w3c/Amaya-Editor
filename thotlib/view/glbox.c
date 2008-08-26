@@ -774,7 +774,6 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
                           &box->BxClipY,
                           &box->BxClipW,
                           &box->BxClipH);    
-          
           box->BxBoundinBoxComputed = TRUE; 
         }
       else
