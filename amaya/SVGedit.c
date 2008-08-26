@@ -3168,9 +3168,12 @@ void TransformGraphicElement (Document doc, View view, int entry)
   ThotBool         isFormattedView, done = TRUE;
   ThotBool         isDistribution, sortSelection;
   ElementType      elType;
+  SSchema          svgSchema;
 
   /* Check that a document is selected */
   if (doc == 0)return;
+
+  svgSchema = GetSVGSSchema (doc);
 
   /* Check that whether we are in formatted or strutured view. */
   if (view == 1) isFormattedView = TRUE;
@@ -3191,6 +3194,17 @@ void TransformGraphicElement (Document doc, View view, int entry)
   else
     /* no selection */
     return;
+
+  /* If the element is a TEXT_UNIT, get the <text/> ancestor */
+  elType = TtaGetElementType(first);
+  if(elType.ElSSchema == svgSchema &&
+     elType.ElTypeNum == SVG_EL_TEXT_UNIT)
+    {
+      elType.ElTypeNum = SVG_EL_text_;
+      child = TtaGetTypedAncestor(first, elType);
+      if(child != NULL)
+	first = child;
+    }
 
   /* Get the <svg/> ancestor, canvas and check that the first selected 
      element is a child of canvas */
@@ -3275,7 +3289,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
   switch (entry)
     {
     case 11: /* group */
-      elType.ElSSchema = GetSVGSSchema (doc);
+      elType.ElSSchema = svgSchema;
       elType.ElTypeNum = SVG_EL_g;
       group = TtaNewElement (doc, elType);
 

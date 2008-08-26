@@ -224,9 +224,10 @@ static int AmayaPopupDocContextMenu(int doc, int view, int window,
 	  elementType = TtaGetElementType(el);
 	  if(elementType.ElSSchema == svgSchema && view == 1)
 	    {
-	      if(!TtaIsLeaf(elementType))
-		/* Display the SVG transforms the a non-terminal SVG element
-		   is selected */
+	      if(!TtaIsLeaf(elementType) ||
+		 elementType.ElTypeNum == SVG_EL_TEXT_UNIT)
+		/* Display the SVG transforms if a non-terminal SVG element
+		   or a TEXT_UNIT is selected */
 		{
 		  display_item[4] = TRUE;
 		  display_item[5] = TRUE;
