@@ -1942,12 +1942,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
           if (svgCanvas)
             /* a root SVG element was created. Create the required attributes*/
             {
+              // mark the new Coordinate System
+              TtaSetElCoordinateSystem (svgCanvas);
               /*attrType.AttrTypeNum = SVG_ATTR_version;
                 attr = TtaNewAttribute (attrType);
                 TtaAttachAttribute (svgCanvas, attr, doc);
                 TtaSetAttributeText (attr, SVG_VERSION, svgCanvas, doc);*/
-              // set the new Coordinate System
-              TtaSetElCoordinateSystem (svgCanvas);
               attrType.AttrTypeNum = SVG_ATTR_width_;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (svgCanvas, attr, doc);
@@ -1958,7 +1958,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               attrType.AttrTypeNum = SVG_ATTR_height_;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (svgCanvas, attr, doc);
-              TtaSetAttributeText (attr, "500", svgCanvas, doc);
+              TtaSetAttributeText (attr, "200", svgCanvas, doc);
               ParseWidthHeightAttribute (attr, svgCanvas, doc, FALSE);
               // point to this default selection
               selEl = svgCanvas;

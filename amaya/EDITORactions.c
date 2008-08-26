@@ -24,6 +24,7 @@
 #include "undo.h"
 #include "document.h"
 #include "MENUconf.h"
+#include "paneltypes_wx.h"
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"
@@ -857,6 +858,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* Activate show areas */
       if (MapAreas[doc])
         ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
+      TtaRaiseDoctypePanels (WXAMAYA_DOCTYPE_XHTML);
     }
   else if (docType == docMath)
     {
@@ -889,6 +891,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
       UpdateContextSensitiveMenus (doc, 1);
+      TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_MATHML);
     }
   else if (docType == docSVG)
     {
@@ -908,6 +911,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       root = TtaSearchTypedElement (elType, SearchInTree, docEl);
       if (root)
         {
+          // set the new Coordinate System
+          TtaSetElCoordinateSystem (root);
           attrType.AttrTypeNum = SVG_ATTR_version;
           attr = TtaNewAttribute (attrType);
           TtaAttachAttribute (root, attr, doc);
@@ -925,6 +930,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
           if (text && TtaGetTextLength (text) == 0)
             TtaSetTextContent (text, (unsigned char*)"No title", language,doc);
           UpdateTitle (title, doc);
+          TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_SVG);
         }
 
       /* force the XML parsing */
