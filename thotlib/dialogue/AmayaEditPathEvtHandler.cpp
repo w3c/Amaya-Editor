@@ -110,15 +110,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       pFrame->GetCanvas()->CaptureMouse();
     }
 
-  /* Get the box of the SVG element */
-  pAb = ((PtrElement)el) -> ElAbstractBox[0];
-  if(!pAb || !(pAb->AbBox))
-    {
-    finished = true;
-    return;
-    }
-  box = pAb -> AbBox;
-
   /* Get the GRAPHICS leaf */
   leaf = TtaGetLastChild((Element)el);
   if(!leaf)
@@ -126,6 +117,15 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
     finished = true;
     return;
     }
+
+  /* Get the box of the SVG element */
+  pAb = ((PtrElement)leaf) -> ElAbstractBox[0];
+  if(!pAb || !(pAb->AbBox))
+    {
+    finished = true;
+    return;
+    }
+  box = pAb -> AbBox;
 
   if(((PtrElement)leaf)->ElLeafType == LtPolyLine)
     {
@@ -297,6 +297,14 @@ AmayaEditPathEvtHandler::~AmayaEditPathEvtHandler()
       p_canvas->PopEventHandler(false /* do not delete myself */);
       pFrame->GetCanvas()->ReleaseMouse();
     }
+
+#ifdef _GL
+      if (glIsList (box->DisplayList))
+        {
+          glDeleteLists (box->DisplayList, 1);
+          box->DisplayList = 0;
+        }
+#endif /* _GL */
 
 }
 
