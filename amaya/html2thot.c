@@ -5744,6 +5744,11 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
         }
       TtaGZClose (stream);
     }
+
+  // allow RDFa for XHTML documents without doctype
+  if ((*docProfile == L_Xhtml11 || *docProfile == L_Transitional) &&
+      !(*docType))
+    *extraProfile = L_RDFa;
 }
 
 /*----------------------------------------------------------------------
