@@ -202,7 +202,7 @@ extern void TtaSetSymbolCode (Element element, wchar_t code, Document document);
                  or the coefficients that allows to defined this point as a
 		 barycenter.
   ----------------------------------------------------------------------*/
-extern void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
+extern int TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
 				   int x, int y, Document document,
 				   ThotBool IsBarycenter);
 

@@ -41,6 +41,8 @@
 #include "viewapi_f.h"
 #include "svgedit.h"
 
+extern int SelectedPointInPolyline;
+
 /* isomorphism description */
 typedef struct _IsomorphDesc *PtrIsomorphDesc;
 typedef struct _IsomorphDesc
@@ -3559,11 +3561,21 @@ void TtaInsertAnyElement (Document document, ThotBool before)
 	{
 	  newPointCreated = TtaInsertPointInCurve (document,
 						   (Element)firstSel,
-						   before, firstChar);
+						   before, &firstChar);
+
+	  ChangeSelection (TtaGiveActiveFrame(),
+			   firstSel->ElAbstractBox[0],
+			   firstChar, FALSE,
+			   TRUE, FALSE, FALSE);
+	  SelectedPointInPolyline = firstChar;
+
 	  /* Update the attribute */
 	  if(newPointCreated)
+	    {
 	    UpdatePointsOrPathAttribute(document,
 					TtaGetParent((Element)firstSel), 0, 0);
+	    TtaSetDocumentModified(document);
+	    }
 	  return;
 	}
 

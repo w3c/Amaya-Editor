@@ -42,12 +42,12 @@ extern void CopyStringToBuffer ( unsigned char *src,
                                  PtrTextBuffer pDestBuf,
                                  int *length );
 extern void ClearText ( PtrTextBuffer pBuf );
-extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
-                                 int rank,
-                                 int x,
-                                 int y,
-                                 ThotBool IsBarycenter,
-                                 ThotBool IsClosed );
+extern int AddPointInPolyline ( PtrTextBuffer firstBuffer,
+                                int rank,
+                                int x,
+                                int y,
+                                ThotBool IsBarycenter,
+                                ThotBool IsClosed );
 extern void DeletePointInPolyline ( PtrTextBuffer * firstBuffer,
                                     int rank );
 extern void ModifyPointInPolyline ( PtrTextBuffer firstBuffer,
@@ -132,12 +132,12 @@ extern void CopyStringToBuffer ( unsigned char *src,
                                    PtrTextBuffer pDestBuf,
                                    int *length );
 extern void ClearText ( PtrTextBuffer pBuf );
-extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
-                                   int rank,
-                                   int x,
-                                   int y,
-                                   ThotBool IsBarycenter,
-                                   ThotBool IsClosed );
+extern int AddPointInPolyline ( PtrTextBuffer firstBuffer,
+                                  int rank,
+                                  int x,
+                                  int y,
+                                  ThotBool IsBarycenter,
+                                  ThotBool IsClosed );
 extern void DeletePointInPolyline ( PtrTextBuffer * firstBuffer,
                                       int rank );
 extern void ModifyPointInPolyline ( PtrTextBuffer firstBuffer,

@@ -238,8 +238,6 @@ AmayaEditShapeEvtHandler::~AmayaEditShapeEvtHandler()
       pFrame->GetCanvas()->SetCursor( wxNullCursor );
       pFrame->GetCanvas()->ReleaseMouse();
     }
-
-
 }
 
 /*----------------------------------------------------------------------

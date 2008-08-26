@@ -1231,13 +1231,14 @@ static ThotBool PolylineOK (Element element, Document document)
   must be positive or null.
   unit: UnPixel or UnPoint.
   ----------------------------------------------------------------------*/
-void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
+int TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
                             int x, int y, Document document,
 			    ThotBool IsBarycenter)
 {
   PtrTextBuffer       firstBuffer;
   PtrElement          pEl;
   ThotBool IsClosed;
+  int newpos;
 
   if (PolylineOK (element, document))
     {
@@ -1253,8 +1254,14 @@ void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
 	  IsClosed = (pEl->ElPolyLineType == 'p');
           firstBuffer = pEl->ElPolyLineBuffer;
           /* adds the point to the polyline */
-          AddPointInPolyline (firstBuffer, rank, x, y, IsBarycenter, IsClosed);
+          newpos = AddPointInPolyline (firstBuffer, rank, x, y, IsBarycenter, IsClosed);
+
           pEl->ElNPoints++;
+
+	  /* The new pos is at the end */
+	  if(newpos == -1)
+	    newpos = pEl->ElNPoints - 1;
+
           /* Updates the volumes of ancestors */
           pEl = pEl->ElParent;
           while (pEl != NULL)
@@ -1265,8 +1272,10 @@ void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
 #ifndef NODISPLAY
           RedisplayLeaf ((PtrElement) element, document, 1);
 #endif
+	  return newpos;
         }
     }
+  return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -2602,25 +2611,40 @@ ThotBool TtaDeletePointInCurve (Document doc, Element el,
    TtaInsertPointInCurve
    ---------------------------------------------------------------------- */
 ThotBool TtaInsertPointInCurve (Document doc, Element el,
-				ThotBool before, int point_number)
+				ThotBool before, int *point_number)
 {
   PtrPathSeg pPa;
-
+  int p = *point_number;
+  
   if(((PtrElement) el)->ElLeafType == LtPolyLine)
     {
-      if(!before)
-	point_number++;
-      TtaAddPointInPolyline (el, point_number, UnPixel, 1, 1, doc, TRUE);
+      if(!before)p++;
+      *point_number = TtaAddPointInPolyline (el, p, UnPixel, 1, 1, doc, TRUE);
       return TRUE;
     }
   else if(((PtrElement) el)->ElLeafType == LtPath)
     {
       pPa = ((PtrElement)el)->ElFirstPathSeg;
-      getPathSegment(&pPa, point_number, before);
+      getPathSegment(&pPa, p, before);
       if(pPa)
 	{
-	TtaSplitPathSeg ((void *)pPa, doc, el);
-	return TRUE;
+	  /* Add a new path segment */
+	  TtaSplitPathSeg ((void *)pPa, doc, el);
+
+	  /* Update the selected point */
+	  if(!before)
+	    {
+	      if(pPa->PaShape == PtQuadraticBezier ||
+		 pPa->PaShape == PtCubicBezier)
+		/* Skip Bezier handles */
+		p+=3;
+	      else
+		p++;
+	    }
+	  
+	  *point_number = p;
+	  
+	  return TRUE;
 	}
     }
   return FALSE;

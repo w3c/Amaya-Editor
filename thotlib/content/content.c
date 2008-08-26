@@ -858,7 +858,7 @@ void ClearText (PtrTextBuffer pBuf)
   des points de controle de la polyline.                 
   On saute le point 0 (coordonnees du point limite).      
   ----------------------------------------------------------------------*/
-void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
+int AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
 			 ThotBool IsBarycenter, ThotBool IsClosed)
 {
   PtrTextBuffer       pBuf, pNextBuf, pBufEnd;
@@ -869,6 +869,8 @@ void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
 
   PolyLinePoint previousPoint = {0, 0}, nextPoint = {0, 0};
   float coeff1, coeff2;
+
+  int newrank = rank;
 
   if(IsBarycenter)
     {
@@ -921,6 +923,7 @@ void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
                */
 	      addAtEnd = TRUE;
 	      rank = pBufEnd->BuLength + 1;
+	      newrank = -1;
 	      pBuf = pBufEnd;
 	      previousPoint.XCoord = pBufEnd->BuPoints[pBufEnd->BuLength - 1].XCoord;
 	      previousPoint.YCoord = pBufEnd->BuPoints[pBufEnd->BuLength - 1].YCoord;
@@ -1099,6 +1102,8 @@ void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y,
     firstBuffer->BuPoints[0].XCoord = x;
   if (y > firstBuffer->BuPoints[0].YCoord)
     firstBuffer->BuPoints[0].YCoord = y;
+
+  return newrank;
 }
 
 /*----------------------------------------------------------------------

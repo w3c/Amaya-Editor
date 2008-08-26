@@ -44,13 +44,13 @@ extern void TtaSetGraphicsShape ( Element element,
 extern void TtaSetSymbolCode ( Element element,
                                wchar_t code,
                                Document document );
-extern void TtaAddPointInPolyline ( Element element,
-                                    int rank,
-                                    TypeUnit unit,
-                                    int x,
-                                    int y,
-                                    Document document,
-                                    ThotBool IsBarycenter );
+extern int TtaAddPointInPolyline ( Element element,
+                                   int rank,
+                                   TypeUnit unit,
+                                   int x,
+                                   int y,
+                                   Document document,
+                                   ThotBool IsBarycenter );
 extern void TtaDeletePointInPolyline ( Element element,
                                        int rank,
                                        Document document );
@@ -140,7 +140,7 @@ extern ThotBool TtaDeletePointInCurve ( Document doc,
 extern ThotBool TtaInsertPointInCurve ( Document doc,
                                         Element el,
                                         ThotBool before,
-                                        int point_number );
+                                        int *point_number );
 extern void TtaAppendTransform ( Element element,
                                  void *transform,
                                  Document document );
@@ -300,13 +300,13 @@ extern void TtaSetGraphicsShape ( Element element,
 extern void TtaSetSymbolCode ( Element element,
                                  wchar_t code,
                                  Document document );
-extern void TtaAddPointInPolyline ( Element element,
-                                      int rank,
-                                      TypeUnit unit,
-                                      int x,
-                                      int y,
-                                      Document document,
-                                      ThotBool IsBarycenter );
+extern int TtaAddPointInPolyline ( Element element,
+                                     int rank,
+                                     TypeUnit unit,
+                                     int x,
+                                     int y,
+                                     Document document,
+                                     ThotBool IsBarycenter );
 extern void TtaDeletePointInPolyline ( Element element,
                                          int rank,
                                          Document document );
@@ -396,7 +396,7 @@ extern ThotBool TtaDeletePointInCurve ( Document doc,
 extern ThotBool TtaInsertPointInCurve ( Document doc,
                                           Element el,
                                           ThotBool before,
-                                          int point_number );
+                                          int *point_number );
 extern void TtaAppendTransform ( Element element,
                                    void *transform,
                                    Document document );
