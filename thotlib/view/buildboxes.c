@@ -1668,7 +1668,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
   PtrAbstractBox      pChildAb, pFirstAb, pCurrentAb;
   PtrBox              pChildBox, box, pBox;
   PtrElement          pEl;
-  int                 val, x, y;
+  int                 val, x, y, zoom;
   ThotBool            still, hMin, vMin, isExtra;
 
   box = NULL;
@@ -1912,20 +1912,10 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           (pAb->AbHeight.DimAbRef != NULL || pAb->AbHeight.DimValue != 0 ||
            pAb->AbHeight.DimUnit == UnAuto) && *height == 0)
         {
-#ifdef IV
-          if (pAb->AbLeafType == LtCompound && FrameTable[frame].FrView == 1)
-            {
-              // it's a compound element of a formatted view
-              pChildAb = pAb->AbFirstEnclosed;
-              while (pChildAb && (pChildAb->AbPresentationBox || pChildAb->AbDead))
-                pChildAb = pChildAb->AbNext;
-              if (pChildAb)
-                *height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
-              else
-                *height = 2;
-            }
+          zoom = ViewFrameTable[frame - 1].FrMagnification;
+          if (pAb->AbLeafType != LtText && pAb->AbLeafType != LtSymbol)
+            *height = GetCurrentFontHeight (pAb->AbSize, pAb->AbSizeUnit, frame);
           else
-#endif
             *height = BoxFontHeight (pAb->AbBox->BxFont, EOS);
         }
     }

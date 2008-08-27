@@ -77,25 +77,25 @@ extern void CreateMUNDER ( Document document,
                            View view );
 extern void CreateMOVER ( Document document,
                           View view );
-extern void CreateMOVERARROW ( Document doc,
+extern void CreateMOVERARROW ( Document document,
                                View view );
-extern void CreateMOVERBRACE ( Document doc,
+extern void CreateMOVERBRACE ( Document document,
                                View view );
-extern void CreateMUNDERBRACE ( Document doc,
+extern void CreateMUNDERBRACE ( Document document,
                                 View view );
-extern void CreateMOVERBAR ( Document doc,
+extern void CreateMOVERBAR ( Document document,
                              View view );
-extern void CreateMOVERBREVE ( Document doc,
+extern void CreateMOVERBREVE ( Document document,
                                View view );
-extern void CreateMOVERCHECK ( Document doc,
+extern void CreateMOVERCHECK ( Document document,
                                View view );
-extern void CreateMOVERDOT ( Document doc,
+extern void CreateMOVERDOT ( Document document,
                              View view );
-extern void CreateMOVERHAT ( Document doc,
+extern void CreateMOVERHAT ( Document document,
                              View view );
-extern void CreateMOVERTILDE ( Document doc,
+extern void CreateMOVERTILDE ( Document document,
                                View view );
-extern void CreateMOVERFROWN ( Document doc,
+extern void CreateMOVERFROWN ( Document document,
                                View view );
 extern void CreateMPARENTHESIS ( Document document,
                                  View view );
@@ -109,11 +109,11 @@ extern void CreateMMULTISCRIPTS ( Document document,
                                   View view );
 extern void CreateMTABLE ( Document document,
                            View view );
-extern void CreateMIntegral ( Document doc,
+extern void CreateMIntegral ( Document document,
                               View view );
-extern void CreateMSum ( Document doc,
+extern void CreateMSum ( Document document,
                          View view );
-extern void CreateMMATRIX ( Document doc,
+extern void CreateMMATRIX ( Document document,
                             View view );
 extern void CreateMABS ( Document document,
                          View view );
@@ -658,25 +658,25 @@ extern void CreateMUNDER ( Document document,
                              View view );
 extern void CreateMOVER ( Document document,
                             View view );
-extern void CreateMOVERARROW ( Document doc,
+extern void CreateMOVERARROW ( Document document,
                                  View view );
-extern void CreateMOVERBRACE ( Document doc,
+extern void CreateMOVERBRACE ( Document document,
                                  View view );
-extern void CreateMUNDERBRACE ( Document doc,
+extern void CreateMUNDERBRACE ( Document document,
                                   View view );
-extern void CreateMOVERBAR ( Document doc,
+extern void CreateMOVERBAR ( Document document,
                                View view );
-extern void CreateMOVERBREVE ( Document doc,
+extern void CreateMOVERBREVE ( Document document,
                                  View view );
-extern void CreateMOVERCHECK ( Document doc,
+extern void CreateMOVERCHECK ( Document document,
                                  View view );
-extern void CreateMOVERDOT ( Document doc,
+extern void CreateMOVERDOT ( Document document,
                                View view );
-extern void CreateMOVERHAT ( Document doc,
+extern void CreateMOVERHAT ( Document document,
                                View view );
-extern void CreateMOVERTILDE ( Document doc,
+extern void CreateMOVERTILDE ( Document document,
                                  View view );
-extern void CreateMOVERFROWN ( Document doc,
+extern void CreateMOVERFROWN ( Document document,
                                  View view );
 extern void CreateMPARENTHESIS ( Document document,
                                    View view );
@@ -690,11 +690,11 @@ extern void CreateMMULTISCRIPTS ( Document document,
                                     View view );
 extern void CreateMTABLE ( Document document,
                              View view );
-extern void CreateMIntegral ( Document doc,
+extern void CreateMIntegral ( Document document,
                                 View view );
-extern void CreateMSum ( Document doc,
+extern void CreateMSum ( Document document,
                            View view );
-extern void CreateMMATRIX ( Document doc,
+extern void CreateMMATRIX ( Document document,
                               View view );
 extern void CreateMABS ( Document document,
                            View view );

@@ -3857,7 +3857,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth, y, lspacing;
   int                 top, left, right, bottom, spacing;
-  int                 l, r;
+  int                 l, r, zoom;
   ThotBool            toAdjust, breakLine, isExtraFlow;
   ThotBool            xAbs, yAbs, extensibleBox, onlySpace = TRUE;
   ThotBool            full, still, standard, isFloat, newblock;
@@ -3970,13 +3970,14 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   if (extensibleBox || pBox->BxShrink)
     pBox->BxW = maxWidth;
   /* compute the line spacing */
+  zoom = ViewFrameTable[frame - 1].FrMagnification;
   if (pBox->BxType == BoBlock)
     lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
-                              pAb, ViewFrameTable[frame - 1].FrMagnification);
+                              pAb, zoom);
   else
     lineSpacing = 0;
   /* space added at the top and bottom of the paragraph */
-  spacing = lineSpacing - BoxFontHeight (pBox->BxFont, EOS);
+  spacing = lineSpacing - GetCurrentFontHeight (pAb->AbSize, pAb->AbSizeUnit, zoom);
   standard = (spacing >= 0);
   spacing = 0;
   /* compute the indent */
@@ -3987,7 +3988,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                          (PtrAbstractBox) width, 0);
   else
     indent = PixelValue (pAb->AbIndent, pAb->AbIndentUnit, pAb,
-                         ViewFrameTable[frame - 1].FrMagnification);
+                         zoom);
 
   pNextBox = NULL;
   full = TRUE;
@@ -4183,7 +4184,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                       /* line position not updated by floated boxes */
                       if (pRefBlock != pAb && pRefBlock->AbInLine)
                         lspacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
-                                               pAb, ViewFrameTable[frame - 1].FrMagnification);
+                                               pAb, zoom);
                       else
                         lspacing = lineSpacing;
                       /* position when line spacing applies */
@@ -4343,14 +4344,12 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
         y = PixelValue (pPosAb->PosDistance, UnPercent,
                         (PtrAbstractBox) (pAb->AbBox->BxW), 0);
       else
-        y = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
-                        ViewFrameTable[frame - 1].FrMagnification);
+        y = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, zoom);
       if (pPosAb->PosDeltaUnit == UnPercent)
         y += PixelValue (pPosAb->PosDistDelta, UnPercent,
                          (PtrAbstractBox) (pAb->AbBox->BxW), 0);
       else
-        y += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb,
-                         ViewFrameTable[frame - 1].FrMagnification);
+        y += PixelValue (pPosAb->PosDistDelta, pPosAb->PosDeltaUnit, pAb, zoom);
       y += top;
       MoveHorizRef (pBox, NULL,
                     pBox->BxFirstLine->LiHorizRef + y - pBox->BxHorizRef, frame);
@@ -5165,7 +5164,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   PtrBox              pBlock;
   int                 ascent, descent, y, shift;
   int                 i, h, top, bottom, left, right;
-  int                 pos, linespacing, spacing;
+  int                 pos, linespacing, spacing, zoom;
   PtrLine             pLine, prevLine;
   PtrLine             pNextLine;
 
@@ -5173,10 +5172,10 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   GetExtraMargins (pBlock, frame, FALSE, &top, &bottom, &left, &right);
   top += pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
   left += pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
-
+  zoom = ViewFrameTable[frame - 1].FrMagnification;
   if (pBlock->BxType == BoBlock)
     linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
-                              pAb, ViewFrameTable[frame - 1].FrMagnification);
+                              pAb, zoom);
   else
     linespacing = 0;
   pNextLine = NULL;
@@ -5393,7 +5392,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
       UpdateBlockWithFloat (frame, pBlock, TRUE, TRUE, FALSE, &h);
       /* compute the line spacing */
       /* space added at the top and bottom of the paragraph */
-      spacing = linespacing - BoxFontHeight (pBlock->BxFont, EOS);
+      spacing = linespacing - GetCurrentFontHeight (pAb->AbSize, pAb->AbSizeUnit, zoom);
       if (spacing > 0)
         spacing /= 2;
       else

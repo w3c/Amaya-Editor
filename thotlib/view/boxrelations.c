@@ -2452,21 +2452,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                     pParentAb->AbBox->BxType == BoGhost)))
                 {
                   /* all child heights depend on the parent height */
-#ifdef IV
-                  if (pAb->AbLeafType == LtSymbol)
-                    {
-                      pParentAb->AbHeight.DimValue = 10;
-                      pParentAb->AbHeight.DimUnit = UnRelative;
-                      ResizeHeight (pParentAb->AbBox, pParentAb->AbBox,NULL,
-                                    BoxFontHeight (pBox->BxFont, 'G') - pParentAb->AbBox->BxH,
-                                    0, 0, frame);
-                    }
-                  else
-#endif
-                    {
-                      pDimAb->DimAbRef = NULL;
-                      pDimAb->DimValue = -1;
-                    }
+                  pDimAb->DimAbRef = NULL;
+                  pDimAb->DimValue = -1;
                 }
             }
           else if (!horizRef && pDimAb->DimAbRef == NULL &&
