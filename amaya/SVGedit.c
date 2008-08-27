@@ -1823,34 +1823,44 @@ void CreateGraphicElement (Document doc, View view, int entry)
   SSchema	          docSchema, svgSchema;
   DisplayMode       dispMode;
   Language          lang;
-  int		            c1, i, dir, svgDir;
+  int		            c1, i, dir, svgDir, profile;
   int               docModified, error;
   int               x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
   int               tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
-  /*  unsigned short    red, green, blue;
-      char              stroke_color[10], fill_color[10];
-*/
   _ParserData       context;
   char              buffer[500], buffer2[200];
- 
   ThotBool	        found, newSVG = FALSE, replaceGraph = FALSE;
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
   ThotBool          isFilled = LastSVGelementIsFilled, isFormattedView, closed;   
 
   /* Check that a document is selected */
-  if (doc == 0)
+  if (doc == 0 || !TtaGetDocumentAccessMode (doc))
     {
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
       return;
     }
-  if (DocumentMeta[doc] && !DocumentMeta[doc]->xmlformat)
+  if (DocumentTypes[doc] == docSource ||
+      DocumentTypes[doc] == docText || DocumentTypes[doc] == docLog)
+    // cannot apply to a text file
+    return;
+  profile = TtaGetDocumentProfile (doc);
+  if (profile == L_Strict || profile == L_Basic)
     {
-      // the document becomes a XML document
-      DocumentMeta[doc]->xmlformat = TRUE;
-      root = TtaGetRootElement (doc);
-      TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+      /* cannot insert here */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+      return;
+    }
+  else if (DocumentTypes[doc] != docSVG && DocumentMeta[doc])
+    {
       DocumentMeta[doc]->compound = TRUE;
+      if (!DocumentMeta[doc]->xmlformat)
+        {
+          // the document becomes an XML document
+          DocumentMeta[doc]->xmlformat = TRUE;
+          root = TtaGetRootElement (doc);
+          TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+        }
     }
   context.doc = doc;
   /* Check that whether we are in formatted or strutured view. */
@@ -2534,70 +2544,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   ParsePointsAttribute (attr, newEl, doc);
                   SVGElementComplete (&context, newEl, &error);
                   break;
-
-                  /* 		case 23: /\* cube *\/ */
-                  /* 		case 24: /\* parallelepiped *\/ */
-                  /* 		  attrType.AttrTypeNum = SVG_ATTR_d; */
-                  /* 		  attr = TtaNewAttribute (attrType); */
-                  /* 		  TtaAttachAttribute (newEl, attr, doc); */
-
-                  /* 		  tmpx1 = (3*x1+x3)/4; */
-                  /* 		  tmpy1 = (3*y1+y3)/4; */
-                  /* 		  tmpx2 = (3*x2+x4)/4; */
-                  /* 		  tmpy2 = (3*y2+y4)/4; */
-
-                  /* 		  tmpx3 = (tmpx1+3*tmpx2)/4; */
-                  /* 		  tmpy3 = (tmpy1+3*tmpy2)/4; */
-
-                  /* 		  tmpx4= (3*x4+x3)/4; */
-                  /* 		  tmpy4 = (3*y4+y3)/4; */
-
-                  /* 		  sprintf(buffer, "M %d %d L %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d M %d %d L %d %d", */
-                  /* 			  tmpx1,tmpy1,            /\*<-1        2------------3 *\/ */
-                  /* 			  (3*x1+x2)/4,(3*y1+y2)/4,/\*<-2       /             / *\/ */
-                  /* 			  x2,y2,                  /\*<-3      /             /| *\/ */
-                  /* 			  (3*x4+x2)/4,(3*y4+y2)/4,/\*<-4     /             / | *\/ */
-                  /* 			  tmpx4,tmpy4,            /\*<-5    1-------------7  | *\/ */
-                  /* 			  x3,y3,                  /\*<-6    |             |  | *\/ */
-                  /* 			  tmpx1,tmpy1,            /\*<-1    |             |  4 *\/ */
-                  /* 			  tmpx3,tmpy3,            /\*<-7    |             |  / *\/ */
-                  /* 			  tmpx4,tmpy4,            /\*<-5    |             | /  *\/ */
-                  /* 			  tmpx3,tmpy3,            /\*<-7    |             |/   *\/ */
-                  /* 			  x2,y2                   /\*<-3    6-------------5    *\/ */
-                  /* 			  ); */
-                  /* 		  TtaSetAttributeText (attr, buffer, newEl, doc); */
-                  /* 		  ParsePathDataAttribute (attr, newEl, doc, TRUE); */
-                  /* 		  break; */
-
-                  /* 		case 25: /\* Cylinder *\/ */
-                  /* 		  tmpx1=(5*x1+x3)/6; */
-                  /* 		  tmpy1=(5*y1+y3)/6; */
-                  /* 		  tmpx2=(5*x3+x1)/6; */
-                  /* 		  tmpy2=(5*y3+y1)/6; */
-                  /* 		  tmpx3=(5*x4+x2)/6; */
-                  /* 		  tmpy3=(5*y4+y2)/6; */
-                  /* 		  tmpx4=(5*x2+x4)/6; */
-                  /* 		  tmpy4=(5*y2+y4)/6; */
-	      
-                  /* 		  attrType.AttrTypeNum = SVG_ATTR_d; */
-                  /* 		  attr = TtaNewAttribute (attrType); */
-                  /* 		  TtaAttachAttribute (newEl, attr, doc); */
-                  /* 		  sprintf(buffer, "M %d %d L %d %d A %d %d 0 0 %d %d %d L %d %d A %d %d 0 0 0 %d %d A %d %d 0 0 0 %d %d", */
-                  /* 			  tmpx1,tmpy1,       /\*    <-1      /----\            *\/ */
-                  /* 			  tmpx2,tmpy2,       /\*    <-2     1      4           *\/ */
-                  /* 			  lx/2, ly/6,        /\*            |\----/|           *\/ */
-                  /* 			  ((x4 - x1)*(y4 - y1)/\*           |      |           *\/			   >= 0 ? 0 : 1),    /\*            |      |           *\/ */
-                  /* 			  tmpx3,tmpy3,       /\*    <-3     |      |           *\/ */
-                  /* 			  tmpx4,tmpy4,       /\*    <-4     |      |           *\/ */
-                  /* 			  lx/2, ly/6,        /\*	           |      |           *\/ */
-                  /* 			  tmpx1,tmpy1,       /\*    <-1     2      3           *\/ */
-                  /* 			  lx/2, ly/6,        /\*             \----/            *\/ */
-                  /* 			  tmpx4,tmpy4        /\*    <-4                            *\/ */
-                  /* 			  ); */
-                  /* 		  TtaSetAttributeText (attr, buffer, newEl, doc); */
-                  /* 		  ParsePathDataAttribute (attr, newEl, doc, TRUE); */
-
-                  /* 		  break; */
 
                 default:
                   break;

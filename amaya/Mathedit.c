@@ -1332,7 +1332,7 @@ static int GetOperatorType(Document doc)
 static void CreateMathConstruct (Document doc, View view, int construct, ...)
 {
   Element            sibling, el, row, child, child2, leaf, leaf2, next, foreignObj;
-  Element            altText, nextToSelect, moveHere, op, previous;
+  Element            altText, nextToSelect, moveHere, op, previous, root;
   ElementType        newType, elType, parentType;
   Attribute          attr;
   AttributeType      attrType;
@@ -1368,7 +1368,16 @@ static void CreateMathConstruct (Document doc, View view, int construct, ...)
       return;
     }
   else if (DocumentTypes[doc] != docMath && DocumentMeta[doc])
-    DocumentMeta[doc]->compound = TRUE;
+    {
+      DocumentMeta[doc]->compound = TRUE;
+      if (!DocumentMeta[doc]->xmlformat)
+        {
+          // the document becomes an XML document
+          DocumentMeta[doc]->xmlformat = TRUE;
+          root = TtaGetRootElement (doc);
+          TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+        }
+    }
   op = NULL;
   docSchema = TtaGetDocumentSSchema (doc);
   TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 

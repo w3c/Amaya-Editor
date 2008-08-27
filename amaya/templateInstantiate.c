@@ -447,10 +447,10 @@ void CreateTemplate(Document doc, char *templatePath)
   TtaSetStructureChecking (TRUE, doc);
   
   // Save document
-  TtaGetEnvBoolean ("GENERATE_MATHPI", &mathPI);
-  TtaSetEnvBoolean("GENERATE_MATHPI", TRUE, TRUE);
-  SaveDocumentToNewDoc(doc, newdoc, templatePath);
-  TtaSetEnvBoolean("GENERATE_MATHPI", mathPI, TRUE);
+  //TtaGetEnvBoolean ("GENERATE_MATHPI", &mathPI);
+  //TtaSetEnvBoolean("GENERATE_MATHPI", TRUE, TRUE);
+  //SaveDocumentToNewDoc(doc, newdoc, templatePath);
+  //TtaSetEnvBoolean("GENERATE_MATHPI", mathPI, TRUE);
   
   TtaClearUndoHistory (doc);
   RemoveParsingErrors (doc);
