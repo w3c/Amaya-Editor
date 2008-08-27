@@ -2595,9 +2595,11 @@ ThotBool ContentEditing (int editType)
 								SelectedPointInPolyline);
 			  /* Update the attribute */
 			  if(pointDeleted)
-			    UpdatePointsOrPathAttribute(doc,
-							TtaGetParent((Element)FirstSelectedElement), 0, 0);
-			  
+			    {
+			      UpdatePointsOrPathAttribute(doc,
+							  TtaGetParent((Element)FirstSelectedElement), 0, 0);
+			      TtaSetDocumentModified(doc);
+			    }
 		    }
 		  return FALSE;
 		}
