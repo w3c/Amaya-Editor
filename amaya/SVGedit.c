@@ -2814,7 +2814,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       
       if(created)
         {
-          sprintf (buffer,  "stroke: black; stroke-opacity: 100.; stroke-width: 1;");
+          sprintf (buffer,  "stroke: black; stroke-opacity: 1; stroke-width: 1;");
           if (isFilled)
             strcat (buffer, "fill: #9dc2de");
           else if(entry != 0)
