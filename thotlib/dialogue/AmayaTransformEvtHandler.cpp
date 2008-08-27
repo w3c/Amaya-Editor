@@ -26,8 +26,7 @@
 #include "geom_f.h"
 #include "font_f.h"
 #include "content_f.h"
-#include "windowdisplay_f.h"
-
+#include "xwindowdisplay_f.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -1035,67 +1034,43 @@ void AmayaTransformEvtHandler::DrawScalingArrows()
   */
 
   /* 1 */
-  DrawArrow (FrameId, 1, 5,
-	     left2 - CURSOR_SIZE,
-	     (top2+bottom2)/2 - CURSOR_SIZE/2,
-	     2*CURSOR_SIZE,
-	     CURSOR_SIZE,
-	     0, 3, 0);
+  DrawResizeTriangle (FrameId, CURSOR_SIZE,
+		      left2, (top2+bottom2)/2,
+		      0, 0, 1);
 
   /* 2 */
-  DrawArrow (FrameId, 1, 5,
-	     right2 - CURSOR_SIZE,
-	     (top2+bottom2)/2 - CURSOR_SIZE/2,
-	     2*CURSOR_SIZE,
-	     CURSOR_SIZE,
-	     0, 3, 0);
+  DrawResizeTriangle (FrameId, CURSOR_SIZE,
+		      right2, (top2+bottom2)/2,
+		      0, 0, 3);
 
   /* 3 */
-  DrawArrow (FrameId, 1, 5,
-	     (left2+right2)/2 - CURSOR_SIZE/2,
-	     top2 - CURSOR_SIZE,
-	     CURSOR_SIZE,
-	     2*CURSOR_SIZE,
-	     90, 3, 0);
+  DrawResizeTriangle (FrameId, CURSOR_SIZE,
+		      (left2+right2)/2, top2,
+		      0, 0, 0);
 
   /* 4 */
-  DrawArrow (FrameId, 1, 5,
-	     (left2+right2)/2 - CURSOR_SIZE/2,
-	     bottom2 - CURSOR_SIZE,
-	     CURSOR_SIZE,
-	     2*CURSOR_SIZE,
-	     90, 3, 0);
+  DrawResizeTriangle (FrameId, CURSOR_SIZE,
+		      (left2+right2)/2, bottom2,
+		      0, 0, 2);
 
   /* 5*/
-  DrawArrow (FrameId, 1, 5,
-	     left2 - CURSOR_SIZE/2,
-	     top2 - CURSOR_SIZE/2,
-	     CURSOR_SIZE,
-	     CURSOR_SIZE,
-	     135, 0, 0);
+  DrawResizeTriangle (FrameId, CURSOR_SIZE,
+		      left2, top2,
+		      0, 0, 4);
 
   /* 6*/
-  DrawArrow (FrameId, 1, 5,
-	     right2 - CURSOR_SIZE/2,
-	     top2 - CURSOR_SIZE/2,
-	     CURSOR_SIZE,
-	     CURSOR_SIZE,
-	     45, 0, 0);
+  DrawResizeTriangle (FrameId, CURSOR_SIZE,
+		      right2, top2,
+		      0, 0, 5);
 
   /* 7*/
-  DrawArrow (FrameId, 1, 5,
-	     right2 - CURSOR_SIZE/2,
-	     bottom2 - CURSOR_SIZE/2,
-	     CURSOR_SIZE,
-	     CURSOR_SIZE,
-	     315, 0, 0);
-  /* 6*/
-  DrawArrow (FrameId, 1, 5,
-	     left2 - CURSOR_SIZE/2,
-	     bottom2 - CURSOR_SIZE/2,
-	     CURSOR_SIZE,
-	     CURSOR_SIZE,
-	     225, 0, 0);
+  DrawResizeTriangle (FrameId, CURSOR_SIZE,
+		      right2, bottom2,
+		      0, 0, 7);
+  /* 8 */
+  DrawResizeTriangle (FrameId, CURSOR_SIZE,
+		      left2, bottom2,
+		      0, 0, 6);
 
   glDisable(GL_COLOR_LOGIC_OP);
 #ifdef _WINDOWS
