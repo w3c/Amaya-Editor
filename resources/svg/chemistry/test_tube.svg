@@ -4,7 +4,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="fill:none;stroke:#000000;">
   <title>Test tube</title>
   <!-- test tube -->
-  <path d="M 0,0 L 5,5 5,110 A 5,7 1 1 0 15,110 L 15,5 20,0 "/>
+  <path fill="none" d="M 0,0 L 5,5 5,110 A 5,7 1 1 0 15,110 L 15,5 20,0 "/>
   <!-- liquid -->
   <path d="M 5,90 L 5,110 A 5,7 1 1 0 15,110 L 15,90" stroke="none"/>
 </svg>

@@ -4,7 +4,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="stroke:#000000; fill:none;">
   <title>Burette</title>
   <!-- burette -->
-  <polygon
+  <polygon fill="none"
            points="0,0 10,10 10,290 17,297 17,350 24,350 24,297 32,291 32,10 42,0 "
            />
   <!-- liquid -->

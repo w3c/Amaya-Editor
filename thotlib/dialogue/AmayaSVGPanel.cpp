@@ -289,12 +289,12 @@ static svg_constructs list_of_constructs[] =
        {"beaker", TMSG_SVG_Beaker, NULL, TRUE},
        {"boiling_flask", TMSG_SVG_Boiling_flask, NULL, TRUE},
        {"buchner_flask", TMSG_SVG_Buchner_flask, NULL, TRUE},
-       {"burette", TMSG_SVG_Burette, NULL, FALSE},
+       {"burette", TMSG_SVG_Burette, NULL, TRUE},
        {"erlenmeyer_flask", TMSG_SVG_Erlenmeyer_flask, NULL, TRUE},
        {"pipette", TMSG_SVG_Pipette, NULL, FALSE},
        {"test_tube", TMSG_SVG_Test_tube, NULL, TRUE},
        {"funnel", TMSG_SVG_Funnel, NULL, FALSE},
-       {"bunsen_burner", TMSG_SVG_Bunsen_burner, NULL, FALSE}
+       {"bunsen_burner", TMSG_SVG_Bunsen_burner, NULL, TRUE}
      }
     },
 
