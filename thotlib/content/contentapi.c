@@ -2675,9 +2675,7 @@ ThotBool TtaInsertPointInCurve (Document doc, Element el,
 	      if(pPa->PaShape == PtQuadraticBezier ||
 		 pPa->PaShape == PtCubicBezier)
 		/* Skip Bezier handles */
-		p+=3;
-	      else
-		p++;
+		p+=2;
 	    }
 	  
 	  *point_number = p;
