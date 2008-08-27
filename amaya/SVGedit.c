@@ -3804,7 +3804,7 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h)
     return;
 
   /* Get the attribute value from the GRAPHICS leaf */
-  leaf = TtaGetFirstLeaf(el);
+  leaf = TtaGetLastChild(el);
 
   if(isPath)
     buffer = TtaGetPathAttributeValue(leaf, w, h);
