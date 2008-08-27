@@ -2701,21 +2701,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	      TtaSetUriSSchema (childType.ElSSchema, XHTML_URI);
 	      TtaSetANamespaceDeclaration (doc, child, NULL, XHTML_URI);
 	      TtaSetStructureChecking (oldStructureChecking, doc);
-	    
-
-	      /* create an alternate SVG text element for viewers that are not
-		 able to display embedded XHTML */
-	      elType.ElSSchema = svgSchema;
-	      elType.ElTypeNum = SVG_EL_text_;
-	      altText = TtaNewElement (doc, elType);
-	      TtaInsertSibling (altText, foreignObj, FALSE, doc);
-	      elType.ElTypeNum = SVG_EL_TEXT_UNIT;
-	      leaf = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (&leaf, altText, doc);
-	      lang = TtaGetLanguageIdFromScript('L');
-	      TtaSetTextContent (leaf,
-				 (unsigned char *)"embedded XHTML not supported" ,
-				 lang, doc);
 
 	      /* is there a SVG direction attribute on any ancestor element? */
 	      attrType.AttrTypeNum = SVG_ATTR_direction_;
@@ -2763,6 +2748,27 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	    }
 	  else
 	    selEl = foreignObj;
+
+	  
+	  /* create an alternate SVG text element for viewers that are not
+	     able to display embedded XHTML/MathML */
+	  elType.ElSSchema = svgSchema;
+	  elType.ElTypeNum = SVG_EL_text_;
+	  altText = TtaNewElement (doc, elType);
+	  TtaInsertSibling (altText, foreignObj, FALSE, doc);
+	  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+	  leaf = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&leaf, altText, doc);
+	  lang = TtaGetLanguageIdFromScript('L');
+	  if(entry == 9)
+	    TtaSetTextContent (leaf,
+			       (unsigned char *)"embedded XHTML not supported" ,
+			       lang, doc);
+	  else
+	    TtaSetTextContent (leaf,
+			       (unsigned char *)"embedded MathML not supported" ,
+			       lang, doc);
+
 
           /* set the visibility of the alternate text */
           EvaluateTestAttrs (switch_, doc);
