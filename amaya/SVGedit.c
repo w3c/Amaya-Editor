@@ -1827,10 +1827,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
   int               docModified, error;
   int               x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
   int               tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
-  unsigned short    red, green, blue;
+  /*  unsigned short    red, green, blue;
+      char              stroke_color[10], fill_color[10];
+*/
   _ParserData       context;
   char              buffer[500], buffer2[200];
-  char              stroke_color[10], fill_color[10];
+ 
   ThotBool	        found, newSVG = FALSE, replaceGraph = FALSE;
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
@@ -2836,6 +2838,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       TtaSetDisplayMode (doc, dispMode);
     }
 
+
   /* create attributes fill and stroke */
   if (entry != -1 && created && 
       (newType.ElTypeNum == SVG_EL_g ||
@@ -2850,93 +2853,78 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
       *buffer = EOS;
 
-      /* Is the shape visible with this configuration? */
-      if(entry == -2 ||
-         Current_Opacity == 0 ||
+/*       /\* Is the shape visible with this configuration? *\/ */
+/*       if(entry == -2 || */
+/*          Current_Opacity == 0 || */
 
-         (
-          /* No fill... */
-          (!isFilled || !FillEnabled || Current_FillOpacity == 0) &&
+/*          ( */
+/*           /\* No fill... *\/ */
+/*           (!isFilled || !FillEnabled || Current_FillOpacity == 0) && */
 
-          /* ...and no stroke */
-          (!StrokeEnabled || Current_StrokeOpacity == 0 ||
-           Current_StrokeWidth == 0)
-          )
+/*           /\* ...and no stroke *\/ */
+/*           (!StrokeEnabled || Current_StrokeOpacity == 0 || */
+/*            Current_StrokeWidth == 0) */
+/*           ) */
 
-         )
-        {
-          Current_Opacity = 100;
+/*          ) */
+/*         { */
+/*           Current_Opacity = 100; */
 
-          StrokeEnabled = TRUE;
-          Current_StrokeColor = 1;
-          Current_StrokeOpacity = 100;
+/*           StrokeEnabled = TRUE; */
+/*           Current_StrokeColor = 1; */
+/*           Current_StrokeOpacity = 100; */
 
-          FillEnabled = FALSE;
-          Current_FillColor = -1;
-          Current_FillOpacity = 100;
+/*           FillEnabled = FALSE; */
+/*           Current_FillColor = -1; */
+/*           Current_FillOpacity = 100; */
 
-          UpdateStylePanel (doc, view);
-        }
+/*           UpdateStylePanel (doc, view); */
+/*         } */
 
-      /* Get the stroke color */
-      if(StrokeEnabled)
-        {
-          if (Current_StrokeColor != -1)
-            TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue);
-          else
-            TtaGiveThotRGB (1, &red, &green, &blue);
-          sprintf(stroke_color, "#%02x%02x%02x", red, green, blue);
-        }
-      else
-        sprintf(stroke_color , "none");
+/*       /\* Get the stroke color *\/ */
+/*       if(StrokeEnabled) */
+/*         { */
+/*           if (Current_StrokeColor != -1) */
+/*             TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue); */
+/*           else */
+/*             TtaGiveThotRGB (1, &red, &green, &blue); */
+/*           sprintf(stroke_color, "#%02x%02x%02x", red, green, blue); */
+/*         } */
+/*       else */
+/*         sprintf(stroke_color , "none"); */
 
-      /* Get the fill color */
-      if (FillEnabled && Current_FillColor != -1 && isFilled)
-        {
-          TtaGiveThotRGB (Current_FillColor, &red, &green, &blue);
-          sprintf(fill_color, "#%02x%02x%02x", red, green, blue);
-        }
-      else
-        sprintf(fill_color, "none");
+/*       /\* Get the fill color *\/ */
+/*       if (FillEnabled && Current_FillColor != -1 && isFilled) */
+/*         { */
+/*           TtaGiveThotRGB (Current_FillColor, &red, &green, &blue); */
+/*           sprintf(fill_color, "#%02x%02x%02x", red, green, blue); */
+/*         } */
+/*       else */
+/*         sprintf(fill_color, "none"); */
 
-      /* Apply global style */
-      sprintf(buffer2, "opacity: %g; ", ((float)Current_Opacity)/100);
-      strcat(buffer, buffer2);
+/*       /\* Apply global style *\/ */
+/*       sprintf(buffer2, "opacity: %g; ", ((float)Current_Opacity)/100); */
+/*       strcat(buffer, buffer2); */
 
-      /* Apply the stroke style */
-      if(StrokeEnabled)
-        {
-          sprintf(buffer2, "stroke: %s; stroke-opacity: %g; stroke-width: %d; ",
-                  stroke_color,
-                  ((float)Current_StrokeOpacity)/100,
-                  Current_StrokeWidth
-                  );
-          strcat(buffer, buffer2);
-        }
+/*       /\* Apply the stroke style *\/ */
+/*       if(StrokeEnabled) */
+/*         { */
+/*           sprintf(buffer2, "stroke: %s; stroke-opacity: %g; stroke-width: %d; ", */
+/*                   stroke_color, */
+/*                   ((float)Current_StrokeOpacity)/100, */
+/*                   Current_StrokeWidth */
+/*                   ); */
+/*           strcat(buffer, buffer2); */
+/*         } */
 
       if(entry >= 5 && entry <= 8)
         {
           /* Add a temporary style */
 
-          if(StrokeEnabled &&
-             Current_StrokeOpacity > 0 && Current_StrokeWidth > 0)
-            {
-              ParseHTMLSpecificStyle (newEl,
-                                      buffer,
-                                      doc, 0, FALSE);
-            }
-          else
-            {
-              strcpy(buffer2, "stroke:cyan;");
-              ParseHTMLSpecificStyle (newEl,
-                                      buffer2,
-                                      doc, 0, FALSE);
-            }
-
-          strcpy(buffer2, "fill:none;");
-          ParseHTMLSpecificStyle (newEl,
-                                  buffer2,
-                                  doc, 0, FALSE);
+	  strcpy(buffer2, "stroke:black; fill:none;");
+	  ParseHTMLSpecificStyle (newEl,
+				  buffer2,
+				  doc, 0, FALSE);
 
           /* Ask the points of the polyline/curve */
           created = AskShapePoints (doc, svgAncestor, svgCanvas,
@@ -2957,23 +2945,29 @@ void CreateGraphicElement (Document doc, View view, int entry)
       if(created)
         {
 
-          /* Apply the fill style */
-          if(newType.ElTypeNum != SVG_EL_line_)
-            {
-              sprintf(buffer2, "fill: %s; ", fill_color);
-              strcat(buffer, buffer2);
-            }
+/*           /\* Apply the fill style *\/ */
+/*           if(newType.ElTypeNum != SVG_EL_line_) */
+/*             { */
+/*               sprintf(buffer2, "fill: %s; ", fill_color); */
+/*               strcat(buffer, buffer2); */
+/*             } */
 	  
-          if (FillEnabled)
-            {
-              sprintf(buffer2, "fill-opacity: %g;",
-                      ((float)Current_FillOpacity)/100
-                      );
-              strcat(buffer, buffer2);
-            }
+/*           if (FillEnabled) */
+/*             { */
+/*               sprintf(buffer2, "fill-opacity: %g;", */
+/*                       ((float)Current_FillOpacity)/100 */
+/*                       ); */
+/*               strcat(buffer, buffer2); */
+/*             } */
 	  
-          strcpy(buffer2, "stroke:none;");
-          ParseHTMLSpecificStyle (newEl, buffer2, doc, 0, TRUE);
+/*           strcpy(buffer2, "stroke:none;"); */
+/*           ParseHTMLSpecificStyle (newEl, buffer2, doc, 0, TRUE); */
+
+	  sprintf (buffer,  "stroke: black; stroke-opacity: 100.; stroke-width: 1;");
+	  if (isFilled)
+	    strcat (buffer, "fill: #9dc2de");
+	  else
+	    strcat (buffer, "fill:none;");
 
           ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
 	  
