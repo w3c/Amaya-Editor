@@ -89,6 +89,7 @@ static Document DocMathElementSelected = 0;
 #include "styleparser_f.h"
 #include "trans_f.h"
 #include "UIcss_f.h"
+#include "SVGedit_f.h"
 #ifdef _WX
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
@@ -1328,9 +1329,8 @@ static int GetOperatorType(Document doc)
   Create a MathML construct at the current position
   According to the construct, other parameters can be sent to complete it. 
   ----------------------------------------------------------------------*/
-static void CreateMathConstruct (int construct, ...)
+static void CreateMathConstruct (Document doc, View view, int construct, ...)
 {
-  Document           doc;
   Element            sibling, el, row, child, child2, leaf, leaf2, next, foreignObj;
   Element            altText, nextToSelect, moveHere, op, previous;
   ElementType        newType, elType, parentType;
@@ -1350,7 +1350,6 @@ static void CreateMathConstruct (int construct, ...)
   ThotBool	         before, emptySel, ok, insertSibling, moveChild, isbinary;
   ThotBool           displayTableForm, registered, insertedMath = FALSE;
   
-  doc = TtaGetSelectedDocument ();
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
     {
       /* no selection. Nothing to do */
@@ -1648,71 +1647,90 @@ static void CreateMathConstruct (int construct, ...)
               if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
                 /* selection is within a SVG element */
                 {
-                  elType.ElTypeNum = SVG_EL_switch;
-                  if (TtaCanInsertSibling (elType, sibling, FALSE, doc))
-                    /* insert a switch element as a sibling */
-                    insertSibling = TRUE;
-                  else
-                    {
-                      child = TtaGetLastChild (sibling);
-                      if (TtaCanInsertSibling (elType, child, FALSE, doc))
-                        {
-                          /* insert a switch element as a child */
-                          sibling = child;
-                          insertSibling = TRUE;
-                        }
-                      else
-                        {
-                          sibling = TtaGetParent (sibling);
-                          if (TtaCanInsertSibling (elType, sibling, FALSE,doc))
-                            /* insert a switch element as a sibling of
-                               the parent element */
-                            insertSibling = TRUE;
-                          else
-                            sibling = NULL;
-                        }
-                    }
-                  if (sibling)
-                    {
-                      /* create a switch element and insert it */
-                      el = TtaNewElement (doc, elType);
-                      TtaInsertSibling (el, sibling, FALSE, doc);
-                      /* create a foreignObject element and insert it as
-                         a child of the new switch element */
-                      elType.ElTypeNum = SVG_EL_foreignObject;
-                      TtaAskFirstCreation ();
-                      foreignObj = TtaNewElement (doc, elType);
-                      TtaInsertFirstChild (&foreignObj, el, doc);
-                      /* associate a requiredExtensions attribute with the
-                         foreignObject element */
-                      attrType.AttrSSchema = elType.ElSSchema;
-                      attrType.AttrTypeNum = SVG_ATTR_requiredExtensions;
-                      attr = TtaNewAttribute (attrType);
-                      TtaAttachAttribute (foreignObj, attr, doc);
-                      TtaSetAttributeText (attr, MathML_URI, foreignObj, doc);
-                      /* create an alternate SVG text element for viewers
-                         that can't display embedded MathML */
-                      elType.ElTypeNum = SVG_EL_text_;
-                      altText = TtaNewElement (doc, elType);
-                      TtaInsertSibling (altText, foreignObj, FALSE, doc);
-                      elType.ElTypeNum = SVG_EL_TEXT_UNIT;
-                      leaf = TtaNewElement (doc, elType);
-                      TtaInsertFirstChild (&leaf, altText, doc);
-                      lang = TtaGetLanguageIdFromScript('L');
-                      TtaSetTextContent (leaf, (unsigned char *)"<math>", lang, doc);
-                      /* set the visibility of the alternate text */
-                      EvaluateTestAttrs (el, doc);
-                      /* update depth of SVG elements */
-                      SetGraphicDepths (doc, el);
-                      /* register the switch element in the Undo queue*/
-                      TtaRegisterElementCreate (el, doc);
-                      registered = TRUE;
-                      elType.ElSSchema = mathSchema;
-                      elType.ElTypeNum = MathML_EL_MathML;
-                      sibling = foreignObj;
-                      insertSibling = FALSE;
-                    }
-                }
+		  if(view == 1)
+		    {
+		      /* We are in formatted view: call the SVG module
+		       to ask where the user want to insert the foreignObject */
+		      TtaCloseUndoSequence (doc);
+		      TtaSelectElement(doc, sibling);
+		      CreateGraphicElement (doc, view, 56);
+		      TtaSetDisplayMode (doc, DisplayImmediately);
+		      TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i);
+		      elType.ElSSchema = mathSchema;
+		      elType.ElTypeNum = MathML_EL_MathML;
+		      registered = TRUE;
+		      insertSibling = FALSE;
+		      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+                      TtaSetDisplayMode (doc, DeferredDisplay);
+		    }
+		  else
+		    {
+		      elType.ElTypeNum = SVG_EL_switch;
+		      if (TtaCanInsertSibling (elType, sibling, FALSE, doc))
+			/* insert a switch element as a sibling */
+			insertSibling = TRUE;
+		      else
+			{
+			  child = TtaGetLastChild (sibling);
+			  if (TtaCanInsertSibling (elType, child, FALSE, doc))
+			    {
+			      /* insert a switch element as a child */
+			      sibling = child;
+			      insertSibling = TRUE;
+			    }
+			  else
+			    {
+			      sibling = TtaGetParent (sibling);
+			      if (TtaCanInsertSibling (elType, sibling, FALSE,doc))
+				/* insert a switch element as a sibling of
+				   the parent element */
+				insertSibling = TRUE;
+			      else
+				sibling = NULL;
+			    }
+			}
+		      if (sibling)
+			{
+			  /* create a switch element and insert it */
+			  el = TtaNewElement (doc, elType);
+			  TtaInsertSibling (el, sibling, FALSE, doc);
+			  /* create a foreignObject element and insert it as
+			     a child of the new switch element */
+			  elType.ElTypeNum = SVG_EL_foreignObject;
+			  TtaAskFirstCreation ();
+			  foreignObj = TtaNewElement (doc, elType);
+			  TtaInsertFirstChild (&foreignObj, el, doc);
+			  /* associate a requiredExtensions attribute with the
+			     foreignObject element */
+			  attrType.AttrSSchema = elType.ElSSchema;
+			  attrType.AttrTypeNum = SVG_ATTR_requiredExtensions;
+			  attr = TtaNewAttribute (attrType);
+			  TtaAttachAttribute (foreignObj, attr, doc);
+			  TtaSetAttributeText (attr, MathML_URI, foreignObj, doc);
+			  /* create an alternate SVG text element for viewers
+			     that can't display embedded MathML */
+			  elType.ElTypeNum = SVG_EL_text_;
+			  altText = TtaNewElement (doc, elType);
+			  TtaInsertSibling (altText, foreignObj, FALSE, doc);
+			  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+			  leaf = TtaNewElement (doc, elType);
+			  TtaInsertFirstChild (&leaf, altText, doc);
+			  lang = TtaGetLanguageIdFromScript('L');
+			  TtaSetTextContent (leaf, (unsigned char *)"embedded MathML not supported", lang, doc);
+			  /* set the visibility of the alternate text */
+			  EvaluateTestAttrs (el, doc);
+			  /* update depth of SVG elements */
+			  //SetGraphicDepths (doc, el);
+			  /* register the switch element in the Undo queue*/
+			  TtaRegisterElementCreate (el, doc);
+			  registered = TRUE;
+			  elType.ElSSchema = mathSchema;
+			  elType.ElTypeNum = MathML_EL_MathML;
+			  sibling = foreignObj;
+			  insertSibling = FALSE;
+			}
+		    }
+		}
               else
                 /* not within a SVG element */
 #endif /* _SVG */
@@ -3445,11 +3463,11 @@ static void CallbackMaths (int ref, int typedata, char *data)
           TtcDisplayGreekKeyboard (doc, 1);
           return;
         }
-      else if (doc > 0)
+      //else if (doc > 0)
         /* there is a selection */
-        if (TtaGetDocumentAccessMode (doc))
-          /* the document is in not in ReadOnly mode */
-          CreateMathConstruct (val + 1);
+      //if (TtaGetDocumentAccessMode (doc))
+      /* the document is in not in ReadOnly mode */
+      //CreateMathConstruct (doc, view, val + 1);
       break;
 
     default:
@@ -3517,7 +3535,7 @@ void SwitchIconMath (Document doc, View view, ThotBool state)
   ----------------------------------------------------------------------*/
 void CreateMath (Document document, View view)
 {
-  CreateMathConstruct (1);
+  CreateMathConstruct (document, view,  1);
 }
 
 /*----------------------------------------------------------------------
@@ -3525,7 +3543,7 @@ void CreateMath (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMROOT (Document document, View view)
 {
-  CreateMathConstruct (2);
+  CreateMathConstruct (document, view,  2);
 }
 
 /*----------------------------------------------------------------------
@@ -3533,7 +3551,7 @@ void CreateMROOT (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMSQRT (Document document, View view)
 {
-  CreateMathConstruct (3);
+  CreateMathConstruct (document, view,  3);
 }
 
 /*----------------------------------------------------------------------
@@ -3541,7 +3559,7 @@ void CreateMSQRT (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMENCLOSE (Document document, View view)
 {
-  CreateMathConstruct (18,0);
+  CreateMathConstruct (document, view,  18,0);
 }
 
 /*----------------------------------------------------------------------
@@ -3549,14 +3567,14 @@ void CreateMENCLOSE (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMENCLOSE2 (Document document, View view)
 {
-  CreateMathConstruct (18,1);
+  CreateMathConstruct (document, view,  18,1);
 }
 /*----------------------------------------------------------------------
   CreateMENCLOSE
   ----------------------------------------------------------------------*/
 void CreateMPHANTOM (Document document, View view)
 {
-  CreateMathConstruct (61);
+  CreateMathConstruct (document, view,  61);
 }
 
 /*----------------------------------------------------------------------
@@ -3564,7 +3582,7 @@ void CreateMPHANTOM (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMFRAC (Document document, View view)
 {
-  CreateMathConstruct (4, 0);
+  CreateMathConstruct (document, view,  4, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -3572,7 +3590,7 @@ void CreateMFRAC (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMLFRAC (Document document, View view)
 {
-  CreateMathConstruct (4, 1);
+  CreateMathConstruct (document, view,  4, 1);
 }
 
 /*----------------------------------------------------------------------
@@ -3580,7 +3598,7 @@ void CreateMLFRAC (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMSUBSUP (Document document, View view)
 {
-  CreateMathConstruct (5);
+  CreateMathConstruct (document, view,  5);
 }
 
 /*----------------------------------------------------------------------
@@ -3588,7 +3606,7 @@ void CreateMSUBSUP (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMSUB (Document document, View view)
 {
-  CreateMathConstruct (6);
+  CreateMathConstruct (document, view,  6);
 }
 
 /*----------------------------------------------------------------------
@@ -3596,7 +3614,7 @@ void CreateMSUB (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMSUP (Document document, View view)
 {
-  CreateMathConstruct (7);
+  CreateMathConstruct (document, view,  7);
 }
 
 /*----------------------------------------------------------------------
@@ -3604,7 +3622,7 @@ void CreateMSUP (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMUNDEROVER (Document document, View view)
 {
-  CreateMathConstruct (8);
+  CreateMathConstruct (document, view,  8);
 }
 
 /*----------------------------------------------------------------------
@@ -3612,7 +3630,7 @@ void CreateMUNDEROVER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMUNDER (Document document, View view)
 {
-  CreateMathConstruct (9);
+  CreateMathConstruct (document, view,  9);
 }
 
 /*----------------------------------------------------------------------
@@ -3620,48 +3638,48 @@ void CreateMUNDER (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMOVER (Document document, View view)
 {
-  CreateMathConstruct (10);
+  CreateMathConstruct (document, view,  10);
 }
 
-void CreateMOVERARROW (Document doc, View view)
+void CreateMOVERARROW (Document document, View view)
 {
-  CreateMathConstruct (59, 'R');
+  CreateMathConstruct (document, view,  59, 'R');
 }
-void CreateMOVERBRACE (Document doc, View view)
+void CreateMOVERBRACE (Document document, View view)
 {
-  CreateMathConstruct (59, 'o');
+  CreateMathConstruct (document, view,  59, 'o');
 }
-void CreateMUNDERBRACE (Document doc, View view)
+void CreateMUNDERBRACE (Document document, View view)
 {
-  CreateMathConstruct (60, 'u');
+  CreateMathConstruct (document, view,  60, 'u');
 }
-void CreateMOVERBAR (Document doc, View view)
+void CreateMOVERBAR (Document document, View view)
 {
-  CreateMathConstruct (59, 'h');
+  CreateMathConstruct (document, view,  59, 'h');
 }
-void CreateMOVERBREVE (Document doc, View view)
+void CreateMOVERBREVE (Document document, View view)
 {
-  CreateMathConstruct (26, 728);
+  CreateMathConstruct (document, view,  26, 728);
 }
-void CreateMOVERCHECK (Document doc, View view) // hacek
+void CreateMOVERCHECK (Document document, View view) // hacek
 {
-  CreateMathConstruct (59, 'k');
+  CreateMathConstruct (document, view,  59, 'k');
 }
-void CreateMOVERDOT (Document doc, View view)
+void CreateMOVERDOT (Document document, View view)
 {
-  CreateMathConstruct (26, 729);
+  CreateMathConstruct (document, view,  26, 729);
 }
-void CreateMOVERHAT (Document doc, View view)
+void CreateMOVERHAT (Document document, View view)
 {
-  CreateMathConstruct (59, 'H');
+  CreateMathConstruct (document, view,  59, 'H');
 }
-void CreateMOVERTILDE (Document doc, View view)
+void CreateMOVERTILDE (Document document, View view)
 {
-  CreateMathConstruct (59, 'T');
+  CreateMathConstruct (document, view,  59, 'T');
 }
-void CreateMOVERFROWN (Document doc, View view) // overparenthesis
+void CreateMOVERFROWN (Document document, View view) // overparenthesis
 {
-  CreateMathConstruct (59, 'p');
+  CreateMathConstruct (document, view,  59, 'p');
 }
 
 
@@ -3670,7 +3688,7 @@ void CreateMOVERFROWN (Document doc, View view) // overparenthesis
   ----------------------------------------------------------------------*/
 void CreateMPARENTHESIS (Document document, View view)
 {
-  CreateMathConstruct (39, '(', ')', ',', 1);
+  CreateMathConstruct (document, view,  39, '(', ')', ',', 1);
 }
 
 /*----------------------------------------------------------------------
@@ -3678,7 +3696,7 @@ void CreateMPARENTHESIS (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMINTERVAL (Document document, View view)
 {
-  CreateMathConstruct (39, -1, -1, ';', 2);
+  CreateMathConstruct (document, view,  39, -1, -1, ';', 2);
 }
 
 /*----------------------------------------------------------------------
@@ -3686,7 +3704,7 @@ void CreateMINTERVAL (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMFENCE (Document document, View view)
 {
-  CreateMathConstruct (39, -1, -1, -1, -1);}
+  CreateMathConstruct (document, view,  39, -1, -1, -1, -1);}
 
 
 /*----------------------------------------------------------------------
@@ -3694,7 +3712,7 @@ void CreateMFENCE (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMROW (Document document, View view)
 {
-  CreateMathConstruct (11);
+  CreateMathConstruct (document, view,  11);
 }
 
 /*----------------------------------------------------------------------
@@ -3702,7 +3720,7 @@ void CreateMROW (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMMULTISCRIPTS (Document document, View view)
 {
-  CreateMathConstruct (12);
+  CreateMathConstruct (document, view,  12);
 }
 
 /*----------------------------------------------------------------------
@@ -3710,7 +3728,7 @@ void CreateMMULTISCRIPTS (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMTABLE (Document document, View view)
 {
-  CreateMathConstruct (13);
+  CreateMathConstruct (document, view,  13);
 }
 
 
@@ -3718,26 +3736,26 @@ void CreateMTABLE (Document document, View view)
   CreateMIntegral
 
   ----------------------------------------------------------------------*/
-void CreateMIntegral (Document doc, View view)
+void CreateMIntegral (Document document, View view)
 {
-  CreateMathConstruct (20, 8747, TRUE);
+  CreateMathConstruct (document, view,  20, 8747, TRUE);
 }
 
 
 /*----------------------------------------------------------------------
   CreateMSum
   ----------------------------------------------------------------------*/
-void CreateMSum (Document doc, View view)
+void CreateMSum (Document document, View view)
 {
-  CreateMathConstruct (21, 1, 0x2211);
+  CreateMathConstruct (document, view,  21, 1, 0x2211);
 }
 
 /*----------------------------------------------------------------------
   CreateMMATRIX
   ----------------------------------------------------------------------*/
-void CreateMMATRIX (Document doc, View view)
+void CreateMMATRIX (Document document, View view)
 {
-  CreateMathConstruct (53, '(', ')', 0, 0);
+  CreateMathConstruct (document, view,  53, '(', ')', 0, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -3745,498 +3763,498 @@ void CreateMMATRIX (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateMABS (Document document, View view)
 {
-  CreateMathConstruct (40,'|','|', TRUE);}
+  CreateMathConstruct (document, view,  40,'|','|', TRUE);}
 /*----------------------------------------------------------------------
   CreateMNORM
   ----------------------------------------------------------------------*/
 void CreateMNORM (Document document, View view)
 {
-  CreateMathConstruct (40,8741,8741, FALSE);}
+  CreateMathConstruct (document, view,  40,8741,8741, FALSE);}
 /*----------------------------------------------------------------------
   CreateMALEPHSUB
   ----------------------------------------------------------------------*/
 void CreateMALEPHSUB (Document document, View view)
 {
-  CreateMathConstruct (31, MathML_EL_MI, 8501);}
+  CreateMathConstruct (document, view,  31, MathML_EL_MI, 8501);}
 /*----------------------------------------------------------------------
   CreateMAND
   ----------------------------------------------------------------------*/
 void CreateMAND (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 0x22c0, 0x2227);}
+  CreateMathConstruct (document, view,  22, -1, 0x22c0, 0x2227);}
 /*----------------------------------------------------------------------
   CreateMANDBINARY
   ----------------------------------------------------------------------*/
 void CreateMANDBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 0x2227);}
+  CreateMathConstruct (document, view,  27, 0x2227);}
 /*----------------------------------------------------------------------
   CreateMAPPROX
   ----------------------------------------------------------------------*/
 void CreateMAPPROX (Document document, View view)
 {
-  CreateMathConstruct (27,8776);}
+  CreateMathConstruct (document, view,  27,8776);}
 /*----------------------------------------------------------------------
   CreateMARG
   ----------------------------------------------------------------------*/
 void CreateMARG (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "arg", TRUE);}
+  CreateMathConstruct (document, view,  23, 0, "arg", TRUE);}
 /*----------------------------------------------------------------------
   CreateMARROW1
   ----------------------------------------------------------------------*/
 void CreateMARROW1 (Document document, View view)
 {
-  CreateMathConstruct (27,8594);}
+  CreateMathConstruct (document, view,  27,8594);}
 /*----------------------------------------------------------------------
   CreateMARROW2
   ----------------------------------------------------------------------*/
 void CreateMARROW2 (Document document, View view)
 {
-  CreateMathConstruct (27,8614);}
+  CreateMathConstruct (document, view,  27,8614);}
 /*----------------------------------------------------------------------
   CreateMCARD
   ----------------------------------------------------------------------*/
 void CreateMCARD (Document document, View view)
 {
-  CreateMathConstruct (40,'|','|', TRUE);}
+  CreateMathConstruct (document, view,  40,'|','|', TRUE);}
 /*----------------------------------------------------------------------
   CreateMCARD2
   ----------------------------------------------------------------------*/
 void CreateMCARD2 (Document document, View view)
 {
-  CreateMathConstruct (23, '#', FALSE);}
+  CreateMathConstruct (document, view,  23, '#', FALSE);}
 /*----------------------------------------------------------------------
   CreateMCARTESIANPRODUCT
   ----------------------------------------------------------------------*/
 void CreateMCARTESIANPRODUCT (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 0x220F, 215);}
+  CreateMathConstruct (document, view,  22, -1, 0x220F, 215);}
 /*----------------------------------------------------------------------
   CreateMCARTESIANPRODUCTBINARY
   ----------------------------------------------------------------------*/
 void CreateMCARTESIANPRODUCTBINARY (Document document, View view)
 {
-  CreateMathConstruct (27,215);}
+  CreateMathConstruct (document, view,  27,215);}
 /*----------------------------------------------------------------------
   CreateMCEILING
   ----------------------------------------------------------------------*/
 void CreateMCEILING (Document document, View view)
 {
-  CreateMathConstruct (40, 5, 6, TRUE);}
+  CreateMathConstruct (document, view,  40, 5, 6, TRUE);}
 /*----------------------------------------------------------------------
   CreateMCODOMAIN
   ----------------------------------------------------------------------*/
 void CreateMCODOMAIN (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "codomain", TRUE);}
+  CreateMathConstruct (document, view,  23, 0, "codomain", TRUE);}
 /*----------------------------------------------------------------------
   CreateMCOMBINATION
   ----------------------------------------------------------------------*/
 void CreateMCOMBINATION (Document document, View view)
 {
-  CreateMathConstruct (32);}
+  CreateMathConstruct (document, view,  32);}
 /*----------------------------------------------------------------------
   CreateMCOMPLEMENT
   ----------------------------------------------------------------------*/
 void CreateMCOMPLEMENT (Document document, View view)
 {
-  CreateMathConstruct (59, 'h');
+  CreateMathConstruct (document, view,  59, 'h');
 }
 /*----------------------------------------------------------------------
   CreateMCOMPLEMENTSUB
   ----------------------------------------------------------------------*/
 void CreateMCOMPLEMENTSUB (Document document, View view)
 {
-  CreateMathConstruct (41, 8705);} 
+  CreateMathConstruct (document, view,  41, 8705);} 
 /*----------------------------------------------------------------------
   CreateMCOMPLEXCARTESIAN
   ----------------------------------------------------------------------*/
 void CreateMCOMPLEXCARTESIAN (Document document, View view)
 {
-  CreateMathConstruct (48, TRUE);}
+  CreateMathConstruct (document, view,  48, TRUE);}
 
 /*----------------------------------------------------------------------
   CreateMCOMPLEXCARTESIAN2
   ----------------------------------------------------------------------*/
 void CreateMCOMPLEXCARTESIAN2 (Document document, View view)
 {
-  CreateMathConstruct (48, FALSE);}
+  CreateMathConstruct (document, view,  48, FALSE);}
 /*----------------------------------------------------------------------
   CreateMCOMPLEXES
   ----------------------------------------------------------------------*/
 void CreateMCOMPLEXES (Document document, View view)
 {
-  CreateMathConstruct (24,8450);}
+  CreateMathConstruct (document, view,  24,8450);}
 /*----------------------------------------------------------------------
   CreateMCOMPLEXPOLAR
   ----------------------------------------------------------------------*/
 void CreateMCOMPLEXPOLAR (Document document, View view)
 {
-  CreateMathConstruct (49);}
+  CreateMathConstruct (document, view,  49);}
 /*----------------------------------------------------------------------
   CreateMCOMPOSE
   ----------------------------------------------------------------------*/
 void CreateMCOMPOSE (Document document, View view)
 {
-  CreateMathConstruct (22, 0, 8728);}
+  CreateMathConstruct (document, view,  22, 0, 8728);}
 /*----------------------------------------------------------------------
   CreateMCOMPOSEBINARY
   ----------------------------------------------------------------------*/
 void CreateMCOMPOSEBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8728);}
+  CreateMathConstruct (document, view,  27, 8728);}
 /*----------------------------------------------------------------------
   CreateMCONGRU
   ----------------------------------------------------------------------*/
 void CreateMCONGRU (Document document, View view)
 {
-  CreateMathConstruct (28);}
+  CreateMathConstruct (document, view,  28);}
 /*----------------------------------------------------------------------
   CreateMCONJUGATE
   ----------------------------------------------------------------------*/
 void CreateMCONJUGATE (Document document, View view)
 {
-  CreateMathConstruct (59, 'h');
+  CreateMathConstruct (document, view,  59, 'h');
 }
 /*----------------------------------------------------------------------
   CreateMCOUPLE
   ----------------------------------------------------------------------*/
 void CreateMCOUPLE (Document document, View view)
 {
-  CreateMathConstruct (37, 2);}
+  CreateMathConstruct (document, view,  37, 2);}
 /*----------------------------------------------------------------------
   CreateMCURL
   ----------------------------------------------------------------------*/
 void CreateMCURL (Document document, View view)
 {
-  CreateMathConstruct (54, 215);}
+  CreateMathConstruct (document, view,  54, 215);}
 /*----------------------------------------------------------------------
   CreateMDETERMINANT
   ----------------------------------------------------------------------*/
 void CreateMDETERMINANT (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "det", FALSE);}
+  CreateMathConstruct (document, view,  23, 0, "det", FALSE);}
 /*----------------------------------------------------------------------
   CreateMDETERMINANT2
   ----------------------------------------------------------------------*/
 void CreateMDETERMINANT2 (Document document, View view)
 {
-  CreateMathConstruct (53, '|', '|', -1, -1);}
+  CreateMathConstruct (document, view,  53, '|', '|', -1, -1);}
 
 /*----------------------------------------------------------------------
   CreateMDIAGONALINTERSECTION
   ----------------------------------------------------------------------*/
 void CreateMDIAGONALINTERSECTION (Document document, View view)
 {
-  CreateMathConstruct (43, FALSE, 916, '<');}
+  CreateMathConstruct (document, view,  43, FALSE, 916, '<');}
 /*----------------------------------------------------------------------
   CreateMDIFF
   ----------------------------------------------------------------------*/
 void CreateMDIFF (Document document, View view)
 {
-  CreateMathConstruct (50, 8518);}
+  CreateMathConstruct (document, view,  50, 8518);}
 /*----------------------------------------------------------------------
   CreateMDIFF3
   ----------------------------------------------------------------------*/
 void CreateMDIFF3 (Document document, View view)
 {
-  CreateMathConstruct (58);}
+  CreateMathConstruct (document, view,  58);}
 /*----------------------------------------------------------------------
   CreateMDIFF2
   ----------------------------------------------------------------------*/
 void CreateMDIFF2 (Document document, View view)
-{CreateMathConstruct (23, 8518, FALSE);}
+{CreateMathConstruct (document, view,  23, 8518, FALSE);}
 
 /*----------------------------------------------------------------------
   CreateMDIRECTSUM
   ----------------------------------------------------------------------*/
 void CreateMDIRECTSUM (Document document, View view)
 {
-  CreateMathConstruct (27,8853);}
+  CreateMathConstruct (document, view,  27,8853);}
 /*----------------------------------------------------------------------
   CreateMDIVERGENCE
   ----------------------------------------------------------------------*/
 void CreateMDIVERGENCE (Document document, View view)
 {
-  CreateMathConstruct (54, '.');}
+  CreateMathConstruct (document, view,  54, '.');}
 /*----------------------------------------------------------------------
   CreateMDIVIDE
   ----------------------------------------------------------------------*/
 void CreateMDIVIDE (Document document, View view)
 {
-  CreateMathConstruct (27,247);}
+  CreateMathConstruct (document, view,  27,247);}
 /*----------------------------------------------------------------------
   CreateMDOMAIN
   ----------------------------------------------------------------------*/
 void CreateMDOMAIN (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "domain", TRUE);}
+  CreateMathConstruct (document, view,  23, 0, "domain", TRUE);}
 /*----------------------------------------------------------------------
   CreateMEMPTYSET
   ----------------------------------------------------------------------*/
 void CreateMEMPTYSET (Document document, View view)
 {
-  CreateMathConstruct (24,8709);}
+  CreateMathConstruct (document, view,  24,8709);}
 /*----------------------------------------------------------------------
   CreateMEQ
   ----------------------------------------------------------------------*/
 void CreateMEQ (Document document, View view)
 {
-  CreateMathConstruct (22, 0, '=');}
+  CreateMathConstruct (document, view,  22, 0, '=');}
 /*----------------------------------------------------------------------
   CreateMEQUIVALENT
   ----------------------------------------------------------------------*/
 void CreateMEQUIVALENT (Document document, View view)
 {
-  CreateMathConstruct (22, 0, 8660);}
+  CreateMathConstruct (document, view,  22, 0, 8660);}
 /*----------------------------------------------------------------------
   CreateMEQUIVALENT2
   ----------------------------------------------------------------------*/
 void CreateMEQUIVALENT2 (Document document, View view)
 {
-  CreateMathConstruct (22, 0, 8801);}
+  CreateMathConstruct (document, view,  22, 0, 8801);}
 /*----------------------------------------------------------------------
   CreateMEQUIVALENT2BINARY
   ----------------------------------------------------------------------*/
 void CreateMEQUIVALENT2BINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8801);}
+  CreateMathConstruct (document, view,  27, 8801);}
 /*----------------------------------------------------------------------
   CreateMEQUIVALENTBINARY
   ----------------------------------------------------------------------*/
 void CreateMEQUIVALENTBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8660);}
+  CreateMathConstruct (document, view,  27, 8660);}
 /*----------------------------------------------------------------------
   CreateMEQUIVALENTUNDER
   ----------------------------------------------------------------------*/
 void CreateMEQUIVALENTUNDER (Document document, View view)
 {
-  CreateMathConstruct (33, TRUE, MathML_EL_MO, '~');}
+  CreateMathConstruct (document, view,  33, TRUE, MathML_EL_MO, '~');}
 /*----------------------------------------------------------------------
   CreateMEULERGAMMA
   ----------------------------------------------------------------------*/
 void CreateMEULERGAMMA (Document document, View view)
 {
-  CreateMathConstruct (24,947);}
+  CreateMathConstruct (document, view,  24,947);}
 /*----------------------------------------------------------------------
   CreateMEXISTS
   ----------------------------------------------------------------------*/
 void CreateMEXISTS (Document document, View view)
 {
-  CreateMathConstruct (29,8707,FALSE);}
+  CreateMathConstruct (document, view,  29,8707,FALSE);}
 /*----------------------------------------------------------------------
   CreateMEXISTS2
   ----------------------------------------------------------------------*/
 void CreateMEXISTS2 (Document document, View view)
 {
-  CreateMathConstruct (29,8707,TRUE);}
+  CreateMathConstruct (document, view,  29,8707,TRUE);}
 
 /*----------------------------------------------------------------------
   CreateMEXPONENTIALE
   ----------------------------------------------------------------------*/
 void CreateMEXPONENTIALE (Document document, View view)
 {
-  CreateMathConstruct (24, 8519);}
+  CreateMathConstruct (document, view,  24, 8519);}
 /*----------------------------------------------------------------------
   CreateMFACTORIAL
   ----------------------------------------------------------------------*/
 void CreateMFACTORIAL (Document document, View view)
 {
-  CreateMathConstruct (23,'!',FALSE);}
+  CreateMathConstruct (document, view,  23,'!',FALSE);}
 /*----------------------------------------------------------------------
   CreateMFACTOROF
   ----------------------------------------------------------------------*/
 void CreateMFACTOROF (Document document, View view)
 {
-  CreateMathConstruct (27,'|');}
+  CreateMathConstruct (document, view,  27,'|');}
 /*----------------------------------------------------------------------
   CreateMFALSE
   ----------------------------------------------------------------------*/
 void CreateMFALSE (Document document, View view)
 {
-  CreateMathConstruct (24, 0, "False");}
+  CreateMathConstruct (document, view,  24, 0, "False");}
 /*----------------------------------------------------------------------
   CreateMFLOOR
   ----------------------------------------------------------------------*/
 void CreateMFLOOR (Document document, View view)
 {
-  CreateMathConstruct (40, 3, 4, TRUE);}
+  CreateMathConstruct (document, view,  40, 3, 4, TRUE);}
 /*----------------------------------------------------------------------
   CreateMFORALL
   ----------------------------------------------------------------------*/
 void CreateMFORALL (Document document, View view)
 {
-  CreateMathConstruct (29,8704,FALSE);}
+  CreateMathConstruct (document, view,  29,8704,FALSE);}
 /*----------------------------------------------------------------------
   CreateMGCD
   ----------------------------------------------------------------------*/
 void CreateMGCD (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "gcd", TRUE);}
+  CreateMathConstruct (document, view,  23, 0, "gcd", TRUE);}
 /*----------------------------------------------------------------------
   CreateMGEQ
   ----------------------------------------------------------------------*/
 void CreateMGEQ (Document document, View view)
 {
-  CreateMathConstruct (22, 0, 8805);}
+  CreateMathConstruct (document, view,  22, 0, 8805);}
 /*----------------------------------------------------------------------
   CreateMGEQBINARY
   ----------------------------------------------------------------------*/
 void CreateMGEQBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8805);}
+  CreateMathConstruct (document, view,  27, 8805);}
 /*----------------------------------------------------------------------
   CreateMGRAD
   ----------------------------------------------------------------------*/
 void CreateMGRAD (Document document, View view)
 {
-  CreateMathConstruct (54, 0);}
+  CreateMathConstruct (document, view,  54, 0);}
 /*----------------------------------------------------------------------
   CreateMGT
   ----------------------------------------------------------------------*/
 void CreateMGT (Document document, View view)
 {
-  CreateMathConstruct (22, 0, '>');}
+  CreateMathConstruct (document, view,  22, 0, '>');}
 /*----------------------------------------------------------------------
   CreateMIDENT
   ----------------------------------------------------------------------*/
 void CreateMIDENT (Document document, View view)
 {
-  CreateMathConstruct (24, 0, "Id");}
+  CreateMathConstruct (document, view,  24, 0, "Id");}
 /*----------------------------------------------------------------------
   CreateMIMAGE
   ----------------------------------------------------------------------*/
 void CreateMIMAGE (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "image", TRUE);}
+  CreateMathConstruct (document, view,  23, 0, "image", TRUE);}
 /*----------------------------------------------------------------------
   CreateMIMAGINARY
   ----------------------------------------------------------------------*/
 void CreateMIMAGINARY (Document document, View view)
 {
-  CreateMathConstruct (23, 8465 ,TRUE);}
+  CreateMathConstruct (document, view,  23, 8465 ,TRUE);}
 /*----------------------------------------------------------------------
   CreateMIMAGINARYI
   ----------------------------------------------------------------------*/
 void CreateMIMAGINARYI (Document document, View view)
 {
-  CreateMathConstruct (24,8520);}
+  CreateMathConstruct (document, view,  24,8520);}
 /*----------------------------------------------------------------------
   CreateMIMPLIES
   ----------------------------------------------------------------------*/
 void CreateMIMPLIES (Document document, View view)
 {
-  CreateMathConstruct (27,8658);}
+  CreateMathConstruct (document, view,  27,8658);}
 /*----------------------------------------------------------------------
   CreateMIN
   ----------------------------------------------------------------------*/
 void CreateMIN (Document document, View view)
 {
-  CreateMathConstruct (27,8712);}
+  CreateMathConstruct (document, view,  27,8712);}
 /*----------------------------------------------------------------------
   CreateMINF
   ----------------------------------------------------------------------*/
 void CreateMINF (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "inf", FALSE);}
+  CreateMathConstruct (document, view,  23, 0, "inf", FALSE);}
 /*----------------------------------------------------------------------
   CreateMINFINITY
   ----------------------------------------------------------------------*/
 void CreateMINFINITY (Document document, View view)
 {
-  CreateMathConstruct (24,8734);}
+  CreateMathConstruct (document, view,  24,8734);}
 /*----------------------------------------------------------------------
   CreateMINFUNDER
   ----------------------------------------------------------------------*/
 void CreateMINFUNDER (Document document, View view)
 {
-  CreateMathConstruct (34, "inf");} 
+  CreateMathConstruct (document, view,  34, "inf");} 
 /*----------------------------------------------------------------------
   CreateMINT2
   ----------------------------------------------------------------------*/
 void CreateMINT2 (Document document, View view)
 {
-  CreateMathConstruct (20, -1);}
+  CreateMathConstruct (document, view,  20, -1);}
 /*----------------------------------------------------------------------
   CreateMINTEGERS
   ----------------------------------------------------------------------*/
 void CreateMINTEGERS (Document document, View view)
 {
-  CreateMathConstruct (24,8484);}
+  CreateMathConstruct (document, view,  24,8484);}
 /*----------------------------------------------------------------------
   CreateMINTERSECT
   ----------------------------------------------------------------------*/
 void CreateMINTERSECT (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 0x22C2, 0x2229);}
+  CreateMathConstruct (document, view,  22, -1, 0x22C2, 0x2229);}
 /*----------------------------------------------------------------------
   CreateMINTERSECTBINARY
   ----------------------------------------------------------------------*/
 void CreateMINTERSECTBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 0x2229);}
+  CreateMathConstruct (document, view,  27, 0x2229);}
 /*----------------------------------------------------------------------
   CreateMINTERSECTUNDER
   ----------------------------------------------------------------------*/
 void CreateMINTERSECTUNDER (Document document, View view)
 {
-  CreateMathConstruct (21, 2, 0x22C2);}
+  CreateMathConstruct (document, view,  21, 2, 0x22C2);}
 /*----------------------------------------------------------------------
   CreateMINTUNDER
   ----------------------------------------------------------------------*/
 void CreateMINTUNDER (Document document, View view)
 {
-  CreateMathConstruct (20, 8747, FALSE);}
+  CreateMathConstruct (document, view,  20, 8747, FALSE);}
 /*----------------------------------------------------------------------
   CreateMINVERSE
   ----------------------------------------------------------------------*/
 void CreateMINVERSE (Document document, View view)
 {
-  CreateMathConstruct (30, MathML_EL_MN, -1, "-1");}
+  CreateMathConstruct (document, view,  30, MathML_EL_MN, -1, "-1");}
 /*----------------------------------------------------------------------
   CreateMISOMORPHIC
   ----------------------------------------------------------------------*/
 void CreateMISOMORPHIC (Document document, View view)
 {
-  CreateMathConstruct (27,8773);}
+  CreateMathConstruct (document, view,  27,8773);}
 /*----------------------------------------------------------------------
   CreateMLISTEXTENSION
   ----------------------------------------------------------------------*/
 void CreateMLISTEXTENSION (Document document, View view)
 {
-  CreateMathConstruct (39, '[', ']', ';', -1);}
+  CreateMathConstruct (document, view,  39, '[', ']', ';', -1);}
 /*----------------------------------------------------------------------
   CreateMLCM
   ----------------------------------------------------------------------*/
 void CreateMLCM (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "lcm", TRUE);}
+  CreateMathConstruct (document, view,  23, 0, "lcm", TRUE);}
 /*----------------------------------------------------------------------
   CreateMLAPLACIAN
   ----------------------------------------------------------------------*/
 void CreateMLAPLACIAN (Document document, View view)
 {
-  CreateMathConstruct (54, 1);}
+  CreateMathConstruct (document, view,  54, 1);}
 /*----------------------------------------------------------------------
   CreateMLEQ
   ----------------------------------------------------------------------*/
 void CreateMLEQ (Document document, View view)
 {
-  CreateMathConstruct (22, 0, 8804);}
+  CreateMathConstruct (document, view,  22, 0, 8804);}
 /*----------------------------------------------------------------------
   CreateMLL
   ----------------------------------------------------------------------*/
 void CreateMLL (Document document, View view)
 {
-  CreateMathConstruct (27, 8810);}
+  CreateMathConstruct (document, view,  27, 8810);}
 /*----------------------------------------------------------------------
   CreateMGG
   ----------------------------------------------------------------------*/
 void CreateMGG (Document document, View view)
 {
-  CreateMathConstruct (27, 8811);}
+  CreateMathConstruct (document, view,  27, 8811);}
 
 
 /*----------------------------------------------------------------------
@@ -4244,667 +4262,667 @@ void CreateMGG (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMLEQBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8804);}
+  CreateMathConstruct (document, view,  27, 8804);}
 /*----------------------------------------------------------------------
   CreateMLISTSEPARATION
   ----------------------------------------------------------------------*/
 void CreateMLISTSEPARATION (Document document, View view)
 {
-  CreateMathConstruct (38, '[', ']');}
+  CreateMathConstruct (document, view,  38, '[', ']');}
 /*----------------------------------------------------------------------
   CreateMLT
   ----------------------------------------------------------------------*/
 void CreateMLT (Document document, View view)
 {
-  CreateMathConstruct (22, 0, '<');}
+  CreateMathConstruct (document, view,  22, 0, '<');}
 /*----------------------------------------------------------------------
   CreateMLAMBDA
   ----------------------------------------------------------------------*/
 void CreateMLAMBDA (Document document, View view)
 {
-  CreateMathConstruct (45);}
+  CreateMathConstruct (document, view,  45);}
 
 /*----------------------------------------------------------------------
   CreateMLIM
   ----------------------------------------------------------------------*/
 void CreateMLIM (Document document, View view)
 {
-  CreateMathConstruct (33, FALSE, MathML_EL_MO, 0, "lim");}
+  CreateMathConstruct (document, view,  33, FALSE, MathML_EL_MO, 0, "lim");}
 
 /*----------------------------------------------------------------------
   CreateMLIMTENDSTO
   ----------------------------------------------------------------------*/
 void CreateMLIMTENDSTO (Document document, View view)
 {
-  CreateMathConstruct (43, FALSE, 0, 8594, "lim");}
+  CreateMathConstruct (document, view,  43, FALSE, 0, 8594, "lim");}
 
 /*----------------------------------------------------------------------
   CreateMMAP
   ----------------------------------------------------------------------*/
 void CreateMMAP (Document document, View view)
 {
-  CreateMathConstruct (47);}
+  CreateMathConstruct (document, view,  47);}
 /*----------------------------------------------------------------------
   CreateMMAX
   ----------------------------------------------------------------------*/
 void CreateMMAX (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "max", FALSE);}
+  CreateMathConstruct (document, view,  23, 0, "max", FALSE);}
 /*----------------------------------------------------------------------
   CreateMMAXUNDER
   ----------------------------------------------------------------------*/
 void CreateMMAXUNDER (Document document, View view)
 {
-  CreateMathConstruct (34, "max");} 
+  CreateMathConstruct (document, view,  34, "max");} 
 /*----------------------------------------------------------------------
   CreateMMEAN
   ----------------------------------------------------------------------*/
 void CreateMMEAN (Document document, View view)
 {
-  CreateMathConstruct (40, '<', '>', TRUE);}
+  CreateMathConstruct (document, view,  40, '<', '>', TRUE);}
 /*----------------------------------------------------------------------
   CreateMMEDIAN
   ----------------------------------------------------------------------*/
 void CreateMMEDIAN (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "median", TRUE);}
+  CreateMathConstruct (document, view,  23, 0, "median", TRUE);}
 /*----------------------------------------------------------------------
   CreateMMIN
   ----------------------------------------------------------------------*/
 void CreateMMIN (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "min", FALSE);}
+  CreateMathConstruct (document, view,  23, 0, "min", FALSE);}
 /*----------------------------------------------------------------------
   CreateMMINUNDER
   ----------------------------------------------------------------------*/
 void CreateMMINUNDER (Document document, View view)
 {
-  CreateMathConstruct (34, "min");} 
+  CreateMathConstruct (document, view,  34, "min");} 
 /*----------------------------------------------------------------------
   CreateMMINUSBINARY
   ----------------------------------------------------------------------*/
 void CreateMMINUSBINARY (Document document, View view)
 {
-  CreateMathConstruct (27,8722);}
+  CreateMathConstruct (document, view,  27,8722);}
 /*----------------------------------------------------------------------
   CreateMMINUSUNARY
   ----------------------------------------------------------------------*/
 void CreateMMINUSUNARY (Document document, View view)
 {
-  CreateMathConstruct (23, 8722, FALSE);}
+  CreateMathConstruct (document, view,  23, 8722, FALSE);}
 /*----------------------------------------------------------------------
   CreateMSYMBOLO
   ----------------------------------------------------------------------*/
 void CreateMSYMBOLO (Document document, View view)
 {
-  CreateMathConstruct (23, 'o', TRUE);}
+  CreateMathConstruct (document, view,  23, 'o', TRUE);}
 /*----------------------------------------------------------------------
   CreateMSYMBOLOO
   ----------------------------------------------------------------------*/
 void CreateMSYMBOLOO (Document document, View view)
 {
-  CreateMathConstruct (23, 'O', TRUE);}
+  CreateMathConstruct (document, view,  23, 'O', TRUE);}
 /*----------------------------------------------------------------------
   CreateMMODE
   ----------------------------------------------------------------------*/
 void CreateMMODE (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "mode", TRUE);}
+  CreateMathConstruct (document, view,  23, 0, "mode", TRUE);}
 /*----------------------------------------------------------------------
   CreateMMOMENT
   ----------------------------------------------------------------------*/
 void CreateMMOMENT (Document document, View view)
 {
-  CreateMathConstruct (56);}
+  CreateMathConstruct (document, view,  56);}
 /*----------------------------------------------------------------------
   CreateMNATURALS
   ----------------------------------------------------------------------*/
 void CreateMNATURALS (Document document, View view)
 {
-  CreateMathConstruct (24,8469);}
+  CreateMathConstruct (document, view,  24,8469);}
 /*----------------------------------------------------------------------
   CreateMNEQ
   ----------------------------------------------------------------------*/
 void CreateMNEQ (Document document, View view)
 {
-  CreateMathConstruct (27,8800);}
+  CreateMathConstruct (document, view,  27,8800);}
 /*----------------------------------------------------------------------
   CreateMNOT
   ----------------------------------------------------------------------*/
 void CreateMNOT (Document document, View view)
 {
-  CreateMathConstruct (23, 172, FALSE);}
+  CreateMathConstruct (document, view,  23, 172, FALSE);}
 /*----------------------------------------------------------------------
   CreateMNOTANUMBER
   ----------------------------------------------------------------------*/
 void CreateMNOTANUMBER (Document document, View view)
 {
-  CreateMathConstruct (24, 0, "NaN");}
+  CreateMathConstruct (document, view,  24, 0, "NaN");}
 /*----------------------------------------------------------------------
   CreateMNOTIN
   ----------------------------------------------------------------------*/
 void CreateMNOTIN (Document document, View view)
 {
-  CreateMathConstruct (27,8713);}
+  CreateMathConstruct (document, view,  27,8713);}
 /*----------------------------------------------------------------------
   CreateMNOTPRSUBSET
   ----------------------------------------------------------------------*/
 void CreateMNOTPRSUBSET (Document document, View view)
 {
-  CreateMathConstruct (27,8836);}
+  CreateMathConstruct (document, view,  27,8836);}
 /*----------------------------------------------------------------------
   CreateMNOTSUBSET
   ----------------------------------------------------------------------*/
 void CreateMNOTSUBSET (Document document, View view)
 {
-  CreateMathConstruct (27,8840);}
+  CreateMathConstruct (document, view,  27,8840);}
 /*----------------------------------------------------------------------
   CreateMNUPLET
   ----------------------------------------------------------------------*/
 void CreateMNUPLET (Document document, View view)
 {
-  CreateMathConstruct (37, 0);}
+  CreateMathConstruct (document, view,  37, 0);}
 /*----------------------------------------------------------------------
   CreateMOMEGASUB
   ----------------------------------------------------------------------*/
 void CreateMOMEGASUB (Document document, View view)
 {
-  CreateMathConstruct (31, MathML_EL_MI, 969);}
+  CreateMathConstruct (document, view,  31, MathML_EL_MI, 969);}
 /*----------------------------------------------------------------------
   CreateMOR
   ----------------------------------------------------------------------*/
 void CreateMOR (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 0x22c1, 0x2228);}
+  CreateMathConstruct (document, view,  22, -1, 0x22c1, 0x2228);}
 /*----------------------------------------------------------------------
   CreateMORBINARY
   ----------------------------------------------------------------------*/
 void CreateMORBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 0x2228);}
+  CreateMathConstruct (document, view,  27, 0x2228);}
 /*----------------------------------------------------------------------
   CreateMORTHOGONAL
   ----------------------------------------------------------------------*/
 void CreateMORTHOGONAL (Document document, View view)
 {
-  CreateMathConstruct (27,8869);}
+  CreateMathConstruct (document, view,  27,8869);}
 /*----------------------------------------------------------------------
   CreateMPARALLEL
   ----------------------------------------------------------------------*/
 void CreateMPARALLEL (Document document, View view)
 {
-  CreateMathConstruct (27,8741);}
+  CreateMathConstruct (document, view,  27,8741);}
 /*----------------------------------------------------------------------
   CreateMORTHOGONALCOMPLEMENT
   ----------------------------------------------------------------------*/
 void CreateMORTHOGONALCOMPLEMENT (Document document, View view)
 {
-  CreateMathConstruct (30, MathML_EL_MO, 8869);}
+  CreateMathConstruct (document, view,  30, MathML_EL_MO, 8869);}
 /*----------------------------------------------------------------------
   CreateMOUTERPRODUCT
   ----------------------------------------------------------------------*/
 void CreateMOUTERPRODUCT (Document document, View view)
 {
-  CreateMathConstruct (27,8855);}
+  CreateMathConstruct (document, view,  27,8855);}
 /*----------------------------------------------------------------------
   CreateMPARTIALDIFF
   ----------------------------------------------------------------------*/
 void CreateMPARTIALDIFF (Document document, View view)
 {
-  CreateMathConstruct (50, 8706);}
+  CreateMathConstruct (document, view,  50, 8706);}
 /*----------------------------------------------------------------------
   CreateMPARTIALDIFF2
   ----------------------------------------------------------------------*/
 void CreateMPARTIALDIFF2 (Document document, View view)
 {
-  CreateMathConstruct (51);}
+  CreateMathConstruct (document, view,  51);}
 /*----------------------------------------------------------------------
   CreateMPI
   ----------------------------------------------------------------------*/
 void CreateMPI (Document document, View view)
 {
-  CreateMathConstruct (24,960);}
+  CreateMathConstruct (document, view,  24,960);}
 /*----------------------------------------------------------------------
   CreateMPIECEWISE
   ----------------------------------------------------------------------*/
 void CreateMPIECEWISE (Document document, View view)
 {
-  CreateMathConstruct (25);}
+  CreateMathConstruct (document, view,  25);}
 
 /*----------------------------------------------------------------------
   CreateMVERTICALBRACE
   ----------------------------------------------------------------------*/
 void CreateMVERTICALBRACE (Document document, View view)
 {
-  CreateMathConstruct (25);}
+  CreateMathConstruct (document, view,  25);}
 
 /*----------------------------------------------------------------------
   CreateMPLUS
   ----------------------------------------------------------------------*/
 void CreateMPLUS (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 0x2211, '+');}
+  CreateMathConstruct (document, view,  22, -1, 0x2211, '+');}
 /*----------------------------------------------------------------------
   CreateMPOWER
   ----------------------------------------------------------------------*/
 void CreateMPOWER (Document document, View view)
 {
-  CreateMathConstruct (7);}
+  CreateMathConstruct (document, view,  7);}
 /*----------------------------------------------------------------------
   CreateMPOWERSET
   ----------------------------------------------------------------------*/
 void CreateMPOWERSET (Document document, View view)
 {
-  CreateMathConstruct (23, 8472, TRUE);}
+  CreateMathConstruct (document, view,  23, 8472, TRUE);}
 /*----------------------------------------------------------------------
   CreateMPRIMES
   ----------------------------------------------------------------------*/
 void CreateMPRIMES (Document document, View view)
 {
-  CreateMathConstruct (24,8473);}
+  CreateMathConstruct (document, view,  24,8473);}
 /*----------------------------------------------------------------------
   CreateMPRODUNDER
   ----------------------------------------------------------------------*/
 void CreateMPRODUNDER (Document document, View view)
 {
-  CreateMathConstruct (21, 2, 0x220F);}
+  CreateMathConstruct (document, view,  21, 2, 0x220F);}
 /*----------------------------------------------------------------------
   CreateMPRODUNDEROVER
   ----------------------------------------------------------------------*/
 void CreateMPRODUNDEROVER (Document document, View view)
 {
-  CreateMathConstruct (21, 1, 0x220F);}
+  CreateMathConstruct (document, view,  21, 1, 0x220F);}
 /*----------------------------------------------------------------------
   CreateMPRSUBSET
   ----------------------------------------------------------------------*/
 void CreateMPRSUBSET (Document document, View view)
 {
-  CreateMathConstruct (22, 0, 8834);}
+  CreateMathConstruct (document, view,  22, 0, 8834);}
 /*----------------------------------------------------------------------
   CreateMPRSUBSETBINARY
   ----------------------------------------------------------------------*/
 void CreateMPRSUBSETBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8834);}
+  CreateMathConstruct (document, view,  27, 8834);}
 /*----------------------------------------------------------------------
   CreateMQUOTIENT
   ----------------------------------------------------------------------*/
 void CreateMQUOTIENT (Document document, View view)
 {
-  CreateMathConstruct (46);}
+  CreateMathConstruct (document, view,  46);}
 /*----------------------------------------------------------------------
   CreateMRATIONNALS
   ----------------------------------------------------------------------*/
 void CreateMRATIONNALS (Document document, View view)
 {
-  CreateMathConstruct (24, 8474);}
+  CreateMathConstruct (document, view,  24, 8474);}
 /*----------------------------------------------------------------------
   CreateMREAL
   ----------------------------------------------------------------------*/
 void CreateMREAL (Document document, View view)
 {
-  CreateMathConstruct (23, 8476, TRUE);}
+  CreateMathConstruct (document, view,  23, 8476, TRUE);}
 /*----------------------------------------------------------------------
   CreateMREALS
   ----------------------------------------------------------------------*/
 void CreateMREALS (Document document, View view)
 {
-  CreateMathConstruct (24,8477);}
+  CreateMathConstruct (document, view,  24,8477);}
 /*----------------------------------------------------------------------
   CreateMQUATERNIONS
   ----------------------------------------------------------------------*/
 void CreateMQUATERNIONS (Document document, View view)
 {
-  CreateMathConstruct (24,8461);}
+  CreateMathConstruct (document, view,  24,8461);}
 /*----------------------------------------------------------------------
   CreateMREM
   ----------------------------------------------------------------------*/
 void CreateMREM (Document document, View view)
 {
-  CreateMathConstruct (27, 0, "mod");}
+  CreateMathConstruct (document, view,  27, 0, "mod");}
 /*----------------------------------------------------------------------
   CreateMSCALARPRODUCT
   ----------------------------------------------------------------------*/
 void CreateMSCALARPRODUCT (Document document, View view)
 {
-  CreateMathConstruct (27,'.');}
+  CreateMathConstruct (document, view,  27,'.');}
 /*----------------------------------------------------------------------
   CreateMSDEV
   ----------------------------------------------------------------------*/
 void CreateMSDEV (Document document, View view)
 {
-  CreateMathConstruct (23, 963, TRUE);}
+  CreateMathConstruct (document, view,  23, 963, TRUE);}
 /*----------------------------------------------------------------------
   CreateMSELECTOR
   ----------------------------------------------------------------------*/
 void CreateMSELECTOR (Document document, View view)
 {
-  CreateMathConstruct (36);}
+  CreateMathConstruct (document, view,  36);}
 /*----------------------------------------------------------------------
   CreateMSETDIFF
   ----------------------------------------------------------------------*/
 void CreateMSETDIFF (Document document, View view)
 {
-  CreateMathConstruct (27,'\\');}
+  CreateMathConstruct (document, view,  27,'\\');}
 /*----------------------------------------------------------------------
   CreateMSETEXTENSION
   ----------------------------------------------------------------------*/
 void CreateMSETEXTENSION (Document document, View view)
 {
-  CreateMathConstruct (39, '{', '}', ';', -1);}
+  CreateMathConstruct (document, view,  39, '{', '}', ';', -1);}
 /*----------------------------------------------------------------------
   CreateMSETSEPARATION
   ----------------------------------------------------------------------*/
 void CreateMSETSEPARATION (Document document, View view)
 {
-  CreateMathConstruct (38, '{', '}');}
+  CreateMathConstruct (document, view,  38, '{', '}');}
 /*----------------------------------------------------------------------
   CreateMSETSYMDIFF
   ----------------------------------------------------------------------*/
 void CreateMSETSYMDIFF (Document document, View view)
 {
-  CreateMathConstruct (27, 916);}
+  CreateMathConstruct (document, view,  27, 916);}
 /*----------------------------------------------------------------------
   CreateMSUBSET
   ----------------------------------------------------------------------*/
 void CreateMSUBSET (Document document, View view)
 {
-  CreateMathConstruct (22, 0, 8838);}
+  CreateMathConstruct (document, view,  22, 0, 8838);}
 /*----------------------------------------------------------------------
   CreateMSUBSETBINARY
   ----------------------------------------------------------------------*/
 void CreateMSUBSETBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 8838);}
+  CreateMathConstruct (document, view,  27, 8838);}
 /*----------------------------------------------------------------------
   CreateMSUMUNDER
   ----------------------------------------------------------------------*/
 void CreateMSUMUNDER (Document document, View view)
 {
-  CreateMathConstruct (21, 2, 0x2211);}
+  CreateMathConstruct (document, view,  21, 2, 0x2211);}
 /*----------------------------------------------------------------------
   CreateMSUP2
   ----------------------------------------------------------------------*/
 void CreateMSUP2 (Document document, View view)
 {
-  CreateMathConstruct (23, 0, "sup", FALSE);}
+  CreateMathConstruct (document, view,  23, 0, "sup", FALSE);}
 /*----------------------------------------------------------------------
   CreateMSUPMINUS
   ----------------------------------------------------------------------*/
 void CreateMSUPMINUS (Document document, View view)
 {
-  CreateMathConstruct (30, MathML_EL_MI, '-');}
+  CreateMathConstruct (document, view,  30, MathML_EL_MI, '-');}
 /*----------------------------------------------------------------------
   CreateMSUPPLUS
   ----------------------------------------------------------------------*/
 void CreateMSUPPLUS (Document document, View view)
 {
-  CreateMathConstruct (30, MathML_EL_MI, '+');}
+  CreateMathConstruct (document, view,  30, MathML_EL_MI, '+');}
 /*----------------------------------------------------------------------
   CreateMSUPUNDER
   ----------------------------------------------------------------------*/
 void CreateMSUPUNDER (Document document, View view)
 {
-  CreateMathConstruct (34, "sup");}
+  CreateMathConstruct (document, view,  34, "sup");}
 /*----------------------------------------------------------------------
   CreateMTENDSTO
   ----------------------------------------------------------------------*/
 void CreateMTENDSTO (Document document, View view)
 {
-  CreateMathConstruct (33, TRUE, MathML_EL_MO, 'R');}
+  CreateMathConstruct (document, view,  33, TRUE, MathML_EL_MO, 'R');}
 /*----------------------------------------------------------------------
   CreateMTENDSTOTENDSTO
   ----------------------------------------------------------------------*/
 void CreateMTENDSTOTENDSTO (Document document, View view)
 {
-  CreateMathConstruct (43, TRUE, 'R', 8594);}
+  CreateMathConstruct (document, view,  43, TRUE, 'R', 8594);}
 /*----------------------------------------------------------------------
   CreateMTIMES
   ----------------------------------------------------------------------*/
 void CreateMTIMES (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 0x220F, 215);}
+  CreateMathConstruct (document, view,  22, -1, 0x220F, 215);}
 /*----------------------------------------------------------------------
   CreateMTIMESBINARY
   ----------------------------------------------------------------------*/
 void CreateMTIMESBINARY (Document document, View view)
 {
-  CreateMathConstruct (27,215);}
+  CreateMathConstruct (document, view,  27,215);}
 /*----------------------------------------------------------------------
   CreateMTRANSPOSE
   ----------------------------------------------------------------------*/
 void CreateMTRANSPOSE (Document document, View view)
 {
-  CreateMathConstruct (57);}
+  CreateMathConstruct (document, view,  57);}
 /*----------------------------------------------------------------------
   CreateMTRUE
   ----------------------------------------------------------------------*/
 void CreateMTRUE (Document document, View view)
 {
-  CreateMathConstruct (24, 0, "True");}
+  CreateMathConstruct (document, view,  24, 0, "True");}
 /*----------------------------------------------------------------------
   CreateMUNION
   ----------------------------------------------------------------------*/
 void CreateMUNION (Document document, View view)
 {
-  CreateMathConstruct (22, -1, 0x22C3, 0x222A);}
+  CreateMathConstruct (document, view,  22, -1, 0x22C3, 0x222A);}
 /*----------------------------------------------------------------------
   CreateMUNIONUNARY
   ----------------------------------------------------------------------*/
 void CreateMUNIONUNARY (Document document, View view)
 {
-  CreateMathConstruct (23, 0x22C3, FALSE);}
+  CreateMathConstruct (document, view,  23, 0x22C3, FALSE);}
 /*----------------------------------------------------------------------
   CreateMUNIONUNDER
   ----------------------------------------------------------------------*/
 void CreateMUNIONUNDER (Document document, View view)
 {
-  CreateMathConstruct (21, 2, 0x22C3);}
+  CreateMathConstruct (document, view,  21, 2, 0x22C3);}
 /*----------------------------------------------------------------------
   CreateMUNIONBINARY
   ----------------------------------------------------------------------*/
 void CreateMUNIONBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 0x222A);}
+  CreateMathConstruct (document, view,  27, 0x222A);}
 /*----------------------------------------------------------------------
   CreateMVARIANCE
   ----------------------------------------------------------------------*/
 void CreateMVARIANCE (Document document, View view)
 {
-  CreateMathConstruct (55);}
+  CreateMathConstruct (document, view,  55);}
 /*----------------------------------------------------------------------
   CreateMVECTORPRODUCT
   ----------------------------------------------------------------------*/
 void CreateMVECTORPRODUCT (Document document, View view)
 {
-  CreateMathConstruct (27,8896);}
+  CreateMathConstruct (document, view,  27,8896);}
 /*----------------------------------------------------------------------
   CreateMVECTORPRODUCT
   ----------------------------------------------------------------------*/
 void CreateMVECTORROW (Document document, View view)
 {
-  CreateMathConstruct (53, '(', ')', 0, 1);}
+  CreateMathConstruct (document, view,  53, '(', ')', 0, 1);}
 /*----------------------------------------------------------------------
   CreateMVECTORPRODUCT
   ----------------------------------------------------------------------*/
 void CreateMVECTORCOLUMN (Document document, View view)
 {
-  CreateMathConstruct (53, '(', ')', 1, 0);}
+  CreateMathConstruct (document, view,  53, '(', ')', 1, 0);}
 /*----------------------------------------------------------------------
   CreateMXOR
   ----------------------------------------------------------------------*/
 void CreateMXOR (Document document, View view)
-{CreateMathConstruct (22, -1, 0, "xor", 0);}
+{CreateMathConstruct (document, view,  22, -1, 0, "xor", 0);}
 
 /*----------------------------------------------------------------------
   CreateMXORBINARY
   ----------------------------------------------------------------------*/
 void CreateMXORBINARY (Document document, View view)
 {
-  CreateMathConstruct (27, 0, "xor");}
+  CreateMathConstruct (document, view,  27, 0, "xor");}
 
 /*----------------------------------------------------------------------
   CreateMARCCOS
   ----------------------------------------------------------------------*/
 void CreateMARCCOS (Document document, View view)
 {
-CreateMathConstruct (44, "arccos");}
+CreateMathConstruct (document, view,  44, "arccos");}
 /*----------------------------------------------------------------------
   CreateMARCCOSH
   ----------------------------------------------------------------------*/
 void CreateMARCCOSH (Document document, View view)
 {
-CreateMathConstruct (44, "arccosh");}
+CreateMathConstruct (document, view,  44, "arccosh");}
 /*----------------------------------------------------------------------
   CreateMARCCOT
   ----------------------------------------------------------------------*/
 void CreateMARCCOT (Document document, View view)
 {
-CreateMathConstruct (44, "arccot");}
+CreateMathConstruct (document, view,  44, "arccot");}
 /*----------------------------------------------------------------------
   CreateMARCCOTH
   ----------------------------------------------------------------------*/
 void CreateMARCCOTH (Document document, View view)
 {
-CreateMathConstruct (44, "arccoth");}
+CreateMathConstruct (document, view,  44, "arccoth");}
 /*----------------------------------------------------------------------
   CreateMARCCSC
   ----------------------------------------------------------------------*/
 void CreateMARCCSC (Document document, View view)
 {
-CreateMathConstruct (44, "arccsc");}
+CreateMathConstruct (document, view,  44, "arccsc");}
 /*----------------------------------------------------------------------
   CreateMARCCSCH
   ----------------------------------------------------------------------*/
 void CreateMARCCSCH (Document document, View view)
 {
-CreateMathConstruct (44, "arccsch");}
+CreateMathConstruct (document, view,  44, "arccsch");}
 /*----------------------------------------------------------------------
   CreateMARCSEC
   ----------------------------------------------------------------------*/
 void CreateMARCSEC (Document document, View view)
 {
-CreateMathConstruct (44, "arcsec");}
+CreateMathConstruct (document, view,  44, "arcsec");}
 /*----------------------------------------------------------------------
   CreateMARCSECH
   ----------------------------------------------------------------------*/
 void CreateMARCSECH (Document document, View view)
 {
-CreateMathConstruct (44, "arcsech");}
+CreateMathConstruct (document, view,  44, "arcsech");}
 /*----------------------------------------------------------------------
   CreateMARCSIN
   ----------------------------------------------------------------------*/
 void CreateMARCSIN (Document document, View view)
 {
-CreateMathConstruct (44, "arcsin");}
+CreateMathConstruct (document, view,  44, "arcsin");}
 /*----------------------------------------------------------------------
   CreateMARCSINH
   ----------------------------------------------------------------------*/
 void CreateMARCSINH (Document document, View view)
 {
-CreateMathConstruct (44, "arcsinh");}
+CreateMathConstruct (document, view,  44, "arcsinh");}
 /*----------------------------------------------------------------------
   CreateMARCTAN
   ----------------------------------------------------------------------*/
 void CreateMARCTAN (Document document, View view)
 {
-CreateMathConstruct (44, "arctan");}
+CreateMathConstruct (document, view,  44, "arctan");}
 /*----------------------------------------------------------------------
   CreateMARCTANH
   ----------------------------------------------------------------------*/
 void CreateMARCTANH (Document document, View view)
 {
-CreateMathConstruct (44, "arctanh");}
+CreateMathConstruct (document, view,  44, "arctanh");}
 /*----------------------------------------------------------------------
   CreateMCOS
   ----------------------------------------------------------------------*/
 void CreateMCOS (Document document, View view)
 {
-CreateMathConstruct (44, "cos");}
+CreateMathConstruct (document, view,  44, "cos");}
 /*----------------------------------------------------------------------
   CreateMCOSH
   ----------------------------------------------------------------------*/
 void CreateMCOSH (Document document, View view)
 {
-CreateMathConstruct (44, "cosh");}
+CreateMathConstruct (document, view,  44, "cosh");}
 /*----------------------------------------------------------------------
   CreateMCOT
   ----------------------------------------------------------------------*/
 void CreateMCOT (Document document, View view)
 {
-CreateMathConstruct (44, "cot");}
+CreateMathConstruct (document, view,  44, "cot");}
 /*----------------------------------------------------------------------
   CreateMCOTH
   ----------------------------------------------------------------------*/
 void CreateMCOTH (Document document, View view)
 {
-CreateMathConstruct (44, "coth");}
+CreateMathConstruct (document, view,  44, "coth");}
 /*----------------------------------------------------------------------
   CreateMCSC
   ----------------------------------------------------------------------*/
 void CreateMCSC (Document document, View view)
 {
-CreateMathConstruct (44, "csc");}
+CreateMathConstruct (document, view,  44, "csc");}
 /*----------------------------------------------------------------------
   CreateMCSCH
   ----------------------------------------------------------------------*/
 void CreateMCSCH (Document document, View view)
 {
-CreateMathConstruct (44, "csch");}
+CreateMathConstruct (document, view,  44, "csch");}
 /*----------------------------------------------------------------------
   CreateMEXP
   ----------------------------------------------------------------------*/
 void CreateMEXP (Document document, View view)
 {
-CreateMathConstruct (44, "exp");}
+CreateMathConstruct (document, view,  44, "exp");}
 /*----------------------------------------------------------------------
   CreateMLN
   ----------------------------------------------------------------------*/
 void CreateMLN (Document document, View view)
 {
-CreateMathConstruct (44, "ln");}
+CreateMathConstruct (document, view,  44, "ln");}
 /*----------------------------------------------------------------------
   CreateMLOG
   ----------------------------------------------------------------------*/
 void CreateMLOG (Document document, View view)
 {
-CreateMathConstruct (44, "log");}
+CreateMathConstruct (document, view,  44, "log");}
 /*----------------------------------------------------------------------
   CreateMSEC
   ----------------------------------------------------------------------*/
 void CreateMSEC (Document document, View view)
 {
-CreateMathConstruct (44, "sec");}
+CreateMathConstruct (document, view,  44, "sec");}
 /*----------------------------------------------------------------------
   CreateMSECH
   ----------------------------------------------------------------------*/
 void CreateMSECH (Document document, View view)
 {
-CreateMathConstruct (44, "sech");}
+CreateMathConstruct (document, view,  44, "sech");}
 /*----------------------------------------------------------------------
   CreateMSIN
   ----------------------------------------------------------------------*/
 void CreateMSIN (Document document, View view)
 {
-CreateMathConstruct (44, "sin");}
+CreateMathConstruct (document, view,  44, "sin");}
 /*----------------------------------------------------------------------
   CreateMSINH
   ----------------------------------------------------------------------*/
 void CreateMSINH (Document document, View view)
 {
-CreateMathConstruct (44, "sinh");}
+CreateMathConstruct (document, view,  44, "sinh");}
 /*----------------------------------------------------------------------
   CreateMTAN
   ----------------------------------------------------------------------*/
 void CreateMTAN (Document document, View view)
 {
-CreateMathConstruct (44, "tan");}
+CreateMathConstruct (document, view,  44, "tan");}
 /*----------------------------------------------------------------------
   CreateMTANH
   ----------------------------------------------------------------------*/
 void CreateMTANH (Document document, View view)
 {
-CreateMathConstruct (44, "tanh");}
+CreateMathConstruct (document, view,  44, "tanh");}
 
 
 /*----------------------------------------------------------------------
@@ -5039,7 +5057,7 @@ static void RoundSelection (Element *firstSel, Element *lastSel,
 /*----------------------------------------------------------------------
   CreateCharStringElement
   -----------------------------------------------------------------------*/
-static void CreateCharStringElement (int typeNum, Document doc)
+static void CreateCharStringElement (int typeNum, Document doc, View view)
 {
   ElementType    elType;
   AttributeType  attrType;
@@ -5100,7 +5118,7 @@ static void CreateCharStringElement (int typeNum, Document doc)
           i = 17;
           break;
         }
-      CreateMathConstruct (i);
+      CreateMathConstruct (doc, view, i);
       return;
     }
 
@@ -5281,7 +5299,7 @@ static void CreateCharStringElement (int typeNum, Document doc)
   -----------------------------------------------------------------------*/
 void CreateMTEXT (Document document, View view)
 {
-  CreateCharStringElement (MathML_EL_MTEXT, document);
+  CreateCharStringElement (MathML_EL_MTEXT, document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -5289,7 +5307,7 @@ void CreateMTEXT (Document document, View view)
   -----------------------------------------------------------------------*/
 void CreateMI (Document document, View view)
 {
-  CreateCharStringElement (MathML_EL_MI, document);
+  CreateCharStringElement (MathML_EL_MI, document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -5297,7 +5315,7 @@ void CreateMI (Document document, View view)
   -----------------------------------------------------------------------*/
 void CreateMN (Document document, View view)
 {
-  CreateCharStringElement (MathML_EL_MN, document);
+  CreateCharStringElement (MathML_EL_MN, document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -5305,7 +5323,7 @@ void CreateMN (Document document, View view)
   -----------------------------------------------------------------------*/
 void CreateMO (Document document, View view)
 {
-  CreateCharStringElement (MathML_EL_MO, document);
+  CreateCharStringElement (MathML_EL_MO, document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -5313,7 +5331,7 @@ void CreateMO (Document document, View view)
   -----------------------------------------------------------------------*/
 void CreateMSPACE (Document document, View view)
 {
-  CreateMathConstruct (19);
+  CreateMathConstruct (document, view, 19);
 }
 
 /*----------------------------------------------------------------------
@@ -7042,7 +7060,7 @@ void CreateMathEntity (Document document, View view)
   if (!parent || strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
     {
       /* if not within a MathML element, create the math element */
-      CreateMathConstruct (1);
+      CreateMathConstruct (document, view, 1);
       TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
       if (!firstSel)
         return;
