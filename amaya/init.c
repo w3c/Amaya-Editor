@@ -64,6 +64,7 @@ extern XmlEntity *pMathEntityTable;
 /* SVG Templates */
 char *LastSVGelement = NULL;
 char *LastSVGelementTitle = NULL;
+ThotBool LastSVGelementIsFilled = FALSE;
 
 /* SVG Style panel */
 int  Current_Opacity = 100;

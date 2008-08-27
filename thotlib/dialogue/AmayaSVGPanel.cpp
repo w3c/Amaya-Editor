@@ -108,6 +108,7 @@ typedef struct svg_construct_
   const char *file_name;
   int  msg_id;
   const char *function_name;
+  ThotBool fill;
 } svg_construct;
 
 /* Structure of a list of a set of constructs */
@@ -123,239 +124,239 @@ static svg_constructs list_of_constructs[] =
   {
     {"", 6,
      {
-       {"document_svg", TMSG_SVG_SvgCanvas, "CreateSVG_Svg"},
-       {"SVG_text", TMSG_SVG_Text, "CreateSVG_Text"},
-       {"SVG_foreign_object", TMSG_SVG_ForeigObject, "CreateSVG_ForeignObject"},
-       {"document_image", TMSG_SVG_Image, "CreateSVG_Image"},
-       {NULL, TMSG_SVG_Information, "EditSVG_Information"},
-       {NULL, TMSG_SVG_GenerateDescription, "EditSVG_GenerateDescription"}
+       {"document_svg", TMSG_SVG_SvgCanvas, "CreateSVG_Svg", FALSE},
+       {"SVG_text", TMSG_SVG_Text, "CreateSVG_Text", FALSE},
+       {"SVG_foreign_object", TMSG_SVG_ForeigObject, "CreateSVG_ForeignObject", FALSE},
+       {"document_image", TMSG_SVG_Image, "CreateSVG_Image", FALSE},
+       {NULL, TMSG_SVG_Information, "EditSVG_Information", FALSE},
+       {NULL, TMSG_SVG_GenerateDescription, "EditSVG_GenerateDescription", FALSE}
      }
     },
 
     {"", 4,
      {
-       {"SVG_line", TMSG_SVG_Line, "CreateSVG_Line"},
-       {"SVG_simple_arrow", TMSG_SVG_SimpleArrow, "CreateSVG_SimpleArrow"},
-       {"SVG_double_arrow", TMSG_SVG_DoubleArrow, "CreateSVG_DoubleArrow"},
-       {"SVG_zigzag", TMSG_SVG_Zigzag, "CreateSVG_Zigzag"}
+       {"SVG_line", TMSG_SVG_Line, "CreateSVG_Line", FALSE},
+       {"SVG_simple_arrow", TMSG_SVG_SimpleArrow, "CreateSVG_SimpleArrow", FALSE},
+       {"SVG_double_arrow", TMSG_SVG_DoubleArrow, "CreateSVG_DoubleArrow", FALSE},
+       {"SVG_zigzag", TMSG_SVG_Zigzag, "CreateSVG_Zigzag", FALSE}
      }
     },
 
     {"", 12,
      {
-       {"SVG_square", TMSG_SVG_Square, "CreateSVG_Square"},
+       {"SVG_square", TMSG_SVG_Square, "CreateSVG_Square", TRUE},
        {"SVG_rounded_square",
-	TMSG_SVG_RoundedSquare, "CreateSVG_RoundedSquare"},
-       {"SVG_rectangle", TMSG_SVG_Rectangle, "CreateSVG_Rectangle"},
+	TMSG_SVG_RoundedSquare, "CreateSVG_RoundedSquare", TRUE},
+       {"SVG_rectangle", TMSG_SVG_Rectangle, "CreateSVG_Rectangle", TRUE},
        {"SVG_rounded_rectangle",
-	TMSG_SVG_RoundedRectangle, "CreateSVG_RoundedRectangle"},
-       {"SVG_diamond", TMSG_SVG_Diamond, "CreateSVG_Diamond"},
-       {"SVG_parallelogram", TMSG_SVG_Parallelogram, "CreateSVG_Parallelogram"},
-       {"SVG_trapezium", TMSG_SVG_Trapezium, "CreateSVG_Trapezium"},
+	TMSG_SVG_RoundedRectangle, "CreateSVG_RoundedRectangle", TRUE},
+       {"SVG_diamond", TMSG_SVG_Diamond, "CreateSVG_Diamond", TRUE},
+       {"SVG_parallelogram", TMSG_SVG_Parallelogram, "CreateSVG_Parallelogram", TRUE},
+       {"SVG_trapezium", TMSG_SVG_Trapezium, "CreateSVG_Trapezium", TRUE},
        {"SVG_equilateral_triangle",
-	TMSG_SVG_EquilateralTriangle, "CreateSVG_EquilateralTriangle"},
+	TMSG_SVG_EquilateralTriangle, "CreateSVG_EquilateralTriangle", TRUE},
        {"SVG_isosceles_triangle",
-	TMSG_SVG_IsoscelesTriangle, "CreateSVG_IsoscelesTriangle"},
+	TMSG_SVG_IsoscelesTriangle, "CreateSVG_IsoscelesTriangle", TRUE},
        {"SVG_right_triangle",
-	TMSG_SVG_RightTriangle, "CreateSVG_RectangleTriangle"},
-       {"SVG_circle", TMSG_SVG_Circle, "CreateSVG_Circle"},
-       {"SVG_ellipse", TMSG_SVG_Ellipse, "CreateSVG_Ellipse"}
+	TMSG_SVG_RightTriangle, "CreateSVG_RectangleTriangle", TRUE},
+       {"SVG_circle", TMSG_SVG_Circle, "CreateSVG_Circle", TRUE},
+       {"SVG_ellipse", TMSG_SVG_Ellipse, "CreateSVG_Ellipse", TRUE}
      }
     },
 
     {"", 4,
      {
-       {"SVG_polyline", TMSG_SVG_Polyline, "CreateSVG_Polyline"},
-       {"SVG_polygon", TMSG_SVG_Polygon, "CreateSVG_Polygon"},
-       {"SVG_bezier", TMSG_SVG_Bezier, "CreateSVG_Spline"},
-       {"SVG_closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed"}
+       {"SVG_polyline", TMSG_SVG_Polyline, "CreateSVG_Polyline", FALSE},
+       {"SVG_polygon", TMSG_SVG_Polygon, "CreateSVG_Polygon", TRUE},
+       {"SVG_bezier", TMSG_SVG_Bezier, "CreateSVG_Spline", FALSE},
+       {"SVG_closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed", TRUE}
      }
     },
 
     {"", 4,
      {
-       {"SVG_send_to_back", TMSG_SVG_SendToBack, "TransformSVG_SendToBack"},
+       {"SVG_send_to_back", TMSG_SVG_SendToBack, "TransformSVG_SendToBack", FALSE},
        {"SVG_send_backward",
-	TMSG_SVG_SendBackward, "TransformSVG_SendBackward"},
+	TMSG_SVG_SendBackward, "TransformSVG_SendBackward", FALSE},
        {"SVG_bring_forward",
-	TMSG_SVG_BringForward, "TransformSVG_BringForward"},
-       {"SVG_bring_to_front", TMSG_SVG_BringToFront, "TransformSVG_BringToFront"}
+	TMSG_SVG_BringForward, "TransformSVG_BringForward", FALSE},
+       {"SVG_bring_to_front", TMSG_SVG_BringToFront, "TransformSVG_BringToFront", FALSE}
      }
     },
 
     {"", 8,
      {
        {"SVG_flip_vertically",
-	TMSG_SVG_FlipVertically, "TransformSVG_FlipVertically"},
+	TMSG_SVG_FlipVertically, "TransformSVG_FlipVertically", FALSE},
        {"SVG_flip_horizontally",
-	TMSG_SVG_FlipHorizontally, "TransformSVG_FlipHorizontally"},
+	TMSG_SVG_FlipHorizontally, "TransformSVG_FlipHorizontally", FALSE},
        {"SVG_rotate_anticlockwise",
-	TMSG_SVG_RotateAntiClockwise, "TransformSVG_AntiClockWise"},
+	TMSG_SVG_RotateAntiClockwise, "TransformSVG_AntiClockWise", FALSE},
        {"SVG_rotate_clockwise",
-	TMSG_SVG_RotateClockwise, "TransformSVG_ClockWise"},
-       {"SVG_rotate", TMSG_SVG_Rotate, "TransformSVG_Rotate"},
-       {"SVG_scale", TMSG_SVG_Scale, "TransformSVG_Scale"},
-       {"SVG_skew", TMSG_SVG_Skew, "TransformSVG_Skew"},
-       {"SVG_translate", TMSG_SVG_Translate, "TransformSVG_Translate"}
+	TMSG_SVG_RotateClockwise, "TransformSVG_ClockWise", FALSE},
+       {"SVG_rotate", TMSG_SVG_Rotate, "TransformSVG_Rotate", FALSE},
+       {"SVG_scale", TMSG_SVG_Scale, "TransformSVG_Scale", FALSE},
+       {"SVG_skew", TMSG_SVG_Skew, "TransformSVG_Skew", FALSE},
+       {"SVG_translate", TMSG_SVG_Translate, "TransformSVG_Translate", FALSE}
      }
     },
 
     {"", 6,
      {
-       {"SVG_align_left", TMSG_SVG_AlignLeft, "TransformSVG_AlignLeft"},
-       {"SVG_align_center", TMSG_SVG_AlignCenter, "TransformSVG_AlignCenter"},
-       {"SVG_align_right", TMSG_SVG_AlignRight, "TransformSVG_AlignRight"},
-       {"SVG_align_top", TMSG_SVG_AlignTop, "TransformSVG_AlignTop"},
-       {"SVG_align_middle", TMSG_SVG_AlignMiddle, "TransformSVG_AlignMiddle"},
-       {"SVG_align_bottom", TMSG_SVG_AlignBottom, "TransformSVG_AlignBottom"}
+       {"SVG_align_left", TMSG_SVG_AlignLeft, "TransformSVG_AlignLeft", FALSE},
+       {"SVG_align_center", TMSG_SVG_AlignCenter, "TransformSVG_AlignCenter", FALSE},
+       {"SVG_align_right", TMSG_SVG_AlignRight, "TransformSVG_AlignRight", FALSE},
+       {"SVG_align_top", TMSG_SVG_AlignTop, "TransformSVG_AlignTop", FALSE},
+       {"SVG_align_middle", TMSG_SVG_AlignMiddle, "TransformSVG_AlignMiddle", FALSE},
+       {"SVG_align_bottom", TMSG_SVG_AlignBottom, "TransformSVG_AlignBottom", FALSE}
      }
     },
 
     {"", 8,
      {
        {"SVG_distribute_left",
-	TMSG_SVG_DistributeLeft, "TransformSVG_DistributeLeft"},
+	TMSG_SVG_DistributeLeft, "TransformSVG_DistributeLeft", FALSE},
        {"SVG_distribute_center",
-	TMSG_SVG_DistributeCenter, "TransformSVG_DistributeCenter"},
+	TMSG_SVG_DistributeCenter, "TransformSVG_DistributeCenter", FALSE},
        {"SVG_distribute_right",
-	TMSG_SVG_DistributeRight, "TransformSVG_DistributeRight"},
+	TMSG_SVG_DistributeRight, "TransformSVG_DistributeRight", FALSE},
        {"SVG_distribute_top",
-	TMSG_SVG_DistributeTop, "TransformSVG_DistributeTop"},
+	TMSG_SVG_DistributeTop, "TransformSVG_DistributeTop", FALSE},
        {"SVG_distribute_middle",
-	TMSG_SVG_DistributeMiddle, "TransformSVG_DistributeMiddle"},
+	TMSG_SVG_DistributeMiddle, "TransformSVG_DistributeMiddle", FALSE},
        {"SVG_distribute_bottom",
-	TMSG_SVG_DistributeBottom, "TransformSVG_DistributeBottom"},
+	TMSG_SVG_DistributeBottom, "TransformSVG_DistributeBottom", FALSE},
        {"SVG_distribute_horizontal_spacing",
-	TMSG_SVG_DistributeHSpacing, "TransformSVG_DistributeHSpacing"},
+	TMSG_SVG_DistributeHSpacing, "TransformSVG_DistributeHSpacing", FALSE},
        {"SVG_distribute_vertical_spacing",
-	TMSG_SVG_DistributeVSpacing, "TransformSVG_DistributeVSpacing"}
+	TMSG_SVG_DistributeVSpacing, "TransformSVG_DistributeVSpacing", FALSE}
      }
     },
    
     {"3d", 6,
      {
-       {"cone", TMSG_SVG_Cone, NULL},
-       {"cube", TMSG_SVG_Cube, NULL},
-       {"cylinder", TMSG_SVG_Cylinder, NULL},
-       {"octahedron", TMSG_SVG_Octahedron, NULL},
-       {"parallelepiped", TMSG_SVG_Parallelepiped, NULL},
-       {"pyramid", TMSG_SVG_Pyramid, NULL}
+       {"cone", TMSG_SVG_Cone, NULL, TRUE},
+       {"cube", TMSG_SVG_Cube, NULL, TRUE},
+       {"cylinder", TMSG_SVG_Cylinder, NULL, TRUE},
+       {"octahedron", TMSG_SVG_Octahedron, NULL, TRUE},
+       {"parallelepiped", TMSG_SVG_Parallelepiped, NULL, TRUE},
+       {"pyramid", TMSG_SVG_Pyramid, NULL, TRUE}
      }
     },
 
     {"balloons", 6,
      {
-       {"rectangular", TMSG_SVG_Rectangular, NULL},
-       {"round", TMSG_SVG_Round, NULL},
-       {"rounded_rectangular", TMSG_SVG_Rounded_rectangular, NULL},
-       {"scream", TMSG_SVG_Scream, NULL},
-       {"thought", TMSG_SVG_Thought, NULL},
-       {"cloud", TMSG_SVG_Cloud, NULL}
+       {"rectangular", TMSG_SVG_Rectangular, NULL, TRUE},
+       {"round", TMSG_SVG_Round, NULL, TRUE},
+       {"rounded_rectangular", TMSG_SVG_Rounded_rectangular, NULL, TRUE},
+       {"scream", TMSG_SVG_Scream, NULL, TRUE},
+       {"thought", TMSG_SVG_Thought, NULL, TRUE},
+       {"cloud", TMSG_SVG_Cloud, NULL, TRUE}
      }
     },
 
     {"block_arrows", 20,
      {
-       {"simple_arrow", TMSG_SVG_Simple_Arrow, NULL},
-       {"double_arrow", TMSG_SVG_Double_Arrow, NULL},
-       {"3-way_arrow", TMSG_SVG_3_Way_Arrow, NULL},
-       {"4-way_arrow", TMSG_SVG_4_Way_Arrow, NULL},
-       {"corner_arrow", TMSG_SVG_Corner_Arrow, NULL},
-       {"corner_double_arrow", TMSG_SVG_Corner_Double_Arrow, NULL},
+       {"simple_arrow", TMSG_SVG_Simple_Arrow, NULL, TRUE},
+       {"double_arrow", TMSG_SVG_Double_Arrow, NULL, TRUE},
+       {"3-way_arrow", TMSG_SVG_3_Way_Arrow, NULL, TRUE},
+       {"4-way_arrow", TMSG_SVG_4_Way_Arrow, NULL, TRUE},
+       {"corner_arrow", TMSG_SVG_Corner_Arrow, NULL, TRUE},
+       {"corner_double_arrow", TMSG_SVG_Corner_Double_Arrow, NULL, TRUE},
 
-       {"simple_arrow_callout", TMSG_SVG_Simple_Arrow_Callout, NULL},
-       {"double_arrow_callout", TMSG_SVG_Double_Arrow_Callout, NULL},
-       {"3-way_arrow_callout", TMSG_SVG_3_Way_Arrow_Callout, NULL},
-       {"4-way_arrow_callout", TMSG_SVG_4_Way_Arrow_Callout, NULL},
+       {"simple_arrow_callout", TMSG_SVG_Simple_Arrow_Callout, NULL, TRUE},
+       {"double_arrow_callout", TMSG_SVG_Double_Arrow_Callout, NULL, TRUE},
+       {"3-way_arrow_callout", TMSG_SVG_3_Way_Arrow_Callout, NULL, TRUE},
+       {"4-way_arrow_callout", TMSG_SVG_4_Way_Arrow_Callout, NULL, TRUE},
        {"corner_double_arrow_callout",
-	TMSG_SVG_Corner_Double_Arrow_Callout, NULL},
+	TMSG_SVG_Corner_Double_Arrow_Callout, NULL, TRUE},
 
-       {"S-shape_arrow", TMSG_SVG_S_Shape_Arrow, NULL},
-       {"rounded_arrow", TMSG_SVG_Rounded_Arrow, NULL},
-       {"circular_arrow", TMSG_SVG_Circular_Arrow, NULL},
-       {"2-way_rounded_arrow", TMSG_SVG_2_Way_Rounded_Arrow, NULL},
+       {"S-shape_arrow", TMSG_SVG_S_Shape_Arrow, NULL, TRUE},
+       {"rounded_arrow", TMSG_SVG_Rounded_Arrow, NULL, TRUE},
+       {"circular_arrow", TMSG_SVG_Circular_Arrow, NULL, TRUE},
+       {"2-way_rounded_arrow", TMSG_SVG_2_Way_Rounded_Arrow, NULL, TRUE},
 
-       {"split_arrow", TMSG_SVG_Split_Arrow, NULL},
-       {"pentagon", TMSG_SVG_Pentagon, NULL},
-       {"chevron", TMSG_SVG_Chevron, NULL},
-       {"striped_arrow", TMSG_SVG_Striped_Arrow, NULL},
-       {"notched_arrow", TMSG_SVG_Notched_Arrow, NULL}
+       {"split_arrow", TMSG_SVG_Split_Arrow, NULL, TRUE},
+       {"pentagon", TMSG_SVG_Pentagon, NULL, TRUE},
+       {"chevron", TMSG_SVG_Chevron, NULL, TRUE},
+       {"striped_arrow", TMSG_SVG_Striped_Arrow, NULL, TRUE},
+       {"notched_arrow", TMSG_SVG_Notched_Arrow, NULL, TRUE}
      }
     },
 
     {"chemistry", 9,
      {
-       {"beaker", TMSG_SVG_Beaker, NULL},
-       {"boiling_flask", TMSG_SVG_Boiling_flask, NULL},
-       {"buchner_flask", TMSG_SVG_Buchner_flask, NULL},
-       {"burette", TMSG_SVG_Burette, NULL},
-       {"erlenmeyer_flask", TMSG_SVG_Erlenmeyer_flask, NULL},
-       {"pipette", TMSG_SVG_Pipette, NULL},
-       {"test_tube", TMSG_SVG_Test_tube, NULL},
-       {"funnel", TMSG_SVG_Funnel, NULL},
-       {"bunsen_burner", TMSG_SVG_Bunsen_burner, NULL}
+       {"beaker", TMSG_SVG_Beaker, NULL, TRUE},
+       {"boiling_flask", TMSG_SVG_Boiling_flask, NULL, TRUE},
+       {"buchner_flask", TMSG_SVG_Buchner_flask, NULL, TRUE},
+       {"burette", TMSG_SVG_Burette, NULL, FALSE},
+       {"erlenmeyer_flask", TMSG_SVG_Erlenmeyer_flask, NULL, TRUE},
+       {"pipette", TMSG_SVG_Pipette, NULL, FALSE},
+       {"test_tube", TMSG_SVG_Test_tube, NULL, TRUE},
+       {"funnel", TMSG_SVG_Funnel, NULL, FALSE},
+       {"bunsen_burner", TMSG_SVG_Bunsen_burner, NULL, FALSE}
      }
     },
 
     {"circuit_diagram", 16,
      {
-       {"current_source", TMSG_SVG_Current_source, NULL},
-       {"current_source2", TMSG_SVG_Current_source, NULL},
-       {"voltage_source", TMSG_SVG_Voltage_source, NULL},
-       {"voltage_source2", TMSG_SVG_Voltage_source, NULL},
-       {"ground_point", TMSG_SVG_Ground_point, NULL},
-       {"resistor", TMSG_SVG_Resistor, NULL},
-       {"resistor2", TMSG_SVG_Resistor, NULL},
-       {"switch", TMSG_SVG_Switch, NULL},
-       {"transistor", TMSG_SVG_Transistor, NULL},
-       {"capacitor", TMSG_SVG_Capacitor, NULL},
-       {"inductor", TMSG_SVG_Inductor, NULL},
-       {"op-amp", TMSG_SVG_Op_amp, NULL},
-       {"op-amp2", TMSG_SVG_Op_amp, NULL},
-       {"led", TMSG_SVG_Led, NULL},
-       {"diode", TMSG_SVG_Diode, NULL},
-       {"zener_diode", TMSG_SVG_Zener_diode, NULL}
+       {"current_source", TMSG_SVG_Current_source, NULL, FALSE},
+       {"current_source2", TMSG_SVG_Current_source, NULL, FALSE},
+       {"voltage_source", TMSG_SVG_Voltage_source, NULL, FALSE},
+       {"voltage_source2", TMSG_SVG_Voltage_source, NULL, FALSE},
+       {"ground_point", TMSG_SVG_Ground_point, NULL, FALSE},
+       {"resistor", TMSG_SVG_Resistor, NULL, FALSE},
+       {"resistor2", TMSG_SVG_Resistor, NULL, FALSE},
+       {"switch", TMSG_SVG_Switch, NULL, FALSE},
+       {"transistor", TMSG_SVG_Transistor, NULL, FALSE},
+       {"capacitor", TMSG_SVG_Capacitor, NULL, FALSE},
+       {"inductor", TMSG_SVG_Inductor, NULL, FALSE},
+       {"op-amp", TMSG_SVG_Op_amp, NULL, FALSE},
+       {"op-amp2", TMSG_SVG_Op_amp, NULL, FALSE},
+       {"led", TMSG_SVG_Led, NULL, FALSE},
+       {"diode", TMSG_SVG_Diode, NULL, FALSE},
+       {"zener_diode", TMSG_SVG_Zener_diode, NULL, FALSE}
      }
     },
 
     {"polygons_and_stars", 7,
      {
-       {"pentagon", TMSG_SVG_Pentagon, NULL},
-       {"hexagon", TMSG_SVG_Hexagon, NULL},
-       {"heptagon", TMSG_SVG_Heptagon, NULL},
-       {"octogon", TMSG_SVG_Octogon, NULL},
-       {"star4", TMSG_SVG_Star4, NULL},
-       {"star5", TMSG_SVG_Star5, NULL},
-       {"star6", TMSG_SVG_Star6, NULL}
+       {"pentagon", TMSG_SVG_Pentagon, NULL, TRUE},
+       {"hexagon", TMSG_SVG_Hexagon, NULL, TRUE},
+       {"heptagon", TMSG_SVG_Heptagon, NULL, TRUE},
+       {"octogon", TMSG_SVG_Octogon, NULL, TRUE},
+       {"star4", TMSG_SVG_Star4, NULL, TRUE},
+       {"star5", TMSG_SVG_Star5, NULL, TRUE},
+       {"star6", TMSG_SVG_Star6, NULL, TRUE}
      }
     },
 
     {"logic_gates", 7,
      {
-       {"and", TMSG_SVG_AND, NULL},
-       {"nand", TMSG_SVG_NAND, NULL},
-       {"or", TMSG_SVG_OR, NULL},
-       {"nor", TMSG_SVG_NOR, NULL},
-       {"xor", TMSG_SVG_XOR, NULL},
-       {"xnor", TMSG_SVG_XNOR, NULL},
-       {"not", TMSG_SVG_NOT, NULL}
+       {"and", TMSG_SVG_AND, NULL, FALSE},
+       {"nand", TMSG_SVG_NAND, NULL, FALSE},
+       {"or", TMSG_SVG_OR, NULL, FALSE},
+       {"nor", TMSG_SVG_NOR, NULL, FALSE},
+       {"xor", TMSG_SVG_XOR, NULL, FALSE},
+       {"xnor", TMSG_SVG_XNOR, NULL, FALSE},
+       {"not", TMSG_SVG_NOT, NULL, FALSE}
      }
     },
 
     {"", 12,
      {
-       {"scroll", TMSG_SVG_Scroll, NULL},
-       {"sun", TMSG_SVG_Sun, NULL},
-       {"cloud", TMSG_SVG_Cloud, NULL},
-       {"lightning_bolt", TMSG_SVG_Lightning_Bolt, NULL},
-       {"moon", TMSG_SVG_Moon, NULL},
-       {"smiley", TMSG_SVG_Smiley, NULL},
-       {"heart", TMSG_SVG_Heart, NULL},
-       {"flower", TMSG_SVG_Flower, NULL},
-       {"cross", TMSG_SVG_Cross, NULL},
-       {"frame", TMSG_SVG_Frame, NULL},
-       {"ring", TMSG_SVG_Ring, NULL},
-       {"prohibited", TMSG_SVG_Prohibited, NULL}
+       {"scroll", TMSG_SVG_Scroll, NULL, TRUE},
+       {"sun", TMSG_SVG_Sun, NULL, TRUE},
+       {"cloud", TMSG_SVG_Cloud, NULL, TRUE},
+       {"lightning_bolt", TMSG_SVG_Lightning_Bolt, NULL, TRUE},
+       {"moon", TMSG_SVG_Moon, NULL, TRUE},
+       {"smiley", TMSG_SVG_Smiley, NULL, TRUE},
+       {"heart", TMSG_SVG_Heart, NULL, TRUE},
+       {"flower", TMSG_SVG_Flower, NULL, TRUE},
+       {"cross", TMSG_SVG_Cross, NULL, TRUE},
+       {"frame", TMSG_SVG_Frame, NULL, TRUE},
+       {"ring", TMSG_SVG_Ring, NULL, TRUE},
+       {"prohibited", TMSG_SVG_Prohibited, NULL, TRUE}
      }
     }
     
@@ -540,6 +541,7 @@ void AmayaSVGPanel::InsertElement(int i, int j)
 
   if(doc > 0 && j >= 0 && j < e.length)
     {
+      LastSVGelementIsFilled = e.list[j].fill;
 
       if(e.list[j].function_name == NULL)
 	{
@@ -551,8 +553,10 @@ void AmayaSVGPanel::InsertElement(int i, int j)
 	  TtaExecuteMenuAction ("CreateSVG_Template", doc, view, TRUE);
 	}
       else
-	/* Call the function */
-	TtaExecuteMenuAction (e.list[j].function_name, doc, view, TRUE);
+	{
+	  /* Call the function */
+	  TtaExecuteMenuAction (e.list[j].function_name, doc, view, TRUE);
+ 	}
     }
 }
 #endif /* #ifdef _WX */

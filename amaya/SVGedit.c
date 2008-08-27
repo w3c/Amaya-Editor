@@ -1836,7 +1836,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   ThotBool	        found, newSVG = FALSE, replaceGraph = FALSE;
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
-  ThotBool          isFilled, isFormattedView, closed;   
+  ThotBool          isFilled = LastSVGelementIsFilled, isFormattedView, closed;   
 
   /* Check that a document is selected */
   if (doc == 0)
@@ -2017,7 +2017,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   newType.ElSSchema = svgSchema;
   newType.ElTypeNum = 0;
-  isFilled = TRUE;
 
   switch (entry)
     {
@@ -2031,7 +2030,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
     case 0:	/* line */
       newType.ElTypeNum = SVG_EL_line_;
-      isFilled = FALSE;
       break;
 
     case 1:	/* rectangle */
@@ -2060,7 +2058,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
     case 5:	/* polyline */
       newType.ElTypeNum = SVG_EL_polyline;
-      isFilled = FALSE;
       break;
 
     case 6:	/* polygon */
@@ -2069,7 +2066,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
     case 7:	/* spline */
       newType.ElTypeNum = SVG_EL_path;
-      isFilled = FALSE;
       break;
 
     case 8:	/* closed spline */
@@ -2091,17 +2087,14 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
     case 12: /* Simple arrow */
       newType.ElTypeNum = SVG_EL_path;
-      isFilled = FALSE;
       break;
 
     case 13: /* Double arrow */
       newType.ElTypeNum = SVG_EL_path;
-      isFilled = FALSE;
       break;
 
     case 14: /* Zigzag */
       newType.ElTypeNum = SVG_EL_polyline;
-      isFilled = FALSE;
       break;
 
     case 17: /* diamond */
@@ -2219,9 +2212,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
           /* Update the title */
           SetElementData(doc, newEl, svgSchema, SVG_EL_title,
                          LastSVGelementTitle);
-          // mark the new Coordinate System
-          TtaSetElCoordinateSystem (newEl);
           TtaFreeMemory(LastSVGelementTitle);
+
+          /* mark the new Coordinate System */
+          TtaSetElCoordinateSystem (newEl);
         }
 
       if (entry == -1)
@@ -2966,7 +2960,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 	  sprintf (buffer,  "stroke: black; stroke-opacity: 100.; stroke-width: 1;");
 	  if (isFilled)
 	    strcat (buffer, "fill: #9dc2de");
-	  else
+	  else if(entry != 0)
 	    strcat (buffer, "fill:none;");
 
           ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);

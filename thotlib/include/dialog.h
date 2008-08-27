@@ -29,6 +29,7 @@ extern int  Current_StrokeWidth;
 
 extern char *LastSVGelement;
 extern char *LastSVGelementTitle;
+extern ThotBool LastSVGelementIsFilled;
 
 #endif /* _WX */
 
