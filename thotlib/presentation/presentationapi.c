@@ -2478,7 +2478,11 @@ void TtaGiveBoxColors (Element element, Document document, View view,
           else
             {
               *color = pAb->AbForeground;
-              *bg_color = pAb->AbBackground;
+              if (pAb->AbFillPattern == 0)
+                // no fill color
+                *bg_color = -1;
+              else
+                *bg_color = pAb->AbBackground;
             }
         }
     }

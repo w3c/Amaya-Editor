@@ -1403,64 +1403,55 @@ void UpdateStylePanelSVG(Document doc, View view, Element el)
   PRule               rule;
   int stroke, fill;
 
-   if (NoCSSEditing (doc))
+  if (NoCSSEditing (doc))
     /* document is ReadOnly */
     return;
 
-  if(el)
+  if (el)
     {
       /* Opacity */
       rule = TtaGetPRule(el, PROpacity);
       if(rule)
-	Current_Opacity = TtaGetPRuleValue (rule)/10;
+        Current_Opacity = TtaGetPRuleValue (rule)/10;
       else
-	Current_Opacity = 100;
+        Current_Opacity = 100;
 
       /* Stroke-Opacity */
       rule = TtaGetPRule(el, PRStrokeOpacity);
       if(rule)
-	  Current_StrokeOpacity = TtaGetPRuleValue (rule)/10;
+        Current_StrokeOpacity = TtaGetPRuleValue (rule)/10;
       else
-	Current_StrokeOpacity = 100;
+        Current_StrokeOpacity = 100;
 
       /* Fill-Opacity */
       rule = TtaGetPRule(el, PRFillOpacity);
       if(rule)
-	  Current_FillOpacity = TtaGetPRuleValue (rule)/10;
+        Current_FillOpacity = TtaGetPRuleValue (rule)/10;
       else
-	Current_FillOpacity = 100;
+        Current_FillOpacity = 100;
 
       /* Stroke-Width */
       rule = TtaGetPRule(el, PRLineWeight);
       if(rule)
-	  Current_StrokeWidth = TtaGetPRuleValue (rule);
+        Current_StrokeWidth = TtaGetPRuleValue (rule);
       else
-	Current_StrokeWidth = 1;
+        Current_StrokeWidth = 1;
 
       /* Stroke and Fill */
-      TtaGiveBoxColors (el, doc, 1,
-			&stroke,
-			&fill);
-
+      TtaGiveBoxColors (el, doc, 1, &stroke, &fill);
       /* TODO: find how to know when stroke and fill values 
-	 are None, Inherit or currentColor */
+         are None, Inherit or currentColor */
 
-      if(stroke >= 0)
-	{
-	  Current_StrokeColor = stroke;
-	  StrokeEnabled = TRUE;
-	}
+      if (stroke >= 0)
+        {
+          Current_StrokeColor = stroke;
+          StrokeEnabled = TRUE;
+        }
       else
-	StrokeEnabled = FALSE;
+        StrokeEnabled = FALSE;
 
-      if(fill >= 0)
-	{
-	  Current_FillColor = fill;
-	  FillEnabled = TRUE;
-	}
-      else
-	FillEnabled = FALSE;
-
+      Current_FillColor = fill;
+      FillEnabled = (fill >= 0);
       UpdateStylePanel (doc, view);
     }
 }

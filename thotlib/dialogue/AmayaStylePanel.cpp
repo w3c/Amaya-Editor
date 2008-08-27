@@ -117,9 +117,11 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
   XRCCTRL(*this, "wxID_CHOICE_FAMILY", wxChoice)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_FONT_FAMILY)));
   
   XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_BODY_SIZE_PTS)));
+  XRCCTRL(*this, "wxID_SVG_FILL_NONE", wxCheckBox)->SetValue(FillEnabled);
+  XRCCTRL(*this, "wxID_SVG_STROKE_NONE", wxCheckBox)->SetValue(StrokeEnabled); 
   SetColor (1);
   SetStrokeColor(1);
-  SetFillColor(0);
+  SetFillColor(-1);
 
   XRCCTRL(*this, "wxID_THEME", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_THEME)));
   wxChoice     *theme = XRCCTRL(*this, "wxID_PANEL_CSS_THEME", wxChoice);
@@ -217,8 +219,13 @@ void AmayaStyleToolPanel::SetBackgroundColor(int color)
     return;
 
   Current_BackgroundColor = color;
-  TtaGiveThotRGB (color, &red, &green, &blue);
-  col = wxColour ( red, green, blue );
+  if (color == -1)
+    col = GetBackgroundColour();
+  else
+    {
+      TtaGiveThotRGB (color, &red, &green, &blue);
+      col = wxColour ( red, green, blue );
+    }
   XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetColour( col );  
 }
 
@@ -255,8 +262,13 @@ void AmayaStyleToolPanel::SetFillColor(int color)
     return;
 
   Current_FillColor = color;
-  TtaGiveThotRGB (color, &red, &green, &blue);
-  col = wxColour ( red, green, blue );
+  if (color == -1)
+    col = GetBackgroundColour();
+  else
+    {
+      TtaGiveThotRGB (color, &red, &green, &blue);
+      col = wxColour ( red, green, blue );
+    }
   XRCCTRL(*this, "wxID_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
 }
 
@@ -475,8 +487,11 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
     {
       TtaGiveThotRGB (Current_BackgroundColor, &red, &green, &blue);
       col = wxColour ( red, green, blue );
-      XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetColour( col );  
     }
+  else
+    col = GetBackgroundColour();
+  XRCCTRL(*this, "wxID_PANEL_CSS_BK_COLOR", AmayaColorButton)->SetColour( col );  
+
   if (Current_StrokeColor != -1)
     {
       TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue);
@@ -487,8 +502,10 @@ void AmayaStyleToolPanel::SendDataToPanel( AmayaParams& p )
     {
       TtaGiveThotRGB (Current_FillColor, &red, &green, &blue);
       col = wxColour ( red, green, blue );
-      XRCCTRL(*this, "wxID_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
     }
+  else
+    col = GetBackgroundColour();
+  XRCCTRL(*this, "wxID_SVG_FILL_COLOR", AmayaColorButton)->SetColour( col );  
 
   if (Current_Opacity != -1)
     XRCCTRL(*this, "wxID_SPIN_SVG_OPACITY", wxSpinCtrl)->SetValue(Current_Opacity);

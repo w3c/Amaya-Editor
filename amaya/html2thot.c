@@ -5747,7 +5747,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 
   // allow RDFa for XHTML documents without doctype
   if ((*docProfile == L_Xhtml11 || *docProfile == L_Transitional) &&
-      !(*docType))
+      *isXML && !(*docType))
     *extraProfile = L_RDFa;
 }
 

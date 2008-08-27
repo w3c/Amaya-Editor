@@ -2819,14 +2819,14 @@ void CreateGraphicElement (Document doc, View view, int entry)
           newEl = NULL;
         }
 
-      if(entry == 56)
-	{
-	  /* Creation of a MathML Foreign object: go back to the Mathedit
-	   module */
-	  TtaSelectElement (doc, foreignObj);
-	  TtaCloseUndoSequence (doc);
-	  return;
-	}
+      if (entry == 56)
+        {
+          /* Creation of a MathML Foreign object: go back to the Mathedit
+             module */
+          TtaSelectElement (doc, foreignObj);
+          TtaCloseUndoSequence (doc);
+          return;
+        }
 
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
@@ -2846,84 +2846,14 @@ void CreateGraphicElement (Document doc, View view, int entry)
     {
 
       *buffer = EOS;
-
-/*       /\* Is the shape visible with this configuration? *\/ */
-/*       if(entry == -2 || */
-/*          Current_Opacity == 0 || */
-
-/*          ( */
-/*           /\* No fill... *\/ */
-/*           (!isFilled || !FillEnabled || Current_FillOpacity == 0) && */
-
-/*           /\* ...and no stroke *\/ */
-/*           (!StrokeEnabled || Current_StrokeOpacity == 0 || */
-/*            Current_StrokeWidth == 0) */
-/*           ) */
-
-/*          ) */
-/*         { */
-/*           Current_Opacity = 100; */
-
-/*           StrokeEnabled = TRUE; */
-/*           Current_StrokeColor = 1; */
-/*           Current_StrokeOpacity = 100; */
-
-/*           FillEnabled = FALSE; */
-/*           Current_FillColor = -1; */
-/*           Current_FillOpacity = 100; */
-
-/*           UpdateStylePanel (doc, view); */
-/*         } */
-
-/*       /\* Get the stroke color *\/ */
-/*       if(StrokeEnabled) */
-/*         { */
-/*           if (Current_StrokeColor != -1) */
-/*             TtaGiveThotRGB (Current_StrokeColor, &red, &green, &blue); */
-/*           else */
-/*             TtaGiveThotRGB (1, &red, &green, &blue); */
-/*           sprintf(stroke_color, "#%02x%02x%02x", red, green, blue); */
-/*         } */
-/*       else */
-/*         sprintf(stroke_color , "none"); */
-
-/*       /\* Get the fill color *\/ */
-/*       if (FillEnabled && Current_FillColor != -1 && isFilled) */
-/*         { */
-/*           TtaGiveThotRGB (Current_FillColor, &red, &green, &blue); */
-/*           sprintf(fill_color, "#%02x%02x%02x", red, green, blue); */
-/*         } */
-/*       else */
-/*         sprintf(fill_color, "none"); */
-
-/*       /\* Apply global style *\/ */
-/*       sprintf(buffer2, "opacity: %g; ", ((float)Current_Opacity)/100); */
-/*       strcat(buffer, buffer2); */
-
-/*       /\* Apply the stroke style *\/ */
-/*       if(StrokeEnabled) */
-/*         { */
-/*           sprintf(buffer2, "stroke: %s; stroke-opacity: %g; stroke-width: %d; ", */
-/*                   stroke_color, */
-/*                   ((float)Current_StrokeOpacity)/100, */
-/*                   Current_StrokeWidth */
-/*                   ); */
-/*           strcat(buffer, buffer2); */
-/*         } */
-
-      if(entry >= 5 && entry <= 8)
+      if (entry >= 5 && entry <= 8)
         {
           /* Add a temporary style */
-
-	  strcpy(buffer2, "stroke:black; fill:none;");
-	  ParseHTMLSpecificStyle (newEl,
-				  buffer2,
-				  doc, 0, FALSE);
-
+          strcpy(buffer2, "stroke:black; fill:none;");
+          ParseHTMLSpecificStyle (newEl, buffer2, doc, 0, FALSE);
           /* Ask the points of the polyline/curve */
           created = AskShapePoints (doc, svgAncestor, svgCanvas,
                                     entry, newEl);
-
           if(created)
             UpdatePointsOrPathAttribute(doc, newEl, 0, 0);
           else
@@ -2938,37 +2868,19 @@ void CreateGraphicElement (Document doc, View view, int entry)
       
       if(created)
         {
-
-/*           /\* Apply the fill style *\/ */
-/*           if(newType.ElTypeNum != SVG_EL_line_) */
-/*             { */
-/*               sprintf(buffer2, "fill: %s; ", fill_color); */
-/*               strcat(buffer, buffer2); */
-/*             } */
-	  
-/*           if (FillEnabled) */
-/*             { */
-/*               sprintf(buffer2, "fill-opacity: %g;", */
-/*                       ((float)Current_FillOpacity)/100 */
-/*                       ); */
-/*               strcat(buffer, buffer2); */
-/*             } */
-	  
-/*           strcpy(buffer2, "stroke:none;"); */
-/*           ParseHTMLSpecificStyle (newEl, buffer2, doc, 0, TRUE); */
-
-	  sprintf (buffer,  "stroke: black; stroke-opacity: 100.; stroke-width: 1;");
-	  if (isFilled)
-	    strcat (buffer, "fill: #9dc2de");
-	  else if(entry != 0)
-	    strcat (buffer, "fill:none;");
-
+          sprintf (buffer,  "stroke: black; stroke-opacity: 100.; stroke-width: 1;");
+          if (isFilled)
+            strcat (buffer, "fill: #9dc2de");
+          else if(entry != 0)
+            strcat (buffer, "fill:none;");
+          
           ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
-	  
           attrType.AttrTypeNum = SVG_ATTR_style_;
           attr = TtaNewAttribute (attrType);
           TtaAttachAttribute (newEl, attr, doc);
           TtaSetAttributeText (attr, buffer, newEl, doc);
+          //  Update the style panel to display current properties
+          UpdateStylePanelSVG (doc, 1, newEl);
         }
     }
 

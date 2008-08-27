@@ -286,7 +286,7 @@
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText">
-                  <label>- width</label>
+                  <label>stroke-width</label>
                 </object>
                 <flag>wxALIGN_RIGHT|wxALIGN_CENTRE_VERTICAL</flag>
               </object>
