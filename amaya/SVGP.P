@@ -1,4 +1,4 @@
-        { Thot presentation schema for SVG
+       { Thot presentation schema for SVG
 
           V. Quint & I. Vatton            1998-2007        }
 
@@ -1672,7 +1672,7 @@ RULES
         CreateBefore (ElementName);
         CreateWith (VerticalLine);
            HorizPos: Left = Enclosing . Left Userspecified;
-           VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+           VertPos:  HRef = Enclosing . Top Userspecified;
         Width: 2.5 cm UserSpecified;
         Height: 1.5 cm UserSpecified;
         Foreground: Black;
