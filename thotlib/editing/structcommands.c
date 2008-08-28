@@ -3573,7 +3573,7 @@ void TtaInsertAnyElement (Document document, ThotBool before)
 	  if(newPointCreated)
 	    {
 	    UpdatePointsOrPathAttribute(document,
-					TtaGetParent((Element)firstSel), 0, 0);
+					TtaGetParent((Element)firstSel), 0, 0, TRUE);
 	    TtaSetDocumentModified(document);
 	    }
 	  return;

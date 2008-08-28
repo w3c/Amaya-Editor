@@ -1716,47 +1716,47 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
             }
 
 	  
-	  /* Check the geometric properties of the leaf */
-	  if(shape_recognition && (elType.ElTypeNum == SVG_EL_polygon ||
-				   elType.ElTypeNum == SVG_EL_path))
-	    {
-	      int w,h,rx = 0,ry = 0;
-	      PresentationContext  ctxt;
-	      PresentationValue    pval;
+          /* Check the geometric properties of the leaf */
+          if(shape_recognition && (elType.ElTypeNum == SVG_EL_polygon ||
+                                   elType.ElTypeNum == SVG_EL_path))
+            {
+              int w,h,rx = 0,ry = 0;
+              PresentationContext  ctxt;
+              PresentationValue    pval;
 
-	      if(CheckGeometricProperties(doc, leaf, &w, &h, &rx, &ry))
-		{
-		  ctxt = TtaGetSpecificStyleContext (doc);
-		  /* the specific presentation is not a CSS rule */
-		  ctxt->cssSpecificity = 2000;
-		  ctxt->destroy = FALSE;
-		  pval.typed_data.real = FALSE;
-		  pval.typed_data.unit = UNIT_PX;
+              if (CheckGeometricProperties(doc, leaf, &w, &h, &rx, &ry))
+                {
+                  ctxt = TtaGetSpecificStyleContext (doc);
+                  /* the specific presentation is not a CSS rule */
+                  ctxt->cssSpecificity = 2000;
+                  ctxt->destroy = FALSE;
+                  pval.typed_data.real = FALSE;
+                  pval.typed_data.unit = UNIT_PX;
 
-		  pval.typed_data.value = w;
-		  TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);
-		  pval.typed_data.value = h;
-		  TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
+                  pval.typed_data.value = w;
+                  TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);
+                  pval.typed_data.value = h;
+                  TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
 
-		  if(rx)
-		    {
-		      pval.typed_data.value = rx;
-		      TtaSetStylePresentation (PRXRadius, el, NULL, ctxt, pval);
-		    }
+                  if(rx)
+                    {
+                      pval.typed_data.value = rx;
+                      TtaSetStylePresentation (PRXRadius, el, NULL, ctxt, pval);
+                    }
 		  
-		  if(ry)
-		    {
-		      pval.typed_data.value = ry;
-		      TtaSetStylePresentation (PRYRadius, el, NULL, ctxt, pval);
-		    }
+                  if(ry)
+                    {
+                      pval.typed_data.value = ry;
+                      TtaSetStylePresentation (PRYRadius, el, NULL, ctxt, pval);
+                    }
 
-		  /* Update transform attribute */
-		  UpdateTransformMatrix(doc, el);
+                  /* Update transform attribute */
+                  UpdateTransformMatrix(doc, el);
 
-		  /* Update points attribute */
-		  UpdatePointsOrPathAttribute(doc, el, w, h);
-		}
-	    }
+                  /* Update points attribute */
+                  UpdatePointsOrPathAttribute(doc, el, w, h, FALSE);
+                }
+            }
           break;
         }
     }

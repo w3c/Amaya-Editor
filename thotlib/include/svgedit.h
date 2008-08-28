@@ -35,7 +35,7 @@ extern ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
 					   Element *svgCanvas);
 extern void UpdateTransformMatrix(Document doc, Element el);
 extern void UpdatePointsOrPathAttribute(Document doc, Element el,
-					int w, int h);
+					int w, int h, ThotBool withUndo);
 extern void UpdateShapeElement(Document doc, Element el,
 			       char shape,
 			       int x, int y, int width, int height,

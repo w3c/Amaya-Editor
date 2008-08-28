@@ -28,7 +28,8 @@ extern void UpdateTransformMatrix ( Document doc,
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                           Element el,
                                           int w,
-                                          int h );
+                                          int h,
+                                          ThotBool withUndo );
 extern void UpdateShapeElement ( Document doc,
                                  Element el,
                                  char shape,
@@ -208,7 +209,8 @@ extern void UpdateTransformMatrix ( Document doc,
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                             Element el,
                                             int w,
-                                            int h );
+                                            int h,
+                                            ThotBool withUndo );
 extern void UpdateShapeElement ( Document doc,
                                    Element el,
                                    char shape,

@@ -833,17 +833,17 @@ void ShowSelectedBox (int frame, ThotBool active)
                 /* the box position is not given by the user */
                 {
 #ifdef _GL
-                  if (y + pBox->BxClipH < ymin + dy)
+                  if (pBox->BxBoundinBoxComputed &&
+                      y + pBox->BxClipH < ymin + dy)
                     /* scroll the window */
                     VerticalScroll (frame, y + pBox->BxClipH - ymin - h, 0);
-#else /* _GL */
-                  if (y + pBox->BxHeight < ymin + dy)
+                    else if (y + pBox->BxHeight < ymin + dy)
                     /* scroll the window */
                     VerticalScroll (frame, y + pBox->BxHeight - ymin - h, 0);
-#endif /* _GL */
                   else if (y > ymax - dy)
                     /* scroll the window */
                     VerticalScroll (frame, y - ymax + h, 0);
+#endif /* _GL */
                 }
             }
         }

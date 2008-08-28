@@ -2800,7 +2800,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
           created = AskShapePoints (doc, svgAncestor, svgCanvas,
                                     entry, newEl);
           if(created)
-            UpdatePointsOrPathAttribute(doc, newEl, 0, 0);
+            UpdatePointsOrPathAttribute(doc, newEl, 0, 0, TRUE);
           else
             {
               /* Actually, the user don't create the shape */
@@ -3633,7 +3633,8 @@ void UpdateTransformMatrix(Document doc, Element el)
 /*----------------------------------------------------------------------
   UpdatePointsOrPathAttribute
   ----------------------------------------------------------------------*/
-void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h)
+void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
+                                 ThotBool withUndo)
 {
   char         *buffer;
   Attribute     attr;
@@ -3679,11 +3680,14 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h)
   attr = TtaGetAttribute (el, attrType);
 
   /* check if the undo sequence is open */
-  open = !TtaHasUndoSequence (doc);
-  if (open)
+  if (withUndo)
     {
-      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-      TtaSetDocumentModified(doc);
+      open = !TtaHasUndoSequence (doc);
+      if (open)
+        {
+          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+          TtaSetDocumentModified(doc);
+        }
     }
 
   if (buffer == NULL)
@@ -3713,7 +3717,7 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h)
   /* Update the attribute menu */
   TtaUpdateAttrMenu(doc);
 
-  if (open)
+  if (withUndo && open)
     {
       TtaCloseUndoSequence (doc);
       TtaSetDocumentUnmodified(doc);
@@ -3784,7 +3788,7 @@ void UpdateShapeElement(Document doc, Element el,
       break;
 
     default:
-      UpdatePointsOrPathAttribute(doc, el, width, height);
+      UpdatePointsOrPathAttribute(doc, el, width, height, TRUE);
       break;
     }
 

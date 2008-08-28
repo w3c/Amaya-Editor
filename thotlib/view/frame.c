@@ -2120,6 +2120,42 @@ void ComputeChangedBoundingBoxes (int frame)
 }
 
 /*----------------------------------------------------------------------
+ AddingOnTop Adds abstract boxes on top of the frame
+ topBox point to the current box displayed on top
+ top gives the height of the available space on top
+  ----------------------------------------------------------------------*/
+static void AddingOnTop (int frame, ViewFrame *pFrame, PtrBox topBox, int top)
+{
+  int y, delta;
+
+
+  if (topBox)
+    {
+      /* register previous location */
+      y = topBox->BxYOrg;
+      delta = y + topBox->BxHeight;
+      //printf("------- box=%s y=%d\n", topBox->BxAbstractBox->AbElement->ElLabel, y);
+    }
+  /* Adding abstract boxes on top of the frame */
+  IncreaseVolume (TRUE, GetCharsCapacity (top, frame), frame);
+  /* Recompute the location of the frame in the abstract image */
+  if (topBox)
+    {
+      y = -y + topBox->BxYOrg;
+      /* y equal the shift of previous first box */
+      /* What's already displayed is related to this */
+      /* previous first box location */
+      pFrame->FrYOrg += y;
+      /* delta equal the limit of redrawing after shifting */
+      if (y > 0)
+        delta = topBox->BxYOrg + topBox->BxHeight;
+      /* new limit */
+      pFrame->FrClipYEnd = delta;
+    }
+  RedrawFrameTop (frame, 0);
+}
+
+/*----------------------------------------------------------------------
   RedrawFrameTop redraw from bottom to top a frame.
   The scroll parameter indicates the height of a scroll
   back which may take place before recomputing the abstract
@@ -2227,36 +2263,17 @@ ThotBool RedrawFrameTop (int frame, int scroll)
                       top = (h / 2 - y) * l;
                       delta = 0;
                       /* Volume of the area to recompute */
-                      if (topBox)
-                        {
-                          /* register previous location */
-                          y = topBox->BxYOrg;
-                          delta = y + topBox->BxHeight;
-                        }
-                      /* Adding abstract boxes at the beginning */
-                      IncreaseVolume (TRUE, GetCharsCapacity (top, frame), frame);
                       toadd = TRUE;
-                      /* Recompute the location of the frame in the abstract image */
-                      if (topBox)
+                        AddingOnTop (frame, pFrame, topBox, top);
+                      if (topBox == NULL)
                         {
-                          y = -y + topBox->BxYOrg;
-                          /* y equal the shift of previous first box */
-                          /* What's already displayed is related to this */
-                          /* previous first box location */
-                          pFrame->FrYOrg += y;
-                          /* delta equal the limit of redrawing after shifting */
-                          if (y > 0)
-                            delta = topBox->BxYOrg + topBox->BxHeight;
-                          /* new limit */
-                          pFrame->FrClipYEnd = delta;
+                          /* No previous box. The frame is drawn */
+                          /* on top of the concrete image */
+                          pFrame->FrYOrg = 0;
+                          /* Image should be complete */
+                          FrameUpdating = FALSE;
+                          RedrawFrameTop (frame, 0);
                         }
-                      else
-                        /* No previous box. The frame is drawn */
-                        /* on top of the concrete image */
-                        pFrame->FrYOrg = 0;
-                      /* Image should be complete */
-                      FrameUpdating = FALSE;
-                      RedrawFrameTop (frame, 0);
                     }
                   y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
                   if (pFrame->FrAbstractBox->AbTruncatedTail && y > 0)
@@ -2295,7 +2312,6 @@ ThotBool RedrawFrameTop (int frame, int scroll)
     DefClip (frame, 0, 0, 0, 0);
   return toadd;
 }
-
 
 /*----------------------------------------------------------------------
   RedrawFrameBottom redraw from top to bottom a frame.
@@ -2406,30 +2422,8 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
                           /* Height to add */
                           top = top * l;
                           /* Volume of the area to recompute */
-                          if (topBox != NULL)
-                            {
-                              /* register previous location */
-                              y = topBox->BxYOrg;
-                              delta = y + topBox->BxHeight;
-                            }
-                          /* Adding abstract boxes at the beginning */
-                          IncreaseVolume (TRUE, GetCharsCapacity (top, frame), frame);
                           toadd = TRUE;
-                          /* Recompute the location of the frame in the abstract image */
-                          if (topBox != NULL)
-                            {
-                              y = -y + topBox->BxYOrg;
-                              /* y equal the shift of previous first box */
-                              /* What's already displayed is related to this */
-                              /* previous first box location */
-                              pFrame->FrYOrg += y;
-                              /* delta equal the limit of redrawing after shifting */
-                              if (y > 0)
-                                delta = topBox->BxYOrg + topBox->BxHeight;
-                              /* new limit */
-                              pFrame->FrClipYEnd = delta;
-                            }
-                          RedrawFrameTop (frame, 0);
+                          AddingOnTop (frame, pFrame, topBox, top);
                         }
                       y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
                       if (pFrame->FrAbstractBox->AbTruncatedTail && y >= 0)
@@ -2437,7 +2431,6 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
                           /* it lacks some abstract image at the bottom of the frame */
                           /* Volume to add */
                           bottom = (y + h / 4) * l;
-			  
                           if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)
                             {
                               /* free abstract boxes on top of the frame */

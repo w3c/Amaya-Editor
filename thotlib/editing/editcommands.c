@@ -2320,7 +2320,7 @@ ThotBool AskPathEdit (Document doc,
 
   /* Update the attribute */
   if(transformApplied)
-    UpdatePointsOrPathAttribute(doc, el, 0, 0);
+    UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
 
   return transformApplied;
 }
@@ -2597,7 +2597,7 @@ ThotBool ContentEditing (int editType)
 			  if(pointDeleted)
 			    {
 			      UpdatePointsOrPathAttribute(doc,
-							  TtaGetParent((Element)FirstSelectedElement), 0, 0);
+							  TtaGetParent((Element)FirstSelectedElement), 0, 0, TRUE);
 			      TtaSetDocumentModified(doc);
 			    }
 		    }
