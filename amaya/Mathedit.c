@@ -1385,13 +1385,14 @@ static void CreateMathConstruct (Document doc, View view, int construct, ...)
   /* Get the type of the first selected element */
   elType = TtaGetElementType (sibling);
   name = TtaGetSSchemaName (elType.ElSSchema);
+
 #ifdef _SVG
-  if (construct == 1 && strcmp (name, "SVG"))
-    /* Math button and selection is not in a SVG element */
-#else /* _SVG */
+  if(construct == 1 && !strcmp (name, "SVG"))
+    construct = 11;
+#endif /* _SVG */
+
     if (construct == 1)
       /* Math button */
-#endif /* _SVG */
       {
         if (strcmp (name, "MathML"))
           /* selection is not in a MathML element */
@@ -3650,47 +3651,75 @@ void CreateMOVER (Document document, View view)
   CreateMathConstruct (document, view,  10);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERARROW (Document document, View view)
 {
   CreateMathConstruct (document, view,  59, 'R');
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERBRACE (Document document, View view)
 {
   CreateMathConstruct (document, view,  59, 'o');
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMUNDERBRACE (Document document, View view)
 {
   CreateMathConstruct (document, view,  60, 'u');
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERBAR (Document document, View view)
 {
   CreateMathConstruct (document, view,  59, 'h');
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERBREVE (Document document, View view)
 {
   CreateMathConstruct (document, view,  26, 728);
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERCHECK (Document document, View view) // hacek
 {
   CreateMathConstruct (document, view,  59, 'k');
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERDOT (Document document, View view)
 {
   CreateMathConstruct (document, view,  26, 729);
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERHAT (Document document, View view)
 {
   CreateMathConstruct (document, view,  59, 'H');
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERTILDE (Document document, View view)
 {
   CreateMathConstruct (document, view,  59, 'T');
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void CreateMOVERFROWN (Document document, View view) // overparenthesis
 {
   CreateMathConstruct (document, view,  59, 'p');
 }
-
 
 /*----------------------------------------------------------------------
   CreateMPARENTHESIS
