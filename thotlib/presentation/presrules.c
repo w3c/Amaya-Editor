@@ -2167,10 +2167,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
           PPos->PosUnit = pPosRule->PoDistUnit;
           PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
           PPos->PosAbRef = pAbbPos;
-          if (FirstCreation)
-            PPos->PosUserSpecified = pPosRule->PoUserSpecified;
-          else
-            PPos->PosUserSpecified = FALSE;
+          PPos->PosUserSpecified = FALSE;
           if (PPos->PosUserSpecified)
             PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
           *appl = TRUE;
@@ -2300,10 +2297,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
               /* c'est la valeur elle meme */
               PPos->PosDistance = pPosRule->PoDistance;
             PPos->PosDistDelta = pPosRule->PoDistDelta;
-            if (FirstCreation)
-              PPos->PosUserSpecified = pPosRule->PoUserSpecified;
-            else
-              PPos->PosUserSpecified = FALSE;
+            PPos->PosUserSpecified = FALSE;
             if (PPos->PosUserSpecified)
               PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
             PPos->PosUnit = pPosRule->PoDistUnit;
@@ -2379,10 +2373,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
               *appl = FALSE;
             PPos->PosUnit = pPosRule->PoDistUnit;
             PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
-            if (FirstCreation)
-              PPos->PosUserSpecified = pPosRule->PoUserSpecified;
-            else
-              PPos->PosUserSpecified = FALSE;
+            PPos->PosUserSpecified = FALSE;
             if (PPos->PosUserSpecified)
               PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
             pAbb1->AbVertEnclosing = TRUE;

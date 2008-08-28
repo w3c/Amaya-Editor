@@ -1707,7 +1707,7 @@ static void CreateMathConstruct (Document doc, View view, int construct, ...)
 			  /* create a foreignObject element and insert it as
 			     a child of the new switch element */
 			  elType.ElTypeNum = SVG_EL_foreignObject;
-			  TtaAskFirstCreation ();
+			  //TtaAskFirstCreation ();
 			  foreignObj = TtaNewElement (doc, elType);
 			  TtaInsertFirstChild (&foreignObj, el, doc);
 			  /* associate a requiredExtensions attribute with the

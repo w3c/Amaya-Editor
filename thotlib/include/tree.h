@@ -1197,13 +1197,6 @@ extern Element TtaSearchNoPageBreak (Element element, ThotBool forward);
 extern void TtaListAbstractTree (Element root, FILE *fileDescriptor);
 
 /* ----------------------------------------------------------------------
-   TtaAskFirstCreation
-
-   Asks interactive creation for "UserSpecified" elements
-   ---------------------------------------------------------------------- */
-extern void TtaAskFirstCreation ();
-
-/* ----------------------------------------------------------------------
    TtaHasHiddenException
 
    Parameters:

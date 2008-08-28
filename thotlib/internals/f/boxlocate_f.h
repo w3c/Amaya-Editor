@@ -59,8 +59,6 @@ extern void ApplyDirectResize ( PtrBox pBox,
                                 int pointselect,
                                 int xm,
                                 int ym );
-extern void DirectCreation ( PtrBox pBox,
-                             int frame );
 extern void LocateClickedChar ( PtrBox pBox,
                                 int frame,
                                 ThotBool extend,
@@ -125,8 +123,6 @@ extern void ApplyDirectResize ( PtrBox pBox,
                                   int pointselect,
                                   int xm,
                                   int ym );
-extern void DirectCreation ( PtrBox pBox,
-                               int frame );
 extern void LocateClickedChar ( PtrBox pBox,
                                   int frame,
                                   ThotBool extend,

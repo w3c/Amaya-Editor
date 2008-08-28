@@ -2104,12 +2104,12 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
                             int *lx, int *ly)
 {
   PtrAbstractBox pAb;
-  PtrBox pBox;
-  ViewFrame          *pFrame;
-  int frame;
-  PtrTransform CTM, inverse;
-  int canvasWidth,canvasHeight,ancestorX,ancestorY;
-  ThotBool created = FALSE;
+  PtrBox         pBox;
+  ViewFrame     *pFrame;
+  PtrTransform   CTM, inverse;
+  int            frame;
+  int            canvasWidth, canvasHeight, ancestorX, ancestorY;
+  ThotBool       created = FALSE;
 
   frame = ActiveFrame;
   if (frame <= 0 || svgCanvas == NULL || svgAncestor == NULL)

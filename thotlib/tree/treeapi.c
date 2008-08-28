@@ -1060,15 +1060,6 @@ void TtaInsertSibling (Element newElement, Element sibling,
 }
 
 /* ----------------------------------------------------------------------
-   TtaAskFirstCreation
-   Asks interactive creation for "UserSpecified" elements
-   ---------------------------------------------------------------------- */
-void TtaAskFirstCreation ()
-{
-  FirstCreation = TRUE;
-}
-
-/* ----------------------------------------------------------------------
    TtaInsertFirstChild
    Inserts an element in a tree, as the first child of a given element.
    The element to be inserted must not yet be part of a document.

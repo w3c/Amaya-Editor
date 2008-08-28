@@ -49,7 +49,6 @@ extern void TtaInsertSibling ( Element newElement,
                                Element sibling,
                                ThotBool before,
                                Document document );
-extern void TtaAskFirstCreation ( void );
 extern void TtaInsertFirstChild ( Element *newElement,
                                   Element parent,
                                   Document document );
@@ -189,7 +188,6 @@ extern void TtaInsertSibling ( Element newElement,
                                  Element sibling,
                                  ThotBool before,
                                  Document document );
-extern void TtaAskFirstCreation ( void );
 extern void TtaInsertFirstChild ( Element *newElement,
                                     Element parent,
                                     Document document );

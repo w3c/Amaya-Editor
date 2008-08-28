@@ -342,8 +342,9 @@ static void CreateAreaMap (Document doc, View view, const char *shape)
       TtaSetStructureChecking (FALSE, doc);
       elType.ElTypeNum = HTML_EL_AREA;
       /* Should we ask the user to give coordinates */
-      if (shape[0] == 'R' || shape[0] == 'a')
-        TtaAskFirstCreation ();
+      // @@@@@@@@@ TODO creation as SVG element@@@@@@@@@@@@@@@@@@
+      //if (shape[0] == 'R' || shape[0] == 'a')
+      //  TtaAskFirstCreation ();
 
       el = TtaNewTree (doc, elType, "");
       if (!newElem)
@@ -357,8 +358,9 @@ static void CreateAreaMap (Document doc, View view, const char *shape)
       child = TtaGetFirstChild (el);
       /* For polygons, sets the value after the Ref_IMG attribute is
          created */
-      if (shape[0] != 'p')
-        TtaSetGraphicsShape (child, shape[0], doc);
+      // @@@@@@@@@ TODO creation as SVG element@@@@@@@@@@@@@@@@@@
+      //if (shape[0] != 'p')
+      //  TtaSetGraphicsShape (child, shape[0], doc);
 
       /* create the shape attribute */
       attrType.AttrTypeNum = HTML_ATTR_shape;

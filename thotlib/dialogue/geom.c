@@ -1423,15 +1423,13 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
      3-------4
 
   ----------------------------------------------------------------------*/
-ThotBool ShapeCreation (int frame,
-		   Document doc, 
-		   void *inverseCTM,
-		   int ancestorX, int ancestorY,
-		   int canvasWidth, int canvasHeight,
-		   int shape,
-		   int *x1, int *y1, int *x2, int *y2,
-		   int *x3, int *y3, int *x4, int *y4,
-		   int *lx, int *ly)
+ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
+                        int ancestorX, int ancestorY,
+                        int canvasWidth, int canvasHeight,
+                        int shape,
+                        int *x1, int *y1, int *x2, int *y2,
+                        int *x3, int *y3, int *x4, int *y4,
+                        int *lx, int *ly)
 {
   ThotBool created = FALSE;
   AmayaFrame * p_frame;

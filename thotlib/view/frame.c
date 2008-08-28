@@ -512,49 +512,6 @@ void TtaRefresh ()
     }
 }
 
-
-/*----------------------------------------------------------------------
-  AddBoxToCreate store in adbloc the list of child boxes to be created,
-  from the most englobing box down to pBox itself.
-  It ensure unicity of boxes referenced in adbloc.
-  ----------------------------------------------------------------------*/
-static void AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
-{
-  PtrAbstractBox      pAb;
-  int                 i;
-
-  /* Look for and ancestor abstract boxe with PavGraphCreation flag set */
-  pAb = pBox->BxAbstractBox->AbEnclosing;
-  i = 0;
-  while (i == 0)
-    {
-      if (pAb == NULL)
-        i = 1;
-      else if (pAb->AbBox->BxHorizFlex || pAb->AbBox->BxVertFlex)
-        {
-          i = 1;
-          if (pAb->AbLeafType != LtGraphics || pAb->AbShape != 'g')
-            pAb = NULL;
-        }
-      else if (pAb->AbHorizPos.PosUserSpecified ||
-               pAb->AbVertPos.PosUserSpecified ||
-               pAb->AbWidth.DimUserSpecified ||
-               pAb->AbHeight.DimUserSpecified)
-        i = 1;
-      else
-        pAb = pAb->AbEnclosing;
-    }
-
-  /* There is an englobing abstract box */
-  if (pAb != NULL)
-    AddBoxToCreate (tocreate, pAb->AbBox, frame);
-  /* Add this box to create, if there is no englobing box */
-  /* already registered and if this box is visible.       */
-  if (*tocreate == NULL &&
-      pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
-    *tocreate = pBox;
-}
-
 /*----------------------------------------------------------------------
   DrawFilledBox draws a box with background or borders.
   The parameter pForm points the box that generates the border or fill.
@@ -593,11 +550,9 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
     return;
   else if (pFrom->AbElement == NULL ||
            (FrameTable[frame].FrView == 1 &&
-            TypeHasException (ExcNoShowBox, pFrom->AbElement->ElTypeNumber,
-                              pFrom->AbElement->ElStructSchema)
-
-
-))
+            TypeHasException (ExcNoShowBox,
+                              pFrom->AbElement->ElTypeNumber,
+                              pFrom->AbElement->ElStructSchema)))
     return;
   
   pFrame = &ViewFrameTable[frame - 1];
@@ -867,7 +822,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
             DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
         }
       else if (!selected && pFrom->AbElement &&
-              pFrom->AbElement->ElStructSchema &&
+               pFrom->AbElement->ElStructSchema &&
                (from->BxType != BoTable ||
                 strcmp (pFrom->AbElement->ElStructSchema->SsName, "HTML")))
         {
@@ -1099,7 +1054,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
             {
               // go next or up
               pNext = pAb->AbNext;
-// --------------------------------------------------------------
+              // --------------------------------------------------------------
               do
                 {
                   if (formatted && pAb->AbDepth == plane)
@@ -1108,7 +1063,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
                       if (IfPopMatrix (pAb))
                         OriginSystemExit (pAb, pFrame, plane,
                                           &OldXOrg, &OldYOrg, 
-                                        ClipXOfFirstCoordSys,
+                                          ClipXOfFirstCoordSys,
                                           ClipYOfFirstCoordSys);
                     }
                   if (pAb == root)
@@ -1125,7 +1080,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
                 }
               while (pAb);
               pAb = pNext;
-// --------------------------------------------------------------
+              // --------------------------------------------------------------
             }
         }
     } 
@@ -1583,16 +1538,14 @@ ThotBool NoBoxModif (PtrAbstractBox pinitAb)
   and left to rigth to display all visible boxes.
   pFlow points to the displayed flow or NULL when it's the main flow.
   Parameters xmin, xmax, ymin, ymax give the clipped area.
-  The parameter create returns the box that must be interactively
-  created by the user.
   tVol and bVol return the volume of not displayed boxes on thetop and
   on the bottom of the window.
   ----------------------------------------------------------------------*/
 PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                         int xmin, int xmax, int ymin, int ymax,
-                        PtrBox *create, int *tVol, int *bVol)
+                        int *tVol, int *bVol)
 {
-  PtrAbstractBox      pAb, specAb, root, pNext;
+  PtrAbstractBox      pAb, root, pNext;
   PtrBox              pBox, box, topBox;
   ViewFrame          *pFrame;
   int                 plane;
@@ -1601,7 +1554,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
   int                 bt, bb;
   int                 l, h;
   int                 x_min, x_max, y_min, y_max;
-  ThotBool            userSpec = FALSE, selected;
+  ThotBool            selected;
   ThotBool            show_bgimage;
 #ifdef _GL
   PtrBox              systemOriginRoot = NULL;
@@ -1693,113 +1646,110 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
               if (!selected && pAb->AbSelected)
                 // open the selected sequence
                 selected = pAb->AbSelected;
- #ifdef _GL
+#ifdef _GL
               if (pAb->AbElement && not_g_opacity_displayed)
                 {
-		  if(formatted)
-		    {
-		      if(pAb->AbSelected && TypeHasException (ExcIsGroup,
-							      pAb->AbElement->ElTypeNumber,
-						       pAb->AbElement->ElStructSchema) )
-			{
-			  /* Draw the bounding box */
-			  glPushMatrix ();
-			  glLoadIdentity();
-			  DrawRectangle (frame, 0, 5,
-					 pBox->BxClipX,
-					 pBox->BxClipY,
-					 pBox->BxClipW,
-					 pBox->BxClipH,
-					 TtaGetThotColor(255, 100, 100), 0, 4);
+                  if(formatted)
+                    {
+                      if(pAb->AbSelected &&
+                         TypeHasException (ExcIsGroup,
+                                           pAb->AbElement->ElTypeNumber,
+                                           pAb->AbElement->ElStructSchema) )
+                        {
+                          /* Draw the bounding box */
+                          glPushMatrix ();
+                          glLoadIdentity();
+                          DrawRectangle (frame, 0, 5,
+                                         pBox->BxClipX,
+                                         pBox->BxClipY,
+                                         pBox->BxClipW,
+                                         pBox->BxClipH,
+                                         TtaGetThotColor(255, 100, 100), 0, 4);
+                          glPopMatrix();
+                        }
+                      if (IfPushMatrix (pAb))
+                        {
+                          /* If the coord sys origin is translated, 
+                             it must be before any other transformation */
+                          if (pAb->AbElement->ElSystemOrigin)
+                            DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+                                                      pFrame->FrXOrg, pFrame->FrYOrg);
+                          /* Normal transformation*/
+                          if (pAb->AbElement->ElTransform)
+                            DisplayTransformation (frame,
+                                                   pAb->AbElement->ElTransform, 
+                                                   pBox->BxWidth, pBox->BxHeight);
+                          if (pAb->AbElement->ElSystemOrigin &&
+                              /* skip boxes already managed */
+                              !IsParentBox (systemOriginRoot, pAb->AbBox))
+                            {
+                              systemOriginRoot = pAb->AbBox;
+                              /*Need to Get REAL computed COORD ORIG
+                                instead of Computing Bounding Boxes forever...
+                                As it's an "optimisation it'll come later :
+                                if computed, no more compute, use synbounding, 
+                                else compute if near screen"*/
+                              if (pFrame->FrXOrg || pFrame->FrYOrg)
+                                {
+                                  pFrame->OldFrXOrg = pFrame->FrXOrg;
+                                  pFrame->OldFrYOrg = pFrame->FrYOrg;
+                                  xOrg = pFrame->FrXOrg;
+                                  yOrg = pFrame->FrYOrg;
+                                  pFrame->FrXOrg = 0;
+                                  pFrame->FrYOrg = 0;
+                                  ComputeBoundingBoxes (frame, x_min, x_max,
+                                                        y_min, y_max, pAb,
+                                                        show_bgimage);
+                                  clipXOfFirstCoordSys = pBox->BxClipX;
+                                  clipYOfFirstCoordSys = pBox->BxClipY;
+                                }
+                              else
+                                ComputeBoundingBoxes (frame, x_min, x_max,
+                                                      y_min, y_max, pAb,
+                                                      show_bgimage);
+                            }
 
-			  glPopMatrix();
-			}
-
-
-		      if (IfPushMatrix (pAb))
-			{
-
-			  /* If the coord sys origin is translated, 
-			     it must be before any other transformation */
-			  if (pAb->AbElement->ElSystemOrigin)
-			    DisplayBoxTransformation (pAb->AbElement->ElTransform, 
-						      pFrame->FrXOrg, pFrame->FrYOrg);
-			  /* Normal transformation*/
-			  if (pAb->AbElement->ElTransform)
-			    DisplayTransformation (frame,
-						   pAb->AbElement->ElTransform, 
-						   pBox->BxWidth, pBox->BxHeight);
-			  if (pAb->AbElement->ElSystemOrigin &&
-			      /* skip boxes already managed */
-			      !IsParentBox (systemOriginRoot, pAb->AbBox))
-			    {
-			      systemOriginRoot = pAb->AbBox;
-			      /*Need to Get REAL computed COORD ORIG
-				instead of Computing Bounding Boxes forever...
-				As it's an "optimisation it'll come later :
-				if computed, no more compute, use synbounding, 
-				else compute if near screen"*/
-			      if (pFrame->FrXOrg || pFrame->FrYOrg)
-				{
-				  pFrame->OldFrXOrg = pFrame->FrXOrg;
-				  pFrame->OldFrYOrg = pFrame->FrYOrg;
-				  xOrg = pFrame->FrXOrg;
-				  yOrg = pFrame->FrYOrg;
-				  pFrame->FrXOrg = 0;
-				  pFrame->FrYOrg = 0;
-				  ComputeBoundingBoxes (frame, x_min, x_max,
-							y_min, y_max, pAb,
-							show_bgimage);
-				  clipXOfFirstCoordSys = pBox->BxClipX;
-				  clipYOfFirstCoordSys = pBox->BxClipY;
-				}
-			      else
-				ComputeBoundingBoxes (frame, x_min, x_max,
-						      y_min, y_max, pAb,
-						      show_bgimage);
-			    }
-
-			  if (pAb->AbOpacity != 1000 &&  not_in_feedback)
-			    {
-			      if (TypeHasException (ExcIsGroup,
-						    pAb->AbElement->ElTypeNumber,
-						    pAb->AbElement->ElStructSchema) )
-				{
-				  if (pAb->AbOpacity == 0 ||
-				      (NoBoxModif (pAb) &&
-				       pAb->AbBox->Post_computed_Pic != NULL))
-				    {
-				      not_g_opacity_displayed = FALSE;
-				      continue;
-				    }
-				  else
-				    {
-				      if (pAb->AbBox->Post_computed_Pic)
-					{
-					  FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
-					  TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
-					  pAb->AbBox->Post_computed_Pic = NULL; 
-					}
-				      OpaqueGroupTexturize (pAb, frame,
-							    x_min, x_max,
-							    y_min, y_max, TRUE);
-				      ClearOpaqueGroup (pAb, frame, x_min, x_max,
-							y_min, y_max);
-				    }
-				}
-			      else if (pAb->AbFirstEnclosed)
-				{
-				  pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;
-				  pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity;
-				}
-			      else 
-				{
-				  pAb->AbFillOpacity = pAb->AbOpacity;      
-				  pAb->AbStrokeOpacity = pAb->AbOpacity; 
-				}
-			    }
-			}
-		    }
+                          if (pAb->AbOpacity != 1000 &&  not_in_feedback)
+                            {
+                              if (TypeHasException (ExcIsGroup,
+                                                    pAb->AbElement->ElTypeNumber,
+                                                    pAb->AbElement->ElStructSchema) )
+                                {
+                                  if (pAb->AbOpacity == 0 ||
+                                      (NoBoxModif (pAb) &&
+                                       pAb->AbBox->Post_computed_Pic != NULL))
+                                    {
+                                      not_g_opacity_displayed = FALSE;
+                                      continue;
+                                    }
+                                  else
+                                    {
+                                      if (pAb->AbBox->Post_computed_Pic)
+                                        {
+                                          FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
+                                          TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
+                                          pAb->AbBox->Post_computed_Pic = NULL; 
+                                        }
+                                      OpaqueGroupTexturize (pAb, frame,
+                                                            x_min, x_max,
+                                                            y_min, y_max, TRUE);
+                                      ClearOpaqueGroup (pAb, frame, x_min, x_max,
+                                                        y_min, y_max);
+                                    }
+                                }
+                              else if (pAb->AbFirstEnclosed)
+                                {
+                                  pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;
+                                  pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity;
+                                }
+                              else 
+                                {
+                                  pAb->AbFillOpacity = pAb->AbOpacity;      
+                                  pAb->AbStrokeOpacity = pAb->AbOpacity; 
+                                }
+                            }
+                        }
+                    }
 #endif /* _GL */
 
                   if (pAb->AbLeafType == LtCompound)
@@ -1811,31 +1761,13 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                        xmin, xmax, ymin, ymax,
                                        selected, TRUE, TRUE, show_bgimage);
                       if (pAb->AbSelected && FrameTable[frame].FrView == 1 &&
-                           TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
-                                             pAb->AbElement->ElStructSchema))
+                          TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
+                                            pAb->AbElement->ElStructSchema))
                         selected = FALSE;
                       if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
                         {
                           /* this is a new box */
                           pBox->BxNew = 0;
-                          specAb = pAb;
-                          while (!userSpec && specAb)
-                            {
-                              if (specAb->AbWidth.DimIsPosition ||
-                                  specAb->AbHeight.DimIsPosition)
-                                specAb = NULL;
-                              else if (specAb->AbHorizPos.PosUserSpecified ||
-                                       specAb->AbVertPos.PosUserSpecified ||
-                                       specAb->AbWidth.DimUserSpecified ||
-                                       specAb->AbHeight.DimUserSpecified)
-                                {
-                                  /* one paramater is given by the user */
-                                  AddBoxToCreate (create, specAb->AbBox, frame);
-                                  userSpec = TRUE;
-                                }
-                              else
-                                specAb = specAb->AbEnclosing;
-                            }
                         }
                     }
                   else
@@ -1893,32 +1825,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 #endif /* _GL */
                               /* the top of the box should be visible */
                               topBox = box;
-
-                          userSpec = FALSE;
-                          if (pBox->BxNew)
-                            {
-                              /* this is a new box */
-                              pBox->BxNew = 0;
-                              specAb = pAb;
-                              while (!userSpec && specAb)
-                                {
-                                  if (specAb->AbWidth.DimIsPosition ||
-                                      specAb->AbHeight.DimIsPosition)
-                                    specAb = NULL;
-                                  else if (specAb->AbHorizPos.PosUserSpecified ||
-                                           specAb->AbVertPos.PosUserSpecified ||
-                                           specAb->AbWidth.DimUserSpecified ||
-                                           specAb->AbHeight.DimUserSpecified)
-                                    {
-                                      /* one paramater is given by the user */
-                                      AddBoxToCreate (create, specAb->AbBox, frame);
-                                      userSpec = TRUE;
-                                    }
-                                  else
-                                    specAb = specAb->AbEnclosing;
-                                }
-                            }
-                          if (!userSpec && pAb->AbVis != 'H')
+                          if (pAb->AbVis != 'H')
                             {
                               if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
                                 while (pBox->BxNexChild)
@@ -1943,12 +1850,12 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                        pBox->BxClipX + pBox->BxClipW >= x_min &&
                                        pBox->BxClipX <= x_max)
 #else /* _GL */
-                              else if (bb >= y_min  &&
-                                       bt <= y_max && 
-                                       pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= x_min &&
-                                       pBox->BxXOrg <= x_max)
+                                else if (bb >= y_min  &&
+                                         bt <= y_max && 
+                                         pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= x_min &&
+                                         pBox->BxXOrg <= x_max)
 #endif /* _GL */
-                                DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
+                                  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, pFlow, selected);
                             }
                         }
                     }  	      
@@ -1972,14 +1879,14 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 #endif /* _GL */
               (pAb == root || !IsFlow (pAb->AbBox, frame)))
             {
-            // go down
-            pAb = pAb->AbFirstEnclosed;
+              // go down
+              pAb = pAb->AbFirstEnclosed;
             }
           else
             {
               // go next or up
               pNext = pAb->AbNext;
-// --------------------------------------------------------------
+              // --------------------------------------------------------------
               do
                 {
 #ifdef _GL
@@ -2016,7 +1923,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                 }
               while (pAb);
               pAb = pNext;
-// --------------------------------------------------------------
+              // --------------------------------------------------------------
             }
         }
     }
@@ -2171,7 +2078,7 @@ void ComputeChangedBoundingBoxes (int frame)
           else
             {
               pNext = pAb->AbNext;
-// --------------------------------------------------------------
+              // --------------------------------------------------------------
               do
                 {
                   if (pAb->AbDepth == plane)
@@ -2203,7 +2110,7 @@ void ComputeChangedBoundingBoxes (int frame)
                 }
               while (pAb);
               pAb = pNext;
-// --------------------------------------------------------------
+              // --------------------------------------------------------------
             }
         }
     } 
@@ -2226,7 +2133,6 @@ void ComputeChangedBoundingBoxes (int frame)
 ThotBool RedrawFrameTop (int frame, int scroll)
 {
   PtrBox              topBox = NULL;
-  PtrBox              create, xbox;
   PtrBox              pRootBox;
   ViewFrame          *pFrame;
   PtrFlow             pFlow;
@@ -2260,8 +2166,6 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 #endif /* _GL */
       top = pFrame->FrYOrg;
       bottom = top + h;
-      /* used to store boxes created on the fly */
-      create = NULL;
       tVol = bVol = 0;
 #if defined(_WINGUI) && !defined(_WIN_PRINT)
       WIN_GetDeviceContext (frame);
@@ -2277,13 +2181,12 @@ ThotBool RedrawFrameTop (int frame, int scroll)
           if (xmin < xmax && ymin < ymax)
             {
               topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
-                                        &create, &tVol, &bVol);
+                                        &tVol, &bVol);
               /* now display extra flows */
               pFlow = pFrame->FrFlow;
               while (pFlow)
                 {
-                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax,
-                                   &xbox, &t, &b);
+                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
                   pFlow = pFlow->FlNext;
                 }
             }
@@ -2411,9 +2314,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 {
   PtrBox              topBox;
   PtrBox              pRootBox;
-  PtrBox              create, xbox;
   ViewFrame          *pFrame;
-  PtrAbstractBox      pAb;
   PtrFlow             pFlow;
   int                 delta, t, b;
   int                 y, tVol, bVol, h, l;
@@ -2458,8 +2359,6 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
           delta = top - h / 4;
           pRootBox = topBox = NULL;
           y = 0;
-          /* used to store boxes created on the fly */
-          create = NULL;
           /* Redraw from top to bottom all filled boxes */
 #if defined(_WINGUI) && !defined(_WIN_PRINT)
           WIN_GetDeviceContext (frame);
@@ -2471,13 +2370,13 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
                               &xmin, &ymin, &xmax, &ymax, 1);
 	      
               topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin,
-                                        ymax, &create, &tVol, &bVol);
+                                        ymax, &tVol, &bVol);
               /* now display extra flows */
               pFlow = pFrame->FrFlow;
               while (pFlow)
                 {
                   DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax,
-                                   &xbox, &t, &b);
+                                   &t, &b);
                   pFlow = pFlow->FlNext;
                 }
               /* The updated area is redrawn */
@@ -2585,19 +2484,6 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
                   /* update of image is finished */
                   FrameUpdating = FALSE;
                 }
-              /* Interactive creation of boxes */
-              if (create)
-                {
-                  pAb = create->BxAbstractBox;
-                  DirectCreation (create, frame);
-                  /* Volume computed is sufficient */
-                  /* Is a cleanup of the bottom of frame needed ? */
-                  if (y > 0)
-                    Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
-                  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
-                  /* update of image is finished */
-                  FrameUpdating = FALSE;
-                }
             }
         }
 #ifdef _GL 
@@ -2616,7 +2502,6 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       WIN_ReleaseDeviceContext ();
 #endif /* __WINGUI && !_WINT_PRINT */
     }
-  FirstCreation = FALSE;
   return toadd;
 }
 
