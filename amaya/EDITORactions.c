@@ -958,7 +958,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
       UpdateContextSensitiveMenus (doc, 1);
-#endif ? _SVG */
+#endif /* _SVG */
     }
   else
     {
