@@ -7300,7 +7300,7 @@
 	<message xml:lang="fr">à gauche et en dessous de</message>
 </label>
 <label define="AM_SVG_RELATIVE_LEFT">
-	<message xml:lang="en">to the left</message>
+	<message xml:lang="en">to the left of</message>
 	<message xml:lang="fr">à gauche de</message>
 </label>
 <label define="AM_SVG_RELATIVE_RIGHT_ABOVE">
@@ -7312,7 +7312,7 @@
 	<message xml:lang="fr">à droite et en dessous de</message>
 </label>
 <label define="AM_SVG_RELATIVE_RIGHT">
-	<message xml:lang="en">to the right</message>
+	<message xml:lang="en">to the right of</message>
 	<message xml:lang="fr">à droite de</message>
 </label>
 <label define="AM_SVG_RELATIVE_ABOVE">

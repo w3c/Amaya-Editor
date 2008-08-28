@@ -4124,8 +4124,8 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 
 <!-- SVG panel -->
 <label define="TMSG_SVG_Information">
-  <message xml:lang="en">Information</message>
-  <message xml:lang="fr">Information</message>
+  <message xml:lang="en">Title/Description</message>
+  <message xml:lang="fr">Titre/Description</message>
 </label>
 <label define="TMSG_SVG_GenerateDescription">
   <message xml:lang="en">Generate a description</message>
