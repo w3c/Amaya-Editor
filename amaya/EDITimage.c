@@ -1131,8 +1131,6 @@ void SvgImageCreated (NotifyElement *event)
   char              *utf8value;
 #endif /* _WX */
   char              *text;
-  char              *pathimage;
-  char              *imagename;
 
   if (CreateNewObject)
     // nothing to do
@@ -1141,38 +1139,24 @@ void SvgImageCreated (NotifyElement *event)
   doc = event->document;
   /* display the Image form and get the user feedback */
   text = GetImageURL (doc, 1, FALSE, FALSE, TRUE);
-  if (text == NULL || text[0] == EOS)
+  if (text == NULL)
     {
       /* delete the empty image element */
       TtaDeleteTree (el, doc);
       return;
     }
   elType = TtaGetElementType (el);
-  /* set the desc child */
-  elType.ElTypeNum = SVG_EL_desc;
-  desc = TtaSearchTypedElement (elType, SearchInTree, el);
-  if (!desc)
+  if (ImgAlt[0] != EOS)
     {
-      desc = TtaNewTree (doc, elType, "");
-      TtaInsertFirstChild (&el, desc, doc);
-    }
-  leaf = TtaGetFirstChild (desc);
-  if (ImgAlt[0] == EOS)
-    /* The user has not provided any alternate name. Copy the image name in
-       the desc element */
-    {
-      imagename = (char *)TtaGetMemory (MAX_LENGTH);
-      pathimage = (char *)TtaGetMemory (MAX_LENGTH);
-      strcpy (imagename, " ");
-      TtaExtractName (text, pathimage, &imagename[1]);
-      strcat (imagename, " ");
-      /* set the element content */
-      TtaSetTextContent (leaf, (unsigned char *)imagename, SPACE, doc);
-      TtaFreeMemory (pathimage);
-      TtaFreeMemory (imagename);
-    }
-  else
-    {
+      /* set the desc child */
+      elType.ElTypeNum = SVG_EL_desc;
+      desc = TtaSearchTypedElement (elType, SearchInTree, el);
+      if (desc == NULL)
+        {
+          desc = TtaNewTree (doc, elType, "");
+          TtaInsertFirstChild (&desc, el, doc);
+        }
+      leaf = TtaGetFirstChild (desc);
 #ifdef _WX
       TtaSetTextContent (leaf, (unsigned char *)ImgAlt, SPACE, doc);
 #else /* _WX */

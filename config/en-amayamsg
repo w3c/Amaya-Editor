@@ -432,7 +432,7 @@
 426 Send
 427 The server address and port must be set in Preferences
 428 Message:
-429 Alternate textual  message:
+429 Alternate textual message:
 430 The server is unreachable or does not respond
 431 The server has reject you
 432 The sender address is misformatted

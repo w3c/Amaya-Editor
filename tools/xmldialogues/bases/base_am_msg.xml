@@ -2254,7 +2254,7 @@
 </label>
 <label define="AM_ALT">
 	<message xml:lang="en">Alternate text</message>
-	<message xml:lang="fr">Texte de remplacement</message>
+	<message xml:lang="fr">Texte alternatif</message>
 	<message xml:lang="de">Alternativer Text:</message>
 	<message xml:lang="it">Testo alternativo</message>
 	<message xml:lang="es">Texto alternativo:</message>
@@ -6773,7 +6773,7 @@
 	<message xml:lang="ja">本文:</message>
 </label>
 <label define="AM_EMAILS_MESSAGE_ALTERN">
-	<message xml:lang="en">Alternate textual  message:</message>
+	<message xml:lang="en">Alternate textual message:</message>
 	<message xml:lang="es">Texto alternativo:</message>
 	<message xml:lang="fr">Message textuel alternatif :</message>
 	<message xml:lang="sk">Alternatívna textová správa:</message>

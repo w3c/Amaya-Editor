@@ -14,6 +14,7 @@
 
 static int      MyRef;
 static int      Waiting = 0;
+static bool     Wait_alt;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -57,7 +58,6 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   // update dialog labels with given ones
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_IMG) ));
-  XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
   XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_CLEAR", wxButton)->SetToolTip( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CLEAR) ));
   XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
@@ -65,18 +65,20 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->SetValue( alt );
-
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetValue(urlToOpen  );
-
   // toolbar to select the html position
   wxToolBar* tb = XRCCTRL(*this, "wxID_TOOL", wxToolBar);
   if (isSvg)
     {
+      XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_BM_DESCRIPTION) ));
       XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->Hide();
       tb->Hide();
+      Wait_alt = false;
     }
   else
     {
+      XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
+      Wait_alt = true;
       XRCCTRL(*this, "wxID_POSITION_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_POSITION) ));
       ImgPosition = 0;
       switch (ImgPosition)
@@ -196,7 +198,7 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
   wxString alt = XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->GetValue( );
   if (alt.Len() == 0)
     {
-      if (Waiting == 1)
+      if (Waiting == 1 && Wait_alt)
         {
           // request an alternate
           XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));

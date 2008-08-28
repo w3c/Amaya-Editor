@@ -23,7 +23,7 @@
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_CLEAR">
                   <tooltip>*Browse*</tooltip>
-                  <bitmap stock_id="wxART_CROSS_MARK"></bitmap>
+                  <bitmap stock_id="wxART_CROSS_MARK"/>
                 </object>
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
@@ -42,7 +42,7 @@
               <object class="sizeritem">
                 <object class="wxBitmapButton" name="wxID_BROWSEBUTTON">
                   <tooltip>*Browse*</tooltip>
-                  <bitmap stock_id="wxART_FILE_OPEN"></bitmap>
+                  <bitmap stock_id="wxART_FILE_OPEN"/>
                 </object>
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
@@ -59,8 +59,8 @@
               <orient>wxHORIZONTAL</orient>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_ALT_LABEL">
+                  <size>120,-1</size>
                   <label>*Get the ALT value*</label>
-                  <size>150,-1</size>
                 </object>
                 <option>1</option>
                 <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -72,7 +72,7 @@
               <object class="sizeritem">
                 <object class="wxTextCtrl" name="wxID_ALT"/>
                 <option>1</option>
-                <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                <flag>wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
               </object>
             </object>
             <flag>wxALL|wxEXPAND</flag>
