@@ -3546,8 +3546,8 @@ void CheckPastedElement (Element el, Document doc, int info, int position,
                          ThotBool by_ref)
 {
   Document            originDocument;
-  Element             anchor, child, previous, nextchild, parent, ancestor,
-    sibling;
+  Element             anchor, child, previous, nextchild, parent;
+  Element             root, ancestor, sibling;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
@@ -3662,9 +3662,22 @@ void CheckPastedElement (Element el, Document doc, int info, int position,
 #ifdef _SVG
   else if (!strcmp (name, "SVG") && elType.ElTypeNum == SVG_EL_SVG)
     {
-      /* Set the MathML namespace declaration */
+      if (DocumentTypes[doc] != docSVG && DocumentMeta[doc])
+        {
+          DocumentMeta[doc]->compound = TRUE;
+          if (!DocumentMeta[doc]->xmlformat)
+            {
+              // the document becomes an XML document
+              DocumentMeta[doc]->xmlformat = TRUE;
+              root = TtaGetRootElement (doc);
+              TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+            }
+        }
+      /* Set the SVG namespace declaration */
       TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
       TtaSetANamespaceDeclaration (doc, el, NULL, SVG_URI);
+      // mark the new Coordinate System
+      TtaSetElCoordinateSystem (el);
     }
 #endif /* _SVG */
 

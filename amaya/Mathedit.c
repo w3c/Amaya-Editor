@@ -7431,7 +7431,7 @@ ThotBool NewMathElement (NotifyOnValue *event)
   -----------------------------------------------------------------------*/
 void MathElementPasted (NotifyElement *event)
 {
-  Element	      placeholderEl, parent, prev, leaf;
+  Element	      placeholderEl, parent, prev, leaf, root;
   ElementType	  elType, elTypeParent;
   Attribute     attr;
   AttributeType attrType;
@@ -7466,6 +7466,18 @@ void MathElementPasted (NotifyElement *event)
       leaf = AppendEmptyText (event->element, doc);
       if (leaf)
         TtaRegisterElementCreate (leaf, doc);
+      // force XML document
+      if (DocumentMeta[doc])
+        {
+          DocumentMeta[doc]->compound = TRUE;
+          if (!DocumentMeta[doc]->xmlformat)
+            {
+              // the document becomes an XML document
+              DocumentMeta[doc]->xmlformat = TRUE;
+              root = TtaGetRootElement (doc);
+              TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
+            }
+        }
       /* Set the MathML namespace declaration */
       TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
       TtaSetANamespaceDeclaration (doc, event->element, NULL, MathML_URI);

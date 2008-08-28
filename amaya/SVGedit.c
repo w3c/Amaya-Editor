@@ -1964,7 +1964,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (svgCanvas, attr, doc);
               TtaSetAttributeText (attr, "500", svgCanvas, doc);
-
               ParseWidthHeightAttribute (attr, svgCanvas, doc, FALSE);
 
               attrType.AttrTypeNum = SVG_ATTR_height_;

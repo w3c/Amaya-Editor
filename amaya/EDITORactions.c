@@ -895,6 +895,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
     }
   else if (docType == docSVG)
     {
+#ifdef _SVG
       /*-------------  New SVG document ------------*/
       /* create the SVG DOCTYPE element */
       elType.ElTypeNum = SVG_EL_DOCTYPE;
@@ -917,6 +918,19 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
           attr = TtaNewAttribute (attrType);
           TtaAttachAttribute (root, attr, doc);
           TtaSetAttributeText (attr, SVG_VERSION, root, doc);
+
+          // fix the width and height
+          attrType.AttrTypeNum = SVG_ATTR_width_;
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (root, attr, doc);
+          TtaSetAttributeText (attr, "600", root, doc);
+          ParseWidthHeightAttribute (attr, root, doc, FALSE);
+
+          attrType.AttrTypeNum = SVG_ATTR_height_;
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (root, attr, doc);
+          TtaSetAttributeText (attr, "600", root, doc);
+          ParseWidthHeightAttribute (attr, root, doc, FALSE);
 
           /* create a default title if there is no title element */
           elType.ElTypeNum = SVG_EL_title;
@@ -944,6 +958,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
       UpdateContextSensitiveMenus (doc, 1);
+#endif ? _SVG */
     }
   else
     {
