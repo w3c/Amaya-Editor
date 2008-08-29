@@ -208,8 +208,8 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
       if (me)
         {
           TtaSetStatus (0, 1, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM), NULL);
-          //if (!SafePut_query(me->urlName))
-          //  InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
+          if (!SafePut_query(me->urlName))
+	    InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
         }
       break;
     case HT_MSG_FILE_REPLACE:
