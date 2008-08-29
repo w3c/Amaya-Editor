@@ -59,7 +59,7 @@
 #include "XHTMLbuilder_f.h"
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
-
+#include "SVGedit_f.h"
 
 #ifdef DAV
 #define WEBDAV_EXPORT extern
@@ -854,7 +854,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       if (SelectionDoc != 0)
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
-      UpdateContextSensitiveMenus (doc, 1);
       /* Activate show areas */
       if (MapAreas[doc])
         ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
@@ -890,7 +889,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       if (SelectionDoc != 0)
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
-      UpdateContextSensitiveMenus (doc, 1);
       TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_MATHML);
     }
   else if (docType == docSVG)
@@ -942,7 +940,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
             }
           text = TtaGetFirstChild (title);
           if (text && TtaGetTextLength (text) == 0)
-            TtaSetTextContent (text, (unsigned char*)"No title", language,doc);
+            TtaSetTextContent (text, (unsigned char*)"Draw", language,doc);
           UpdateTitle (title, doc);
           TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_SVG);
         }
@@ -1005,8 +1003,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       SelectionDoc = doc;
     }
 
-  /* Update the Doctype menu */
-  UpdateDoctypeMenu (doc);
   /* the document should be saved */
   TtaSetDocumentUnmodified (doc);
 #ifdef _WX
@@ -1015,6 +1011,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
   UpdateStyleList (doc, 1);
 #endif /* _WX */
   UpdateEditorMenus (doc);
+  UpdateContextSensitiveMenus (doc, 1);
 }
 
 /*----------------------------------------------------------------------
