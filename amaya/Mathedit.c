@@ -1168,9 +1168,9 @@ void ClearMathFrame (Document doc)
   ----------------------------------------------------------------------*/
 void MathSelectionChanged (NotifyElement *event)
 {
-  Element          el;
+  Element          el, parent;
   Attribute        attr;
-  ElementType      elType;
+  ElementType      elType, parentType;
   AttributeType    attrType;
   ThotBool         drawFrame;
 
@@ -1199,9 +1199,22 @@ void MathSelectionChanged (NotifyElement *event)
             }
           if (el)
             {
+	      /* if the ancestor <math> element is a child of an SVG element,
+		 do not draw a frame */
+	      parent = TtaGetParent (el);
+	      if (parent)
+		{
+		  parentType = TtaGetElementType (parent);
+		  if (!strcmp (TtaGetSSchemaName (parentType.ElSSchema),"SVG"))
+		    /* the parent is an SVG element */
+		    {
+		      UnFrameMath ();
+		      el = NULL;
+		    }
+		}
               /* if another formula is already highlighted, remove its frame
-                 and frame the new one */
-              if (el != MathElementSelected)
+                 and draw a frame around the new one */
+              if (el && el != MathElementSelected)
                 {
                   UnFrameMath ();
                   /* associate an attribute IntSelected with the new <math>
@@ -1225,9 +1238,9 @@ void MathSelectionChanged (NotifyElement *event)
             }
         }
     }
-    UpdateXmlElementListTool (event->element,event->document);
-    TtaSetStatusSelectedElement (event->document, 1, event->element);
-    TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_MATHML);
+  UpdateXmlElementListTool (event->element,event->document);
+  TtaSetStatusSelectedElement (event->document, 1, event->element);
+  TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_MATHML);
 }
 
 /*----------------------------------------------------------------------
