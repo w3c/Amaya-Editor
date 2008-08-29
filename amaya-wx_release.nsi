@@ -198,6 +198,27 @@ Section "Amaya" SecAmaya
   File resources\icons\16x16\*.ico
   SetOutPath "$INSTDIR\resources\icons\22x22"
   File resources\icons\22x22\*.png
+  SetOutPath "$INSTDIR\resources\svg"
+  File resources\svg\*.png
+  File resources\svg\*.svg
+  SetOutPath "$INSTDIR\resources\svg\balloons"
+  File resources\svg\balloons\*.png
+  File resources\svg\balloons\*.svg
+  SetOutPath "$INSTDIR\resources\svg\block_arrows"
+  File resources\svg\block_arrows\*.png
+  File resources\svg\block_arrows\*.svg
+  SetOutPath "$INSTDIR\resources\svg\chemistry"
+  File resources\svg\chemistry\*.png
+  File resources\svg\chemistry\*.svg
+  SetOutPath "$INSTDIR\resources\svg\circuit_diagram"
+  File resources\svg\circuit_diagram\*.png
+  File resources\svg\circuit_diagram\*.svg
+  SetOutPath "$INSTDIR\resources\svg\logic_gates"
+  File resources\svg\logic_gates\*.png
+  File resources\svg\logic_gates\*.svg
+  SetOutPath "$INSTDIR\resources\svg\polygons_and_stars"
+  File resources\svg\polygons_and_stars\*.png
+  File resources\svg\polygons_and_stars\*.svg
   SetOutPath "$INSTDIR\resources\xrc"
   File resources\xrc\*.xrc
 
@@ -241,18 +262,12 @@ Section "Amaya" SecAmaya
   DetailPrint "Installing Amaya config files"
   SetDetailsPrint listonly
 
-  SetOutPath "$INSTDIR\config\libconfig"
-  File config\libconfig\*.png
-  File config\libconfig\*.svg
-  File config\libconfig\*.css
-  File config\libconfig\*.lhtml
 
   SetOutPath "$INSTDIR\config"
   File config\*-amayadialogue
   File config\*-libdialogue
   File config\*-amayamsg
   File config\*-libdialogue
-  File config\lib_files.dat
   File config\fonts.*
   File config\amaya.kb
   File config\amaya.profiles
