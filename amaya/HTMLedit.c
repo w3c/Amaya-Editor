@@ -1773,15 +1773,32 @@ void ChangeTitle (Document doc, View view)
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
     return;
-
   /* search the Title element */
-  el = TtaGetMainRoot (doc);
+  el = TtaGetRootElement (doc);
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     /* it's a HTML document */
     {
       elType.ElTypeNum = HTML_EL_TITLE;
       el = TtaSearchTypedElement (elType, SearchForward, el);
+    }
+  else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    /* it's an SVG document */
+    {
+      child = TtaGetFirstChild (el);
+      elType = TtaGetElementType (child);
+      while (child && (elType.ElTypeNum != SVG_EL_title ||
+		       strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG")))
+	{
+	  TtaNextSibling (&child);
+	  elType = TtaGetElementType (child);
+	}
+      el = child;
+    }
+  else
+    el = NULL;
+  if (el)
+    {
       child = GetNoTemplateChild (el, TRUE);
       if (child == NULL)
         {
@@ -1843,12 +1860,29 @@ void SetNewTitle (Document doc)
     /* the document is in ReadOnly mode */
     return;
   /* search the Title element */
-  el = TtaGetMainRoot (doc);
+  el = TtaGetRootElement (doc);
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     {
       elType.ElTypeNum = HTML_EL_TITLE;
       el = TtaSearchTypedElement (elType, SearchForward, el);
+    }
+  else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    {
+      child = TtaGetFirstChild (el);
+      elType = TtaGetElementType (child);
+      while (child && (elType.ElTypeNum != SVG_EL_title ||
+		       strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG")))
+	{
+	  TtaNextSibling (&child);
+	  elType = TtaGetElementType (child);
+	}
+      el = child;
+    }
+  else
+    el = NULL;
+  if (el)
+    {
       child = GetNoTemplateChild (el, TRUE);
       if (child)
         {

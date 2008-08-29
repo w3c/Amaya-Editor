@@ -660,6 +660,7 @@ SelectColumn
 ShowGraphicsPalette
 Anim_Play
 HelpSVG
+&ChangeTitle
 *AmayaSVGToolPanel
 &CreateSVG_Template
 &CreateSVG_Svg
