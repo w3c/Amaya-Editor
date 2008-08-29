@@ -1619,10 +1619,12 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
 #endif /* _SVG */
 
 /*----------------------------------------------------------------------
-  GetElementData
+  GetElementData gets the SVG title or descriptor (according to the
+  given el_type_num) value of of the element el.
+  Return a string that gives the value or NULL.
+  The returned string mist be freed.
   -----------------------------------------------------------------------*/
-static char *GetElementData(Document doc, Element el,
-                            SSchema sschema, int el_type_num)
+char *GetElementData (Document doc, Element el, SSchema sschema, int el_type_num)
 {
   Element child;
   ElementType       elType;
@@ -1630,8 +1632,8 @@ static char *GetElementData(Document doc, Element el,
   int len;
   char *text;
 
-  if(el_type_num != SVG_EL_title &&
-     el_type_num != SVG_EL_desc)
+  // check the requested type
+  if(el_type_num != SVG_EL_title && el_type_num != SVG_EL_desc)
     return NULL;
 
   elType = TtaGetElementType (el);
@@ -1654,28 +1656,30 @@ static char *GetElementData(Document doc, Element el,
 
   child = TtaGetFirstChild(child);
   elType = TtaGetElementType (child);
-  if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)return NULL;
+  if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)
+    return NULL;
 
   len = TtaGetTextLength(child);
-  if(len == 0)return NULL;
-  text = (char *)TtaGetMemory (len);
+  if(len == 0)
+    return NULL;
+  text = (char *) TtaGetMemory (len+1);
   TtaGiveTextContent (child, (unsigned char *)text, &len, &lang);
   return text;
 }
 
 /*----------------------------------------------------------------------
-  SetElementData
+  SetElementData creates or update the title or description attached to
+  the element el.
+  The parameter value 
   -----------------------------------------------------------------------*/
-static ThotBool SetElementData(Document doc, Element el,
-                               SSchema sschema, int el_type_num,
-                               char *value)
+ThotBool SetElementData (Document doc, Element el,
+                         SSchema sschema, int el_type_num, char *value)
 {
   Element child, text_unit;
   ElementType       elType;
   ThotBool remove;
 
-  if(el_type_num != SVG_EL_title &&
-     el_type_num != SVG_EL_desc)
+  if(el_type_num != SVG_EL_title && el_type_num != SVG_EL_desc)
     return FALSE;
 
   elType = TtaGetElementType (el);
@@ -2929,16 +2933,15 @@ void SelectGraphicElement (Document doc, View view)
 void EditGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
-  DisplayMode      dispMode;
-  int		   c1, c2;
-  ThotBool done;
-  Element first, parent;
+  DisplayMode  dispMode;
+  int		       c1, c2;
+  ThotBool     done;
+  Element      first, parent;
   SSchema      svgSchema;
-
 #define MAX_TITLE 50
-  char title[MAX_TITLE];
-  char desc[MAX_LENGTH];
-  char *title_, *desc_;
+  char         title[MAX_TITLE+1];
+  char         desc[MAX_LENGTH+1];
+  char        *title_, *desc_;
 
   /* Check that a document is selected */
   if (doc == 0)return;
@@ -2976,21 +2979,23 @@ void EditGraphicElement (Document doc, View view, int entry)
       title_ = GetElementData(doc, first, svgSchema, SVG_EL_title);
       if(title_)
         {
-          strncpy(title, title_, MAX_TITLE-1);
+          strncpy(title, title_, MAX_TITLE);
+          title[MAX_TITLE] = EOS;
           TtaFreeMemory(title_);
         }
       else
-        *title = '\0';
+        *title = EOS;
 
       /* Get the current title */
       desc_ = GetElementData(doc, first, svgSchema, SVG_EL_desc);
       if(desc_)
         {
-          strncpy(desc, desc_, MAX_LENGTH-1);
-          TtaFreeMemory(desc_);
+          strncpy (desc, desc_, MAX_LENGTH);
+          desc[MAX_LENGTH] = EOS;
+          TtaFreeMemory (desc_);
         }
       else
-        *desc = '\0';
+        *desc = EOS;
 
       /* Dialog box */
       done = QueryTitleAndDescFromUser(title, MAX_TITLE,

@@ -8,6 +8,15 @@
 
 extern void CheckSVGRoot ( Document doc,
                            Element el );
+extern char *GetElementData ( Document doc,
+                              Element el,
+                              SSchema sschema,
+                              int el_type_num );
+extern ThotBool SetElementData ( Document doc,
+                                 Element el,
+                                 SSchema sschema,
+                                 int el_type_num,
+                                 char *value );
 extern ThotBool GetAncestorCanvasAndObject ( Document doc,
                                              Element *el,
                                              Element *svgAncestor,
@@ -189,6 +198,15 @@ extern void EditSVG_GenerateDescription ( Document document,
 
 extern void CheckSVGRoot ( Document doc,
                              Element el );
+extern char *GetElementData ( Document doc,
+                                Element el,
+                                SSchema sschema,
+                                int el_type_num );
+extern ThotBool SetElementData ( Document doc,
+                                   Element el,
+                                   SSchema sschema,
+                                   int el_type_num,
+                                   char *value );
 extern ThotBool GetAncestorCanvasAndObject ( Document doc,
                                                Element *el,
                                                Element *svgAncestor,

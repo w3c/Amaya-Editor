@@ -44,6 +44,7 @@ static int        RefFormImage = 0;
 #include "wxdialogapi_f.h"
 #include "message_wx.h"
 #include "SVGbuilder_f.h"
+#include "SVGedit_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -1127,7 +1128,7 @@ void SvgImageCreated (NotifyElement *event)
   AttributeType      attrType;
   Attribute          attr;
   ElementType        elType;
-  Element            el, desc, leaf;
+  Element            el;
   Document           doc;
 #ifndef _WX
   char              *utf8value;
@@ -1147,26 +1148,12 @@ void SvgImageCreated (NotifyElement *event)
       TtaDeleteTree (el, doc);
       return;
     }
+  TtaSetDocumentModified (doc);
   elType = TtaGetElementType (el);
   if (ImgAlt[0] != EOS)
     {
       /* set the desc child */
-      elType.ElTypeNum = SVG_EL_desc;
-      desc = TtaSearchTypedElement (elType, SearchInTree, el);
-      if (desc == NULL)
-        {
-          desc = TtaNewTree (doc, elType, "");
-          TtaInsertFirstChild (&desc, el, doc);
-        }
-      leaf = TtaGetFirstChild (desc);
-#ifdef _WX
-      TtaSetTextContent (leaf, (unsigned char *)ImgAlt, SPACE, doc);
-#else /* _WX */
-      utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)ImgAlt,
-                                               TtaGetDefaultCharset ());
-      TtaSetTextContent (leaf, (unsigned char *)utf8value, SPACE, doc);
-      TtaFreeMemory (utf8value);
-#endif /* _WX */
+      SetElementData (doc, el, elType.ElSSchema, SVG_EL_desc, ImgAlt);
       ImgAlt[0] = EOS;
     }
   /* update the xlink:href attribute */
@@ -1294,6 +1281,7 @@ void AddNewImage (Document doc, View view, ThotBool isInput, ThotBool isSvg)
   Attribute          attr;
   AttributeType      attrType, attrH;
   NotifyOnTarget     event;
+  NotifyElement      svgevent;
   char              *name, *value;
   int                c1, i, j, cN, length, width, height, w, h, profile;
   ThotBool           oldStructureChecking, newAttr, checkoptions = FALSE;
@@ -1343,14 +1331,6 @@ void AddNewImage (Document doc, View view, ThotBool isInput, ThotBool isSvg)
                   NormalizeURL (value, doc, LastURLImage, name, NULL);
                   TtaFreeMemory (value);
                   TtaFreeMemory (name);
-#ifdef IV
-                  if (!IsHTTPPath (LastURLImage))
-                    {
-                      /* extract directory and file names */
-                      TtaExtractName (LastURLImage, DirectoryImage, ImageName);
-                      LastURLImage[0] = EOS;
-                    }
-#endif
                 }
             }
 
@@ -1383,22 +1363,72 @@ void AddNewImage (Document doc, View view, ThotBool isInput, ThotBool isSvg)
 #ifdef _SVG
               // insert the new image as the last child to get it on the top
               TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-              do
+              if (elType.ElTypeNum == SVG_EL_image &&
+                  lastSelEl == firstSelEl)
                 {
-                  el = firstSelEl;
-                  TtaNextSibling (&el);
-                  if (el)
-                    firstSelEl = el;
+                  // replace the current image
+                  CreateNewImage = FALSE;
+                  /* get the value of the current src attribute for this image
+                     to initialize the image dialogue box */
+                  attrType.AttrSSchema = elType.ElSSchema;
+                  attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+                  attr = TtaGetAttribute (firstSelEl, attrType);
+                  if (attr)
+                    {
+                      length = TtaGetTextAttributeLength (attr) + 1;
+                      if (length <= MAX_LENGTH)
+                        {
+                          /* not too large URI: initialize the default URI */
+                          length = MAX_LENGTH;
+                          /* get a buffer for the attribute value */
+                          value = (char *)TtaGetMemory (length);
+                          /* copy the SRC attribute into the buffer */
+                          TtaGiveTextAttributeValue (attr, value, &length);
+                          name = (char *)TtaConvertMbsToByte ((unsigned char *)value,
+                                                              TtaGetDefaultCharset ());
+                          TtaFreeMemory (value);
+                          value = name;
+                          name = (char *)TtaGetMemory (MAX_LENGTH);
+                          NormalizeURL (value, doc, LastURLImage, name, NULL);
+                          TtaFreeMemory (value);
+                          TtaFreeMemory (name);
+                        }
+                    }
+                  // get the alternate value
+                  value = GetElementData (doc, firstSelEl, elType.ElSSchema, SVG_EL_desc);
+                  if (value)
+                    {
+                      strcpy (ImgAlt, value);
+                      TtaFreeMemory (value);
+                      value = NULL;
+                    }
+                  checkoptions = TRUE;
+                  /* display the image dialogue box */
+                  svgevent.element = firstSelEl;
+                  svgevent.document = doc;
+                  SvgImageCreated (&svgevent);
+                  checkoptions = TRUE;
                 }
-              while (el);
-              TtaSelectElement (doc, firstSelEl);
-              TtaInsertAnyElement (doc, FALSE);
-              TtaExtendUndoSequence (doc);
-              elType.ElTypeNum = SVG_EL_image;
-              checkoptions = TtaCreateElement (elType, doc);
-              TtaSetDocumentModified (doc);
-              if (!checkoptions)
-                TtaCloseUndoSequence(doc);
+              else
+                {
+                  // move the selection to the last child
+                  do
+                    {
+                      el = firstSelEl;
+                      TtaNextSibling (&el);
+                      if (el)
+                        firstSelEl = el;
+                    }
+                  while (el);
+                  TtaSelectElement (doc, firstSelEl);
+                  TtaInsertAnyElement (doc, FALSE);
+                  TtaExtendUndoSequence (doc);
+                  elType.ElTypeNum = SVG_EL_image;
+                  checkoptions = TtaCreateElement (elType, doc);
+                  TtaSetDocumentModified (doc);
+                  if (!checkoptions)
+                    TtaCloseUndoSequence(doc);
+                }
 #endif /* _SVG */
             }
           else if (!strcmp (name, "HTML"))

@@ -302,23 +302,22 @@ void ShowYPosition (int frame, int y, int height)
 #endif
 
 /*----------------------------------------------------------------------
-  PositionAbsBox rend la position de l'image abstraite de la fenetre^tre      
-  frame dans le document.                                 
-  Cette fonction retourne la valeur :                              
-  -1 si l'image abstraite est vide.                                
-  0 si l'image abstraite est complete.                            
-  1 si l'image abstraite est situe'e au de'but du document.       
-  2 si l'image abstraite est situe'e a` la fin du document.       
-  3 si l'image abstraite est situe'e au milieu du document.       
-  nbCharBegin indique le nombre de carate`res avant l'image abstraite.  
-  nbCharEnd indique le nombre de carate`res apres l'image abstraite.    
-  total indique le nombre total de carate`res du document.        
+  PositionAbsBox gives the position of the box in the frame.
+  Return
+   -1: the frame is empty
+    0: the frame is full
+    1 the top of the document is displayed
+    2 the bottom of the document is displayed
+    3 neither the top nor the bottom is displayed
+  nbCharBegin: gives the number of undisplayed characters before
+  nbCharEnd: gives the number of undisplayed characters before
+  total: gives the number of characters of the doccument
   ----------------------------------------------------------------------*/
 int PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
 {
   ViewFrame          *pFrame;
-  PtrBox              premiere;
-  PtrBox              derniere;
+  PtrBox              first;
+  PtrBox              last;
   int                 h, l;
 
   /* Initialisation */
@@ -339,17 +338,17 @@ int PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
   else if (!pFrame->FrAbstractBox->AbTruncatedHead &&
            !pFrame->FrAbstractBox->AbTruncatedTail)
     {
-      premiere = pFrame->FrAbstractBox->AbBox;
-      *total = premiere->BxHeight;
+      first = pFrame->FrAbstractBox->AbBox;
+      *total = first->BxHeight;
       return 0;
     }
   else
     {
       /* Repere la position de l'image abstraite dans le document */
-      premiere = pFrame->FrAbstractBox->AbBox->BxNext;
-      derniere = pFrame->FrAbstractBox->AbBox->BxPrevious;
-      VolumeTree (pFrame->FrAbstractBox, premiere->BxAbstractBox,
-                  derniere->BxAbstractBox, nbCharBegin, nbCharEnd, total);
+      first = pFrame->FrAbstractBox->AbBox->BxNext;
+      last = pFrame->FrAbstractBox->AbBox->BxPrevious;
+      VolumeTree (pFrame->FrAbstractBox, first->BxAbstractBox,
+                  last->BxAbstractBox, nbCharBegin, nbCharEnd, total);
 
       /* L'image se trouve au debut du document ? */
       if (!pFrame->FrAbstractBox->AbTruncatedHead)
