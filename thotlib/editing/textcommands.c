@@ -1019,7 +1019,7 @@ static void MovingCommands (int code, Document doc, View view,
                 }
               if (!done)
                 {
-                  if (code != 7 && pBox && yDelta < pBox->BxH)
+                  if (extendSel && pBox && yDelta < pBox->BxH)
                     yDelta = pBox->BxH; // skip almost at the bottom of the box
                   LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
                 }
