@@ -336,7 +336,7 @@ void  TtaSetMoveBackwardCallback (Func callbackFunc)
   Commandes de deplacement                                           
   ----------------------------------------------------------------------*/
 static void MovingCommands (int code, Document doc, View view,
-                            ThotBool extendSel)
+                            ThotBool extendSel, int yDelta)
 {
   PtrBox              pBox, pBoxBegin, pBoxEnd, ibox, box;
   PtrElement          pEl = NULL, firstEl, lastEl;
@@ -345,7 +345,7 @@ static void MovingCommands (int code, Document doc, View view,
   ViewSelection      *pViewSel, *pViewSelEnd;
   CHAR_T              word[MAX_WORD_LEN];
   int                 frame, x, y, i;
-  int                 xDelta, yDelta;
+  int                 xDelta;
   int                 h, w;
   int                 indpos, xpos;
   int                 first, last;
@@ -969,7 +969,7 @@ static void MovingCommands (int code, Document doc, View view,
                     x = pViewSelEnd->VsXPos + pBox->BxXOrg;
                   y = pBox->BxYOrg + pBox->BxHeight;
                 }
-              yDelta = 10;
+              // yDelta = 10;
               /* store the end position of the selection as the new reference */
               if (extendSel && LeftExtended)
                 {
@@ -1061,7 +1061,7 @@ static void MovingCommands (int code, Document doc, View view,
                   else
                     x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
                 }
-              yDelta = -10;
+              // yDelta = -10;
               if (extendSel && RightExtended)
                 {
                   i = pBoxEnd->BxYOrg - pBoxBegin->BxYOrg;
@@ -1098,7 +1098,7 @@ static void MovingCommands (int code, Document doc, View view,
                     /* take the original position into account */
                     x = ClickX + pFrame->FrXOrg;
                 }
-              else if (extendSel)
+              else
                 {
                   //x = ClickX + pFrame->FrXOrg;
                   LeftExtended = TRUE;
@@ -1249,112 +1249,136 @@ static void MovingCommands (int code, Document doc, View view,
   ----------------------------------------------------------------------*/
 void TtcPreviousChar (Document document, View view)
 {
-  MovingCommands (1, document, view, FALSE);
+  MovingCommands (1, document, view, FALSE, -10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcNextChar (Document document, View view)
 {
-  MovingCommands (2, document, view, FALSE);
+  MovingCommands (2, document, view, FALSE, 10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcPreviousLine (Document document, View view)
 {
-  MovingCommands (8, document, view, FALSE);
+  MovingCommands (8, document, view, FALSE, -10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcNextLine (Document document, View view)
 {
-  MovingCommands (7, document, view, FALSE);
+  MovingCommands (7, document, view, FALSE, 10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcStartOfLine (Document document, View view)
 {
-  MovingCommands (4, document, view, FALSE);
+  MovingCommands (4, document, view, FALSE, -10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcSelStartOfLine (Document document, View view)
 {
-  MovingCommands (4, document, view, TRUE);
+  MovingCommands (4, document, view, TRUE, -10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcEndOfLine (Document document, View view)
 {
-  MovingCommands (3, document, view, FALSE);
+  MovingCommands (3, document, view, FALSE, 10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcSelEndOfLine (Document document, View view)
 {
-  MovingCommands (3, document, view, TRUE);
+  MovingCommands (3, document, view, TRUE, 10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcPreviousSelChar (Document document, View view)
 {
-  MovingCommands (1, document, view, TRUE);
+  MovingCommands (1, document, view, TRUE, -10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcNextSelChar (Document document, View view)
 {
-  MovingCommands (2, document, view, TRUE);
+  MovingCommands (2, document, view, TRUE, 10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcPreviousSelLine (Document document, View view)
 {
-  MovingCommands (8, document, view, TRUE);
+  MovingCommands (8, document, view, TRUE, -10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcNextSelLine (Document document, View view)
 {
-  MovingCommands (7, document, view, TRUE);
+  MovingCommands (7, document, view, TRUE, 10);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void TtcPreviousSelPage (Document document, View view)
+{
+  int          frame;
+
+  if (document == 0)
+    return;
+  frame = GetWindowNumber (document, view);
+  MovingCommands (8, document, view, TRUE, -FrameTable[frame].FrHeight);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void TtcNextSelPage (Document document, View view)
+{
+  int          frame;
+
+  if (document == 0)
+    return;
+  frame = GetWindowNumber (document, view);
+  MovingCommands (7, document, view, TRUE, FrameTable[frame].FrHeight);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcPreviousWord (Document document, View view)
 {
-  MovingCommands (9, document, view, FALSE);
+  MovingCommands (9, document, view, FALSE, -10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcNextWord (Document document, View view)
 {
-  MovingCommands (10, document, view, FALSE);
+  MovingCommands (10, document, view, FALSE, 10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcPreviousSelWord (Document document, View view)
 {
-  MovingCommands (9, document, view, TRUE);
+  MovingCommands (9, document, view, TRUE, -10);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void TtcNextSelWord (Document document, View view)
 {
-  MovingCommands (10, document, view, TRUE);
+  MovingCommands (10, document, view, TRUE, 10);
 }
 
 /*----------------------------------------------------------------------

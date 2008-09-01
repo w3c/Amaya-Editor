@@ -277,6 +277,12 @@ void TteInitMenus (char *name, int number)
 
   MenuActionList[CMD_CutSelection].ActionName = "TtcCutSelection";
   MenuActionList[CMD_CutSelection].Call_Action = (Proc) TtcCutSelection;
+
+  MenuActionList[CMD_SelPageUp].ActionName = "TtcPreviousSelPage";
+  MenuActionList[CMD_SelPageUp].Call_Action = (Proc) TtcPreviousSelPage;
+
+  MenuActionList[CMD_SelPageDown].ActionName = "TtcNextSelPage";
+  MenuActionList[CMD_SelPageDown].Call_Action = (Proc) TtcNextSelPage;
 }
 
 /*----------------------------------------------------------------------
@@ -779,7 +785,7 @@ void TteAddMenuItem (int menuID, int subMenu, int itemID, const char *actionName
               if (iconName != NULL)
                 strcpy(ptr[i].ItemIconName, iconName);
               else
-                ptr[i].ItemIconName[0] = '\0';
+                ptr[i].ItemIconName[0] = EOS;
             }
           else
             /* Remove separator */

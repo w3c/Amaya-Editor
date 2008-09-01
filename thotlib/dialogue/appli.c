@@ -559,10 +559,9 @@ void TtcPageUp (Document document, View view)
   int          delta;
   int          frame;
 
-  if (document != 0)
-    frame = GetWindowNumber (document, view);
-  else
-    frame = 0;
+  if (document == 0)
+    return;
+  frame = GetWindowNumber (document, view);
   delta = -FrameTable[frame].FrHeight;
   VerticalScroll (frame, delta, 1);
 }
@@ -575,10 +574,9 @@ void TtcPageDown (Document document, View view)
   int          delta;
   int          frame;
 
-  if (document != 0)
-    frame = GetWindowNumber (document, view);
-  else
-    frame = 0;
+  if (document == 0)
+    return;
+  frame = GetWindowNumber (document, view);
   delta = FrameTable[frame].FrHeight;
   VerticalScroll (frame, delta, 1);
 }

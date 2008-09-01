@@ -32,6 +32,10 @@ extern void TtcPreviousSelLine ( Document document,
                                  View view );
 extern void TtcNextSelLine ( Document document,
                              View view );
+extern void TtcPreviousSelPage ( Document document,
+                                 View view );
+extern void TtcNextSelPage ( Document document,
+                             View view );
 extern void TtcPreviousWord ( Document document,
                               View view );
 extern void TtcNextWord ( Document document,
@@ -87,6 +91,10 @@ extern void TtcNextSelChar ( Document document,
 extern void TtcPreviousSelLine ( Document document,
                                    View view );
 extern void TtcNextSelLine ( Document document,
+                               View view );
+extern void TtcPreviousSelPage ( Document document,
+                                   View view );
+extern void TtcNextSelPage ( Document document,
                                View view );
 extern void TtcPreviousWord ( Document document,
                                 View view );
