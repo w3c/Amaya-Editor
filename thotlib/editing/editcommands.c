@@ -4372,12 +4372,6 @@ void TtcDeletePreviousChar (Document doc, View view)
                    !strcmp (firstEl->ElStructSchema->SsName, "TextFile")) ||
                   (pViewSel->VsBox &&
                    pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
-      else
-        /* remove the previous char if the selection is at the end of the
-           text */
-        delPrev = (pViewSel->VsBox &&
-                   pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText &&
-                   pViewSel->VsIndBox >= pViewSel->VsBox->BxNChars);
 
       /* avoid to redisplay step by step */
       dispMode = TtaGetDisplayMode (doc);

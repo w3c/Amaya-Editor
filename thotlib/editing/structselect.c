@@ -2939,7 +2939,7 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                       if (pAsc)
                         FirstSelectedElement = pAsc;
                     }
-                  if (rank == 1)
+                  if (rank == 1 && drag)
                     {
                       pElP = pEl;
                       /* move the end of the selection to the end of the 

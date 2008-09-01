@@ -697,6 +697,8 @@ static void MovingCommands (int code, Document doc, View view,
                   if (!extendSel || !LeftExtended)
                     {
                       /* move the right extremity */
+                      if (extendSel && !LeftExtended)
+                        RightExtended = TRUE;
                       pBox = pBoxEnd;
                       pEl = pBox->BxAbstractBox->AbElement;
                       if ((!extendSel && pViewSelEnd->VsBox &&
@@ -833,7 +835,7 @@ static void MovingCommands (int code, Document doc, View view,
                               if (box->BxScript == 'A' ||
                                   box->BxScript == 'H')
                                 x += box->BxClipW;
-                              else
+                              else if (!extendSel)
                                 x -= 2;
                               y = box->BxClipY + pFrame->FrYOrg;
                             }
@@ -844,7 +846,7 @@ static void MovingCommands (int code, Document doc, View view,
                               if (box->BxScript == 'A' ||
                                   box->BxScript == 'H')
                                 x += box->BxWidth;
-                              else
+                              else if (!extendSel)
                                 x -= 2;
                               y = box->BxYOrg;
                             }
