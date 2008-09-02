@@ -922,6 +922,11 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   Document   doc;
   View       view;
 
+#ifdef _WINDOWS
+  // a patch to manage enter in the URL combo
+  if (p_combo_box && id == 1)
+	  GotoSelectedURL (FALSE);
+#endif /* _WINDOWS */
   if (( p_text_ctrl || p_combo_box || p_spinctrl ) &&
       action_id >= 0 && action_id < MaxMenuAction && 
       MenuActionList[action_id].ActionName)
