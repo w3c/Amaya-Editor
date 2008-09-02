@@ -1204,10 +1204,12 @@ RULES
         END;
 
  Comment\240: BEGIN
+        Create '<!--';
         NoLineBreak;
-         Create '<!--';
         {NoTranslation;}
-        Create '-->\12' after;
+        Create '-->' after;
+	if not within ParagEquiv
+           Create '\12' after;
         END;
 
  Comment_line: BEGIN
@@ -1215,8 +1217,8 @@ RULES
         END;
 
  ASP_element: BEGIN
+        Create '<%';
         NoLineBreak;
-         Create '<%';
         {NoTranslation;}
         Create '>\12' after;
         END;
@@ -1226,18 +1228,17 @@ RULES
         END;
 
  XMLPI: BEGIN
+        Create '<?';
         NoLineBreak;
-         Create '<?';
         {NoTranslation;}
-  IF Within Paragraph
-        Create '?>' after;
-  IF Within List_Item
-        Create '?>' after;
-  IF Within TITLE
-        Create '?>' after;
-        IF not Within Paragraph and not Within List_Item
-  and not Within TITLE
-        Create '?>\12' after;
+        IF Within Paragraph
+           Create '?>' after;
+        IF Within List_Item
+           Create '?>' after;
+        IF Within TITLE
+           Create '?>' after;
+        IF not Within Paragraph and not Within List_Item and not Within TITLE
+           Create '?>\12' after;
         END;
 
  PI_line: BEGIN
@@ -1254,8 +1255,8 @@ RULES
         if not last create '\12' after;
 
  CDATA: BEGIN
-        NoLineBreak;
         Create '<![CDATA[';
+        NoLineBreak;
         NoTranslation;
         Create ']]>' After;
         END;

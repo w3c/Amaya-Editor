@@ -932,12 +932,23 @@ STRUCT
     of type URI.  Only elements to be shown in the Links view
     are taken into account }
   AnyLink = CASE OF
-        Anchor;                { HREF_ }
+        Anchor;             { HREF_ }
         Block_Quote;        { cite }
-        Quotation;        { cite }
+        Quotation;          { cite }
         ins;                { cite }
         del;                { cite }
         END;
+
+  { ParagEquiv is an alias for elements that are usually formatted like
+	paragraphs }
+  ParagEquiv = CASE OF
+	Paragraph; Pseudo_paragraph;
+	H1; H2; H3; H4; H5; H6;
+	Term;
+	Address;
+	Preformatted;
+	CAPTION;
+	END;
 
 EXCEPT
         HTML:           NoMove, NoResize;

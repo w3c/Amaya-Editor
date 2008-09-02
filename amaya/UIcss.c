@@ -706,12 +706,13 @@ char *CssToPrint (Document doc, char *printdir)
   -----------------------------------------------------------------------*/
 static void GenerateStyle (const char * data , ThotBool add)
 {
-  Element             el, firstC, lastC;
+  Element             el, firstC, lastC, colhead, col;
   ElementType         elType;
   Attribute           attr = NULL;
+  AttributeType       attrType;
   char                 *value;
   int                 doc, i, j, len;
-  ThotBool            open;
+  ThotBool            open, colcolgroup;
   PresentationContext ctxt;
 
   doc = TtaGetSelectedDocument();
@@ -734,12 +735,55 @@ static void GenerateStyle (const char * data , ThotBool add)
   if (data && data[0] != EOS)
     // there are style properties to be associated with the current selection
     {
+      // should the style be applied to a COL or COLGROUP element ?
+      colcolgroup = FALSE;
       elType = TtaGetElementType (el);
-      if (TtaIsColumnSelected (doc) ||
-          (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-	   (elType.ElTypeNum == HTML_EL_COL ||
-	    elType.ElTypeNum == HTML_EL_COLGROUP)))
-	// whole column is selected in a HTML table. Call the table editor
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	{
+	  if (elType.ElTypeNum == HTML_EL_COL ||
+	      elType.ElTypeNum == HTML_EL_COLGROUP)
+	    // a COL or COLGROUP element is selected
+	    colcolgroup = TRUE;
+	  else if (TtaIsColumnSelected (doc))
+	    // a whole column is selected. Is there a COL or COLGROUP element
+	    // for that column ?
+	    {
+	      if (elType.ElTypeNum == HTML_EL_Data_cell ||
+		  elType.ElTypeNum == HTML_EL_Heading_cell)
+		{
+		  // get the relevant COL or COLGROUP element
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr)
+		    {
+		      TtaGiveReferenceAttributeValue (attr, &colhead);
+		      if (colhead)
+			{
+			  attrType.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
+			  attr = TtaGetAttribute (colhead, attrType);
+			  if (attr)
+			    // this Column-head is linked to a COL or COLGROUP
+			    {
+			      TtaGiveReferenceAttributeValue (attr, &col);
+			      if (col)
+				{
+				  attrType.AttrTypeNum = HTML_ATTR_span_;
+				  attr = TtaGetAttribute (col, attrType);
+				  if (!attr ||
+				      TtaGetAttributeValue (attr) <= 1)
+				    // no spanning
+				    colcolgroup = TRUE;
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	}
+      if (colcolgroup)
+	// a whole column with a COL or COLGROUP element is selected in a HTML
+	// table. Call the table editor
 	{
 	  // create the context of the Specific presentation driver
 	  ctxt = TtaGetSpecificStyleContext (doc);

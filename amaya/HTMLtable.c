@@ -3541,7 +3541,7 @@ static void ApplyCSSRuleOneCol (Element col, PresentationContext ctxt,
 void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule,
 		      CSSInfoPtr css)
 {
-  Element             child, lastEl, colhead, col;
+  Element             child, colhead, col;
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
@@ -3549,13 +3549,11 @@ void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule,
   Document            doc;
   int                 i, j;
 
-  lastEl = el;
   if (!el)
     /* apply the CSS rule to the current selection */
     {
       doc = TtaGetSelectedDocument();
       TtaGiveFirstSelectedElement (doc, &el, &i, &j);
-      TtaGiveLastSelectedElement (doc, &lastEl, &i, &j);
       if (TtaIsColumnSelected (doc))
 	/* all cells of a column are selected */
 	{
@@ -3580,8 +3578,6 @@ void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule,
 			  TtaGiveReferenceAttributeValue (attr, &col);
 			  if (col)
 			    el = col;
-			  /* @@@@ This COL or COLGROUP element may have a
-			     span attribute and control several columns... */
 			}
 		    }
 		}
@@ -3611,8 +3607,6 @@ void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule,
 	  else
 	    {
 	      /* this COL or COLGROUP element has children. Process them */
-	      attrType.AttrSSchema = HTMLschema;
-	      attrType.AttrTypeNum = HTML_ATTR_Cell_align;
 	      do
 		{
 		  ApplyCSSRuleOneCol (child, ctxt, cssRule, css);
