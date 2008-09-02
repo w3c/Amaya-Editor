@@ -296,7 +296,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
                                  &nChars, &nbbl);
               if (LeftExtended && nChars > 0 && nChars <= pBox->BxNChars)
                 nChars--;
-              nChars = pBox->BxFirstChar + nChars;
+              nChars += pBox->BxFirstChar;
               if (extendSel && yDelta > 0 &&
                   pAb->AbElement == LastSelectedElement &&
                   LastSelectedElement &&
@@ -835,7 +835,7 @@ static void MovingCommands (int code, Document doc, View view,
                               if (box->BxScript == 'A' ||
                                   box->BxScript == 'H')
                                 x += box->BxClipW;
-                              else if (!extendSel)
+                              else
                                 x -= 2;
                               y = box->BxClipY + pFrame->FrYOrg;
                             }
@@ -846,7 +846,7 @@ static void MovingCommands (int code, Document doc, View view,
                               if (box->BxScript == 'A' ||
                                   box->BxScript == 'H')
                                 x += box->BxWidth;
-                              else if (!extendSel)
+                              else
                                 x -= 2;
                               y = box->BxYOrg;
                             }

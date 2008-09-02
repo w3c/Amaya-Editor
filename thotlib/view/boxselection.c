@@ -659,7 +659,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
                     pViewSelEnd->VsXPos += 2;
                   else if (SelPosition)
                     pViewSelEnd->VsXPos += 2;
-                  else if (firstChar == lastChar)
+                  else if (firstChar == lastChar && firstChar != 1)
                     {
                       c = pViewSelEnd->VsBuffer->BuContent[pViewSelEnd->VsIndBuf];
                       if (c == SPACE && pBox->BxSpaceWidth != 0)
