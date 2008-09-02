@@ -53,12 +53,16 @@ void SpellCheckDlgWX::Set_Proposals ( )
           TtaGetProposal (&proposal, i);
           if (proposal && strcmp (proposal, "$") != 0)
             XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString (i-1, TtaConvMessageToWX( proposal ));
+	  else
+            XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString (i-1, TtaConvMessageToWX(""));
         }
       XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetSelection(0);
       // default correction
       TtaGetProposal (&proposal, 1);
-      if (strcmp (proposal, "$") != 0)
+      if (proposal && strcmp (proposal, "$") != 0)
         XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->SetValue(TtaConvMessageToWX( proposal ) );
+      else
+        XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->SetValue(TtaConvMessageToWX("") );
       //checker language
       TtaGetChkrLanguageName (&lang);
       char buffer[100];
