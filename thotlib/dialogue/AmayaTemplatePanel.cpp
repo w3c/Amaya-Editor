@@ -34,25 +34,31 @@
 
 //
 //
-// AmayaSVGPanel
+// AmayaTemplatePanel
 //
 //
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaTemplateToolDef)
-AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_TEXT_BOX",           "TemplateCreateTextBox", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USE_BOX",            "TemplateCreateUseBox", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USECOMP_BOX",        "TemplateCreateUseBox", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEAT_SECTION",     "TemplateCreateRepeat", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEATCOMP_SECTION", "TemplateCreateRepeat", wxID_ANY, wxID_ANY)
-AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_FREE_BOX",           "TemplateCreateFreeBox", wxID_ANY, wxID_ANY)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_CREATE", "CreateTemplateFromDocument", LIB, TemplateFromDocument)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_TEXT_BOX", "TemplateCreateTextBox", LIB, TemplateTextBox)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USE_BOX", "TemplateCreateUseBox", LIB, TemplateUseBox)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USECOMP_BOX", "TemplateCreateUseBox", LIB, TemplateUseCompBox)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEAT_SECTION", "TemplateCreateRepeat", LIB, TemplateRepeat)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEATCOMP_SECTION", "TemplateCreateRepeat", LIB, TemplateRepeatComp)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_FREE_BOX", "TemplateCreateFreeBox", LIB, TemplateFreeBox)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_UNION", "TemplateCreateUnion", LIB, TemplateUnion)
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
+/*----------------------------------------------------------------------------
+  ----------------------------------------------------------------------------*/
 AmayaTemplatePanel::AmayaTemplatePanel():
   wxPanel()
 {
 }
 
+/*----------------------------------------------------------------------------
+  ----------------------------------------------------------------------------*/
 AmayaTemplatePanel::AmayaTemplatePanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
     const wxSize& size, long style, const wxString& name, wxObject* extra):
   wxPanel()
@@ -60,10 +66,14 @@ AmayaTemplatePanel::AmayaTemplatePanel(wxWindow* parent, wxWindowID id, const wx
   Create(parent, id, pos, size, style, name, extra);
 }
 
+/*----------------------------------------------------------------------------
+  ----------------------------------------------------------------------------*/
 AmayaTemplatePanel::~AmayaTemplatePanel()
 {
 }
 
+/*----------------------------------------------------------------------------
+  ----------------------------------------------------------------------------*/
 bool AmayaTemplatePanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
@@ -71,9 +81,12 @@ bool AmayaTemplatePanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& 
     return false;
   
   m_tbar1 = XRCCTRL(*this,"wxID_TOOLBAR_TEMPLATE_1", AmayaBaseToolBar);
+  m_tbar2 = XRCCTRL(*this,"wxID_TOOLBAR_TEMPLATE_2", AmayaBaseToolBar);
 
   m_tbar1->Add(AmayaTemplateToolDef);
   m_tbar1->Realize();
+  m_tbar2->Add(AmayaTemplateToolDef);
+  m_tbar2->Realize();
   Fit();
   SetAutoLayout(true);
   

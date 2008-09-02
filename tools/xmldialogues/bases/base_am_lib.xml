@@ -4664,6 +4664,38 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
   <message xml:lang="en">Striped Arrow</message>
   <message xml:lang="fr">Flèche avec bandes</message>
 </label>
+<label define="TemplateFromDocument">
+	<message xml:lang="en">Create template from current document...</message>
+	<message xml:lang="fr">Créer un modèle depuis le document courant...</message>
+</label>
+<label define="TemplateTextBox">
+	<message xml:lang="en">Create a text area</message>
+	<message xml:lang="fr">Créer une zone de texte</message>
+</label>
+<label define="TemplateUseBox">
+	<message xml:lang="en">Use a component or an element</message>
+	<message xml:lang="fr">Utiliser un composant ou un élément</message>
+</label>
+<label define="TemplateUseCompBox">
+	<message xml:lang="en">Create and use a component</message>
+	<message xml:lang="fr">Créer et utiliser un composant</message>
+</label>
+<label define="TemplateRepeat">
+	<message xml:lang="en">Repeat the current use</message>
+	<message xml:lang="fr">Répéter l'utilisation courante</message>
+</label>
+<label define="TemplateRepeatComp">
+	<message xml:lang="en">Create and repeat a component</message>
+	<message xml:lang="fr">Créer et répéter un composant</message>
+</label>
+<label define="TemplateFreeBox">
+	<message xml:lang="en">Create a free editing box</message>
+	<message xml:lang="fr">Créer une zone d'édition libre</message>
+</label>
+<label define="TemplateUnion">
+	<message xml:lang="en">Create a new types union</message>
+	<message xml:lang="fr">Créer une nouvelle union de types</message>
+</label>
 
 <!-- End of SVG panel -->
 

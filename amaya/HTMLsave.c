@@ -849,6 +849,7 @@ void InitSaveObjectForm (Document document, View view, char *object,
                          char *pathname)
 {
   char           tempdir[MAX_LENGTH];
+  ThotBool       created;
 
   if (Saving_lock)
     // there is a current saving operation
@@ -856,7 +857,6 @@ void InitSaveObjectForm (Document document, View view, char *object,
 
   SavingObject = document;
   strncpy (tempSavedObject, object, sizeof (tempSavedObject));
-  ThotBool created;
 
   TtaExtractName (pathname, tempdir, ObjectName);
   created = CreateSaveObject (BaseDialog + SaveForm,
@@ -2069,10 +2069,8 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
       /* get default name */
       ok = (DocumentMeta[doc] && DocumentMeta[doc]->content_location);
       if (ok)
-        {
-          // don't pay attention to current suffix
-          *with_suffix = TRUE;
-        }
+        // don't pay attention to current suffix
+        *with_suffix = TRUE;
       else
         {
           defaultName = TtaGetEnvString ("DEFAULTNAME");

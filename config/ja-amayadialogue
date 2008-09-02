@@ -335,48 +335,49 @@
 333 リソースのプロパティを表示...
 334 ロック情報をコピー...
 335 ロックしますか?
-336 Templates
-337 Create template from current document...
-338 Create a text box
-339 Use a component or a language element
-340 Create and use a component
-341 Repeat a component or a language element
-342 Create a repeated component
-343 Create a free editing box
-344 Javascript/DOM(&J)
-345 有効/無効
-346 コマンドの実行
-347 外部スクリプトの実行
-348 外部スクリプトの追加
-349 スクリプトの挿入
-350 Amaya について
-351 配布先 (W3C) へ
-352 ユーザマニュアル
-353 ブラウジング
-354 ドキュメントの表示
-355 範囲指定
-356 ドキュメント
-357 要素の作成
-358 属性 / Attributes
-359 文字
-360 テンプレート
-361 ドキュメントの再構成
-362 リンク
-363 表
-364 イメージマップ
-365 数学表現
-366 グラフィックス(Graphics)
-367 XML のサポート
-368 スタイルシート
-369 検索
-370 スペルチェック
-371 出版
-372 協力
-373 印刷
-374 番号付け
-375 ブックを作る
-376 注釈
-377 コンフィグ
-378 ショートカットキー
-379 Amaya の利便性
-380 今日のTips
+336 **Templates
+337 **Create template from current document...
+338 **Create a text area
+339 **Use a component or an element
+340 **Create and use a component
+341 **Repeat the current use
+342 **Create and repeat a component
+343 **Create a free editing box
+344 **Create a new types union
+345 Javascript/DOM(&J)
+346 有効/無効
+347 コマンドの実行
+348 外部スクリプトの実行
+349 外部スクリプトの追加
+350 スクリプトの挿入
+351 Amaya について
+352 配布先 (W3C) へ
+353 ユーザマニュアル
+354 ブラウジング
+355 ドキュメントの表示
+356 範囲指定
+357 ドキュメント
+358 要素の作成
+359 属性 / Attributes
+360 文字
+361 テンプレート
+362 ドキュメントの再構成
+363 リンク
+364 表
+365 イメージマップ
+366 数学表現
+367 グラフィックス(Graphics)
+368 XML のサポート
+369 スタイルシート
+370 検索
+371 スペルチェック
+372 出版
+373 協力
+374 印刷
+375 番号付け
+376 ブックを作る
+377 注釈
+378 コンフィグ
+379 ショートカットキー
+380 Amaya の利便性
+381 今日のTips

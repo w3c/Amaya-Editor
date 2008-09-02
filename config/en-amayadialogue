@@ -337,46 +337,47 @@
 335 Locked?
 336 Templates
 337 Create template from current document...
-338 Create a text box
-339 Use a component or a language element
+338 Create a text area
+339 Use a component or an element
 340 Create and use a component
-341 Repeat a component or a language element
-342 Create a repeated component
+341 Repeat the current use
+342 Create and repeat a component
 343 Create a free editing box
-344 &Javascript/DOM
-345 Enable/Disable
-346 Execute a command
-347 Execute an external script
-348 Add an external script
-349 Insert a script
-350 About Amaya
-351 About Amaya at W3C
-352 Index
-353 Browsing
-354 Views
-355 Selecting
-356 Documents
-357 Creating elements
-358 Attributes
-359 Characters
-360 Templates
-361 Restructuring
-362 Links
-363 Tables
-364 Images
-365 Math
-366 Graphics
-367 XML support
-368 Style sheets
-369 Searching
-370 Spell checking
-371 Publishing
-372 Cooperation
-373 Printing
-374 Numbering
-375 Making books
-376 Annotations
-377 Configuring
-378 Shortcuts
-379 Accessibility in Amaya
-380 Tip of the day...
+344 Create a new types union
+345 &Javascript/DOM
+346 Enable/Disable
+347 Execute a command
+348 Execute an external script
+349 Add an external script
+350 Insert a script
+351 About Amaya
+352 About Amaya at W3C
+353 Index
+354 Browsing
+355 Views
+356 Selecting
+357 Documents
+358 Creating elements
+359 Attributes
+360 Characters
+361 Templates
+362 Restructuring
+363 Links
+364 Tables
+365 Images
+366 Math
+367 Graphics
+368 XML support
+369 Style sheets
+370 Searching
+371 Spell checking
+372 Publishing
+373 Cooperation
+374 Printing
+375 Numbering
+376 Making books
+377 Annotations
+378 Configuring
+379 Shortcuts
+380 Accessibility in Amaya
+381 Tip of the day...

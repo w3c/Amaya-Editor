@@ -337,46 +337,47 @@
 335 დაბლოკილია?
 336 **Templates
 337 **Create template from current document...
-338 **Create a text box
-339 **Use a component or a language element
+338 **Create a text area
+339 **Use a component or an element
 340 **Create and use a component
-341 **Repeat a component or a language element
-342 **Create a repeated component
+341 **Repeat the current use
+342 **Create and repeat a component
 343 **Create a free editing box
-344 &Javascript/DOM
-345 **Enable/Disable
-346 **Execute a command
-347 **Execute an external script
-348 **Add an external script
-349 **Insert a script
-350 პროგრამა Amaya-ს შესახებ
-351 პროგრამა Amaya-ს შესახებ W3C-ზე
-352 მაჩვენებელი
-353 ნუსხა
-354 ხედები
-355 შერჩევა
-356 დოკუმენტი
-357 ელემენტების შექმნა
-358 ატრიბუტები
-359 სიმბოლოები
-360 **Templates
-361 რესტრუქტურიზება
-362 ბმები
-363 ცხრილები
-364 რუკის გამოსახულებები
-365 მათემატიკა
-366 გრაფიკა
-367 XML მხარდაჭერა
-368 სტილები
-369 ძიება
-370 მართლწერის შემოწმება
-371 გამოქვეყნება
-372 თანამშრომლობა
-373 ბეჭდვა
-374 გადანომვრა
-375 წიგნების შექმნა
-376 ანოტაციები
-377 ს გამართვა
-378 მალმხმობები
-379 Amaya-ს დამხმარე საშუალებები
-380 **Tip of the day...
+344 **Create a new types union
+345 &Javascript/DOM
+346 **Enable/Disable
+347 **Execute a command
+348 **Execute an external script
+349 **Add an external script
+350 **Insert a script
+351 პროგრამა Amaya-ს შესახებ
+352 პროგრამა Amaya-ს შესახებ W3C-ზე
+353 მაჩვენებელი
+354 ნუსხა
+355 ხედები
+356 შერჩევა
+357 დოკუმენტი
+358 ელემენტების შექმნა
+359 ატრიბუტები
+360 სიმბოლოები
+361 **Templates
+362 რესტრუქტურიზება
+363 ბმები
+364 ცხრილები
+365 რუკის გამოსახულებები
+366 მათემატიკა
+367 გრაფიკა
+368 XML მხარდაჭერა
+369 სტილები
+370 ძიება
+371 მართლწერის შემოწმება
+372 გამოქვეყნება
+373 თანამშრომლობა
+374 ბეჭდვა
+375 გადანომვრა
+376 წიგნების შექმნა
+377 ანოტაციები
+378 ს გამართვა
+379 მალმხმობები
+380 Amaya-ს დამხმარე საშუალებები
+381 **Tip of the day...

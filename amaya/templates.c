@@ -1659,8 +1659,16 @@ ThotBool TemplateAttrInMenu (NotifyAttribute * event)
 void CreateTemplateFromDocument(Document doc, View view)
 {
 #ifdef TEMPLATES
-  char buffer[MAX_LENGTH];
-  strcpy(buffer, DocumentURLs[doc]);
+  char buffer[MAX_LENGTH], suffix[10];
+
+  // removet the current suffix
+  strcpy (buffer, DocumentURLs[doc]);
+  TtaExtractSuffix (buffer, suffix);
+  if (suffix[0] == EOS && IsW3Path (buffer) &&
+      DocumentMeta[doc] && DocumentMeta[doc]->content_location)
+    // use the location instead of the current URI
+    strcpy (buffer, DocumentMeta[doc]->content_location);
+  // the new suffix
   strcat(buffer, ".xtd");
   DontReplaceOldDoc = TRUE;
   CreateTemplate(doc, buffer);
@@ -1672,7 +1680,7 @@ void CreateTemplateFromDocument(Document doc, View view)
   ----------------------------------------------------------------------*/
 void UpdateTemplateMenus (Document doc)
 {
-  if(IsTemplateInstanceDocument(doc))
+  if (IsTemplateInstanceDocument(doc))
     {
       // Instance document
       TtaSetItemOff (doc, 1, Tools, BCreateTemplateFromDocument);
@@ -1682,6 +1690,7 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeat);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeatComp);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateFreeBox);
+      TtaSetItemOff (doc, 1, Tools, BTemplateCreateUnion);
     }
   else if (DocumentURLs[doc] && IsXTiger (DocumentURLs[doc]))
     {
@@ -1693,6 +1702,7 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOn (doc, 1, Tools, BTemplateCreateRepeat);
       TtaSetItemOn (doc, 1, Tools, BTemplateCreateRepeatComp);
       TtaSetItemOn (doc, 1, Tools, BTemplateCreateFreeBox);      
+      TtaSetItemOn (doc, 1, Tools, BTemplateCreateUnion);
     }
   else
     {
@@ -1704,6 +1714,7 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeat);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateRepeatComp);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateFreeBox);
+      TtaSetItemOff (doc, 1, Tools, BTemplateCreateUnion);
     }
 }
 
@@ -2018,6 +2029,16 @@ void TemplateCreateRepeat(Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  TemplateCreateUnion
+  Create a xt:union around the selection.
+  ----------------------------------------------------------------------*/
+void TemplateCreateUnion(Document doc, View view)
+{
+#ifdef TEMPLATES
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
   TemplateCreateRepeatComp
   Create a xt:repeat around the selection.
   ----------------------------------------------------------------------*/
@@ -2025,7 +2046,6 @@ void TemplateCreateRepeatComp(Document doc, View view)
 {
   
 }
-
 
 /*----------------------------------------------------------------------
   TemplateCreateUseBox

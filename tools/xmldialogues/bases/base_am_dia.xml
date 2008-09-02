@@ -5012,42 +5012,38 @@
 <label define="Templates_">
 	<message xml:lang="en">Templates</message>
 	<message xml:lang="fr">Modèles</message>
-	<message xml:lang="ja">Templates</message>
 </label>
 <label define="BCreateTemplateFromDocument">
 	<message xml:lang="en">Create template from current document...</message>
 	<message xml:lang="fr">Créer un modèle depuis le document courant...</message>
-	<message xml:lang="ja">Create template from current document...</message>
 </label>
 <label define="BTemplateCreateTextBox">
-	<message xml:lang="en">Create a text box</message>
+	<message xml:lang="en">Create a text area</message>
 	<message xml:lang="fr">Créer une zone de texte</message>
-	<message xml:lang="ja">Create a text box</message>
 </label>
 <label define="BTemplateCreateUseBox">
-	<message xml:lang="en">Use a component or a language element</message>
-	<message xml:lang="fr">Utiliser un composant ou un élément du langage</message>
-	<message xml:lang="ja">Use a component or a language element</message>
+	<message xml:lang="en">Use a component or an element</message>
+	<message xml:lang="fr">Utiliser un composant ou un élément</message>
 </label>
 <label define="BTemplateCreateUseCompBox">
 	<message xml:lang="en">Create and use a component</message>
 	<message xml:lang="fr">Créer et utiliser un composant</message>
-	<message xml:lang="ja">Create and use a component</message>
 </label>
 <label define="BTemplateCreateRepeat">
-	<message xml:lang="en">Repeat a component or a language element</message>
-	<message xml:lang="fr">Répète un composant ou un élément du langage</message>
-	<message xml:lang="ja">Repeat a component or a language element</message>
+	<message xml:lang="en">Repeat the current use</message>
+	<message xml:lang="fr">Répéter l'utilisation courant</message>
 </label>
 <label define="BTemplateCreateRepeatComp">
-	<message xml:lang="en">Create a repeated component</message>
-	<message xml:lang="fr">Créer un composant répétée</message>
-	<message xml:lang="ja">Create a repeated component</message>
+	<message xml:lang="en">Create and repeat a component</message>
+	<message xml:lang="fr">Créer et répéter un composant</message>
 </label>
 <label define="BTemplateCreateFreeBox">
 	<message xml:lang="en">Create a free editing box</message>
 	<message xml:lang="fr">Créer une zone d'édition libre</message>
-	<message xml:lang="ja">Create a free editing box</message>
+</label>
+<label define="BTemplateCreateUnion">
+	<message xml:lang="en">Create a new types union</message>
+	<message xml:lang="fr">Créer une nouvelle union de types</message>
 </label>
 <label define="JavascriptDom_">
 	<message xml:lang="en">&amp;Javascript/DOM</message>

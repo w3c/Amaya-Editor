@@ -25,7 +25,7 @@ public:
             const wxString& name = wxT("AmayaSVGPanel"), wxObject* extra=NULL);
 protected:
 
-  AmayaBaseToolBar *m_tbar1;
+  AmayaBaseToolBar *m_tbar1, *m_tbar2;
 };
 
 

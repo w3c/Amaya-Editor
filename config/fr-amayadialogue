@@ -338,45 +338,46 @@
 336 Modèles
 337 Créer un modèle depuis le document courant...
 338 Créer une zone de texte
-339 Utiliser un composant ou un élément du langage
+339 Utiliser un composant ou un élément
 340 Créer et utiliser un composant
-341 Répète un composant ou un élément du langage
-342 Créer un composant répétée
+341 Répéter l'utilisation courant
+342 Créer et répéter un composant
 343 Créer une zone d'édition libre
-344 &Javascript/DOM
-345 Activer/Désactiver
-346 Exécuter une commande
-347 Exécuter un script externe
-348 Ajouter un script externe
-349 Inserer un script
-350 À propos de Amaya
-351 À propos d'Amaya au W3C
-352 Index
-353 Navigation
-354 Vues
-355 Sélection
-356 Documents
-357 Création d'éléments
-358 Attributs
-359 Caractères
-360 Modèles
-361 Restructuration
-362 Liens
-363 Tableaux
-364 Images
-365 Math
-366 Graphiques
-367 Support XML
-368 Feuilles de style
-369 Recherche
-370 Vérification orthographique
-371 Enregistrement
-372 Coopération
-373 Impression
-374 Numérotation
-375 Construction de livre
-376 Annotations
-377 Configuration
-378 Raccourcis clavier
-379 Accessibilité d'Amaya
-380 Conseil du jour...
+344 Créer une nouvelle union de types
+345 &Javascript/DOM
+346 Activer/Désactiver
+347 Exécuter une commande
+348 Exécuter un script externe
+349 Ajouter un script externe
+350 Inserer un script
+351 À propos de Amaya
+352 À propos d'Amaya au W3C
+353 Index
+354 Navigation
+355 Vues
+356 Sélection
+357 Documents
+358 Création d'éléments
+359 Attributs
+360 Caractères
+361 Modèles
+362 Restructuration
+363 Liens
+364 Tableaux
+365 Images
+366 Math
+367 Graphiques
+368 Support XML
+369 Feuilles de style
+370 Recherche
+371 Vérification orthographique
+372 Enregistrement
+373 Coopération
+374 Impression
+375 Numérotation
+376 Construction de livre
+377 Annotations
+378 Configuration
+379 Raccourcis clavier
+380 Accessibilité d'Amaya
+381 Conseil du jour...

@@ -413,6 +413,14 @@
 #define TMSG_SVG_Split_Arrow		408
 #define TMSG_SVG_S_Shape_Arrow		409
 #define TMSG_SVG_Striped_Arrow		410
-#define TMSG_LIB_MSG_MAX		411
+#define TemplateFromDocument		411
+#define TemplateTextBox		412
+#define TemplateUseBox		413
+#define TemplateUseCompBox		414
+#define TemplateRepeat		415
+#define TemplateRepeatComp		416
+#define TemplateFreeBox		417
+#define TemplateUnion		418
+#define TMSG_LIB_MSG_MAX		419
 
 #endif

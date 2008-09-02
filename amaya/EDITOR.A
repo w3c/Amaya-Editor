@@ -386,6 +386,7 @@ MENUS
     Tools.Templates_  button:BTemplateCreateRepeat -> TemplateCreateRepeat;
     Tools.Templates_  button:BTemplateCreateRepeatComp -> TemplateCreateRepeatComp;
     Tools.Templates_  button:BTemplateCreateFreeBox -> TemplateCreateFreeBox;
+    Tools.Templates_  button:BTemplateCreateUnion -> TemplateCreateUnion;
     Tools.JavascriptDom_ toggle:BSwitch_JS_DOM-> SwitchJavaScript;
     Tools.JavascriptDom_ button:BExecuteACommand -> ExecuteACommand;
     Tools.JavascriptDom_ button:BExecuteExternal -> ExecuteExternal;

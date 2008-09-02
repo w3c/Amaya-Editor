@@ -29,18 +29,11 @@
           <object class="tool" name="wxID_MENU_SVG_BLOCK_ARROWS">
             <bitmap>../svg/block_arrows/simple_arrow.png</bitmap>
           </object>
-        
-          
         </object>
       </object>
+
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_SVG_2" subclass="AmayaBaseToolBar">
-          
-          
-          
-          
-          
-          
           <object class="tool" name="wxID_MENU_SVG_CHEMISTRY">
             <bitmap>../svg/chemistry/erlenmeyer_flask.png</bitmap>
           </object>
