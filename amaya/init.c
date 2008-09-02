@@ -1134,6 +1134,8 @@ void UpdateEditorMenus (Document doc)
                 }
             }
         }
+      else if (TtaIsDocumentSelected (doc))
+        SetTableMenuOn (doc, 1);
     }
 #ifdef _JAVA
     /* Update the javascript menus */
@@ -2206,7 +2208,7 @@ void UpdateDoctypeMenu (Document doc)
           TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlTransitional);
           TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlStrict);
           TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlBasic);
-	  TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlRDFa);
+          TtaSetItemOff (doc, 1, Tools, BDoctypeXhtmlRDFa);
           TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlTransitional);
           TtaSetItemOff (doc, 1, Tools, BDoctypeHtmlStrict);
         }

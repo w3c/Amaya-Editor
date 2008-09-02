@@ -319,7 +319,7 @@ void ExecuteExternal (Document document, View view)
   ----------------------------------------------------------------------*/
 void SingleNewXHTML (Document doc, View view)
 {
-  OpenNew (doc, view, docHTML, 0);
+  OpenNew (doc, view, docHTML, L_Other);
 }
 
 /*----------------------------------------------------------------------
@@ -335,7 +335,7 @@ void DoNewXHTML (Document doc, View view)
   ----------------------------------------------------------------------*/
 void NewXHTML (Document doc, View view)
 {
-  OpenNew (doc, view, docHTML, 0);
+  OpenNew (doc, view, docHTML, L_Other);
 }
 
 /*----------------------------------------------------------------------
@@ -350,7 +350,7 @@ void NewMathML (Document doc, View view)
   ----------------------------------------------------------------------*/
 void NewSVG (Document doc, View view)
 {
-  OpenNew (doc, view, docSVG, L_Other);
+  OpenNew (doc, view, docSVG, L_SVG);
 }
 
 /*----------------------------------------------------------------------
@@ -358,7 +358,7 @@ void NewSVG (Document doc, View view)
   ----------------------------------------------------------------------*/
 void NewCss (Document doc, View view)
 {
-  OpenNew (doc, view, docCSS, L_Other);
+  OpenNew (doc, view, docCSS, L_CSS);
 }
 
 /*--------------------------------------------------------------------------
@@ -955,7 +955,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       if (SelectionDoc != 0)
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
-      UpdateContextSensitiveMenus (doc, 1);
 #endif /* _SVG */
     }
   else

@@ -15,10 +15,10 @@ Distribution: W3C
 Name:         amaya_wx
 Release:      1
 License:    W3C http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
-Group:        X11/Applications/Networking
+Group:        Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
-Packager:     Irene.Vatton@w3.org
+Packager:     Irene.Vatton@inria.fr
 BuildRoot:    /var/tmp/%{name}-buildroot
 #BuildRoot:     /usr/src/redhat/BUILD/
 

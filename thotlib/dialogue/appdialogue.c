@@ -1475,8 +1475,8 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
     return;
   /* Search the menu, submenu and item */
   FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
-  if (action > 0 && action < MaxMenuAction &&
-      MenuActionList[action].ActionActive[document])
+  if (action > 0 && action < MaxMenuAction /*&&
+      MenuActionList[action].ActionActive[document]*/)
     {
     /* the entry is found and is active */
       MenuActionList[action].ActionActive[document] = FALSE;
