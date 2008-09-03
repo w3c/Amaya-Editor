@@ -1818,7 +1818,7 @@ void RestartParser (Document doc, char *localFile,
     DocumentMeta[doc]->xmlformat = FALSE;
 
   /* Removes all CSS informations linked with the document */
-  RemoveDocCSSs (doc, FALSE);  
+  RemoveDocCSSs (doc, TRUE);  
   /* Clear all editing operations registered in the editing history of the
      document */
   TtaClearUndoHistory (doc);
