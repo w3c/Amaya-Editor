@@ -349,7 +349,7 @@ Remove the submenu: (optgroup{*+})+;
 
 Bulleted list: (p|ol|menu|dir|pre|form)+;
    	{
-        p > <ul class=p.class>:<li style=p.style>;
+        p > <ul>:<li class=p.class style=p.style>;
         ol > <ul class=ol.class>;
         pre > ul:li.pre;
         form > ul:li.form;
@@ -357,7 +357,7 @@ Bulleted list: (p|ol|menu|dir|pre|form)+;
 
 Numbered list:(p|ul|menu|dir|pre|form)+;
 	   {
-        p > <ol class=p.class>:<li style=p.style>;
+        p > <ol>:<li class=p.class style=p.style>;
         ul > <ol class=ul.class>;
         pre > ol:li.pre;
         form > ol:li.form;

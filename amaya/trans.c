@@ -1431,7 +1431,7 @@ static ThotBool PutBeginTag (strNodeDesc * ND, strNode * TN)
   res = res && PutInHtmlBuffer ((char *)NS->Tag);
 
   AD = NS->Attributes;
-  /* wrting the attributes */
+  /* writing the attributes */
   while (AD != NULL)
     {
       if (AD->IsTransf)
@@ -1452,26 +1452,25 @@ static ThotBool PutBeginTag (strNodeDesc * ND, strNode * TN)
             }
           if (found)
             {
-              /* searching for an ancestor of the source element which have
-                 the wanted attribute  */
+              /* searching for the wanted attribute on the current element  */
               found = FALSE;
-              while (!found && ancestor != NULL)
+              //while (!found && ancestor != NULL)
+              //  {
+              attr = NULL;
+              attrType.AttrTypeNum = -1;
+              if (ancestor->Tag && strcmp((char *)ancestor->Tag, "Root"))
                 {
-                  attr = NULL;
-                  attrType.AttrTypeNum = -1;
-                  if (ancestor->Tag && strcmp((char *)ancestor->Tag, "Root"))
-                    {
-                      tag = (char *)TtaGetMemory (NAME_LENGTH);
-                      strcpy ((char *)tag, (char *)GetXMLElementName (TtaGetElementType (ancestor->Elem), TransDoc));
-                      attrType.AttrTypeNum = MapThotAttr ((char *)AD->AttrAttr, (char *)tag);
-                      TtaFreeMemory (tag);
-                      if (attrType.AttrTypeNum != -1)
-                        attr = TtaGetAttribute (ancestor->Elem, attrType);
-                    }
-                  found = (attr != NULL);
-                  if (!found)
-                    ancestor = ancestor->Parent;
+                  tag = (char *)TtaGetMemory (NAME_LENGTH);
+                  strcpy ((char *)tag, (char *)GetXMLElementName (TtaGetElementType (ancestor->Elem), TransDoc));
+                  attrType.AttrTypeNum = MapThotAttr ((char *)AD->AttrAttr, (char *)tag);
+                  TtaFreeMemory (tag);
+                  if (attrType.AttrTypeNum != -1)
+                    attr = TtaGetAttribute (ancestor->Elem, attrType);
                 }
+              found = (attr != NULL);
+              // if (!found)
+              //  ancestor = ancestor->Parent;
+              //  }
               if (found)
                 {
                   /* the attribute has been found, writing the attribute name*/
