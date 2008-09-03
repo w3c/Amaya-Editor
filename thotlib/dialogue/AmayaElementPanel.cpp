@@ -67,7 +67,10 @@ AmayaElementToolPanel::~AmayaElementToolPanel()
 	// Windows : delete notebook pages now to prevent a crash
 	if (m_notebook)
 		while (m_notebook->GetPageCount() > 0)
+		{
+			m_notebook->GetPage(0)->Hide();
 			m_notebook->DeletePage(0);
+		}
 }
 
 /*----------------------------------------------------------------------
