@@ -120,7 +120,8 @@
                     <item>sk (Slovak)</item>
                     <item>tr (Turkish)</item>
                     <item>zh-cn (Simplified Chinese)</item>
-                    <item>zh-tw (Traditional Chinese)</item></content>
+                    <item>zh-tw (Traditional Chinese)</item>
+                  </content>
                 </object>
                 <flag>wxLEFT|wxALIGN_CENTRE_VERTICAL</flag>
                 <border>5</border>
@@ -557,7 +558,7 @@
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_VALUE_REDIRECT">
-              <value></value>
+              <value/>
             </object>
             <option>0</option>
             <flag>wxALL|wxEXPAND</flag>
@@ -949,6 +950,12 @@
         <option>0</option>
         <flag>wxALL|wxEXPAND</flag>
         <border>10</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxCheckBox" name="wxID_COLOR_SOURCE">
+          <label>*Colorier le code source*</label>
+          <checked>1</checked>
+        </object>
       </object>
     </object>
     <style>wxTAB_TRAVERSAL</style>
@@ -1356,7 +1363,7 @@
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_VALUE_EMAIL_SERVER_ADDRESS">
               <size>200,-1</size>
-              <style></style>
+              <style/>
             </object>
             <option>1</option>
             <flag>wxALL</flag>
@@ -1412,7 +1419,7 @@
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_VALUE_EMAIL_FROM_ADDRESS">
               <size>200,-1</size>
-              <style></style>
+              <style/>
             </object>
             <option>1</option>
             <flag>wxALL</flag>
@@ -1463,7 +1470,7 @@
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_NEW_NS">
-              <label>Select a namespace in the list below or add a new one (syntax prefix="uri")</label>
+              <label>Select a namespace in the list below or add a new one (syntax prefix=&quot;uri&quot;)</label>
               <size>800,-1</size>
               <style>wxALIGN_LEFT</style>
             </object>

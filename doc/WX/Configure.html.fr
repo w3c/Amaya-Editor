@@ -12,37 +12,35 @@
 <body xml:lang="fr" lang="fr">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
-<p class="nav"><a href="Annotations.html.fr" accesskey="p"><img
-alt="previous" src="../../resources/icons/misc/left.png" /> </a> <a
-href="Manual.html.fr" accesskey="t"><img alt="top"
-src="../../resources/icons/misc/up.png" /> </a> <a href="ShortCuts.html.fr"
-accesskey="n"><img alt="next" src="../../resources/icons/misc/right.png" />
-</a></p>
+<p class="nav"><a href="Annotations.html.fr" accesskey="p"><img alt="previous"
+src="../../resources/icons/misc/left.png" /> </a> <a href="Manual.html.fr"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /> </a> <a
+href="ShortCuts.html.fr" accesskey="n"><img alt="next"
+src="../../resources/icons/misc/right.png" /> </a></p>
 </div>
 
 <div class="PageBody" id="Configuring">
 <h2 id="Configurer">Configurer Amaya</h2>
 
 <p>Amaya utilise différents fichiers de configuration pour initialiser les
-paramètres globaux, les dialogues, les raccourcis, la taille et la position
-de la fenêtre, la feuille de style de l'utilisateur, etc. Vous pouvez changer
-la plupart de ces paramètres de configuration par le biais de dialogues de
+paramètres globaux, les dialogues, les raccourcis, la taille et la position de
+la fenêtre, la feuille de style de l'utilisateur, etc. Vous pouvez changer la
+plupart de ces paramètres de configuration par le biais de dialogues de
 préférences.</p>
 
-<h3 id="plusieurs">Une ou plusieurs instances d'Amaya</h3>
+<h5 id="plusieurs">Une ou plusieurs instances d'Amaya</h5>
 
 <p>Par défaut une seule instance de l'application est lancée. Toute nouvelle
 invocation est redirigée vers l'instance active. Ce comportement peut être
 modifié en forçant la variable d'environnement
 <code>AMAYA_MULTIPLE_INSTANCES=yes</code>.</p>
 
-<h3 id="propos">Répertoires de configuration</h3>
+<h5 id="propos">Répertoires de configuration</h5>
 
-<p>Amaya utilise un certain nombre de répertoires par défaut pour conserver
-les informations de configuration.</p>
+<p>Amaya utilise un certain nombre de répertoires par défaut pour conserver les
+informations de configuration.</p>
 
 <h4 id="pertoire">Le répertoire <code>config</code></h4>
 
@@ -82,12 +80,12 @@ ci-dessous pour Windows et Mac OS X).</p>
 
 <h4 id="pertoire1">Le répertoire <code>AmayaHome</code></h4>
 
-<p>Amaya stocke les préférences de l'utilisateur ainsi que les autres
-fichiers de configuration de l'utilisateur dans un répertoire que nous
-appellerons le répertoire <strong>AmayaHome</strong>. Un répertoire existant
-peut être sélectionné par l'utilisateur en utilisant la variable
-d'environnement <code>AMAYA_USER_HOME</code>. Sinon Amaya sélectionne un
-répertoire par défaut.</p>
+<p>Amaya stocke les préférences de l'utilisateur ainsi que les autres fichiers
+de configuration de l'utilisateur dans un répertoire que nous appellerons le
+répertoire <strong>AmayaHome</strong>. Un répertoire existant peut être
+sélectionné par l'utilisateur en utilisant la variable d'environnement
+<code>AMAYA_USER_HOME</code>. Sinon Amaya sélectionne un répertoire par
+défaut.</p>
 
 <p>La table suivante montre la position par défaut de ce répertoire dans les
 différentes architectures :</p>
@@ -120,8 +118,8 @@ différentes architectures :</p>
   </tbody>
 </table>
 
-<p>Le répertoire <strong>AmayaHome</strong> est conservé même si on installe
-de nouvelles versions d'Amaya. Il peut contenir les fichiers suivants :</p>
+<p>Le répertoire <strong>AmayaHome</strong> est conservé même si on installe de
+nouvelles versions d'Amaya. Il peut contenir les fichiers suivants :</p>
 <ul>
   <li><code>thot.rc</code> : les préférences de l'utilisateur, changées grâce
     au menu des préférences.</li>
@@ -131,29 +129,28 @@ de nouvelles versions d'Amaya. Il peut contenir les fichiers suivants :</p>
   correspondante.</li>
   <li><code>amaya.css</code> : contient la <em>feuille de style de
     l'utilisateur</em>.</li>
-  <li><code>dictionary.DCT</code> : Amaya fournit un vérificateur
-    d'orthographe multi-langues. Par défaut le vérificateur d'orthographe
-    travaille avec deux dictionnaires : Le dictionnaire Anglais et le
-    dictionnaire Français (d'autres dictionnaires peuvent être téléchargés
-    depuis les <a href="http://www.w3.org/Amaya/User/BinDist.html">serveurs
-    W3C</a>). Quand l'utilisateur veut enregistrer un nouveau mot, le
-    vérificateur d'orthographe crée ou met à jour ce "dictionnaire personnel
-    de l'utilisateur".</li>
+  <li><code>dictionary.DCT</code> : Amaya fournit un vérificateur d'orthographe
+    multi-langues. Par défaut le vérificateur d'orthographe travaille avec deux
+    dictionnaires : Le dictionnaire Anglais et le dictionnaire Français
+    (d'autres dictionnaires peuvent être téléchargés depuis les <a
+    href="http://www.w3.org/Amaya/User/BinDist.html">serveurs W3C</a>). Quand
+    l'utilisateur veut enregistrer un nouveau mot, le vérificateur
+    d'orthographe crée ou met à jour ce "dictionnaire personnel de
+    l'utilisateur".</li>
 </ul>
 
 <p class="Note"><strong>Note :</strong> les fichiers
-<code>amaya.keyboard</code>, <code>amaya.kb</code>,
-<code>amaya.kb-mac</code>, et <code>amaya.css</code> sont chargés au moment
-du démarrage. Si vous les changer, vous devrez quitter et redémarrer Amaya
-pour les prendre en compte.</p>
+<code>amaya.keyboard</code>, <code>amaya.kb</code>, <code>amaya.kb-mac</code>,
+et <code>amaya.css</code> sont chargés au moment du démarrage. Si vous les
+changer, vous devrez quitter et redémarrer Amaya pour les prendre en compte.</p>
 
 <h4 id="pertoire2"><a name="AmayaTemp">Le répertoire
 <code>AmayaTemp</code></a></h4>
 
 <p>Amaya stocke tous les fichiers temporaires qu'il crée durant l'exécution
-dans un répertoire que nous appelons le répertoire
-<strong>AmayaTemp</strong>. La table suivante montre où ce répertoire est
-stocké dans les différents architectures :</p>
+dans un répertoire que nous appelons le répertoire <strong>AmayaTemp</strong>.
+La table suivante montre où ce répertoire est stocké dans les différents
+architectures :</p>
 
 <table border="1">
   <tbody>
@@ -176,8 +173,8 @@ stocké dans les différents architectures :</p>
   </tbody>
 </table>
 
-<p>Amaya crée des fichiers dans ce répertoire pendant que vous naviguez ou
-que vous imprimez un document. Le cache est stocké dans ce répertoire.
+<p>Amaya crée des fichiers dans ce répertoire pendant que vous naviguez ou que
+vous imprimez un document. Le cache est stocké dans ce répertoire.
 L'utilisateur peut changer le répertoire cache par le biais du menu
 <strong>Préférences Cache</strong>.</p>
 
@@ -191,8 +188,8 @@ ultérieures.</p>
 <p>Ce dialogue se trouve dans <strong>Éditer/Préférences</strong>
 (<strong>Amaya/Préférences</strong> sous Mac OSX). Il y a douze onglets
 différents disponibles : <strong>Générales, Navigation, Publication, Cache,
-Proxy, Couleurs, Géométrie, Annotations, WebDAV, Modèles, Courriel</strong>.
-Ce présente trois boutons d'action :</p>
+Proxy, Couleurs, Géométrie, Annotations, WebDAV, Modèles, Courriel</strong>. Ce
+présente trois boutons d'action :</p>
 <ul>
   <li><strong>Appliquer</strong> : ce bouton valide et stocke les options
     affichées.</li>
@@ -207,22 +204,21 @@ Ce présente trois boutons d'action :</p>
 
 <h5 id="Profile">Profil</h5>
 
-<p>Amaya peut être configuré pour présenter un ensemble de fonctionnalités
-plus ou moins étendu et l'interface utilisateur correspondante. L'ensemble
-des fonctionnalités disponibles à un instant donné est appelé un
+<p>Amaya peut être configuré pour présenter un ensemble de fonctionnalités plus
+ou moins étendu et l'interface utilisateur correspondante. L'ensemble des
+fonctionnalités disponibles à un instant donné est appelé un
 <em>profil</em>.</p>
 
-<p>Dans les préférences <strong>Générales</strong> un menu déroulant permet
-de choisir un profil (Lite, Lite+Math, etc.). Le profil choisi ne s'applique
-pas immédiatement, mais seulement au prochain démarrage d'Amaya.</p>
+<p>Dans les préférences <strong>Générales</strong> un menu déroulant permet de
+choisir un profil (Lite, Lite+Math, etc.). Le profil choisi ne s'applique pas
+immédiatement, mais seulement au prochain démarrage d'Amaya.</p>
 
 <h5 id="Position">Position des panneaux d'outils</h5>
 
 <p>Les panneaux d'outils peuvent être affichés, sur le coté gauche de la
 fenêtre, ou sur le côté droit de la fenêtre, ou paramétrables.</p>
 
-<p>Si vous choisissez l'option <strong>Paramétrable</strong>, vous
-pouvez :</p>
+<p>Si vous choisissez l'option <strong>Paramétrable</strong>, vous pouvez :</p>
 <ul>
   <li>Réordonner la liste des panneaux : Vous cliquez sur le titre du panneau
     et le déplacez vers la bonne position dans la liste.</li>
@@ -231,8 +227,8 @@ pouvez :</p>
     son titre et le déplacer vers l'autre côté de la fenêtre. La position
     finale du <strong>curseur</strong> (non du panneau) doit être exactement
     sur le bord de la fenêtre.</li>
-  <li>Détacher un panneau : Si vous déplacer un panneau vers une position
-    autre qu'un bord de fenêtre, le panneau reste dans l'état flottant.</li>
+  <li>Détacher un panneau : Si vous déplacer un panneau vers une position autre
+    qu'un bord de fenêtre, le panneau reste dans l'état flottant.</li>
   <li>Supprimer/Ajouter un panneau : Quand vous cliquez sur la croix dans le
     titre du panneau, le panneau est supprimé. Vous pouvez aussi fermer et
     ouvrir un panneau avec le sous-menu <strong>Barres d'outils</strong> du
@@ -241,14 +237,13 @@ pouvez :</p>
 
 <h5 id="Polices">Polices de caractères et langue</h5>
 
-<p><strong>Zoom caractères</strong>. Il est possible d'augmenter et de
-diminuer l'effet de zoom, fenêtre de document par fenêtre de document. Chaque
-document (texte et images) visualisé à l'intérieur d'une fenêtre zoomée sera
-visualisée plus gros ou plus petit que sa taille réelle selon le zoom
-courant. Cette option vous permet de changer le zoom des caractères pour
-toutes les fenêtres. Ce changement affecte uniquement les tailles de
-caractères mais pas les images. Cette option est reflétée immédiatement sur
-tous les documents ouverts. <br />
+<p><strong>Zoom caractères</strong>. Il est possible d'augmenter et de diminuer
+l'effet de zoom, fenêtre de document par fenêtre de document. Chaque document
+(texte et images) visualisé à l'intérieur d'une fenêtre zoomée sera visualisée
+plus gros ou plus petit que sa taille réelle selon le zoom courant. Cette
+option vous permet de changer le zoom des caractères pour toutes les fenêtres.
+Ce changement affecte uniquement les tailles de caractères mais pas les images.
+Cette option est reflétée immédiatement sur tous les documents ouverts. <br />
 </p>
 
 <p><strong>Langue du dialogue</strong>. Spécifie la langue utilisée dans les
@@ -256,8 +251,8 @@ menus et les messages. La langue par défaut est l'anglais américain (en).
 D'autres langues sont possibles comme le français (fr), l'italien (it),
 l'espagnol (es), l'allemand (de), le portugais (pt), le finlandais (fi), le
 russe (ru) et le turc (tr), etc.. Au démarrage, Amaya charge les fichiers de
-dialogue selon la langue de dialogue courante : les fichiers en-, fr-, ou
-de-, etc. Ces fichiers de dialogue se trouvent dans le répertoire
+dialogue selon la langue de dialogue courante : les fichiers en-, fr-, ou de-,
+etc. Ces fichiers de dialogue se trouvent dans le répertoire
 <strong>Amaya/config</strong>. Il est possible d'adapter Amaya aux nouvelles
 langues ISO-Latin-1 en écrivant les fichiers de dialogue correspondants. Ces
 fichiers de dialogue doivent se trouver dans le même répertoire (c'est à dire
@@ -273,17 +268,17 @@ href="http://www.w3.org"><code>http://www.w3.org</code></a>.</p>
 
 <h5 id="Options">Options</h5>
 
-<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case
-de gauche alignée avec l'intitulé de l'option.</p>
+<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case de
+gauche alignée avec l'intitulé de l'option.</p>
 
 <p><strong>Mode d'édition XML.</strong> L'utilisateur peut fixer son mode
 d'édition (<a href="Creating.html.fr#Modes">Texte ou XML</a>) par défaut.</p>
 
 <p><strong><a name="Enable" id="Enable">Préserver les lignes dans le
 coller</a></strong>. Cette option concerne le coller depuis une autre
-application. Quand cette option est activée, les lignes de l'application
-source sont conservées. Sinon les caractères « fin de ligne » sont remplacés
-par des espaces.</p>
+application. Quand cette option est activée, les lignes de l'application source
+sont conservées. Sinon les caractères « fin de ligne » sont remplacés par des
+espaces.</p>
 
 <p><strong>Garder les espaces multiples</strong>. Quand cette option est
 activée, Amaya engendre des espaces non séquables pour préserver les espaces
@@ -293,13 +288,12 @@ multiples insérés.</p>
 active Amaya va produire périodiquement un fichier de sauvegarde pour chaque
 document édité.</p>
 
-<p><strong>Anti-aliasing.</strong> Contrôle si l'usage de polices de
-caractères anti-aliased (meilleure qualité d'affichage quand l'option est
-utilisée).</p>
+<p><strong>Anti-aliasing.</strong> Contrôle si l'usage de polices de caractères
+anti-aliased (meilleure qualité d'affichage quand l'option est utilisée).</p>
 
-<p><strong>ISO format for date.</strong> Contrôle le format des date
-engendrées par Amaya : soit au format ISO (DD-MM-YYYY) soit au format
-américain (YYYY/MM/DD).</p>
+<p><strong>ISO format for date.</strong> Contrôle le format des date engendrées
+par Amaya : soit au format ISO (DD-MM-YYYY) soit au format américain
+(YYYY/MM/DD).</p>
 
 <p><strong>Montrer les cibles</strong>. Contrôle si les cibles de liens sont
 visualisées ou non. Montrer les cibles peut aider quand on veut <a
@@ -308,12 +302,11 @@ href="Links.html.fr#L245">créer de nouveaux liens</a>.</p>
 <p><strong>Montrer tous les raccourcis.</strong> Contrôle si les séquences de
 touches sont visualisées ou non dans les menus.</p>
 
-<p><strong>Avertir avant de fermer plusieurs onglets.</strong> Demande à
-Amaya d'afficher un dialogue quand plusieurs onglets sont fermés en même
-temps.</p>
+<p><strong>Avertir avant de fermer plusieurs onglets.</strong> Demande à Amaya
+d'afficher un dialogue quand plusieurs onglets sont fermés en même temps.</p>
 
-<p><strong>Afficher le "Conseil du jour" au démarrage.</strong> Contrôle si
-le "Conseil du jour" visualisé au démarrage.</p>
+<p><strong>Afficher le "Conseil du jour" au démarrage.</strong> Contrôle si le
+"Conseil du jour" visualisé au démarrage.</p>
 
 <h5 id="rapides">Accès rapides</h5>
 
@@ -321,8 +314,8 @@ le "Conseil du jour" visualisé au démarrage.</p>
 utilisée pour mettre en oeuvre les <a href="Browsing.html.fr#L294">accès
 rapides</a> des documents, ou indique que les accès rapides sont ignorés.</p>
 
-<p class="Note"><strong>Note</strong> : La touche <code>Alt</code> peut ne
-pas fonctionner parce qu'elle est utilisée par les widgets d'interface.</p>
+<p class="Note"><strong>Note</strong> : La touche <code>Alt</code> peut ne pas
+fonctionner parce qu'elle est utilisée par les widgets d'interface.</p>
 
 <h4 id="L405">Préférences de navigation</h4>
 
@@ -330,12 +323,12 @@ pas fonctionner parce qu'elle est utilisée par les widgets d'interface.</p>
 
 <h5 id="Options1">Options</h5>
 
-<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case
-de gauche alignée avec l'intitulé de l'option.</p>
+<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case de
+gauche alignée avec l'intitulé de l'option.</p>
 
-<p><strong>Vérifier les IDs dupliqués</strong>. Demande la vérification des
-IDs dupliqués lors du chargement d'un document. Cette option augmente le
-temps de lecture des documents.</p>
+<p><strong>Vérifier les IDs dupliqués</strong>. Demande la vérification des IDs
+dupliqués lors du chargement d'un document. Cette option augmente le temps de
+lecture des documents.</p>
 
 <p><strong>Charger les images</strong>. Contrôle si les images doivent être
 chargées et affichées. Sinon, l'attribut ALT est visualisé à la place de
@@ -347,18 +340,17 @@ chargés et affichés. Sinon, le contenu de l'objet est visualisé à la place de
 l'objet. Cette option prend effet dès que le formulaire est validé.</p>
 
 <p><strong>Montrer les images de fond</strong>. Contrôle si les images en
-arrière plan doivent être montrées ou non. Cette option prend effet dès que
-le formulaire est validé. document.</p>
+arrière plan doivent être montrées ou non. Cette option prend effet dès que le
+formulaire est validé. document.</p>
 
 <p><strong>Appliquer CSS</strong>. Contrôle si les feuilles de style CSS
-doivent être chargées et appliquées ou non. Cette option prend effet dès que
-le formulaire est validé.</p>
+doivent être chargées et appliquées ou non. Cette option prend effet dès que le
+formulaire est validé.</p>
 
 <p><strong>Cliquer deux fois pour suivre un lien</strong>. Depuis la première
-version d'Amaya, les utilisateurs ont besoin de double cliquer sur un lien
-pour l'activer. Cela permet de différencier l'édition d'un lien de son
-activation. Vous pouvez changer ce comportement en désactivant cette option.
-<br />
+version d'Amaya, les utilisateurs ont besoin de double cliquer sur un lien pour
+l'activer. Cela permet de différencier l'édition d'un lien de son activation.
+Vous pouvez changer ce comportement en désactivant cette option. <br />
 </p>
 
 <h5 id="Endroit">Endroit d'ouverture</h5>
@@ -381,21 +373,21 @@ dans ce formulaire.</p>
 
 <p>Si un document existe en différentes langues et que votre serveur est
 configuré pour faire une négociation de langue, vous pouvez utiliser ce menu
-pour entrer vos préférences de langue (La première a la plus grande
-priorité). Essayez de naviguer ce <a
-href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">communiqué</a>,
-qui existe en versions Française, Anglaise et Japonaise. En changeant la
+pour entrer vos préférences de langue (La première a la plus grande priorité).
+Essayez de naviguer ce <a
+href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">communiqué</a>, qui
+existe en versions Française, Anglaise et Japonaise. En changeant la
 négociation de la langue en code ISO pour les langues ci dessus
-(<strong>fr</strong>, <strong>en</strong>, ou <strong>ja</strong>) vous
-pouvez demander de façon transparente n'importe laquelle de ces versions.</p>
+(<strong>fr</strong>, <strong>en</strong>, ou <strong>ja</strong>) vous pouvez
+demander de façon transparente n'importe laquelle de ces versions.</p>
 
 <h4 id="L470"><a name="Publishing">Pré</a>férences de publication</h4>
 
-<p>Ces Préférences vous permettent d'enregistrer vos préférences pour les
-ETAGS et pré-conditions, pour vérifier ou non chaque commande PUT avec une
-commande GET, pour définir un nom par défaut pour les URLs finissant par un
-'/' et pour autoriser la redirection automatique de la commande PUT dans des
-domaines spécifiques.</p>
+<p>Ces Préférences vous permettent d'enregistrer vos préférences pour les ETAGS
+et pré-conditions, pour vérifier ou non chaque commande PUT avec une commande
+GET, pour définir un nom par défaut pour les URLs finissant par un '/' et pour
+autoriser la redirection automatique de la commande PUT dans des domaines
+spécifiques.</p>
 
 <h5 id="Charset">Charset pour les nouveaux documents</h5>
 
@@ -404,25 +396,25 @@ documents.</p>
 
 <h5 id="Options2">Options</h5>
 
-<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case
-de gauche alignée avec l'intitulé de l'option.</p>
+<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case de
+gauche alignée avec l'intitulé de l'option.</p>
 
 <p><strong>Ajouter la feuille xsl pour les éléments MathML</strong>. Engendre
-un appel à une feuille de style xsl capable de transformer les éléments
-MathML inclus en objets externes. Cette feuille de style xsl a été développée
-par le groupe de travail MathML pour permettre à Internet Explorer de
-visualiser les types de documents composés.</p>
+un appel à une feuille de style xsl capable de transformer les éléments MathML
+inclus en objets externes. Cette feuille de style xsl a été développée par le
+groupe de travail MathML pour permettre à Internet Explorer de visualiser les
+types de documents composés.</p>
 
 <p><strong>Utiliser le type MIME application/xhtml+xml pour les documents
 XHTML</strong>. Lorsqu'elle est active, cette option associe le nouveau (et
-officiel) type MIME XHTML à tout nouveau document XHTML publié sur le Web.
-Elle est désactivé par défaut pour cette version d'Amaya car à l'heure
-actuelle, tous les serveurs ne gèrent pas ce type MIME. Cette option ne
-modifie pas le type MIME des anciens documents: le type MIME qui est reçu est
-celui qui sera utilisé pour publier le document, sauf si vous utilisez la
-commande <strong>Enregistrer sous</strong>. Il est à noter que cette option
-nécessite aussi de modifier la configuration de votre serveur si celui-ci
-n'enregistre pas les méta-données associées à chaque document.</p>
+officiel) type MIME XHTML à tout nouveau document XHTML publié sur le Web. Elle
+est désactivé par défaut pour cette version d'Amaya car à l'heure actuelle,
+tous les serveurs ne gèrent pas ce type MIME. Cette option ne modifie pas le
+type MIME des anciens documents: le type MIME qui est reçu est celui qui sera
+utilisé pour publier le document, sauf si vous utilisez la commande
+<strong>Enregistrer sous</strong>. Il est à noter que cette option nécessite
+aussi de modifier la configuration de votre serveur si celui-ci n'enregistre
+pas les méta-données associées à chaque document.</p>
 
 <p><strong>Utiliser les ETAGS et les conditions requises</strong>. HTTP/1.1
 introduit des nouvelles entêtes qui permettent d'éviter le problème de <a
@@ -435,9 +427,9 @@ confiance en votre serveur, cette option dit à Amaya de rétablir chaque
 document dès qu'il a été publié et le compare à la copie stockée dans votre
 station de travail. Si les documents diffèrent, Amaya vous alertera.</p>
 
-<p><strong>Exporter CR/LF</strong>. Indique si les fins de lignes des
-fichiers produits par Amaya se terminent par <code>CR/LF</code> (format DOS)
-ou par un simple LF (format standard). </p>
+<p><strong>Exporter CR/LF</strong>. Indique si les fins de lignes des fichiers
+produits par Amaya se terminent par <code>CR/LF</code> (format DOS) ou par un
+simple LF (format standard). </p>
 
 <h5 id="Longueur">Longueur de ligne fixée</h5>
 
@@ -450,51 +442,49 @@ est 0, Amaya utilise sa propre valeur par défaut (actuellement 78).<br />
 
 <p>Un serveur HTTP associe habituellement les URLs qui finissent par '/' à un
 nom par défaut, par exemple, Overview.html. Cette option permet la
-spécification du nom par défaut qu'Amaya devrait utiliser quand on publiera
-un tel URL. S'il vous plaît, consultez votre Webmaster pour découvrir quel
-est le nom par défaut de votre serveur.</p>
+spécification du nom par défaut qu'Amaya devrait utiliser quand on publiera un
+tel URL. S'il vous plaît, consultez votre Webmaster pour découvrir quel est le
+nom par défaut de votre serveur.</p>
 
 <h5 id="Permettre">Permettre des redirections PUT automatiques sur ces
 domaines</h5>
 
 <p>Selon la spécification HTTP/1.1, les opérations PUT ne devraient pas être
-redirigées automatiquement sans confirmation de l'utilisateur, puisque ça
-peut changer les conditions sous lesquelles la requête est d'origine. Vous
-pouvez éviter d'avoir un avertissement d'Amaya avec une alerte de redirection
-PUT en entrant le nom du domaine du serveur de publication. Vous pouvez
-spécifier un ou plusieurs domaines, chacun séparé d'un <em>espace</em>, par
-exemple, <code>www.w3.org groucho.marx.edu</code>.</p>
+redirigées automatiquement sans confirmation de l'utilisateur, puisque ça peut
+changer les conditions sous lesquelles la requête est d'origine. Vous pouvez
+éviter d'avoir un avertissement d'Amaya avec une alerte de redirection PUT en
+entrant le nom du domaine du serveur de publication. Vous pouvez spécifier un
+ou plusieurs domaines, chacun séparé d'un <em>espace</em>, par exemple,
+<code>www.w3.org groucho.marx.edu</code>.</p>
 
 <h4 id="L1595">Préférences de cache</h4>
 
 <p>Amaya fournit un cache par l'intermédiaire de la libwww. Par défaut, le
 cache est activé et est stocké dans le répertoire
-<strong>AmayaTemp/libwww-cache</strong>. Cet onglet fournit également un
-bouton <strong>Nettoyage du Cache</strong>, pour effacer le répertoire du
-cache.</p>
+<strong>AmayaTemp/libwww-cache</strong>. Cet onglet fournit également un bouton
+<strong>Nettoyage du Cache</strong>, pour effacer le répertoire du cache.</p>
 
 <h5 id="Options3">Options</h5>
 
-<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case
-de gauche alignée avec l'intitulé de l'option.</p>
+<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case de
+gauche alignée avec l'intitulé de l'option.</p>
 
 <p><strong>Activer le cache</strong>. Active ou désactive le cache</p>
 
 <p><strong>Stocker dans le cache des documents protégés</strong>. Par défaut,
-les documents qui sont protégés par un mot de passe sont stockés dans le
-cache. Utiliser ce drapeau pour passer outre ce comportement.</p>
+les documents qui sont protégés par un mot de passe sont stockés dans le cache.
+Utiliser ce drapeau pour passer outre ce comportement.</p>
 
-<p><strong>Mode déconnecté</strong>. Récupère toujours les documents depuis
-le cache.</p>
+<p><strong>Mode déconnecté</strong>. Récupère toujours les documents depuis le
+cache.</p>
 
 <p><strong>Ignorer l'en-tête Expires</strong>. Ignore les dates d'expiration
 des entrées de cache.</p>
 
 <h5 id="L1701">Répertoire du cache</h5>
 
-<p>Donne l'adresse du répertoire libwww-cache. Le fait de changer ce
-répertoire n'effacera pas le contenu du précédant. Vous aurez à le supprimer
-vous même.</p>
+<p>Donne l'adresse du répertoire libwww-cache. Le fait de changer ce répertoire
+n'effacera pas le contenu du précédant. Vous aurez à le supprimer vous même.</p>
 
 <h5 id="Taille">Taille du cache (Mo)</h5>
 
@@ -512,16 +502,16 @@ vous même.</p>
 passe</a></h4>
 
 <p>Amaya vous permet d'enregistrer les données saisies lors du dialogue
-d'authentification. Ces données sont le <strong>nom de l'utilisateur et le
-mot de passe</strong> associés à une paire <strong>nom de serveur/nom de
+d'authentification. Ces données sont le <strong>nom de l'utilisateur et le mot
+de passe</strong> associés à une paire <strong>nom de serveur/nom de
 domaine</strong>.</p>
 
 <h5 id="Vider1">Enregistrer les mots de passe</h5>
 
-<p>Ce bouton, s'il est activé, permet de demander à l'utilisateur s'il
-souhaite qu'Amaya enregistre les informations de connexion saisies lors du
-dialogue d'authentification. S'il est désactivé (option par défaut),
-l'utilisateur n'aura pas la possibilité d'enregistrer ces données.</p>
+<p>Ce bouton, s'il est activé, permet de demander à l'utilisateur s'il souhaite
+qu'Amaya enregistre les informations de connexion saisies lors du dialogue
+d'authentification. S'il est désactivé (option par défaut), l'utilisateur
+n'aura pas la possibilité d'enregistrer ces données.</p>
 
 <h5 id="Vider11">Tout effacer</h5>
 
@@ -530,18 +520,18 @@ enregistrées dans Amaya.</p>
 
 <h5 id="Vider111">Sites</h5>
 
-<p>Cette liste permet d'effacer les données d'authentification correspondant
-à une paire <strong>nom de serveur/nom de domaine</strong>.</p>
+<p>Cette liste permet d'effacer les données d'authentification correspondant à
+une paire <strong>nom de serveur/nom de domaine</strong>.</p>
 
 <h4 id="L599"><a name="Proxy">Préférences du proxy</a></h4>
 
-<p>Vous pouvez spécifier un proxy et une série de domaines où le proxy
-devrait ou ne devrait pas être utilisé par le biais de ce menu.</p>
+<p>Vous pouvez spécifier un proxy et une série de domaines où le proxy devrait
+ou ne devrait pas être utilisé par le biais de ce menu.</p>
 
 <h4 id="Proxy1">Proxy HTTP</h4>
 
-<p>Donnes le proxy qui devrait être utilisé pour les requêtes HTTP. Vous
-devez spécifier le nom du serveur en entier. Si le serveur est en train de
+<p>Donnes le proxy qui devrait être utilisé pour les requêtes HTTP. Vous devez
+spécifier le nom du serveur en entier. Si le serveur est en train de
 fonctionner sur un port autre que 80, alors, comme un URL, vous devez ajouter
 un caractère ":" au nom du proxy, suivi par le numéro du port. Voici deux
 exemples.</p>
@@ -593,13 +583,13 @@ avec cette liste de domaines.</p>
 plan par défaut pour les documents. Il permet également de contrôler les
 couleurs utilisées par Amaya pour visualiser la sélection courante.</p>
 <ul>
-  <li><strong>Couleur du texte</strong> donne la couleur par défaut du
-    premier plan des pages affichées.</li>
-  <li>C<strong>ouleur de fond donne la couleur</strong> par défaut de
-    l'arrière plan des pages affichées.</li>
-  <li><strong>Couleur du point d'insertion</strong> donne la couleur du
-    premier plan qui montre la sélection quand elle est limitée à un point
-    d'insertion.</li>
+  <li><strong>Couleur du texte</strong> donne la couleur par défaut du premier
+    plan des pages affichées.</li>
+  <li>C<strong>ouleur de fond donne la couleur</strong> par défaut de l'arrière
+    plan des pages affichées.</li>
+  <li><strong>Couleur du point d'insertion</strong> donne la couleur du premier
+    plan qui montre la sélection quand elle est limitée à un point
+  d'insertion.</li>
   <li><strong>Sélection de la couleur</strong> donne la couleur de l'arrière
     plan qui montre la sélection courante quand elle est étendue.</li>
 </ul>
@@ -615,14 +605,21 @@ hexadécimal, ou leur format rgb :</p>
 <p>Vous pouvez également sélectionner les couleurs par le biais de la palette
 associée.</p>
 
+<h5 id="Options31">Option</h5>
+
+<p>L'option suivante peut être cochée ou non en cliquant sur la case de gauche
+alignée avec l'intitulé de l'option.</p>
+
+<p><strong>Colorier le source</strong>. Active ou désactive la coloration des
+documents source.</p>
+
 <p class="Note"><strong>Note :</strong> le changement des couleurs sera
 effectif quand vous ouvrirez une nouvelle fenêtre de document.</p>
 
 <h4 id="rences1">Les préférences de géométrie</h4>
 
-<p><strong>Enregistrer la géométrie en quittant</strong>. La géométrie
-courante des fenêtres sera automatiquement sauvegardée en quittant
-l'application.</p>
+<p><strong>Enregistrer la géométrie en quittant</strong>. La géométrie courante
+des fenêtres sera automatiquement sauvegardée en quittant l'application.</p>
 
 <p>Deux boutons vous permettent</p>
 <ul>
@@ -630,18 +627,17 @@ l'application.</p>
   <li>ou de restaurer les valeurs par défaut.</li>
 </ul>
 
-<p class="Note"><strong>Note</strong> : Ces changements seront effectifs
-quand vous ouvrirez des nouvelles fenêtres document.</p>
+<p class="Note"><strong>Note</strong> : Ces changements seront effectifs quand
+vous ouvrirez des nouvelles fenêtres document.</p>
 
 <h4 id="Configurat">Configuration des annotations</h4>
 
 <h4 id="utilisateu">Nom de l'utilisateur</h4>
 
 <p>Ce champ est associé à chaque nouvelle annotation et définit
-l'<strong>auteur</strong> de l'annotation. Par défaut, Amaya utilise le nom
-de connexion pour construire la méta-donnée auteur. Le champ "Annotation
-user" permet à un utilisateur de remplacer ce nom par un nom plus
-significatif.</p>
+l'<strong>auteur</strong> de l'annotation. Par défaut, Amaya utilise le nom de
+connexion pour construire la méta-donnée auteur. Le champ "Annotation user"
+permet à un utilisateur de remplacer ce nom par un nom plus significatif.</p>
 
 <h4 id="Serveur">Serveur de publication</h4>
 
@@ -656,14 +652,14 @@ voulez.</p>
 <h4 id="Serveurs">Serveurs d'annotations</h4>
 
 <p>Ce champ définit les serveurs d'annotations à interroger lorsque Amaya
-cherche une annotation. Vous pouvez spécifier un ou plusieurs serveurs. Le
-nom de serveur <strong>localhost</strong> est réservé, il indique à Amaya de
+cherche une annotation. Vous pouvez spécifier un ou plusieurs serveurs. Le nom
+de serveur <strong>localhost</strong> est réservé, il indique à Amaya de
 chercher localement les annotations. Cela ne signifie pas que l'on utilise un
 serveur pour les annotations locale, pour cela il faudrait donner l'URL
-complète de celui-ci. Sous Unix, les serveurs d'annotations sont spécifiés à
-la suite, séparés par un espace. Sous Windows, ils sont spécifiés les uns
-après les autres et séparés par la touche <code>Entrée</code>. Par défaut, ce
-champ est initialisé avec <code>localhost</code>.</p>
+complète de celui-ci. Sous Unix, les serveurs d'annotations sont spécifiés à la
+suite, séparés par un espace. Sous Windows, ils sont spécifiés les uns après
+les autres et séparés par la touche <code>Entrée</code>. Par défaut, ce champ
+est initialisé avec <code>localhost</code>.</p>
 
 <p class="Note"><em class="Note">ASTUCE</em>: Vous pouvez inhiber la
 consultation d'un serveur d'annotations en préfixant l'URL du serveur avec le
@@ -671,22 +667,22 @@ caractère '-'.</p>
 
 <h5 id="Options4">Options</h5>
 
-<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case
-de gauche alignée avec l'intitulé de l'option.</p>
+<p>Les options suivantes peuvent être cochées ou non en cliquant sur la case de
+gauche alignée avec l'intitulé de l'option.</p>
 
 <p><strong>Charger automatiquement les annotations locales</strong>. Cette
 option indique que les annotations locales doivent être chargées
-automatiquement ou non lorsqu'une nouvelle page est chargée. Si elle n'est
-pas positionnée l'utilisateur doit explicitement sélectionner l'entrée
-<strong>Charger les annotations</strong> pour visualiser celles-ci. Par
-défaut, cette options est désactivée.</p>
+automatiquement ou non lorsqu'une nouvelle page est chargée. Si elle n'est pas
+positionnée l'utilisateur doit explicitement sélectionner l'entrée
+<strong>Charger les annotations</strong> pour visualiser celles-ci. Par défaut,
+cette options est désactivée.</p>
 
 <p><strong>Charger automatiquement les annotations distantes</strong>. Cette
 option indique que les annotations distantes doivent être chargées
-automatiquement ou non lorsqu'une nouvelle page est chargée. Si elle n'est
-pas positionnée l'utilisateur doit explicitement sélectionner l'entrée
-<strong>Charger les annotations</strong> pour visualiser celles-ci. Par
-défaut, cette options est désactivée.</p>
+automatiquement ou non lorsqu'une nouvelle page est chargée. Si elle n'est pas
+positionnée l'utilisateur doit explicitement sélectionner l'entrée
+<strong>Charger les annotations</strong> pour visualiser celles-ci. Par défaut,
+cette options est désactivée.</p>
 
 <p class="Note"><strong>Note</strong> ; Il peut y avoir un certain délai
 lorsque Amaya charge les annotations distantes, ce délai étant du à la
@@ -696,9 +692,9 @@ résolution du nom DNS des serveurs d'annotations.</p>
 distantes</strong>. Lorsque cette option est activée, Amaya réinitialise
 l'option <strong>Chargement automatique des annotations distantes</strong> au
 démarrage. Cela est très utile si vous travaillez en mode déconnecté de temps
-en temps et que vous voulez continuer à charger automatiquement les
-annotations locales tout en rechargeant les annotations distantes lorsque
-vous êtes connectés.</p>
+en temps et que vous voulez continuer à charger automatiquement les annotations
+locales tout en rechargeant les annotations distantes lorsque vous êtes
+connectés.</p>
 </div>
 </body>
 </html>

@@ -7339,6 +7339,10 @@
 	<message xml:lang="en">Optional use</message>
 	<message xml:lang="fr">Utilisation optionnelle</message>
 </label>
+<label define="AM_COLOR_SOURCE">
+	<message xml:lang="en">Color source code</message>
+	<message xml:lang="fr">Colorier le code source</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

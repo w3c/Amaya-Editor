@@ -6869,6 +6869,7 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean("EDIT_TOOLBAR", TRUE, FALSE);
   TtaSetEnvBoolean ("XML_EDIT_MODE", FALSE, FALSE);
   TtaSetEnvBoolean ("USE_XML_DECLARATION", TRUE, FALSE);
+  TtaSetEnvBoolean ("COLOR_SOURCE", TRUE, FALSE);
   /* get current value */
   TtaGetEnvBoolean ("SHOW_MAP_AREAS", &map);
   /* Create and intialize resources needed for each document */

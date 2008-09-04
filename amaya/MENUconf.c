@@ -1192,12 +1192,12 @@ void SetGeneralConf (void)
       ptr = TtaGetEnvString ("TOOLPANEL_LAYOUT");
       if (GProp_General.ToolPanelLayout == 0 && strcmp (ptr, "LEFT"))
         {
-          WarnRestart = true;
+          //WarnRestart = true;
           TtaSetEnvString ("TOOLPANEL_LAYOUT", "LEFT", TRUE);
         }
-      else if (strcmp (ptr, "RIGHT"))
+      else if (GProp_General.ToolPanelLayout == 1 && strcmp (ptr, "RIGHT"))
         {
-          WarnRestart = true;
+          //WarnRestart = true;
           TtaSetEnvString ("TOOLPANEL_LAYOUT", "RIGHT", TRUE);
         }
     }
@@ -1901,6 +1901,7 @@ static void GetColorConf (void)
   GetEnvString ("FgSelectColor", &(GProp_Color.FgSelColor[0]));
   GetEnvString ("MenuFgColor", &(GProp_Color.MenuFgColor[0]));
   GetEnvString ("MenuBgColor", &(GProp_Color.MenuBgColor[0]));
+  TtaGetEnvBoolean ("COLOR_SOURCE", &(GProp_Color.ColorSource));
 }
 
 /*----------------------------------------------------------------------
@@ -1915,6 +1916,7 @@ static void GetDefaultColorConf (void)
   GetDefEnvString ("FgSelectColor", &(GProp_Color.FgSelColor[0]));
   GetDefEnvString ("MenuFgColor", &(GProp_Color.MenuFgColor[0]));
   GetDefEnvString ("MenuBgColor", &(GProp_Color.MenuBgColor[0]));
+  TtaGetDefEnvBoolean ("COLOR_SOURCE", &(GProp_Color.ColorSource));
 }
 
 /*----------------------------------------------------------------------
@@ -1929,6 +1931,7 @@ static void SetColorConf (void)
   TtaSetEnvString ("FgSelectColor", GProp_Color.FgSelColor, TRUE);
   TtaSetEnvString ("MenuFgColor", GProp_Color.MenuFgColor, TRUE);
   TtaSetEnvString ("MenuBgColor", GProp_Color.MenuBgColor, TRUE);
+  TtaSetEnvBoolean ("COLOR_SOURCE", GProp_Color.ColorSource, TRUE);
   TtaSaveAppRegistry ();
   /* change the current settings */
   TtaUpdateEditorColors ();
@@ -1983,44 +1986,6 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
               break;
             }
           break;
-#ifdef IV  
-        case mFgColor:
-          if (data)
-            strcpy (GProp_Color.FgColor, data);
-          else
-            GProp_Color.FgColor[0] = EOS;
-          break;
-        case mBgColor:
-          if (data)
-            strcpy (GProp_Color.BgColor, data);
-          else
-            GProp_Color.BgColor[0] = EOS;
-          break;
-        case mBgSelColor:
-          if (data)
-            strcpy (GProp_Color.BgSelColor, data);
-          else
-            GProp_Color.BgSelColor[0] = EOS;
-          break;
-        case mFgSelColor:
-          if (data)
-            strcpy (GProp_Color.FgSelColor, data);
-          else
-            GProp_Color.FgSelColor[0] = EOS;
-          break;
-        case mMenuFgColor:
-          if (data)
-            strcpy (GProp_Color.MenuFgColor, data);
-          else
-            GProp_Color.MenuFgColor[0] = EOS;
-          break;
-        case mMenuBgColor:
-          if (data)
-            strcpy (GProp_Color.MenuBgColor, data);
-          else
-            GProp_Color.MenuBgColor[0] = EOS;
-          break;
-#endif
         default:
           break;
         }

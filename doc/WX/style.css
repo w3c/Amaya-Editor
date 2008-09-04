@@ -223,29 +223,36 @@
     }
 
   h2 {
-    margin-top: 1.67em;
+    margin-top: 3.67em;
     margin-bottom: 0.33em;
     padding-top: 0pt;
     padding-bottom: 0pt;
     }
 
   h3 {
-    margin-top: 1.5em;
+    margin-top: 3.5em;
     margin-bottom: 0.33em;
     padding-top: 0pt;
     padding-bottom: 0pt;
     }
 
   h4 {
-    margin-top: 1.33em;
+    margin-top: 2.33em;
     margin-bottom: 0.33em;
     padding-top: 0pt;
     padding-bottom: 0pt;
     }
 
+  h5:before {
+   content: "> ";
+   font-size: 150%;
+   font-weight: bold;
+   }
+
   h5 {
     margin-top: 1.17em;
     margin-bottom: 0.33em;
+    margin-left: 1.5em;
     padding-top: 0pt;
     padding-bottom: 0pt;
     }
@@ -253,6 +260,7 @@
   h6 {
     margin-top: 1em;
     margin-bottom: 0.33em;
+    margin-left: 1.5em;
     padding-top: 0pt;
     padding-bottom: 0pt;
     }

@@ -183,6 +183,7 @@ typedef struct Prop_Color_t
   char     FgSelColor[MAX_LENGTH];
   char     MenuFgColor[MAX_LENGTH];
   char     MenuBgColor[MAX_LENGTH];
+  ThotBool ColorSource;
 } Prop_Color;
 
 typedef struct Prop_Annot_t

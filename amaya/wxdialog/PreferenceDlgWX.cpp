@@ -795,6 +795,7 @@ void PreferenceDlgWX::SetupLabelDialog_Color()
   XRCCTRL(*this, "wxID_LABEL_SELBACKCOLOR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BG_SEL_COLOR)) );
 
   XRCCTRL(*this, "wxID_LABEL_COLORGEOCHG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_CHANGE)) );
+  XRCCTRL(*this, "wxID_COLOR_SOURCE", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_COLOR_SOURCE)) );
 
   // setup combobox choices
   int    id_color   = 0;
@@ -827,6 +828,7 @@ void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
   XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgSelColor) );
   XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->SetValue( TtaConvMessageToWX(prop.BgColor) );
   XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->SetValue( TtaConvMessageToWX(prop.FgColor) );
+  XRCCTRL(*this, "wxID_COLOR_SOURCE", wxCheckBox)->SetValue( prop.ColorSource );
 
   // setup background colours
   unsigned short      red;
@@ -865,6 +867,8 @@ Prop_Color PreferenceDlgWX::GetValueDialog_Color()
 
   value = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
   strcpy( prop.FgColor, (const char*)value.mb_str(wxConvUTF8) );
+
+  prop.ColorSource = XRCCTRL(*this, "wxID_COLOR_SOURCE", wxCheckBox)->GetValue();
 
   return prop;
 }

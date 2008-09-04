@@ -4855,7 +4855,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   Attribute	      attr;
   unsigned char       charRead;
   int		      val;
-  ThotBool            endOfTextFile;
+  ThotBool            endOfTextFile, color_source;
   ThotBool            withinMarkup = FALSE;
   ThotBool            withinQuote = FALSE, withinString = FALSE;
   ThotBool            withinComment = FALSE;
@@ -4866,6 +4866,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   NumberOfCharRead = 0;
   NumberOfLinesRead = 1; 
   CurrentBufChar = 0;
+  TtaGetEnvBoolean ("COLOR_SOURCE", &color_source);
 
 #ifdef ANNOTATIONS
   if (DocumentTypes[doc] == docAnnot)
@@ -4990,7 +4991,9 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
       if (charRead != EOS)
         {
           /* a valid character has been read */
-          if (charRead == '@' && DocumentTypes[doc] == docLog && LgBuffer == 0)
+          if (!color_source)
+            inputBuffer[LgBuffer++] = charRead;
+          else if (charRead == '@' && DocumentTypes[doc] == docLog && LgBuffer == 0)
             {
               attrType.AttrTypeNum = TextFile_ATTR_IsLink;
               val = TextFile_ATTR_IsLink_VAL_Yes_;
@@ -5217,6 +5220,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
             }
           else
             inputBuffer[LgBuffer++] = charRead;
+
           if (el != NULL)
             {
               /* test if last created element is a Symbol */
