@@ -2069,7 +2069,8 @@ void SearchPresSchema (PtrElement pEl, PtrPSchema *pSchP, int *indexElType,
                   if (found)
                     {
                       pSP = PresentationSchema (pSc1, pDoc);
-                      if (pSP && pSP->PsElemPRule->ElemPres[i - 1])
+                      if (pSP && i <= pSP->PsNElemPRule &&
+                          pSP->PsElemPRule->ElemPres[i - 1])
                         /* il y a des regles de presentation pour ce type */
                         {
                           *pSchP = pSP;

@@ -5739,10 +5739,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 
           /* pRSpec: premiere regle de presentation associee au type de
              l'element */
-          if (index > pSchP->PsNElemPRule)
-            pRSpec = NULL;
-          else
-            pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
+          pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
           /* premiere regle de presentation par defaut */
           pRDef = pSchP->PsFirstDefaultPRule;
           /* initialise la file des regles qui n'ont pas pu etre appliquees*/
