@@ -5869,6 +5869,9 @@ static int GetCharType (CHAR_T c, char script)
            (c == 0x03D5))
     /* greek letter */
     ret = MathML_EL_MI;
+  else if (c >= 0x0410 && c <= 0x044F)
+    /* cyrillic letter */
+    ret = MathML_EL_MI;
   else if (c >= 0xC0 && c <= 0xFF &&  /* accented latin letter */
            c != 0xD7 && c != 0xF7)    /* but not operators times or divide */
     ret = MathML_EL_MI;
