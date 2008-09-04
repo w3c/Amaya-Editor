@@ -1471,6 +1471,16 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
      index = (int) 0x49;
      face = (int) 4;
     }
+  else if (c == 0x2720) /* maltese cross */
+    {
+     index = (int) 0x21;
+     face = (int) 2;
+    }
+  else if (c == 0x260E) /* phone */
+    {
+     index = (int) 0x54;
+     face = (int) 2;
+    }
   else if (c == 0x20DB || c == 0x20DC) /* dots */
     {
      index = (int) (c - 0x20DB + 0x61);
