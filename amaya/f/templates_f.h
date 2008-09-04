@@ -68,6 +68,8 @@ extern void TemplateCreateFreeBox ( Document doc,
                                     View view );
 extern void TemplateCreateRepeat ( Document doc,
                                    View view );
+extern void TemplateCreateUnion ( Document doc,
+                                  View view );
 extern void TemplateCreateRepeatComp ( Document doc,
                                        View view );
 extern void TemplateCreateUseBox ( Document doc,
@@ -142,6 +144,8 @@ extern void TemplateCreateFreeBox ( Document doc,
                                       View view );
 extern void TemplateCreateRepeat ( Document doc,
                                      View view );
+extern void TemplateCreateUnion ( Document doc,
+                                    View view );
 extern void TemplateCreateRepeatComp ( Document doc,
                                          View view );
 extern void TemplateCreateUseBox ( Document doc,

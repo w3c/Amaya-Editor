@@ -1566,7 +1566,7 @@ void TtaGetSchemaPath (char *buffer, int bufferLength)
   the document for which the last Copy or Cut command has been issued.
   0 if the clipboard is empty.
   ----------------------------------------------------------------------*/
-Document            TtaGetDocumentOfSavedElements ()
+Document TtaGetDocumentOfSavedElements ()
 {
   UserErrorCode = 0;
   if (DocOfSavedElements == NULL)
@@ -1579,7 +1579,7 @@ Document            TtaGetDocumentOfSavedElements ()
 /*----------------------------------------------------------------------
   DocToPtr returns the PtrDocument corresponding to a given document
   ----------------------------------------------------------------------*/
-PtrDocument         DocToPtr (Document document)
+PtrDocument DocToPtr (Document document)
 {
   return LoadedDocument[document - 1];
 }
@@ -1604,6 +1604,29 @@ void TtaSetANamespaceDeclaration (Document document, Element element,
       /* parameter document is correct */
       pDoc = LoadedDocument[document - 1];
       SetNamespaceDeclaration (pDoc, (PtrElement) element, NsPrefix, NsUri);
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaSetNamespaceDeclaration
+  Sets a namespace declaration for an element 
+  ----------------------------------------------------------------------*/
+void TtaRemoveANamespaceDeclaration (Document document, Element element,
+                                     const char *NsUri)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      RemoveANamespaceDeclaration (pDoc, (PtrElement) element, NsUri);
     }
 }
 

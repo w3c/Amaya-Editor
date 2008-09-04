@@ -1126,7 +1126,7 @@ ThotBool ANNOT_LocalSave (Document doc_annot, char *html_filename)
   TtaSetTextContent (el, (unsigned char *)annot->mdate, TtaGetDefaultLanguage (), doc_annot); 
 
   /* set up the charset and namespaces */
-  SetNamespacesAndDTD (doc_annot);
+  SetNamespacesAndDTD (doc_annot, FALSE);
   result = TtaExportDocumentWithNewLineNumbers (doc_annot, html_filename, 
 					       "AnnotT", FALSE);
 

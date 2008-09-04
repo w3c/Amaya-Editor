@@ -35,7 +35,8 @@ extern void DoSaveObjectAs ( void );
 extern void SaveDocumentAs ( Document doc,
                              View view );
 extern char *UpdateDocumentCharset ( Document doc );
-extern void SetNamespacesAndDTD ( Document doc );
+extern void SetNamespacesAndDTD ( Document doc,
+                                  ThotBool removeTemplate );
 extern ThotBool ParseWithNewDoctype ( Document doc,
                                       char *localFile,
                                       char *tempdir,
@@ -111,7 +112,8 @@ extern void DoSaveObjectAs ( void );
 extern void SaveDocumentAs ( Document doc,
                                View view );
 extern char *UpdateDocumentCharset ( Document doc );
-extern void SetNamespacesAndDTD ( Document doc );
+extern void SetNamespacesAndDTD ( Document doc,
+                                    ThotBool removeTemplate );
 extern ThotBool ParseWithNewDoctype ( Document doc,
                                         char *localFile,
                                         char *tempdir,

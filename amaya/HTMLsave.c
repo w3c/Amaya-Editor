@@ -1188,8 +1188,9 @@ char *UpdateDocumentCharset (Document doc)
   For (X)HTML documents, set the content of the Namespaces attribute
   (on the root element) according to the SSchemas used in the document;
   create a META element to specify Content-Type and Charset.
+  removeTemplate says if the template namespace must be removed or not.
   ----------------------------------------------------------------------*/
-void SetNamespacesAndDTD (Document doc)
+void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
 {
   Element       root, el, head, meta, docEl, doctype, elFound, text;
   Element       next, elDecl;
@@ -1231,7 +1232,11 @@ void SetNamespacesAndDTD (Document doc)
     root = TtaGetMainRoot (doc);
   else
     root = TtaGetRootElement (doc);
-   
+
+  if (removeTemplate)
+    // remove the XTiger namespace
+    TtaRemoveANamespaceDeclaration (doc, root, Template_URI);
+
   /* Look for all natures used in the document */
   if (DocumentMeta[doc] && DocumentMeta[doc]->compound)
     do
@@ -1953,7 +1958,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
     {
       if (DocumentTypes[doc] == docHTML)
         DocumentMeta[doc]->xmlformat = SaveAsXML;
-      SetNamespacesAndDTD (doc);
+      SetNamespacesAndDTD (doc, RemoveTemplate);
       if (DocumentTypes[doc] == docHTML)
         {
           if (SaveAsXML)
@@ -2290,7 +2295,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   tempname = GetLocalPath (doc, url);
 
   /* First step : generate the output file and ask for confirmation */
-  SetNamespacesAndDTD (doc);
+  SetNamespacesAndDTD (doc, RemoveTemplate);
   if (DocumentTypes[doc] == docHTML)
     if (SaveAsXML)
       {
@@ -2551,7 +2556,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
       if (saveBefore)
         {
           /* save the current state of the document into the temporary file */
-          SetNamespacesAndDTD (doc);
+          SetNamespacesAndDTD (doc, FALSE);
           if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
             {
               if (TtaGetDocumentProfile (doc) == L_Xhtml11 || TtaGetDocumentProfile (doc) == L_Basic)
@@ -3183,7 +3188,7 @@ static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
     }
   else
     {
-      SetNamespacesAndDTD (doc);
+      SetNamespacesAndDTD (doc, FALSE);
       if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
         {
           if (SaveAsXML)

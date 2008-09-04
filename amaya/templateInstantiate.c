@@ -352,11 +352,9 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 void CreateTemplate(Document doc, char *templatePath)
 {
 #ifdef TEMPLATES
-  Document          newdoc = 0;
   Element           root, head, elem, xt, title, child, last;
   ElementType       elType, xtType;
   char             *s;
-  ThotBool          mathPI;
   SSchema           templSchema;
   XTigerTemplate    t;
   
@@ -445,12 +443,6 @@ void CreateTemplate(Document doc, char *templatePath)
     }
   // Save changes
   TtaSetStructureChecking (TRUE, doc);
-  
-  // Save document
-  //TtaGetEnvBoolean ("GENERATE_MATHPI", &mathPI);
-  //TtaSetEnvBoolean("GENERATE_MATHPI", TRUE, TRUE);
-  //SaveDocumentToNewDoc(doc, newdoc, templatePath);
-  //TtaSetEnvBoolean("GENERATE_MATHPI", mathPI, TRUE);
   
   TtaClearUndoHistory (doc);
   RemoveParsingErrors (doc);
@@ -565,7 +557,7 @@ void CreateInstance(char *templatePath, char *instancePath,
         {
           TtaSetDocumentCharset (doc, charset, FALSE);
           DocumentMeta[doc]->charset = TtaStrdup (charsetname);
-          SetNamespacesAndDTD (doc);
+          SetNamespacesAndDTD (doc, FALSE);
         }
 
       // Parse template to fill structure and remove extra data

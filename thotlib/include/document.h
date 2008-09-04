@@ -769,6 +769,13 @@ void TtaSetANamespaceDeclaration (Document document, Element element,
                                   const char *Ns_Prefix, const char *Ns_Uri);
 
 /*----------------------------------------------------------------------
+  TtaSetNamespaceDeclaration
+  Sets a namespace declaration for an element 
+  ----------------------------------------------------------------------*/
+void TtaRemoveANamespaceDeclaration (Document document, Element element,
+                                     const char *NsUri);
+
+/*----------------------------------------------------------------------
   TtaGiveNamespaceURI
   Returns the pointer to the current registerd namesapce URI or NULL
   ----------------------------------------------------------------------*/

@@ -4271,7 +4271,7 @@ void ShowSource (Document doc, View view)
       localFile = GetLocalPath (doc, DocumentURLs[doc]);
       if (TtaIsDocumentModified (doc) || !TtaFileExist (localFile))
         {
-          SetNamespacesAndDTD (doc);
+          SetNamespacesAndDTD (doc, FALSE);
           if (DocumentTypes[doc] == docLibrary ||
               DocumentTypes[doc] == docHTML)
             {

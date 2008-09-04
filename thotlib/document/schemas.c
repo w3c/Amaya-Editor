@@ -2822,6 +2822,69 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
 }
 
 /*----------------------------------------------------------------------
+  RemoveANamespaceDeclaration removes a namespace declaration
+  ----------------------------------------------------------------------*/
+void RemoveANamespaceDeclaration (PtrDocument pDoc, PtrElement element,
+                                  const char *NsUri)
+{
+  PtrNsUriDescr     uriDecl, prevUri;
+  PtrNsPrefixDescr  prefixDecl, prevDecl;
+
+  if (pDoc == NULL || element == NULL ||
+      element->ElTerminal || ElementIsHidden (element))
+    // don't set a namespace for terminal and hidden elements
+    return;
+  if (NsUri == NULL)
+    return;
+
+  prevUri = NULL;
+  uriDecl = pDoc->DocNsUriDecl;
+  if (uriDecl)
+    {
+      /* Search if this uri has been already declared */
+      while (uriDecl)
+        {
+          // html element could declare several namespaces
+          // It's the uri of the element, check the list of elements
+          prefixDecl = uriDecl->NsPtrPrefix;
+          prevDecl = NULL;
+          while (prefixDecl)
+            {
+              if (prefixDecl->NsPrefixElem == element &&
+                  !strcmp (uriDecl->NsUriName, NsUri))
+                {
+                  if (prevDecl)
+                    prevDecl->NsNextPrefixDecl = prefixDecl->NsNextPrefixDecl;
+                  else
+                    {
+                      // it was the first entry for this uri
+                      uriDecl->NsPtrPrefix = prefixDecl->NsNextPrefixDecl;
+                      if (uriDecl->NsPtrPrefix == NULL)
+                        {
+                          // no more entry for this uri, remove this declaration
+                          if (prevUri)
+                            prevUri->NsNextUriDecl = uriDecl->NsNextUriDecl;
+                          else
+                            pDoc->DocNsUriDecl = uriDecl->NsNextUriDecl;
+                          TtaFreeMemory (uriDecl->NsUriName);
+                          TtaFreeMemory (prefixDecl->NsPrefixName);
+                          TtaFreeMemory (uriDecl);
+                        }
+                    }
+                  TtaFreeMemory (prefixDecl);
+                  return;
+                }
+              prevDecl = prefixDecl;
+              prefixDecl = prefixDecl->NsNextPrefixDecl;
+            }
+          // next uri declaration
+          prevUri = uriDecl;
+          uriDecl = prevUri->NsNextUriDecl;
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
   RemoveNamespaceDeclaration removes a namespace declaration
   ----------------------------------------------------------------------*/
 void RemoveNamespaceDeclaration (PtrDocument pDoc, PtrElement element)
@@ -2862,6 +2925,7 @@ void RemoveNamespaceDeclaration (PtrDocument pDoc, PtrElement element)
                           else
                             pDoc->DocNsUriDecl = uriDecl->NsNextUriDecl;
                           TtaFreeMemory (uriDecl->NsUriName);
+                          TtaFreeMemory (prefixDecl->NsPrefixName);
                           TtaFreeMemory (uriDecl);
                         }
                     }
