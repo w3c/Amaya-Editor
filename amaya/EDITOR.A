@@ -394,10 +394,8 @@ MENUS
     Tools.JavascriptDom_ button:BAddExternal -> AddExternal;
     Tools.JavascriptDom_ button:BInsertScript -> InsertScript;
 
-	Help_ button:BInformation -> HelpAmaya icon:about.png;
 	Help_ button:BAtW3C -> HelpAtW3C;
 	Help_ button:BHelpIndex -> HelpIndex;
-	Help_ Separator;
 	Help_ button:BHelpBrowsing -> HelpBrowsing;
 	Help_ button:BHelpViews -> HelpViews;
 	Help_ button:BHelpSelecting -> HelpSelecting;
@@ -425,8 +423,9 @@ MENUS
 	Help_ button:BHelpConfigure -> HelpConfigure;
 	Help_ button:BHelpShortCuts -> HelpShortCuts;
 	Help_ button:BHelpAccess -> HelpAccess;
-	Help_ Separator;
 	Help_ button:BTipOfTheDay -> TipOfTheDay;
+	Help_ Separator;
+	Help_ button:BInformation -> HelpAmaya icon:about.png;
 	END;
 
 FUNCTIONS

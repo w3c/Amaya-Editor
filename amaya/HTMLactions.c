@@ -1801,9 +1801,9 @@ ThotBool WithinLinkElement (Element element, Document document)
 }
 
 /*----------------------------------------------------------------------
-  ActivateElement    The user has activated an element.         
+  ActivateElement   The user has activated an element.
   ----------------------------------------------------------------------*/
-static ThotBool ActivateElement (Element element, Document document)
+static ThotBool ActivateElement (Element element, Document doc)
 {
   Attribute           HrefAttr;
   Element             anchor, elFound;
@@ -1854,7 +1854,7 @@ static ThotBool ActivateElement (Element element, Document document)
   else if (isSVG)
     ok = TRUE;
   else
-    ok = WithinLinkElement (element, document);
+    ok = WithinLinkElement (element, doc);
 
   if (!ok)
     /* DoubleClick is disabled for this element type */
@@ -1869,11 +1869,11 @@ static ThotBool ActivateElement (Element element, Document document)
         /* it 's a double click on a submit or reset button */
         {
           /* interrupt current transfer and submit the corresponding form */
-          StopTransfer (document, 1);	   
-          SubmitForm (document, element);
+          StopTransfer (doc, 1);	   
+          SubmitForm (doc, element);
         }
       else if (elType.ElTypeNum == HTML_EL_BUTTON_)
-        DblClickOnButton (element, document);
+        DblClickOnButton (element, doc);
       return (TRUE);
     }
   else if (isHTML && (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
@@ -1887,7 +1887,7 @@ static ThotBool ActivateElement (Element element, Document document)
       elFound = TtaGetTypedAncestor (element, elType1);
       if (elFound)
         {
-          DblClickOnButton (elFound, document);
+          DblClickOnButton (elFound, doc);
           return (TRUE);
         }
       else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
@@ -1898,8 +1898,8 @@ static ThotBool ActivateElement (Element element, Document document)
           if (elType1.ElTypeNum == HTML_EL_Image_Input)
             {
               /* interrupt current transfer */
-              StopTransfer (document, 1);	   
-              SubmitForm (document, element);
+              StopTransfer (doc, 1);	   
+              SubmitForm (doc, element);
               return (TRUE);
             }
         }
@@ -1912,7 +1912,7 @@ static ThotBool ActivateElement (Element element, Document document)
       elType1 = TtaGetElementType (elFound);
       if (elType1.ElTypeNum == HTML_EL_Option)
         {
-          SelectOneOption (document, elFound);
+          SelectOneOption (doc, elFound);
           return (TRUE);
         }
     }
@@ -1924,40 +1924,45 @@ static ThotBool ActivateElement (Element element, Document document)
       elFound = TtaSearchTypedElement (elType1, SearchInTree, element);
       if (elFound)
         {
-          SelectOneOption (document, elFound);
+          SelectOneOption (doc, elFound);
           return (TRUE);
         }
     }
   else if (isHTML && elType.ElTypeNum == HTML_EL_Checkbox_Input)
     {
-      SelectCheckbox (document, element);
+      SelectCheckbox (doc, element);
       return (TRUE);
     }
   else if (isHTML && elType.ElTypeNum == HTML_EL_Radio_Input)
     {
-      SelectOneRadio (document, element);
+      SelectOneRadio (doc, element);
       return (TRUE);
     }
   else if (isHTML && elType.ElTypeNum == HTML_EL_File_Input)
     {
-      ActivateFileInput (document, element);
+      ActivateFileInput (doc, element);
       return (TRUE);
     }
 
   /* Search the anchor or LINK element */
-  anchor = SearchAnchor (document, element, &HrefAttr, FALSE);
+  anchor = SearchAnchor (doc, element, &HrefAttr, FALSE);
 
   if (anchor && HrefAttr)
     {
-      // open in new tab if the back function is available
-      if ((DocumentMeta[document] &&
-          DocumentMeta[document]->method == CE_HELP) ||
+      if ((DocumentMeta[doc] &&
+          DocumentMeta[doc]->method == CE_HELP) ||
           !TtaIsActionAvailable ("GotoPreviousHTML"))
         {
-          DontReplaceOldDoc = TRUE;
-          InNewWindow       = FALSE;
+          if (DocumentURLs[doc] &&
+              strstr (DocumentURLs[doc], "Manual.html"))
+              // open in new tab
+              DontReplaceOldDoc = TRUE;
+          else
+            // replace current help page
+            DontReplaceOldDoc = FALSE;
+          InNewWindow = FALSE;
         }
-      return (Do_follow_link (anchor, element, HrefAttr, document));
+      return (Do_follow_link (anchor, element, HrefAttr, doc));
     }
   else
     return FALSE;
@@ -1967,11 +1972,11 @@ static ThotBool ActivateElement (Element element, Document document)
   CanFollowTheLink returns TRUE if the currently right-clic selected element
   is a link element.
   ----------------------------------------------------------------------*/
-ThotBool CanFollowTheLink (Document document)
+ThotBool CanFollowTheLink (Document doc)
 {
-  if (Right_ClikedElement && TtaGetDocument(Right_ClikedElement) == document)
+  if (Right_ClikedElement && TtaGetDocument(Right_ClikedElement) == doc)
     {
-      if (WithinLinkElement (Right_ClikedElement, document))
+      if (WithinLinkElement (Right_ClikedElement, doc))
         return TRUE;
     }
   return FALSE;
@@ -1980,40 +1985,40 @@ ThotBool CanFollowTheLink (Document document)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void FollowTheLink (Document document, View view)
+void FollowTheLink (Document doc, View view)
 {
   DontReplaceOldDoc = FALSE;
   if (Right_ClikedElement)
-    ActivateElement (Right_ClikedElement, document);
+    ActivateElement (Right_ClikedElement, doc);
   Right_ClikedElement = NULL;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void FollowTheLinkNewWin (Document document, View view)
+void FollowTheLinkNewWin (Document doc, View view)
 {
   DontReplaceOldDoc = TRUE;
   InNewWindow       = TRUE;
   if (Right_ClikedElement)
-    ActivateElement (Right_ClikedElement, document);
+    ActivateElement (Right_ClikedElement, doc);
   Right_ClikedElement = NULL;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void FollowTheLinkNewTab (Document document, View view)
+void FollowTheLinkNewTab (Document doc, View view)
 {
   DontReplaceOldDoc = TRUE;
   InNewWindow       = FALSE;
   if (Right_ClikedElement)
-    ActivateElement (Right_ClikedElement, document);
+    ActivateElement (Right_ClikedElement, doc);
   Right_ClikedElement = NULL;
 }
 
 /*----------------------------------------------------------------------
   DisplayUrlAnchor displays the url when an anchor is selected
   ----------------------------------------------------------------------*/
-static void DisplayUrlAnchor (Element element, Document document)
+static void DisplayUrlAnchor (Element element, Document doc)
 {
   Attribute           HrefAttr, titleAttr;
   Element             anchor, ancestor;
@@ -2024,7 +2029,7 @@ static void DisplayUrlAnchor (Element element, Document document)
 
   /* Search an ancestor that acts as a link anchor */
   HrefAttr = NULL;
-  anchor = SearchAnchor (document, element, &HrefAttr, FALSE);
+  anchor = SearchAnchor (doc, element, &HrefAttr, FALSE);
 
   if (anchor && HrefAttr)
     {
@@ -2044,12 +2049,12 @@ static void DisplayUrlAnchor (Element element, Document document)
           documentname = (char *)TtaGetMemory (MAX_LENGTH);
           if (url[0] == '#')
             {
-              strcpy (pathname, DocumentURLs[document]);
+              strcpy (pathname, DocumentURLs[doc]);
               strcat (pathname, url);
             }
           else
             /* Normalize the URL */
-            NormalizeURL (url, document, pathname, documentname, NULL);
+            NormalizeURL (url, doc, pathname, documentname, NULL);
 
           /* Display the URL in the status line */
           /* look for a Title attribute */
@@ -2089,7 +2094,7 @@ static void DisplayUrlAnchor (Element element, Document document)
                 }
             }
        
-          TtaSetStatus (document, 1, pathname, NULL);
+          TtaSetStatus (doc, 1, pathname, NULL);
           TtaFreeMemory (pathname);
           TtaFreeMemory (documentname);
           TtaFreeMemory (url);

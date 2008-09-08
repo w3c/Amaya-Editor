@@ -5107,56 +5107,32 @@
 	<message xml:lang="it">Inserisci uno script</message>
 	<message xml:lang="ja">スクリプトの挿入</message>
 </label>
-<label define="BInformation">
-	<message xml:lang="en">About Amaya</message>
-	<message xml:lang="fr">À propos de Amaya</message>
-	<message xml:lang="de">Info</message>
-	<message xml:lang="it">Informazioni su Amaya</message>
-	<message xml:lang="es">Acerca de Amaya</message>
-	<message xml:lang="pt">Sobre Amaya</message>
-	<message xml:lang="fi">Tietoja Amayasta</message>
-	<message xml:lang="tr">Amaya hakkında</message>
-	<message xml:lang="ru">О программе Amaya</message>
-	<message xml:lang="hu">Amaya &amp;névjegye</message>
-	<message xml:lang="ka">პროგრამა Amaya-ს შესახებ</message>
-	<message xml:lang="cn">关于 Amaya</message>
-	<message xml:lang="tw">關于 Amaya</message>
-	<message xml:lang="sk">O programe Amaya</message>
-	<message xml:lang="ja">Amaya について</message>
-</label>
 <label define="BAtW3C">
-	<message xml:lang="en">About Amaya at W3C</message>
-	<message xml:lang="fr">À propos d'Amaya au W3C</message>
-	<message xml:lang="de">Über Amaya</message>
-	<message xml:lang="it">Informazioni su Amaya al W3C</message>
+	<message xml:lang="en">Check for update</message>
+	<message xml:lang="fr">Vérifier les mises à jour</message>
 	<message xml:lang="tr">W3C deki Amaya hakkında</message>
-	<message xml:lang="es">Página web de Amaya en el W3C</message>
 	<message xml:lang="pt">Sobre Amaya no W3C</message>
 	<message xml:lang="fi">Lisätietoa Amayasta W3C:ssä</message>
-	<message xml:lang="ru">О программе Amaya на W3C</message>
-	<message xml:lang="hu">Az Amaya a W3C &amp;webhelyen</message>
 	<message xml:lang="ka">პროგრამა Amaya-ს შესახებ W3C-ზე</message>
 	<message xml:lang="cn">关于 Amaya at W3C</message>
 	<message xml:lang="tw">關于 Amaya at W3C</message>
-	<message xml:lang="sk">Domoská stránka programu Amaya</message>
-	<message xml:lang="ja">配布先 (W3C) へ</message>
 </label>
 <label define="BHelpIndex">
-	<message xml:lang="en">Index</message>
-	<message xml:lang="fr">Index</message>
-	<message xml:lang="de">Index</message>
-	<message xml:lang="it">Indice</message>
-	<message xml:lang="es">Índice</message>
-	<message xml:lang="pt">Índice</message>
-	<message xml:lang="fi">Hakemisto</message>
-	<message xml:lang="tr">Içerik</message>
-	<message xml:lang="ru">Указатель</message>
-	<message xml:lang="hu">&amp;Betűrendes mutató</message>
-	<message xml:lang="ka">მაჩვენებელი</message>
-	<message xml:lang="cn">索引</message>
-	<message xml:lang="tw">索引</message>
-	<message xml:lang="sk">Témy pomocníka</message>
-	<message xml:lang="ja">ユーザマニュアル</message>
+	<message xml:lang="en">Amaya Help</message>
+	<message xml:lang="fr">Aide Amaya</message>
+	<message xml:lang="de">Amaya Hilfe</message>
+	<message xml:lang="it">Aiuto Amaya</message>
+	<message xml:lang="tr">Amaya Yardım</message>
+	<message xml:lang="es">Ayuda Amaya</message>
+	<message xml:lang="pt">Ajuda Amaya</message>
+	<message xml:lang="fi">Ohje Amaya</message>
+	<message xml:lang="ru">Справка Amaya</message>
+	<message xml:lang="hu">Súgó</message>
+	<message xml:lang="ka">კარნახი Amaya</message>
+	<message xml:lang="cn">帮助 Amaya</message>
+	<message xml:lang="tw">幫助 Amaya</message>
+	<message xml:lang="sk">Pomocník Amaya</message>
+	<message xml:lang="ja">Amaya ヘルプ</message>
 </label>
 <label define="BHelpBrowsing">
 	<message xml:lang="en">Browsing</message>
@@ -5619,6 +5595,23 @@
 	<message xml:lang="it">Suggerimenti del giorno...</message>
 	<message xml:lang="hu">A nap tippje</message>
 	<message xml:lang="ja">今日のTips</message>
+</label>
+<label define="BInformation">
+	<message xml:lang="en">About Amaya</message>
+	<message xml:lang="fr">À propos d'Amaya</message>
+	<message xml:lang="de">Info</message>
+	<message xml:lang="it">Informazioni su Amaya</message>
+	<message xml:lang="es">Acerca de Amaya</message>
+	<message xml:lang="pt">Sobre Amaya</message>
+	<message xml:lang="fi">Tietoja Amayasta</message>
+	<message xml:lang="tr">Amaya hakkında</message>
+	<message xml:lang="ru">О программе Amaya</message>
+	<message xml:lang="hu">Amaya &amp;névjegye</message>
+	<message xml:lang="ka">პროგრამა Amaya-ს შესახებ</message>
+	<message xml:lang="cn">关于 Amaya</message>
+	<message xml:lang="tw">關于 Amaya</message>
+	<message xml:lang="sk">O programe Amaya</message>
+	<message xml:lang="ja">Amaya について</message>
 </label>
 <label define="MAX_EDITOR_LABEL">
 </label>

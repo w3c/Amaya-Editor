@@ -66,7 +66,7 @@ CopyLocation
 +advanced-edit
 &SingleCreateTable
 &SingleNewXHTML
-HelpAttributes
+#HelpAttributes
 *AmayaAttributeToolPanel
 
 ################# AMAYA Lite+Math+Web
@@ -85,7 +85,7 @@ HelpAttributes
 FullScreen
 &SingleCreateTable
 &SingleNewXHTML
-HelpAttributes
+#HelpAttributes
 *AmayaAttributeToolPanel
 
 ################# AMAYA Lite+Math+Web+CSS
@@ -108,7 +108,7 @@ FullScreen
 &Synchronize
 &SingleNewXHTML
 &NewCss
-HelpAttributes
+#HelpAttributes
 *AmayaAttributeToolPanel
 
 ################# AMAYA BROWSER
@@ -264,7 +264,7 @@ HelpAtW3C
 ################# AMAYA FUNCTIONS
 ######### DAV MODULES
 [davbase]
-HelpWebDAV
+#HelpWebDAV
 LockDocument
 UnlockDocument
 PropDocument
@@ -315,10 +315,10 @@ UpdateShowError
 +templates
 +table-edit
 DoNewXHTML
-HelpDocument
-HelpTemplating
-HelpPublishing
-HelpAccess
+#HelpDocument
+#HelpTemplating
+#HelpPublishing
+#HelpAccess
 &InsertBefore
 &InsertAfter
 &SaveDocument
@@ -367,13 +367,13 @@ ShowEditingBar
 +tables
 &CreateBase
 &SetCSSStyle
-HelpXml
+#HelpXml
 &NewXHTML
 &NewMathML
 &NewSVG
 &NewCss
 &Synchronize
-HelpAttributes
+#HelpAttributes
 *AmayaAttributeToolPanel
 *AmayaXMLPanel
 
@@ -387,9 +387,9 @@ TtcParentElement
 TtcChildElement
 TtcPreviousElement
 TtcNextElement
-HelpChanging
-HelpTables
-HelpMath
+#HelpChanging
+#HelpTables
+#HelpMath
 *AmayaMathMLPanel
 *AmayaSVGPanel
 
@@ -410,7 +410,7 @@ HelpMath
 DocumentInfo
 GotoPreviousHTML
 GotoNextHTML
-HelpBrowsing
+#HelpBrowsing
 StopTransfer
 FollowTheLink
 ReadAsUTF_8
@@ -452,18 +452,18 @@ ShowToC
 #ShowTimeLineWindow
 ShowPanel
 TtcCloseView
-HelpViews
+#HelpViews
 HelpAmaya
 HelpAtW3C
 HelpIndex
-HelpSearching
-HelpSelecting
-HelpLocal
+#HelpSearching
+#HelpSelecting
+#HelpLocal
 TipOfTheDay
 
 ########### PRINTING
 [print]
-HelpPrinting
+#HelpPrinting
 PrintAs
 SetupAndPrint
 
@@ -490,8 +490,8 @@ SetupAndPrint
 &CreateHeading6
 &CreateParagraph
 &CreatePreformatted
-HelpCreating
-HelpEditChar
+#HelpCreating
+#HelpEditChar
 
 [text-module]
 +text-module-lite
@@ -513,7 +513,7 @@ HelpEditChar
 &CreateOrChangeLink
 &CreateTarget
 &DeleteAnchor
-HelpLinks
+#HelpLinks
 &LinkToPreviousTarget
 #&XPointer_bufferStore
 
@@ -567,7 +567,7 @@ HelpLinks
 &CreateAreaPoly
 &CreateAreaRect
 ShowMapAreas
-HelpImageMaps
+#HelpImageMaps
 
 [basic-form-module]
 &CreateForm
@@ -659,7 +659,7 @@ SelectColumn
 [svg]
 ShowGraphicsPalette
 Anim_Play
-HelpSVG
+#HelpSVG
 &ChangeTitle
 *AmayaSVGToolPanel
 &CreateSVG_Template
@@ -742,7 +742,7 @@ ApplyClass
 
 [css-browsing]
 *StyleListToolPanel
-HelpStyleSheets
+#HelpStyleSheets
 
 [css-style]
 +css-style-lite
@@ -786,8 +786,8 @@ ShowAppliedStyle
 ########### OPTIONAL MODULES
 [config]
 ConfigAmaya
-HelpConfigure
-HelpShortCuts
+#HelpConfigure
+#HelpShortCuts
 
 [templates]
 ConfigTemplates
@@ -801,10 +801,10 @@ TemplateCreateFreeBox
 
 [spell]
 SpellCheck
-HelpSpellChecking
+#HelpSpellChecking
 
 [makebook-lite]
-HelpNumbering
+#HelpNumbering
 &MakeToc
 &SectionNumbering
 
@@ -812,7 +812,7 @@ HelpNumbering
 +makebook-lite
 &MakeIDMenu
 &MakeBook
-HelpMakeBook
+#HelpMakeBook
 
 [annot-module]
 +annot-doc
@@ -822,7 +822,7 @@ HelpMakeBook
 AnnotateSelection
 AnnotateDocument
 LoadAnnotations
-HelpAnnotation
+#HelpAnnotation
 
 [annot-annot]
 DeleteAnnotation
