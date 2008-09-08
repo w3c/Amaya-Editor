@@ -921,8 +921,6 @@ static void OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame,
           pFrame->FrYOrg = *OldYOrg;
           pFrame->OldFrXOrg = 0;
           pFrame->OldFrYOrg = 0;
-          *OldXOrg = 0;
-          *OldYOrg = 0;
         }
     }
 }
