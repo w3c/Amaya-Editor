@@ -3976,8 +3976,6 @@ void SelectionChanged (NotifyElement *event)
 
   CheckSynchronize (event);
   TtaSelectView (SelectionDoc, 1);
-  /* update the displayed style information */
-  SynchronizeAppliedStyle (event);
   UnFrameMath ();
   
   if (DocumentTypes[doc] != docLog)
@@ -4025,6 +4023,8 @@ void SelectionChanged (NotifyElement *event)
         TtaSetStatusSelectedElement(doc, 1, el);
     }
   SelectionChanging = FALSE;
+  /* update the displayed style information */
+  SynchronizeAppliedStyle (event);
 }
 
 /*----------------------------------------------------------------------

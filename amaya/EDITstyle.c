@@ -1781,7 +1781,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
         {
           len = strlen (name);
           len++; /* add the \0 */
-          if (len > *free)
+          if (len >= *free)
             return;
           if (previous && i > 1 && i  <= *nb)
             {
@@ -1799,6 +1799,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
             /* add this new class name with a dot at the end */
               buf[(*index)++] = '.';
               strcpy (&buf[*index], name);
+	      *free -= 1;
             }
           *free -= len;
           *index += len;
