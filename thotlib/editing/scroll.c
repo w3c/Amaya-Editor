@@ -29,6 +29,7 @@
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "editcommands_f.h"
+#include "exceptions_f.h"
 #include "frame_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
@@ -776,10 +777,11 @@ void ShowSelectedBox (int frame, ThotBool active)
             /* no box found */
             return;
         }
+
+      pAb = pBox->BxAbstractBox;
       if (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoGhost))
         {
           // get the position of the fist visible box
-          pAb = pBox->BxAbstractBox;
           while (pAb && pAb->AbBox &&
                  (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoGhost))
             pAb = pAb->AbFirstEnclosed;
@@ -787,6 +789,21 @@ void ShowSelectedBox (int frame, ThotBool active)
             pBox = pAb->AbBox;
           else
             pBox = NULL;
+        }
+
+      // check the show of the SVG element instead of enclosed constructs
+      if (pAb &&
+          FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
+          pAb->AbPSchema->PsStructName &&
+          !strcmp (pAb->AbPSchema->PsStructName, "SVG"))
+        {
+          while (pAb->AbEnclosing && pAb->AbEnclosing->AbElement &&
+                 !TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
+                                    pAb->AbElement->ElStructSchema))
+            {
+              pAb = pAb->AbEnclosing;
+              pBox = pAb->AbBox;
+            }
         }
 
       if (pBox && (pBox->BxType == BoSplit || pBox->BxType == BoMulScript))
