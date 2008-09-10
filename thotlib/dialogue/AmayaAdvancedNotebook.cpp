@@ -118,17 +118,18 @@ bool AmayaAdvancedNotebook::ClosePage(int page_id)
 
   if (GetPageCount()==1)
     {
-      if (GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow)))
+      if (GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow))  &&
+	  AmayaNormalWindow::GetNormalWindowCount()==1)
+	{
+	  TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
+	  result = false;
+	}
+      else
 	{
 #ifdef _MACOS
 	  // Prevent an Amaya crash
 	  return false;
 #endif
-	}
-      else if (AmayaNormalWindow::GetNormalWindowCount()==1)
-	{
-	  TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
-	  result = false;
 	}
     }
 
@@ -275,8 +276,13 @@ void AmayaAdvancedNotebook::OnClosePage(wxAuiNotebookEvent& event)
 void AmayaAdvancedNotebook::UpdatePageId()
 {
   /* update page_id for each page */
-  unsigned int page_id = 0;
-  while ( page_id < GetPageCount() )
+  unsigned int page_id = 0, count = GetPageCount();
+
+  if (count == 1)
+    SetTabCtrlHeight(0);
+  else
+    SetTabCtrlHeight(-1);
+  while (page_id < count)
     {
       AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
       if (!p_page->IsClosed())
