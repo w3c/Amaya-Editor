@@ -603,7 +603,7 @@ AmayaFrame * AmayaSplittablePage::DetachFrame( int position )
       SetActiveFrame( NULL );
     }
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS) || defined(_MACOS)
   // simulate a size event to refresh the canvas ...
   // this is usefull when a document is modified and there is many open views :
   // if nothing is done here when a view is detached from the page, a undraw

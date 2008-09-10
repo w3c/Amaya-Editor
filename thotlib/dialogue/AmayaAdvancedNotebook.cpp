@@ -116,15 +116,23 @@ bool AmayaAdvancedNotebook::ClosePage(int page_id)
   if (page == NULL)
     return result;
 
-  page->Hide();
-  if (GetPageCount()==1 &&
-      AmayaNormalWindow::GetNormalWindowCount()==1 &&
-      !GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow)))
+  if (GetPageCount()==1)
     {
-      TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
-      result = false;
+      if (GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow)))
+	{
+#ifdef _MACOS
+	  // Prevent an Amaya crash
+	  return false;
+#endif
+	}
+      else if (AmayaNormalWindow::GetNormalWindowCount()==1)
+	{
+	  TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
+	  result = false;
+	}
     }
 
+  page->Hide();
   page = (AmayaPage*)GetPage( page_id );
   if (page == NULL)
     return result;

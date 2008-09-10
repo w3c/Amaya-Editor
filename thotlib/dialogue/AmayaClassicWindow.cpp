@@ -59,12 +59,6 @@
 static ThotBool  UpdateFrameUrl = TRUE;
 #endif /* _MACOS */
 
-#ifdef _WINDOWS
-static  char      BufUrl[2048];
-static  ThotBool  isBufUrl = 0;
-#endif /* _WINDOWS */
-
-
 IMPLEMENT_CLASS(AmayaClassicWindow, AmayaNormalWindow)
 
 /*----------------------------------------------------------------------
