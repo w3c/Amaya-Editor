@@ -666,14 +666,11 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent,
 }
 
 /*----------------------------------------------------------------------
-  IsScrolled regarde si la marque d'insertion (de'but de se'lection) 
-  est visible dans la fenetre^tre affiche'e sur l'e'cran.        
-  Si c'est le cas, la fonction rend la valeur vrai.       
-  Si cela n'est pas le cas, la fonction demande le        
-  de'placement horizontal ou vertical de la portion       
-  d'image concre`te affiche'e et rend la valeur fausse.   
-  Le parame`tre selection indique s'il faut ge'rer la     
-  se'lection (valeur 1) ou non (valeur 0).                
+  IsScrolled checks if the insert point is visible in the frame.
+  The parameter selection is set to 1 if the selection must be updated.
+  Return:
+  -  TRUE is all is okay
+  -  FALSE if a scroll was done
   ----------------------------------------------------------------------*/
 ThotBool IsScrolled (int frame, int selection)
 {
@@ -681,28 +678,34 @@ ThotBool IsScrolled (int frame, int selection)
   int                 ymin, ymax;
   int                 x, y, dx, dy, h;
   ViewFrame          *pFrame;
-  PtrBox              pBo1;
+  PtrBox              pBox;
+  PtrAbstractBox      pDraw;
   ThotBool            result;
 
   pFrame = &ViewFrameTable[frame - 1];
-  pBo1 = pFrame->FrSelectionBegin.VsBox;
-  if (pBo1 == NULL)
+  pBox = pFrame->FrSelectionBegin.VsBox;
+  if (pBox == NULL)
     return TRUE;
 
-#ifdef _GL
-          if (pBo1->BxBoundinBoxComputed)
-            {
-              x = pBo1->BxClipX + pFrame->FrXOrg;
-              y = pBo1->BxClipY + pFrame->FrYOrg;
-            }
-          else
-#endif /* _GL*/
-            {
-	      x = pBo1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
-	      y = pBo1->BxYOrg;
-            }
+  // check if the slection is within a SVG draw
+  pDraw =GetParentDraw (pBox);
+  if (pDraw)
+    pBox = pDraw->AbBox;
 
-  h = pBo1->BxHeight;
+#ifdef _GL
+  if (pBox->BxBoundinBoxComputed)
+    {
+      x = pBox->BxClipX + pFrame->FrXOrg;
+      y = pBox->BxClipY + pFrame->FrYOrg;
+    }
+  else
+#endif /* _GL*/
+    {
+      x = pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
+      y = pBox->BxYOrg;
+    }
+
+  h = pBox->BxHeight;
   GetSizesFrame (frame, &dx, &dy);
   xmin = pFrame->FrXOrg;
   xmax = xmin + dx;
@@ -713,7 +716,7 @@ ThotBool IsScrolled (int frame, int selection)
 
   /* On debloque eventuellement l'affichage */
   pFrame->FrReady = TRUE;
-  if (pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
+  if (pBox->BxAbstractBox->AbHorizPos.PosUserSpecified)
     /* C'est une creation interactive de boite, la boite sera */
     /* automatiquement placee dans la fenetre au moment de sa creation */
     result = TRUE;
@@ -726,7 +729,7 @@ ThotBool IsScrolled (int frame, int selection)
   else
     result = TRUE;
 
-  if (pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
+  if (pBox->BxAbstractBox->AbVertPos.PosUserSpecified)
     /* C'est une creation interactive de boite, la boite sera */
     /* automatiquement placee dans la fenetre au moment de sa creation */
     result = TRUE;
@@ -750,7 +753,7 @@ void ShowSelectedBox (int frame, ThotBool active)
 {
   ViewFrame          *pFrame;
   PtrBox              pBox;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, pDraw;
   int                 xmin, xmax;
   int                 ymin, ymax;
   int                 x, y, dx, dy, w, h;
@@ -792,16 +795,12 @@ void ShowSelectedBox (int frame, ThotBool active)
         }
 
       // check the show of the SVG element instead of enclosed constructs
-      if (pAb &&
-          FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
-          pAb->AbPSchema->PsStructName &&
-          !strcmp (pAb->AbPSchema->PsStructName, "SVG"))
+      if (pAb && FrameTable[frame].FrView == 1)
         {
-          while (pAb->AbEnclosing && pAb->AbEnclosing->AbElement &&
-                 !TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
-                                    pAb->AbElement->ElStructSchema))
+          pDraw = GetParentDraw (pBox);
+          if (pDraw)
             {
-              pAb = pAb->AbEnclosing;
+              pAb = pDraw;
               pBox = pAb->AbBox;
             }
         }

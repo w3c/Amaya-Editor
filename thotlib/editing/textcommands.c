@@ -339,6 +339,7 @@ static void MovingCommands (int code, Document doc, View view,
                             ThotBool extendSel, int yDelta)
 {
   PtrBox              pBox, pBoxBegin, pBoxEnd, ibox, box;
+  PtrAbstractBox      pDraw = NULL;
   PtrElement          pEl = NULL, firstEl, lastEl;
   PtrLine             pLine, pLine1;
   ViewFrame          *pFrame;
@@ -365,12 +366,11 @@ static void MovingCommands (int code, Document doc, View view,
       pViewSelEnd = &(pFrame->FrSelectionEnd);
       /* beginning of the selection */
       pBoxBegin = pViewSel->VsBox;
+      pDraw = GetParentDraw (pBoxBegin);
       if (pBoxBegin)
         {
           xpos = pViewSel->VsXPos;
           while (pBoxBegin &&
-                 (pBoxBegin->BxType == BoGhost ||
-                  pBoxBegin->BxType == BoFloatGhost) &&
                  pBoxBegin->BxAbstractBox &&
                  pBoxBegin->BxAbstractBox->AbFirstEnclosed)
             /* the real selection is on child elements */
@@ -379,11 +379,11 @@ static void MovingCommands (int code, Document doc, View view,
       
       /* end of the selection */
       pBoxEnd = pViewSelEnd->VsBox;
+      if (pDraw && pDraw != GetParentDraw (pBoxEnd))
+        return;
       if (pBoxEnd != NULL)
         {
           while (pBoxEnd &&
-                 //(pBoxEnd->BxType == BoGhost ||
-                 // pBoxEnd->BxType == BoFloatGhost) &&
                  pBoxEnd->BxAbstractBox &&
                  pBoxEnd->BxAbstractBox->AbFirstEnclosed)
             {
@@ -398,24 +398,28 @@ static void MovingCommands (int code, Document doc, View view,
             }
         }
 
-      /* Check if boxes are visible */
       GetSizesFrame (frame, &w, &h);
-      if (!RightExtended && !LeftExtended)
+      /* Check if boxes are visible */
+      if (pDraw == NULL)
         {
-          if (pBoxBegin &&
-              (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
-               pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
+          if (!RightExtended && !LeftExtended)
             {
-              /* the element is not displayed within the window */
-              top = pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg;
-              pBoxBegin = NULL;
+              if (pBoxBegin &&
+                  (pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg ||
+                   pBoxBegin->BxYOrg >= pFrame->FrYOrg + h))
+                {
+                  /* the element is not displayed within the window */
+                  top = pBoxBegin->BxYOrg + pBoxBegin->BxHeight <= pFrame->FrYOrg;
+                  pBoxBegin = NULL;
+                }
+              if (pBoxEnd != NULL &&
+                  (pBoxEnd->BxYOrg + pBoxEnd->BxHeight <= pFrame->FrYOrg ||
+                   pBoxEnd->BxYOrg >= pFrame->FrYOrg + h))
+                /* the element is not displayed within the window */
+                pBoxEnd = NULL;
             }
-          if (pBoxEnd != NULL &&
-              (pBoxEnd->BxYOrg + pBoxEnd->BxHeight <= pFrame->FrYOrg ||
-               pBoxEnd->BxYOrg >= pFrame->FrYOrg + h))
-            /* the element is not displayed within the window */
-            pBoxEnd = NULL;
         }
+
       if (pBoxBegin == NULL && pBoxEnd != NULL)
         pBoxBegin = pBoxEnd;
       else if (pBoxBegin != NULL && pBoxEnd == NULL)
