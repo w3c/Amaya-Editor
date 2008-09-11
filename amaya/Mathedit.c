@@ -5616,25 +5616,41 @@ static ThotBool MathMoveForward ()
               if (nextEl)
                 {
                   elType = TtaGetElementType (nextEl);
-                  /* if it's a mroot, move to the Index, not the RootBase */
-                  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML")&&
-                      elType.ElTypeNum == MathML_EL_MROOT)
-                    nextEl = TtaGetLastChild (nextEl);
-                  /* get the first leaf in that element */
-                  leaf = TtaGetFirstLeaf (nextEl);
-                  if (leaf)
+                  if (TtaIsLeaf (elType))
                     {
-                      elType = TtaGetElementType (leaf);
                       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
                           elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
                         /* put the caret before the first character in the
                            string */
-                        TtaSelectString (doc, leaf, 1, 0);
+                        TtaSelectString (doc, nextEl, 1, 0);
                       else
                         /* select the whole leaf */
-                        TtaSelectElement (doc, leaf);
-                      selected = leaf;
+                        TtaSelectElement (doc, nextEl);
+                      selected = nextEl;
                       done = TRUE;
+                    }
+                  else
+                    {
+                      /* if it's a mroot, move to the Index, not the RootBase */
+                      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML")&&
+                          elType.ElTypeNum == MathML_EL_MROOT)
+                        nextEl = TtaGetLastChild (nextEl);
+                      /* get the first leaf in that element */
+                      leaf = TtaGetFirstLeaf (nextEl);
+                      if (leaf && leaf != nextEl)
+                        {
+                          elType = TtaGetElementType (leaf);
+                          if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+                              elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
+                            /* put the caret before the first character in the
+                               string */
+                            TtaSelectString (doc, leaf, 1, 0);
+                          else
+                            /* select the whole leaf */
+                            TtaSelectElement (doc, leaf);
+                          selected = leaf;
+                          done = TRUE;
+                        }
                     }
                 }
             }
@@ -5762,27 +5778,43 @@ static ThotBool MathMoveBackward ()
               if (prevEl)
                 {
                   elType = TtaGetElementType (prevEl);
-                  /* if it's a mroot, move to the RootBase, not the Index */
-                  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML")&&
-                      elType.ElTypeNum == MathML_EL_MROOT)
-                    prevEl = TtaGetFirstChild (prevEl);
-                  /* get the last leaf in that element */
-                  leaf = TtaGetLastLeaf (prevEl);
-                  if (leaf)
+                  if (TtaIsLeaf (elType))
                     {
-                      elType = TtaGetElementType (leaf);
                       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
                           elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
-                        /* put the caret at the end of the string */
-                        {
-                          len = TtaGetElementVolume (leaf);
-                          TtaSelectString (doc, leaf, len + 1, len);
-                        }
+                        /* put the caret before the first character in the
+                           string */
+                        TtaSelectString (doc, prevEl, 1, 0);
                       else
                         /* select the whole leaf */
-                        TtaSelectElement (doc, leaf);
-                      selected = leaf;
+                        TtaSelectElement (doc, prevEl);
+                      selected = prevEl;
                       done = TRUE;
+                    }
+                  else
+                    {
+                      /* if it's a mroot, move to the RootBase, not the Index */
+                      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML")&&
+                          elType.ElTypeNum == MathML_EL_MROOT)
+                        prevEl = TtaGetFirstChild (prevEl);
+                      /* get the last leaf in that element */
+                      leaf = TtaGetLastLeaf (prevEl);
+                      if (leaf && leaf != prevEl)
+                        {
+                          elType = TtaGetElementType (leaf);
+                          if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+                              elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
+                            /* put the caret at the end of the string */
+                            {
+                              len = TtaGetElementVolume (leaf);
+                              TtaSelectString (doc, leaf, len + 1, len);
+                            }
+                          else
+                            /* select the whole leaf */
+                            TtaSelectElement (doc, leaf);
+                          selected = leaf;
+                          done = TRUE;
+                        }
                     }
                 }
             }

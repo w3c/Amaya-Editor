@@ -351,6 +351,7 @@ static void MovingCommands (int code, Document doc, View view,
   int                 indpos, xpos;
   int                 first, last;
   int                 firstC, lastC;
+  DisplayMode         dispMode;
   ThotBool            done, top = TRUE, isPict;
 
   indpos = 0;
@@ -522,7 +523,11 @@ static void MovingCommands (int code, Document doc, View view,
                 done = FALSE;
               else if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
                        MathMoveBackwardCursorFunction != NULL)
-                done = MathMoveBackwardCursorFunction ();
+                {
+                  if (pEl != FirstSelectedElement)
+                    FirstSelectedElement = pEl;
+                  done = MathMoveBackwardCursorFunction ();
+                }
               else if (!strcmp (pEl->ElStructSchema->SsName, "SVG") &&
                        (!pEl->ElTerminal || pEl->ElLeafType != LtText))
                 {
@@ -689,7 +694,11 @@ static void MovingCommands (int code, Document doc, View view,
                 done = FALSE;
               else if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
                        MathMoveForwardCursorFunction != NULL)
-                done = MathMoveForwardCursorFunction ();
+                {
+                  if (pEl != LastSelectedElement)
+                    LastSelectedElement = pEl;
+                  done = MathMoveForwardCursorFunction ();
+                }
               else if (!strcmp (pEl->ElStructSchema->SsName, "SVG") &&
                        (!pEl->ElTerminal || pEl->ElLeafType != LtText))
                 {
