@@ -3550,13 +3550,13 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
           return result;
         }
     }
-  else if (view == 1)
-    {
-      // do we have to move the selection to an emclosing SVG group
-      pGroup = GetParentGroup (pAb);
-      if (pGroup)
-        pAb = pGroup;
-    }
+/*   else if (view == 1) */
+/*     { */
+/*       // do we have to move the selection to an emclosing SVG group */
+/*       pGroup = GetParentGroup (pAb); */
+/*       if (pGroup) */
+/*         pAb = pGroup; */
+/*     } */
   pEl = pAb->AbElement;
 
   error = FALSE;

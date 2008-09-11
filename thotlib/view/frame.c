@@ -1114,8 +1114,8 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
           else
             {
               *higherx = *lowerx = FloatToInt ((float) finalx);
-              *y = base_y;
             }
+          *y = base_y;
         }
     }
   else

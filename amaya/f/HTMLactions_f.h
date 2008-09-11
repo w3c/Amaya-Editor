@@ -45,12 +45,12 @@ extern ThotBool IsCSSLink ( Element el,
 extern void CheckRefresh ( Document doc );
 extern ThotBool WithinLinkElement ( Element element,
                                     Document document );
-extern ThotBool CanFollowTheLink ( Document document );
-extern void FollowTheLink ( Document document,
+extern ThotBool CanFollowTheLink ( Document doc );
+extern void FollowTheLink ( Document doc,
                             View view );
-extern void FollowTheLinkNewWin ( Document document,
+extern void FollowTheLinkNewWin ( Document doc,
                                   View view );
-extern void FollowTheLinkNewTab ( Document document,
+extern void FollowTheLinkNewTab ( Document doc,
                                   View view );
 extern void DoAction ( Document doc,
                        View view );
@@ -140,12 +140,12 @@ extern ThotBool IsCSSLink ( Element el,
 extern void CheckRefresh ( Document doc );
 extern ThotBool WithinLinkElement ( Element element,
                                       Document document );
-extern ThotBool CanFollowTheLink ( Document document );
-extern void FollowTheLink ( Document document,
+extern ThotBool CanFollowTheLink ( Document doc );
+extern void FollowTheLink ( Document doc,
                               View view );
-extern void FollowTheLinkNewWin ( Document document,
+extern void FollowTheLinkNewWin ( Document doc,
                                     View view );
-extern void FollowTheLinkNewTab ( Document document,
+extern void FollowTheLinkNewTab ( Document doc,
                                     View view );
 extern void DoAction ( Document doc,
                          View view );

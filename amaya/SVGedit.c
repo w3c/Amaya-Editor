@@ -174,6 +174,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
        elType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
       )
     {
+#ifdef IV
       /* Search the ancestor which is a direct child of the svgCanvas */
       elType.ElTypeNum = SVG_EL_SVG;
       elType.ElSSchema = svgSchema;
@@ -192,6 +193,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
           event->element = asc;
           event->elementType = TtaGetElementType(asc);
         }
+#endif
     }
   else
     {

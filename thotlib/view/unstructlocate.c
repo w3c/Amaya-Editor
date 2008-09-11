@@ -227,6 +227,7 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
   int                 dist;
   int                 pointIndex;
   int                 d, bx, by, bw;
+  ThotBool            selshape = FALSE;
 
   pBox = NULL;
   pSelBox = NULL;
@@ -297,7 +298,7 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                             graphicBox = pBox;
                           else
                             graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
-                                                                 &pointIndex, pFlow);
+                                                                 &pointIndex, &selshape, pFlow);
                         }
                       if (graphicBox == NULL)
                         /* eliminate this box */
