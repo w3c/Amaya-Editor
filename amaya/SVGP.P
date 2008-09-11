@@ -748,7 +748,7 @@ RULES
         CreateWith (VerticalLine);
         Width: Enclosed . Width;
            HorizPos: Left = Enclosing . Left Userspecified;
-           VertPos:  HRef = Enclosing . Top Userspecified;
+           VertPos:  Top = Enclosing . Top Userspecified;
         HorizRef: Enclosed . HRef;
         IN Structure_view BEGIN
                 if within use_
