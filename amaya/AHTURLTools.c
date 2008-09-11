@@ -2434,8 +2434,10 @@ void         SimplifyUrl (char **url)
   ----------------------------------------------------------------------*/
 ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
 {
+#ifdef IV
   char             *s;
   int               i;
+#endif /* IV */
   int               start_index; /* the first char that we'll copy */
   ThotBool          change;
 
