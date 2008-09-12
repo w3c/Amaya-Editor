@@ -357,6 +357,8 @@ MENUS
 	Tools button:BMakeBook -> MakeBook;
 	Tools button:BDate -> CreateDate icon:XHTML_date.png;
 	Tools Separator;
+	Tools button:BUpdateNSDecl -> UpdateNSDeclaration;
+	Tools Separator;
 	Tools.Annotations_ button:BAnnotateSelection -> AnnotateSelection;
 	Tools.Annotations_ button:BAnnotateDocument -> AnnotateDocument;
 	Tools.Annotations_ Separator;
@@ -391,8 +393,8 @@ MENUS
     Tools.JavascriptDom_ button:BExecuteACommand -> ExecuteACommand;
     Tools.JavascriptDom_ button:BExecuteExternal -> ExecuteExternal;
 	Tools.JavascriptDom_ Separator;
-    Tools.JavascriptDom_ button:BAddExternal -> AddExternal;
-    Tools.JavascriptDom_ button:BInsertScript -> InsertScript;
+        Tools.JavascriptDom_ button:BAddExternal -> AddExternal;
+        Tools.JavascriptDom_ button:BInsertScript -> InsertScript;
 
 	Help_ button:BAtW3C -> HelpAtW3C;
 	Help_ button:BHelpIndex -> HelpIndex;

@@ -69,6 +69,11 @@ extern void CreateDoctypeSVG ( Document doc,
                                View view );
 extern void PasteBuffer ( Document doc,
                           View view );
+extern void UpdateNSDeclaration ( Document document,
+                                  View view );
+extern void SynchronizeNSDeclaration ( NotifyElement *event );
+extern void AddaNSDeclaration ( char *decl );
+extern void RemoveaNSDeclaration ( char *decl );
 extern void SpellCheck ( Document doc,
                          View view );
 extern void CreateBreak ( Document doc,
@@ -344,6 +349,11 @@ extern void CreateDoctypeSVG ( Document doc,
                                  View view );
 extern void PasteBuffer ( Document doc,
                             View view );
+extern void UpdateNSDeclaration ( Document document,
+                                    View view );
+extern void SynchronizeNSDeclaration ( NotifyElement *event );
+extern void AddaNSDeclaration ( char *decl );
+extern void RemoveaNSDeclaration ( char *decl );
 extern void SpellCheck ( Document doc,
                            View view );
 extern void CreateBreak ( Document doc,

@@ -197,6 +197,9 @@ typedef enum _ClickEvent {
 #define OptionMenu	54
 #define OpenTemplate    55
 #define PasswordSave    56
+#define ListNSForm      57
+#define ListNSAdd       58
+#define ListNSSupp      59
 
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
@@ -239,8 +242,8 @@ typedef enum _ClickEvent {
 #define DocInfoDocTypeTitle   478
 #define DocInfoDocType        479
 #define CssDirSave            480
-#define JavascriptPromptForm 481
-#define JavascriptPromptText 482
+#define JavascriptPromptForm  481
+#define JavascriptPromptText  482
 #define MAX_REF 483
 
 #define FormPrint        1

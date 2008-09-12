@@ -1648,6 +1648,24 @@ char *TtaGiveNamespaceDeclaration (Document document, Element element)
 }
 
 /*----------------------------------------------------------------------
+  TtaGiveElemNamespaceDeclarations
+  Give all namespace declarations and prefixes defined for a element           
+  ----------------------------------------------------------------------*/
+void TtaGiveElemNamespaceDeclarations (Document document, Element element,
+				       char **declarations, char **prefixes)
+{
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    GiveElemNamespaceDeclarations (LoadedDocument[document - 1],
+				   (PtrElement)element, declarations, prefixes);
+}
+
+/*----------------------------------------------------------------------
   TtaFreeElemNamespaceDeclarations
   Free the namespaces declarations related to an element
   ----------------------------------------------------------------------*/

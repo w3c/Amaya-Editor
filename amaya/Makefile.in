@@ -199,13 +199,14 @@ AMAYA_OBJ = \
 	wxdialog/CheckedListDlgWX.o \
 	wxdialog/CreateTableDlgWX.o \
 	wxdialog/DocInfoDlgWX.o \
-  wxdialog/FontDlgWX.o \
+        wxdialog/FontDlgWX.o \
 	wxdialog/HRefDlgWX.o \
 	wxdialog/ImageDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \
 	wxdialog/ListBoxBook.o \
 	wxdialog/ListDlgWX.o \
 	wxdialog/ListEditDlgWX.o \
+	wxdialog/ListNSDlgWX.o \
 	wxdialog/MakeIdDlgWX.o \
 	wxdialog/ObjectDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="ListNSDlgWX">
+    <title>Update Namespace Declarations</title>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxStaticBoxSizer">
+          <label>Namespace Declarations</label>
+	  <size>700,500</size>
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+	      <size>700,-1</size>
+              <object class="sizeritem">
+                <object class="wxListBox" name="wxID_LIST_ELEM_NS">
+                  <content/>
+                  <size>400,280</size>
+                  <style>wxLB_NEEDED_SB|wxLB_HSCROLL</style>
+                </object>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxBitmapButton" name="wxID_DELETE_ELEM_NS">
+                      <bitmap>../icons/16x16/editdelete.png</bitmap>
+                    </object>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                </object>
+              </object>
+            </object>
+            <option>1</option>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+          <object class="spacer">
+            <size>0,10</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_NEW_ELEM_NS">
+              <label>Select a namespace in the list below or add a new one (syntax prefix="uri")</label>
+              <style>wxALIGN_LEFT</style>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="sizeritem">
+                <object class="wxComboBox" name="wxID_COMBOBOX_NEW_ELEM_NS">
+                  <content/>
+                  <focused>1</focused>
+                </object>
+                <option>1</option>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_ADD_ELEM_NS">
+                  <bitmap>../icons/16x16/ok.png</bitmap>
+                </object>
+              </object>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>4</border>
+          </object>
+          <object class="spacer">
+            <size>0,10</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <option>1</option>
+              </object>
+              <object class="sizeritem">
+                <object class="wxButton" name="wxID_CANCEL2">
+                  <label>CANCEL</label>
+                </object>
+              </object>
+            </object>
+            <option>0</option>
+            <flag>wxALL|wxEXPAND</flag>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+    </object>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL</style>
+  </object>
+</resource>
+
+
+
+
+

@@ -42,6 +42,7 @@
 +web-module
 +annot-module
 #+javascript_dom
++rdfa
 &CreateBase
 MenuShowLogFile
 FullScreen
@@ -774,6 +775,9 @@ TemplateCreateFreeBox
 
 [spell]
 SpellCheck
+
+[rdfa]
+&UpdateNSDeclaration
 
 [makebook-lite]
 &MakeToc

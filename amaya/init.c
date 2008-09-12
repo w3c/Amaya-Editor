@@ -6228,6 +6228,26 @@ void CallbackDialogue (int ref, int typedata, char *data)
         SetNewTitle (CurrentDocument);
       break;
       
+    case ListNSForm:
+      /* ********Update the NS declaration attached to an element*********** */
+      {
+        switch (val)
+          {
+          case 0:
+            TtaDestroyDialogue (ref);
+            break;
+	  }
+	break;
+      }
+      
+    case ListNSAdd:
+      AddaNSDeclaration (data);
+      break;
+      
+    case ListNSSupp:
+      RemoveaNSDeclaration (data);
+      break;
+
     case TitleText:
       /* new document name */
       strncpy (Answer_text, data, MAX_LENGTH);

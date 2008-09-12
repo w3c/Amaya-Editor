@@ -32,6 +32,7 @@
   #include "wxdialog/InitConfirmDlgWX.h"
   #include "wxdialog/ListDlgWX.h"
   #include "wxdialog/ListEditDlgWX.h"
+  #include "wxdialog/ListNSDlgWX.h"
   #include "wxdialog/MakeIdDlgWX.h"
   #include "wxdialog/ObjectDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
@@ -1347,6 +1348,55 @@ ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family,
         }
     }
   return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  CreateListNSDlgWX proposes (generic way)
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateListNSDlgWX (int ref, ThotWindow parent, int nb_item,
+			    const char *items, const char *rdfa_list)
+{
+#ifdef _WX
+  wxArrayString wx_items;
+  wxArrayString wx_items_rdfa;
+  
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  /* build the NS list */
+  int i = 0;
+  int index = 0;
+  while (i < nb_item && items[index] != EOS)
+    {
+      wx_items.Add( TtaConvMessageToWX( &items[index] ) );
+      index += strlen (&items[index]) + 1; /* one entry length */
+      i++;
+    }
+
+  /* build the combobox list */
+  if (rdfa_list)
+    wx_items_rdfa = BuildWX_URL_List(rdfa_list);
+
+  /* create the dialog */
+  ListNSDlgWX * p_dlg = new ListNSDlgWX( ref, parent,
+					 wx_items,
+					 wx_items_rdfa );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */  
 }
 
 /*----------------------------------------------------------------------

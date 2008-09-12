@@ -61,6 +61,7 @@
 #include "transparse_f.h"
 #include "UIcss_f.h"
 #include "Xml2thot_f.h"
+#include "wxdialogapi_f.h"
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"
@@ -2464,13 +2465,15 @@ ThotBool DoubleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool SimpleClick (NotifyElement *event)
 {
-  /*
+
+#ifdef LC
+
 #define MAX_NS 20
   char     *declarations[MAX_NS];
   char     *prefixes[MAX_NS];
   int       i;
 
-  for (i=0; i<MAX_NS; i++)
+  for (i = 0; i < MAX_NS; i++)
     {
       declarations[i] = NULL;
       prefixes[i] = NULL;
@@ -2493,7 +2496,7 @@ ThotBool SimpleClick (NotifyElement *event)
 	i = MAX_NS;
     }
   printf ("\n");
-  */
+#endif /* LC */
 
   ThotBool  usedouble;
 
@@ -3983,6 +3986,9 @@ void SelectionChanged (NotifyElement *event)
   TtaSelectView (SelectionDoc, 1);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
+  /* update the list of NS declaration */
+  SynchronizeNSDeclaration (event);
+
   UnFrameMath ();
   
   if (DocumentTypes[doc] != docLog)

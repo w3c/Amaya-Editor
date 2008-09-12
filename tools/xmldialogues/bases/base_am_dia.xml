@@ -4702,6 +4702,10 @@
 	<message xml:lang="sk">Vložiť dnešný dátum</message>
 	<message xml:lang="ja">現在の日付を挿入</message>
 </label>
+<label define="BUpdateNSDecl">
+	<message xml:lang="en">Namespace Declarations</message>
+	<message xml:lang="fr">Déclaration d'espaces de noms</message>
+</label>
 <label define="Annotations_">
 	<message xml:lang="en">A&amp;nnotations</message>
 	<message xml:lang="fr">A&amp;nnotations</message>

@@ -1503,6 +1503,249 @@ void PasteBuffer (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  GiveNSDeclaration
+  ----------------------------------------------------------------------*/
+static int GiveNSDeclaration (Document document, Element el, char *buf)
+{
+#define MAX_NS 20
+  char     *declarations[MAX_NS];
+  char     *prefixes[MAX_NS];
+  int       i, len;
+  int       nb = 0;
+  int       index = 0;
+
+  // Fill up the element NS list
+  for (i = 0; i < MAX_NS; i++)
+    {
+      declarations[i] = NULL;
+      prefixes[i] = NULL;
+    }
+  
+  TtaGiveElemNamespaceDeclarations (document, el, &declarations[0], &prefixes[0]);
+  CurrentDocument = document;
+  
+  for (i = 0; i < MAX_NS; i++)
+    {
+      if (prefixes[i] == NULL && declarations[i] == NULL)
+	i = MAX_NS;
+      else
+	{
+	  if (declarations[i] != NULL)
+	    {
+	      nb++;
+	      if (prefixes[i] != NULL)
+		{
+		  len = strlen(declarations[i]) + strlen(prefixes[i]) + 4; /* EOS + '=' + 2 x '"' */
+		  strcpy (&buf[index], prefixes[i]);
+		  index += strlen(prefixes[i]);
+		  strcat (&buf[index++], "=");
+		  strcat (&buf[index++], "\"");
+		  strcat (&buf[index], declarations[i]);
+		  index += strlen(declarations[i]);
+		  strcat (&buf[index++], "\"");
+		  buf[index++] = EOS;
+		}
+	      else
+		{
+		  len = strlen(declarations[i]) + 3; /* EOS + 2 x '"' */
+		  strcpy (&buf[index++], "\"");
+		  strcat (&buf[index], declarations[i]);
+		  index += strlen(declarations[i]);
+		  strcat (&buf[index++], "\"");
+		  buf[index++] = EOS;
+		}
+	    }
+	}
+    }
+  return nb;
+}
+
+
+/*----------------------------------------------------------------------
+  UpdateNSDeclaration
+  Update the Namespace declaration for a selected element
+  ----------------------------------------------------------------------*/
+void UpdateNSDeclaration (Document document, View view)
+{
+  char      buf[MAX_TXT_LEN];
+  int       nb = 0;
+  Element   el;
+  int       f, l;
+
+  TtaGiveFirstSelectedElement (document, &el, &f, &l);
+  if (el == NULL)
+    InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
+              TtaGetMessage (AMAYA, AM_NO_SELECTION));
+  else
+    {
+      nb = GiveNSDeclaration (document, el, buf);
+
+      // Create the dialog
+      ThotBool created = CreateListNSDlgWX (BaseDialog + ListNSForm,
+					    TtaGetViewFrame (document, view),
+					    nb, buf, RDFa_list );
+      if (created)
+	{
+	  TtaSetDialoguePosition ();
+	  TtaShowDialogue (BaseDialog + ListNSForm, FALSE);
+	  /* wait for an answer */
+	  TtaWaitShowDialogue ();
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  SynchronizeNSDeclaration
+  ----------------------------------------------------------------------*/
+void SynchronizeNSDeclaration (NotifyElement *event)
+{
+  int       nb = 0;
+  char      buf[MAX_TXT_LEN];
+
+  unsigned int i, n;
+  wxDialog dialog;
+  // wxString strs = TtaConvMessageToWX(proposed);
+  // wxArrayString arr = wxStringTokenize(strs);
+  wxCheckListBox* box;
+        /*
+
+  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("ListNSDlgWX")))
+    {
+      dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_NEWUSE)));
+      XRCCTRL(dialog, "wxID_LABEL_LABEL", wxStaticText)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_LABEL)));
+      XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_OPTIONAL)));
+      XRCCTRL(dialog, "wxID_CANCEL", wxButton)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL) ));
+      XRCCTRL(dialog, "wxID_OK", wxButton)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));      
+      
+      wxSizer* sz = dialog.GetSizer();
+      box = XRCCTRL(dialog, "wxID_LIST_TYPES", wxCheckListBox);
+      box->Hide();
+      
+      box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
+      sz->Insert(2, box, 1, wxEXPAND);
+      
+      
+      box->Append(arr);
+      
+      if(dialog.ShowModal()==wxID_OK)
+        {
+          strs.Clear();
+          n = box->GetCount();
+          for(i=0; i<n; i++)
+            {
+              if(box->IsChecked(i))
+                {
+                  strs += box->GetString(i);
+                  strs += wxT(" ");
+                }
+            }
+          strs.Trim();
+          
+          if(label)
+            *label = TtaStrdup((const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8));
+          if(types)
+            *types = TtaStrdup((const char*)strs.mb_str(wxConvUTF8));
+          if(option)
+            *option = XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->GetValue();
+          return TRUE;
+        }
+    }
+
+
+      */
+
+
+
+
+  /*
+  else
+    {
+      // Create the dialog
+      nb = GiveNSDeclaration (event->document, event->element, buf);   
+      ThotBool created = CreateListNSDlgWX (BaseDialog + ListNSForm,
+					    TtaGetViewFrame (event->document, 1),
+					    nb, buf, RDFa_list );
+      if (created)
+	{
+	  TtaSetDialoguePosition ();
+	  TtaShowDialogue (BaseDialog + ListNSForm, FALSE);
+	  TtaWaitShowDialogue ();
+	}
+    }
+  */
+}
+
+/*----------------------------------------------------------------------
+  Add a NS Declaration
+  ----------------------------------------------------------------------*/
+void AddaNSDeclaration (char *decl)
+{
+  Document  doc;
+  Element   el;
+  int       f, l;
+  char     *prefix = NULL, *url = NULL;
+
+  doc = CurrentDocument;
+  TtaGiveFirstSelectedElement (doc, &el, &f, &l);
+  if (el != NULL)
+    {
+      url = strstr (decl, "=");
+      if (url)
+	{
+	  url[0] = EOS;
+	  prefix = decl;
+	  decl = url + 1;
+	}
+      if (decl[0] == '\"')
+	{
+	  decl++;
+	  url = strstr (decl, "\"");
+	  if (url)
+	    url[0] = EOS;
+	}
+      TtaSetANamespaceDeclaration (doc, el, prefix, decl);
+      TtaSetDocumentModified (doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  Remove a NS Declaration
+  ----------------------------------------------------------------------*/
+void RemoveaNSDeclaration (char *decl)
+{
+  Document  doc;
+  Element   el;
+  int       f, l;
+  char     *prefix = NULL, *url = NULL;
+
+  doc = CurrentDocument;
+  TtaGiveFirstSelectedElement (doc, &el, &f, &l);
+  if (el != NULL)
+    {
+      url = strstr (decl, "=");
+      if (url)
+	{
+	  url[0] = EOS;
+	  prefix = decl;
+	  decl = url + 1;
+	}
+      if (decl[0] == '\"')
+	{
+	  decl++;
+	  url = strstr (decl, "\"");
+	  if (url)
+	    url[0] = EOS;
+	}
+      TtaRemoveANamespaceDeclaration (doc, el, decl);
+      TtaSetDocumentModified (doc);
+    }
+}
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void SpellCheck (Document doc, View view)
 {
