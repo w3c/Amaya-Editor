@@ -766,14 +766,14 @@ extern void TtaSetDocumentProfile (Document document, int profile, int extraProf
   Sets a namespace declaration for an element 
  ----------------------------------------------------------------------*/
 void TtaSetANamespaceDeclaration (Document document, Element element,
-                                  const char *Ns_Prefix, const char *Ns_Uri);
+                                  const char *nsPrefix, const char *nsUri);
 
 /*----------------------------------------------------------------------
   TtaSetNamespaceDeclaration
   Sets a namespace declaration for an element 
   ----------------------------------------------------------------------*/
 void TtaRemoveANamespaceDeclaration (Document document, Element element,
-                                     const char *NsUri);
+				     const char *nsPrefix, const char *nsUri);
 
 /*----------------------------------------------------------------------
   TtaGiveNamespaceURI

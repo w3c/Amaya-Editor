@@ -2705,9 +2705,12 @@ static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
   prevDecl = NULL;
   while (lastDecl)
     {
+      /* avoid to duplicate a declaration for the same element */
+      /* we now accept it */
+      /*
       if (lastDecl->NsPrefixElem == element)
-        /* avoid to duplicate a declaration for the same element */
         return;
+      */
       prevDecl = lastDecl;
       lastDecl = lastDecl->NsNextPrefixDecl;   
     }
@@ -2732,7 +2735,7 @@ static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
   AddANewNamespaceUri
   ----------------------------------------------------------------------*/
 static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
-                                 const char *nsPrefix, const char *NsUri)
+                                 const char *nsPrefix, const char *nsUri)
 {
   PtrNsUriDescr  newUriDecl, uriDecl, prevUriDecl;
 
@@ -2740,8 +2743,8 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
   if (newUriDecl == NULL)
     return;
   memset (newUriDecl, 0, sizeof (NsUriDescr));
-  if (NsUri != NULL)
-    newUriDecl->NsUriName = (char *)TtaStrdup (NsUri);
+  if (nsUri != NULL)
+    newUriDecl->NsUriName = (char *)TtaStrdup (nsUri);
   else
     newUriDecl->NsUriName = NULL;
   newUriDecl->NsUriSSchema = element->ElStructSchema;
@@ -2769,30 +2772,30 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
   Add a namespace declaration to the document
   ----------------------------------------------------------------------*/
 void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
-                              const char *nsPrefix, const char *NsUri)
+                              const char *nsPrefix, const char *nsUri)
 {
   PtrNsUriDescr   uriDecl;
   ThotBool        found;
 
   if (element == NULL || element->ElTerminal || ElementIsHidden (element))
-    // don't set a namespace for terminal and hidden elements
+    // don't set a namespace declaration for terminal and hidden elements
     return;
   uriDecl = NULL;
   found = FALSE;
   // a patch to replace the old xtiger path by the new one
-  if (NsUri && !strcmp (NsUri, Template_URI_o))
-    NsUri = Template_URI;
+  if (nsUri && !strcmp (nsUri, Template_URI_o))
+    nsUri = Template_URI;
   if (pDoc->DocNsUriDecl)
     {
       /* Search if this uri has been already declared */
       uriDecl = pDoc->DocNsUriDecl;
-      if (NsUri)
+      if (nsUri)
         {
           while (!found && uriDecl)
             {
               if (uriDecl->NsUriName)
                 {
-                  if (strcmp (uriDecl->NsUriName, NsUri) == 0)
+                  if (strcmp (uriDecl->NsUriName, nsUri) == 0)
                     found = TRUE;
                   else
                     uriDecl = uriDecl->NsNextUriDecl;
@@ -2815,7 +2818,7 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
 
   if (!found)
     /* Add a new uri declaration */
-    AddANewNamespaceUri (pDoc, element, nsPrefix, NsUri);
+    AddANewNamespaceUri (pDoc, element, nsPrefix, nsUri);
   else
     /* Add a new prefix/element declaration */
     AddANewNamespacePrefix (pDoc, element, nsPrefix, uriDecl);
@@ -2825,7 +2828,7 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
   RemoveANamespaceDeclaration removes a namespace declaration
   ----------------------------------------------------------------------*/
 void RemoveANamespaceDeclaration (PtrDocument pDoc, PtrElement element,
-                                  const char *NsUri)
+                                  const char *nsPrefix, const char *nsUri)
 {
   PtrNsUriDescr     uriDecl, prevUri;
   PtrNsPrefixDescr  prefixDecl, prevDecl;
@@ -2834,7 +2837,7 @@ void RemoveANamespaceDeclaration (PtrDocument pDoc, PtrElement element,
       element->ElTerminal || ElementIsHidden (element))
     // don't set a namespace for terminal and hidden elements
     return;
-  if (NsUri == NULL)
+  if (nsUri == NULL)
     return;
 
   prevUri = NULL;
@@ -2850,8 +2853,12 @@ void RemoveANamespaceDeclaration (PtrDocument pDoc, PtrElement element,
           prevDecl = NULL;
           while (prefixDecl)
             {
-              if (prefixDecl->NsPrefixElem == element &&
-                  !strcmp (uriDecl->NsUriName, NsUri))
+              if ((prefixDecl->NsPrefixElem == element &&
+		   !strcmp (uriDecl->NsUriName, nsUri) &&
+		   nsPrefix == NULL) ||
+		  (prefixDecl->NsPrefixElem == element &&
+		   !strcmp (uriDecl->NsUriName, nsUri) &&
+		   nsPrefix != NULL && !strcmp (prefixDecl->NsPrefixName, nsPrefix)))
                 {
                   if (prevDecl)
                     prevDecl->NsNextPrefixDecl = prefixDecl->NsNextPrefixDecl;
@@ -2988,7 +2995,7 @@ void ReplaceNamespaceDeclaration (PtrDocument pDoc, PtrElement oldEl,
 /*----------------------------------------------------------------------
   CopyNamespaceDeclarations
   Transmit namespace declarations from the source document to the 
-  targe document.
+  target document.
   ----------------------------------------------------------------------*/
 void CopyNamespaceDeclarations (PtrDocument docSource, PtrElement elSource,
                                 PtrDocument docTarget, PtrElement elTarget)

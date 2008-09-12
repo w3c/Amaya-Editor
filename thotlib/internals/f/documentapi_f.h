@@ -85,11 +85,12 @@ extern Document TtaGetDocumentOfSavedElements ( void );
 extern PtrDocument DocToPtr ( Document document );
 extern void TtaSetANamespaceDeclaration ( Document document,
                                           Element element,
-                                          const char *NsPrefix,
-                                          const char *NsUri );
+                                          const char *nsPrefix,
+                                          const char *nsUri );
 extern void TtaRemoveANamespaceDeclaration ( Document document,
                                              Element element,
-                                             const char *NsUri );
+                                             const char *nsPrefix,
+                                             const char *nsUri );
 extern char *TtaGiveNamespaceDeclaration ( Document document,
                                            Element element );
 extern void TtaGiveElemNamespaceDeclarations ( Document document,
@@ -209,11 +210,12 @@ extern Document TtaGetDocumentOfSavedElements ( void );
 extern PtrDocument DocToPtr ( Document document );
 extern void TtaSetANamespaceDeclaration ( Document document,
                                             Element element,
-                                            const char *NsPrefix,
-                                            const char *NsUri );
+                                            const char *nsPrefix,
+                                            const char *nsUri );
 extern void TtaRemoveANamespaceDeclaration ( Document document,
                                                Element element,
-                                               const char *NsUri );
+                                               const char *nsPrefix,
+                                               const char *nsUri );
 extern char *TtaGiveNamespaceDeclaration ( Document document,
                                              Element element );
 extern void TtaGiveElemNamespaceDeclarations ( Document document,

@@ -104,10 +104,11 @@ extern void ChangeGenericSchemaNames ( const char *sSchemaUri,
 extern void SetNamespaceDeclaration ( PtrDocument pDoc,
                                       PtrElement element,
                                       const char *nsPrefix,
-                                      const char *NsUri );
+                                      const char *nsUri );
 extern void RemoveANamespaceDeclaration ( PtrDocument pDoc,
                                           PtrElement element,
-                                          const char *NsUri );
+                                          const char *nsPrefix,
+                                          const char *nsUri );
 extern void RemoveNamespaceDeclaration ( PtrDocument pDoc,
                                          PtrElement element );
 extern void ReplaceNamespaceDeclaration ( PtrDocument pDoc,
@@ -224,10 +225,11 @@ extern void ChangeGenericSchemaNames ( const char *sSchemaUri,
 extern void SetNamespaceDeclaration ( PtrDocument pDoc,
                                         PtrElement element,
                                         const char *nsPrefix,
-                                        const char *NsUri );
+                                        const char *nsUri );
 extern void RemoveANamespaceDeclaration ( PtrDocument pDoc,
                                             PtrElement element,
-                                            const char *NsUri );
+                                            const char *nsPrefix,
+                                            const char *nsUri );
 extern void RemoveNamespaceDeclaration ( PtrDocument pDoc,
                                            PtrElement element );
 extern void ReplaceNamespaceDeclaration ( PtrDocument pDoc,

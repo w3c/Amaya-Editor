@@ -1589,7 +1589,7 @@ PtrDocument DocToPtr (Document document)
   Sets a namespace declaration for an element 
   ----------------------------------------------------------------------*/
 void TtaSetANamespaceDeclaration (Document document, Element element,
-                                  const char *NsPrefix, const char *NsUri)
+                                  const char *nsPrefix, const char *nsUri)
 {
   PtrDocument pDoc;
 
@@ -1603,7 +1603,7 @@ void TtaSetANamespaceDeclaration (Document document, Element element,
     {
       /* parameter document is correct */
       pDoc = LoadedDocument[document - 1];
-      SetNamespaceDeclaration (pDoc, (PtrElement) element, NsPrefix, NsUri);
+      SetNamespaceDeclaration (pDoc, (PtrElement) element, nsPrefix, nsUri);
     }
 }
 
@@ -1612,7 +1612,7 @@ void TtaSetANamespaceDeclaration (Document document, Element element,
   Sets a namespace declaration for an element 
   ----------------------------------------------------------------------*/
 void TtaRemoveANamespaceDeclaration (Document document, Element element,
-                                     const char *NsUri)
+                                      const char *nsPrefix, const char *nsUri)
 {
   PtrDocument pDoc;
 
@@ -1626,7 +1626,7 @@ void TtaRemoveANamespaceDeclaration (Document document, Element element,
     {
       /* parameter document is correct */
       pDoc = LoadedDocument[document - 1];
-      RemoveANamespaceDeclaration (pDoc, (PtrElement) element, NsUri);
+      RemoveANamespaceDeclaration (pDoc, (PtrElement) element, nsPrefix, nsUri);
     }
 }
 

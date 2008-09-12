@@ -1740,7 +1740,7 @@ void RemoveaNSDeclaration (char *decl)
 	  if (url)
 	    url[0] = EOS;
 	}
-      TtaRemoveANamespaceDeclaration (doc, el, decl);
+      TtaRemoveANamespaceDeclaration (doc, el, prefix, decl);
       TtaSetDocumentModified (doc);
     }
 }
