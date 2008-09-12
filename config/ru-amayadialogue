@@ -317,40 +317,41 @@
 315 Добавить/Обновить Оглавление
 316 Создат&ь книгу
 317 Вставить метку времени
-318 Анно&тации
-319 Аннотировать выбранное
-320 Аннотировать документ
-321 Переместить в выбранное
-322 Сохранить выбранное как &XPointer
-323 Переместить на хранение в XPointer
-324 Ответить на аннотацию
-325 Опубликовать (post) на сервере
-326 Удалить аннотации
-327 Загрузить аннотации
-328 Настроить запрос...
-329 Локальный фильтр...
-330 Совместная работа
-331 Блокировать ресурс...
-332 Разблокировать ресурс...
-333 Просмотреть свойства ресурса...
-334 Копировать информацию блокировки...
-335 Заблокировано ?
-336 **Templates
-337 **Create template from current document...
-338 **Create a text area
-339 **Use a component or an element
-340 **Create and use a component
-341 **Repeat the current use
-342 **Create and repeat a component
-343 **Create a free editing box
-344 **Create a new types union
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 **Check for update
-352 Справка Amaya
-353 **Tip of the day...
-354 О программе Amaya
+318 **Namespace declarations...
+319 Анно&тации
+320 Аннотировать выбранное
+321 Аннотировать документ
+322 Переместить в выбранное
+323 Сохранить выбранное как &XPointer
+324 Переместить на хранение в XPointer
+325 Ответить на аннотацию
+326 Опубликовать (post) на сервере
+327 Удалить аннотации
+328 Загрузить аннотации
+329 Настроить запрос...
+330 Локальный фильтр...
+331 Совместная работа
+332 Блокировать ресурс...
+333 Разблокировать ресурс...
+334 Просмотреть свойства ресурса...
+335 Копировать информацию блокировки...
+336 Заблокировано ?
+337 **Templates
+338 **Create template from current document
+339 **Create a text area
+340 **Use a component or an element
+341 **Create and use a component
+342 **Repeat the current use
+343 **Create and repeat a component
+344 **Create a free editing box
+345 **Create a new types union
+346 &Javascript/DOM
+347 **Enable/Disable
+348 **Execute a command
+349 **Execute an external script
+350 **Add an external script
+351 **Insert a script
+352 **Check for update
+353 Справка Amaya...
+354 **Tip of the day...
+355 О программе Amaya

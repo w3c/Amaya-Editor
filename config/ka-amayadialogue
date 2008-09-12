@@ -317,40 +317,41 @@
 315 საძიებლის შექმნა
 316 წიგნის შექმნა
 317 დროის შტამპის ჩამატება
-318 ანოტაციები
-319 მონიშნულის ანოტაცია
-320 დოკუმენტის ანოტაცია
-321 მონიშნულში გადატანა
-322 მონიშნულის შენახვა როგორც XPointer
-323 გადატანა შენახულ XPointer-ში
-324 პასუხი ანოტაციაზე
-325 სევერზე გამოქვეყნება (post)
-326 წაშლა
-327 ჩამოტვირთვა
-328 მოთხოვნის მორგება...
-329 ლოკალური ფილტრი...
-330 ანოტაციები
-331 რესურსის დაბლოკვა...
-332 დაბლოკვის მოხსნა...
-333 რესურსის პარამეტრების დათვალიერება...
-334 დაბლოკვის ინფორმაციის კოპირება...
-335 დაბლოკილია?
-336 **Templates
-337 **Create template from current document...
-338 **Create a text area
-339 **Use a component or an element
-340 **Create and use a component
-341 **Repeat the current use
-342 **Create and repeat a component
-343 **Create a free editing box
-344 **Create a new types union
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 პროგრამა Amaya-ს შესახებ W3C-ზე
-352 კარნახი Amaya
-353 **Tip of the day...
-354 პროგრამა Amaya-ს შესახებ
+318 **Namespace declarations...
+319 ანოტაციები
+320 მონიშნულის ანოტაცია
+321 დოკუმენტის ანოტაცია
+322 მონიშნულში გადატანა
+323 მონიშნულის შენახვა როგორც XPointer
+324 გადატანა შენახულ XPointer-ში
+325 პასუხი ანოტაციაზე
+326 სევერზე გამოქვეყნება (post)
+327 წაშლა
+328 ჩამოტვირთვა
+329 მოთხოვნის მორგება...
+330 ლოკალური ფილტრი...
+331 ანოტაციები
+332 რესურსის დაბლოკვა...
+333 დაბლოკვის მოხსნა...
+334 რესურსის პარამეტრების დათვალიერება...
+335 დაბლოკვის ინფორმაციის კოპირება...
+336 დაბლოკილია?
+337 **Templates
+338 **Create template from current document
+339 **Create a text area
+340 **Use a component or an element
+341 **Create and use a component
+342 **Repeat the current use
+343 **Create and repeat a component
+344 **Create a free editing box
+345 **Create a new types union
+346 &Javascript/DOM
+347 **Enable/Disable
+348 **Execute a command
+349 **Execute an external script
+350 **Add an external script
+351 **Insert a script
+352 პროგრამა Amaya-ს შესახებ W3C-ზე
+353 კარნახი Amaya...
+354 **Tip of the day...
+355 პროგრამა Amaya-ს შესახებ

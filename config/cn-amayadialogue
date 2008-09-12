@@ -317,40 +317,41 @@
 315 生成内容列表(&G)
 316 制作书籍(&M)
 317 插入时间戳
-318 注释
-319 为选择区作注释
-320 为文档作注释
-321 移动到选择区
-322 存储选择区为 XPointer(&X)
-323 移动到已存储的 XPointer
-324 答复注释
-325 提交到服务器
-326 删除
-327 载入
-328 自定义查询...
-329 本地过滤器...
-330 协作(&O)
-331 锁定资源...
-332 取消锁定资源...
-333 查看资源属性...
-334 复制锁定信息...
-335 锁定了吗?
-336 **Templates
-337 **Create template from current document...
-338 **Create a text area
-339 **Use a component or an element
-340 **Create and use a component
-341 **Repeat the current use
-342 **Create and repeat a component
-343 **Create a free editing box
-344 **Create a new types union
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 关于 Amaya at W3C
-352 帮助 Amaya
-353 **Tip of the day...
-354 关于 Amaya
+318 **Namespace declarations...
+319 注释
+320 为选择区作注释
+321 为文档作注释
+322 移动到选择区
+323 存储选择区为 XPointer(&X)
+324 移动到已存储的 XPointer
+325 答复注释
+326 提交到服务器
+327 删除
+328 载入
+329 自定义查询...
+330 本地过滤器...
+331 协作(&O)
+332 锁定资源...
+333 取消锁定资源...
+334 查看资源属性...
+335 复制锁定信息...
+336 锁定了吗?
+337 **Templates
+338 **Create template from current document
+339 **Create a text area
+340 **Use a component or an element
+341 **Create and use a component
+342 **Repeat the current use
+343 **Create and repeat a component
+344 **Create a free editing box
+345 **Create a new types union
+346 &Javascript/DOM
+347 **Enable/Disable
+348 **Execute a command
+349 **Execute an external script
+350 **Add an external script
+351 **Insert a script
+352 关于 Amaya at W3C
+353 帮助 Amaya...
+354 **Tip of the day...
+355 关于 Amaya

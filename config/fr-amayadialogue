@@ -317,40 +317,41 @@
 315 &Ajouter/Actualiser la table des matières
 316 &Construire un livre
 317 Insérer la date de mise à jour
-318 A&nnotations
-319 Annoter la sélection
-320 Annoter le document
-321 Déplacer sur la sélection
-322 Enregistrer la sélection comme &XPointer
-323 Déplacer sur le XPointer enregistré
-324 Répondre à l'annotation
-325 Enregister sur le serveur
-326 Supprimer
-327 Charger annotations
-328 Personnaliser la requête...
-329 Filtrer local...
-330 C&oopération
-331 Verrouiller la ressource...
-332 Déverrouiller la ressource...
-333 Visualiser les propriétés de la ressource...
-334 Copier les informations du verrou...
-335 Verrouillé ?
-336 Modèles
-337 Créer un modèle depuis le document courant...
-338 Créer une zone de texte
-339 Utiliser un composant ou un élément
-340 Créer et utiliser un composant
-341 Répéter l'utilisation courant
-342 Créer et répéter un composant
-343 Créer une zone d'édition libre
-344 Créer une nouvelle union de types
-345 &Javascript/DOM
-346 Activer/Désactiver
-347 Exécuter une commande
-348 Exécuter un script externe
-349 Ajouter un script externe
-350 Inserer un script
-351 Vérifier les mises à jour
-352 Aide Amaya
-353 Conseil du jour...
-354 À propos d'Amaya
+318 Déclaration d'espaces de noms...
+319 A&nnotations
+320 Annoter la sélection
+321 Annoter le document
+322 Déplacer sur la sélection
+323 Enregistrer la sélection comme &XPointer
+324 Déplacer sur le XPointer enregistré
+325 Répondre à l'annotation
+326 Enregister sur le serveur
+327 Supprimer
+328 Charger annotations
+329 Personnaliser la requête...
+330 Filtrer local...
+331 C&oopération
+332 Verrouiller la ressource...
+333 Déverrouiller la ressource...
+334 Visualiser les propriétés de la ressource...
+335 Copier les informations du verrou...
+336 Verrouillé ?
+337 Modèles
+338 Créer un modèle depuis le document courant
+339 Créer une zone de texte
+340 Utiliser un composant ou un élément
+341 Créer et utiliser un composant
+342 Répéter l'utilisation courant
+343 Créer et répéter un composant
+344 Créer une zone d'édition libre
+345 Créer une nouvelle union de types
+346 &Javascript/DOM
+347 Activer/Désactiver
+348 Exécuter une commande
+349 Exécuter un script externe
+350 Ajouter un script externe
+351 Inserer un script
+352 Vérifier les mises à jour
+353 Aide Amaya...
+354 Conseil du jour...
+355 À propos d'Amaya

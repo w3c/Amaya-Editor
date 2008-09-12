@@ -317,40 +317,41 @@
 315 **&Add/Update table of contents
 316 Kitap yap
 317 **Insert time stamp
-318 &Eklemeler
-319 Seçili alan ekleme
-320 Doküman eklemek
-321 Seçili alanı taşı
-322 seçilen alanı XPointer gibi kaydet
-323 Xpointer\'daki birikenleri taşı
-324 Tekrar ekle
-325 Server\'e kaydet
-326 Sil
-327 Yükle
-328 Kişisel ayarlama...
-329 Sabit filitre...
-330 &Birlikte çalışmak
-331 Tekrar okumayı kitle...
-332 Tekrar okumayı kilidi aç...
-333 Tekrar okuma ayarlarını göster...
-334 kilitli bilgileri kopyala...
-335 kitli mi?
-336 **Templates
-337 **Create template from current document...
-338 **Create a text area
-339 **Use a component or an element
-340 **Create and use a component
-341 **Repeat the current use
-342 **Create and repeat a component
-343 **Create a free editing box
-344 **Create a new types union
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 W3C deki Amaya hakkında
-352 Amaya Yardım
-353 **Tip of the day...
-354 Amaya hakkında
+318 **Namespace declarations...
+319 &Eklemeler
+320 Seçili alan ekleme
+321 Doküman eklemek
+322 Seçili alanı taşı
+323 seçilen alanı XPointer gibi kaydet
+324 Xpointer\'daki birikenleri taşı
+325 Tekrar ekle
+326 Server\'e kaydet
+327 Sil
+328 Yükle
+329 Kişisel ayarlama...
+330 Sabit filitre...
+331 &Birlikte çalışmak
+332 Tekrar okumayı kitle...
+333 Tekrar okumayı kilidi aç...
+334 Tekrar okuma ayarlarını göster...
+335 kilitli bilgileri kopyala...
+336 kitli mi?
+337 **Templates
+338 **Create template from current document
+339 **Create a text area
+340 **Use a component or an element
+341 **Create and use a component
+342 **Repeat the current use
+343 **Create and repeat a component
+344 **Create a free editing box
+345 **Create a new types union
+346 &Javascript/DOM
+347 **Enable/Disable
+348 **Execute a command
+349 **Execute an external script
+350 **Add an external script
+351 **Insert a script
+352 W3C deki Amaya hakkında
+353 Amaya Yardım...
+354 **Tip of the day...
+355 Amaya hakkında

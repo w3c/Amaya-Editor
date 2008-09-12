@@ -4703,8 +4703,8 @@
 	<message xml:lang="ja">現在の日付を挿入</message>
 </label>
 <label define="BUpdateNSDecl">
-	<message xml:lang="en">Namespace Declarations</message>
-	<message xml:lang="fr">Déclaration d'espaces de noms</message>
+	<message xml:lang="en">Namespace declarations...</message>
+	<message xml:lang="fr">Déclaration d'espaces de noms...</message>
 </label>
 <label define="Annotations_">
 	<message xml:lang="en">A&amp;nnotations</message>
@@ -5017,8 +5017,8 @@
 	<message xml:lang="fr">Modèles</message>
 </label>
 <label define="BCreateTemplateFromDocument">
-	<message xml:lang="en">Create template from current document...</message>
-	<message xml:lang="fr">Créer un modèle depuis le document courant...</message>
+	<message xml:lang="en">Create template from current document</message>
+	<message xml:lang="fr">Créer un modèle depuis le document courant</message>
 </label>
 <label define="BTemplateCreateTextBox">
 	<message xml:lang="en">Create a text area</message>
@@ -5121,21 +5121,21 @@
 	<message xml:lang="tw">關于 Amaya at W3C</message>
 </label>
 <label define="BHelpIndex">
-	<message xml:lang="en">Amaya Help</message>
-	<message xml:lang="fr">Aide Amaya</message>
-	<message xml:lang="de">Amaya Hilfe</message>
-	<message xml:lang="it">Aiuto Amaya</message>
-	<message xml:lang="tr">Amaya Yardım</message>
-	<message xml:lang="es">Ayuda Amaya</message>
-	<message xml:lang="pt">Ajuda Amaya</message>
-	<message xml:lang="fi">Ohje Amaya</message>
-	<message xml:lang="ru">Справка Amaya</message>
-	<message xml:lang="hu">Súgó</message>
-	<message xml:lang="ka">კარნახი Amaya</message>
-	<message xml:lang="cn">帮助 Amaya</message>
-	<message xml:lang="tw">幫助 Amaya</message>
-	<message xml:lang="sk">Pomocník Amaya</message>
-	<message xml:lang="ja">Amaya ヘルプ</message>
+	<message xml:lang="en">Amaya Help...</message>
+	<message xml:lang="fr">Aide Amaya...</message>
+	<message xml:lang="de">Amaya Hilfe...</message>
+	<message xml:lang="it">Aiuto Amaya...</message>
+	<message xml:lang="tr">Amaya Yardım...</message>
+	<message xml:lang="es">Ayuda Amaya...</message>
+	<message xml:lang="pt">Ajuda Amaya...</message>
+	<message xml:lang="fi">Ohje Amaya...</message>
+	<message xml:lang="ru">Справка Amaya...</message>
+	<message xml:lang="hu">Súgó...</message>
+	<message xml:lang="ka">კარნახი Amaya...</message>
+	<message xml:lang="cn">帮助 Amaya...</message>
+	<message xml:lang="tw">幫助 Amaya...</message>
+	<message xml:lang="sk">Pomocník Amaya...</message>
+	<message xml:lang="ja">Amaya ヘルプ...</message>
 </label>
 <label define="BTipOfTheDay">
 	<message xml:lang="en">Tip of the day...</message>

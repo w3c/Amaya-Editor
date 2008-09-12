@@ -317,40 +317,41 @@
 315 &Vytvoriť obsah
 316 &Zostaviť knihu
 317 Vložiť dnešný dátum
-318 &Komentáre
-319 Okomentovať výber
-320 Okomentovať dokument
-321 Presunúť k výberu
-322 Uložiť výber ako &XPointer
-323 Presunúť k uloženému XPointeru
-324 Reagovať na komentár
-325 Odoslať na server
-326 Odstrániť komentár
-327 Nahrať komentár
-328 Zadefinovať požiadavku...
-329 Filtrovať komentáre...
-330 Sp&olupráca
-331 Uzamknúť zdrojový súbor...
-332 Odomknúť zdrojový súbor...
-333 Zobraziť vlastnosti zdroja...
-334 Kopírovať informácie o uzamknutí...
-335 Zamknutý?
-336 **Templates
-337 **Create template from current document...
-338 **Create a text area
-339 **Use a component or an element
-340 **Create and use a component
-341 **Repeat the current use
-342 **Create and repeat a component
-343 **Create a free editing box
-344 **Create a new types union
-345 &Javascript/DOM
-346 **Enable/Disable
-347 **Execute a command
-348 **Execute an external script
-349 **Add an external script
-350 **Insert a script
-351 **Check for update
-352 Pomocník Amaya
-353 **Tip of the day...
-354 O programe Amaya
+318 **Namespace declarations...
+319 &Komentáre
+320 Okomentovať výber
+321 Okomentovať dokument
+322 Presunúť k výberu
+323 Uložiť výber ako &XPointer
+324 Presunúť k uloženému XPointeru
+325 Reagovať na komentár
+326 Odoslať na server
+327 Odstrániť komentár
+328 Nahrať komentár
+329 Zadefinovať požiadavku...
+330 Filtrovať komentáre...
+331 Sp&olupráca
+332 Uzamknúť zdrojový súbor...
+333 Odomknúť zdrojový súbor...
+334 Zobraziť vlastnosti zdroja...
+335 Kopírovať informácie o uzamknutí...
+336 Zamknutý?
+337 **Templates
+338 **Create template from current document
+339 **Create a text area
+340 **Use a component or an element
+341 **Create and use a component
+342 **Repeat the current use
+343 **Create and repeat a component
+344 **Create a free editing box
+345 **Create a new types union
+346 &Javascript/DOM
+347 **Enable/Disable
+348 **Execute a command
+349 **Execute an external script
+350 **Add an external script
+351 **Insert a script
+352 **Check for update
+353 Pomocník Amaya...
+354 **Tip of the day...
+355 O programe Amaya

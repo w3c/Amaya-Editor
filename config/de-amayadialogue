@@ -317,40 +317,41 @@
 315 Inhaltsverzeichnis erzeugen
 316 Buch erstellen
 317 Zeitstempel einfügen
-318 A&nmerkungen
-319 Zur Markierung
-320 Zum Dokument
-321 Auf Markierung verschieben
-322 Als XPointer speichern
-323 Auf XPointer verschieben
-324 Beantworten
-325 Veröffentlichen
-326 Löschen
-327 Laden
-328 Abfrage bearbeiten...
-329 Filter...
-330 &Kooperation
-331 Resource sperren...
-332 Resource entsperren...
-333 Resourceeigenschaften anzeigen...
-334 Sperrinformation kopieren...
-335 Gesperrt?
-336 **Templates
-337 **Create template from current document...
-338 **Create a text area
-339 **Use a component or an element
-340 **Create and use a component
-341 **Repeat the current use
-342 **Create and repeat a component
-343 **Create a free editing box
-344 **Create a new types union
-345 &Javascript/DOM
-346 Java-Unterstützung ein-/ausschalten
-347 Befehl ausführen
-348 externes Skript ausführen
-349 externes Skript hinzufügen
-350 Skript einfügen
-351 **Check for update
-352 Amaya Hilfe
-353 Tip des Tages...
-354 Info
+318 **Namespace declarations...
+319 A&nmerkungen
+320 Zur Markierung
+321 Zum Dokument
+322 Auf Markierung verschieben
+323 Als XPointer speichern
+324 Auf XPointer verschieben
+325 Beantworten
+326 Veröffentlichen
+327 Löschen
+328 Laden
+329 Abfrage bearbeiten...
+330 Filter...
+331 &Kooperation
+332 Resource sperren...
+333 Resource entsperren...
+334 Resourceeigenschaften anzeigen...
+335 Sperrinformation kopieren...
+336 Gesperrt?
+337 **Templates
+338 **Create template from current document
+339 **Create a text area
+340 **Use a component or an element
+341 **Create and use a component
+342 **Repeat the current use
+343 **Create and repeat a component
+344 **Create a free editing box
+345 **Create a new types union
+346 &Javascript/DOM
+347 Java-Unterstützung ein-/ausschalten
+348 Befehl ausführen
+349 externes Skript ausführen
+350 externes Skript hinzufügen
+351 Skript einfügen
+352 **Check for update
+353 Amaya Hilfe...
+354 Tip des Tages...
+355 Info

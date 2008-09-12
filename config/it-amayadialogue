@@ -317,40 +317,41 @@
 315 Genera Indice
 316 Crea libro
 317 Inserisci timestamp
-318 A&nnotazioni
-319 Annota la selezione
-320 Annota il documento
-321 Muovi sulla selezione
-322 Salva la selezione come XPointer
-323 Muovi sull'Xpointer memorizzato
-324 Rispondi all'annotazione
-325 Registra
-326 Elimina
-327 Carica
-328 Personalizza la richiesta
-329 Filtro locale...
-330 &Cooperazione
-331 Lock resource...
-332 Unlock resource...
-333 Informazioni per il lock...
-334 Copia delle informazioni per il lock...
-335 Lock?
-336 **Templates
-337 **Create template from current document...
-338 **Create a text area
-339 **Use a component or an element
-340 **Create and use a component
-341 **Repeat the current use
-342 **Create and repeat a component
-343 **Create a free editing box
-344 **Create a new types union
-345 &Javascript/DOM
-346 Attiva/Disattiva
-347 Esegui un comando
+318 **Namespace declarations...
+319 A&nnotazioni
+320 Annota la selezione
+321 Annota il documento
+322 Muovi sulla selezione
+323 Salva la selezione come XPointer
+324 Muovi sull'Xpointer memorizzato
+325 Rispondi all'annotazione
+326 Registra
+327 Elimina
+328 Carica
+329 Personalizza la richiesta
+330 Filtro locale...
+331 &Cooperazione
+332 Lock resource...
+333 Unlock resource...
+334 Informazioni per il lock...
+335 Copia delle informazioni per il lock...
+336 Lock?
+337 **Templates
+338 **Create template from current document
+339 **Create a text area
+340 **Use a component or an element
+341 **Create and use a component
+342 **Repeat the current use
+343 **Create and repeat a component
+344 **Create a free editing box
+345 **Create a new types union
+346 &Javascript/DOM
+347 Attiva/Disattiva
 348 Esegui un comando
-349 Aggiungi uno script esterno
-350 Inserisci uno script
-351 **Check for update
-352 Aiuto Amaya
-353 Suggerimenti del giorno...
-354 Informazioni su Amaya
+349 Esegui un comando
+350 Aggiungi uno script esterno
+351 Inserisci uno script
+352 **Check for update
+353 Aiuto Amaya...
+354 Suggerimenti del giorno...
+355 Informazioni su Amaya

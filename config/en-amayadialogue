@@ -317,40 +317,41 @@
 315 &Add/Update table of contents
 316 &Make book
 317 Insert time stamp
-318 A&nnotations
-319 Annotate selection
-320 Annotate document
-321 Move to selection
-322 Store selection as &XPointer
-323 Move to stored XPointer
-324 Reply to annotation
-325 Post to server
-326 Delete
-327 Load
-328 Customize query...
-329 Local filter...
-330 C&ooperation
-331 Lock resource...
-332 Unlock resource...
-333 View resource properties...
-334 Copy lock information...
-335 Locked?
-336 Templates
-337 Create template from current document...
-338 Create a text area
-339 Use a component or an element
-340 Create and use a component
-341 Repeat the current use
-342 Create and repeat a component
-343 Create a free editing box
-344 Create a new types union
-345 &Javascript/DOM
-346 Enable/Disable
-347 Execute a command
-348 Execute an external script
-349 Add an external script
-350 Insert a script
-351 Check for update
-352 Amaya Help
-353 Tip of the day...
-354 About Amaya
+318 Namespace declarations...
+319 A&nnotations
+320 Annotate selection
+321 Annotate document
+322 Move to selection
+323 Store selection as &XPointer
+324 Move to stored XPointer
+325 Reply to annotation
+326 Post to server
+327 Delete
+328 Load
+329 Customize query...
+330 Local filter...
+331 C&ooperation
+332 Lock resource...
+333 Unlock resource...
+334 View resource properties...
+335 Copy lock information...
+336 Locked?
+337 Templates
+338 Create template from current document
+339 Create a text area
+340 Use a component or an element
+341 Create and use a component
+342 Repeat the current use
+343 Create and repeat a component
+344 Create a free editing box
+345 Create a new types union
+346 &Javascript/DOM
+347 Enable/Disable
+348 Execute a command
+349 Execute an external script
+350 Add an external script
+351 Insert a script
+352 Check for update
+353 Amaya Help...
+354 Tip of the day...
+355 About Amaya
