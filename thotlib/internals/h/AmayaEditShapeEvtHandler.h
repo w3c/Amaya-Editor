@@ -46,26 +46,24 @@ class AmayaEditShapeEvtHandler : public wxEvtHandler
  protected:
   bool finished;
 
-  AmayaFrame * pFrame;
-  int frameId;
-  int doc;
-  void *inverse;
-  int x0, y0, width, height;
-  Element el;
-  int point;
-  ThotBool *hasBeenEdited;
+  AmayaFrame  *pFrame;
+  int          frameId;
+  int          document;
+  void        *inverse;
+  int          x0, y0, width, height;
+  Element      el;
+  int          point;
+  ThotBool    *hasBeenEdited;
 
   /* Coordinates of the mouse */
-  int lastX, lastY, mouse_x,mouse_y;
-  bool buttonDown;
-
-  Element leaf;
-  PtrAbstractBox e_ab;
-  PtrBox  e_box;
-  PtrAbstractBox ab;
-  PtrBox  box;
-  char shape;
-  int x_org, y_org;
+  int          lastX, lastY, mouse_x,mouse_y;
+  bool         buttonDown;
+  Element      leaf;
+  PtrAbstractBox e_ab, ab;
+  PtrBox       e_box;
+  PtrBox       box;
+  char         shape;
+  int          x_org, y_org;
 };
 
 #endif /* __AMAYAEDITSHAPEEVTHANDLER_H__ */

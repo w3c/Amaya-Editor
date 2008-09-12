@@ -830,12 +830,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         box = IsSelectingControlPoint (frame, x, y, &ctrlpt);
         if (box)
           {
-            if (box->BxAbstractBox &&
-                (box->BxAbstractBox->AbLeafType == LtPath ||
-                 box->BxAbstractBox->AbLeafType == LtPolyLine))
-              ApplyDirectTranslate (box, frame, x, y);
-            else
-              ApplyDirectResize(box, frame, ctrlpt, x, y);
+            ApplyDirectResize(box, frame, ctrlpt, x, y);
           }
         else
           {

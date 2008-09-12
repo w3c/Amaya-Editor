@@ -43,43 +43,43 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaEditPathEvtHandler, wxEvtHandler)
 
-/*----------------------------------------------------------------------
- *  this is where the event table is declared
- *  the callbacks are assigned to an event type
- *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaEditPathEvtHandler, wxEvtHandler)
-EVT_KEY_DOWN( AmayaEditPathEvtHandler::OnChar )
-EVT_LEFT_DOWN(AmayaEditPathEvtHandler::OnMouseDown) 
-EVT_LEFT_UP(AmayaEditPathEvtHandler::OnMouseUp)
-EVT_LEFT_DCLICK(AmayaEditPathEvtHandler::OnMouseDbClick)
-EVT_MIDDLE_DOWN(AmayaEditPathEvtHandler::OnMouseDown)
-EVT_MIDDLE_UP(AmayaEditPathEvtHandler::OnMouseUp)
-EVT_MIDDLE_DCLICK(AmayaEditPathEvtHandler::OnMouseDbClick)
-EVT_RIGHT_DOWN(AmayaEditPathEvtHandler::OnMouseDown)
-EVT_RIGHT_UP(AmayaEditPathEvtHandler::OnMouseUp)
-EVT_RIGHT_DCLICK(AmayaEditPathEvtHandler::OnMouseDbClick)
-EVT_MOTION(AmayaEditPathEvtHandler::OnMouseMove)
-EVT_MOUSEWHEEL(AmayaEditPathEvtHandler::OnMouseWheel)
-END_EVENT_TABLE()
+  /*----------------------------------------------------------------------
+   *  this is where the event table is declared
+   *  the callbacks are assigned to an event type
+   *----------------------------------------------------------------------*/
+  BEGIN_EVENT_TABLE(AmayaEditPathEvtHandler, wxEvtHandler)
+  EVT_KEY_DOWN( AmayaEditPathEvtHandler::OnChar )
+  EVT_LEFT_DOWN(AmayaEditPathEvtHandler::OnMouseDown) 
+  EVT_LEFT_UP(AmayaEditPathEvtHandler::OnMouseUp)
+  EVT_LEFT_DCLICK(AmayaEditPathEvtHandler::OnMouseDbClick)
+  EVT_MIDDLE_DOWN(AmayaEditPathEvtHandler::OnMouseDown)
+  EVT_MIDDLE_UP(AmayaEditPathEvtHandler::OnMouseUp)
+  EVT_MIDDLE_DCLICK(AmayaEditPathEvtHandler::OnMouseDbClick)
+  EVT_RIGHT_DOWN(AmayaEditPathEvtHandler::OnMouseDown)
+  EVT_RIGHT_UP(AmayaEditPathEvtHandler::OnMouseUp)
+  EVT_RIGHT_DCLICK(AmayaEditPathEvtHandler::OnMouseDbClick)
+  EVT_MOTION(AmayaEditPathEvtHandler::OnMouseMove)
+  EVT_MOUSEWHEEL(AmayaEditPathEvtHandler::OnMouseWheel)
+  END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaEditPathEvtHandler::AmayaEditPathEvtHandler() : wxEvtHandler()
+*----------------------------------------------------------------------*/
+  AmayaEditPathEvtHandler::AmayaEditPathEvtHandler() : wxEvtHandler()
 {
 }
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
-						 Document doc,
-						 void *inverse,
-						 int ancestorX,
-						 int ancestorY,
-						 int canvasWidth,
-						 int canvasHeight,
-						 Element element,
-						 int point_number,
-						 ThotBool *transformApplied)
+                                                 Document doc,
+                                                 void *inverse,
+                                                 int ancestorX,
+                                                 int ancestorY,
+                                                 int canvasWidth,
+                                                 int canvasHeight,
+                                                 Element element,
+                                                 int point_number,
+                                                 ThotBool *transformApplied)
   :wxEvtHandler()
   ,finished(false)
   ,pFrame(p_frame)
@@ -101,7 +101,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
   PtrPathSeg          pPa, pPaStart;
 
   *hasBeenTransformed = FALSE;
-
   if (pFrame)
     {
       /* attach this handler to the canvas */
@@ -112,45 +111,45 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
 
   /* Get the GRAPHICS leaf */
   leaf = TtaGetLastChild((Element)el);
-  if(!leaf)
+  if (!leaf)
     {
-    finished = true;
-    return;
+      finished = true;
+      return;
     }
 
   /* Get the box of the SVG element */
   pAb = ((PtrElement)leaf) -> ElAbstractBox[0];
-  if(!pAb || !(pAb->AbBox))
+  if (!pAb || !(pAb->AbBox))
     {
-    finished = true;
-    return;
+      finished = true;
+      return;
     }
   box = pAb -> AbBox;
 
-  if(((PtrElement)leaf)->ElLeafType == LtPolyLine)
+  if (((PtrElement)leaf)->ElLeafType == LtPolyLine)
     {
       /* It's a polyline or a polygon */
       pBuffer = ((PtrElement)leaf)->ElPolyLineBuffer;
       j = 1;
       for (i = 1; pBuffer; i++)
-	{
-	  if(i == point_number)
-	    {
-	      /* Moving a point of a polyline/polygon  */
-	      type = 6;
-	      i_poly = j;
-	      break;
-	    }
+        {
+          if (i == point_number)
+            {
+              /* Moving a point of a polyline/polygon  */
+              type = 6;
+              i_poly = j;
+              break;
+            }
 	  
-	  j++;
-	  if (j == pBuffer->BuLength)
-	    {
-	      pBuffer = pBuffer->BuNext;
-	      j = 0;
-	    }
-	}
+          j++;
+          if (j == pBuffer->BuLength)
+            {
+              pBuffer = pBuffer->BuNext;
+              j = 0;
+            }
+        }
     }
-  else if(((PtrElement)leaf)->ElLeafType == LtPath)
+  else if (((PtrElement)leaf)->ElLeafType == LtPath)
     {
       /* It's a path: find the segment to edit */
       pPaPrevious = NULL;
@@ -159,124 +158,124 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       i = 1;
 
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
-      if(pPa == NULL)
-	{
-	  finished = true;
-	  return;
-	}
+      if (pPa == NULL)
+        {
+          finished = true;
+          return;
+        }
   
       while (pPa)
-	{
-	  if ((pPa->PaNewSubpath || !pPa->PaPrevious))
-	    {
-	      /* this path segment starts a new subpath */
-	      pPaStart = pPa;
+        {
+          if ((pPa->PaNewSubpath || !pPa->PaPrevious))
+            {
+              /* this path segment starts a new subpath */
+              pPaStart = pPa;
 	      
-	      if(i == point_number)
-		{
-		  /* Moving the first point of subpath */
-		  type = 0;
-		  break;
-		}
+              if (i == point_number)
+                {
+                  /* Moving the first point of subpath */
+                  type = 0;
+                  break;
+                }
 	      
-	      i++;
-	    }
+              i++;
+            }
 
-	  if(pPa->PaShape == PtCubicBezier ||
-	     pPa->PaShape == PtQuadraticBezier)
-	    {
+          if (pPa->PaShape == PtCubicBezier ||
+              pPa->PaShape == PtQuadraticBezier)
+            {
 	      
-	      if(i == point_number)
-		{
-		  if(pPa->PaNewSubpath || !pPa->PaPrevious)
-		    {
-		      /* Moving the start control point of a subpath */
-		      type = 1;
-		      break;
-		    }
-		  else
-		    {
-		      /* Moving a start control point */
-		      type = 2;
-		      pPaPrevious = pPa->PaPrevious;
-		      break;
-		    }
-		}
-	      i++;
+              if (i == point_number)
+                {
+                  if (pPa->PaNewSubpath || !pPa->PaPrevious)
+                    {
+                      /* Moving the start control point of a subpath */
+                      type = 1;
+                      break;
+                    }
+                  else
+                    {
+                      /* Moving a start control point */
+                      type = 2;
+                      pPaPrevious = pPa->PaPrevious;
+                      break;
+                    }
+                }
+              i++;
 
-	      if(i == point_number)
-		{
-		  if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
-		      /* Moving an end control point */
-		    {
-		      type = 3;
-		      pPaNext = pPa->PaNext;
-		      break;
-		    }
-		  else
-		    /* Moving the end control point of the last point
-		       of a subpath*/
-		    {
-		      type = 7;
-		      break;
-		    }
-		}
-	      i++;
-	    }
+              if (i == point_number)
+                {
+                  if (pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+                    /* Moving an end control point */
+                    {
+                      type = 3;
+                      pPaNext = pPa->PaNext;
+                      break;
+                    }
+                  else
+                    /* Moving the end control point of the last point
+                       of a subpath*/
+                    {
+                      type = 7;
+                      break;
+                    }
+                }
+              i++;
+            }
 
-	  if(i == point_number)
-	    {
-	      if(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
-		{
-		  /* Moving a point in the path */
-		  type = 4;
-		  pPaNext = pPa->PaNext;
-		  break;
-		}
-	      else
-	      {
-		  /* Moving the last point of a subpath */
-		  type = 5;
-		  break;
-		}
-	    }
+          if (i == point_number)
+            {
+              if (pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+                {
+                  /* Moving a point in the path */
+                  type = 4;
+                  pPaNext = pPa->PaNext;
+                  break;
+                }
+              else
+                {
+                  /* Moving the last point of a subpath */
+                  type = 5;
+                  break;
+                }
+            }
 	  
-	  i++;
-	  pPa = pPa->PaNext;
-	}
+          i++;
+          pPa = pPa->PaNext;
+        }
 
       pPaCurrent = pPa;
 
-      if(pPaCurrent)
-	{
-	  if(type == 0 || type == 1)
-	    {
-	      /* We want to edit the first point of a subpath:
-		 is the last point at the same position? */
-	      while(pPa)
-		{
-		  if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
-		    {
-		      if(pPa->XEnd == pPaCurrent->XStart &&
-			 pPa->YEnd == pPaCurrent->YStart)
-			  pPaPrevious = pPa;
+      if (pPaCurrent)
+        {
+          if (type == 0 || type == 1)
+            {
+              /* We want to edit the first point of a subpath:
+                 is the last point at the same position? */
+              while(pPa)
+                {
+                  if (!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+                    {
+                      if (pPa->XEnd == pPaCurrent->XStart &&
+                          pPa->YEnd == pPaCurrent->YStart)
+                        pPaPrevious = pPa;
 
-		      break;
-		    }
+                      break;
+                    }
 		  
-		  pPa = pPa->PaNext;
-		}
-	    }
-	  else if(type == 7 || type == 5)
-	    {
-	      /* We want to edit the last point of a subpath:
-		 is the first point at the same position? */
-	      if(pPaStart && 
-		 pPaStart->XStart == pPaCurrent->XEnd &&
-		 pPaStart->YStart == pPaCurrent->YEnd)
-		pPaNext = pPaStart;
-	    }
-	}
+                  pPa = pPa->PaNext;
+                }
+            }
+          else if (type == 7 || type == 5)
+            {
+              /* We want to edit the last point of a subpath:
+                 is the first point at the same position? */
+              if (pPaStart && 
+                  pPaStart->XStart == pPaCurrent->XEnd &&
+                  pPaStart->YStart == pPaCurrent->YEnd)
+                pPaNext = pPaStart;
+            }
+        }
      
     }
   else 
@@ -299,11 +298,11 @@ AmayaEditPathEvtHandler::~AmayaEditPathEvtHandler()
     }
 
 #ifdef _GL
-      if (glIsList (box->DisplayList))
-        {
-          glDeleteLists (box->DisplayList, 1);
-          box->DisplayList = 0;
-        }
+  if (glIsList (box->DisplayList))
+    {
+      glDeleteLists (box->DisplayList, 1);
+      box->DisplayList = 0;
+    }
 #endif /* _GL */
 
 }
@@ -319,8 +318,11 @@ bool AmayaEditPathEvtHandler::IsFinish()
  *----------------------------------------------------------------------*/
 void AmayaEditPathEvtHandler::OnChar( wxKeyEvent& event )
 {
-  if(event.GetKeyCode() !=  WXK_SHIFT)
-    finished = true;
+  if (event.GetKeyCode() !=  WXK_SHIFT)
+    {
+      TtaSetStatus (document, 1, "", NULL);
+      finished = true;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -330,7 +332,8 @@ void AmayaEditPathEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditPathEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
-  if (IsFinish())return;
+  if (IsFinish())
+    return;
 }
 
 /*----------------------------------------------------------------------
@@ -340,8 +343,10 @@ void AmayaEditPathEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditPathEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
-  if (IsFinish())return;
+  if (IsFinish())
+    return;
 
+  TtaSetStatus (document, 1, "", NULL);
   finished = true;
 }
 
@@ -352,6 +357,7 @@ void AmayaEditPathEvtHandler::OnMouseUp( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditPathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
+  TtaSetStatus (document, 1, "", NULL);
   finished = true;
 }
 
@@ -366,39 +372,39 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
   int dx, dy;
   ThotBool smooth = TRUE;
 
-  if (IsFinish())return;
-
-  if(event.ShiftDown())smooth = FALSE;
+  if (IsFinish())
+    return;
+  if (event.ShiftDown())
+    smooth = FALSE;
 
   /* DELTA is the sensitivity toward mouse moves. */
 #define DELTA 0
-
   /* Update the current mouse coordinates */
   mouse_x = event.GetX();
   mouse_y = event.GetY();
 
-  if(!buttonDown)
+  if (!buttonDown)
     {
       lastX = mouse_x;
       lastY = mouse_y;
       buttonDown = true;
     }
 
-  if((abs(mouse_x -lastX) + abs(mouse_y - lastY) > DELTA))
+  if ((abs(mouse_x -lastX) + abs(mouse_y - lastY) > DELTA))
     {
 
-      if(!(*hasBeenTransformed) && type != 6)
-	{
-	  /* Convert Quadratic Bezier to Cubic */
-	  if(pPaCurrent && pPaCurrent->PaShape == PtQuadraticBezier)
-	    TtaQuadraticToCubicPathSeg ((void *)pPaCurrent);
+      if (!(*hasBeenTransformed) && type != 6)
+        {
+          /* Convert Quadratic Bezier to Cubic */
+          if (pPaCurrent && pPaCurrent->PaShape == PtQuadraticBezier)
+            TtaQuadraticToCubicPathSeg ((void *)pPaCurrent);
 	  
-	  if(pPaNext && pPaNext->PaShape == PtQuadraticBezier)
-	    TtaQuadraticToCubicPathSeg ((void *)pPaNext);
+          if (pPaNext && pPaNext->PaShape == PtQuadraticBezier)
+            TtaQuadraticToCubicPathSeg ((void *)pPaNext);
 	  
-	  if(pPaPrevious && pPaPrevious->PaShape == PtQuadraticBezier)
-	    TtaQuadraticToCubicPathSeg ((void *)pPaPrevious);
-	}
+          if (pPaPrevious && pPaPrevious->PaShape == PtQuadraticBezier)
+            TtaQuadraticToCubicPathSeg ((void *)pPaPrevious);
+        }
 
       /* The user is pressing the mouse button and moving */
       x1 = lastX;
@@ -406,140 +412,136 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
       x2 = mouse_x;
       y2 = mouse_y;
 
-      MouseCoordinatesToSVG(document, pFrame,
-			    x0, y0,
-			    width, height,
-			    inverse,
-			    TRUE, &x1, &y1);
+      MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                            inverse, TRUE, TtaGetMessage (LIB, BUTTON_UP),
+                            &x1, &y1);
 
-      MouseCoordinatesToSVG(document, pFrame,
-			    x0, y0,
-			    width, height,
-			    inverse,
-			    TRUE, &x2, &y2);
+      MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                            inverse, TRUE, TtaGetMessage (LIB, BUTTON_UP),
+                            &x2, &y2);
 
       dx = x2 - x1;
       dy = y2 - y1;
 
       switch(type)
-	{
-	case 0:
-	  /* Moving a start point */
-	  pPaCurrent->XStart += dx;
-	  pPaCurrent->YStart += dy;
+        {
+        case 0:
+          /* Moving a start point */
+          pPaCurrent->XStart += dx;
+          pPaCurrent->YStart += dy;
 
-	  if(pPaCurrent->PaShape == PtCubicBezier)
-	    {
-	     pPaCurrent->XCtrlStart += dx;
-	     pPaCurrent->YCtrlStart += dy;
-	    }
+          if (pPaCurrent->PaShape == PtCubicBezier)
+            {
+              pPaCurrent->XCtrlStart += dx;
+              pPaCurrent->YCtrlStart += dy;
+            }
 
-	  if(pPaPrevious)
-	    {
-	      pPaPrevious->XEnd += dx;
-	      pPaPrevious->YEnd += dy;
+          if (pPaPrevious)
+            {
+              pPaPrevious->XEnd += dx;
+              pPaPrevious->YEnd += dy;
 
-	      if(pPaPrevious->PaShape == PtCubicBezier)
-		{
-		  pPaPrevious->XCtrlEnd += dx;
-		  pPaPrevious->YCtrlEnd += dy;
-		}
-	      }
-	  break;
+              if (pPaPrevious->PaShape == PtCubicBezier)
+                {
+                  pPaPrevious->XCtrlEnd += dx;
+                  pPaPrevious->YCtrlEnd += dy;
+                }
+            }
+          break;
 
-	case 1:
-	  /* Moving the start control point of a new subpath */
-	case 2:
-	  /* Moving the start control point */
-	  pPaCurrent->XCtrlStart += dx;
-	  pPaCurrent->YCtrlStart += dy;
+        case 1:
+          /* Moving the start control point of a new subpath */
+        case 2:
+          /* Moving the start control point */
+          pPaCurrent->XCtrlStart += dx;
+          pPaCurrent->YCtrlStart += dy;
 
-	  if(smooth && pPaPrevious &&
-	     pPaPrevious->PaShape == PtCubicBezier)
-	    {
-	      /* Update the other control point */
-	      GetSymetricPoint(pPaCurrent->XCtrlStart,
-			       pPaCurrent->YCtrlStart,
-			       pPaCurrent->XStart,
-			       pPaCurrent->YStart,
+          if (smooth && pPaPrevious &&
+              pPaPrevious->PaShape == PtCubicBezier)
+            {
+              /* Update the other control point */
+              GetSymetricPoint(pPaCurrent->XCtrlStart,
+                               pPaCurrent->YCtrlStart,
+                               pPaCurrent->XStart,
+                               pPaCurrent->YStart,
 
-			       &(pPaPrevious->XCtrlEnd),
-			       &(pPaPrevious->YCtrlEnd));
-	    }
+                               &(pPaPrevious->XCtrlEnd),
+                               &(pPaPrevious->YCtrlEnd));
+            }
 
-	  break;
+          break;
 
-	case 3:
-	  /* Moving the end control point */
+        case 3:
+          /* Moving the end control point */
 
-	case 7:
-	  /* Moving the end control point of the last point
-	     of a subpath*/
-	  pPaCurrent->XCtrlEnd += dx;
-	  pPaCurrent->YCtrlEnd += dy;
+        case 7:
+          /* Moving the end control point of the last point
+             of a subpath*/
+          pPaCurrent->XCtrlEnd += dx;
+          pPaCurrent->YCtrlEnd += dy;
 
-	  if(smooth && pPaNext && 
-	     pPaNext->PaShape == PtCubicBezier)
-	    {
-	      /* Update the other control point */
-	      GetSymetricPoint(pPaCurrent->XCtrlEnd,
-			       pPaCurrent->YCtrlEnd,
-			       pPaCurrent->XEnd,
-			       pPaCurrent->YEnd,
+          if (smooth && pPaNext && 
+              pPaNext->PaShape == PtCubicBezier)
+            {
+              /* Update the other control point */
+              GetSymetricPoint(pPaCurrent->XCtrlEnd,
+                               pPaCurrent->YCtrlEnd,
+                               pPaCurrent->XEnd,
+                               pPaCurrent->YEnd,
 
-			       &(pPaNext->XCtrlStart),
-			       &(pPaNext->YCtrlStart));
-	    }
+                               &(pPaNext->XCtrlStart),
+                               &(pPaNext->YCtrlStart));
+            }
 
-	  break;
+          break;
 
-	case 4:
-	  /* Moving a point in the path */
-	case 5:
-	  /* Moving the last point of a subpath */
+        case 4:
+          /* Moving a point in the path */
+        case 5:
+          /* Moving the last point of a subpath */
 
-	  /*if(pPaCurrent->PaShape == PtEllipticalArc)
-	    UpdateArc(pPaCurrent->XStart,
-		      pPaCurrent->XStart,
-		      pPaCurrent->XEnd,
-		      pPaCurrent->YEnd,
-		      (int)(pPaCurrent->XEnd+dx),
-		      (int)(pPaCurrent->YEnd+dy),
-		      &(pPaCurrent->XAxisRotation),
-		      &(pPaCurrent->XRadius),
-		      &(pPaCurrent->YRadius));*/
+          /*if (pPaCurrent->PaShape == PtEllipticalArc)
+            UpdateArc(pPaCurrent->XStart,
+            pPaCurrent->XStart,
+            pPaCurrent->XEnd,
+            pPaCurrent->YEnd,
+            (int)(pPaCurrent->XEnd+dx),
+            (int)(pPaCurrent->YEnd+dy),
+            &(pPaCurrent->XAxisRotation),
+            &(pPaCurrent->XRadius),
+            &(pPaCurrent->YRadius));*/
 
-	  if(pPaCurrent->PaShape == PtCubicBezier)
-	    {
-	      pPaCurrent->XCtrlEnd += dx;
-	      pPaCurrent->YCtrlEnd += dy;
-	    }
+          if (pPaCurrent->PaShape == PtCubicBezier)
+            {
+              pPaCurrent->XCtrlEnd += dx;
+              pPaCurrent->YCtrlEnd += dy;
+            }
 
-	  pPaCurrent->XEnd += dx;
-	  pPaCurrent->YEnd += dy;
+          pPaCurrent->XEnd += dx;
+          pPaCurrent->YEnd += dy;
 
-	  if(pPaNext)
-	    {
-	      pPaNext->XStart += dx;
-	      pPaNext->YStart += dy;
+          if (pPaNext)
+            {
+              pPaNext->XStart += dx;
+              pPaNext->YStart += dy;
 
-	      if(pPaNext->PaShape == PtCubicBezier)
-		{
-		  pPaNext->XCtrlStart += dx;
-		  pPaNext->YCtrlStart += dy;
-		}
-	    }
-	  break;
+              if (pPaNext->PaShape == PtCubicBezier)
+                {
+                  pPaNext->XCtrlStart += dx;
+                  pPaNext->YCtrlStart += dy;
+                }
+            }
+          break;
 
-	case 6:
-	  /* Moving a point of a polyline/polygon  */
-	  pBuffer->BuPoints[i_poly].XCoord += dx;
-	  pBuffer->BuPoints[i_poly].YCoord += dy;
-	  break;
+        case 6:
+          /* Moving a point of a polyline/polygon  */
+          pBuffer->BuPoints[i_poly].XCoord += dx;
+          pBuffer->BuPoints[i_poly].YCoord += dy;
+          break;
 
-	default:
-	  break;
-	}
+        default:
+          break;
+        }
 
 #ifndef NODISPLAY
       /* Redisplay the GRAPHICS leaf */
@@ -549,7 +551,6 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
       /* Update the previous mouse coordinates */
       lastX = mouse_x;
       lastY = mouse_y;
-
       *hasBeenTransformed = TRUE;
     }
 }
@@ -565,10 +566,10 @@ void AmayaEditPathEvtHandler::OnMouseWheel( wxMouseEvent& event )
 
 /*----------------------------------------------------------------------
   GetSymetricPoint
- *----------------------------------------------------------------------*/
+  *----------------------------------------------------------------------*/
 void AmayaEditPathEvtHandler::GetSymetricPoint(int x, int y,
-					       int x0, int y0,
-					       int *symx, int *symy)
+                                               int x0, int y0,
+                                               int *symx, int *symy)
 {
   *symx = 2*x0 - x;
   *symy = 2*y0 - y;
@@ -623,7 +624,7 @@ void AmayaEditPathEvtHandler::GetSymetricPoint(int x, int y,
 //   d1 = dx1*dx1 + dy1*dy1;
 //   d2 = dx2*dx2 + dy2*dy2;
 
-//   if(d1 == 0 || d2 == 0)
+//   if (d1 == 0 || d2 == 0)
 //     return;
 
 //   k = sqrt(d2/d1);
@@ -672,7 +673,7 @@ void AmayaEditPathEvtHandler::GetSymetricPoint(int x, int y,
 //   y = (-b*c + a*d)/det;
 
 //   *phi = (int)(acos(x) * 180 / M_PI);
-//   if(y < 0)*phi = 360-*phi;
+//   if (y < 0)*phi = 360-*phi;
 // }
 
 #endif /* _WX */

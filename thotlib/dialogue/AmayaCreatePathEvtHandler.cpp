@@ -42,40 +42,40 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)
 
-/*----------------------------------------------------------------------
- *  this is where the event table is declared
- *  the callbacks are assigned to an event type
- *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaCreatePathEvtHandler, wxEvtHandler)
-EVT_KEY_DOWN( AmayaCreatePathEvtHandler::OnChar )
-EVT_LEFT_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
-EVT_LEFT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
-EVT_MIDDLE_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
-EVT_MIDDLE_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
-EVT_RIGHT_DOWN(	AmayaCreatePathEvtHandler::OnMouseRightDown)
-EVT_RIGHT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
-EVT_MOTION(		AmayaCreatePathEvtHandler::OnMouseMove)
-EVT_MOUSEWHEEL(	AmayaCreatePathEvtHandler::OnMouseWheel)
-END_EVENT_TABLE()
+  /*----------------------------------------------------------------------
+   *  this is where the event table is declared
+   *  the callbacks are assigned to an event type
+   *----------------------------------------------------------------------*/
+  BEGIN_EVENT_TABLE(AmayaCreatePathEvtHandler, wxEvtHandler)
+  EVT_KEY_DOWN( AmayaCreatePathEvtHandler::OnChar )
+  EVT_LEFT_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
+  EVT_LEFT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+  EVT_MIDDLE_DOWN(	AmayaCreatePathEvtHandler::OnMouseDown)
+  EVT_MIDDLE_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+  EVT_RIGHT_DOWN(	AmayaCreatePathEvtHandler::OnMouseRightDown)
+  EVT_RIGHT_DCLICK(	AmayaCreatePathEvtHandler::OnMouseDbClick)
+  EVT_MOTION(		AmayaCreatePathEvtHandler::OnMouseMove)
+  EVT_MOUSEWHEEL(	AmayaCreatePathEvtHandler::OnMouseWheel)
+  END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler() : wxEvtHandler()
+*----------------------------------------------------------------------*/
+  AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler() : wxEvtHandler()
 {
 }
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
-						     Document doc,
-						     void *inverse,
-						     int ancestorX,
-						     int ancestorY,
-						     int canvasWidth,
-						     int canvasHeight,
-						     int shape,
-						     Element el,
-						     ThotBool *created)
+                                                     Document doc,
+                                                     void *inverse,
+                                                     int ancestorX,
+                                                     int ancestorY,
+                                                     int canvasWidth,
+                                                     int canvasHeight,
+                                                     int shape,
+                                                     Element el,
+                                                     ThotBool *created)
   : wxEvtHandler()
   ,finished(false)
   ,pFrame(p_frame)
@@ -111,19 +111,19 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
 
   /* Get the box of the SVG element */
   pAb = ((PtrElement)el) -> ElAbstractBox[0];
-  if(!pAb || !(pAb->AbBox))
+  if (!pAb || !(pAb->AbBox))
     {
-    finished = true;
-    return;
+      finished = true;
+      return;
     }
   box = pAb -> AbBox;
 
   /* Get the GRAPHICS leaf */
   leaf = TtaGetLastChild((Element)el);
-  if(!leaf)
+  if (!leaf)
     {
-    finished = true;
-    return;
+      finished = true;
+      return;
     }
 }
 
@@ -134,86 +134,72 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
   int x1,y1,x2,y2,x3,y3,x4,y4;
   PtrPathSeg          pPa;
 
-  if(shape == 8)
+  if (shape == 8)
     {
       /* close the curve */
       pPa = ((PtrElement)leaf)->ElFirstPathSeg;
+      if (pPa)
+        {
+          if (state == 2)
+            {
+              x1 = lastX2;
+              y1 = lastY2;
+              x2 = symX;
+              y2 = symY;
+            }
+          if (state == 3)
+            {
+              x1 = lastX2;
+              y1 = lastY2;
+              x2 = 2*lastX1-lastX2;
+              y2 = 2*lastY1-lastY2;
+            }
+          else
+            {
+              x1 = lastX3;
+              y1 = lastY3;
+              x2 = 2*lastX2-lastX3;
+              y2 = 2*lastY2-lastY3;
+            }
+          MouseCoordinatesToSVG(document, pFrame, x0,y0, width,height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x1, &y1);
+          MouseCoordinatesToSVG(document, pFrame, x0,y0, width,height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x2, &y2);
+          x3 = 2*pPa->XStart - pPa->XCtrlStart;
+          y3 = 2*pPa->YStart - pPa->YCtrlStart;
+          x4 = pPa->XStart;
+          y4 = pPa->YStart;
+          /*                          (x3,y3)
+           *
+           *	(x2,y2)	     ..............
+           *		.....		  ....
+           *	      ...		      ..
+           *	    ...				...
+           *	  ...                             (x4,y4) = first point
+           *	 ..                                         of the path
+           *	..
+           *  (x1,y1) = last point
+           *    
+           *
+           */
 
-      if(pPa)
-	{
-	  if(state == 2)
-	    {
-	      x1 = lastX2;
-	      y1 = lastY2;
-	      x2 = symX;
-	      y2 = symY;
-	    }
-	  if(state == 3)
-	    {
-	      x1 = lastX2;
-	      y1 = lastY2;
-	      x2 = 2*lastX1-lastX2;
-	      y2 = 2*lastY1-lastY2;
-	    }
-	  else
-	    {
-	      x1 = lastX3;
-	      y1 = lastY3;
-	      x2 = 2*lastX2-lastX3;
-	      y2 = 2*lastY2-lastY3;
-	    }
-   
-	  MouseCoordinatesToSVG(document, pFrame,
-			    x0,y0,
-			    width,height,
-			    NULL,
-			    TRUE, &x1, &y1);
-
-	  MouseCoordinatesToSVG(document, pFrame,
-			    x0,y0,
-			    width,height,
-			    NULL,
-			    TRUE, &x2, &y2);
-
-	  x3 = 2*pPa->XStart - pPa->XCtrlStart;
-	  y3 = 2*pPa->YStart - pPa->YCtrlStart;
-
-	  x4 = pPa->XStart;
-	  y4 = pPa->YStart;
-
-	  /*                          (x3,y3)
-	   *
-	   *	(x2,y2)	     ..............
-	   *		.....		  ....
-	   *	      ...		      ..
-	   *	    ...				...
-	   *	  ...                             (x4,y4) = first point
-	   *	 ..                                         of the path
-	   *	..
-	   *  (x1,y1) = last point
-	   *    
-	   *
-	   */
-
-	  TtaAppendPathSeg (leaf,
-			    TtaNewPathSegCubic (x1, y1, x4 ,y4,
-						x2, y2, x3, y3, FALSE),
-			    document);
-	}
+          TtaAppendPathSeg (leaf, TtaNewPathSegCubic (x1, y1, x4 ,y4,
+                                                      x2, y2, x3, y3, FALSE), document);
+        }
     }
 
+  TtaSetStatus (document, 1, "", NULL);
   if (pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
       p_canvas->PopEventHandler(false /* do not delete myself */);
-
       /* restore the default cursor */
       pFrame->GetCanvas()->SetCursor( wxNullCursor );
-
       pFrame->GetCanvas()->ReleaseMouse();
     }
-
 }
 
 /*----------------------------------------------------------------------
@@ -227,9 +213,10 @@ bool AmayaCreatePathEvtHandler::IsFinish()
  *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
 {
-  if(event.GetKeyCode() !=  WXK_SHIFT)
+  if (event.GetKeyCode() !=  WXK_SHIFT)
     {
       *created = FALSE;
+      TtaSetStatus (document, 1, "", NULL);
       finished = true;
     }
 }
@@ -241,9 +228,8 @@ void AmayaCreatePathEvtHandler::OnChar( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
-  if(IsFinish())
+  if (IsFinish())
     return;
-
   AddNewPoint ();
 }
 
@@ -254,10 +240,11 @@ void AmayaCreatePathEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
-  if(IsFinish())
+  if (IsFinish())
     return;
 
   AddNewPoint();
+  TtaSetStatus (document, 1, "", NULL);
   finished = true;
 }
 
@@ -265,9 +252,10 @@ void AmayaCreatePathEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
 {
-  if(IsFinish())
+  if (IsFinish())
     return;
 
+  TtaSetStatus (document, 1, "", NULL);
   finished = true;
 }
 
@@ -278,29 +266,22 @@ void AmayaCreatePathEvtHandler::OnMouseRightDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-  if(clear)
+  if (clear)
     DrawPathFragment(shape, TRUE);
-
   currentX = event.GetX();
   currentY = event.GetY();
-
-  if(event.ShiftDown())
+  if (event.ShiftDown())
     {
-      if(nb_points >= 2 && (shape == 5 || shape == 6))
-	ApproximateAngleOfLine(15, lastX1, lastY1, &currentX, &currentY);
+      if (nb_points >= 2 && (shape == 5 || shape == 6))
+        ApproximateAngleOfLine(15, lastX1, lastY1, &currentX, &currentY);
     }
 
   UpdateSymetricPoint();
-
   DrawPathFragment(shape, TRUE);
   clear = true;
-
-  MouseCoordinatesToSVG(document, pFrame,
-			x0,y0,
-			width,height,
-			inverse,
-			FALSE, &currentX, &currentY);
-  
+  MouseCoordinatesToSVG(document, pFrame, x0,y0, width,height,
+                        inverse, FALSE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                        &currentX, &currentY);
 #ifndef _WINDOWS
   pFrame->GetCanvas()->Refresh();
 #endif /* _WINDOWS */
@@ -329,7 +310,7 @@ void AmayaCreatePathEvtHandler::OnMouseWheel( wxMouseEvent& event )
 
   *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::DrawLine (int x2, int y2, int x3,
-					  int y3, ThotBool specialColor)
+                                          int y3, ThotBool specialColor)
 {
   glEnable(GL_COLOR_LOGIC_OP);
 #ifdef _WINDOWS
@@ -337,7 +318,7 @@ void AmayaCreatePathEvtHandler::DrawLine (int x2, int y2, int x3,
   glColor4ub (127, 127, 127, 0);
 #else /* _WINDOWS */
   glLogicOp(GL_XOR);
-  if(specialColor)
+  if (specialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
@@ -357,9 +338,9 @@ void AmayaCreatePathEvtHandler::DrawLine (int x2, int y2, int x3,
 
   *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::DrawQuadraticBezier (int x1, int y1,
-						     int x2, int y2,
-						     int x3, int y3,
-						     ThotBool specialColor)
+                                                     int x2, int y2,
+                                                     int x3, int y3,
+                                                     ThotBool specialColor)
 	      
 {
 #define N_INTERP 50
@@ -375,7 +356,7 @@ void AmayaCreatePathEvtHandler::DrawQuadraticBezier (int x1, int y1,
   glColor4ub (127, 127, 127, 0);
 #else /* _WINDOWS */
   glLogicOp(GL_XOR);
-  if(specialColor)
+  if (specialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
@@ -399,10 +380,10 @@ void AmayaCreatePathEvtHandler::DrawQuadraticBezier (int x1, int y1,
   using (x2,y2) and (x3,y3) as the control points.
   *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::DrawCubicBezier (int x1, int y1,
-						 int x2, int y2,
-						 int x3, int y3,
-						 int x4, int y4,
-						 ThotBool specialColor)
+                                                 int x2, int y2,
+                                                 int x3, int y3,
+                                                 int x4, int y4,
+                                                 ThotBool specialColor)
 {
   int i;
 
@@ -417,7 +398,7 @@ void AmayaCreatePathEvtHandler::DrawCubicBezier (int x1, int y1,
   glColor4ub (127, 127, 127, 0);
 #else /* _WINDOWS */
   glLogicOp(GL_XOR);
-  if(specialColor)
+  if (specialColor)
     glColor4ub (127, 0, 127, 0);
   else
     glColor4ub (127, 127, 127, 0);
@@ -485,7 +466,7 @@ void AmayaCreatePathEvtHandler::DrawControlPoints ()
   is drawn with a special color to show that it is active.
   *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
-						 ThotBool specialColor)
+                                                 ThotBool specialColor)
 {
   InitDrawing (5, 1, 0);
 
@@ -493,66 +474,66 @@ void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
     {
     case 5:
     case 6:
-      if(state == 1)
-	DrawLine (lastX1, lastY1, currentX, currentY, specialColor);
+      if (state == 1)
+        DrawLine (lastX1, lastY1, currentX, currentY, specialColor);
       break;
 
     case 7:
     case 8:
       switch(state)
-	{
-	case 0:
-	  /*                                                  */
-	  /*                                                  */
-	  /*         (current)+                               */
-	  break;
-	case 1:
-	  /*                          .....+(current)         */
-	  /*                    ......                        */
-	  /*         (last1)O...                              */
-	  DrawLine (lastX1, lastY1, currentX, currentY, specialColor);
-	  break;
+        {
+        case 0:
+          /*                                                  */
+          /*                                                  */
+          /*         (current)+                               */
+          break;
+        case 1:
+          /*                          .....+(current)         */
+          /*                    ......                        */
+          /*         (last1)O...                              */
+          DrawLine (lastX1, lastY1, currentX, currentY, specialColor);
+          break;
 	
-	case 2:
-	  /*                           +(current)             */
-	  /*  (last2)                 /                       */
-	  /*        .                /                        */
-	  /*         ..          .(last1)                     */
-	  /*           ..     ..  /                           */
-	  /*             .....   /                            */
-	  /*                  (sym)                           */
-	  DrawQuadraticBezier (lastX2, lastY2, symX, symY,
-			       lastX1, lastY1, specialColor);
-	  if(specialColor)DrawControlPoints();
-	  break;
+        case 2:
+          /*                           +(current)             */
+          /*  (last2)                 /                       */
+          /*        .                /                        */
+          /*         ..          .(last1)                     */
+          /*           ..     ..  /                           */
+          /*             .....   /                            */
+          /*                  (sym)                           */
+          DrawQuadraticBezier (lastX2, lastY2, symX, symY,
+                               lastX1, lastY1, specialColor);
+          if (specialColor)DrawControlPoints();
+          break;
 
-	case 3:
-	  /*                    +(current)                    */
-	  /*                    ...                           */
-	  /*                       .                          */
-	  /*                      .                           */
-	  /*                  ...   (last1)                   */
-	  /*             .....                                */
-	  /*   (last2)...                                     */
-	  /*                                                  */
-	  DrawQuadraticBezier (lastX2, lastY2, lastX1, lastY1,
-			       currentX, currentY, specialColor);
-	  break;
+        case 3:
+          /*                    +(current)                    */
+          /*                    ...                           */
+          /*                       .                          */
+          /*                      .                           */
+          /*                  ...   (last1)                   */
+          /*             .....                                */
+          /*   (last2)...                                     */
+          /*                                                  */
+          DrawQuadraticBezier (lastX2, lastY2, lastX1, lastY1,
+                               currentX, currentY, specialColor);
+          break;
 
-	case 4:
-	  /*      (current)+---(last1)---(sym)                */
-	  /*                      ...                         */
-	  /*                         ....                     */
-	  /*                            .                     */
-	  /*                            .                     */
-	  /*                          ...                     */
-	  /*               ...........     (last2)            */
-	  /*    (last3)....                                   */
-	  DrawCubicBezier(lastX3, lastY3, lastX2, lastY2, symX, symY,
-			  lastX1, lastY1, specialColor);
-	  if(specialColor)DrawControlPoints();
-	  break;
-	}
+        case 4:
+          /*      (current)+---(last1)---(sym)                */
+          /*                      ...                         */
+          /*                         ....                     */
+          /*                            .                     */
+          /*                            .                     */
+          /*                          ...                     */
+          /*               ...........     (last2)            */
+          /*    (last3)....                                   */
+          DrawCubicBezier(lastX3, lastY3, lastX2, lastY2, symX, symY,
+                          lastX1, lastY1, specialColor);
+          if (specialColor)DrawControlPoints();
+          break;
+        }
       break;
 
     default:
@@ -575,29 +556,27 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
     return;
 
   /* Are we in the SVG ? */
-  if(!MouseCoordinatesToSVG(document, pFrame,
-			    x0,y0,
-			    width,height,
-			    NULL,
-			    FALSE, &currentX, &currentY))return;
+  if (!MouseCoordinatesToSVG (document, pFrame, x0,y0, width,height,
+                              NULL, FALSE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                              &currentX, &currentY))
+    return;
 
-  if(shape == 7 || shape == 8)
+  if (shape == 7 || shape == 8)
     {
       clear = false;
-
-      if(state == 0 || state == 1 || state == 3)
-	{
-	  /* Clear the active fragment */
-	  DrawPathFragment(shape, TRUE);
-	}
+      if (state == 0 || state == 1 || state == 3)
+        {
+          /* Clear the active fragment */
+          DrawPathFragment(shape, TRUE);
+        }
       else
-	{
-	  /* Clear the active fragment */
-	  DrawPathFragment(shape, TRUE);
+        {
+          /* Clear the active fragment */
+          DrawPathFragment(shape, TRUE);
 
-	  /* Draw the new curve fragment */
-	  DrawPathFragment(shape, FALSE);
-	}
+          /* Draw the new curve fragment */
+          DrawPathFragment(shape, FALSE);
+        }
     }
   else
     {
@@ -608,106 +587,86 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
       DrawPathFragment(shape, FALSE);
     }
 
-  if(shape == 5 || shape == 6)
+  if (shape == 5 || shape == 6)
     {
-      if(nb_points == 2)
-	*created = TRUE;
+      if (nb_points == 2)
+        *created = TRUE;
 
       /* Add a new point in the polyline/polygon */
       state = 1;
       x1 = currentX;
       y1 = currentY;
-      MouseCoordinatesToSVG(document, pFrame,
-			    x0,y0,
-			    width,height,
-			    NULL,
-			    TRUE, &x1, &y1);
+      MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                            NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                            &x1, &y1);
 
       TtaAddPointInPolyline (leaf, nb_points, UnPixel, x1, y1, document, FALSE);
       nb_points++;
     }
-  else if(shape == 7 || shape == 8)
+  else if (shape == 7 || shape == 8)
     {
       /* Bezier Curve */
       
-      if(state == 2)
-	{
-	  /* Add a quadratic Bezier curve */
-	  x1 = lastX2;
-	  y1 = lastY2;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x1, &y1);
+      if (state == 2)
+        {
+          /* Add a quadratic Bezier curve */
+          x1 = lastX2;
+          y1 = lastY2;
+          MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x1, &y1);
 
-	  x2 = symX;
-	  y2 = symY;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x2, &y2);
+          x2 = symX;
+          y2 = symY;
+          MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x2, &y2);
 
-	  x4 = lastX1;
-	  y4 = lastY1;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x4, &y4);
+          x4 = lastX1;
+          y4 = lastY1;
+          MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x4, &y4);
 
 	  
-	  TtaAppendPathSeg (leaf,
-			    TtaNewPathSegQuadratic (x1, y1, x4 ,y4,
-						    x2, y2, FALSE),
-			    document);
+          TtaAppendPathSeg (leaf, TtaNewPathSegQuadratic (x1, y1, x4 ,y4,
+                                                          x2, y2, FALSE), document);
 
-	  *created = TRUE;
-	}
-      else if(state == 4)
-	{
-	  x1 = lastX3;
-	  y1 = lastY3;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x1, &y1);
+          *created = TRUE;
+        }
+      else if (state == 4)
+        {
+          x1 = lastX3;
+          y1 = lastY3;
+          MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x1, &y1);
 
-	  x2 = lastX2;
-	  y2 = lastY2;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x2, &y2);
+          x2 = lastX2;
+          y2 = lastY2;
+          MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x2, &y2);
 
-	  x3 = symX;
-	  y3 = symY;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x3, &y3);
+          x3 = symX;
+          y3 = symY;
+          MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x3, &y3);
 
-	  x4 = lastX1;
-	  y4 = lastY1;
-	  MouseCoordinatesToSVG(document, pFrame,
-				x0,y0,
-				width,height,
-				NULL,
-				TRUE, &x4, &y4);
+          x4 = lastX1;
+          y4 = lastY1;
+          MouseCoordinatesToSVG(document, pFrame, x0,y0, width,height,
+                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                &x4, &y4);
 
-	  
-	  TtaAppendPathSeg (leaf,
-			    TtaNewPathSegCubic (x1, y1, x4 ,y4,
-						x2, y2, x3, y3, FALSE),
-			    document);
-	}
-
-      if(state < 4)state++;
-      else state=3;
+          TtaAppendPathSeg (leaf, TtaNewPathSegCubic (x1, y1, x4 ,y4,
+                                                      x2, y2, x3, y3, FALSE), document);
+        }
+      if (state < 4)
+        state++;
+      else
+        state=3;
     }
 
   lastX3 = lastX2;
@@ -717,7 +676,6 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
   lastX1 = currentX;
   lastY1 = currentY;
   UpdateSymetricPoint();
-
 }
 
 

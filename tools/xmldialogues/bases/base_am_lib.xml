@@ -4696,6 +4696,18 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 	<message xml:lang="en">Create a new types union</message>
 	<message xml:lang="fr">Créer une nouvelle union de types</message>
 </label>
+<label define="BUTTON_UP">
+	<message xml:lang="en">(%d,%d) Button up to close</message>
+	<message xml:lang="fr">(%d,%d) Bouton relaché pour terminer</message>
+</label>
+<label define="DOUBLE_CLICK">
+	<message xml:lang="en">(%d,%d) Double click to close</message>
+	<message xml:lang="fr">(%d,%d) Double clic pour terminer</message>
+</label>
+<label define="SIMPLE_CLICK">
+	<message xml:lang="en">(%d,%d) Click to close</message>
+	<message xml:lang="fr">(%d,%d) Cliquer pour terminer</message>
+</label>
 
 <!-- End of SVG panel -->
 

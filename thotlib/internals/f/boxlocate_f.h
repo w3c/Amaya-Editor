@@ -51,10 +51,6 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef,
                                   PtrFlow *pFlow );
-extern void ApplyDirectTranslate ( PtrBox pBox,
-                                   int frame,
-                                   int xm,
-                                   int ym );
 extern void ApplyDirectResize ( PtrBox pBox,
                                 int frame,
                                 int pointselect,
@@ -116,10 +112,6 @@ extern PtrBox GetClickedLeafBox ( int frame,
                                     int xRef,
                                     int yRef,
                                     PtrFlow *pFlow );
-extern void ApplyDirectTranslate ( PtrBox pBox,
-                                     int frame,
-                                     int xm,
-                                     int ym );
 extern void ApplyDirectResize ( PtrBox pBox,
                                   int frame,
                                   int pointselect,

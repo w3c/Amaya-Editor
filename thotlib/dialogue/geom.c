@@ -15,7 +15,7 @@
  *
  */
 #ifdef _WX
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -48,26 +48,26 @@ static int          GridSize = 1;
 #include "units_f.h"
 #include "windowdisplay_f.h"
 #ifdef _GL
-  #if defined (_MACOS) && defined (_WX)
-  #include <gl.h>
-  #else /* _MACOS */
-  #include <GL/gl.h>
-  #endif /* _MACOS */
-  #include "glwindowdisplay.h"
+#if defined (_MACOS) && defined (_WX)
+#include <gl.h>
+#else /* _MACOS */
+#include <GL/gl.h>
+#endif /* _MACOS */
+#include "glwindowdisplay.h"
 #endif /*_GL*/
 #ifdef _WX
-  #include "logdebug.h"
-  #include "message_wx.h"
-  #include "AmayaFrame.h"
-  #include "AmayaAddPointEvtHandler.h"
-  #include "AmayaMovePointEvtHandler.h"
-  #include "AmayaMovingBoxEvtHandler.h"
-  #include "AmayaResizingBoxEvtHandler.h"
-  #include "AmayaCreateShapeEvtHandler.h"
-  #include "AmayaCreatePathEvtHandler.h"
-  #include "AmayaTransformEvtHandler.h"
-  #include "AmayaEditPathEvtHandler.h"
-  #include "AmayaEditShapeEvtHandler.h"
+#include "logdebug.h"
+#include "message_wx.h"
+#include "AmayaFrame.h"
+#include "AmayaAddPointEvtHandler.h"
+#include "AmayaMovePointEvtHandler.h"
+#include "AmayaMovingBoxEvtHandler.h"
+#include "AmayaResizingBoxEvtHandler.h"
+#include "AmayaCreateShapeEvtHandler.h"
+#include "AmayaCreatePathEvtHandler.h"
+#include "AmayaTransformEvtHandler.h"
+#include "AmayaEditPathEvtHandler.h"
+#include "AmayaEditShapeEvtHandler.h"
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
@@ -137,8 +137,8 @@ void InvertEllipse (int frame, int x, int y, int width, int height,
   - x3, y3 successor of point
   ----------------------------------------------------------------------*/
 static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
-			    int nb, int point, ThotBool close, int *x1,
-			    int *y1, int *x2, int *y2, int *x3, int *y3)
+                            int nb, int point, ThotBool close, int *x1,
+                            int *y1, int *x2, int *y2, int *x3, int *y3)
 {
   ThotWindow          w;
   ThotPoint          *points;
@@ -154,38 +154,38 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
   for (i = 0; i < nb - 1; i++)
     {
       if (j >= adbuff->BuLength &&
-	  adbuff->BuNext != NULL)
-	{
-	  /* change the buffer */
-	  adbuff = adbuff->BuNext;
-	  j = 0;
-	}
+          adbuff->BuNext != NULL)
+        {
+          /* change the buffer */
+          adbuff = adbuff->BuNext;
+          j = 0;
+        }
       points[i].x = x + PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL,
-				    ViewFrameTable[frame - 1].FrMagnification);
+                                    ViewFrameTable[frame - 1].FrMagnification);
       points[i].y = y + PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL,
-				    ViewFrameTable[frame - 1].FrMagnification);
+                                    ViewFrameTable[frame - 1].FrMagnification);
       /* write down predecessor and sucessor of point */
       if (i + 1 == point)
-	{
-	  /* selected point */
-	  *x2 = (int)points[i].x;
-	  *y2 = (int)points[i].y;
-	}
+        {
+          /* selected point */
+          *x2 = (int)points[i].x;
+          *y2 = (int)points[i].y;
+        }
       else
-	{
-	  if (i + 1 == point - 1)
-	    {
-	      /* predecessor */
-	      *x1 = (int)points[i].x;
-	      *y1 = (int)points[i].y;
-	    }
-	  else if (i == point)
-	    {
-	      /* succesor */
-	      *x3 = (int)points[i].x;
-	      *y3 = (int)points[i].y;
-	    }
-	}
+        {
+          if (i + 1 == point - 1)
+            {
+              /* predecessor */
+              *x1 = (int)points[i].x;
+              *y1 = (int)points[i].y;
+            }
+          else if (i == point)
+            {
+              /* succesor */
+              *x3 = (int)points[i].x;
+              *y3 = (int)points[i].y;
+            }
+        }
       j++;
     }
 
@@ -195,16 +195,16 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
       /* This is a closed polyline with more than 2 points */
       points[nb - 1].x = points[0].x;
       points[nb - 1].y = points[0].y;
-     if (point == 1)
-       {
-	 *x1 = (int)points[nb - 2].x;
-	 *y1 = (int)points[nb - 2].y;
-       }
-     if (point == nb - 1)
-       {
-	 *x3 = (int)points[0].x;
-	 *y3 = (int)points[0].y;
-       }
+      if (point == 1)
+        {
+          *x1 = (int)points[nb - 2].x;
+          *y1 = (int)points[nb - 2].y;
+        }
+      if (point == nb - 1)
+        {
+          *x3 = (int)points[0].x;
+          *y3 = (int)points[0].y;
+        }
     }
   else 
     /* free the table of points */
@@ -214,20 +214,20 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
 
 /*----------------------------------------------------------------------
   AddPoints adds a set of new points in a Polyline
-   - x, y and lastx, lasty points to the current point
-   - the first inserted point will be linked to x1, y1 when x1!= -1
-   - the last inserted point will be linked to x3, y3 when x3!= -1
-   - point gives the index of the first inserted point
-   - maxPoints gives the constraint when the number of points is fixed
-     (0 if there is no constraint).
-   - width and height give the limits of the box
-   - Pbuffer and Bbuffer point to the current Abstract Box buffer and
-     Box buffer.
+  - x, y and lastx, lasty points to the current point
+  - the first inserted point will be linked to x1, y1 when x1!= -1
+  - the last inserted point will be linked to x3, y3 when x3!= -1
+  - point gives the index of the first inserted point
+  - maxPoints gives the constraint when the number of points is fixed
+  (0 if there is no constraint).
+  - width and height give the limits of the box
+  - Pbuffer and Bbuffer point to the current Abstract Box buffer and
+  Box buffer.
   ----------------------------------------------------------------------*/
 static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
-		       int y3, int lastx, int lasty, int point,
-		       int *nbpoints, int maxPoints, int width, int height,
-		       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
+                       int y3, int lastx, int lasty, int point,
+                       int *nbpoints, int maxPoints, int width, int height,
+                       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 {
 #ifdef _WX
   TTALOGDEBUG_13( TTA_LOG_SVGEDIT, _T("AddPoints: frame=%d x=%d y=%d x1=%d y1=%d x3=%d y3=%d lastx=%d lasty=%d point=%d maxPoints=%d width=%d height=%d"), frame, x, y, x1, y1, x3, y3, lastx, lasty, point, maxPoints, width, height );
@@ -443,13 +443,13 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 
 /*----------------------------------------------------------------------
   MoveApoint moves a point in a Polyline
-   - x, y and lastx, lasty points to the current point
-   - the first inserted point will be linked to x1, y1 when x1!= -1
-   - the last inserted point will be linked to x3, y3 when x3!= -1
-   - point gives the index of the first inserted point
-   - x, y, width and height give the limits of the box
-   - Pbuffer and Bbuffer point to the current Abstract Box buffer and
-     Box buffer.
+  - x, y and lastx, lasty points to the current point
+  - the first inserted point will be linked to x1, y1 when x1!= -1
+  - the last inserted point will be linked to x3, y3 when x3!= -1
+  - point gives the index of the first inserted point
+  - x, y, width and height give the limits of the box
+  - Pbuffer and Bbuffer point to the current Abstract Box buffer and
+  Box buffer.
   ----------------------------------------------------------------------*/
 static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
                         int x1, int y1, int x3, int y3,
@@ -628,7 +628,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   returns the number of point in the polyline.
   ----------------------------------------------------------------------*/
 int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
-		      int maxPoints)
+                      int maxPoints)
 {
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
@@ -647,11 +647,11 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
   width = PixelValue (width, UnPixel, NULL,
-		      ViewFrameTable[frame - 1].FrMagnification);
+                      ViewFrameTable[frame - 1].FrMagnification);
   y = *yOrg;
   height = Bbuffer->BuPoints[0].YCoord;
   height = PixelValue (height, UnPixel, NULL,
-		       ViewFrameTable[frame - 1].FrMagnification);
+                       ViewFrameTable[frame - 1].FrMagnification);
 
 #if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
@@ -683,7 +683,7 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   This function updates both lists of control points.
   ----------------------------------------------------------------------*/
 void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
-			   int nbpoints, int point, ThotBool close)
+                           int nbpoints, int point, ThotBool close)
 {
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
@@ -694,7 +694,7 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   int                 x, y;
 
   if (pBox == NULL || pBox->BxAbstractBox == NULL)
-     return;
+    return;
 
   Bbuffer = pBox->BxBuffer;
   Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
@@ -716,9 +716,9 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
       height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
     }
   width = PixelValue (width, UnPixel, NULL,
-		      ViewFrameTable[frame - 1].FrMagnification);
+                      ViewFrameTable[frame - 1].FrMagnification);
   height = PixelValue (height, UnPixel, NULL,
-		       ViewFrameTable[frame - 1].FrMagnification);
+                       ViewFrameTable[frame - 1].FrMagnification);
 
 #if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
@@ -767,7 +767,7 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   returns the new number of points in the polyline.
   ----------------------------------------------------------------------*/
 int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
-		       int nbpoints, int point, ThotBool close)
+                       int nbpoints, int point, ThotBool close)
 {
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
@@ -786,22 +786,22 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
   width = PixelValue (width, UnPixel, NULL,
-		      ViewFrameTable[frame - 1].FrMagnification);
+                      ViewFrameTable[frame - 1].FrMagnification);
   y = *yOrg;
   height = Bbuffer->BuPoints[0].YCoord;
   height = PixelValue (height, UnPixel, NULL,
-		       ViewFrameTable[frame - 1].FrMagnification);
+                       ViewFrameTable[frame - 1].FrMagnification);
 
 #if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINGUI */
 
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
-		  &x1, &y1, &lastx, &lasty, &x3, &y3);
+                  &x1, &y1, &lastx, &lasty, &x3, &y3);
   x1 = lastx;
   y1 = lasty;
   AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, &nbpoints, 0, width, height,
-	     Pbuffer, Bbuffer);
+             Pbuffer, Bbuffer);
 
 #if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
@@ -818,7 +818,7 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   This fonction returns position of extremities: x1, y1 and x2, y2.
   ----------------------------------------------------------------------*/
 int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
-		  int *y2)
+                  int *y2)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      draw;
@@ -828,7 +828,7 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
   int                 nbpoints;
 
   if (pBox == NULL || pBox->BxAbstractBox == NULL ||
-	  pBox->BxAbstractBox->AbEnclosing == NULL)
+      pBox->BxAbstractBox->AbEnclosing == NULL)
     return (0);
 
   /* Allocate a polyline buffer to simulate a polyline */ 
@@ -846,9 +846,9 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
       height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
     }
   pBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
+                                              ViewFrameTable[frame - 1].FrMagnification);
   pBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
+                                              ViewFrameTable[frame - 1].FrMagnification);
   x = *x1;
   y = *y1;
 
@@ -860,15 +860,15 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
   lastx = x; 
   lasty = y;
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, 2, width, height,
-	     pBuffer, pBuffer);
+             pBuffer, pBuffer);
   *x1 = PixelValue (pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
-		    ViewFrameTable[frame - 1].FrMagnification);
+                    ViewFrameTable[frame - 1].FrMagnification);
   *y1 = PixelValue (pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
-		    ViewFrameTable[frame - 1].FrMagnification);
+                    ViewFrameTable[frame - 1].FrMagnification);
   *x2 = PixelValue (pBuffer->BuPoints[2].XCoord, UnPixel, NULL,
-		    ViewFrameTable[frame - 1].FrMagnification);
+                    ViewFrameTable[frame - 1].FrMagnification);
   *y2 = PixelValue (pBuffer->BuPoints[2].YCoord, UnPixel, NULL,
-		    ViewFrameTable[frame - 1].FrMagnification);
+                    ViewFrameTable[frame - 1].FrMagnification);
 
 #if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
@@ -970,19 +970,19 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
   
   /* The first point is the box bottom right point */
   pBuffer->BuPoints[0].XCoord = LogicalValue (pBox->BxWidth, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
+                                              ViewFrameTable[frame - 1].FrMagnification);
   pBuffer->BuPoints[0].YCoord = LogicalValue (pBox->BxHeight, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
+                                              ViewFrameTable[frame - 1].FrMagnification);
   /* The second point is the selected one (x,y) */
   pBuffer->BuPoints[1].XCoord = LogicalValue (x, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
+                                              ViewFrameTable[frame - 1].FrMagnification);
   pBuffer->BuPoints[1].YCoord = LogicalValue (y, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
+                                              ViewFrameTable[frame - 1].FrMagnification);
   /* The last point is the line end point (x1,y1) */
   pBuffer->BuPoints[2].XCoord = LogicalValue (x1, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
+                                              ViewFrameTable[frame - 1].FrMagnification);
   pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPixel, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification);
+                                              ViewFrameTable[frame - 1].FrMagnification);
   /* 3 points in the buffer */
   pBuffer->BuLength = 3;
   
@@ -1007,9 +1007,9 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
       height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
     }
   width = PixelValue (width, UnPixel, NULL,
-		      	ViewFrameTable[frame - 1].FrMagnification);
+                      ViewFrameTable[frame - 1].FrMagnification);
   height = PixelValue (height, UnPixel, NULL,
-		      	ViewFrameTable[frame - 1].FrMagnification);
+                       ViewFrameTable[frame - 1].FrMagnification);
   
   /* remember some values */
   boxType = pBox->BxAbstractBox->AbLeafType;
@@ -1112,8 +1112,8 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
                      PtrBox box, int xmin, int xmax, int ymin, int ymax,
                      int xm, int ym, int percentW, int percentH)
 {
- Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
-           percentW, percentH);
+  Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
+            percentW, percentH);
 }
 
 
@@ -1123,8 +1123,8 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
   of the box.
   ----------------------------------------------------------------------*/
 static void Moving (int frame, int *x, int *y, int width, int height,
-		    PtrBox box, int xmin, int xmax, int ymin, int ymax,
-		    int xm, int ym)
+                    PtrBox box, int xmin, int xmax, int ymin, int ymax,
+                    int xm, int ym)
 {  
   ThotWindow          w;
   PtrAbstractBox      pAb;
@@ -1135,9 +1135,9 @@ static void Moving (int frame, int *x, int *y, int width, int height,
   if (pAb && pAb->AbLeafType == LtCompound)
     pAb = pAb->AbFirstEnclosed;
   isEllipse = (pAb &&
-	       pAb->AbLeafType == LtGraphics &&
-	       (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
-   /* Pick the correct cursor */
+               pAb->AbLeafType == LtGraphics &&
+               (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
+  /* Pick the correct cursor */
   w = (ThotWindow)FrameTable[frame].WdFrame;
   /* draw the current box geometry */
   switch (box->BxHorizEdge)
@@ -1197,7 +1197,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
     BoxGeometry (frame, *x, *y, width, height, *x + xref, *y + yref);
 }
 
-
+#ifdef IV
 /*----------------------------------------------------------------------
   GeometryMove draws a box at a specific origin location (x,y) in
   frame and of size (width, height) when interracting with
@@ -1207,29 +1207,29 @@ static void Moving (int frame, int *x, int *y, int width, int height,
   This function returns the new position (x, y) of the origin.
   ----------------------------------------------------------------------*/
 void GeometryMove (int frame, int *x, int *y, int width, int height,
-		   PtrBox box, int xmin, int xmax, int ymin, int ymax,
-		   int xm, int ym)
+                   PtrBox box, int xmin, int xmax, int ymin, int ymax,
+                   int xm, int ym)
 {
 #ifdef _WINGUI
-   ThotWindow          w;
+  ThotWindow          w;
 #endif /* _WINGUI */
 #ifdef _WINGUI
-   w = FrRef[frame];
+  w = FrRef[frame];
 #ifndef _GL
-   Gdc = GetDC (w);
+  Gdc = GetDC (w);
 #endif /*_GL*/
-   SetCursor (LoadCursor (NULL, IDC_CROSS));
-   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
-   SetCursor (LoadCursor (NULL, IDC_ARROW));
+  SetCursor (LoadCursor (NULL, IDC_CROSS));
+  Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
+  SetCursor (LoadCursor (NULL, IDC_ARROW));
 #ifndef _GL
-   ReleaseDC (w, Gdc);
+  ReleaseDC (w, Gdc);
 #endif _GL
 #endif /* _WINGUI */
-   #ifdef _WX
+#ifdef _WX
   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
 #endif /* _WX */
 }
-
+#endif /* IV */
 
 /*----------------------------------------------------------------------
   GeometryCreate draws a box at a specific origin location (x, y) in
@@ -1246,9 +1246,9 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
   - width, height the dimension of the box.
   ----------------------------------------------------------------------*/
 void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
-		     int xmin, int xmax, int ymin, int ymax, PtrBox box,
-		     int PosX, int PosY, int DimX, int DimY, int percentW,
-		     int percentH)
+                     int xmin, int xmax, int ymin, int ymax, PtrBox box,
+                     int PosX, int PosY, int DimX, int DimY, int percentW,
+                     int percentH)
 {
   ThotWindow          w;
   PtrAbstractBox      pAb;
@@ -1262,8 +1262,8 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   if (pAb && pAb->AbLeafType == LtCompound)
     pAb = pAb->AbFirstEnclosed;
   isEllipse = (pAb &&
-	       pAb->AbLeafType == LtGraphics &&
-	       (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
+               pAb->AbLeafType == LtGraphics &&
+               (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
   /* use relative coordinates */
   xm = ym = 0;
   /* default position */
@@ -1332,7 +1332,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   else
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 
-    Resizing (frame, *x, *y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
+  Resizing (frame, *x, *y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
 }
 
 /*----------------------------------------------------------------------
@@ -1341,12 +1341,12 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   Return the coordinates of the two points that allow to draw an arrow,
   from the coordinates of the two extremities:
 
-     (x2,y2)                   (x1,y1) ---/              
-        /                                /|       
-       /               ===>             / |
-      /                                /  (x2,y2)    
-     /                                /       
-   (x1,y1)
+  (x2,y2)                   (x1,y1) ---/              
+  /                                /|       
+  /               ===>             / |
+  /                                /  (x2,y2)    
+  /                                /       
+  (x1,y1)
 
   ----------------------------------------------------------------------*/
 void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
@@ -1360,9 +1360,9 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
   x0 = *x2;
   y0 = *y2;
 
-  if(dx == 0 && dy == 0)return;
+  if (dx == 0 && dy == 0)return;
 
-  if(abs(lambda*dy) < abs(dx))
+  if (abs(lambda*dy) < abs(dx))
     {
       /* Almost horizontal arrow */
       *x1 = x0 + size * (dx < 0 ? 1 : -1);
@@ -1373,7 +1373,7 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
       return;
     }
 
-  if(abs(lambda*dx) < abs(dy))
+  if (abs(lambda*dx) < abs(dy))
     {
       /* Almost vertical arrow */
       *y1 = y0 + size * (dy < 0 ? 1 : -1);
@@ -1384,7 +1384,7 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
       return;
     }
 
-  if(dx < 0)
+  if (dx < 0)
     {
       *x1 = x0;
       *x2 = x0 + size;
@@ -1408,19 +1408,19 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
   transform is a the matrix that allows to get coordinates of a point in
   the Canvas from its coordinates in the Ancestor.
 
-          --------------------
-	  |  |------|        |
-          |  |Canvas| Ancestor
-          |  |------|        |
-	  --------------------
+  --------------------
+  |  |------|        |
+  |  |Canvas| Ancestor
+  |  |------|        |
+  --------------------
 
   The returned value are the one of the surrounding rectangle
 
-     1--lx---2
-     |       |
-    ly Shape |
-     |       |
-     3-------4
+  1--lx---2
+  |       |
+  ly Shape |
+  |       |
+  3-------4
 
   ----------------------------------------------------------------------*/
 ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
@@ -1440,17 +1440,17 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
 
   /* Create the handler */
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
-							    doc,
-							    inverseCTM,
-							    ancestorX,
-							    ancestorY,
-							    canvasWidth,
-							    canvasHeight,
-							    shape,
-							    x1, y1,
-							    x4, y4,
-							    &created
-							    );
+                                                            doc,
+                                                            inverseCTM,
+                                                            ancestorX,
+                                                            ancestorY,
+                                                            canvasWidth,
+                                                            canvasHeight,
+                                                            shape,
+                                                            x1, y1,
+                                                            x4, y4,
+                                                            &created
+                                                            );
 
   /* Wait until the end of the interactive contruction */
   while(!p_CreateShapeEvtHandler->IsFinish())
@@ -1458,45 +1458,45 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   
   delete p_CreateShapeEvtHandler;
 
-  if(!created)return FALSE;
+  if (!created)return FALSE;
 
   /* Size of the construct */
   *lx = abs(*x4 - *x1);
   *ly = abs(*y4 - *y1);
 
   /* Some shapes have specific contrainsts.  */
-  if(shape == 9 || shape == 10 || shape == 42 || shape == -1)
+  if (shape == 9 || shape == 10 || shape == 42 || shape == -1)
     {
       /* text, foreign object or selection */
       created = TRUE;
     }
-  else if(!(shape == 0 || (shape >= 12 && shape <= 14)))
+  else if (!(shape == 0 || (shape >= 12 && shape <= 14)))
     {
       /* Shape */
 
-      if(shape == 20)
-	/* equilateral triangle
+      if (shape == 20)
+        /* equilateral triangle
 	        
-              /\       ^
-	     /  \      |  ly        (ly)^2 + (lx/2)^2 = (lx)^2
-	    /    \     |         => ly = srqt(3)*lx/2
-	   .------.    v
+        /\       ^
+        /  \      |  ly        (ly)^2 + (lx/2)^2 = (lx)^2
+        /    \     |         => ly = srqt(3)*lx/2
+        .------.    v
 
-	   <------>
-              lx      */
-	*lx = (int) (floor(2 *  *ly / sqrt(3)));
+        <------>
+        lx      */
+        *lx = (int) (floor(2 *  *ly / sqrt(3)));
 	
-      else if(shape == 3 || shape == 15 || shape == 16 || shape == 23)
-	{
-	  /* *lx and *ly must be equal (square, circle...) */
-	  if(*ly < *lx)*lx=*ly; else *ly = *lx;
-	}
+      else if (shape == 3 || shape == 15 || shape == 16 || shape == 23)
+        {
+          /* *lx and *ly must be equal (square, circle...) */
+          if (*ly < *lx)*lx=*ly; else *ly = *lx;
+        }
 
       /* Invert the coordinates of (1) and (4) if necessary */
-      if(*x4 < *x1)*x4 = *x1 - *lx;
+      if (*x4 < *x1)*x4 = *x1 - *lx;
       else *x4 = *x1 + *lx;
 
-      if(*y4 < *y1)*y4 = *y1 - *ly;
+      if (*y4 < *y1)*y4 = *y1 - *ly;
       else *y4 = *y1 + *ly;
 
       /* Check that the shape is not too small */
@@ -1505,61 +1505,39 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
     }
   else
     {
-       /* Line, arrows etc. Check that it is not reduced to one point */
+      /* Line, arrows etc. Check that it is not reduced to one point */
       created = (*lx > 0 || *ly > 0);
     }
 
-  if(!created)return FALSE;
-
+  if (!created)
+    return FALSE;
   /* Compute the position of point (2) and (3) */
   *x2 = *x4;
   *y2 = *y1;
   *x3 = *x1;
   *y3 = *y4;
-
   /* Convert the coordinates x1,y1 x2,y2 x3,y3 x4,y4 */
-  MouseCoordinatesToSVG(doc, p_frame,
-			ancestorX,
-			ancestorY,
-			canvasWidth,
-			canvasHeight,
-			inverseCTM,
-			TRUE, x1, y1);
-  MouseCoordinatesToSVG(doc, p_frame,
-			ancestorX,
-			ancestorY,
-			canvasWidth,
-			canvasHeight,
-			inverseCTM,
-			TRUE, x2, y2);
-  MouseCoordinatesToSVG(doc, p_frame,
-			ancestorX,
-			ancestorY,
-			canvasWidth,
-			canvasHeight,
-			inverseCTM,
-			TRUE, x3, y3);
-  MouseCoordinatesToSVG(doc, p_frame,
-			ancestorX,
-			ancestorY,
-			canvasWidth,
-			canvasHeight,
-			inverseCTM,
-			TRUE, x4, y4);
-
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x1, y1);
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x2, y2);
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x3, y3);
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x4, y4);
+  TtaSetStatus (doc, 1, "", NULL);
   return TRUE;
 }
 
 /*----------------------------------------------------------------------
   TransformSVG
   ----------------------------------------------------------------------*/
-ThotBool TransformSVG (int frame,
-		   Document doc, 
-		   void *CTM, void *inverse,
-		   int ancestorX, int ancestorY,
-		   int canvasWidth, int canvasHeight,
-		   int transform_type,
-		   Element el)
+ThotBool TransformSVG (int frame, Document doc, 
+                       void *CTM, void *inverse,
+                       int ancestorX, int ancestorY,
+                       int canvasWidth, int canvasHeight,
+                       int transform_type,
+                       Element el)
 {
   AmayaFrame * p_frame;
   AmayaTransformEvtHandler *p_TransformEvtHandler;
@@ -1568,16 +1546,16 @@ ThotBool TransformSVG (int frame,
 
   p_frame = FrameTable[frame].WdFrame;
   p_TransformEvtHandler = new AmayaTransformEvtHandler(p_frame,
-						       doc,
-						       CTM,
-						       inverse,
-						       ancestorX,
-						       ancestorY,
-						       canvasWidth,
-						       canvasHeight,
-						       transform_type,
-						       el,
-						       &transformApplied);
+                                                       doc,
+                                                       CTM,
+                                                       inverse,
+                                                       ancestorX,
+                                                       ancestorY,
+                                                       canvasWidth,
+                                                       canvasHeight,
+                                                       transform_type,
+                                                       el,
+                                                       &transformApplied);
 
   while(!p_TransformEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
@@ -1590,14 +1568,13 @@ ThotBool TransformSVG (int frame,
 /*----------------------------------------------------------------------
   ShapeEdit
   ----------------------------------------------------------------------*/
-ThotBool ShapeEdit (int frame,
-		    Document doc, 
-		    void *inverse,
-		    int ancestorX, int ancestorY,
-		    int canvasWidth, int canvasHeight,
-		    Element el,
-		    int point_edited
-		    )
+ThotBool ShapeEdit (int frame, Document doc, 
+                    void *inverse,
+                    int ancestorX, int ancestorY,
+                    int canvasWidth, int canvasHeight,
+                    Element el,
+                    int point_edited
+                    )
 {
   AmayaFrame * p_frame;
   AmayaEditShapeEvtHandler *p_EditShapeEvtHandler;
@@ -1606,15 +1583,15 @@ ThotBool ShapeEdit (int frame,
 
   p_frame = FrameTable[frame].WdFrame;
   p_EditShapeEvtHandler = new AmayaEditShapeEvtHandler(p_frame,
-						       doc,
-						       inverse,
-						       ancestorX,
-						       ancestorY,
-						       canvasWidth,
-						       canvasHeight,
-						       el,
-						       point_edited,
-						       &hasBeenEdited);
+                                                       doc,
+                                                       inverse,
+                                                       ancestorX,
+                                                       ancestorY,
+                                                       canvasWidth,
+                                                       canvasHeight,
+                                                       el,
+                                                       point_edited,
+                                                       &hasBeenEdited);
   
   while(!p_EditShapeEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
@@ -1628,13 +1605,13 @@ ThotBool ShapeEdit (int frame,
   PathEdit
   ----------------------------------------------------------------------*/
 ThotBool PathEdit (int frame,
-		   Document doc, 
-		   void *inverse,
-		   int ancestorX, int ancestorY,
-		   int canvasWidth, int canvasHeight,
-		   Element el,
-		   int point_edited
-		   )
+                   Document doc, 
+                   void *inverse,
+                   int ancestorX, int ancestorY,
+                   int canvasWidth, int canvasHeight,
+                   Element el,
+                   int point_edited
+                   )
 {
   AmayaFrame * p_frame;
   AmayaEditPathEvtHandler *p_EditPathEvtHandler;
@@ -1643,15 +1620,15 @@ ThotBool PathEdit (int frame,
 
   p_frame = FrameTable[frame].WdFrame;
   p_EditPathEvtHandler = new AmayaEditPathEvtHandler(p_frame,
-						     doc,
-						     inverse,
-						     ancestorX,
-						     ancestorY,
-						     canvasWidth,
-						     canvasHeight,
-						     el,
-						     point_edited,
-						     &transformApplied);
+                                                     doc,
+                                                     inverse,
+                                                     ancestorX,
+                                                     ancestorY,
+                                                     canvasWidth,
+                                                     canvasHeight,
+                                                     el,
+                                                     point_edited,
+                                                     &transformApplied);
   
   while(!p_EditPathEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
@@ -1664,13 +1641,12 @@ ThotBool PathEdit (int frame,
 /*----------------------------------------------------------------------
   PathCreation
   ----------------------------------------------------------------------*/
-ThotBool PathCreation (int frame, 
-		       Document doc, 
-		       void *inverse,
-		       int ancestorX, int ancestorY,
-		       int canvasWidth, int canvasHeight,
-		       int shape,
-		       Element el)
+ThotBool PathCreation (int frame, Document doc, 
+                       void *inverse,
+                       int ancestorX, int ancestorY,
+                       int canvasWidth, int canvasHeight,
+                       int shape,
+                       Element el)
 {
   ThotBool created;
   AmayaFrame * p_frame;
@@ -1680,15 +1656,15 @@ ThotBool PathCreation (int frame,
   p_frame = FrameTable[frame].WdFrame;
 
   p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame,
-							 doc,
-							 inverse,
-							 ancestorX,
-							 ancestorY,
-							 canvasWidth,
-							 canvasHeight,
-							 shape,
-							 el,
-							 &created);
+                                                         doc,
+                                                         inverse,
+                                                         ancestorX,
+                                                         ancestorY,
+                                                         canvasWidth,
+                                                         canvasHeight,
+                                                         shape,
+                                                         el,
+                                                         &created);
   while(!p_CreatePathEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
@@ -1700,28 +1676,25 @@ ThotBool PathCreation (int frame,
 
 /*----------------------------------------------------------------------
   MouseCoordinatesToSVG
-
   Convert the mouse coordinates (x,y) into the one in the SVG canvas and
   display them into the status bar. If convert is TRUE, then x and y are
   modified.
-
-   Return TRUE if the mouse is inside the SVG Canvas 
+  Return TRUE if the mouse is inside the SVG Canvas 
   ----------------------------------------------------------------------*/
-ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
-			       int x0, int y0,
-			       int width, int height,
-			       void *inverseCTM,
-			       ThotBool convert, int *x, int *y
-			       )
+ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame * p_frame,
+                                int x0, int y0, int width, int height,
+                                void *inverseCTM, ThotBool convert,
+                                char *msg, int *x, int *y
+                                )
 {
   int FrameId;
   int newx, newy;
   int newx2, newy2;
-  char buffer[100];
+  char buffer[200];
   ThotBool inside = TRUE;
 
   float a,b,c,d,e,f;
-  if(inverseCTM)
+  if (inverseCTM)
     {
       /* Get the coefficients of the Matrix */
       a = ((PtrTransform)(inverseCTM)) -> AMatrix;
@@ -1741,40 +1714,54 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
   FrameId = p_frame->GetFrameId();
 
   width = LogicalValue (width, UnPixel, NULL,
-  ViewFrameTable[FrameId - 1].FrMagnification);
+                        ViewFrameTable[FrameId - 1].FrMagnification);
 
   height = LogicalValue (height, UnPixel, NULL,
-  ViewFrameTable[FrameId - 1].FrMagnification);
+                         ViewFrameTable[FrameId - 1].FrMagnification);
 
   /* Mouse coordinates to SVG ancestor coordinates */
   newx = LogicalValue (*x - x0, UnPixel, NULL,
-  ViewFrameTable[FrameId - 1].FrMagnification);
+                       ViewFrameTable[FrameId - 1].FrMagnification);
 
   newy = LogicalValue (*y - y0, UnPixel, NULL,
-  ViewFrameTable[FrameId - 1].FrMagnification);
+                       ViewFrameTable[FrameId - 1].FrMagnification);
 
   /* SVG ancestor coordinates to SVG canvas */
   newx2 = (int)(a * newx + c * newy + e);
   newy2 = (int)(b * newx + d * newy + f);
 
   /* Modify x and y if asked */
-  if(convert)
+  if (convert)
     {
       *x = newx2;
       *y = newy2;
     }
 
   /* Check whether the point is inside the Canvas */
-  if(newx2 < 0){newx2 = 0;inside=FALSE;}
-  else if(newx2 > width){newx2 = width;inside=FALSE;}
-
-  if(newy2 < 0){newy2 = 0;inside=FALSE;}
-  else if(newy2 > height){newy2 = height;inside=FALSE;}
+  if (newx2 < 0)
+    {
+      newx2 = 0;
+      inside = FALSE;
+    }
+  else if (newx2 > width)
+    {
+      newx2 = width;
+      inside = FALSE;
+    }
+  if (newy2 < 0)
+    {
+      newy2 = 0;
+      inside = FALSE;
+    }
+  else if (newy2 > height)
+    {
+      newy2 = height;
+      inside = FALSE;
+    }
 
   /* Display the coordinates in the status bar */
-  sprintf(buffer, "(%d,%d)", newx2, newy2);
+  sprintf(buffer, msg, newx2, newy2);
   TtaSetStatus (doc, 1, buffer, NULL);
-
   return inside;
 }
 
@@ -1782,18 +1769,16 @@ ThotBool MouseCoordinatesToSVG(Document doc, AmayaFrame * p_frame,
 /*----------------------------------------------------------------------
   MouseCoordinatesToSVG
   ----------------------------------------------------------------------*/
-void SVGToMouseCoordinates(Document doc, AmayaFrame * p_frame,
-			   int x0, int y0,
-			   int width, int height,
-			   void *CTM,
-			   float x, float y,
-			   int *newx, int *newy
-			   )
+void SVGToMouseCoordinates (Document doc, AmayaFrame * p_frame,
+                            int x0, int y0, int width, int height,
+                            void *CTM, float x, float y,
+                            int *newx, int *newy
+                            )
 {
   int FrameId;
   float a,b,c,d,e,f;
 
-  if(CTM)
+  if (CTM)
     {
       /* Get the coefficients of the Matrix */
       a = ((PtrTransform)(CTM)) -> AMatrix;
@@ -1809,22 +1794,20 @@ void SVGToMouseCoordinates(Document doc, AmayaFrame * p_frame,
       a = 1; b = 0; c = 0; d = 1; e = 0; f = 0;
     }
 
-
   FrameId = p_frame->GetFrameId();
-
   *newx = x0 + PixelValue ( (int)(a * x + c * y + e),
-			    UnPixel, NULL,
-			    ViewFrameTable[FrameId - 1].FrMagnification);
+                            UnPixel, NULL,
+                            ViewFrameTable[FrameId - 1].FrMagnification);
 
   *newy = y0 + PixelValue ( (int)(b * x + d * y + f),
-		    UnPixel, NULL,
-		    ViewFrameTable[FrameId - 1].FrMagnification);
+                            UnPixel, NULL,
+                            ViewFrameTable[FrameId - 1].FrMagnification);
 }
 
 /*----------------------------------------------------------------------
   ApproximateAngleOfLine
   ----------------------------------------------------------------------*/
-void ApproximateAngleOfLine(int T, int x1, int y1, int *x2, int *y2)
+void ApproximateAngleOfLine (int T, int x1, int y1, int *x2, int *y2)
 {
   float local_x, local_y, r;
   float theta;
@@ -1832,23 +1815,23 @@ void ApproximateAngleOfLine(int T, int x1, int y1, int *x2, int *y2)
   local_x = *x2 - x1;
   local_y = *y2 - y1;
   r = sqrt(local_x*local_x + local_y*local_y);
-  if(r == 0)return;
+  if (r == 0)return;
 
-      /*
-	 We work in the system of coordinates of origin (x1,y1)
+  /*
+    We work in the system of coordinates of origin (x1,y1)
 
-	     |    O (local_x, local_y)
-             | r /
-             |  /
-             | /theta
-             |/
-             ------
-          (0,0)
-       */
+    |    O (local_x, local_y)
+    | r /
+    |  /
+    | /theta
+    |/
+    ------
+    (0,0)
+  */
 
   /* Get the angle */
   theta = 180*acos(local_x/r)/M_PI;
-  if(local_y < 0)theta = -theta;
+  if (local_y < 0)theta = -theta;
 
   /* Approximate the angle */
   

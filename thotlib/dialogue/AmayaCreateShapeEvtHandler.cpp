@@ -40,43 +40,42 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaCreateShapeEvtHandler, wxEvtHandler)
 
-/*----------------------------------------------------------------------
- *  this is where the event table is declared
- *  the callbacks are assigned to an event type
- *----------------------------------------------------------------------*/
-BEGIN_EVENT_TABLE(AmayaCreateShapeEvtHandler, wxEvtHandler)
-EVT_KEY_DOWN ( AmayaCreateShapeEvtHandler::OnKeyDown )
-EVT_LEFT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
-EVT_LEFT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
-EVT_LEFT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
-EVT_MIDDLE_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
-EVT_MIDDLE_UP(	AmayaCreateShapeEvtHandler::OnMouseUp)
-EVT_MIDDLE_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
-EVT_RIGHT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
-EVT_RIGHT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
-EVT_RIGHT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
-EVT_MOTION(		AmayaCreateShapeEvtHandler::OnMouseMove)
-EVT_MOUSEWHEEL(	AmayaCreateShapeEvtHandler::OnMouseWheel)
-END_EVENT_TABLE()
+  /*----------------------------------------------------------------------
+   *  this is where the event table is declared
+   *  the callbacks are assigned to an event type
+   *----------------------------------------------------------------------*/
+  BEGIN_EVENT_TABLE(AmayaCreateShapeEvtHandler, wxEvtHandler)
+  EVT_KEY_DOWN ( AmayaCreateShapeEvtHandler::OnKeyDown )
+  EVT_LEFT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+  EVT_LEFT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
+  EVT_LEFT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+  EVT_MIDDLE_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+  EVT_MIDDLE_UP(	AmayaCreateShapeEvtHandler::OnMouseUp)
+  EVT_MIDDLE_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+  EVT_RIGHT_DOWN(	AmayaCreateShapeEvtHandler::OnMouseDown)
+  EVT_RIGHT_UP(		AmayaCreateShapeEvtHandler::OnMouseUp)
+  EVT_RIGHT_DCLICK(	AmayaCreateShapeEvtHandler::OnMouseDbClick)
+  EVT_MOTION(		AmayaCreateShapeEvtHandler::OnMouseMove)
+  EVT_MOUSEWHEEL(	AmayaCreateShapeEvtHandler::OnMouseWheel)
+  END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
- *----------------------------------------------------------------------*/
-AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler() : wxEvtHandler()
+*----------------------------------------------------------------------*/
+  AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler() : wxEvtHandler()
 {
 }
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
-AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
-(AmayaFrame * p_frame,
- Document doc, void *transform,
- int ancestorX,
- int ancestorY,
- int canvasWidth,
- int canvasHeight,
- int shape_number,
- int *x1, int *y1, int *x2, int *y2,
- ThotBool *created)
+AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler (AmayaFrame * p_frame,
+                                                        Document doc, void *transform,
+                                                        int ancestorX,
+                                                        int ancestorY,
+                                                        int canvasWidth,
+                                                        int canvasHeight,
+                                                        int shape_number,
+                                                        int *x1, int *y1, int *x2, int *y2,
+                                                        ThotBool *created)
   : wxEvtHandler()
   ,finished(false)
   ,pFrame(p_frame)
@@ -102,11 +101,11 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler
       p_canvas->PushEventHandler(this);
 
       if(shape == 9 || shape == 10)
-	/* assign a ibeam mouse cursor */
-	pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_IBEAM) );
+        /* assign a ibeam mouse cursor */
+        pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_IBEAM) );
       else
-	/* assign a cross mouse cursor */
-	pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
+        /* assign a cross mouse cursor */
+        pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
 
       pFrame->GetCanvas()->CaptureMouse();
 
@@ -126,7 +125,7 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
 {
   /* Clear the shape */
   DrawShape ();
-
+  TtaSetStatus (document, 1, "", NULL);
   if (pFrame)
     {
       /* detach this handler from the canvas (restore default behaviour) */
@@ -141,7 +140,7 @@ AmayaCreateShapeEvtHandler::~AmayaCreateShapeEvtHandler()
 
 /*----------------------------------------------------------------------
   IsFinish
- *----------------------------------------------------------------------*/
+  *----------------------------------------------------------------------*/
 bool AmayaCreateShapeEvtHandler::IsFinish()
 {
   return finished;
@@ -149,10 +148,10 @@ bool AmayaCreateShapeEvtHandler::IsFinish()
 
 /*----------------------------------------------------------------------
   OnKeyDown
- *----------------------------------------------------------------------*/
+  *----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnKeyDown( wxKeyEvent& event )
 {
-  if(event.GetKeyCode() !=  WXK_SHIFT)
+  if (event.GetKeyCode() !=  WXK_SHIFT)
     {
       *created = FALSE;
       finished = true;
@@ -166,21 +165,20 @@ void AmayaCreateShapeEvtHandler::OnKeyDown( wxKeyEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
-  if (finished || nb_points != 0)return;
-
+  if (finished || nb_points != 0)
+    return;
   /* Are we in the SVG ? */
-  if(!MouseCoordinatesToSVG(document, pFrame,
-			    x0, y0,
-			    width, height,
-			    transform,
-			    FALSE, px1, py1))return;
+  if (!MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
+                              transform, FALSE, TtaGetMessage (LIB, BUTTON_UP),
+                              px1, py1))
+    return;
+
   nb_points = 1;
   *px2 = *px1;
   *py2 = *py1;
-
-  if(shape == 10 || shape == 9)
+  if (shape == 10 || shape == 9)
     {
-    /* Only one point is needed */
+      /* Only one point is needed */
       *created = TRUE;
       finished = true;
     }
@@ -193,18 +191,16 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
-  if(finished || nb_points != 1)return;
+  if (finished || nb_points != 1)return;
 
   /* Are we in the SVG ? */
-  if(!MouseCoordinatesToSVG(document, pFrame,
-			    x0, y0,
-			    width, height,
-			    transform,
-			    FALSE, px2, py2))return;
-
+  if (!MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
+                              transform, FALSE, TtaGetMessage (LIB, BUTTON_UP),
+                              px2, py2))
+    return;
   nb_points = 2;
-
   *created = TRUE;
+  TtaSetStatus (document, 1, "", NULL);
   finished = true;
 }
 
@@ -215,6 +211,7 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
+  TtaSetStatus (document, 1, "", NULL);
   finished = true;
 }
 
@@ -234,20 +231,17 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   x = event.GetX();
   y = event.GetY();
 
-  if(event.ShiftDown())
+  if (event.ShiftDown())
     {
-      if(nb_points > 0 && (shape == 0 || shape == 12 || shape == 13))
-	/* It's a line or an arrow and the shift button is pressed */
-	ApproximateAngleOfLine(15, *px1, *py1, &x, &y);
+      if (nb_points > 0 && (shape == 0 || shape == 12 || shape == 13))
+        /* It's a line or an arrow and the shift button is pressed */
+        ApproximateAngleOfLine(15, *px1, *py1, &x, &y);
     }
   
-  MouseCoordinatesToSVG(document, pFrame,
-			x0, y0,
-			width, height,
-			transform,
-			FALSE, &x, &y);
-
-  if(nb_points == 0)
+  MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
+                         transform, FALSE, TtaGetMessage (LIB, BUTTON_UP),
+                         &x, &y);
+  if (nb_points == 0)
     {
       /* First point */
       *px1 = x;
@@ -263,7 +257,7 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   /* Draw the shape */
   DrawShape ();
 #ifndef _WINDOWS
-    pFrame->GetCanvas()->Refresh();
+  pFrame->GetCanvas()->Refresh();
 #endif /* _WINDOWS */
 }
 
@@ -277,50 +271,51 @@ void AmayaCreateShapeEvtHandler::OnMouseWheel( wxMouseEvent& event )
 }
 
 /*----------------------------------------------------------------------
- -----------------------------------------------------------------------*/
+  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::DrawShape ()
 { 
   int lx,ly;
   int x1, x2, y1, y2, x3, y3, x4, y4, x5, y5, x6, y6,tmp;
 
-  if(nb_points == 0)return;
-
-  glEnable(GL_COLOR_LOGIC_OP);
+  if (nb_points == 0)
+    return;
+  glEnable (GL_COLOR_LOGIC_OP);
 #ifdef _WINDOWS
-  glLogicOp(GL_COPY_INVERTED);
+  glLogicOp (GL_COPY_INVERTED);
 #else /* _WINDOWS */
-  glLogicOp(GL_XOR);
+  glLogicOp (GL_XOR);
 #endif /* _WINDOWS */
   glColor4ub (127, 127, 127, 0);
 
   lx = abs(*px2 - *px1);
   ly = abs(*py2 - *py1);
-  
-  if(!(shape == 0 || (shape >= 12 && shape <= 14)))
+  if (!(shape == 0 || (shape >= 12 && shape <= 14)))
     {
       /* It's a shape drawn in a rectangle */
 
-      if(shape == 20)
-	/* equilateral triangle */
-	lx = (int) (floor(2 *  ly / sqrt(3)));
-      else if(shape == 3 || shape == 15 || shape == 16 || shape == 23)
-	{
-	  /* lx and ly must be equal (square, circle...) */
-	  if(ly < lx)lx=ly; else ly = lx;
-	}
+      if (shape == 20)
+        /* equilateral triangle */
+        lx = (int) (floor(2 *  ly / sqrt(3)));
+      else if (shape == 3 || shape == 15 || shape == 16 || shape == 23)
+        {
+          /* lx and ly must be equal (square, circle...) */
+          if (ly < lx)lx=ly; else ly = lx;
+        }
 
-      if(*px2 < *px1)*px2 = *px1 - lx;
-	else *px2 = *px1 + lx;
-
-      if(*py2 < *py1)*py2 = *py1 - ly;
-        else *py2 = *py1 + ly;
+      if (*px2 < *px1)
+        *px2 = *px1 - lx;
+      else
+        *px2 = *px1 + lx;
+      if (*py2 < *py1)
+        *py2 = *py1 - ly;
+      else
+        *py2 = *py1 + ly;
     }
   
   x1 = *px1;
   x2 = *px2;
   y1 = *py1;
   y2 = *py2;
-
   switch(shape)
     {
       /* Line */
@@ -410,30 +405,30 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
     case 16:
       /* Rounded-Rectangle */
     case 2:
-      if(lx > 5 && ly > 5)
-	{
-	  if(x2<x1){tmp=x1;x1=x2;x2=tmp;}
-	  if(y2<y1){tmp=y1;y1=y2;y2=tmp;}
+      if (lx > 5 && ly > 5)
+        {
+          if (x2<x1){tmp=x1;x1=x2;x2=tmp;}
+          if (y2<y1){tmp=y1;y1=y2;y2=tmp;}
 
-	  glBegin(GL_LINE_LOOP);
-	  glVertex2i(x1+5, y1);
-	  glVertex2i(x2-5, y1);
-	  glVertex2i(x2, y1+5);
-	  glVertex2i(x2, y2-5);
-	  glVertex2i(x2-5, y2);
-	  glVertex2i(x1+5, y2);
-	  glVertex2i(x1, y2-5);
-	  glVertex2i(x1, y1+5);
-	  glEnd();
-	}
+          glBegin(GL_LINE_LOOP);
+          glVertex2i(x1+5, y1);
+          glVertex2i(x2-5, y1);
+          glVertex2i(x2, y1+5);
+          glVertex2i(x2, y2-5);
+          glVertex2i(x2-5, y2);
+          glVertex2i(x1+5, y2);
+          glVertex2i(x1, y2-5);
+          glVertex2i(x1, y1+5);
+          glEnd();
+        }
       break;
 
       /* Circle */
     case 3:
       /* Ellipse */
     case 4:
-      if(x2<x1)x1=x2;
-      if(y2<y1)y1=y2;
+      if (x2<x1)x1=x2;
+      if (y2<y1)y1=y2;
       GL_DrawArc (x1, y1, lx, ly, 0, 360, 0, FALSE);
       break;
 
@@ -518,33 +513,27 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
       glVertex2i(x2,(5*y1+y2)/6);
       glVertex2i(x2,(5*y2+y1)/6);
       glEnd (); 
-
-      if(x2 < x1)x1=x2;
-      
-      if(y2 < y1)
-	{
-	  GL_DrawArc (x1, y2, lx, ly/3, 0, 180, 0, FALSE);
-	  GL_DrawArc (x1, (y2+2*y1)/3, lx, ly/3, 0, 360, 0, FALSE);
-	}
+      if (x2 < x1)
+        x1=x2;
+      if (y2 < y1)
+        {
+          GL_DrawArc (x1, y2, lx, ly/3, 0, 180, 0, FALSE);
+          GL_DrawArc (x1, (y2+2*y1)/3, lx, ly/3, 0, 360, 0, FALSE);
+        }
       else
-	{
-	  GL_DrawArc (x1, y1, lx, ly/3, 0, 360, 0, FALSE);
-	  GL_DrawArc (x1, (2*y2+y1)/3, lx, ly/3, 0, -180, 0, FALSE);
-	}
-
+        {
+          GL_DrawArc (x1, y1, lx, ly/3, 0, 360, 0, FALSE);
+          GL_DrawArc (x1, (2*y2+y1)/3, lx, ly/3, 0, -180, 0, FALSE);
+        }
       break;
 
     default:
       /* shape = 9 = Foreign object */
       /* shape = 10 = Text */
-
       break;
-
     }
-
   glLogicOp(GL_COPY);
   glDisable(GL_COLOR_LOGIC_OP);
-
 #ifdef _WINDOWS
   GL_Swap (frameId);
 #endif /* WINDOWS */

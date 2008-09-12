@@ -2883,6 +2883,7 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
   return ok;
 }
 
+#ifdef IV
 /*----------------------------------------------------------------------
   ApplyDirectTranslate applies direct translation to the box.
   ----------------------------------------------------------------------*/
@@ -3070,6 +3071,7 @@ void ApplyDirectTranslate (PtrBox pBox, int frame, int xm, int ym)
         }
     }
 }
+#endif /* IV */
 
 /*----------------------------------------------------------------------
   CanBeResized teste si un pave est modifiable en Dimension.       

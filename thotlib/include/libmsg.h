@@ -421,6 +421,9 @@
 #define TemplateRepeatComp		416
 #define TemplateFreeBox		417
 #define TemplateUnion		418
-#define TMSG_LIB_MSG_MAX		419
+#define BUTTON_UP		419
+#define DOUBLE_CLICK		420
+#define SIMPLE_CLICK		421
+#define TMSG_LIB_MSG_MAX		422
 
 #endif

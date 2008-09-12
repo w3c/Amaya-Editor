@@ -45,15 +45,15 @@ class AmayaCreateShapeEvtHandler : public wxEvtHandler
  protected:
   bool finished;
 
-  AmayaFrame * pFrame;
-  int frameId;
-  int document;
-  void *transform;
-  int x0, y0, width, height;
-  int shape;
-  int *px1,*py1,*px2,*py2;
-  ThotBool *created;
-  int nb_points;
+  AmayaFrame *pFrame;
+  int         frameId;
+  int         document;
+  void       *transform;
+  int         x0, y0, width, height;
+  int         shape;
+  int        *px1,*py1,*px2,*py2;
+  ThotBool   *created;
+  int         nb_points;
 };
 
 #endif /* __AMAYACREATESHAPEEVTHANDLER_H__ */
