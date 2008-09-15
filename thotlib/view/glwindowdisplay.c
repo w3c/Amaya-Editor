@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -381,7 +381,7 @@ void InitDrawing (int style, int thick, int fg)
         glLineStipple (thick, 0x1F1F);
       glEnable (GL_LINE_STIPPLE);
     }
- GL_SetForeground (fg, FALSE);
+  GL_SetForeground (fg, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -460,7 +460,7 @@ void GL_DrawSegments (ThotSegment *point, int npoints)
     {
       glBegin (GL_POINTS); 
       for (i = 0; i < npoints; i++)
-       {
+        {
           glVertex2f ((point + i)->x1 , 
                       (point + i)->y1);
           glVertex2f ((point + i)->x2 , 
@@ -470,7 +470,7 @@ void GL_DrawSegments (ThotSegment *point, int npoints)
     }
   glBegin (GL_LINES) ;
   for (i = 0; i < npoints; i++)
-   {
+    {
       glVertex2f ((point + i)->x1 , 
                   (point + i)->y1);
       glVertex2f ((point + i)->x2 , 
@@ -502,7 +502,7 @@ void GL_DrawArc (float x, float y, float w, float h, int startAngle,
   cx  = ((GLfloat)x) + rx; 
   cy  = ((GLfloat)y) + ry;
   if (w < 10 && h < 10)
-      slices = 36;
+    slices = 36;
   else
     slices = SLICES;
 
@@ -588,7 +588,7 @@ void GL_DrawLines (ThotPoint *points, int npoints)
 {
   int i;
 
- if (S_thick > 1.)
+  if (S_thick > 1.)
     {
       /* Joinning if a certain thickness ?*/
       glBegin (GL_POINTS); 
@@ -992,8 +992,8 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
       Trans = Trans->Next;
     }
   /* How to clip ????
-  if (is_x_clipped || is_y_clipped)
-    @@@clip ((int) -x_trans, (int) -y_trans, Width, Height);
+     if (is_x_clipped || is_y_clipped)
+     @@@clip ((int) -x_trans, (int) -y_trans, Width, Height);
   */
   if (is_translated)
     glTranslatef (x_trans, y_trans, (float) 0);
@@ -1051,18 +1051,18 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
               break;
             case PtElAnimTranslate:
             case PtElTranslate:
-	      tx = ZoomedValue (Trans->XScale,
-				ViewFrameTable[frame - 1].FrMagnification);
-	      ty = ZoomedValue (Trans->YScale,
-				ViewFrameTable[frame - 1].FrMagnification);
-	      glTranslatef (tx, ty, 0);
+              tx = ZoomedValue (Trans->XScale,
+                                ViewFrameTable[frame - 1].FrMagnification);
+              ty = ZoomedValue (Trans->YScale,
+                                ViewFrameTable[frame - 1].FrMagnification);
+              glTranslatef (tx, ty, 0);
               break;
             case PtElAnimRotate:
             case PtElRotate:
-	      tx = ZoomedValue (Trans->XRotate,
-				ViewFrameTable[frame - 1].FrMagnification);
-	      ty = ZoomedValue (Trans->YRotate,
-				ViewFrameTable[frame - 1].FrMagnification);
+              tx = ZoomedValue (Trans->XRotate,
+                                ViewFrameTable[frame - 1].FrMagnification);
+              ty = ZoomedValue (Trans->YRotate,
+                                ViewFrameTable[frame - 1].FrMagnification);
 
               glTranslatef (tx, ty , 0);
               glRotatef (Trans->TrAngle, 0, 0, 1);
@@ -1073,11 +1073,11 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
                  GlMatrix is 4*4
                  Svg is 3*3 but 
                  only 2*3 is specified */
-	      tx = ZoomedValue (Trans->EMatrix,
-				ViewFrameTable[frame - 1].FrMagnification);
-	      ty = ZoomedValue (Trans->FMatrix,
-				ViewFrameTable[frame - 1].FrMagnification);
-	      glTranslatef (tx, ty , 0);	      
+              tx = ZoomedValue (Trans->EMatrix,
+                                ViewFrameTable[frame - 1].FrMagnification);
+              ty = ZoomedValue (Trans->FMatrix,
+                                ViewFrameTable[frame - 1].FrMagnification);
+              glTranslatef (tx, ty , 0);	      
 
               trans_matrix[0] = Trans->AMatrix;
               trans_matrix[1] = Trans->BMatrix;

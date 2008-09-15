@@ -575,11 +575,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
              (y2) = (skew 1) (y1)
           */ 
           skew = ((float)(y2 - y1))/x1;
-          TtaApplyMatrixTransform (document, el,
-                                   1,
-                                   skew,
-                                   0, 1,
-                                   0,0);
+          TtaApplyMatrixTransform (document, el, 1, skew, 0, 1, 0,0);
 
           /* Move the shape to its initial position */
           TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, +cx, +cy);

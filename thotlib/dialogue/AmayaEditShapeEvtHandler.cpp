@@ -365,68 +365,6 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
       switch(shape)
         {
-        case 'g': /* line */
-          switch(point)
-            {
-            case 1:
-              x3 = x+lx;
-              y3 = y+ly;
-              x4 = x;
-              y4 = y;
-              break;
-
-            case 3:
-              x3 = x;
-              y3 = y+ly;
-              x4 = x+lx;
-              y4 = y;
-              break;
-
-            case 5:
-              x3 = x;
-              y3 = y;
-              x4 = x+lx;
-              y4 = y+ly;
-              break;
-
-            case 7:
-              x3 = x+lx;
-              y3 = y;
-              x4 = x;
-              y4 = y+ly;
-              break;
-            }
-
-          x4+=dx;
-          y4+=dy;
-
-          lx = abs(x4 - x3);
-          ly = abs(y4 - y3);
-          if (x3 < x4)x = x3; else x = x4;
-          if (y3 < y4)y = y3; else y = y4;
-
-          e_ab->AbHorizPos.PosEdge = (x == x4 ? Left : Right);
-          e_ab->AbVertPos.PosEdge = (y == y4 ? Top : Bottom);
-
-          if (e_ab->AbHorizPos.PosEdge == Left)
-            {
-              if (e_ab->AbVertPos.PosEdge == Top)
-                point = 1;
-              else
-                point = 7;
-            }
-          else
-            {
-              if (e_ab->AbVertPos.PosEdge == Top)
-                point = 3;
-              else
-                point = 5;
-            }
-
-          /* Change the selected point in the line. */
-          ViewFrameTable[frameId - 1].FrSelectionBegin.VsIndBox = point;
-          break;
-
         case 1: /* square */
         case 2: /* Parallelogram */
         case 3: /* Trapezium */

@@ -457,26 +457,24 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                  nChars > 0 && Selecting != NULL && el &&
                  el->ElParent && IsSVGComponent(el->ElParent))
                 {
-                  if(el->ElLeafType == LtGraphics &&
-                     (pAb->AbShape == 1 || /* Square */
-                      pAb->AbShape == 2 || /* Parallelogram */
-                      pAb->AbShape == 3 || /* Trapezium */
-                      pAb->AbShape == 4 || /* Equilateral triangle */
-                      pAb->AbShape == 5 || /* Isosceles triangle */
-                      pAb->AbShape == 6 || /* Rectangled triangle */
-                      pAb->AbShape == 'C' ||  /* Rectangle */
-                      pAb->AbShape == 'c' ||  /* Ellipse */
-                      pAb->AbShape == 'a' ||  /* Circle */
-                      pAb->AbShape == 'g' ||  /* Line */
-                      pAb->AbShape == 'L' ||  /* Diamond */      
-                      pAb->AbShape == 7   ||  /* Square */
-                      pAb->AbShape == 8   /* Rectangle */      
-                      ))
+                  if (el->ElLeafType == LtGraphics &&
+                      (pAb->AbShape == 1 || /* Square */
+                       pAb->AbShape == 2 || /* Parallelogram */
+                       pAb->AbShape == 3 || /* Trapezium */
+                       pAb->AbShape == 4 || /* Equilateral triangle */
+                       pAb->AbShape == 5 || /* Isosceles triangle */
+                       pAb->AbShape == 6 || /* Rectangled triangle */
+                       pAb->AbShape == 'C' ||  /* Rectangle */
+                       pAb->AbShape == 'c' ||  /* Ellipse */
+                       pAb->AbShape == 'a' ||  /* Circle */
+                       pAb->AbShape == 'L' ||  /* Diamond */      
+                       pAb->AbShape == 7   ||  /* Square */
+                       pAb->AbShape == 8   /* Rectangle */      
+                       ))
                     {
                       /* Click on a handle */
                       *Selecting = FALSE;
-                      if(AskShapeEdit(doc,
-                                      (Element)(el->ElParent), nChars))
+                      if(AskShapeEdit(doc, (Element)(el->ElParent), nChars))
                         {
                           /* The user has edited an SVG element */
                           TtaSetDocumentModified(doc);
@@ -490,13 +488,12 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 
                     }
 
-                  if(el->ElLeafType == LtPolyLine || el->ElLeafType == LtPath)
+                  if (el->ElLeafType == LtPolyLine || el->ElLeafType == LtPath)
                     {
                       /* Click on a point of a polyline or Path */
                       SelectedPointInPolyline = nChars;
                       *Selecting = FALSE;
-                      if(AskPathEdit(doc,
-                                     0, (Element)(el->ElParent), nChars))
+                      if (AskPathEdit(doc, 0, (Element)(el->ElParent), nChars))
                         {
                           /* The user has edited an SVG element */
                           TtaSetDocumentModified(doc);
@@ -531,9 +528,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                          !(ElementIsReadOnly(pEl)))
                         {
                           *Selecting = FALSE;
-                          if(AskTransform(doc,
-                                          NULL,
-                                          NULL,
+                          if(AskTransform(doc, NULL, NULL,
                                           0, (Element)(el->ElParent)))
                             {
                               /* The user has moved an SVG element */
@@ -542,7 +537,6 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                             }
                         }
                     }
-
                   NotifyClick (TteElemLClick, FALSE, el, doc);
                 }
               break;
@@ -550,8 +544,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
               if (!ChangeSelection (frame, pAb, nChars, FALSE, TRUE, TRUE, FALSE) &&
                   pAb->AbLeafType == LtText &&
                   (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-                SelectCurrentWord (frame, pBox, nChars, index, pBuffer,
-                                   TRUE);
+                SelectCurrentWord (frame, pBox, nChars, index, pBuffer, TRUE);
               break;
             case 4:
               if (SkipClickEvent)
@@ -2650,9 +2643,6 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
 static void GiveMovingArea (PtrAbstractBox pAb, int frame,
                             ThotBool horizRef, int *min, int *max)
 {
-#ifdef IV
-  PtrAbstractBox      pParentAb;
-#endif /* IV */
   /* default values */
   *min = 0;
   *max = 100000;
@@ -2679,399 +2669,14 @@ static void GiveMovingArea (PtrAbstractBox pAb, int frame,
     {
       *min = -50;
       *max = 100000;
-#ifdef IV
-      /* check the enclosing abstract box */
-      if (pAb->AbHorizEnclosing)
-        pParentAb = pAb->AbEnclosing;
-      else
-        pParentAb = ViewFrameTable[frame - 1].FrAbstractBox;
-
-      /* by default the emclosing box gives limits */
-      *min = pParentAb->AbBox->BxXOrg;
-      *max = *min + pParentAb->AbBox->BxWidth;
-
-      if (pParentAb->AbBox->BxContentWidth)
-        /* the enclosing box gets the contents size and the box
-           doesn't depend of the enclosing */
-        switch (pAb->AbBox->BxHorizEdge)
-          {
-          case Left:
-            *max = 100000;
-            break;
-          case Right:
-            *min = 0;
-            break;
-          default:
-            *min = 0;
-            *max = 100000;
-            break;
-          }
-#endif /* IV */
     }
   else
     {
       *min = -50;
       *max = 100000;
-#ifdef IV
-      /* check the enclosing abstract box */
-      if (pAb->AbVertEnclosing && pAb->AbEnclosing != NULL)
-        {
-          pParentAb = pAb;
-          do
-            pParentAb = pParentAb->AbEnclosing;
-          while (pParentAb->AbBox->BxType == BoGhost ||
-                 pParentAb->AbBox->BxType == BoFloatGhost);
-        }
-      else
-        pParentAb = ViewFrameTable[frame - 1].FrAbstractBox;
-
-      /* by default the emclosing box gives limits */
-      *min = pParentAb->AbBox->BxYOrg;
-      *max = *min + pParentAb->AbBox->BxHeight;
-
-      if (pParentAb->AbBox->BxContentHeight)
-        /* the enclosing box gets the contents size and the box
-           doesn't depend of the enclosing */
-        switch (pAb->AbBox->BxVertEdge)
-          {
-          case Top:
-            *max = 100000;
-            break;
-          case Bottom:
-            *min = 0;
-            break;
-          default:
-            *min = 0;
-            *max = 100000;
-            break;
-          }
-#endif /* IV */
     }
 }
 
-/*----------------------------------------------------------------------
-  CanBeTranslated teste si un pave est modifiable en position     
-  (X ou Y), et si oui, rend les positions extremes        
-  de la boite.                                            
-  ----------------------------------------------------------------------*/
-static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
-                                     ThotBool horizRef, int *min, int *max)
-{
-  PtrAbstractBox      pParentAb;
-  PtrBox              pBox;
-  PtrElement          pEl;
-  PtrDocument         pDoc;
-  ThotBool            ok, found;
-
-  pBox = pAb->AbBox;
-  pParentAb = pAb->AbEnclosing;
-  pEl = pAb->AbElement;
-  pDoc = DocumentOfElement (pEl);
-
-  /* Deplacement nul si ok est faux */
-  if (horizRef)
-    *min = pBox->BxXOrg;
-  else
-    *min = pBox->BxYOrg;
-
-  *max = *min;
-  ok = TRUE;
-  if (pDoc->DocReadOnly)
-    ok = FALSE;
-  else if (pEl->ElIsCopy)
-    ok = FALSE;
-  else if (ElementIsReadOnly (pEl))
-    ok = FALSE;
-  else if (pAb->AbPresentationBox)
-    /* presentation box */
-    ok = FALSE;
-  else if (horizRef && pAb->AbWidth.DimIsPosition)
-    /* stretchable box */
-    ok = FALSE;
-  else if (!horizRef && pAb->AbHeight.DimIsPosition)
-    /* stretchable box */
-    ok = FALSE;
-  else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
-    /* box width linked with its parent */
-    ok = FALSE;
-  else if (!horizRef && pAb->AbHeight.DimAbRef == pParentAb)
-    /* box height linked with its parent */
-    ok = FALSE;
-  else if (horizRef && pAb->AbHorizPos.PosAbRef == NULL)
-    /* no position rule */
-    ok = FALSE;
-  else if (!horizRef && pAb->AbVertPos.PosAbRef == NULL)
-    /* no position rule */
-    ok = FALSE;
-  else if ( pParentAb->AbBox->BxType == BoBlock ||
-            pParentAb->AbBox->BxType == BoFloatBlock ||
-            pParentAb->AbBox->BxType == BoCellBlock ||
-            pParentAb->AbBox->BxType == BoGhost ||
-            pParentAb->AbBox->BxType == BoFloatGhost)
-    /* box displayed in block of lines */
-    ok = FALSE;
-  else
-    {
-      /* search the first rule Move or NoMove */
-      found = FALSE;
-      while (!found && ok && pEl != NULL)
-        {
-          if (TypeHasException (ExcNoMove, pEl->ElTypeNumber,
-                                pEl->ElStructSchema))
-            ok = FALSE;
-          else if (horizRef && TypeHasException (ExcNoHMove, pEl->ElTypeNumber,
-                                                 pEl->ElStructSchema))
-            ok = FALSE;
-          else if (!horizRef && TypeHasException (ExcNoVMove,pEl->ElTypeNumber,
-                                                  pEl->ElStructSchema))
-            ok = FALSE;
-          else if (TypeHasException (ExcMoveResize, pEl->ElTypeNumber,
-                                     pEl->ElStructSchema))
-            found = TRUE;
-          /* if no directive is done, see the parent */
-          pEl = pEl->ElParent;
-        }
-
-      if (!found && ok && pParentAb != NULL)
-        {
-          /* it's not the root box */
-          if (horizRef &&
-              /* et le pParentAb ne depend pas de son contenu */
-              pParentAb->AbBox->BxContentWidth &&
-              !pParentAb->AbWidth.DimIsPosition &&
-              !pParentAb->AbWidth.DimMinimum &&
-              pAb->AbHorizPos.PosAbRef == pParentAb &&
-              pAb->AbHorizPos.PosRefEdge != Left)
-            ok = FALSE;
-          else if (!horizRef &&
-                   /* et le pParentAb ne depend pas de son contenu */
-                   pParentAb->AbBox->BxContentHeight &&
-                   !pParentAb->AbHeight.DimIsPosition &&
-                   !pParentAb->AbHeight.DimMinimum &&
-                   pAb->AbVertPos.PosAbRef == pParentAb &&
-                   pAb->AbVertPos.PosRefEdge != Top)
-            ok = FALSE;
-        }
-    }
-
-  if (horizRef)
-    if (ok)
-      {
-        GiveMovingArea (pAb, frame, horizRef, min, max);
-        /* La boite est-elle bloquee dans l'englobante ? */
-        if (*min == pBox->BxXOrg && *max == *min + pBox->BxWidth)
-          ok = FALSE;
-      }
-    else
-      {
-        *min = pBox->BxXOrg;
-        *max = *min + pBox->BxWidth;
-      }
-  else if (ok)
-    {
-      GiveMovingArea (pAb, frame, horizRef, min, max);
-      /* La boite est-elle bloquee dans l'englobante ? */
-      if (*min == pBox->BxYOrg && *max == *min + pBox->BxHeight)
-        ok = FALSE;
-    }
-  else
-    {
-      *min = pBox->BxYOrg;
-      *max = *min + pBox->BxHeight;
-    }
-
-  return ok;
-}
-
-#ifdef IV
-/*----------------------------------------------------------------------
-  ApplyDirectTranslate applies direct translation to the box.
-  ----------------------------------------------------------------------*/
-void ApplyDirectTranslate (PtrBox pBox, int frame, int xm, int ym)
-{
-  PtrDocument         pDoc;
-  PtrAbstractBox      pAb;
-  PtrElement	        pEl;
-  ViewFrame          *pFrame;
-  int                 x, width;
-  int                 y, height;
-  int                 xmin, xmax;
-  int                 ymin, ymax;
-  int                 xref, yref;
-  int                 pointselect;
-  int                 view;
-  ThotBool            open, still;
-  ThotBool            okH, okV, send;
-  
-  pFrame = &ViewFrameTable[frame - 1];
-  GetDocAndView (frame, &pDoc, &view);
-  if (pDoc == NULL)
-    return;
-  
-  open = !pDoc->DocEditSequence;
-  /* by default no selected point */
-  pointselect = 0;
-  if (pFrame->FrAbstractBox != NULL)
-    {
-      /* Get positions in the window */
-      if (pBox)
-        {
-          pAb = pBox->BxAbstractBox;
-          if (pointselect && pBox->BxType != BoPicture)
-            {
-              /* moving a polyline point */
-              still = FALSE;
-              xmin = ymin = 0;
-              xmax = ymax = 9999;
-            }
-          else
-            {
-              /* moving the whole box */
-              still = TRUE;
-              pointselect = 0;
-            }
-          /* Loop as long as a box that can be moved is not found */
-          while (still)
-            {
-              /* check if the moving is allowed */
-              okH = CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax);
-              okV = CanBeTranslated (pAb, frame, FALSE, &ymin, &ymax);
-              if (okH || okV)
-                still = FALSE;
-              if (still)
-                {
-                  /* no box found yet, check the enclosing box */
-                  if (pAb != NULL)
-                    pAb = pAb->AbEnclosing;
-                  if (pAb == NULL)
-                    {
-                      pBox = NULL;
-                      still = FALSE;
-                    }
-                  else
-                    pBox = pAb->AbBox;
-                }
-            }
-          
-          if (pBox)
-            {
-              /* A box is found */
-              x = pBox->BxXOrg - pFrame->FrXOrg;
-              y = pBox->BxYOrg - pFrame->FrYOrg;
-              width = pBox->BxWidth;
-              height = pBox->BxHeight;
-              pEl = pBox->BxAbstractBox->AbElement;
-              send = FALSE;
-              if (pointselect != 0 && pBox->BxType != BoPicture)
-                /* moving a single point */
-                {
-                  if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'g')
-                    /* moving an end of a line */
-                    {
-                      LineModification (frame, pBox, pointselect, &x, &y);
-                      /* get back current changes */
-                      if (!pAb->AbWidth.DimIsPosition && pAb->AbEnclosing)
-                        /* this rule is applied to the parent */
-                        pAb = pAb->AbEnclosing;
-                      pBox = pAb->AbBox;
-                      switch (pointselect)
-                        {
-                        case 1:
-                        case 7:
-                          if (pBox->BxHorizInverted)
-                            NewDimension (pAb, x, y, frame, TRUE);
-                          else
-                            NewPosition (pAb, x, 0, y, 0, frame, TRUE);
-                          break;
-                        case 3:
-                        case 5:
-                          if (pBox->BxHorizInverted)
-                            NewPosition (pAb, x, 0, y, 0, frame, TRUE);
-                          else
-                            NewDimension (pAb, x, y, frame, TRUE);
-                          break;
-                        default: break;
-                        }
-                    }
-                  else
-                    /* moving a point in a polyline */
-                    {
-                      /* send an event to the application */
-                      if (!APPgraphicModify (pEl, pointselect, frame, TRUE, open))
-                        /* application agrees */
-                        {
-                          /* check if the polyline is open or closed */
-                          still = (pAb->AbPolyLineShape == 'p' ||
-                                   pAb->AbPolyLineShape == 's');
-                          PolyLineModification (frame, &x, &y, pBox,
-                                                pBox->BxNChars,
-                                                pointselect, still);
-                          NewContent (pAb);
-                          send = TRUE;
-                        }
-                    }
-                  
-                  
-                  /* redisplay the box */
-                  DefBoxRegion (frame, pBox, 0, 0, width, height);
-                  RedrawFrameBottom (frame, 0, NULL);
-                }
-              else
-                /* moving the whole box */
-                {
-                  /* set positions related to the window */
-                  xmin -= pFrame->FrXOrg;
-                  xmax -= pFrame->FrXOrg;
-                  ymin -= pFrame->FrYOrg;
-                  ymax -= pFrame->FrYOrg;
-                  /* execute the interaction */
-                  GeometryMove (frame, &x, &y, width, height, pBox, xmin,
-                                xmax, ymin, ymax, xm, ym);
-                  /* get back changes */
-                  x += pFrame->FrXOrg;
-                  y += pFrame->FrYOrg;
-                  /* get the position of reference point */
-                  switch (pBox->BxHorizEdge)
-                    {
-                    case Right:
-                      xref = width;
-                      break;
-                    case VertMiddle:
-                      xref = width / 2;
-                      break;
-                    case VertRef:
-                      xref = pBox->BxVertRef;
-                      break;
-                    default:
-                      xref = 0;
-                      break;
-                    }
-                  switch (pBox->BxVertEdge)
-                    {
-                    case Bottom:
-                      yref = height;
-                      break;
-                    case HorizMiddle:
-                      yref = height / 2;
-                      break;
-                    case HorizRef:
-                      yref = pBox->BxHorizRef;
-                      break;
-                    default:
-                      yref = 0;
-                      break;
-                    }
-                  NewPosition (pAb, x, xref, y, yref, frame, TRUE);
-                }
-              if (send)
-                APPgraphicModify (pEl, pointselect, frame, FALSE, open);
-              // now update attribute panels
-              TtaUpdateAttrMenu (FrameTable[frame].FrDoc);
-            }
-        }
-    }
-}
-#endif /* IV */
 
 /*----------------------------------------------------------------------
   CanBeResized teste si un pave est modifiable en Dimension.       

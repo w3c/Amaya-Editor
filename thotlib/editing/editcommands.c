@@ -1326,158 +1326,7 @@ static void LoadSymbol (int c, PtrLine pLine, ThotBool defaultHeight,
 
 
 /*----------------------------------------------------------------------
-  Charge un graphique ou une polyline.                            
-  ----------------------------------------------------------------------*/
-static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
-                       ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
-                       int frame)
-{
-  ViewFrame          *pFrame;
-  PtrTextBuffer       pBuffer;
-  PtrDocument         pDoc;
-  int                 xDelta, yDelta;
-  int                 width, height;
-  int                 x, y;
-  int                 view;
-  ThotBool            open;
-
-  pFrame = &ViewFrameTable[frame - 1];
-  GetDocAndView (frame, &pDoc, &view);
-  if (pDoc == NULL)
-    return;
-  open = !pDoc->DocEditSequence;
-  if (!APPgraphicModify (pAb->AbElement, (int) c, frame, TRUE, open))
-    {
-      /* efface la selection precedente */
-      switch (c)
-        {
-        case 'S':	/* polyline */
-        case 'U':	/* polyline with forward arrow */
-        case 'N':	/* polyline with backward arrow */
-        case 'M':	/* polyline with arrows at both ends */
-        case 'w':	/* segment */
-        case 'x':	/* segment with forward arrow */
-        case 'y':	/* segment with backward arrow */
-        case 'z':	/* segment with arrows at both ends */
-        case 'B':	/* Beziers (ouvertes) */
-        case 'A':	/* Beziers (ouvertes) flechees vers avant */
-        case 'F':	/* Beziers (ouvertes) flechees vers arriere */
-        case 'D':	/* Beziers (ouvertes) flechees dns les deux sens */
-        case 'p':	/* polygone */
-        case 's':	/* spline fermee */
-          pAb->AbPolyLineShape = c;
-          width = pBox->BxWidth;
-          height = pBox->BxHeight;
-          if (pBox->BxBuffer == NULL)
-            {
-              /* Changement de graphique simple a polyline */
-              pAb->AbLeafType = LtPolyLine;
-              pAb->AbElement->ElLeafType = LtPolyLine;
-              /* creation du buffer initial pour ranger les points de la polyline */
-              GetTextBuffer (&(pAb->AbPolyLineBuffer));
-              pAb->AbPolyLineBuffer->BuLength = 1;
-              pAb->AbPolyLineBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPixel, NULL,
-                                                                        ViewFrameTable[frame - 1].FrMagnification);
-              pAb->AbPolyLineBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPixel, NULL,
-                                                                        ViewFrameTable[frame - 1].FrMagnification);
-              GetTextBuffer (&(pBox->BxBuffer));
-              /* initialise la dimension de la boite polyline */
-              pBox->BxBuffer->BuLength = 1;
-              pBox->BxBuffer->BuPoints[0].XCoord = pAb->AbPolyLineBuffer->BuPoints[0].XCoord;
-              pBox->BxBuffer->BuPoints[0].YCoord = pAb->AbPolyLineBuffer->BuPoints[0].YCoord;
-              pBox->BxNChars = 1;
-            }
-	  
-          if (pBox->BxNChars == 1)
-            {
-              /* il faut saisir les points de la polyline */
-              x = pBox->BxXOrg - pFrame->FrXOrg;
-              y = pBox->BxYOrg - pFrame->FrYOrg;
-              if (c == 'w' || c == 'x' || c == 'y' || c == 'z')
-                pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, 2);
-              else
-                pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, 0);
-              pAb->AbElement->ElNPoints = pAb->AbVolume;
-              pBox->BxNChars = pAb->AbVolume;
-              DisplayPointSelection (frame, pBox, 0, FALSE);
-            }
-
-          /* redisplay the whole box */
-          DefBoxRegion (frame, pBox, -1, -1, -1, -1);
-          break;
-
-        default:	/* un graphique simple */
-          if (pBox->BxBuffer != NULL)
-            {
-              /* Transformation polyline en graphique simple */
-              pAb->AbLeafType = LtGraphics;
-              /* libere les points de controle */
-              if (pBox->BxPictInfo != NULL)
-                {
-                  free ((STRING) pBox->BxPictInfo);
-                  pBox->BxPictInfo = NULL;
-                }
-              /* il faut liberer les buffers */
-              pBox->BxNChars = 1;
-              pBuffer = pBox->BxBuffer;
-              while (pBuffer != NULL)
-                {
-                  pBox->BxBuffer = pBuffer->BuNext;
-                  FreeTextBuffer (pBuffer);
-                  pBuffer = pBox->BxBuffer;
-                }
-              pBuffer = pAb->AbPolyLineBuffer;
-              while (pBuffer != NULL)
-                {
-                  pAb->AbPolyLineBuffer = pBuffer->BuNext;
-                  FreeTextBuffer (pBuffer);
-                  pBuffer = pAb->AbPolyLineBuffer;
-                }
-            }
-
-          pAb->AbShape = c;
-          pAb->AbVolume = 1;
-          if (c == 'g' && pAb->AbEnclosing &&
-              pAb->AbEnclosing->AbWidth.DimIsPosition)
-            {
-              x = pBox->BxXOrg - pFrame->FrXOrg;
-              y = pBox->BxYOrg - pFrame->FrYOrg;
-              LineCreation (frame, pBox, &x, &y, &xDelta, &yDelta);
-              /* Update the enclosing stretchable box */
-              pAb = pAb->AbEnclosing;
-              NewPosition (pAb, x, 0, y, 0, frame, TRUE);
-              NewDimension (pAb, xDelta, yDelta, frame, TRUE);
-            }
-          else
-            {
-              if (c == 1 || c == 'C')
-                /* rectangle with rounded corners */
-                {
-                  pAb->AbRx = 0;
-                  pAb->AbRy = 0;
-                }
-              /* Dimensions du symbole */
-              GiveGraphicSize (pAb, &xDelta, &yDelta);
-              /* met a jour la boite */
-              if (defaultWidth)
-                xDelta -= pBox->BxWidth;
-              else
-                xDelta = 0;
-              if (defaultHeight)
-                yDelta -= pBox->BxHeight;
-              else
-                yDelta = 0;
-              BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
-            }
-        }
-      /* but could notify its parent */
-      APPgraphicModify (pAb->AbElement, (int) c, frame, FALSE, open);
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  insere dans la boite pBox.                                     
+  A picture is inserted
   ----------------------------------------------------------------------*/
 static void LoadPictFile (PtrLine pLine, ThotBool defaultHeight,
                           ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb,
@@ -2011,11 +1860,6 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
       LoadSymbol (clipboard->BuContent[0], pLine, defaultHeight,
                   defaultWidth, pBox, pAb, frame);
       break;
-    case LtPolyLine:
-    case LtGraphics:
-      LoadShape ((char)clipboard->BuContent[0], pLine, defaultHeight,
-                 defaultWidth, pBox, pAb, frame);
-      break;
     default:
       break;
     }
@@ -2025,11 +1869,8 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
   AskShapePoints
   Ask the user the list of points of a polyline or curve.
   --------------------------------------------------------------------*/
-ThotBool AskShapePoints (Document doc,
-			 Element svgAncestor,
-			 Element svgCanvas,
-			 int shape,
-			 Element el)
+ThotBool AskShapePoints (Document doc, Element svgAncestor, Element svgCanvas,
+                         int shape, Element el)
 {
   PtrAbstractBox pAb;
   PtrBox pBox;
@@ -2040,16 +1881,13 @@ ThotBool AskShapePoints (Document doc,
   ThotBool created = FALSE;
 
   frame = ActiveFrame;
-
-  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )return FALSE;
+  if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )
+    return FALSE;
 
   /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
-
   if(CTM == NULL)
-    {
-      inverse = NULL;
-    }
+    inverse = NULL;
   else
     {
       /* Get the inverse of the CTM and free the CTM */
@@ -2057,36 +1895,29 @@ ThotBool AskShapePoints (Document doc,
       TtaFreeTransform(CTM);
 
       if(inverse == NULL)
-	/* Transform not inversible */
-	return FALSE;
+        /* Transform not inversible */
+        return FALSE;
     }
 
   pFrame = &ViewFrameTable[frame - 1];
-
   /* Get the size of the SVG Canvas */
   TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
-
   /* Get the origin of the ancestor */
   //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if(pAb && pAb -> AbBox)
+  if (pAb && pAb -> AbBox)
     pBox = pAb -> AbBox;
   else return FALSE;
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
-  
   /* Call the interactive module */
-  created = PathCreation (frame,
-			  doc,
-			  inverse,
-			  ancestorX, ancestorY,
-			  canvasWidth, canvasHeight,
-			  shape, el);
+  created = PathCreation (frame, doc, inverse,
+                          ancestorX, ancestorY, canvasWidth, canvasHeight,
+                          shape, el);
 
   /* Free the inverse of the CTM */
   if(inverse != NULL)
     TtaFreeTransform(inverse);
-
   return created;
 }
 
@@ -2146,16 +1977,10 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
   
   /* Call the interactive module */
-  created = ShapeCreation (frame, doc,
-                           (void *)inverse,
+  created = ShapeCreation (frame, doc, (void *)inverse,
                            ancestorX, ancestorY,
-                           canvasWidth, canvasHeight,
-                           shape,
-                           x1, y1,
-                           x2, y2,
-                           x3, y3,
-                           x4, y4,
-                           lx, ly);
+                           canvasWidth, canvasHeight, shape,
+                           x1, y1, x2, y2, x3, y3, x4, y4, lx, ly);
 
   /* Free the inverse of the CTM */
   if(inverse != NULL)
@@ -2167,8 +1992,7 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
 /*----------------------------------------------------------------------
   AskTransform
   --------------------------------------------------------------------*/
-ThotBool AskTransform (Document doc, Element svgAncestor,
-                       Element svgCanvas,
+ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
                        int transform_type, Element el)
 {
   PtrAbstractBox pAb;
@@ -2224,13 +2048,9 @@ ThotBool AskTransform (Document doc, Element svgAncestor,
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
   /* Call the interactive module */
-  transformApplied = TransformSVG (frame,
-				   doc, 
-				   CTM, inverse,
-				   ancestorX, ancestorY,
-				   canvasWidth, canvasHeight,
-				   transform_type,
-				   el);
+  transformApplied = TransformSVG (frame, doc, CTM, inverse,
+                                   ancestorX, ancestorY, canvasWidth, canvasHeight,
+                                   transform_type, el);
 
   /* Free the transform matrix */
   if(CTM)TtaFreeTransform(CTM);
@@ -2307,29 +2127,23 @@ ThotBool AskPathEdit (Document doc,
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
   /* Call the interactive module */
-  transformApplied = PathEdit (frame,
-			       doc, 
-			       inverse,
-			       ancestorX, ancestorY,
-			       canvasWidth, canvasHeight,
-			       el, point);
-
+  transformApplied = PathEdit (frame, doc,  inverse,
+                               ancestorX, ancestorY, canvasWidth, canvasHeight,
+                               el, point);
   /* Free the transform matrix */
-  if(inverse)TtaFreeTransform(inverse);
-
+  if(inverse)
+    TtaFreeTransform(inverse);
 
   /* Update the attribute */
   if(transformApplied)
     UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
-
   return transformApplied;
 }
 
 /*----------------------------------------------------------------------
   AskShapeEdit
   --------------------------------------------------------------------*/
-ThotBool AskShapeEdit (Document doc,
-		       Element el, int point)
+ThotBool AskShapeEdit (Document doc, Element el, int point)
 {
   Element svgCanvas = NULL, svgAncestor = NULL, el2;
   PtrAbstractBox pAb;
@@ -2653,8 +2467,8 @@ ThotBool ContentEditing (int editType)
                           x = pBox->BxXOrg - pFrame->FrXOrg;
                           y = pBox->BxYOrg - pFrame->FrYOrg;
                           i = pViewSel->VsIndBox;
-                          pBox->BxNChars = PolyLineExtension (frame, &x, &y,
-                                                              pBox, pBox->BxNChars, i, still);
+/*                           pBox->BxNChars = PolyLineExtension (frame, &x, &y, */
+/*                                                               pBox, pBox->BxNChars, i, still); */
                           graphEdit = TRUE;
                           pAb->AbVolume = pBox->BxNChars;
                           if (pBox->BxPictInfo != NULL)
@@ -3046,14 +2860,6 @@ ThotBool ContentEditing (int editType)
                   LoadSymbol (editType, pLine, defaultHeight,
                               defaultWidth, pBox, pAb, frame);
                   CloseHistorySequence (pDoc);
-                }
-              else if ((pAb->AbLeafType == LtGraphics ||
-                        pAb->AbLeafType == LtPolyLine) &&
-                       NewInsert)
-                {
-                  LoadShape ((char) editType, pLine, defaultHeight,
-                             defaultWidth, pBox, pAb, frame);
-                  NewContent (pAb);
                 }
             }
         }

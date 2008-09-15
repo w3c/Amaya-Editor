@@ -677,11 +677,9 @@ RULES
    line_:
         BEGIN
         CreateBefore (ElementName);
-        HorizPos: Left = Enclosing . Left UserSpecified;
-        VertPos:  Top = Enclosing . Top UserSpecified;
-        Width: Right = Enclosing . Left;
-        Height:  Bottom = Enclosing . Top;
-               IN Structure_view BEGIN
+        Width: Enclosing . Width;
+        Height: Enclosing . Height;
+        IN Structure_view BEGIN
                 if within use_
                     Visibility: 0;
                 Width: Enclosing . Width - STRUCT_INDENT;

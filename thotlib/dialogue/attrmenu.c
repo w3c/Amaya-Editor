@@ -735,6 +735,11 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
           if (firstSel->ElTerminal && firstSel->ElLeafType == LtPicture && parent &&
               TypeHasException (ExcIsImg, parent->ElTypeNumber, parent->ElStructSchema))
             firstSel = parent;
+          else if (firstSel->ElTerminal &&
+                   (firstSel->ElLeafType == LtPolyLine ||
+                    firstSel->ElLeafType == LtPath ||
+                    firstSel->ElLeafType == LtGraphics))
+            firstSel = parent;
           if (force || pDoc != PrevDoc ||
               firstSel->ElStructSchema != PrevStructSchema ||
               firstSel->ElTypeNumber != PrevElTypeNumber ||

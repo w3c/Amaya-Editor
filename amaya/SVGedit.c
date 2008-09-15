@@ -661,7 +661,7 @@ void AttrWidthHeightChanged (NotifyAttribute *event)
 /*----------------------------------------------------------------------
   AttrWidthHeightDelete
   -----------------------------------------------------------------------*/
-ThotBool         AttrWidthHeightDelete (NotifyAttribute *event)
+ThotBool AttrWidthHeightDelete (NotifyAttribute *event)
 {
   return ParseWidthHeightAttribute (event->attribute, event->element,
                                     event->document, TRUE);
@@ -2265,7 +2265,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
           UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
           selEl = newEl;
         }
-      else if ((0 <= entry && entry <= 4) || (entry >= 12 && entry <= 25))
+      else if ((0 < entry && entry <= 4) || (entry >= 12 && entry <= 25))
         {
           /* Basic Shapes and lines */
           selEl = newEl;
@@ -2555,7 +2555,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
                 }
             }
         }
-      else if (entry >= 5 && entry <= 8)
+      else if (entry == 0 || (entry >= 5 && entry <= 8))
         {
           /* Polyline and curves */
           selEl = newEl;
@@ -2570,7 +2570,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
         }
       else if (entry == 9 || entry == 56)
         /* create a foreignObject containing an
-	   XHTML <div/> / MathML <math/> element */
+           XHTML <div/> / MathML <math/> element */
         {
           created = TRUE;
 
@@ -2614,10 +2614,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
           attr = TtaNewAttribute (attrType);
           TtaAttachAttribute (foreignObj, attr, doc);
 
-	  if(entry == 9)
-	    TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
-	  else 
-	    TtaSetAttributeText (attr, MathML_URI, foreignObj, doc);
+          if(entry == 9)
+            TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
+          else 
+            TtaSetAttributeText (attr, MathML_URI, foreignObj, doc);
 
           if (isFormattedView)
             {
@@ -2628,93 +2628,93 @@ void CreateGraphicElement (Document doc, View view, int entry)
               UpdateAttrText (foreignObj, doc, attrType, 50, FALSE, TRUE);
             }
 
-	  if(entry == 9)
-	    {
-	      /* the document is supposed to be HTML */
-	      childType.ElSSchema = TtaNewNature (doc, docSchema, NULL, "HTML",
-                                              "HTMLP");
-	      childType.ElTypeNum = HTML_EL_Division;
-	      child = TtaNewTree (doc, childType, "");
+          if(entry == 9)
+            {
+              /* the document is supposed to be HTML */
+              childType.ElSSchema = TtaNewNature (doc, docSchema, NULL, "HTML",
+                                                  "HTMLP");
+              childType.ElTypeNum = HTML_EL_Division;
+              child = TtaNewTree (doc, childType, "");
 
-	      /* do not check the Thot abstract tree against the structure */
-	      /* schema when inserting this element */
-	      oldStructureChecking = TtaGetStructureChecking (doc);
-	      TtaSetStructureChecking (FALSE, doc);
+              /* do not check the Thot abstract tree against the structure */
+              /* schema when inserting this element */
+              oldStructureChecking = TtaGetStructureChecking (doc);
+              TtaSetStructureChecking (FALSE, doc);
 
-	      /* insert the new <div> element */
-	      TtaInsertFirstChild (&child, foreignObj, doc);
+              /* insert the new <div> element */
+              TtaInsertFirstChild (&child, foreignObj, doc);
 
-	      /* put an XHTML namespace declaration on the <div> element */
-	      TtaSetUriSSchema (childType.ElSSchema, XHTML_URI);
-	      TtaSetANamespaceDeclaration (doc, child, NULL, XHTML_URI);
-	      TtaSetStructureChecking (oldStructureChecking, doc);
+              /* put an XHTML namespace declaration on the <div> element */
+              TtaSetUriSSchema (childType.ElSSchema, XHTML_URI);
+              TtaSetANamespaceDeclaration (doc, child, NULL, XHTML_URI);
+              TtaSetStructureChecking (oldStructureChecking, doc);
 
-	      /* is there a SVG direction attribute on any ancestor element? */
-	      attrType.AttrTypeNum = SVG_ATTR_direction_;
-	      inheritedAttr = InheritAttribute (foreignObj, attrType);
-	      dir = -1;
-	      if (!inheritedAttr)
-		/* no direction attribute. Create a HTML dir attribute with
-		   value ltr */
-		dir = HTML_ATTR_dir_VAL_ltr_;
-	      else
-		{
-		  svgDir = TtaGetAttributeValue (inheritedAttr);
-		  switch (svgDir)
-		    {
-		    case SVG_ATTR_direction__VAL_ltr_ :
-		      dir = HTML_ATTR_dir_VAL_ltr_;
-		      break;
-		    case SVG_ATTR_direction__VAL_rtl_ :
-		      dir = HTML_ATTR_dir_VAL_rtl_;
-		      break;
-		    case SVG_ATTR_direction__VAL_inherit :
-		      dir = -1;
-		      break;
-		    }
-		}
-	      if (dir >= 0)
-		{
-		  /* create a dir attribute for the div element */
-		  attrTypeHTML.AttrSSchema = childType.ElSSchema;
-		  attrTypeHTML.AttrTypeNum = HTML_ATTR_dir;
-		  attr = TtaNewAttribute (attrTypeHTML);
-		  TtaAttachAttribute (child, attr, doc);
-		  TtaSetAttributeValue (attr, dir, child, doc);
-		}
+              /* is there a SVG direction attribute on any ancestor element? */
+              attrType.AttrTypeNum = SVG_ATTR_direction_;
+              inheritedAttr = InheritAttribute (foreignObj, attrType);
+              dir = -1;
+              if (!inheritedAttr)
+                /* no direction attribute. Create a HTML dir attribute with
+                   value ltr */
+                dir = HTML_ATTR_dir_VAL_ltr_;
+              else
+                {
+                  svgDir = TtaGetAttributeValue (inheritedAttr);
+                  switch (svgDir)
+                    {
+                    case SVG_ATTR_direction__VAL_ltr_ :
+                      dir = HTML_ATTR_dir_VAL_ltr_;
+                      break;
+                    case SVG_ATTR_direction__VAL_rtl_ :
+                      dir = HTML_ATTR_dir_VAL_rtl_;
+                      break;
+                    case SVG_ATTR_direction__VAL_inherit :
+                      dir = -1;
+                      break;
+                    }
+                }
+              if (dir >= 0)
+                {
+                  /* create a dir attribute for the div element */
+                  attrTypeHTML.AttrSSchema = childType.ElSSchema;
+                  attrTypeHTML.AttrTypeNum = HTML_ATTR_dir;
+                  attr = TtaNewAttribute (attrTypeHTML);
+                  TtaAttachAttribute (child, attr, doc);
+                  TtaSetAttributeValue (attr, dir, child, doc);
+                }
   
-	      /* select the first leaf */
-	      elem = child;
+              /* select the first leaf */
+              elem = child;
 	      
-	      do
-		{
-		  selEl = elem;
-		  elem = TtaGetFirstChild (elem);
-		}
-	      while (elem != NULL);
-	    }
-	  else
-	    selEl = foreignObj;
+              do
+                {
+                  selEl = elem;
+                  elem = TtaGetFirstChild (elem);
+                }
+              while (elem != NULL);
+            }
+          else
+            selEl = foreignObj;
 
 	  
-	  /* create an alternate SVG text element for viewers that are not
-	     able to display embedded XHTML/MathML */
-	  elType.ElSSchema = svgSchema;
-	  elType.ElTypeNum = SVG_EL_text_;
-	  altText = TtaNewElement (doc, elType);
-	  TtaInsertSibling (altText, foreignObj, FALSE, doc);
-	  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
-	  leaf = TtaNewElement (doc, elType);
-	  TtaInsertFirstChild (&leaf, altText, doc);
-	  lang = TtaGetLanguageIdFromScript('L');
-	  if(entry == 9)
-	    TtaSetTextContent (leaf,
-			       (unsigned char *)"embedded XHTML not supported" ,
-			       lang, doc);
-	  else
-	    TtaSetTextContent (leaf,
-			       (unsigned char *)"embedded MathML not supported" ,
-			       lang, doc);
+          /* create an alternate SVG text element for viewers that are not
+             able to display embedded XHTML/MathML */
+          elType.ElSSchema = svgSchema;
+          elType.ElTypeNum = SVG_EL_text_;
+          altText = TtaNewElement (doc, elType);
+          TtaInsertSibling (altText, foreignObj, FALSE, doc);
+          elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+          leaf = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&leaf, altText, doc);
+          lang = TtaGetLanguageIdFromScript('L');
+          if(entry == 9)
+            TtaSetTextContent (leaf,
+                               (unsigned char *)"embedded XHTML not supported" ,
+                               lang, doc);
+          else
+            TtaSetTextContent (leaf,
+                               (unsigned char *)"embedded MathML not supported" ,
+                               lang, doc);
 
 
           /* set the visibility of the alternate text */
@@ -2797,7 +2797,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
     {
 
       *buffer = EOS;
-      if (entry >= 5 && entry <= 8)
+      if (entry == 0 || (entry >= 5 && entry <= 8))
         {
           /* Add a temporary style */
           strcpy(buffer2, "stroke:black; fill:none;");
@@ -3085,7 +3085,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
       elType.ElTypeNum = SVG_EL_text_;
       child = TtaGetTypedAncestor(first, elType);
       if(child != NULL)
-	first = child;
+        first = child;
     }
 
   /* Get the <svg/> ancestor, canvas and check that the first selected 
@@ -3643,49 +3643,50 @@ void UpdateTransformMatrix(Document doc, Element el)
 void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
                                  ThotBool withUndo)
 {
-  char         *buffer;
+  char         *buffer = NULL, value[20];
   Attribute     attr;
   AttributeType attrType;
   ElementType   elType;
   ThotBool      new_, open;
-  Element leaf;
-  SSchema      svgSchema = GetSVGSSchema (doc);
-  ThotBool isPath;
+  Element       leaf;
+  int           i, v;
+  SSchema       svgSchema = GetSVGSSchema (doc);
+  ThotBool      isPath = FALSE, isLine = FALSE;
 
   /* Check whether the element is a Path or a polyline/polygon */
   elType = TtaGetElementType (el);
-  if(elType.ElTypeNum == SVG_EL_path)
-    {
-      /* It's a Path */
-      isPath = TRUE;
-    }
-  else if(elType.ElTypeNum == SVG_EL_polyline ||
+  if (elType.ElTypeNum == SVG_EL_path)
+    /* It's a Path */
+    isPath = TRUE;
+  else if (elType.ElTypeNum == SVG_EL_polyline ||
           elType.ElTypeNum == SVG_EL_polygon)
     {
       /* It's a Polygon/polyline */
-      isPath = FALSE;
+      isPath = FALSE; isLine = FALSE;
+    
     }
+  else if (elType.ElTypeNum == SVG_EL_line_)
+    isLine = TRUE;
   else
     return;
 
   /* Get the attribute value from the GRAPHICS leaf */
   leaf = TtaGetLastChild(el);
-
   if(isPath)
-    buffer = TtaGetPathAttributeValue(leaf, w, h);
+    buffer = TtaGetPathAttributeValue (leaf, w, h);
   else
-    buffer = TtaGetPointsAttributeValue(leaf, w, h);
+    buffer = TtaGetPointsAttributeValue (leaf, w, h);
 
   /* Check if the attribute already exists */
   attrType.AttrSSchema = svgSchema;
-
   if(isPath)
     attrType.AttrTypeNum = SVG_ATTR_d;
+  if(isLine)
+    attrType.AttrTypeNum = SVG_ATTR_x1;
   else
     attrType.AttrTypeNum = SVG_ATTR_points;
 
   attr = TtaGetAttribute (el, attrType);
-
   /* check if the undo sequence is open */
   if (withUndo)
     {
@@ -3699,7 +3700,7 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
 
   if (buffer == NULL)
     {
-      if (attr)
+      if (attr && !isLine)
         {
           /* Remove the current path attribute */
           TtaRegisterAttributeDelete (attr, el, doc);
@@ -3707,23 +3708,62 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
         }
       return;
     }
-    
-  new_ = (attr == NULL);
-  if (new_)
+
+  if (isLine)
     {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
+      i = 0;
+      while (isLine)
+        {
+          v = 0;
+          while (isdigit(buffer[i]))
+            value[v++] = buffer[i++];
+          value[i] = EOS;
+          new_ = (attr == NULL);
+          if (new_)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+            }
+          else
+            TtaRegisterAttributeReplace (attr, el, doc);
+          
+          TtaSetAttributeText (attr, value, el, doc);
+          if (new_)
+            TtaRegisterAttributeCreate (attr, el, doc);
+          if (attrType.AttrTypeNum == SVG_ATTR_x1)
+            attrType.AttrTypeNum = SVG_ATTR_y1;
+          else if (attrType.AttrTypeNum == SVG_ATTR_y1)
+            attrType.AttrTypeNum = SVG_ATTR_x2;
+          else if (attrType.AttrTypeNum == SVG_ATTR_x2)
+            attrType.AttrTypeNum = SVG_ATTR_y2;
+          else
+            isLine = FALSE;
+          if (isLine)
+            {
+              while (buffer[i] != EOS && !isdigit(buffer[i]))
+                i++;
+              attr = TtaGetAttribute (el, attrType);
+            }
+        }
     }
   else
-    TtaRegisterAttributeReplace (attr, el, doc);
-  TtaSetAttributeText (attr, buffer, el, doc);
-  if (new_)
-    TtaRegisterAttributeCreate (attr, el, doc);
-  TtaFreeMemory(buffer);
+    {
+      new_ = (attr == NULL);
+      if (new_)
+        {
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (el, attr, doc);
+        }
+      else
+        TtaRegisterAttributeReplace (attr, el, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      if (new_)
+        TtaRegisterAttributeCreate (attr, el, doc);
+    }
  
+  TtaFreeMemory(buffer);
   /* Update the attribute menu */
   TtaUpdateAttrMenu(doc);
-
   if (withUndo && open)
     {
       TtaCloseUndoSequence (doc);

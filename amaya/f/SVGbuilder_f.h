@@ -49,6 +49,10 @@ extern void CreateCSSRules ( Element el,
                              Document doc );
 extern void SVGElementCreated ( Element el,
                                 Document doc );
+extern void ParsePointsBuffer ( char *text,
+                                Element leaf,
+                                Document doc );
+extern char *ConvertLineAttributesToPath ( Element el );
 extern void SVGElementComplete ( ParserData *context,
                                  Element el,
                                  int *error );
@@ -153,6 +157,10 @@ extern void CreateCSSRules ( Element el,
                                Document doc );
 extern void SVGElementCreated ( Element el,
                                   Document doc );
+extern void ParsePointsBuffer ( char *text,
+                                  Element leaf,
+                                  Document doc );
+extern char *ConvertLineAttributesToPath ( Element el );
 extern void SVGElementComplete ( ParserData *context,
                                    Element el,
                                    int *error );

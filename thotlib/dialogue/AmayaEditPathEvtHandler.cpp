@@ -70,7 +70,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaEditPathEvtHandler, wxEvtHandler)
 
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
-AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
+AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame *p_frame,
                                                  Document doc,
                                                  void *inverse,
                                                  int ancestorX,
@@ -125,7 +125,6 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame * p_frame,
       return;
     }
   box = pAb -> AbBox;
-
   if (((PtrElement)leaf)->ElLeafType == LtPolyLine)
     {
       /* It's a polyline or a polygon */

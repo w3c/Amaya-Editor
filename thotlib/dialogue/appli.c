@@ -758,16 +758,6 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
                 statusbar->SetSelectedElement (elem);
               else
                 statusbar->SetSelectedElement (NULL);
-#ifdef IV
-              PtrElement         pEl = (PtrElement)elem;
-              if (pEl && pEl->ElAbstractBox[0])
-                {
-                  // Update the current color in the tool panel
-                  AmayaToolPanel* panel = window->GetPanel (WXAMAYA_PANEL_STYLE);
-                  if (panel)
-                    panel->SetColor (pEl->ElAbstractBox[0]->AbForeground);
-                }
-#endif
             }
         }
     }
@@ -1104,11 +1094,8 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
  *   + TRUE : if the event must be forwarded to other widgets
  *   + FALSE : if the event is cought
  ----------------------------------------------------------------------*/
-ThotBool FrameMouseWheelCallback( 
-                                 int frame,
-                                 int thot_mod_mask,
-                                 int direction,
-                                 int delta,
+ThotBool FrameMouseWheelCallback( int frame, int thot_mod_mask,
+                                 int direction, int delta,
                                  int x, int y )
 {
   Document   document;

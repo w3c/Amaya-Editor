@@ -472,6 +472,7 @@ void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
 
   switch(shape)
     {
+    case 0:
     case 5:
     case 6:
       if (state == 1)
@@ -550,7 +551,7 @@ void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
   *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::AddNewPoint()
 {
-  int x1,y1,x2,y2,x3,y3,x4,y4;
+  int x1, y1, x2, y2, x3, y3, x4, y4;
 
   if (IsFinish())
     return;
@@ -587,20 +588,25 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
       DrawPathFragment(shape, FALSE);
     }
 
-  if (shape == 5 || shape == 6)
+  if (shape == 0 || shape == 5 || shape == 6)
     {
-      if (nb_points == 2)
+      if ((shape == 0 && nb_points == 1) || nb_points == 2)
         *created = TRUE;
 
       /* Add a new point in the polyline/polygon */
       state = 1;
       x1 = currentX;
       y1 = currentY;
-      MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                            NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
-                            &x1, &y1);
+      MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
+                             NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                             &x1, &y1);
 
       TtaAddPointInPolyline (leaf, nb_points, UnPixel, x1, y1, document, FALSE);
+      if (shape == 0 && nb_points == 2)
+        {
+          TtaSetStatus (document, 1, "", NULL);
+          finished = true;
+        }
       nb_points++;
     }
   else if (shape == 7 || shape == 8)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1998-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1998-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -272,8 +272,8 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
 static Element CreateGraphicalLeaf (char shape, Element el, Document doc)
 {
   ElementType	   elType;
-  Element	   leaf, child;
-  char             oldShape;
+  Element	       leaf, child;
+  char           oldShape;
 
   leaf = NULL;
   child = TtaGetLastChild (el);
@@ -331,19 +331,19 @@ Element CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
     {
     case SVG_EL_rect:
       if(shape_recognition)
-	{
-	  rule = TtaGetPRule(el, PRWidth);
-	  w = TtaGetPRuleValue (rule);
-	  rule = TtaGetPRule(el, PRHeight);
-	  h = TtaGetPRuleValue (rule);
-
-	  if(w == h)
-	    leaf = CreateGraphicalLeaf (1, el, doc);
-	  else
-	    leaf = CreateGraphicalLeaf ('C', el, doc);
-	}
+        {
+          rule = TtaGetPRule(el, PRWidth);
+          w = TtaGetPRuleValue (rule);
+          rule = TtaGetPRule(el, PRHeight);
+          h = TtaGetPRuleValue (rule);
+          
+          if(w == h)
+            leaf = CreateGraphicalLeaf (1, el, doc);
+          else
+            leaf = CreateGraphicalLeaf ('C', el, doc);
+        }
       else
-	leaf = CreateGraphicalLeaf ('C', el, doc);
+        leaf = CreateGraphicalLeaf ('C', el, doc);
       *closed = TRUE;
       break;
 
@@ -1469,6 +1469,268 @@ static void InstanciateUseElements (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  GetNumber
+  Parse an integer or floating point number and skip to the next token.
+  Return the value of that number in number and moves ptr to the next
+  token to be parsed.
+  If the string to be parsed is not a valid number, set error to TRUE.
+  ----------------------------------------------------------------------*/
+static char *GetNumber (char *ptr, int* number, ThotBool *error)
+{
+  int      integer, nbdecimal, exponent, i;
+  char     *decimal;
+  ThotBool negative, negativeExp;
+
+  *number = 0;
+  *error = FALSE;
+  integer = 0;
+  nbdecimal = 0;
+  decimal = NULL;
+  negative = FALSE;
+  /* read the sign */
+  if (*ptr == '+')
+    ptr++;
+  else if (*ptr == '-')
+    {
+      ptr++;
+      negative = TRUE;
+    }
+
+  if (*ptr < '0' || *ptr > '9')
+    {
+      *error = TRUE;
+      ptr++;
+      return (ptr);
+    }
+  /* read the integer part */
+  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
+    {
+      integer *= 10;
+      integer += *ptr - '0';
+      ptr++;
+    }
+  if (*ptr == '.')
+    /* there is a decimal part */
+    {
+      ptr++;
+      decimal = ptr;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+        {
+          nbdecimal++;
+          ptr++;
+        }
+    }
+
+  if (*ptr != 'e' && *ptr != 'E')
+    /* no exponent */
+    {
+      if (nbdecimal > 0)
+        /* there are some digits after the decimal point */
+        {
+          if (*decimal >= '5' && *decimal <= '9')
+            /* the first digit after the point is 5 of greater
+               round up the value to the next integer */
+            integer++;
+        }
+    }
+  else
+    /* there is an exponent part, parse it */
+    {
+      ptr++;
+      negativeExp = FALSE;
+      /* read the sign of the exponent */
+      if (*ptr == '+')
+        ptr++;
+      else if (*ptr == '-')
+        {
+          ptr++;
+          negativeExp = TRUE;
+        }
+      exponent = 0;
+
+      if (*ptr < '0' || *ptr > '9')
+        {
+          *error = TRUE;
+          ptr++;
+          return (ptr);
+        }
+
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+        {
+          exponent *= 10;
+          exponent += *ptr - '0';
+          ptr++;
+        }
+      if (exponent > 0)
+        {
+          if (negativeExp)
+            {
+              for (i = 0; i < exponent; i++)
+                integer /= 10;
+            }
+          else
+            {
+              for (i = 0; i < exponent; i++)
+                {
+                  integer *= 10;
+                  if (i < nbdecimal)
+                    {
+                      integer += *decimal - '0';
+                      decimal++;
+                    }
+                }
+            }
+        }
+    }
+
+  if (negative)
+    *number = - integer;
+  else
+    *number = integer;
+
+  /* skip the following spaces */
+  while (*ptr != EOS &&
+         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
+          *ptr == EOL    || *ptr == TAB   || *ptr == CR))
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+  ParsePointsBuffer
+  Process the points attribute
+  ----------------------------------------------------------------------*/
+void ParsePointsBuffer (char *text, Element leaf, Document doc)
+{
+  DisplayMode  dispMode;
+ TypeUnit		   unit;
+  char		    *ptr;
+  int          x, y, nbPoints, maxX, maxY, minX, minY, i;
+  ThotBool     error;
+
+  if (text)
+    {
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
+
+      /* first, delete all points in the polyline */
+      nbPoints = TtaGetPolylineLength (leaf);
+      for (i = 1; i <= nbPoints; i++)
+        TtaDeletePointInPolyline (leaf, i, doc);
+
+      // set new points
+      ptr = text;
+      error = FALSE;
+      ptr = (char*)TtaSkipBlanks (ptr);
+      nbPoints = 0;
+      minX = minY = 32000;
+      maxX = maxY = 0;
+      unit = UnPixel;
+      while (*ptr != EOS && !error)
+        {
+          x = y = 0;
+          ptr = GetNumber (ptr, &x, &error);
+          if (x > maxX)
+            maxX = x;
+          if (x < minX)
+            minX = x;
+          if (*ptr == EOS)
+            error = TRUE;
+          if (*ptr == ',')
+            {
+              ptr++;
+              ptr = (char*)TtaSkipBlanks (ptr);
+            }
+          if (!error)
+            {
+              ptr = GetNumber (ptr, &y, &error);
+              if (y > maxY)
+                maxY = y;
+              if (y < minY)
+                minY = y;
+              if (!error)
+                {
+                  nbPoints++;
+                  TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc, FALSE);
+                  if (*ptr == ',')
+                    {
+                      ptr++;
+                      ptr = (char*)TtaSkipBlanks (ptr);
+                    }
+                }
+            }
+        }
+      TtaSetDisplayMode (doc, dispMode);
+    }
+}
+
+/*----------------------------------------------------------------------
+  ConvertLineAttributesToPath 
+  ----------------------------------------------------------------------*/
+char *ConvertLineAttributesToPath (Element el)
+{
+  ElementType		       elType;
+  AttributeType        attrType;
+  Attribute            attr;
+  char                 *buffer;
+  int                  length, l;
+
+  elType = TtaGetElementType (el);
+  // update an enclosing polyline
+  buffer = (char *)TtaGetMemory (100);
+  buffer[0] = EOS;
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_x1;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    {
+      length = 10;
+      TtaGiveTextAttributeValue (attr, buffer, &length);
+      l = strlen (buffer)-1;
+      while (l > 0 && !isdigit(buffer[l]))
+        buffer[l--] = EOS;
+      strcat (buffer, ",");
+    }
+  attrType.AttrTypeNum = SVG_ATTR_y1;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    {
+      length = 10;
+      l = strlen(buffer);
+      TtaGiveTextAttributeValue (attr, &buffer[l], &length);
+      l = strlen (buffer)-1;
+      while (l > 0 && !isdigit(buffer[l]))
+        buffer[l--] = EOS;
+      strcat (buffer, " ");
+    }
+  attrType.AttrTypeNum = SVG_ATTR_x2;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    {
+      length = 10;
+      l = strlen(buffer);
+      TtaGiveTextAttributeValue (attr, &buffer[l], &length);
+      l = strlen (buffer)-1;
+      while (l > 0 && !isdigit(buffer[l]))
+        buffer[l--] = EOS;
+      strcat (buffer, ",");
+    }
+  attrType.AttrTypeNum = SVG_ATTR_y2;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr)
+    {
+      length = 10;
+      l = strlen(buffer);
+      TtaGiveTextAttributeValue (attr, &buffer[l], &length);
+      l = strlen (buffer)-1;
+      while (l > 0 && !isdigit(buffer[l]))
+        buffer[l--] = EOS;
+    }
+  return buffer;
+}
+
+/*----------------------------------------------------------------------
   SVGElementComplete
   Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
@@ -1482,10 +1744,11 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
   int                  length;
   PRule		             fillPatternRule, newPRule;
   SSchema	             SVGSSchema;
-  char                 *href;
-  ThotBool		         closedShape, ok;
+  char                 *href, *buffer;
+  ThotBool		         closedShape, ok, closed;
   ThotBool             shape_recognition;
-  if(!TtaGetEnvBoolean ("ENABLE_SHAPE_RECOGNITION", &shape_recognition))
+
+  if (!TtaGetEnvBoolean ("ENABLE_SHAPE_RECOGNITION", &shape_recognition))
     shape_recognition = TRUE;
 
   *error = 0;
@@ -1698,6 +1961,17 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           CreateCSSRules (el, doc);
           break;
 
+        case SVG_EL_line_:
+          /* create (or get) the Graphics leaf according to the element type */
+          leaf = CreateGraphicLeaf (el, doc, &closed);
+          if (leaf == NULL)
+            return;
+          buffer = ConvertLineAttributesToPath (el);
+          ParsePointsBuffer (buffer, leaf, doc);
+          TtaFreeMemory (buffer);
+          buffer = NULL;
+          break;
+
         default:
           /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
              of the element, if it has not been done when creating attributes
@@ -1720,7 +1994,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           if(shape_recognition && (elType.ElTypeNum == SVG_EL_polygon ||
                                    elType.ElTypeNum == SVG_EL_path))
             {
-              int w,h,rx = 0,ry = 0;
+              int w, h, rx = 0,ry = 0;
               PresentationContext  ctxt;
               PresentationValue    pval;
 
@@ -1788,134 +2062,6 @@ void UnknownSVGNameSpace (ParserData *context, Element *unknownEl,
       TtaSetTextContent (elText, (unsigned char *)content, context->language, context->doc);
       TtaSetAccessRight (elText, ReadOnly, context->doc);
     }
-}
-
-/*----------------------------------------------------------------------
-  GetNumber
-  Parse an integer or floating point number and skip to the next token.
-  Return the value of that number in number and moves ptr to the next
-  token to be parsed.
-  If the string to be parsed is not a valid number, set error to TRUE.
-  ----------------------------------------------------------------------*/
-static char *GetNumber (char *ptr, int* number, ThotBool *error)
-{
-  int      integer, nbdecimal, exponent, i;
-  char     *decimal;
-  ThotBool negative, negativeExp;
-
-  *number = 0;
-  *error = FALSE;
-  integer = 0;
-  nbdecimal = 0;
-  decimal = NULL;
-  negative = FALSE;
-  /* read the sign */
-  if (*ptr == '+')
-    ptr++;
-  else if (*ptr == '-')
-    {
-      ptr++;
-      negative = TRUE;
-    }
-
-  if (*ptr < '0' || *ptr > '9')
-    {
-      *error = TRUE;
-      ptr++;
-      return (ptr);
-    }
-  /* read the integer part */
-  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
-    {
-      integer *= 10;
-      integer += *ptr - '0';
-      ptr++;
-    }
-  if (*ptr == '.')
-    /* there is a decimal part */
-    {
-      ptr++;
-      decimal = ptr;
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-        {
-          nbdecimal++;
-          ptr++;
-        }
-    }
-
-  if (*ptr != 'e' && *ptr != 'E')
-    /* no exponent */
-    {
-      if (nbdecimal > 0)
-        /* there are some digits after the decimal point */
-        {
-          if (*decimal >= '5' && *decimal <= '9')
-            /* the first digit after the point is 5 of greater
-               round up the value to the next integer */
-            integer++;
-        }
-    }
-  else
-    /* there is an exponent part, parse it */
-    {
-      ptr++;
-      negativeExp = FALSE;
-      /* read the sign of the exponent */
-      if (*ptr == '+')
-        ptr++;
-      else if (*ptr == '-')
-        {
-          ptr++;
-          negativeExp = TRUE;
-        }
-      exponent = 0;
-
-      if (*ptr < '0' || *ptr > '9')
-        {
-          *error = TRUE;
-          ptr++;
-          return (ptr);
-        }
-
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-        {
-          exponent *= 10;
-          exponent += *ptr - '0';
-          ptr++;
-        }
-      if (exponent > 0)
-        {
-          if (negativeExp)
-            {
-              for (i = 0; i < exponent; i++)
-                integer /= 10;
-            }
-          else
-            {
-              for (i = 0; i < exponent; i++)
-                {
-                  integer *= 10;
-                  if (i < nbdecimal)
-                    {
-                      integer += *decimal - '0';
-                      decimal++;
-                    }
-                }
-            }
-        }
-    }
-
-  if (negative)
-    *number = - integer;
-  else
-    *number = integer;
-
-  /* skip the following spaces */
-  while (*ptr != EOS &&
-         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
-          *ptr == EOL    || *ptr == TAB   || *ptr == CR))
-    ptr++;
-  return (ptr);
 }
 
 /*----------------------------------------------------------------------
@@ -2086,87 +2232,6 @@ void TranslateElement (Element el, Document doc, int delta, TypeUnit unit,
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == SVG_EL_line_)
     {
-#ifdef IV
-      AttributeType	        attrType;
-      Attribute		attr;
-      char		        buffer[512];
-      int			length;
-
-      if (horiz)
-        {
-          /* update the first point */
-          attrType.AttrTypeNum = SVG_ATTR_x1;
-          attr = TtaGetAttribute (el, attrType);
-          length = 50;
-          if (attr == NULL)
-            /* element el has no position attribute */
-            {
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, doc);
-              x = 0;
-              unit = UnPixel;
-            }
-          else
-            GetAttributeValueAndUnit (attr, &x, &unit);
-          sprintf (buffer, "%dpx", x);
-          TtaSetAttributeText (attr, buffer, el, doc);
-          /* update the last point */
-          attrType.AttrTypeNum = SVG_ATTR_x2;
-          attr = TtaGetAttribute (el, attrType);
-          if (attr == NULL)
-            /* element el has no position attribute */
-            {
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, doc);
-              x = 0;
-              unit = UnPixel;
-            }
-          else
-            {
-              x = 0;
-            }
-          sprintf (buffer, "%dpx", x);
-          TtaSetAttributeText (attr, buffer, el, doc);
-        }
-      else
-        {
-          /* update the first point */
-          attrType.AttrTypeNum = SVG_ATTR_y1;
-          attr = TtaGetAttribute (el, attrType);
-          length = 50;
-          if (attr == NULL)
-            /* element el has no position attribute */
-            {
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, doc);
-              y = 0;
-              unit = UnPixel;
-            }
-          else
-            {
-              y = 0;
-            }
-          sprintf (buffer, "%dpx", y);
-          TtaSetAttributeText (attr, buffer, el, doc);
-          /* update the last point */
-          attrType.AttrTypeNum = SVG_ATTR_y2;
-          attr = TtaGetAttribute (el, attrType);
-          if (attr == NULL)
-            /* element el has no position attribute */
-            {
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, doc);
-              y = 0;
-              unit = UnPixel;
-            }
-          else
-            {
-              y = 0;
-            }
-          sprintf (buffer, "%dpx", y);
-          TtaSetAttributeText (attr, buffer, el, doc);
-        }
-#endif /* IV */
     }
   else
     /* update (or create) the transform attribute for the element */
@@ -2299,10 +2364,17 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 {
   int                  length, attrKind, ruleType;
   char                *text, *ptr;
+  ElementType          elType;
   AttributeType        attrType;
   PresentationValue    pval;
   PresentationContext  ctxt;
   ThotBool             important;
+
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == SVG_EL_line_ &&
+      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    return;
 
   length = TtaGetTextAttributeLength (attr) + 2;
   text = (char *)TtaGetMemory (length);
@@ -2379,8 +2451,8 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
   AttributeType	attrType;
   ElementType          elType;
   Element              child;
-  int			length, attrKind, ruleType;
-  char		       *text, *ptr;
+  int			             length, attrKind, ruleType;
+  char		            *text, *ptr;
   PresentationValue    pval;
   PresentationContext  ctxt;
   ThotBool             ret;
@@ -2560,84 +2632,30 @@ void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
   ----------------------------------------------------------------------*/
 void ParsePointsAttribute (Attribute attr, Element el, Document doc)
 {
-  Element		leaf;
-  TypeUnit		unit;
-  DisplayMode          dispMode;
-  char		       *text, *ptr;
-  int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
-  ThotBool		closed, error;
+  Element		   leaf;
+  char		    *text;
+  int          length;
+  ThotBool     closed;
 
   /* create (or get) the Graphics leaf according to the element type */
   leaf = CreateGraphicLeaf (el, doc, &closed);
   if (leaf == NULL)
     return;
-
-  dispMode = TtaGetDisplayMode (doc);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
-
   /* text attribute. Get its value */
   length = TtaGetTextAttributeLength (attr) + 2;
   text = (char *)TtaGetMemory (length);
   if (text)
     {
-      /* first, delete all points in the polyline */
-      nbPoints = TtaGetPolylineLength (leaf);
-      for (i = 1; i <= nbPoints; i++)
-        TtaDeletePointInPolyline (leaf, i, doc);
       /* get the content of the points attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
-      ptr = text;
-      error = FALSE;
-      ptr = (char*)TtaSkipBlanks (ptr);
-      nbPoints = 0;
-      minX = minY = 32000;
-      maxX = maxY = 0;
-      unit = UnPixel;
-      while (*ptr != EOS && !error)
-        {
-          x = y = 0;
-          ptr = GetNumber (ptr, &x, &error);
-          if (x > maxX)
-            maxX = x;
-          if (x < minX)
-            minX = x;
-          if (*ptr == EOS)
-            error = TRUE;
-          if (*ptr == ',')
-            {
-              ptr++;
-              ptr = (char*)TtaSkipBlanks (ptr);
-            }
-          if (!error)
-            {
-              ptr = GetNumber (ptr, &y, &error);
-              if (y > maxY)
-                maxY = y;
-              if (y < minY)
-                minY = y;
-              if (!error)
-                {
-                  nbPoints++;
-                  TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc,
-					 FALSE);
-                  if (*ptr == ',')
-                    {
-                      ptr++;
-                      ptr = (char*)TtaSkipBlanks (ptr);
-                    }
-                }
-            }
-        }
+      ParsePointsBuffer (text, leaf, doc);
       /* This set the top left corner of the polyline to (0,0), and
-	 consequently added a translate attribute. Because the user may
-	 not want the XML structure to change, I removed it. - F.Wang
-	if (nbPoints > 0)
-        UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY); */
+         consequently added a translate attribute. Because the user may
+         not want the XML structure to change, I removed it. - F.Wang
+      if (nbPoints > 0)
+         UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY); */
       TtaFreeMemory (text);
     }
-
-  TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -3588,7 +3606,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
         TtaSetLinearx2Gradient (ParseIntAttribute (attr), el);
-      else
+       else
         ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_y2:

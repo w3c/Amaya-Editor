@@ -1011,9 +1011,6 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
           if (yd + height > pFrame->FrClipYEnd - pFrame->FrYOrg)
             height = pFrame->FrClipYEnd - pFrame->FrYOrg - yd;
         }
-      /* box sizes have to be positive */
-      if ((width <= 0 || height <= 0) && pAb->AbRealShape != 'g')
-        return;
 
       /* Style and thickness of drawing */
       i = GetLineWeight (pAb, frame);
@@ -1034,6 +1031,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 
       switch (pAb->AbRealShape)
         {
+#ifdef IV
         case 'g': /* Line */
           /* Coords are given by the enclosing box */
           pAb = pAb->AbEnclosing;
@@ -1047,7 +1045,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
             /* draw a / */
             DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
           break;
-
+#endif
 	case 1: /* Square */
 	case 'C': /* Rectangle */
 	case 7: /* Square */
@@ -1351,6 +1349,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
       switch (pAb->AbPolyLineShape)
         {
         case 'S':	/* Segments */
+        case 'g':	/* Line */
         case 'U':	/* Segments forward arrow */
         case 'N':	/* Segments backward arrow */
         case 'M':	/* Segments arrows on both directions */
@@ -1358,7 +1357,8 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
         case 'x':	/* Segments (2 points) forward arrow */
         case 'y':	/* Segments (2 points) backward arrow */
         case 'z':	/* Segments (2 points) arrows on both directions */
-          if (pAb->AbPolyLineShape == 'S' || pAb->AbPolyLineShape == 'w')
+          if (pAb->AbPolyLineShape == 'S' || pAb->AbPolyLineShape == 'w' ||
+              pAb->AbPolyLineShape == 'g')
             arrow = 0;
           else if (pAb->AbPolyLineShape == 'U' || pAb->AbPolyLineShape == 'x')
             arrow = 1;
