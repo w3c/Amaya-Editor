@@ -2286,6 +2286,11 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	       TcondRoot;
 	     break;
 
+	   case KWD_Transclusion:
+	     CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition =
+	       TcondTransclusion;
+	     break;
+
 	   case KWD_Parent:
 	     CurBlock->TbCondition[CurBlock->TbNConditions - 1].
 	       TcAscendRelLevel = 1;

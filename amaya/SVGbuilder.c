@@ -16,6 +16,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "content.h"
 #include "css.h"
 #include "HTML.h"
 #include "parser.h"
@@ -577,6 +578,345 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
         TtaSetStructureChecking (oldStructureChecking, doc);
     }
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  CopyAMarker
+  Make a copy of the marker pointed by the value attrVal of attribute
+  att (marker-start, marker-end, or marker-mid) which is attached to
+  element el (a <path>, a <line>, a <polyline> or a <polygon>).
+  ----------------------------------------------------------------------*/
+static void CopyAMarker (Element marker, Element el, Element leaf, int vertex, Document doc)
+{
+  ElementType          elType;
+  Element              copy, child;
+  AttributeType        attrType;
+  Attribute            attr;
+  char                 *val;
+  int                  x, y, length;
+  float                scale;
+  double               angle;
+  PresentationContext  context;
+  PresentationValue    presValue;
+  ThotBool             oldStructureChecking, strokeWidth;
+
+  /* @@@@ disable the marker feature for the moment @@@@ */
+  return;
+
+  elType = TtaGetElementType (el);
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  if (oldStructureChecking)
+    TtaSetStructureChecking (FALSE, doc);
+
+  /* make a copy of the marker element */
+  copy = TtaNewTranscludedElement (doc, marker);
+  /* remove the id attribute from the copy */
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_id;
+  attr = TtaGetAttribute (copy, attrType);
+  if (attr)
+    TtaRemoveAttribute (copy, attr, doc);
+  /* insert the copy in the tree as the last child of the host element */
+  child = TtaGetLastChild (el);
+  if (child)
+    TtaInsertSibling (copy, child, FALSE, doc);
+  else
+    TtaInsertFirstChild (&copy, el, doc);
+
+  /* add a transform (translate) to the copied marker to place it on the
+     relevant vertex of the host element */
+  if (elType.ElTypeNum == SVG_EL_polyline ||
+      elType.ElTypeNum == SVG_EL_polygon ||
+      elType.ElTypeNum == SVG_EL_line_)
+    TtaGivePolylinePoint (leaf, vertex, UnPixel, &x, &y);
+  else if (elType.ElTypeNum == SVG_EL_path)
+    TtaGivePathPoint (leaf, vertex, UnPixel, &x, &y);
+  else
+    { x = 0;   y = 0; }
+  if (x != 0 || y != 0)
+    TtaAppendTransform (copy, TtaNewTransformTranslate (x, y), doc);
+
+  /* add a rotation corresponding to the orient attribute of the marker */
+  angle = 0;
+  attrType.AttrTypeNum = SVG_ATTR_orient;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    /* there is an orient attribute. Get its value */
+    {
+      length = TtaGetTextAttributeLength (attr);
+      val = (char *)TtaGetMemory (length + 1);
+      TtaGiveTextAttributeValue (attr, val, &length);
+      if (!strcmp (val, "auto"))
+	/* angle="auto". Compute the angle for the relevant vertex */
+	{
+	  if (elType.ElTypeNum == SVG_EL_polyline ||
+	      elType.ElTypeNum == SVG_EL_polygon ||
+	      elType.ElTypeNum == SVG_EL_line_)
+	    TtaGivePolylineAngle (leaf, vertex, &angle);
+	  else if (elType.ElTypeNum == SVG_EL_path)
+	    TtaGivePathAngle (leaf, vertex, &angle);
+	}
+      else
+	/* not "auto". Parse the value of the angle */
+	{
+	  /* @@@@ to be written @@@@ */
+	}
+      TtaFreeMemory (val);
+    }
+  if (angle != 0)
+    TtaAppendTransform (copy, TtaNewTransformRotate (angle, 0, 0), doc);
+
+  /* add a scaling to match the coordinate system indicated by the
+     'markerUnits' attribute */
+  scale = 1;
+  strokeWidth = TRUE;  /* default value */
+  attrType.AttrTypeNum = SVG_ATTR_markerUnits;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    /* there is a 'markerUnits' attribute. Get its value */
+    {
+      if (TtaGetAttributeValue(attr) == SVG_ATTR_markerUnits_VAL_userSpaceOnUse)
+	strokeWidth = FALSE;
+    }
+  if (strokeWidth)
+    {
+      if (TtaGetStylePresentation (PRLineWeight, el, NULL, context, &presValue)
+          == 0)
+	{
+	  if (presValue.typed_data.real)
+	    scale = presValue.typed_data.value / 1000;
+	  else
+	    scale = presValue.typed_data.value;
+	  if (presValue.typed_data.unit == UNIT_REL)
+	    scale = scale / 10;
+	}
+    }
+  if (scale != 1)
+    TtaAppendTransform (copy, TtaNewTransformScale (scale, scale), doc);
+
+  /* add a translate to put the reference point of the marker on the vertex of
+     the host element, using the 'refX' and 'refY' attributes of the marker */
+  /* @@@@ to be written @@@@ */
+
+  /* add a transform to scale the coordinate system based on the viewBox and
+     the markerHeight and the markerWidth attributes of the marker */
+  /* @@@@ to be written @@@@ */
+
+  if (oldStructureChecking)
+    TtaSetStructureChecking (oldStructureChecking, doc);
+}
+
+/*----------------------------------------------------------------------
+  CopyMarkersSubtree
+  Make copies of element marker in every <path>, <line>, <polyline> and
+  <polygon> in the subtree of element el.
+  ----------------------------------------------------------------------*/
+static void CopyMarkersSubtree (Element el, Element marker, int att,
+				Document doc)
+{
+  Element              child, leaf;
+  ElementType          elType;
+  int                  length, i;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != SVG_EL_polyline &&
+      elType.ElTypeNum != SVG_EL_polygon &&
+      elType.ElTypeNum != SVG_EL_path &&
+      elType.ElTypeNum != SVG_EL_line_)
+    /* it's not a polyline, polygon, path or line. visit the subtree */
+    {
+      child = TtaGetFirstChild (el);
+      while (child)
+	{
+	  CopyMarkersSubtree (child, marker, att, doc);
+	  TtaNextSibling (&child);
+	}
+    }
+  else
+    /* it's a polyline, polygon, path or line. Copy the marker in the element */
+    {
+      leaf = TtaGetFirstChild (el);
+      while (leaf &&
+	     TtaGetElementType(leaf).ElTypeNum != GRAPHICS_UNIT)
+	TtaNextSibling (&leaf);
+      if (!leaf)
+	return;
+      if (elType.ElTypeNum == SVG_EL_polyline ||
+	  elType.ElTypeNum == SVG_EL_polygon)
+	length = TtaGetPolylineLength (leaf) - 1;
+      else if (elType.ElTypeNum == SVG_EL_path)
+	length = TtaGetElementVolume (leaf);
+      else
+	length = 1;
+      if (att == SVG_ATTR_marker_start)
+	CopyAMarker (marker, el, leaf, 1, doc);
+      else if (att == SVG_ATTR_marker_end)
+	CopyAMarker (marker, el, leaf, length+1, doc);
+      else if (att == SVG_ATTR_marker_mid)
+	{
+	  for (i = 2; i <= length; i++)
+	    CopyAMarker (marker, el, leaf, i, doc);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  CopyMarkers
+  Make copies of the marker pointed by the value attrVal of attribute
+  att (marker-start, marker-end, marker-mid) which is attached to
+  element el (<path>, <line>, <polyline> or <polygon>).
+  ----------------------------------------------------------------------*/
+static ThotBool CopyMarkers (Element el, Document doc, char *attrVal, int att)
+{
+  ElementType          elType;
+  Element              marker, curEl, elFound;
+  AttributeType        attrType;
+  Attribute            attr;
+  SearchDomain         direction;
+  char                 *id;
+  int                  length, i;
+
+  if (!strncmp (attrVal, "none", 4))
+    return TRUE;
+  length = strlen(attrVal);
+  if (strncmp (attrVal, "url(", 4) || attrVal[length - 1] != ')')
+    return TRUE;
+  attrVal[length-1] = EOS;
+  /* look for an element with an id attribute with the same value as the
+     marker-* attribute */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_id;
+  /* search backwards first */
+  direction = SearchBackward;
+  marker = NULL;
+  if (attrVal[4] == '#') /* handles only internal links */
+    for (i = 1; i <= 2 && marker == NULL; i++)
+      {
+        curEl = el;
+        do
+          {
+            TtaSearchAttribute (attrType, direction, curEl, &elFound, &attr);
+            if (attr)
+              /* an id attribute has been found */
+              {
+                /* get its value */
+                length = TtaGetTextAttributeLength (attr);
+                id = (char *)TtaGetMemory (length + 1);
+                TtaGiveTextAttributeValue (attr, id, &length);
+                /* compare with the marker-* attribute of the use element */
+                if (!strcasecmp (&attrVal[5], id))
+                  /* same  values. we found it */
+                  marker = elFound;
+                TtaFreeMemory (id);
+              }
+            curEl = elFound;
+          }
+        while (elFound && !marker);
+        /* search forward if not found */
+        direction = SearchForward;
+      }
+  if (!marker)
+    return FALSE;
+  else
+    /* the marker to be copied has been found */
+    CopyMarkersSubtree (el, marker, att, doc);
+
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  SetAttributeOnRoot
+  Put attribute att on the <svg> element to which element el belongs.
+  ----------------------------------------------------------------------*/
+static void SetAttributeOnRoot (Element el, int att, Document doc)
+{
+  ElementType     elType, parentType;
+  Element         root, parent, prev;
+  AttributeType   attrType;
+  Attribute       attr;
+
+  /* find the root of the current SVG tree */
+  root = NULL;
+  elType = TtaGetElementType (el);
+  parent = TtaGetParent (el);
+  while (parent && !root)
+    {
+      parentType = TtaGetElementType (parent);
+      prev = parent;
+      parent = TtaGetParent (parent);
+      if (parentType.ElSSchema == elType.ElSSchema &&
+	  parentType.ElTypeNum == SVG_EL_SVG)
+	/* this is an <svg> element */
+	if (parent)
+	  {
+	    parentType = TtaGetElementType (parent);
+	    if (parentType.ElTypeNum == SVG_EL_Document)
+	      /* its parent is the root of the document */
+	      root = prev;
+	    else if (parentType.ElSSchema != elType.ElSSchema)
+	      /* its parent is in a different namespace */
+	      root = prev;
+	  }
+    }
+  if (root)
+    /* put the attribute on the root if it is not present yet */
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = att;
+      attr = TtaGetAttribute (root, attrType);
+      if (!attr)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (root, attr, doc);
+	}
+    } 
+}
+
+/*----------------------------------------------------------------------
+  ProcessMarkers
+  If element el has some marker-start, marker-end, or marker-mid
+  attributes, get the referred marker elements and insert them as
+  transclusions in the element.
+  ----------------------------------------------------------------------*/
+static void ProcessMarkers (Element el, Document doc)
+{
+  ElementType      elType;
+  AttributeType    attrType;
+  Attribute        attr;
+  int              length, i;
+  char             *attrVal;
+  ThotBool         ok;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  /* check the three marker-* attributes */
+  for (i = 1; i <= 3; i++)
+    {
+      /* choose one of the three possible attributes */
+      if (i==1)
+	attrType.AttrTypeNum = SVG_ATTR_marker_start;
+      else if (i==2)
+	attrType.AttrTypeNum = SVG_ATTR_marker_mid;
+      else
+	attrType.AttrTypeNum = SVG_ATTR_marker_end;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+	/* the element has this attribute */
+	{
+	  /* get its value */
+	  length = TtaGetTextAttributeLength (attr);
+	  attrVal = (char *)TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, attrVal, &length);
+	  ok = CopyMarkers (el, doc, attrVal, attrType.AttrTypeNum);
+	  TtaFreeMemory (attrVal);
+	  if (!ok)
+	    /* the referred marker was not found. It may be a forward reference
+	       to an element that has not been parsed yet. We should retry when
+	       the document is complete. */
+	    SetAttributeOnRoot (el, SVG_ATTR_UnresolvedRef, doc);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1432,7 +1772,7 @@ void      SVGElementCreated (Element el, Document doc)
 
 /*----------------------------------------------------------------------
   InstanciateUseElements
-  Find all "use" element in the subtree of element el and instanciate
+  Find all <use> element in the subtree of element el and instanciate
   those with no child.
   ----------------------------------------------------------------------*/
 static void InstanciateUseElements (Element el, Document doc)
@@ -1737,20 +2077,19 @@ char *ConvertLineAttributesToPath (Element el)
 void SVGElementComplete (ParserData *context, Element el, int *error)
 {
   Document             doc;   
-  ElementType		       elType, parentType, newType;
-  Element		           child, parent, new_, leaf, root, prev;
+  ElementType	       elType, parentType, newType;
+  Element	       child, parent, new_, leaf;
   AttributeType        attrType;
   Attribute            attr;
   int                  length;
-  PRule		             fillPatternRule, newPRule;
-  SSchema	             SVGSSchema;
+  PRule		       fillPatternRule, newPRule;
+  SSchema	       SVGSSchema;
   char                 *href, *buffer;
-  ThotBool		         closedShape, ok, closed;
+  ThotBool	       closedShape, ok, closed;
   ThotBool             shape_recognition;
 
   if (!TtaGetEnvBoolean ("ENABLE_SHAPE_RECOGNITION", &shape_recognition))
     shape_recognition = TRUE;
-
   *error = 0;
   doc = context->doc;
   elType = TtaGetElementType (el);
@@ -1773,6 +2112,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
         }
     }
   else
+    /* this element belongs to the SVG vocabulary */
     {
       /* if the parent element is defined by a different SSchema, insert
          a SVG root element between the element and its parent */
@@ -1798,6 +2138,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           elType.ElTypeNum == SVG_EL_g ||
           elType.ElTypeNum == SVG_EL_defs ||
           elType.ElTypeNum == SVG_EL_symbol_ ||
+          elType.ElTypeNum == SVG_EL_marker ||
           elType.ElTypeNum == SVG_EL_use_ ||
           elType.ElTypeNum == SVG_EL_switch ||
           elType.ElTypeNum == SVG_EL_text_ ||
@@ -1805,7 +2146,6 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           elType.ElTypeNum == SVG_EL_tref ||
           elType.ElTypeNum == SVG_EL_textPath ||
           elType.ElTypeNum == SVG_EL_altGlyph ||
-          elType.ElTypeNum == SVG_EL_marker ||
           elType.ElTypeNum == SVG_EL_pattern ||
           elType.ElTypeNum == SVG_EL_clipPath ||
           elType.ElTypeNum == SVG_EL_mask ||
@@ -1816,7 +2156,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           elType.ElTypeNum == SVG_EL_glyph ||
           elType.ElTypeNum == SVG_EL_missing_glyph ||
           elType.ElTypeNum == SVG_EL_foreignObject)
-        /* add textPath, altGlyph, clipPath, marker, pattern, mask,
+        /* add textPath, altGlyph, clipPath, pattern, mask,
            filter, feImage, font, glyph, missing_glyph */
         /* this element may have a text-anchor attribute */
         {
@@ -1838,12 +2178,15 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
         {	 
         case SVG_EL_foreignObject:
         case SVG_EL_symbol_:
+        case SVG_EL_marker:
           /* case SVG_EL_view: */
           TtaSetElCoordinateSystem (el);
+	  ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_g:
           TtaSetElCoordinateSystem (el);
+	  ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_SVG:
@@ -1858,6 +2201,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
               InstanciateUseElements (el, doc);
               TtaRemoveAttribute (el, attr, doc);
             } 
+	  ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_image:
@@ -1878,7 +2222,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 
         case SVG_EL_use_:
         case SVG_EL_tref:
-          /* it's a use element */
+          /* it's a use or a tref element */
           /* if it has a href attribute from the XLink namespace, replace
              that attribute by a href attribute from the SVG namespace */
           CheckHrefAttr (el, doc);
@@ -1901,51 +2245,25 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
                 /* the referred element was not found. It may be a forward
                    reference to an element that has not been parsed yet.
                    We should retry when the document is complete. */
-                {
-                  /* find the root of the current SVG tree */
-                  root = NULL;
-                  parent = TtaGetParent (el);
-                  while (parent && !root)
-                    {
-                      parentType = TtaGetElementType (parent);
-                      prev = parent;
-                      parent = TtaGetParent (parent);
-                      if (parentType.ElSSchema == elType.ElSSchema &&
-                          parentType.ElTypeNum == SVG_EL_SVG)
-                        /* this is an SVG element */
-                        if (parent)
-                          {
-                            parentType = TtaGetElementType (parent);
-                            if (parentType.ElTypeNum == SVG_EL_Document)
-                              /* its parent is the root of the document */
-                              root = prev;
-                            else if (parentType.ElSSchema != elType.ElSSchema)
-                              /* its parent is in a different namespace */
-                              root = prev;
-                          }
-                    }
-                  if (root)
-                    /* put a UnresolvedRef attribute on the root if it is not
-                       present yet */
-                    {
-                      attrType.AttrSSchema = elType.ElSSchema;
-                      attrType.AttrTypeNum = SVG_ATTR_UnresolvedRef;
-                      attr = TtaGetAttribute (root, attrType);
-                      if (!attr)
-                        {
-                          attr = TtaNewAttribute (attrType);
-                          TtaAttachAttribute (root, attr, doc);
-                        }
-                    } 
-                }
+		SetAttributeOnRoot (el, SVG_ATTR_UnresolvedRef, doc);
             }
+	  ProcessMarkers (el, doc);
           break;
+
+	case SVG_EL_path:
+        case SVG_EL_polyline:
+        case SVG_EL_polygon:
+	  /* this element may use markers. Check its marker-start, marker-end
+	     and maker-mid attributes and copy the referred marker(s) */
+	  ProcessMarkers (el, doc);
+	  break;
 
         case SVG_EL_a:
           /* it's an anchor element */
           /* if it has a href attribute from the XLink namespace, replace
              that attribute by a href attribute from the SVG namespace */
           CheckHrefAttr (el, doc);
+	  ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_switch:
@@ -1954,12 +2272,24 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
              systemLanguage attributes on its direct child elements to select
              the child to be rendered */
           EvaluateTestAttrs (el, doc);
+	  ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_style__:
           /* it's a style element, parse its contents as a style sheet */
           CreateCSSRules (el, doc);
           break;
+
+	case SVG_EL_defs:
+	case SVG_EL_mask:
+	case SVG_EL_pattern:
+	case SVG_EL_filter:
+	case SVG_EL_feImage:
+	case SVG_EL_font_:
+	case SVG_EL_glyph:
+	case SVG_EL_missing_glyph:
+	  ProcessMarkers (el, doc);
+	  break;
 
         case SVG_EL_line_:
           /* create (or get) the Graphics leaf according to the element type */
@@ -1970,6 +2300,9 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           ParsePointsBuffer (buffer, leaf, doc);
           TtaFreeMemory (buffer);
           buffer = NULL;
+	  /* this element may use markers. Check its marker-start, marker-end
+	     and maker-mid attributes and copy the referred marker(s) */
+	  ProcessMarkers (el, doc);
           break;
 
         default:
@@ -1989,7 +2322,6 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
                 }
             }
 
-	  
           /* Check the geometric properties of the leaf */
           if(shape_recognition && (elType.ElTypeNum == SVG_EL_polygon ||
                                    elType.ElTypeNum == SVG_EL_path))
@@ -2232,6 +2564,87 @@ void TranslateElement (Element el, Document doc, int delta, TypeUnit unit,
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == SVG_EL_line_)
     {
+#ifdef IV
+      AttributeType	        attrType;
+      Attribute		        attr;
+      char		        buffer[512];
+      int			length;
+
+      if (horiz)
+        {
+          /* update the first point */
+          attrType.AttrTypeNum = SVG_ATTR_x1;
+          attr = TtaGetAttribute (el, attrType);
+          length = 50;
+          if (attr == NULL)
+            /* element el has no position attribute */
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              x = 0;
+              unit = UnPixel;
+            }
+          else
+            GetAttributeValueAndUnit (attr, &x, &unit);
+          sprintf (buffer, "%dpx", x);
+          TtaSetAttributeText (attr, buffer, el, doc);
+          /* update the last point */
+          attrType.AttrTypeNum = SVG_ATTR_x2;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            /* element el has no position attribute */
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              x = 0;
+              unit = UnPixel;
+            }
+          else
+            {
+              x = 0;
+            }
+          sprintf (buffer, "%dpx", x);
+          TtaSetAttributeText (attr, buffer, el, doc);
+        }
+      else
+        {
+          /* update the first point */
+          attrType.AttrTypeNum = SVG_ATTR_y1;
+          attr = TtaGetAttribute (el, attrType);
+          length = 50;
+          if (attr == NULL)
+            /* element el has no position attribute */
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              y = 0;
+              unit = UnPixel;
+            }
+          else
+            {
+              y = 0;
+            }
+          sprintf (buffer, "%dpx", y);
+          TtaSetAttributeText (attr, buffer, el, doc);
+          /* update the last point */
+          attrType.AttrTypeNum = SVG_ATTR_y2;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            /* element el has no position attribute */
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              y = 0;
+              unit = UnPixel;
+            }
+          else
+            {
+              y = 0;
+            }
+          sprintf (buffer, "%dpx", y);
+          TtaSetAttributeText (attr, buffer, el, doc);
+        }
+#endif /* IV */
     }
   else
     /* update (or create) the transform attribute for the element */
@@ -3540,16 +3953,16 @@ float ParseFloatAttribute (Attribute attr)
   ----------------------------------------------------------------------*/
 void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 {
-  AttributeType	attrType, attrType1;
+  AttributeType	       attrType, attrType1;
   Attribute            intAttr;
   ElementType          elType;
-  Element		leaf;
-  int			attrKind;
-  ThotBool		closed;
+  Element	       leaf;
+  int		       attrKind;
+  ThotBool	       closed;
   unsigned short       red, green, blue;
   char                 *color;
   float                offset;
-   
+
   TtaGiveAttributeType (attr, &attrType, &attrKind);
   switch (attrType.AttrTypeNum)
     {

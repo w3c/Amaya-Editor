@@ -1740,8 +1740,8 @@ static ThotBool     EmptyElement (PtrElement pEl)
         {
           if (specialGraphic)
             /* this is a SVG element such as rect, circle, ellipse, etc. that
-               has to be considered empty even if it contains a Graphic Leaf
-               element */
+               has to be considered empty even if it contains a Thot Graphic
+	       Leaf element */
             {
               if (!pChild->ElTerminal ||
                   (pChild->ElLeafType != LtPicture &&
@@ -1768,7 +1768,7 @@ static ThotBool     EmptyElement (PtrElement pEl)
                 /* this is not a Thot picture basic element */
                 empty = FALSE;
             }
-          else if (!EmptyElement (pChild))
+          else /* if (!EmptyElement (pChild)) */
             empty = FALSE;
           if (empty)
             pChild = pChild->ElNext;
@@ -2254,6 +2254,12 @@ static ThotBool ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
                            pElem->ElParent->ElTypeNumber ==
                            pElem->ElParent->ElStructSchema->SsDocument);
                     break;
+
+		  case TcondTransclusion:
+		    /* condition is true if element is a transclusion */
+                    ret = (pElem->ElSource &&
+			   pElem->ElSource->RdTypeRef == RefInclusion);
+		    break;
 
                   default:
                     break;

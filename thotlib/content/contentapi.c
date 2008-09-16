@@ -4570,7 +4570,7 @@ int TtaGetPolylineLength (Element element)
   Parameters:
   element: the Polyline element. This element must
   be a basic element of type Polyline.
-  rank: rank of the point in the PloyLine. If rank is greater
+  rank: rank of the point in the PolyLine. If rank is greater
   than the actual number of points, an error is raised.
   rank must be strictly positive.
   unit: UnPixel or UnPoint.
@@ -4615,6 +4615,206 @@ void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
     }
 }
 
+/*----------------------------------------------------------------------
+  Norm
+  ----------------------------------------------------------------------*/
+static double Norm(double dx1, double dy1)
+{
+  return sqrt(dx1*dx1+dy1*dy1);
+}
+
+/*----------------------------------------------------------------------
+  UnsignedAngle
+  ----------------------------------------------------------------------*/
+static double UnsignedAngle(double dx1, double dy1,
+			    double dx2, double dy2)
+{
+  /*       (dx1) (dx2)
+       s = (dy1).(dy2) = r1*r2*cosA
+
+   */
+
+  double s, r1, r2, cosA;
+  s = dx1*dx2 + dy1*dy2;
+  r1 = Norm(dx1, dy1);
+  r2 = Norm(dx2, dy2);
+
+  if(r1 == 0 || r2 == 0)
+    return -1;
+
+  cosA = s/(r1*r2);
+
+  /* Avoid errors when cosA is slightly greater/lower that 1/-1
+    because of float approximations */
+  if(cosA > 1.)cosA = 1.;
+  if(cosA < -1.)cosA = -1.;
+
+  return acos(cosA);
+}
+
+/*----------------------------------------------------------------------
+  TtaGivePolylineAngle
+
+  Returns the bisector angle of a vertex in a Polyline basic element.
+
+  Parameters:
+  element: the Polyline element. This element must
+           be a basic element of type Polyline.
+  rank: rank of the point in the PolyLine. If rank is greater
+        than the actual number of points, an error is raised.
+        rank must be strictly positive.
+
+  Return value:
+  angle: the angle of the bisector.
+
+  ----------------------------------------------------------------------*/
+void TtaGivePolylineAngle (Element element, int rank, double *angle)
+{
+  PtrTextBuffer       buff, prevBuff;
+  int                 x, y, xPrev, yPrev, xNext, yNext;
+  ThotBool            first, last;
+
+  UserErrorCode = 0;
+  *angle = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!((PtrElement) element)->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (((PtrElement) element)->ElLeafType != LtPolyLine)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      /* Looking for the buffer containing the point which rank is: rank */
+      first = (rank == 1);
+      last = (rank == ((PtrElement) element)->ElNPoints - 1);
+      buff = ((PtrElement) element)->ElPolyLineBuffer;
+      prevBuff = NULL;
+      while (rank >= buff->BuLength && buff->BuNext != NULL)
+        {
+          rank -= buff->BuLength;
+	  prevBuff = buff;
+          buff = buff->BuNext;
+        }
+      if (rank > buff->BuLength)
+        TtaError (ERR_invalid_parameter);
+      else
+        {
+          x = buff->BuPoints[rank].XCoord;
+          y = buff->BuPoints[rank].YCoord;
+	  if (rank > 1)
+	    {
+	      xPrev = buff->BuPoints[rank-1].XCoord;
+	      yPrev = buff->BuPoints[rank-1].YCoord;
+	    }
+	  else if (prevBuff && !first)
+	    {
+	      xPrev = prevBuff->BuPoints[prevBuff->BuLength].XCoord;
+	      yPrev = prevBuff->BuPoints[prevBuff->BuLength].YCoord;
+	    }
+	  if (rank < buff->BuLength)
+	    {
+	      xNext = buff->BuPoints[rank+1].XCoord;
+	      yNext = buff->BuPoints[rank+1].YCoord;
+	    }
+	  else if (buff->BuNext && !last)
+	    {
+	      xNext = buff->BuNext->BuPoints[1].XCoord;
+	      yNext = buff->BuNext->BuPoints[1].YCoord;
+	    }
+
+	  if (first)
+	    /* first point in the polyline */
+	    /* @@@@ to be checked @@@@ */
+	    *angle = (UnsignedAngle(100, 0, xNext-x, yNext-y)*180)/M_PI;
+	  else if (last)
+	    /* last point in the polyline */
+	    /* @@@@ to be checked @@@@ */
+	    *angle = (UnsignedAngle(xPrev-x, yPrev-y, 100, 0)*180)/M_PI;
+	  else
+	    /* any other point in the polyline : bisector of the angle */
+	    /* @@@@ to be checked @@@@ */
+	    *angle = (UnsignedAngle(xPrev-x, yPrev-y, xNext-x, yNext-y)*180)/(2*M_PI);
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaGivePathPoint
+
+  Returns the coordinates of a point in a Path basic element.
+
+  Parameters:
+  element: the Path element. This element must
+           be a basic element of type Path.
+  rank: rank of the point in the Path. If rank is greater
+        than the actual number of points, an error is raised.
+        rank must be strictly positive.
+  unit: UnPixel or UnPoint.
+
+  Return values:
+  x, y: coordinates of the point, in unit
+  ----------------------------------------------------------------------*/
+void TtaGivePathPoint (Element element, int rank, TypeUnit unit, int *x, int *y)
+{
+  PtrPathSeg       pPa, prevPa;
+  int              i;
+
+  UserErrorCode = 0;
+  *x = 0;
+  *y = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!((PtrElement) element)->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (((PtrElement) element)->ElLeafType != LtPath)
+    TtaError (ERR_invalid_element_type);
+  else if (unit != UnPoint && unit != UnPixel)
+    TtaError (ERR_invalid_parameter);
+  else if (rank > ((PtrElement) element)->ElVolume + 1)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      pPa = ((PtrElement) element)->ElFirstPathSeg;
+      prevPa = NULL;
+      for (i = 1; i < rank && pPa; i++)
+	{
+	  prevPa = pPa;
+	  pPa = pPa->PaNext;
+	}
+      if (pPa)
+        {
+	  *x = pPa->XStart;
+	  *y = pPa->YStart;
+        }
+      else if (prevPa && rank == ((PtrElement) element)->ElVolume + 1)
+	/* end point */
+	{
+	  *x = prevPa->XEnd;
+	  *y = prevPa->YEnd;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaGivePathAngle
+
+  Returns the bisector angle of a vertex in a Path basic element.
+
+  Parameters:
+  element: the Path element. This element must be a basic element of type Path.
+  rank: rank of the point in the Path. If rank is greater
+        than the actual number of points, an error is raised.
+        rank must be strictly positive.
+
+  Return value:
+  angle: the angle of the bisector.
+
+  ----------------------------------------------------------------------*/
+void TtaGivePathAngle (Element element, int rank, double *angle)
+{
+  /* @@@@ to be written @@@@ */
+  *angle = 0;
+}
 
 /*----------------------------------------------------------------------
   TtaGetPageNumber
@@ -4683,43 +4883,6 @@ int TtaGetPageView (Element pageElement)
 static ThotBool IsNull(double dx1, double dy1)
 {
   return (dx1 == 0 && dy1 == 0);
-}
-
-/*----------------------------------------------------------------------
-  Norm
-  ----------------------------------------------------------------------*/
-static double Norm(double dx1, double dy1)
-{
-  return sqrt(dx1*dx1+dy1*dy1);
-}
-
-/*----------------------------------------------------------------------
-  UnsignedAngle
-  ----------------------------------------------------------------------*/
-static double UnsignedAngle(double dx1, double dy1,
-                            double dx2, double dy2)
-{
-  /*       (dx1) (dx2)
-           s = (dy1).(dy2) = r1*r2*cosA
-
-  */
-
-  double s, r1, r2, cosA;
-  s = dx1*dx2 + dy1*dy2;
-  r1 = Norm(dx1, dy1);
-  r2 = Norm(dx2, dy2);
-
-  if(r1 == 0 || r2 == 0)
-    return -1;
-
-  cosA = s/(r1*r2);
-
-  /* Avoid errors when cosA is slightly greater/lower that 1/-1
-     because of float approximations */
-  if(cosA > 1.)cosA = 1.;
-  if(cosA < -1.)cosA = -1.;
-
-  return acos(cosA);
 }
 
 /*----------------------------------------------------------------------

@@ -100,7 +100,7 @@ number
 			 'Script' '=' Script /
 			 'FirstAttr' / 'LastAttr' /
 			 'ComputedPage' / 'StartPage' / 'UserPage' / 'ReminderPage' /
-			 'Empty' / 'Root' .
+			 'Empty' / 'Root' / 'Transclusion' .
 	
    56	CondAscend =     [ Ascend ] CondOnAscend .
    58	Ascend =         '*' / 'Parent' / 'Ancestor' LevelOrType .
@@ -302,78 +302,79 @@ code  key-word      numbers of rules using the key-word
 1153  ReminderPage    55
 1154  Empty           55
 1155  Root            55
-1156  Parent          58
-1157  Ancestor        58
-1158  Last            59
-1159  Refered         59  69  71
-1160  Referred        59  69  71
-1161  Immediately     59
-1162  Within          59
-1163  FirstWithin     59
-1164  Create          67
-1165  Get             67
-1166  Copy            67
-1167  Use             67
-1168  For             67
-1169  Remove          67
-1170  Ignore          67
-1171  Write           67
-1172  Read            67
-1173  Include         67
-1174  NoTranslation   67
-1175  NoLineBreak     67
-1176  ChangeMainFile  68
-1177  Indent          68  63
-1178  RemoveFile      68
-1179  Suspend         73
-1180  Resume          73
-1181  Translated      69
-1182  Content         69
-1183  RefId           69  76
-1184  PairId          69
-1185  After           70
-1186  Before          70
-1187  Included        71
-1188  Size            63
-1189  LineSpacing     63
-1190  Adjust          63
-1191  Hyphenate       63
-1192  Style           63
-1193  Weight          63
-1194  Font            63
-1195  UnderLine       63  88
-1196  Thickness       63
-1197  LineStyle       63
-1198  LineWeight      63
-1199  FillPattern     63
-1200  Background      63
-1201  Foreground      63
-1202  Left            83
-1203  Right           83
-1204  VMiddle         83
-1205  LeftWithDots    83
-1206  Justify         83
-1207  Yes             84
-1208  No              84  88
-1209  Roman           85
-1210  Italics         85
-1211  Oblique         85
-1212  Normal          86
-1213  Bold            86
-1214  Times           87
-1215  Helvetica       87
-1216  Courier         87
-1217  NoUnderline     88
-1218  Underlined      88
-1219  Overlined       88
-1220  CrossedOut      88
-1221  OverLine        88
-1222  StrikeOut       88
-1223  Thick           89
-1224  Thin            89
-1225  Solid           90
-1226  Dashed          90
-1227  Dotted          90
+1156  Transclusion    55
+1157  Parent          58
+1158  Ancestor        58
+1159  Last            59
+1160  Refered         59  69  71
+1161  Referred        59  69  71
+1162  Immediately     59
+1163  Within          59
+1164  FirstWithin     59
+1165  Create          67
+1166  Get             67
+1167  Copy            67
+1168  Use             67
+1169  For             67
+1170  Remove          67
+1171  Ignore          67
+1172  Write           67
+1173  Read            67
+1174  Include         67
+1175  NoTranslation   67
+1176  NoLineBreak     67
+1177  ChangeMainFile  68
+1178  Indent          68  63
+1179  RemoveFile      68
+1180  Suspend         73
+1181  Resume          73
+1182  Translated      69
+1183  Content         69
+1184  RefId           69  76
+1185  PairId          69
+1186  After           70
+1187  Before          70
+1188  Included        71
+1189  Size            63
+1190  LineSpacing     63
+1191  Adjust          63
+1192  Hyphenate       63
+1193  Style           63
+1194  Weight          63
+1195  Font            63
+1196  UnderLine       63  88
+1197  Thickness       63
+1198  LineStyle       63
+1199  LineWeight      63
+1200  FillPattern     63
+1201  Background      63
+1202  Foreground      63
+1203  Left            83
+1204  Right           83
+1205  VMiddle         83
+1206  LeftWithDots    83
+1207  Justify         83
+1208  Yes             84
+1209  No              84  88
+1210  Roman           85
+1211  Italics         85
+1212  Oblique         85
+1213  Normal          86
+1214  Bold            86
+1215  Times           87
+1216  Helvetica       87
+1217  Courier         87
+1218  NoUnderline     88
+1219  Underlined      88
+1220  Overlined       88
+1221  CrossedOut      88
+1222  OverLine        88
+1223  StrikeOut       88
+1224  Thick           89
+1225  Thin            89
+1226  Solid           90
+1227  Dashed          90
+1228  Dotted          90
 
 
 

@@ -75,6 +75,7 @@
 #define C_TR_ROOT 'r'
 #define C_TR_EXTERNALREF 'e'
 #define C_TR_ELEMENTTYPE 't'
+#define C_TR_TRANSCLUSION 'c'
 
 /* a translation rule type */
 #define C_TR_CREATE 'C'

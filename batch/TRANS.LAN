@@ -94,7 +94,7 @@ CondOnSelf =     'FirstRef' / 'LastRef' / 'ExternalRef' /
 		 'Script' '=' Script /
 		 'FirstAttr' / 'LastAttr' /
 		 'ComputedPage' / 'StartPage' / 'UserPage' / 'ReminderPage' /
-		 'Empty' / 'Root' .
+		 'Empty' / 'Root' / 'Transclusion' .
 
 CondAscend =     [ Ascend ] CondOnAscend .
 Ascend =         '*' / 'Parent' / 'Ancestor' LevelOrType .

@@ -648,7 +648,7 @@ extern int TtaGetPolylineLength (Element element);
    Parameters:
    element: the Polyline element. This element must
    be a basic element of type Polyline.
-   rank: rank of the point in the PloyLine. If rank is greater
+   rank: rank of the point in the PolyLine. If rank is greater
    than the actual number of points, an error is raised.
    rank must be strictly positive.
    unit: UnPixel or UnPoint.
@@ -659,7 +659,59 @@ extern int TtaGetPolylineLength (Element element);
 extern void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
 				  /*OUT*/ int *x, /*OUT*/ int *y);
 
+/*----------------------------------------------------------------------
+  TtaGivePolylineAngle
 
+  Returns the bisector angle of a point in a Polyline basic element.
+
+  Parameters:
+  element: the Polyline element. This element must
+           be a basic element of type Polyline.
+  rank: rank of the point in the PolyLine. If rank is greater
+        than the actual number of points, an error is raised.
+        rank must be strictly positive.
+  unit: UnPixel or UnPoint.
+
+  Return value:
+  angle: the angle of the bisector.
+
+  ----------------------------------------------------------------------*/
+extern void TtaGivePolylineAngle (Element element, int rank, double *angle);
+
+/*----------------------------------------------------------------------
+  TtaGivePathPoint
+
+  Returns the coordinates of a point in a Path basic element.
+
+  Parameters:
+  element: the Path element. This element must
+           be a basic element of type Path.
+  rank: rank of the point in the Path. If rank is greater
+        than the actual number of points, an error is raised.
+        rank must be strictly positive.
+  unit: UnPixel or UnPoint.
+
+  Return values:
+  x, y: coordinates of the point, in unit
+  ----------------------------------------------------------------------*/
+extern void TtaGivePathPoint (Element element, int rank, TypeUnit unit, int *x, int *y);
+
+/*----------------------------------------------------------------------
+  TtaGivePathAngle
+
+  Returns the bisector angle of a vertex in a Path basic element.
+
+  Parameters:
+  element: the Path element. This element must be a basic element of type Path.
+  rank: rank of the point in the Path. If rank is greater
+        than the actual number of points, an error is raised.
+        rank must be strictly positive.
+
+  Return value:
+  angle: the angle of the bisector.
+
+  ----------------------------------------------------------------------*/
+extern void TtaGivePathAngle (Element element, int rank, double *angle);
 
 /*----------------------------------------------------------------------
   TtaRemovePathData

@@ -885,9 +885,19 @@ RULES
         BEGIN
         CreateBefore (ElementName);
         CreateWith (VerticalLine);
-        Visibility: 0;
+	if not immediately within path and not immediately within line_ and
+           not immediately within polygon and not immediately within polyline
+           Visibility: 0;
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
+		if immediately within path
+                  Visibility: 0;
+		if immediately within line_
+                  Visibility: 0;
+		if immediately within polyline
+                  Visibility: 0;
+		if immediately within polygon
+                  Visibility: 0;
                 Size: DOC_FONTSIZE;
                 Width: Enclosing . Width - STRUCT_INDENT;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;

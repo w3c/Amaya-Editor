@@ -120,6 +120,9 @@ static TransCondition ReadTransCondition (BinFile file)
       case C_TR_ELEMENTTYPE:
         cond = TcondElementType;
         break;
+      case C_TR_TRANSCLUSION:
+        cond = TcondTransclusion;
+        break;
       default:
         TSchemaError (2);
         cond = TcondFirst;

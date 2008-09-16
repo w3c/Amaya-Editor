@@ -393,7 +393,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'textPath>\14' after;
+		create 'textPath>\12' after;
 		END;
 	END;
 
@@ -414,7 +414,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'altGlyph>\14' after;
+		create 'altGlyph>\12' after;
 		END;
 	END;
 
@@ -435,7 +435,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'altGlyphDef>\14' after;
+		create 'altGlyphDef>\12' after;
 		END;
 	END;
 
@@ -456,7 +456,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'altGlyphItem>\14' after;
+		create 'altGlyphItem>\12' after;
 		END;
 	END;
 
@@ -477,13 +477,15 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'glyphRef>\14' after;
+		create 'glyphRef>\12' after;
 		END;
 	END;
 
    marker:
 	BEGIN
 	if immediately within use_
+           Ignore;
+	if transclusion
            Ignore;
 	create SOT;
 	create 'marker';
@@ -498,7 +500,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'marker>\14' after;
+		create 'marker>\12' after;
 		END;
 	END;
 
@@ -519,7 +521,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'color-profile>\14' after;
+		create 'color-profile>\12' after;
 		END;
 	END;
 
@@ -540,7 +542,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'linearGradient>\14' after;
+		create 'linearGradient>\12' after;
 		END;
 	END;
 
@@ -561,7 +563,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'radialGradient>\14' after;
+		create 'radialGradient>\12' after;
 		END;
 	END;
 
@@ -603,7 +605,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'pattern>\14' after;
+		create 'pattern>\12' after;
 		END;
 	END;
 
@@ -645,7 +647,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'mask>\14' after;
+		create 'mask>\12' after;
 		END;
 	END;
 
@@ -666,7 +668,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'filter>\14' after;
+		create 'filter>\12' after;
 		END;
 	END;
 
@@ -687,7 +689,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feDistantLight>\14' after;
+		create 'feDistantLight>\12' after;
 		END;
 	END;
 
@@ -708,7 +710,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'fePointLight>\14' after;
+		create 'fePointLight>\12' after;
 		END;
 	END;
 
@@ -729,7 +731,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feSpotLight>\14' after;
+		create 'feSpotLight>\12' after;
 		END;
 	END;
 
@@ -750,7 +752,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feBlend>\14' after;
+		create 'feBlend>\12' after;
 		END;
 	END;
 
@@ -771,7 +773,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feColorMatrix>\14' after;
+		create 'feColorMatrix>\12' after;
 		END;
 	END;
 
@@ -792,7 +794,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feComponentTransfer>\14' after;
+		create 'feComponentTransfer>\12' after;
 		END;
 	END;
 
@@ -813,7 +815,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feFuncR>\14' after;
+		create 'feFuncR>\12' after;
 		END;
 	END;
 
@@ -834,7 +836,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feFuncG>\14' after;
+		create 'feFuncG>\12' after;
 		END;
 	END;
 
@@ -855,7 +857,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feFuncB>\14' after;
+		create 'feFuncB>\12' after;
 		END;
 	END;
 
@@ -876,7 +878,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feFuncA>\14' after;
+		create 'feFuncA>\12' after;
 		END;
 	END;
 
@@ -897,7 +899,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feComposite>\14' after;
+		create 'feComposite>\12' after;
 		END;
 	END;
 
@@ -918,7 +920,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feConvolveMatrix>\14' after;
+		create 'feConvolveMatrix>\12' after;
 		END;
 	END;
 
@@ -939,7 +941,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feDiffuseLighting>\14' after;
+		create 'feDiffuseLighting>\12' after;
 		END;
 	END;
 
@@ -960,7 +962,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feDisplacementMap>\14' after;
+		create 'feDisplacementMap>\12' after;
 		END;
 	END;
 
@@ -981,7 +983,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feFlood>\14' after;
+		create 'feFlood>\12' after;
 		END;
 	END;
 
@@ -1002,7 +1004,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feGaussianBlur>\14' after;
+		create 'feGaussianBlur>\12' after;
 		END;
 	END;
 
@@ -1023,7 +1025,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feImage>\14' after;
+		create 'feImage>\12' after;
 		END;
 	END;
 
@@ -1044,7 +1046,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feMerge>\14' after;
+		create 'feMerge>\12' after;
 		END;
 	END;
 
@@ -1065,7 +1067,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feMergeNode>\14' after;
+		create 'feMergeNode>\12' after;
 		END;
 	END;
 
@@ -1086,7 +1088,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feMorphology>\14' after;
+		create 'feMorphology>\12' after;
 		END;
 	END;
 
@@ -1107,7 +1109,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feOffset>\14' after;
+		create 'feOffset>\12' after;
 		END;
 	END;
 
@@ -1128,7 +1130,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feSpecularLighting>\14' after;
+		create 'feSpecularLighting>\12' after;
 		END;
 	END;
 
@@ -1149,7 +1151,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feTile>\14' after;
+		create 'feTile>\12' after;
 		END;
 	END;
 
@@ -1170,7 +1172,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'feTurbulence>\14' after;
+		create 'feTurbulence>\12' after;
 		END;
 	END;
 
@@ -1191,7 +1193,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'cursor>\14' after;
+		create 'cursor>\12' after;
 		END;
 	END;
 
@@ -1227,7 +1229,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'view>\14' after;
+		create 'view>\12' after;
 		END;
 	END;
 

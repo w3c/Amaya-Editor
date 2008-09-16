@@ -147,6 +147,9 @@ void                WriteTransCondition (TransCondition cond)
 	    case TcondElementType:
 	       TtaWriteByte (outfile, C_TR_ELEMENTTYPE);
 	       break;
+	    case TcondTransclusion:
+	       TtaWriteByte (outfile, C_TR_TRANSCLUSION);
+	       break;
 	 }
 }
 

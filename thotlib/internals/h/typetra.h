@@ -53,7 +53,8 @@ typedef enum
 	TcondEmpty,
 	TcondRoot,
 	TcondExternalRef,
-	TcondElementType
+	TcondElementType,
+	TcondTransclusion
 } TransCondition;
 
 /* a translation rule type */
