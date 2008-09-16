@@ -20,6 +20,7 @@ BEGIN_EVENT_TABLE(ListNSDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_DELETE_ELEM_NS"), ListNSDlgWX::OnNSDelete )
   EVT_BUTTON( XRCID("wxID_ADD_ELEM_NS"),    ListNSDlgWX::OnNSAdd )
   EVT_LISTBOX(XRCID("wxID_LIST_ELEM_NS"),   ListNSDlgWX::OnNSSelected)
+  EVT_CLOSE( ListNSDlgWX::OnClose )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -66,6 +67,26 @@ ListNSDlgWX::~ListNSDlgWX()
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
+/*----------------------------------------------------------------------
+  OnCancelButton called when the user wants to exit from this dialog
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void ListNSDlgWX::OnClose( wxCloseEvent& event )
+{
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+}
+
+/*----------------------------------------------------------------------
+  NSUpdate called when the user change the selection
+  returns:
+  ----------------------------------------------------------------------*/
+void ListNSDlgWX::NSUpdate( const wxArrayString& items )
+{
+  // fill up the ns list
+  XRCCTRL(*this, "wxID_LIST_ELEM_NS", wxListBox)->Clear( );
+  XRCCTRL(*this, "wxID_LIST_ELEM_NS", wxListBox)->Append( items );
+}
 
 /*----------------------------------------------------------------------
   OnCancelButton called when the user wants to exit from this dialog

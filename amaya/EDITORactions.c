@@ -60,6 +60,7 @@
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
 #include "SVGedit_f.h"
+#include "wxdialog/ListNSDlgWX.h"
 
 #ifdef DAV
 #define WEBDAV_EXPORT extern
@@ -68,6 +69,8 @@
 #ifdef _JAVA
   #include "javascript_f.h"
 #endif /* _JAVA */
+
+static void * NSList = NULL;
 
 /*----------------------------------------------------------------------
   Switch_JS_DOM
@@ -1571,27 +1574,32 @@ void UpdateNSDeclaration (Document document, View view)
   int       nb = 0;
   Element   el;
   int       f, l;
+  void     *p_dlg;
 
   TtaGiveFirstSelectedElement (document, &el, &f, &l);
-  if (el == NULL)
-    InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
-              TtaGetMessage (AMAYA, AM_NO_SELECTION));
-  else
-    {
-      nb = GiveNSDeclaration (document, el, buf);
+  if (el != NULL)
+    nb = GiveNSDeclaration (document, el, buf);
 
       // Create the dialog
-      ThotBool created = CreateListNSDlgWX (BaseDialog + ListNSForm,
-					    TtaGetViewFrame (document, view),
-					    nb, buf, RDFa_list );
-      if (created)
+      p_dlg = CreateListNSDlgWX (BaseDialog + ListNSForm,
+				 TtaGetViewFrame (document, view),
+				 nb, buf, RDFa_list );
+      if (p_dlg)
 	{
+	  NSList = p_dlg;
 	  TtaSetDialoguePosition ();
 	  TtaShowDialogue (BaseDialog + ListNSForm, FALSE);
 	  /* wait for an answer */
 	  TtaWaitShowDialogue ();
 	}
-    }
+}
+
+/*----------------------------------------------------------------------
+  CloseNSDeclaration
+  ----------------------------------------------------------------------*/
+void CloseNSDeclaration ()
+{
+  NSList = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -1599,84 +1607,19 @@ void UpdateNSDeclaration (Document document, View view)
   ----------------------------------------------------------------------*/
 void SynchronizeNSDeclaration (NotifyElement *event)
 {
-  int       nb = 0;
   char      buf[MAX_TXT_LEN];
+  int       nb = 0;
+  wxArrayString wx_items;
 
-  unsigned int i, n;
-  wxDialog dialog;
-  // wxString strs = TtaConvMessageToWX(proposed);
-  // wxArrayString arr = wxStringTokenize(strs);
-  wxCheckListBox* box;
-        /*
-
-  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("ListNSDlgWX")))
+  if (NSList)
     {
-      dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_NEWUSE)));
-      XRCCTRL(dialog, "wxID_LABEL_LABEL", wxStaticText)->
-            SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_LABEL)));
-      XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->
-            SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_OPTIONAL)));
-      XRCCTRL(dialog, "wxID_CANCEL", wxButton)->
-            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL) ));
-      XRCCTRL(dialog, "wxID_OK", wxButton)->
-            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));      
-      
-      wxSizer* sz = dialog.GetSizer();
-      box = XRCCTRL(dialog, "wxID_LIST_TYPES", wxCheckListBox);
-      box->Hide();
-      
-      box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
-      sz->Insert(2, box, 1, wxEXPAND);
-      
-      
-      box->Append(arr);
-      
-      if(dialog.ShowModal()==wxID_OK)
-        {
-          strs.Clear();
-          n = box->GetCount();
-          for(i=0; i<n; i++)
-            {
-              if(box->IsChecked(i))
-                {
-                  strs += box->GetString(i);
-                  strs += wxT(" ");
-                }
-            }
-          strs.Trim();
-          
-          if(label)
-            *label = TtaStrdup((const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8));
-          if(types)
-            *types = TtaStrdup((const char*)strs.mb_str(wxConvUTF8));
-          if(option)
-            *option = XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->GetValue();
-          return TRUE;
-        }
-    }
-
-
-      */
-
-
-
-
-  /*
-  else
-    {
-      // Create the dialog
-      nb = GiveNSDeclaration (event->document, event->element, buf);   
-      ThotBool created = CreateListNSDlgWX (BaseDialog + ListNSForm,
-					    TtaGetViewFrame (event->document, 1),
-					    nb, buf, RDFa_list );
-      if (created)
+      if (((ListNSDlgWX *) NSList)->IsShown())
 	{
-	  TtaSetDialoguePosition ();
-	  TtaShowDialogue (BaseDialog + ListNSForm, FALSE);
-	  TtaWaitShowDialogue ();
+	  nb = GiveNSDeclaration (event->document, event->element, buf);
+	  /* Update the NS list */
+	  UpdateListNSDlgWX (nb, buf, NSList);
 	}
     }
-  */
 }
 
 /*----------------------------------------------------------------------

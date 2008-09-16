@@ -23,21 +23,22 @@ public:
   // Destructor.                  
   virtual ~ListNSDlgWX();
 
-protected:
-  // Any class wishing to process wxWindows events must use this macro
-  DECLARE_EVENT_TABLE()
+  // Update NS list
+  void NSUpdate(const wxArrayString& items);
 
+
+protected:
+
+
+private:
+  // Override base class functions of a wxDialog.
+  void OnClose( wxCloseEvent& event );
   void OnCancelButton( wxCommandEvent& event );
   void OnNSAdd(wxCommandEvent& event);
   void OnNSDelete(wxCommandEvent& event);
   void OnNSSelected(wxCommandEvent& event);
-
-
-private:
-  
-  // wxArrayString m_UrlList;
-  // wxArrayString m_RDFaNSList;
-  
+  // Any class wishing to process wxWindows events must use this macro
+  DECLARE_EVENT_TABLE()
 };
 
 #endif  //__LISTNSDLGWX_H__

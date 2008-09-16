@@ -6235,6 +6235,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
           {
           case 0:
             TtaDestroyDialogue (ref);
+	    CloseNSDeclaration ();
             break;
 	  }
 	break;

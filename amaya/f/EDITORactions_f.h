@@ -71,6 +71,7 @@ extern void PasteBuffer ( Document doc,
                           View view );
 extern void UpdateNSDeclaration ( Document document,
                                   View view );
+extern void CloseNSDeclaration ( void );
 extern void SynchronizeNSDeclaration ( NotifyElement *event );
 extern void AddaNSDeclaration ( char *decl );
 extern void RemoveaNSDeclaration ( char *decl );
@@ -351,6 +352,7 @@ extern void PasteBuffer ( Document doc,
                             View view );
 extern void UpdateNSDeclaration ( Document document,
                                     View view );
+extern void CloseNSDeclaration ( void );
 extern void SynchronizeNSDeclaration ( NotifyElement *event );
 extern void AddaNSDeclaration ( char *decl );
 extern void RemoveaNSDeclaration ( char *decl );

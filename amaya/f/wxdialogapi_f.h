@@ -164,11 +164,14 @@ extern ThotBool CreateFontDlgWX ( ThotWindow parent,
                                   const char *title,
                                   int* family,
                                   int* size );
-extern ThotBool CreateListNSDlgWX ( int ref,
-                                    ThotWindow parent,
-                                    int nb_item,
-                                    const char *items,
-                                    const char *rdfa_list );
+extern void* CreateListNSDlgWX ( int ref,
+                                 ThotWindow parent,
+                                 int nb_item,
+                                 const char *items,
+                                 const char *rdfa_list );
+extern void UpdateListNSDlgWX ( int nb_item,
+                                const char *items,
+                                void * p_dlg );
 extern void QueryStringFromUser ( const char *label,
                                   const char *title,
                                   char* res,
@@ -342,11 +345,14 @@ extern ThotBool CreateFontDlgWX ( ThotWindow parent,
                                     const char *title,
                                     int* family,
                                     int* size );
-extern ThotBool CreateListNSDlgWX ( int ref,
-                                      ThotWindow parent,
-                                      int nb_item,
-                                      const char *items,
-                                      const char *rdfa_list );
+extern void* CreateListNSDlgWX ( int ref,
+                                   ThotWindow parent,
+                                   int nb_item,
+                                   const char *items,
+                                   const char *rdfa_list );
+extern void UpdateListNSDlgWX ( int nb_item,
+                                  const char *items,
+                                  void * p_dlg );
 extern void QueryStringFromUser ( const char *label,
                                     const char *title,
                                     char* res,

@@ -1355,8 +1355,8 @@ ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family,
   params:
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateListNSDlgWX (int ref, ThotWindow parent, int nb_item,
-			    const char *items, const char *rdfa_list)
+void*  CreateListNSDlgWX (int ref, ThotWindow parent, int nb_item,
+			  const char *items, const char *rdfa_list)
 {
 #ifdef _WX
   wxArrayString wx_items;
@@ -1364,7 +1364,7 @@ ThotBool CreateListNSDlgWX (int ref, ThotWindow parent, int nb_item,
   
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
-    return FALSE;
+    return NULL;
 
   /* build the NS list */
   int i = 0;
@@ -1386,16 +1386,42 @@ ThotBool CreateListNSDlgWX (int ref, ThotWindow parent, int nb_item,
 					 wx_items_rdfa );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
       /* the dialog has been sucesfully registred */
-      return TRUE;
+      return (p_dlg);
+    }
   else
     {
       /* an error occured durring registration */
       p_dlg->Destroy();
-      return FALSE;
+      return NULL;
     }
+
 #else /* _WX */
   return FALSE;
+#endif /* _WX */  
+}
+
+/*----------------------------------------------------------------------
+  UpdateListNSDlgWX
+  ----------------------------------------------------------------------*/
+void UpdateListNSDlgWX (int nb_item, const char *items, void * p_dlg)
+{
+#ifdef _WX
+  wxArrayString wx_items;
+  int       i = 0;
+  int       index = 0;
+
+  /* build the NS list */
+  while (i < nb_item && items[index] != EOS)
+    {
+      wx_items.Add( TtaConvMessageToWX( &items[index] ) );
+      index += strlen (&items[index]) + 1; /* one entry length */
+      i++;
+    }
+  ((ListNSDlgWX *) p_dlg)->NSUpdate(wx_items);
+#else /* _WX */
+  return;
 #endif /* _WX */  
 }
 
