@@ -1282,7 +1282,17 @@ void BlockInCharLevelElem (Element el)
 {
   PtrElemToBeChecked  nextElTBC, elTBC;
   Element             parent;
+  ElementType         elType, parentType;
 
+  parent = TtaGetParent (el);
+  elType = TtaGetElementType (el);
+  /* a <div> within a <button> is allowed */
+  if (elType.ElTypeNum == HTML_EL_Division)
+    {
+      parentType = TtaGetElementType (parent);
+      if (parentType.ElTypeNum == HTML_EL_BUTTON_)
+	return;
+    }
   if (LastElemToBeChecked != NULL)
     {
       nextElTBC = FirstElemToBeChecked;
@@ -1295,7 +1305,6 @@ void BlockInCharLevelElem (Element el)
             nextElTBC = nextElTBC->nextElemToBeChecked;
         }
     }   
-  parent = TtaGetParent (el);
   if (parent != NULL)
     if (IsCharacterLevelElement (parent))
       {
@@ -6313,12 +6322,12 @@ static Element ParentOfType (Element el, int typeNum)
 void CheckAbstractTree (Document doc, ThotBool isXTiger)
 {
   ElementType	elType, newElType, headElType;
-  Element	    elRoot, glossary, list, elText, previous;
-  Element	    el, elHead, elBody, elFrameset, elNoframes, nextEl, newEl;
-  Element	    prevEl, lastChild, firstTerm, lastTerm, termList, child;
-	Element		  parent, firstDef, lastDef, defList, firstEntry, lastEntry;
-  ThotBool	  ok, moved;
-  SSchema     htmlSSchema;
+  Element	elRoot, glossary, list, elText, previous;
+  Element	el, elHead, elBody, elFrameset, elNoframes, nextEl, newEl;
+  Element	prevEl, lastChild, firstTerm, lastTerm, termList, child;
+  Element	parent, firstDef, lastDef, defList, firstEntry, lastEntry;
+  ThotBool	ok, moved;
+  SSchema       htmlSSchema;
 
   /* the root HTML element only accepts elements HEAD, BODY, FRAMESET
      Comment and PI as children */
