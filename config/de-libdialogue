@@ -257,10 +257,11 @@
 254 Spalte inzufügen (danach)
 255 Tip des Tages
 256 Tips bei Programmstart anzeigen
-257 **Previous tip
+257 Vorhergehender Tipp
 258 Nächster Tip
 259 Haben Sie schon gewusst?
 260 **Close
+261 Schließen
 261 Amaya kann auf Ihre Bedürfnisse angepasst werden: fünf verschiedene Profile mit verschiedenen Kombinationen von Menu Einträgen und Bedienelementen. Für weitere Informationen werfen Sie bitte einen Blick in die Einstellungen.
 262 Bedienelemente können links, rechts oder benutzerdefiniert angezeigt werden. Siehe Einstellungen.
 263 Mit F2 oder der Escape Taste können Sie das Elternelement in der Struktur auswählen und Editier Funktionen (kopieren, einfügen,Attribute usw.) auf dieses Element anzuwenden.
@@ -271,154 +272,154 @@
 268 Bemerken Sie einen roten Button in der Statusleiste können Sie sich mit einem Klick darauf Fehler im Dokument anzeigen lassen.
 269 Sie können Vorgängerelemente durch einen Klick auf deren Bezeichnung in der Pfadanzeige unten in der Statusleiste auswählen.
 270 Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.
-271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
-272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
-274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
-275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
+271 Falls Sie "Ziele anzeigen" im "Darstellungen"-Menü wählen, werde sie formatiert dargestellt. Dies ist günstig bei der Erzeugung von Verweisen: Ein Ziel kan durch Klicken ausgewählt werden 
+272 Wenn Sie  ein SVG-Objekt drehen, wird der Drehpunkt durch ein Kreuz angezeigt. Sie können die Maus zum Bewegen verwenden.
+273 SVG-Grundformen haben Marker die zur Bearbeitung der Form verwendet werden können. Blaue Dreiecke oder grüne Quadrate ermöglichen es die Größe der Form zu ändern. Bei 
+274 Bei SVG-Zeichnungen werden Linien mit einer Genauigkeit von 15º erstellt wenn Sie dei Hochtaste drücken. Das ist sehr nützlich, wenn Sie gerade Linien zeichnen wollen.
+275 Beim Vergrößern und Verkleinern von Bildern oder SVG-Objekten erhält das Drücken der Hochtaste die Seitenverhältnisse
+276 Verwenden Sie Bearbeiten>Einstellungen>Sprache zur Auswahl der Sprache
 277 Klassisch
 278 Modern
 279 Kein Motiv
-280 **Title/Description
-281 **Generate a description
-282 **Square
-283 **Rounded Square
-284 **Rectangle
-285 **Rounded rectangle
-286 **Diamond
-287 **Parallelogram
-288 **Trapezium
-289 **Equilateral triangle
-290 **Isosceles triangle
-291 **Right triangle
-292 **Circle
-293 **Ellipse
-294 **Line
-295 **Arrow
-296 **Double Arrow
-297 **Zigzag
-298 **Group
-299 **Ungroup
-300 **Bring to front
-301 **Send to back
-302 **One level up
-303 **One level down
-304 **90° left
-305 **90° right
-306 **Rotate
-307 **Vertical symmetry
-308 **Horizontal symmetry
-309 **Scale
-310 **Skew
-311 **Move
-312 **Align bottom
-313 **Align center
-314 **Align left
-315 **Align middle
-316 **Align right
-317 **Align top
-318 **Distribute bottom
-319 **Distribute center
-320 **Distribute left
-321 **Distribute middle
-322 **Distribute right
-323 **Distribute top
-324 **Distribute vertical spacing
-325 **Distribute horizontal spacing
-326 **Closed Bezier curve
-327 **Bezier curve
-328 **Polyline
-329 **Polygon
-330 **Foreign Object
-331 **Image
-332 **SVG Canvas
-333 **Text
-334 **Cone
-335 **Cube
-336 **Cylinder
-337 **Octahedron
-338 **Parallelepiped
-339 **Pyramid
-340 **Beaker
-341 **Funnel
-342 **Bunsen burner
-343 **Buchner flask
-344 **Boiling flask
-345 **Burette
-346 **Erlenmeyer flask
-347 **Test tube
-348 **Pipette
-349 **Rectangular
-350 **Rounded rectangular
-351 **Round
-352 **Scream
-353 **Thought
-354 **Capacitor
-355 **Current source
-356 **Diode
-357 **Ground Point
-358 **Inductor
-359 **LED
-360 **Op-amp
-361 **Resistor
-362 **Switch
-363 **Transistor
-364 **Voltage source
-365 **Zener diode
-366 **Pentagon
-367 **Hexagon
-368 **Heptagon
-369 **Octogon
-370 **Star (4 branches)
-371 **Star (5 branches)
-372 **Star (6 branches)
-373 **AND
-374 **NAND
-375 **OR
-376 **NOR
-377 **XOR
-378 **XNOR
-379 **NOT
-380 **Cross
-381 **Frame
-382 **Ring
-383 **Cloud
-384 **Scroll
-385 **Sun
-386 **Lightning_Bolt
-387 **Moon
-388 **Smiley
-389 **Heart
-390 **Flower
-391 **Prohibited
-392 **2-Way Rounded Arrow
-393 **3-Way Arrow Callout
-394 **3-Way Arrow
-395 **4-Way_Arrow_Callout
-396 **4-Way Arrow
-397 **Chevron
-398 **Circular Arrow
-399 **Corner Arrow
-400 **Corner Double Arrow Callout
-401 **Corner Double Arrow
-402 **Double Arrow Callout
-403 **Double Arrow
-404 **Notched Arrow
-405 **Rounded Arrow
-406 **Simple Arrow Callout
-407 **Simple Arrow
-408 **Split Arrow
-409 **S-Shape Arrow
-410 **Striped Arrow
-411 **Create template from current document...
-412 **Create a text area
-413 **Use a component or an element
-414 **Create and use a component
-415 **Repeat the current use
-416 **Create and repeat a component
-417 **Create a free editing box
-418 **Create a new types union
-419 **(%d,%d) Button up to close
-420 **(%d,%d) Double click to close
-421 **(%d,%d) Click to close
+280 Titel / Beschreibung
+281 Erstelle eine Beschreibung
+282 Quadrat
+283 Quadrat mit abgerundeten Ecken
+284 Rechteck
+285 Rechteck mit abgerundeten Ecken
+286 Raute
+287 Parallelogramm
+288 Trapezoid
+289 Gleichseitiges Dreieck
+290 Gleichschenkeliges Dreieck
+291 Rechtwinkeliges Dreieck
+292 Kreis
+293 Elipse
+294 Linie
+295 Pfeil
+296 Doppelpfeil
+297 Zickzack
+298 Gruppe
+299 Untergruppe
+300 Ganz nach vorn
+301 Ganz nach hinten
+302 Eine Ebene höher
+303 Eine Ebene tiefer
+304 90° links herum
+305 90° rechts herum
+306 Drehen
+307 Vertikal Spiegeln
+308 Horizontal Spiegeln
+309 Skalieren
+310 Schrägstellen
+311 Verschieben
+312 Am unteren Rand ausrichten
+313 Mittig ausrichten
+314 Am linken Rand ausrichten
+315 Mittig ausrichten
+316 Am rechten Rand ausrichten
+317 Am oberen Rand ausrichten
+318 Verteilen Sie Unterseite
+319 Verteilen Sie Mitte
+320 Verteilen Sie sich nach links
+321 Verteilen Sie Mitte
+322 Verteilen Sie sich nach rechts
+323 Verteilen Sie Oberseite
+324 Verteilen Sie Zeilenvorschub
+325 Verteilen Sie horizontalen Zeichenabstand
+326 Geschlossene Bezierkurve
+327 Bezierkurve
+328 Linienzug
+329 Vieleck
+330 fremdes Objekt
+331 Bild
+332 SVG Leinwand
+333 Text
+334 Kegel
+335 Würfel
+336 Zylinder
+337 Oktaeder
+338 Spat
+339 Pyramide
+340 Becher
+341 Trichter
+342 Bunsenbrenner
+343 Büchnerflasche
+344 Kochkolben
+345 Bürette
+346 Erlenmeyer Kolben
+347 Reagenzglas
+348 Pipette
+349 Rechteck
+350 Rechteck mit abgerundeten Ecken
+351 Rund
+352 Schrei
+353 Gedanke
+354 Kondensator
+355 Stromquelle
+356 Diode
+357 Masse
+358 Induktor
+359 LED
+360 Operationsverstärker
+361 Widerstand
+362 Schalter
+363 Transistor
+364 Spannungsquelle
+365 Zener-Diode
+366 Fünfeck
+367 Sechseck
+368 Siebeneck
+369 Achteck
+370 Stern (4 Zacken)
+371 Stern (5 Zacken)
+372 Stern (6 Zacken)
+373 AND
+374 NAND
+375 OR
+376 NOR
+377 XOR
+378 XNOR
+379 NOT
+380 Kreuz
+381 Rand
+382 Ring
+383 Wolke
+384 Papierrolle
+385 Sonne
+386 Blitz
+387 Mond
+388 Smiley
+389 Herz
+390 Blume
+391 Verboten
+392 gerundeter Doppelpfeil
+393 Hinweispfeil in 3 Richtungen
+394 Pfeil in 3 Richtungen
+395 Hinweispfeil in 4 Richtungen
+396 Pfeil in 4 Richtungen
+397 Winkel
+398 Pfeil im Kreis
+399 Winkelpfeil
+400 Hinweispfeil über Eck
+401 Pfeil über Eck
+402 Hinweisdoppelpfeil
+403 Doppelpfeil
+404 Eingekerbter Pfeil
+405 Abgerundeter Pfeil
+406 Einfacher Hinweispfeil
+407 Einfacher Pfeil
+408 Aufgesplitteter Pfeil
+409 S-förmiger Pfeil
+410 Gestreifter Pfeil
+411 Eine Vorlage aus dem aktuellen Dokument erstellen
+412 Ein Textfeld erstellen
+413 Eine Komponente oder Element verwenden
+414 Erstellen und Verwenden einer Komponente
+415 Aktuelle Anwendung wiederholen
+416 Erstellen und vervielfältigen einer Komponente
+417 Eine freie Editierbox erstellen
+418 Verursachen Sie neue Typen Anschluss
+419 (%d,%d) Knopf bis zum Abschluss
+420 (%d,%d) Doppeltes Klicken zum zu schließen
+421 (%d,%d) Klicken zum zu schließen

@@ -66,11 +66,11 @@
 64 Verweis öffnen
 65 Verweis in neuem Tab öffnen
 66 Verweis in neuem Fenster öffnen
-67 **Rotate
-68 **Skew
-69 **Scale
-70 **Move
-71 **Ungroup
+67 Drehen
+68 Schrägstellen
+69 Skalieren
+70 Verschieben
+71 Gruppierung aufheben
 72 Ausschneiden
 73 Kopieren
 74 Einfügen
@@ -112,7 +112,7 @@
 110 &Vollbildanzeige
 111 Schrift vergrößern
 112 Schrift verkleinern
-113 **Normal zoom
+113 normale Vergrößerung
 114 Absatz (p)
 115 Überschrift
 116 h1 (groß)
@@ -186,21 +186,21 @@
 184 Vierfachindex (mmultiscripts)
 185 Matrix (mtable)
 186 Grafiken
-187 **Line
-188 **Arrow
-189 **Text
-190 **ForeignObject
-191 **Group
-192 **Square
-193 **Rectangle
-194 **Diamond
-195 **Triangle
-196 **Circle
-197 **Ellipse
-198 **Polyline
-199 **Polygon
-200 **Open curve
-201 **Closed curve
+187 Linie
+188 Pfeil
+189 Text
+190 fremdes Objekt
+191 Gruppierung
+192 Quadrat
+193 Rechteck
+194 Raute
+195 Dreieck
+196 Kreis
+197 Elipse
+198 Linienzug
+199 Vieleck
+200 offene Kurve
+201 geschlossene Kurve
 202 Formular
 203 Neues Formular (form)
 204 Knopf (button)
@@ -285,7 +285,7 @@
 283 Id hinzufügen/entfernen...
 284 Rechtschreibprüfung...
 285 Transformieren...
-286 **Code clean up
+286 Quelltext bereinigen
 287 Tabelle editieren
 288 Umwandeln in datenzelle
 289 Umwandeln in titelzelle
@@ -336,14 +336,14 @@
 334 Resourceeigenschaften anzeigen...
 335 Sperrinformation kopieren...
 336 Gesperrt?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
+337 Vorlagen
+338 Eine Vorlage aus dem aktuellen Dokument erstellen
+339 Ein Textfeld erstellen
+340 Eine Komponente oder Element verwenden
+341 Erstellen und Verwenden einer Komponente
+342 Aktuelle Anwendung wiederholen
+343 Erstellen und vervielfältigen einer Komponente
+344 Eine freie Editierbox erstellen
 345 **Create a new types union
 346 &Javascript/DOM
 347 Java-Unterstützung ein-/ausschalten
@@ -351,7 +351,7 @@
 349 externes Skript ausführen
 350 externes Skript hinzufügen
 351 Skript einfügen
-352 **Check for update
+352 Nach Aktualisierungen suchen
 353 Amaya Hilfe...
 354 Tip des Tages...
 355 Info

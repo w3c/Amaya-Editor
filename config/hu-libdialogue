@@ -372,13 +372,13 @@
 370 **Star (4 branches)
 371 **Star (5 branches)
 372 **Star (6 branches)
-373 **AND
-374 **NAND
-375 **OR
-376 **NOR
-377 **XOR
-378 **XNOR
-379 **NOT
+373 AND
+374 NAND
+375 OR
+376 NOR
+377 XOR
+378 XNOR
+379 NOT
 380 **Cross
 381 **Frame
 382 **Ring

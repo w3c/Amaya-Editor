@@ -6917,10 +6917,14 @@
 <label define="AM_RDFa">
 	<message xml:lang="en">XML namespaces generated for new XHTML+RDFa documents</message>
 	<message xml:lang="fr">Espaces de noms XML générés pour les nouveaux documents XHTML+RDFa</message>
+	<message xml:lang="de">XML namespaces erzeugt für neue XHTML+RDFa Dokumente</message>
+	<message xml:lang="es">Espacios de nombres XML generados para nuevos documentos HTML+RDFa</message>
 </label>
 <label define="AM_RDFa_NEW_LABEL">
 	<message xml:lang="en">Select a namespace in the list below or add a new one (syntax prefix="uri")</message>
 	<message xml:lang="fr">Choisir un espace de noms dans la liste ou en saisir un nouveau (syntaxe: prefix="uri")</message>
+	<message xml:lang="de">Einen Namensraum aus unten stehender Liste wählen oder einen neuen hinzufügen</message>
+	<message xml:lang="es">Seleccionar un espacio de nombres de la lista o añadir uno nuevos (sintaxis prefijo="uri")</message>
 </label>
 <label define="AM_JAVASCRIPT_CAN_NOT_BUILD">
 	<message xml:lang="en">An error occured during the building of the javascript/DOM objects</message>
@@ -7201,147 +7205,217 @@
 	<message xml:lang="en">Template has error(s), it will not be used:</message>
 	<message xml:lang="fr">Le modèle a des erreurs, il ne sera pas utilisé:</message>
 	<message xml:lang="ja">テンプレートがエラーを含んでいます, 使用できません:</message>
+	<message xml:lang="es">La plantilla tiene errores, no se utilizará:</message>
+	<message xml:lang="de">Die Vorlage hat einen/mehrere Fehler und kann nicht verwendet werden:</message>
 </label>
 <label define="AM_CLOSE">
 	<message xml:lang="en">Close</message>
 	<message xml:lang="fr">Fermer</message>
 	<message xml:lang="ja">閉じる</message>
+	<message xml:lang="es">Cerrar</message>
+	<message xml:lang="de">Schließen</message>
 </label>
 <label define="AM_TEMPLATE_ERR_MULTICOMP">
 	<message xml:lang="en">Component '%s' has multiple definition.</message>
 	<message xml:lang="fr">Le composant '%s' a une définition multiple.</message>
 	<message xml:lang="ja">コンポーネント '%s' は複数定義されています</message>
+	<message xml:lang="es">El componente '%s' tiene múltiples definiciones</message>
+	<message xml:lang="de">Die Komponente '%s' ist mehrfach definiert</message>
 </label>
 <label define="AM_TEMPLATE_ERR_BADLIB">
 	<message xml:lang="en">Library '%s' can not be loaded.</message>
 	<message xml:lang="fr">La bibliothèque '%s' ne peut être chargée.</message>
 	<message xml:lang="ja">ライブラリ '%s' を読み込めません</message>
+	<message xml:lang="es">La biblioteca '%s' no puede cargarse.</message>
+	<message xml:lang="de">Die Bibliothek '%s' kann nicht geladen werden</message>
 </label>
 <label define="AM_TEMPLATE_ERR_INSTANCE">
 	<message xml:lang="en">Can not convert an instance document to template.</message>
 	<message xml:lang="fr">Conversion d'une instance en modèle impossible.</message>
+	<message xml:lang="es">No se puede convertir el documento en plantilla</message>
+	<message xml:lang="de">Ein Beispieldokument kann nicht in eine Vorlage umgewandelt werden</message>
 </label>
 <label define="AM_TEMPLATE_ERR_TEMPLATE">
 	<message xml:lang="en">The document is already a template</message>
 	<message xml:lang="fr">Le document est déjà un modèle</message>
+	<message xml:lang="es">El documento ya es una plantilla</message>
+	<message xml:lang="de">Dieses Dokument ist bereits eine Vorlage</message>
 </label>
 <label define="AM_TEMPLATE_ERR_CREATION">
 	<message xml:lang="en">Template creation fails</message>
 	<message xml:lang="fr">La création du modèle a échouée</message>
+	<message xml:lang="es">Error en la creación de la plantilla</message>
+	<message xml:lang="de">Die Erstellung der Vorlage schlug fehl</message>
 </label>
 <label define="AM_TEMPLATE_USESTRING">
 	<message xml:lang="en">Text area</message>
 	<message xml:lang="fr">Zone texte</message>
+	<message xml:lang="es">Área de texto</message>
+	<message xml:lang="de">Textbereich</message>
 </label>
 <label define="AM_TEMPLATE_LABEL">
 	<message xml:lang="en">Element label:</message>
 	<message xml:lang="fr">Label de l'élément :</message>
+	<message xml:lang="es">Etiqueta de elemento:</message>
+	<message xml:lang="de">Schild</message>
 </label>
 <label define="AM_TEMPLATE_BAGANY">
 	<message xml:lang="en">Bag area</message>
 	<message xml:lang="fr">Zone multi-élément</message>
+	<message xml:lang="es">Zona multi elementos</message>
+	<message xml:lang="de">Zone Elementmulti</message>
 </label>
 <label define="AM_TEMPLATE_REPEATCOMP">
 	<message xml:lang="en">Repeat element</message>
 	<message xml:lang="fr">Elément de répétition</message>
+	<message xml:lang="es">Repetir elemento</message>
+	<message xml:lang="de">Wiederholungselement</message>
 </label>
 <label define="AM_TEMPLATE_NEWCOMP">
 	<message xml:lang="en">New component</message>
 	<message xml:lang="fr">Nouveau composant</message>
+	<message xml:lang="es">Nuevo componente</message>
+	<message xml:lang="de">Neue Komponente</message>
 </label>
 <label define="AM_TEMPLATE_USEDCOMP_CANTREMOVE">
 	<message xml:lang="en">Component is used, you can not remove it.</message>
 	<message xml:lang="fr">Ce composant est utilisé, vous ne pouvez le détruire.</message>
+	<message xml:lang="es">Conponente en uso, no se puede borrar</message>
+	<message xml:lang="de">Die Komponente kann nicht entfernt werden, da sie verwendet wird</message>
 </label>
 
 <label define="AM_SVG_ABSOLUTE_TOP_LEFT">
 	<message xml:lang="en">at the top left corner</message>
 	<message xml:lang="fr">dans le coin supérieur gauche</message>
+	<message xml:lang="es">en la esquina superior izquierda</message>
+	<message xml:lang="de">an linker oberer Ecke</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_BOTTOM_LEFT">
 	<message xml:lang="en">at the bottom left corner</message>
 	<message xml:lang="fr">dans le coin inférieur gauche</message>
+	<message xml:lang="es">en la esquina inferior izquierda</message>
+	<message xml:lang="de">an linker unterer Ecke</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_LEFT">
 	<message xml:lang="en">on the left</message>
 	<message xml:lang="fr">à gauche</message>
+	<message xml:lang="es">en la izquierda</message>
+	<message xml:lang="de">links</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_TOP_RIGHT">
 	<message xml:lang="en">at the top right corner</message>
 	<message xml:lang="fr">dans le coin supérieur droit</message>
+	<message xml:lang="es">en la esquina superior derecha</message>
+	<message xml:lang="de">an rechter oberer Ecke</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_BOTTOM_RIGHT">
 	<message xml:lang="en">at the bottom right corner</message>
 	<message xml:lang="fr">dans le coin inférieur droit</message>
+	<message xml:lang="es">en la esquina inferior derecha</message>
+	<message xml:lang="de">an rechter unterer Ecke</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_RIGHT">
 	<message xml:lang="en">on the right</message>
 	<message xml:lang="fr">à droite</message>
+	<message xml:lang="es">en la derecha</message>
+	<message xml:lang="de">rechts</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_TOP">
 	<message xml:lang="en">at the top</message>
 	<message xml:lang="fr">en haut</message>
+	<message xml:lang="es">arriba</message>
+	<message xml:lang="de">am Kopf</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_BOTTOM">
 	<message xml:lang="en">at the bottom</message>
 	<message xml:lang="fr">en bas</message>
+	<message xml:lang="es">abajo</message>
+	<message xml:lang="de">am Fuß</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_CENTER">
 	<message xml:lang="en">in the center</message>
 	<message xml:lang="fr">au centre</message>
+	<message xml:lang="es">al centro</message>
+	<message xml:lang="de">in der Mitte</message>
 </label>
 
 <label define="AM_SVG_RELATIVE_LEFT_ABOVE">
 	<message xml:lang="en">to the left and above</message>
 	<message xml:lang="fr">à gauche et au dessus de</message>
+	<message xml:lang="es">a la izquierda y arriba</message>
+	<message xml:lang="de">nach links oben</message>
 </label>
 <label define="AM_SVG_RELATIVE_LEFT_BELOW">
 	<message xml:lang="en">to the left and below</message>
 	<message xml:lang="fr">à gauche et en dessous de</message>
+	<message xml:lang="es">a la izquierda y abajo</message>
+	<message xml:lang="de">nach links unten</message>
 </label>
 <label define="AM_SVG_RELATIVE_LEFT">
 	<message xml:lang="en">to the left of</message>
 	<message xml:lang="fr">à gauche de</message>
+	<message xml:lang="es">a la izquierda</message>
+	<message xml:lang="de">links von</message>
 </label>
 <label define="AM_SVG_RELATIVE_RIGHT_ABOVE">
 	<message xml:lang="en">to the right and above</message>
 	<message xml:lang="fr">à droite et au dessus de</message>
+	<message xml:lang="es">a la derecha y arriba</message>
+	<message xml:lang="de">nach rechts oben</message>
 </label>
 <label define="AM_SVG_RELATIVE_RIGHT_BELOW">
 	<message xml:lang="en">to the right and below</message>
 	<message xml:lang="fr">à droite et en dessous de</message>
+	<message xml:lang="es">a la derecha y abajo</message>
+	<message xml:lang="de">nach rechts unten</message>
 </label>
 <label define="AM_SVG_RELATIVE_RIGHT">
 	<message xml:lang="en">to the right of</message>
 	<message xml:lang="fr">à droite de</message>
+	<message xml:lang="es">a la derecha</message>
+	<message xml:lang="de">rechts von</message>
 </label>
 <label define="AM_SVG_RELATIVE_ABOVE">
 	<message xml:lang="en">above</message>
 	<message xml:lang="fr">au dessus de</message>
+	<message xml:lang="es">arriba</message>
+	<message xml:lang="de">darüber</message>
 </label>
 <label define="AM_SVG_RELATIVE_BELOW">
 	<message xml:lang="en">below</message>
 	<message xml:lang="fr">en dessous de</message>
+	<message xml:lang="es">abajo</message>
+	<message xml:lang="de">darunter</message>
 </label>
 <label define="AM_SVG_RELATIVE_IN_FRONT_OF">
 	<message xml:lang="en">in front of</message>
 	<message xml:lang="fr">devant</message>
+	<message xml:lang="es">delante de</message>
+	<message xml:lang="de">vor</message>
 </label>
 <label define="AM_SVG_THERE_ARE">
 	<message xml:lang="en">There are %d objects: </message>
 	<message xml:lang="fr">Il y a %d objets : </message>
+	<message xml:lang="es">Hay %d objetos:</message>
+	<message xml:lang="de">Es gibt %d objekte:</message>
 </label>
 <label define="AM_TEMPLATE_NEWUSE">
 	<message xml:lang="en">New use</message>
 	<message xml:lang="fr">Nouvelle utilisation</message>
+	<message xml:lang="es">Nuevo uso</message>
+	<message xml:lang="de">Neu verwenden</message>
 </label>
 <label define="AM_TEMPLATE_OPTIONAL">
 	<message xml:lang="en">Optional use</message>
 	<message xml:lang="fr">Utilisation optionnelle</message>
+	<message xml:lang="es">uso opcional</message>
+	<message xml:lang="de">Optional verwenden</message>
 </label>
 <label define="AM_COLOR_SOURCE">
 	<message xml:lang="en">Color source code</message>
 	<message xml:lang="fr">Colorier le code source</message>
+	<message xml:lang="es">Color del código fuente</message>
+	<message xml:lang="de">Farbcode</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

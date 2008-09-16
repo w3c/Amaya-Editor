@@ -173,7 +173,10 @@ ThotBool IsParentBox (PtrBox pAncestor, PtrBox pChild)
         {
           // prevent a deadlock when pAb == pAb->AbEnclosing
           equal = pAb->AbBox == pAncestor || pAb == pAb->AbEnclosing;
-          pAb = pAb->AbEnclosing;
+          if (pAb->AbElement == NULL)
+            pAb = NULL;
+          else
+            pAb = pAb->AbEnclosing;
         }
       return (equal);
     }

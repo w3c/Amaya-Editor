@@ -372,13 +372,13 @@
 370 Étoile (4 branches)
 371 Étoile (5 branches)
 372 Étoile (6 branches)
-373 **AND
-374 **NAND
-375 **OR
-376 **NOR
-377 **XOR
-378 **XNOR
-379 **NOT
+373 AND
+374 NAND
+375 OR
+376 NOR
+377 XOR
+378 XNOR
+379 NOT
 380 Croix
 381 Cadre
 382 Anneau

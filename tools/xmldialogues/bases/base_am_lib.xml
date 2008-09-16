@@ -3895,6 +3895,8 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
 <label define="TIP_DIALOG_PREVIOUS_TIP">
 <message xml:lang="en">Previous tip</message>
  <message xml:lang="fr">Conseil précédent</message>
+<message xml:lang="es">Sugerencia anterior</message>
+ <message xml:lang="de">Vorhergehender Tipp</message>
 </label>
 <label define="TIP_DIALOG_NEXT_TIP">
 <message xml:lang="en">Next tip</message>
@@ -3916,6 +3918,8 @@ xml:lang="ja">エラーは発見されませんでした</message></label>
 <message xml:lang="en">Close</message>
  <message xml:lang="fr">Fermer</message>
  <message xml:lang="ja">閉じる</message></label>
+<message xml:lang="es">Cerrar</message>
+ <message xml:lang="de">Schließen</message>
 <label define="TIP_AMAYA_PROFILES">
 <message xml:lang="en">Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.</message>
  <message xml:lang="fr">Amaya s'adapte à vos besoins : cinq profils sont fournis avec différents ensembles de menus et de barres d'outils. Voir les Préférences.</message>
@@ -4070,31 +4074,44 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 <label define="TIP_LINK_TARGET">
 <message xml:lang="en">If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.</message>
 <message xml:lang="fr">Si vous activez "Voir les cibles" dans le menu "Vues", des cibles sont affichées en vue formatée. Cela est pratique pour la création de lien : une cible peut être choisie en cliquant dessus.</message>
+<message xml:lang="es">Si activa "Destinos" en el menú "Ver", se muestran los destinos en la vista formateada. Esto resulta útil para la creación de enlaces: los destinos se seleccionan haciendo clic en ellos.</message>
+<message xml:lang="de">Falls Sie "Ziele anzeigen" im "Darstellungen"-Menü wählen, werde sie formatiert dargestellt. Dies ist günstig bei der Erzeugung von Verweisen: Ein Ziel kan durch Klicken ausgewählt werden
+</message>
 </label>
 
 <label define="TIP_SVG_ROTATE">
 <message xml:lang="en">When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.</message>
 <message xml:lang="fr">Lors de la rotation d'un objet SVG, le centre est indiqué par une croix. Il peut être déplacé à l'aide de la souris.</message>
+<message xml:lang="es">Al rotar un objeto SVG, el centro se indica con una cruz. Puede desplazarlo con el ratón.</message>
+<message xml:lang="de">Wenn Sie  ein SVG-Objekt drehen, wird der Drehpunkt durch ein Kreuz angezeigt. Sie können die Maus zum Bewegen verwenden.</message>
 </label>
 
 <label define="TIP_SVG_SHAPE_EDIT">
 <message xml:lang="en">Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For &lt;rect/&gt; element, red circles give a control on radius of rounded corners.</message>
 <message xml:lang="fr">Les figures élémentaires SVG ont des poignées qui peuvent être utilisées pour les éditer. Des triangles bleus ou des carrés verts permettent de changer leur taille. Pour les éléments &lt;rect/&gt;, des ronds rouges donnent un controle sur les rayons des coins arrondis.</message>
+<message xml:lang="es">Las formas básicas SVG tienen elementos que permiten editarlos. Los triángulos azules o los cuadrados verdes permiten cambiar su tamaño. En los elementos rectangulares, los círculos rojos permiten controlar el radio de las esquinas redondeadas.</message>
+<message xml:lang="de">SVG-Grundformen haben Marker die zur Bearbeitung der Form verwendet werden können. Blaue Dreiecke oder grüne Quadrate ermöglichen es die Größe der Form zu ändern. Bei <rect/>-Elementen gibt es rote Kreise um den Radius abgerundeter Ecken zu bearbeiten.</message>
 </label>
 
 <label define="TIP_SVG_LINES">
 <message xml:lang="en">For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.</message>
 <message xml:lang="fr">Pour les dessins SVG, les lignes sont dessinées avec une précision de 15° si vous pressez le bouton shift. Cela est utile si vous souhaitez dessiner des lignes droites.</message>
+<message xml:lang="es">Al dibujar SVG, las líneas se crean con una precisión de 15º si se mantiene pulsada la tecla Shift.Esto resulta útil para dibujar líneas rectas</message>
+<message xml:lang="de">Bei SVG-Zeichnungen werden Linien mit einer Genauigkeit von 15º erstellt wenn Sie dei Hochtaste drücken. Das ist sehr nützlich, wenn Sie gerade Linien zeichnen wollen.</message>
 </label>
 
 <label define="TIP_SVG_ASPECT_RATIO">
 <message xml:lang="en">When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.</message>
 <message xml:lang="fr">Lors du redimensionnement d'une image ou d'un objet SVG, l'appui de la touche shift permet de préserver le rapport des dimensions.</message>
+<message xml:lang="es">Al modificar el tamaño de una imagen o de un objeto SVG, si se mantiene pulsada la tecla Shift se conservan sus proporciones.</message>
+<message xml:lang="de">Beim Vergrößern und Verkleinern von Bildern oder SVG-Objekten erhält das Drücken der Hochtaste die Seitenverhältnisse</message>
 </label>
 
 <label define="TIP_LANGUAGES">
 <message xml:lang="en">Use Edit&gt;Preferences&gt;Dialogue Language to choose the language of the user interface.</message>
 <message xml:lang="fr">Utilisez Édition&gt;Préférences&gt;Langue des dialogues pour choisir la langue de l'interface utilisateur.</message>
+<message xml:lang="es">Utilice el menú Editar > Preferencias > Idioma de diálogo para elegir el idioma del interfaz de usuario.</message>
+<message xml:lang="de">Verwenden Sie Bearbeiten>Einstellungen>Sprache zur Auswahl der Sprache</message>
 </label>
 
 <label define="Classic">
@@ -4126,587 +4143,943 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 <label define="TMSG_SVG_Information">
   <message xml:lang="en">Title/Description</message>
   <message xml:lang="fr">Titre/Description</message>
+  <message xml:lang="es">Descripción / Título</message>
+  <message xml:lang="de">Titel / Beschreibung</message>
 </label>
 <label define="TMSG_SVG_GenerateDescription">
   <message xml:lang="en">Generate a description</message>
   <message xml:lang="fr">Générer une descripion</message>
+  <message xml:lang="es">Generar una descripción</message>
+  <message xml:lang="de">Erstelle eine Beschreibung</message>
 </label>
 
 <label define="TMSG_SVG_Square">
   <message xml:lang="en">Square</message>
   <message xml:lang="fr">Carré</message>
   <message xml:lang="es">Cuadrado</message>
+  <message xml:lang="de">Quadrat</message>
 </label>
 <label define="TMSG_SVG_RoundedSquare">
   <message xml:lang="en">Rounded Square</message>
   <message xml:lang="fr">Carré à coins arrondis</message>
+  <message xml:lang="es">Cuadrado redondeado</message>
+  <message xml:lang="de">Quadrat mit abgerundeten Ecken</message>
 </label>
 <label define="TMSG_SVG_Rectangle">
   <message xml:lang="en">Rectangle</message>
   <message xml:lang="fr">Rectangle</message>
   <message xml:lang="es">Rectángulo</message>
+  <message xml:lang="de">Rechteck</message>
 </label>
 <label define="TMSG_SVG_RoundedRectangle">
   <message xml:lang="en">Rounded rectangle</message>
   <message xml:lang="fr">Rectangle à coins arrondis</message>
+  <message xml:lang="es">Rectángulo redondeado</message>
+  <message xml:lang="de">Rechteck mit abgerundeten Ecken</message>
 </label>
 <label define="TMSG_SVG_Diamond">
   <message xml:lang="en">Diamond</message>
   <message xml:lang="fr">Losange</message>
   <message xml:lang="es">Rombo</message>
+  <message xml:lang="de">Raute</message>
 </label>
 <label define="TMSG_SVG_Parallelogram">
   <message xml:lang="en">Parallelogram</message>
   <message xml:lang="fr">Parallelogramme</message>
+  <message xml:lang="es">Paralelogramo</message>
+  <message xml:lang="de">Parallelogramm</message>
 </label>
 <label define="TMSG_SVG_Trapezium">
   <message xml:lang="en">Trapezium</message>
   <message xml:lang="fr">Trapèze</message>
+  <message xml:lang="es">Trapecio</message>
+  <message xml:lang="de">Trapezoid</message>
 </label>
 <label define="TMSG_SVG_EquilateralTriangle">
   <message xml:lang="en">Equilateral triangle</message>
   <message xml:lang="fr">Triangle équilatéral</message>
   <message xml:lang="es">Triángulo</message>
+  <message xml:lang="de">Gleichseitiges Dreieck</message>
 </label>
 <label define="TMSG_SVG_IsoscelesTriangle">
   <message xml:lang="en">Isosceles triangle</message>
   <message xml:lang="fr">Triangle isocèle</message>
   <message xml:lang="es">Triángulo</message>
+  <message xml:lang="de">Gleichschenkeliges Dreieck</message>
 </label>
 <label define="TMSG_SVG_RightTriangle">
   <message xml:lang="en">Right triangle</message>
   <message xml:lang="fr">Triangle rectangle</message>
   <message xml:lang="es">Triángulo</message>
+  <message xml:lang="de">Rechtwinkeliges Dreieck</message>
 </label>
 <label define="TMSG_SVG_Circle">
   <message xml:lang="en">Circle</message>
   <message xml:lang="fr">Cercle</message>
   <message xml:lang="es">Círculo</message>
+  <message xml:lang="de">Kreis</message>
 </label>
 <label define="TMSG_SVG_Ellipse">
   <message xml:lang="en">Ellipse</message>
   <message xml:lang="fr">Ellipse</message>
   <message xml:lang="es">Elipse</message>
+  <message xml:lang="de">Elipse</message>
 </label>
 
 <label define="TMSG_SVG_Line">
   <message xml:lang="en">Line</message>
   <message xml:lang="fr">Ligne</message>
   <message xml:lang="es">Linea</message>
+  <message xml:lang="de">Linie</message>
 </label>
 <label define="TMSG_SVG_SimpleArrow">
   <message xml:lang="en">Arrow</message>
   <message xml:lang="fr">Flèche</message>
   <message xml:lang="es">Flecha</message>
+  <message xml:lang="de">Pfeil</message>
 </label>
 <label define="TMSG_SVG_DoubleArrow">
   <message xml:lang="en">Double Arrow</message>
   <message xml:lang="fr">Flèche double</message>
   <message xml:lang="es">Flecha</message>
+  <message xml:lang="de">Doppelpfeil</message>
 </label>
 <label define="TMSG_SVG_Zigzag">
   <message xml:lang="en">Zigzag</message>
   <message xml:lang="fr">Zigzag</message>
+  <message xml:lang="es">Zigzag</message>
+  <message xml:lang="de">Zickzack</message>
 </label>
 
 <label define="TMSG_SVG_Group">
   <message xml:lang="en">Group</message>
   <message xml:lang="fr">Grouper</message>
+  <message xml:lang="es">Agrupar</message>
+  <message xml:lang="de">Gruppe</message>
 </label>
 <label define="TMSG_SVG_Ungroup">
   <message xml:lang="en">Ungroup</message>
-  <message xml:lang="fr">Dégrouper</message></label>
+  <message xml:lang="fr">Dégrouper</message>
+  <message xml:lang="es">Desagrupar</message>
+  <message xml:lang="de">Untergruppe</message>
+</label>
 <label define="TMSG_SVG_BringToFront">
   <message xml:lang="en">Bring to front</message>
-  <message xml:lang="fr">Mettre au dessus</message></label>
+  <message xml:lang="fr">Mettre au dessus</message>
+  <message xml:lang="es">Traer al frente</message>
+  <message xml:lang="de">Ganz nach vorn</message>
+</label>
 <label define="TMSG_SVG_SendToBack">
   <message xml:lang="en">Send to back</message>
-  <message xml:lang="fr">Mettre en dessous</message></label>
+  <message xml:lang="fr">Mettre en dessous</message>
+  <message xml:lang="es">Enviar al fondo</message>
+  <message xml:lang="de">Ganz nach hinten</message>
+</label>
 <label define="TMSG_SVG_BringForward">
   <message xml:lang="en">One level up</message>
-  <message xml:lang="fr">Monter d'un niveau</message></label>
+  <message xml:lang="fr">Monter d'un niveau</message>
+  <message xml:lang="es">Avanzar uno</message>
+  <message xml:lang="de">Eine Ebene höher</message>
+</label>
 <label define="TMSG_SVG_SendBackward">
   <message xml:lang="en">One level down</message>
-  <message xml:lang="fr">Descendre d'un niveau</message></label>
+  <message xml:lang="fr">Descendre d'un niveau</message>
+  <message xml:lang="es">Retroceder uno</message>
+  <message xml:lang="de">Eine Ebene tiefer</message>
+</label>
 
 <label define="TMSG_SVG_RotateAntiClockwise">
   <message xml:lang="en">90° left</message>
   <message xml:lang="fr">90° à gauche</message>
+  <message xml:lang="es">90º izquierda</message>
+  <message xml:lang="de">90° links herum</message>
 </label>
 <label define="TMSG_SVG_RotateClockwise">
   <message xml:lang="en">90° right</message>
   <message xml:lang="fr">90° à droite</message>
+  <message xml:lang="es">90º derecha</message>
+  <message xml:lang="de">90° rechts herum</message>
 </label>
 <label define="TMSG_SVG_Rotate">
   <message xml:lang="en">Rotate</message>
   <message xml:lang="fr">Tourner</message>
+  <message xml:lang="es">Rotar</message>
+  <message xml:lang="de">Drehen</message>
 </label>
 <label define="TMSG_SVG_FlipVertically">
   <message xml:lang="en">Vertical symmetry</message>
   <message xml:lang="fr">Symétrie verticale</message>
+  <message xml:lang="es">Simetría vertical</message>
+  <message xml:lang="de">Vertikal Spiegeln</message>
 </label>
 <label define="TMSG_SVG_FlipHorizontally">
   <message xml:lang="en">Horizontal symmetry</message>
   <message xml:lang="fr">Symétrie horizontale</message>
+  <message xml:lang="es">Simetría horizontal</message>
+  <message xml:lang="de">Horizontal Spiegeln</message>
 </label>
 <label define="TMSG_SVG_Scale">
   <message xml:lang="en">Scale</message>
   <message xml:lang="fr">Redimensionner</message>
+  <message xml:lang="es">Escalar</message>
+  <message xml:lang="de">Skalieren</message>
 </label>
 <label define="TMSG_SVG_Skew">
   <message xml:lang="en">Skew</message>
   <message xml:lang="fr">Incliner</message>
+  <message xml:lang="es">Inclinar</message>
+  <message xml:lang="de">Schrägstellen</message>
 </label>
 <label define="TMSG_SVG_Translate">
   <message xml:lang="en">Move</message>
   <message xml:lang="fr">Déplacer</message>
+  <message xml:lang="es">Mover</message>
+  <message xml:lang="de">Verschieben</message>
 </label>
 
 <label define="TMSG_SVG_AlignBottom">
   <message xml:lang="en">Align bottom</message>
   <message xml:lang="fr">Aligner bord inférieur</message>
+  <message xml:lang="es">Alinear abajo</message>
+  <message xml:lang="de">Am unteren Rand ausrichten</message>
 </label>
 <label define="TMSG_SVG_AlignCenter">
   <message xml:lang="en">Align center</message>
   <message xml:lang="fr">Aligner axe vertical</message>
+  <message xml:lang="es">Alinear al centro</message>
+  <message xml:lang="de">Mittig ausrichten</message>
 </label>
 <label define="TMSG_SVG_AlignLeft">
   <message xml:lang="en">Align left</message>
   <message xml:lang="fr">Aligner bord gauche</message>
+  <message xml:lang="es">Alinear a la izquierda</message>
+  <message xml:lang="de">Am linken Rand ausrichten</message>
 </label>
 <label define="TMSG_SVG_AlignMiddle">
   <message xml:lang="en">Align middle</message>
   <message xml:lang="fr">Aligner axe horizontal</message>
+  <message xml:lang="es">Alinear al centro</message>
+  <message xml:lang="de">Mittig ausrichten</message>
 </label>
 <label define="TMSG_SVG_AlignRight">
   <message xml:lang="en">Align right</message>
   <message xml:lang="fr">Aligner bord droit</message>
+  <message xml:lang="es">Alinear a la derecha</message>
+  <message xml:lang="de">Am rechten Rand ausrichten</message>
 </label>
 <label define="TMSG_SVG_AlignTop">
   <message xml:lang="en">Align top</message>
   <message xml:lang="fr">Aligner bord supérieur</message>
+  <message xml:lang="de">Am oberen Rand ausrichten</message>
+  <message xml:lang="es">Alinear arriba</message>
 </label>
 
 <label define="TMSG_SVG_DistributeBottom">
   <message xml:lang="en">Distribute bottom</message>
   <message xml:lang="fr">Distribuer bords inférieurs</message>
+  <message xml:lang="es">Distribuir abajo</message>
+  <message xml:lang="de">Verteilen Sie Unterseite</message>
 </label>
 <label define="TMSG_SVG_DistributeCenter">
   <message xml:lang="en">Distribute center</message>
   <message xml:lang="fr">Distribuer axes verticaux</message>
+  <message xml:lang="es">Distribuir al centro</message>
+  <message xml:lang="de">Verteilen Sie Mitte</message>
 </label>
 <label define="TMSG_SVG_DistributeLeft">
   <message xml:lang="en">Distribute left</message>
   <message xml:lang="fr">Distribuer bords gauches</message>
+  <message xml:lang="es">Distribuir a la izquierda</message>
+  <message xml:lang="de">Verteilen Sie sich nach links</message>
 </label>
 <label define="TMSG_SVG_DistributeMiddle">
   <message xml:lang="en">Distribute middle</message>
   <message xml:lang="fr">Distribuer axes verticaux</message>
+  <message xml:lang="es">Distribuir al centro</message>
+  <message xml:lang="de">Verteilen Sie Mitte</message>
 </label>
 <label define="TMSG_SVG_DistributeRight">
   <message xml:lang="en">Distribute right</message>
   <message xml:lang="fr">Distribuer bords droits</message>
+  <message xml:lang="es">Distribuir a la derecha</message>
+  <message xml:lang="de">Verteilen Sie sich nach rechts</message>
 </label>
 <label define="TMSG_SVG_DistributeTop">
   <message xml:lang="en">Distribute top</message>
   <message xml:lang="fr">Distribuer bords supérieurs</message>
+  <message xml:lang="es">Distribuir arriba</message>
+  <message xml:lang="de">Verteilen Sie Oberseite</message>
 </label>
 <label define="TMSG_SVG_DistributeVSpacing">
   <message xml:lang="en">Distribute vertical spacing</message>
   <message xml:lang="fr">Distribuer espacements verticaux</message>
+  <message xml:lang="es">Distribuir espacio vertical</message>
+  <message xml:lang="de">Verteilen Sie Zeilenvorschub</message>
 </label>
 <label define="TMSG_SVG_DistributeHSpacing">
   <message xml:lang="en">Distribute horizontal spacing</message>
   <message xml:lang="fr">Distribuer espacements horizontaux</message>
+  <message xml:lang="es">Distribuir espacio horizontal</message>
+  <message xml:lang="de">Verteilen Sie horizontalen Zeichenabstand</message>
 </label>
 
 <label define="TMSG_SVG_ClosedBezier">
   <message xml:lang="en">Closed Bezier curve</message>
   <message xml:lang="fr">Courbe de Bézier fermée</message>
+  <message xml:lang="es">Curva Bezier cerrrada</message>
+  <message xml:lang="de">Geschlossene Bezierkurve</message>
 </label>
 <label define="TMSG_SVG_Bezier">
   <message xml:lang="en">Bezier curve</message>
   <message xml:lang="fr">Courbe de Bézier</message>
+  <message xml:lang="es">Curva Bezier</message>
+  <message xml:lang="de">Bezierkurve</message>
 </label>
 <label define="TMSG_SVG_Polyline">
   <message xml:lang="en">Polyline</message>
   <message xml:lang="fr">Segments de droite (&lt;polyline/&gt;)</message>
+  <message xml:lang="es">Polilínea</message>
+  <message xml:lang="de">Linienzug</message>
 </label>
 <label define="TMSG_SVG_Polygon">
   <message xml:lang="en">Polygon</message>
   <message xml:lang="fr">Polygone</message>
+  <message xml:lang="es">Bild</message>
+  <message xml:lang="de">Vieleck</message>
 </label>
 
 <label define="TMSG_SVG_ForeigObject">
   <message xml:lang="en">Foreign Object</message>
   <message xml:lang="fr">Objet étranger (&lt;foreignObject/&gt;)</message>
+  <message xml:lang="es">Objeto externo</message>
+  <message xml:lang="de">fremdes Objekt</message>
 </label>
 <label define="TMSG_SVG_Image">
   <message xml:lang="en">Image</message>
   <message xml:lang="fr">Image</message>
+  <message xml:lang="es">Imagen</message>
+  <message xml:lang="de">Bild</message>
 </label>
 <label define="TMSG_SVG_SvgCanvas">
   <message xml:lang="en">SVG Canvas</message>
   <message xml:lang="fr">Canevas SVG</message>
+  <message xml:lang="es">Lienzo SVG</message>
+  <message xml:lang="de">SVG Leinwand</message>
 </label>
 <label define="TMSG_SVG_Text">
   <message xml:lang="en">Text</message>
   <message xml:lang="fr">Texte</message>
   <message xml:lang="es">Texto</message>
+  <message xml:lang="de">Text</message>
 </label>
 
 <label define="TMSG_SVG_Cone">
   <message xml:lang="en">Cone</message>
   <message xml:lang="fr">Cône</message>
+  <message xml:lang="es">Cono</message>
+  <message xml:lang="de">Kegel</message>
 </label>
 <label define="TMSG_SVG_Cube">
   <message xml:lang="en">Cube</message>
   <message xml:lang="fr">Cube</message>
   <message xml:lang="es">Cubo</message>
+  <message xml:lang="de">Würfel</message>
 </label>
 <label define="TMSG_SVG_Cylinder">
   <message xml:lang="en">Cylinder</message>
   <message xml:lang="fr">Cylindre</message>
   <message xml:lang="es">Cilindro</message>
+  <message xml:lang="de">Zylinder</message>
 </label>
 <label define="TMSG_SVG_Octahedron">
   <message xml:lang="en">Octahedron</message>
   <message xml:lang="fr">Octaèdre</message>
+  <message xml:lang="es">Octaedro</message>
+  <message xml:lang="de">Oktaeder</message>
 </label>
 <label define="TMSG_SVG_Parallelepiped">
   <message xml:lang="en">Parallelepiped</message>
   <message xml:lang="fr">Parallèlépidède</message>
+  <message xml:lang="es">Paralelepípedo</message>
+  <message xml:lang="de">Spat</message>
 </label>
 <label define="TMSG_SVG_Pyramid">
   <message xml:lang="en">Pyramid</message>
   <message xml:lang="fr">Pyramide</message>
+  <message xml:lang="es">Pirámide</message>
+  <message xml:lang="de">Pyramide</message>
 </label>
 <label define="TMSG_SVG_Beaker">
   <message xml:lang="en">Beaker</message>
   <message xml:lang="fr">Bécher</message>
+  <message xml:lang="es">Vaso</message>
+  <message xml:lang="de">Becher</message>
 </label>
 <label define="TMSG_SVG_Funnel">
   <message xml:lang="en">Funnel</message>
   <message xml:lang="fr">Entonnoir</message>
+  <message xml:lang="es">Embudo</message>
+  <message xml:lang="de">Trichter</message>
 </label>
 <label define="TMSG_SVG_Bunsen_burner">
   <message xml:lang="en">Bunsen burner</message>
   <message xml:lang="fr">Bec bunsen</message>
+  <message xml:lang="es">Quemador Bunsen</message>
+  <message xml:lang="de">Bunsenbrenner</message>
 </label>
 <label define="TMSG_SVG_Buchner_flask">
   <message xml:lang="en">Buchner flask</message>
   <message xml:lang="fr">Fiole à vide</message>
+  <message xml:lang="es">Matraz Buchner</message>
+  <message xml:lang="de">Büchnerflasche</message>
 </label>
 <label define="TMSG_SVG_Boiling_flask">
   <message xml:lang="en">Boiling flask</message>
   <message xml:lang="fr">Ballon</message>
+  <message xml:lang="es">Matraz de ebullición</message>
+  <message xml:lang="de">Kochkolben</message>
 </label>
 <label define="TMSG_SVG_Burette">
   <message xml:lang="en">Burette</message>
   <message xml:lang="fr">Burette</message>
+  <message xml:lang="es">Bureta</message>
+  <message xml:lang="de">Bürette</message>
 </label>
 <label define="TMSG_SVG_Erlenmeyer_flask">
   <message xml:lang="en">Erlenmeyer flask</message>
   <message xml:lang="fr">Erlenmeyer</message>
+  <message xml:lang="es">Matraz de Erlenmeyer</message>
+  <message xml:lang="de">Erlenmeyer Kolben</message>
 </label>
 <label define="TMSG_SVG_Test_tube">
   <message xml:lang="en">Test tube</message>
   <message xml:lang="fr">Tube à essai</message>
+  <message xml:lang="es">Tubo de ensayo</message>
+  <message xml:lang="de">Reagenzglas</message>
 </label>
 <label define="TMSG_SVG_Pipette">
   <message xml:lang="en">Pipette</message>
   <message xml:lang="fr">Pipette</message>
+  <message xml:lang="es">Pipeta</message>
+  <message xml:lang="de">Pipette</message>
 </label>
 <label define="TMSG_SVG_Rectangular">
   <message xml:lang="en">Rectangular</message>
   <message xml:lang="fr">Rectangulaire</message>
+  <message xml:lang="es">Rectangular</message>
+  <message xml:lang="de">Rechteck</message>
 </label>
 <label define="TMSG_SVG_Rounded_rectangular">
   <message xml:lang="en">Rounded rectangular</message>
   <message xml:lang="fr">À coins arrondis</message>
+  <message xml:lang="es">Rectangular redondeada</message>
+  <message xml:lang="de">Rechteck mit abgerundeten Ecken</message>
 </label>
 <label define="TMSG_SVG_Round">
   <message xml:lang="en">Round</message>
   <message xml:lang="fr">Ronde</message>
+  <message xml:lang="es">Redondear</message>
+  <message xml:lang="de">Rund</message>
 </label>
 <label define="TMSG_SVG_Scream">
   <message xml:lang="en">Scream</message>
   <message xml:lang="fr">Cri</message>
+  <message xml:lang="es">Grito</message>
+  <message xml:lang="de">Schrei</message>
 </label>
 <label define="TMSG_SVG_Thought">
   <message xml:lang="en">Thought</message>
   <message xml:lang="fr">Pensée</message>
+  <message xml:lang="es">Pensamiento</message>
+  <message xml:lang="de">Gedanke</message>
 </label>
 <label define="TMSG_SVG_Capacitor">
   <message xml:lang="en">Capacitor</message>
   <message xml:lang="fr">Condensateur</message>
+  <message xml:lang="es">Condensadores</message>
+  <message xml:lang="de">Kondensator</message>
 </label>
 <label define="TMSG_SVG_Current_source">
   <message xml:lang="en">Current source</message>
   <message xml:lang="fr">Source de courant</message>
+  <message xml:lang="es">Fuente actual</message>
+  <message xml:lang="de">Stromquelle</message>
 </label>
 <label define="TMSG_SVG_Diode">
   <message xml:lang="en">Diode</message>
   <message xml:lang="fr">Diode</message>
+  <message xml:lang="es">Diodo</message>
+  <message xml:lang="de">Diode</message>
 </label>
 <label define="TMSG_SVG_Ground_point">
   <message xml:lang="en">Ground Point</message>
   <message xml:lang="fr">Terre</message>
+  <message xml:lang="es">Toma de tierra</message>
+  <message xml:lang="de">Masse</message>
 </label>
 <label define="TMSG_SVG_Inductor">
   <message xml:lang="en">Inductor</message>
   <message xml:lang="fr">Inductance</message>
+  <message xml:lang="es">Inductor</message>
+  <message xml:lang="de">Induktor</message>
 </label>
 <label define="TMSG_SVG_Led">
   <message xml:lang="en">LED</message>
   <message xml:lang="fr">DEL</message>
+  <message xml:lang="es">LED</message>
+  <message xml:lang="de">LED</message>
 </label>
 <label define="TMSG_SVG_Op_amp">
   <message xml:lang="en">Op-amp</message>
   <message xml:lang="fr">Ampli-op</message>
+  <message xml:lang="es">Amplificador operacional</message>
+  <message xml:lang="de">Operationsverstärker</message>
 </label>
 <label define="TMSG_SVG_Resistor">
   <message xml:lang="en">Resistor</message>
   <message xml:lang="fr">Résistance</message>
+  <message xml:lang="es">Resistencia</message>
+  <message xml:lang="de">Widerstand</message>
 </label>
 <label define="TMSG_SVG_Switch">
   <message xml:lang="en">Switch</message>
   <message xml:lang="fr">Interrupteur</message>
+  <message xml:lang="es">Interruptor</message>
+  <message xml:lang="de">Schalter</message>
 </label>
 <label define="TMSG_SVG_Transistor">
   <message xml:lang="en">Transistor</message>
   <message xml:lang="fr">Transistor</message>
+  <message xml:lang="es">Transistor</message>
+  <message xml:lang="de">Transistor</message>
 </label>
 <label define="TMSG_SVG_Voltage_source">
   <message xml:lang="en">Voltage source</message>
   <message xml:lang="fr">Source de tension</message>
+  <message xml:lang="es">Fuente de tensión</message>
+  <message xml:lang="de">Spannungsquelle</message>
 </label>
 <label define="TMSG_SVG_Zener_diode">
   <message xml:lang="en">Zener diode</message>
   <message xml:lang="fr">Diode Zener</message>
+  <message xml:lang="es">Diodo Zener</message>
+  <message xml:lang="de">Zener-Diode</message>
 </label>
 <label define="TMSG_SVG_Pentagon">
   <message xml:lang="en">Pentagon</message>
   <message xml:lang="fr">Pentagone</message>
+  <message xml:lang="es">Pentágono</message>
+  <message xml:lang="de">Fünfeck</message>
 </label>
 <label define="TMSG_SVG_Hexagon">
   <message xml:lang="en">Hexagon</message>
   <message xml:lang="fr">Hexagone</message>
+  <message xml:lang="es">Hexágono</message>
+  <message xml:lang="de">Sechseck</message>
 </label>
 <label define="TMSG_SVG_Heptagon">
   <message xml:lang="en">Heptagon</message>
   <message xml:lang="fr">Heptagone</message>
+  <message xml:lang="es">Heptágono</message>
+  <message xml:lang="de">Siebeneck</message>
 </label>
 <label define="TMSG_SVG_Octogon">
   <message xml:lang="en">Octogon</message>
   <message xml:lang="fr">Octogone</message>
+  <message xml:lang="es">Octógono</message>
+  <message xml:lang="de">Achteck</message>
 </label>
 <label define="TMSG_SVG_Star4">
   <message xml:lang="en">Star (4 branches)</message>
   <message xml:lang="fr">Étoile (4 branches)</message>
+  <message xml:lang="es">Estrella (4 puntas)</message>
+  <message xml:lang="de">Stern (4 Zacken)</message>
 </label>
 <label define="TMSG_SVG_Star5">
   <message xml:lang="en">Star (5 branches)</message>
   <message xml:lang="fr">Étoile (5 branches)</message>
+  <message xml:lang="es">Estrella (5 puntas)</message>
+  <message xml:lang="de">Stern (5 Zacken)</message>
 </label>
 <label define="TMSG_SVG_Star6">
   <message xml:lang="en">Star (6 branches)</message>
   <message xml:lang="fr">Étoile (6 branches)</message>
+  <message xml:lang="es">Estrella (6 puntas)</message>
+  <message xml:lang="de">Stern (6 Zacken)</message>
 </label>
 
 <label define="TMSG_SVG_AND">
   <message xml:lang="en">AND</message>
+  <message xml:lang="fr">AND</message>
+  <message xml:lang="es">AND</message>
+  <message xml:lang="de">AND</message>
+  <message xml:lang="it">AND</message>
+  <message xml:lang="tr">AND</message>
+  <message xml:lang="pt">AND</message>
+  <message xml:lang="fi">AND</message>
+  <message xml:lang="ru">AND</message>
+  <message xml:lang="hu">AND</message>
+  <message xml:lang="ka">AND</message>
+  <message xml:lang="cn">AND</message>
+  <message xml:lang="tw">AND</message>
+  <message xml:lang="sk">AND</message>
+  <message xml:lang="ja">AND</message>
 </label>
 <label define="TMSG_SVG_NAND">
   <message xml:lang="en">NAND</message>
+  <message xml:lang="fr">NAND</message>
+  <message xml:lang="es">NAND</message>
+  <message xml:lang="de">NAND</message>
+  <message xml:lang="it">NAND</message>
+  <message xml:lang="tr">NAND</message>
+  <message xml:lang="pt">NAND</message>
+  <message xml:lang="fi">NAND</message>
+  <message xml:lang="ru">NAND</message>
+  <message xml:lang="hu">NAND</message>
+  <message xml:lang="ka">NAND</message>
+  <message xml:lang="cn">NAND</message>
+  <message xml:lang="tw">NAND</message>
+  <message xml:lang="sk">NAND</message>
+  <message xml:lang="ja">NAND</message>
 </label>
 <label define="TMSG_SVG_OR">
   <message xml:lang="en">OR</message>
+  <message xml:lang="fr">OR</message>
+  <message xml:lang="es">OR</message>
+  <message xml:lang="de">OR</message>
+  <message xml:lang="it">OR</message>
+  <message xml:lang="tr">OR</message>
+  <message xml:lang="pt">OR</message>
+  <message xml:lang="fi">OR</message>
+  <message xml:lang="ru">OR</message>
+  <message xml:lang="hu">OR</message>
+  <message xml:lang="ka">OR</message>
+  <message xml:lang="cn">OR</message>
+  <message xml:lang="tw">OR</message>
+  <message xml:lang="sk">OR</message>
+  <message xml:lang="ja">OR</message>
 </label>
 <label define="TMSG_SVG_NOR">
   <message xml:lang="en">NOR</message>
+  <message xml:lang="fr">NOR</message>
+  <message xml:lang="es">NOR</message>
+  <message xml:lang="de">NOR</message>
+  <message xml:lang="it">NOR</message>
+  <message xml:lang="tr">NOR</message>
+  <message xml:lang="pt">NOR</message>
+  <message xml:lang="fi">NOR</message>
+  <message xml:lang="ru">NOR</message>
+  <message xml:lang="hu">NOR</message>
+  <message xml:lang="ka">NOR</message>
+  <message xml:lang="cn">NOR</message>
+  <message xml:lang="tw">NOR</message>
+  <message xml:lang="sk">NOR</message>
+  <message xml:lang="ja">NOR</message>
 </label>
 <label define="TMSG_SVG_XOR">
   <message xml:lang="en">XOR</message>
+  <message xml:lang="fr">XOR</message>
+  <message xml:lang="es">XOR</message>
+  <message xml:lang="de">XOR</message>
+  <message xml:lang="it">XOR</message>
+  <message xml:lang="tr">XOR</message>
+  <message xml:lang="pt">XOR</message>
+  <message xml:lang="fi">XOR</message>
+  <message xml:lang="ru">XOR</message>
+  <message xml:lang="hu">XOR</message>
+  <message xml:lang="ka">XOR</message>
+  <message xml:lang="cn">XOR</message>
+  <message xml:lang="tw">XOR</message>
+  <message xml:lang="sk">XOR</message>
+  <message xml:lang="ja">XOR</message>
 </label>
 <label define="TMSG_SVG_XNOR">
   <message xml:lang="en">XNOR</message>
+  <message xml:lang="fr">XNOR</message>
+  <message xml:lang="es">XNOR</message>
+  <message xml:lang="de">XNOR</message>
+  <message xml:lang="it">XNOR</message>
+  <message xml:lang="tr">XNOR</message>
+  <message xml:lang="pt">XNOR</message>
+  <message xml:lang="fi">XNOR</message>
+  <message xml:lang="ru">XNOR</message>
+  <message xml:lang="hu">XNOR</message>
+  <message xml:lang="ka">XNOR</message>
+  <message xml:lang="cn">XNOR</message>
+  <message xml:lang="tw">XNOR</message>
+  <message xml:lang="sk">XNOR</message>
+  <message xml:lang="ja">XNOR</message>
 </label>
 <label define="TMSG_SVG_NOT">
   <message xml:lang="en">NOT</message>
+  <message xml:lang="fr">NOT</message>
+  <message xml:lang="es">NOT</message>
+  <message xml:lang="de">NOT</message>
+  <message xml:lang="it">NOT</message>
+  <message xml:lang="tr">NOT</message>
+  <message xml:lang="pt">NOT</message>
+  <message xml:lang="fi">NOT</message>
+  <message xml:lang="ru">NOT</message>
+  <message xml:lang="hu">NOT</message>
+  <message xml:lang="ka">NOT</message>
+  <message xml:lang="cn">NOT</message>
+  <message xml:lang="tw">NOT</message>
+  <message xml:lang="sk">NOT</message>
+  <message xml:lang="ja">NOT</message>
 </label>
 
 <label define="TMSG_SVG_Cross">
   <message xml:lang="en">Cross</message>
   <message xml:lang="fr">Croix</message>
+  <message xml:lang="es">Cruz</message>
+  <message xml:lang="de">Kreuz</message>
 </label>
 <label define="TMSG_SVG_Frame">
   <message xml:lang="en">Frame</message>
   <message xml:lang="fr">Cadre</message>
+  <message xml:lang="es">Marco</message>
+  <message xml:lang="de">Rand</message>
 </label>
 <label define="TMSG_SVG_Ring">
   <message xml:lang="en">Ring</message>
   <message xml:lang="fr">Anneau</message>
+  <message xml:lang="es">Anillo</message>
+  <message xml:lang="de">Ring</message>
 </label>
 <label define="TMSG_SVG_Cloud">
   <message xml:lang="en">Cloud</message>
   <message xml:lang="fr">Nuage</message>
+  <message xml:lang="es">Nube</message>
+  <message xml:lang="de">Wolke</message>
 </label>
 <label define="TMSG_SVG_Scroll">
   <message xml:lang="en">Scroll</message>
   <message xml:lang="fr">Parchemin</message>
+  <message xml:lang="es">Desplazar</message>
+  <message xml:lang="de">Papierrolle</message>
 </label>
 <label define="TMSG_SVG_Sun">
   <message xml:lang="en">Sun</message>
   <message xml:lang="fr">Soleil</message>
   <message xml:lang="es">Sol</message>
+  <message xml:lang="de">Sonne</message>
 </label>
 <label define="TMSG_SVG_Lightning_Bolt">
   <message xml:lang="en">Lightning_Bolt</message>
   <message xml:lang="fr">Éclair</message>
+  <message xml:lang="es">Rayo</message>
+  <message xml:lang="de">Blitz</message>
 </label>
 <label define="TMSG_SVG_Moon">
   <message xml:lang="en">Moon</message>
   <message xml:lang="fr">Lune</message>
   <message xml:lang="es">Luna</message>
+  <message xml:lang="de">Mond</message>
 </label>
 <label define="TMSG_SVG_Smiley">
   <message xml:lang="en">Smiley</message>
   <message xml:lang="fr">Frimousse</message>
+  <message xml:lang="es">Smiley</message>
+  <message xml:lang="de">Smiley</message>
 </label>
 <label define="TMSG_SVG_Heart">
   <message xml:lang="en">Heart</message>
   <message xml:lang="fr">Coeur</message>
   <message xml:lang="es">Corazón</message>
+  <message xml:lang="de">Herz</message>
 </label>
 <label define="TMSG_SVG_Flower">
   <message xml:lang="en">Flower</message>
   <message xml:lang="fr">Fleur</message>
+  <message xml:lang="es">Flor</message>
+  <message xml:lang="de">Blume</message>
 </label>
 <label define="TMSG_SVG_Prohibited">
   <message xml:lang="en">Prohibited</message>
   <message xml:lang="fr">Interdit</message>
+  <message xml:lang="es">Prohibido</message>
+  <message xml:lang="de">Verboten</message>
 </label>
 
 <label define="TMSG_SVG_2_Way_Rounded_Arrow">
   <message xml:lang="en">2-Way Rounded Arrow</message>
   <message xml:lang="fr">Flèche courbe dans deux directions</message>
+  <message xml:lang="es">Flecha redondeada bidireccional</message>
+  <message xml:lang="de">gerundeter Doppelpfeil</message>
 </label>
 <label define="TMSG_SVG_3_Way_Arrow_Callout">
   <message xml:lang="en">3-Way Arrow Callout</message>
   <message xml:lang="fr">Légende avec flèche dans 3 directions</message>
+  <message xml:lang="es">Flecha de flujo de 3 direcciones</message>
+  <message xml:lang="de">Hinweispfeil in 3 Richtungen</message>
 </label>
 <label define="TMSG_SVG_3_Way_Arrow">
   <message xml:lang="en">3-Way Arrow</message>
   <message xml:lang="fr">Flèche dans 3 directions</message>
+  <message xml:lang="es">Flecha de 3 direcciones</message>
+  <message xml:lang="de">Pfeil in 3 Richtungen</message>
 </label>
 <label define="TMSG_SVG_4_Way_Arrow_Callout">
   <message xml:lang="en">4-Way_Arrow_Callout</message>
   <message xml:lang="fr">Légende avec flèche dans 4 directions</message>
+  <message xml:lang="es">Flecha de flujo de 4 direcciones</message>
+  <message xml:lang="de">Hinweispfeil in 4 Richtungen</message>
 </label>
 <label define="TMSG_SVG_4_Way_Arrow">
   <message xml:lang="en">4-Way Arrow</message>
   <message xml:lang="fr">Flèche dans 4 directions</message>
+  <message xml:lang="es">Flecha de 4 direcciones</message>
+  <message xml:lang="de">Pfeil in 4 Richtungen</message>
 </label>
 <label define="TMSG_SVG_Chevron">
   <message xml:lang="en">Chevron</message>
   <message xml:lang="fr">Chevron</message>
+  <message xml:lang="es">Cabrio</message>
+  <message xml:lang="de">Winkel</message>
 </label>
 <label define="TMSG_SVG_Circular_Arrow">
   <message xml:lang="en">Circular Arrow</message>
   <message xml:lang="fr">Flèche en arc</message>
+  <message xml:lang="es">Flecha circular</message>
+  <message xml:lang="de">Pfeil im Kreis</message>
 </label>
 <label define="TMSG_SVG_Corner_Arrow">
   <message xml:lang="en">Corner Arrow</message>
   <message xml:lang="fr">Flèche en angle</message>
+  <message xml:lang="es">Flecha de esquina</message>
+  <message xml:lang="de">Winkelpfeil</message>
 </label>
 <label define="TMSG_SVG_Corner_Double_Arrow_Callout">
   <message xml:lang="en">Corner Double Arrow Callout</message>
   <message xml:lang="fr">Légende avec flèche double en angle</message>
+  <message xml:lang="es">Flecha de flujo doble de esquina</message>
+  <message xml:lang="de">Hinweispfeil über Eck</message>
 </label>
 <label define="TMSG_SVG_Corner_Double_Arrow">
   <message xml:lang="en">Corner Double Arrow</message>
   <message xml:lang="fr">Flèche double en angle</message>
+  <message xml:lang="es">Flecha doble de esquina</message>
+  <message xml:lang="de">Pfeil über Eck</message>
 </label>
 <label define="TMSG_SVG_Double_Arrow_Callout">
   <message xml:lang="en">Double Arrow Callout</message>
   <message xml:lang="fr">Légende avec flèche double</message>
+  <message xml:lang="es">Flecha de flujo doble</message>
+  <message xml:lang="de">Hinweisdoppelpfeil</message>
 </label>
 <label define="TMSG_SVG_Double_Arrow">
   <message xml:lang="en">Double Arrow</message>
   <message xml:lang="fr">Flèche double</message>
+  <message xml:lang="es">Flecha doble</message>
+  <message xml:lang="de">Doppelpfeil</message>
 </label>
 <label define="TMSG_SVG_Notched_Arrow">
   <message xml:lang="en">Notched Arrow</message>
   <message xml:lang="fr">Flèche avec entailles</message>
+  <message xml:lang="es">Flecha con muesca</message>
+  <message xml:lang="de">Eingekerbter Pfeil</message>
 </label>
 <label define="TMSG_SVG_Rounded_Arrow">
   <message xml:lang="en">Rounded Arrow</message>
   <message xml:lang="fr">Flèche courbe</message>
+  <message xml:lang="es">Flecha redondeada</message>
+  <message xml:lang="de">Abgerundeter Pfeil</message>
 </label>
 <label define="TMSG_SVG_Simple_Arrow_Callout">
   <message xml:lang="en">Simple Arrow Callout</message>
   <message xml:lang="fr">Légende avec flèche simple</message>
+  <message xml:lang="es">Flecha de flujo simple</message>
+  <message xml:lang="de">Einfacher Hinweispfeil</message>
 </label>
 <label define="TMSG_SVG_Simple_Arrow">
   <message xml:lang="en">Simple Arrow</message>
   <message xml:lang="fr">Flèche simple</message>
+  <message xml:lang="es">Flecha simple</message>
+  <message xml:lang="de">Einfacher Pfeil</message>
 </label>
 <label define="TMSG_SVG_Split_Arrow">
   <message xml:lang="en">Split Arrow</message>
   <message xml:lang="fr">Flèche en fourche</message>
+  <message xml:lang="es">Flecha bifurcada</message>
+  <message xml:lang="de">Aufgesplitteter Pfeil</message>
 </label>
 <label define="TMSG_SVG_S_Shape_Arrow">
   <message xml:lang="en">S-Shape Arrow</message>
   <message xml:lang="fr">Flèche en S</message>
+  <message xml:lang="es">Flecha en S</message>
+  <message xml:lang="de">S-förmiger Pfeil</message>
 </label>
 <label define="TMSG_SVG_Striped_Arrow">
   <message xml:lang="en">Striped Arrow</message>
   <message xml:lang="fr">Flèche avec bandes</message>
+  <message xml:lang="es">Flecha rayada</message>
+  <message xml:lang="de">Gestreifter Pfeil</message>
 </label>
 <label define="TemplateFromDocument">
 	<message xml:lang="en">Create template from current document...</message>
 	<message xml:lang="fr">Créer un modèle depuis le document courant...</message>
+	<message xml:lang="es">Crear plantilla a partir de documento actual</message>
+	<message xml:lang="de">Eine Vorlage aus dem aktuellen Dokument erstellen</message>
 </label>
 <label define="TemplateTextBox">
 	<message xml:lang="en">Create a text area</message>
 	<message xml:lang="fr">Créer une zone de texte</message>
+	<message xml:lang="es">Crear área de texto</message>
+	<message xml:lang="de">Ein Textfeld erstellen</message>
 </label>
 <label define="TemplateUseBox">
 	<message xml:lang="en">Use a component or an element</message>
 	<message xml:lang="fr">Utiliser un composant ou un élément</message>
+	<message xml:lang="es">Usar componente o elemento</message>
+	<message xml:lang="de">Eine Komponente oder Element verwenden</message>
 </label>
 <label define="TemplateUseCompBox">
 	<message xml:lang="en">Create and use a component</message>
 	<message xml:lang="fr">Créer et utiliser un composant</message>
+	<message xml:lang="es">Crear y usar componente</message>
+	<message xml:lang="de">Erstellen und Verwenden einer Komponente</message>
 </label>
 <label define="TemplateRepeat">
 	<message xml:lang="en">Repeat the current use</message>
 	<message xml:lang="fr">Répéter l'utilisation courante</message>
+	<message xml:lang="es">Repetir uso actual</message>
+	<message xml:lang="de">Aktuelle Anwendung wiederholen</message>
 </label>
 <label define="TemplateRepeatComp">
 	<message xml:lang="en">Create and repeat a component</message>
 	<message xml:lang="fr">Créer et répéter un composant</message>
+	<message xml:lang="es">Crear y repetir componente</message>
+	<message xml:lang="de">Erstellen und vervielfältigen einer Komponente</message>
 </label>
 <label define="TemplateFreeBox">
 	<message xml:lang="en">Create a free editing box</message>
 	<message xml:lang="fr">Créer une zone d'édition libre</message>
+	<message xml:lang="es">Crear caja de edición libre</message>
+	<message xml:lang="de">Eine freie Editierbox erstellen</message>
 </label>
 <label define="TemplateUnion">
 	<message xml:lang="en">Create a new types union</message>
 	<message xml:lang="fr">Créer une nouvelle union de types</message>
+	<message xml:lang="es">Crear nueva unión de tipos</message>
+	<message xml:lang="de">Verursachen Sie neue Typen Anschluss</message>
 </label>
 <label define="BUTTON_UP">
 	<message xml:lang="en">(%d,%d) Button up to close</message>
 	<message xml:lang="fr">(%d,%d) Bouton relaché pour terminer</message>
+	<message xml:lang="es">(%d,%d) Botón hasta cierre</message>
+	<message xml:lang="de">(%d,%d) Knopf bis zum Abschluss</message>
 </label>
 <label define="DOUBLE_CLICK">
 	<message xml:lang="en">(%d,%d) Double click to close</message>
 	<message xml:lang="fr">(%d,%d) Double clic pour terminer</message>
+	<message xml:lang="es">(%d,%d) Tecleo doble a cerrarse</message>
+	<message xml:lang="de">(%d,%d) Doppeltes Klicken zum zu schließen</message>
 </label>
 <label define="SIMPLE_CLICK">
 	<message xml:lang="en">(%d,%d) Click to close</message>
 	<message xml:lang="fr">(%d,%d) Cliquer pour terminer</message>
+	<message xml:lang="es">(%d,%d) Tecleo a cerrarse</message>
+	<message xml:lang="de">(%d,%d) Klicken zum zu schließen</message>
 </label>
 
 <!-- End of SVG panel -->

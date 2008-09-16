@@ -66,11 +66,11 @@
 64 Abrir enlace
 65 Abrir enlace en una nueva pestaña
 66 Abrir enlace en una nueva ventana
-67 **Rotate
-68 **Skew
-69 **Scale
-70 **Move
-71 **Ungroup
+67 Rotar
+68 Inclinar
+69 Escalar
+70 Mover
+71 Desagrupar
 72 Cortar
 73 Copiar
 74 Pegar
@@ -112,7 +112,7 @@
 110 &Pantalla completa
 111 &Aumentar tamaño de texto
 112 &Reducir tamaño de texto
-113 **Normal zoom
+113 Zoom a tamaño real
 114 Párrafo (p)
 115 Encabezado (heading)
 116 h1
@@ -146,7 +146,7 @@
 144 Teletipo (tt)
 145 Grande (big)
 146 Pequeña (small)
-147 **Span
+147 Span
 148 Subíndice (sub)
 149 Superíndice (sup)
 150 Cita (q)
@@ -285,7 +285,7 @@
 283 &Crear/Borrar atributos id...
 284 &Revisar ortografía...
 285 &Transformar...
-286 **Code clean up
+286 Limpiar código
 287 Editar tabla
 288 Cambiar a celda de datos
 289 Cambiar a celda de cabecera
@@ -336,22 +336,22 @@
 334 Ver propiedades del recurso...
 335 Copiar información de bloqueo
 336 ¿Bloqueado?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
-345 **Create a new types union
+337 Plantillas
+338 Crear plantilla a partir de documento actual
+339 Crear área de texto
+340 Usar componente o elemento
+341 Crear y usar componente
+342 Repetir uso actual
+343 Crear y repetir componente
+344 Crear caja de edición libre
+345 Crear nueva unión de tipos
 346 &Javascript/DOM
 347 Activar/Desactivar
 348 Ejecutar un comando
 349 Ejecutar un script externo
 350 Añadir un script externo
 351 Insertar un script
-352 **Check for update
+352 Buscar actualizaciones
 353 Ayuda Amaya...
 354 Sugerencia del día...
 355 Acerca de Amaya

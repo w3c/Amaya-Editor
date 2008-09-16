@@ -441,8 +441,8 @@
 439 Passwörter für Sites speichern
 440 Sites (alle Dateien)
 441 Alles entfernen
-442 **XML namespaces generated for new XHTML+RDFa documents
-443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+442 XML namespaces erzeugt für neue XHTML+RDFa Dokumente
+443 Einen Namensraum aus unten stehender Liste wählen oder einen neuen hinzufügen
 444 Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts
 445 Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen
 446 Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden
@@ -471,38 +471,38 @@
 469 Amaya typ:
 470 "Tip des Tages" bei Programmstart anzeigen
 471 Schriftart - und Größe wählen:
-472 **Template has error(s), it will not be used:
-473 **Close
-474 **Component '%s' has multiple definition.
-475 **Library '%s' can not be loaded.
-476 **Can not convert an instance document to template.
-477 **The document is already a template
-478 **Template creation fails
-479 **Text area
-480 **Element label:
-481 **Bag area
-482 **Repeat element
-483 **New component
-484 **Component is used, you can not remove it.
-485 **at the top left corner
-486 **at the bottom left corner
-487 **on the left
-488 **at the top right corner
-489 **at the bottom right corner
-490 **on the right
-491 **at the top
-492 **at the bottom
-493 **in the center
-494 **to the left and above
-495 **to the left and below
-496 **to the left of
-497 **to the right and above
-498 **to the right and below
-499 **to the right of
-500 **above
-501 **below
-502 **in front of
-503 **There are %d objects: 
-504 **New use
-505 **Optional use
-506 **Color source code
+472 Die Vorlage hat einen/mehrere Fehler und kann nicht verwendet werden:
+473 Schließen
+474 Die Komponente '%s' ist mehrfach definiert
+475 Die Bibliothek '%s' kann nicht geladen werden
+476 Ein Beispieldokument kann nicht in eine Vorlage umgewandelt werden
+477 Dieses Dokument ist bereits eine Vorlage
+478 Die Erstellung der Vorlage schlug fehl
+479 Textbereich
+480 Schild
+481 Zone Elementmulti
+482 Wiederholungselement
+483 Neue Komponente
+484 Die Komponente kann nicht entfernt werden, da sie verwendet wird
+485 an linker oberer Ecke
+486 an linker unterer Ecke
+487 links
+488 an rechter oberer Ecke
+489 an rechter unterer Ecke
+490 rechts
+491 am Kopf
+492 am Fuß
+493 in der Mitte
+494 nach links oben
+495 nach links unten
+496 links von
+497 nach rechts oben
+498 nach rechts unten
+499 rechts von
+500 darüber
+501 darunter
+502 vor
+503 Es gibt %d objekte:
+504 Neu verwenden
+505 Optional verwenden
+506 Farbcode
