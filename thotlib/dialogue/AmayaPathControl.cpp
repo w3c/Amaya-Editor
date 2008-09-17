@@ -378,6 +378,7 @@ void AmayaPathControl::OnMouseLeave(wxMouseEvent& WXUNUSED(event))
 }
 
 extern void SynchronizeAppliedStyle (NotifyElement *event);
+extern void SynchronizeNSDeclaration (NotifyElement *event);
 /*----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
@@ -406,7 +407,7 @@ void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
                     {
                       TtaSelectElementWithoutPath (doc, node->GetData()->elem);
                       TtaRedirectFocus ();
-                      /* WARNING: just update applied style */
+                      /* WARNING: update applied style */
                       notifyEl.event = TteElemSelect;
                       notifyEl.document = doc;
                       notifyEl.element = (Element)pEl;
@@ -415,6 +416,8 @@ void AmayaPathControl::OnMouseLeftUp(wxMouseEvent& event)
                       notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
                       notifyEl.position = 0;
                       SynchronizeAppliedStyle (&notifyEl);
+                      /* WARNING: update NS list */
+                      SynchronizeNSDeclaration (&notifyEl);
                     }
                   return;
                 }
