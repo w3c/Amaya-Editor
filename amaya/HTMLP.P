@@ -4267,8 +4267,8 @@ FIELDSET: BEGIN
         CreateLast (SPACE);
         HorizPos: Left = Enclosing . Left UserSpecified;
         VertPos: Top = Enclosing . Top UserSpecified;
-        Width: 5 pt UserSpecified;
-        Height: 5 pt UserSpecified;
+        Width: 5 pt;
+        Height: 5 pt;
         Depth: Enclosing - 9;
         FillPattern: nopattern;
         IN Structure_view BEGIN
@@ -5817,7 +5817,7 @@ ATTRIBUTES
  IntWidthPxl:
         BEGIN
         if AREA
-           Width: IntWidthPxl px UserSpecified;
+           Width: IntWidthPxl px;
         if not AREA
            Width: IntWidthPxl px;
         IN Structure_view BEGIN
@@ -5877,7 +5877,7 @@ ATTRIBUTES
         if Heading_cell
            Height: IntHeightPxl px min;
         if AREA
-           Height: IntHeightPxl px UserSpecified;
+           Height: IntHeightPxl px;
         if not AREA and not Data_cell and not Heading_cell
            Height: IntHeightPxl px;
         IN Structure_view BEGIN

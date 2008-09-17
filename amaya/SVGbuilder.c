@@ -270,7 +270,7 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
   does not exist yet.
   Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
-static Element CreateGraphicalLeaf (char shape, Element el, Document doc)
+Element CreateGraphicalLeaf (char shape, Element el, Document doc)
 {
   ElementType	   elType;
   Element	       leaf, child;

@@ -28,6 +28,9 @@ extern void ParseCSSequivAttribute ( int attrType,
                                      Element el,
                                      Document doc,
                                      ThotBool delete_ );
+extern Element CreateGraphicalLeaf ( char shape,
+                                     Element el,
+                                     Document doc );
 extern Element CreateGraphicLeaf ( Element el,
                                    Document doc,
                                    ThotBool *closed );
@@ -136,6 +139,9 @@ extern void ParseCSSequivAttribute ( int attrType,
                                        Element el,
                                        Document doc,
                                        ThotBool delete_ );
+extern Element CreateGraphicalLeaf ( char shape,
+                                       Element el,
+                                       Document doc );
 extern Element CreateGraphicLeaf ( Element el,
                                      Document doc,
                                      ThotBool *closed );

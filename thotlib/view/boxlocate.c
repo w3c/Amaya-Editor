@@ -211,61 +211,50 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
   ViewFrame      *pFrame;
   PtrFlow         pFlow = NULL;
 
-  if (FrameTable[frame].FrView == 1 && FirstSelectedElement &&
-      FirstSelectedElement == LastSelectedElement &&
+  if (FrameTable[frame].FrView != 1 || FirstSelectedElement == NULL ||
+      FirstSelectedElement != LastSelectedElement ||
+      IsSVGComponent (FirstSelectedElement))
+    // cannot apply to that element
+    return NULL;
 
-      /* This function must not be used for SVG */
-      !(
-        /* An SVG component */
-        IsSVGComponent(FirstSelectedElement) ||
-
-        /* A leaf of an SVG component */
-        (FirstSelectedElement->ElTerminal &&
-         FirstSelectedElement->ElParent &&
-         IsSVGComponent(FirstSelectedElement->ElParent))
-        )
-
-      )
+  pAb = FirstSelectedElement->ElAbstractBox[0];
+  // take into account the document scroll
+  pFrame = &ViewFrameTable[frame - 1];
+  x += pFrame->FrXOrg;
+  y += pFrame->FrYOrg;
+  if (pAb && pAb->AbBox)
+    pFlow = GetRelativeFlow (pAb->AbBox, frame);
+  if (pFlow)
     {
-      pAb = FirstSelectedElement->ElAbstractBox[0];
-      // take into account the document scroll
-      pFrame = &ViewFrameTable[frame - 1];
-      x += pFrame->FrXOrg;
-      y += pFrame->FrYOrg;
+      /* apply the box shift */
+      x += pFlow->FlXStart;
+      y += pFlow->FlYStart;
+    }
+  if (!FirstSelectedElement->ElTerminal &&
+      FirstSelectedElement->ElFirstChild &&
+      FirstSelectedElement->ElFirstChild->ElTerminal)
+    {
+      child = FirstSelectedElement->ElFirstChild;
+      // manage HTML area this way
+      if (child->ElLeafType == LtPicture ||
+          (child->ElLeafType == LtGraphics &&
+           (child->ElGraph == 'a' || child->ElGraph == 'R')))
+        {
+          pAb = child->ElAbstractBox[0];
+          box = IsOnShape (pAb, x, y, ctrlpt);
+          if (child->ElLeafType != LtPicture || *ctrlpt != 0)
+            return box;
+        }
+    }
+  else if (FirstSelectedElement->ElAbstractBox[0] &&
+           TypeHasException (ExcIsDraw, FirstSelectedElement->ElTypeNumber,
+                             FirstSelectedElement->ElStructSchema))
+    {
       if (pAb && pAb->AbBox)
-        pFlow = GetRelativeFlow (pAb->AbBox, frame);
-      if (pFlow)
         {
-          /* apply the box shift */
-          x += pFlow->FlXStart;
-          y += pFlow->FlYStart;
-        }
-      if (!FirstSelectedElement->ElTerminal &&
-          FirstSelectedElement->ElFirstChild &&
-          FirstSelectedElement->ElFirstChild->ElTerminal)
-        {
-          child = FirstSelectedElement->ElFirstChild;
-          if (child->ElLeafType == LtPicture ||
-              child->ElLeafType == LtPath ||
-              child->ElLeafType == LtPolyLine ||
-              child->ElLeafType == LtGraphics)
-            {
-              pAb = child->ElAbstractBox[0];
-              box = IsOnShape (pAb, x, y, ctrlpt);
-              if (child->ElLeafType != LtPicture || *ctrlpt != 0)
-                return box;
-            }
-        }
-      else if (FirstSelectedElement->ElAbstractBox[0] &&
-               TypeHasException (ExcIsDraw, FirstSelectedElement->ElTypeNumber,
-                                 FirstSelectedElement->ElStructSchema))
-        {
-          if (pAb && pAb->AbBox)
-            {
-              box = IsOnShape (pAb, x, y, ctrlpt);
-              if (*ctrlpt != 0)
-                return box;
-            }
+          box = IsOnShape (pAb, x, y, ctrlpt);
+          if (*ctrlpt != 0)
+            return box;
         }
     }
   return NULL;
@@ -455,7 +444,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 
               if(FrameTable[frame].FrView == 1 &&
                  nChars > 0 && Selecting != NULL && el &&
-                 el->ElParent && IsSVGComponent(el->ElParent))
+                 el->ElParent /*&& IsSVGComponent(el->ElParent)*/)
                 {
                   if (el->ElLeafType == LtGraphics &&
                       (pAb->AbShape == 1 || /* Square */
@@ -2909,6 +2898,132 @@ void ApplyDirectResize (PtrBox pBox, int frame, int pointselect, int xm, int ym)
             NewDimension (pAb, width, height, frame, TRUE);
           // now update attribute panels
           TtaUpdateAttrMenu (FrameTable[frame].FrDoc);
+        }
+    }
+}
+/*----------------------------------------------------------------------
+  ApplyDirectTranslate applies direct translation to the box.
+  ----------------------------------------------------------------------*/
+void ApplyDirectTranslate (PtrBox pBox, int frame, int xm, int ym)
+{
+  PtrDocument         pDoc;
+  PtrAbstractBox      pAb;
+  PtrElement            pEl;
+  ViewFrame          *pFrame;
+  int                 x, width;
+  int                 y, height;
+  int                 xmin, xmax;
+  int                 ymin, ymax;
+  int                 xref, yref;
+  int                 pointselect;
+  int                 view;
+  ThotBool            open, still;
+ 
+  pFrame = &ViewFrameTable[frame - 1];
+  GetDocAndView (frame, &pDoc, &view);
+  if (pDoc == NULL)
+    return;
+
+  open = !pDoc->DocEditSequence;
+  /* by default no selected point */
+  pointselect = 0;
+  if (pFrame->FrAbstractBox != NULL)
+    {
+      /* Get positions in the window */
+      if (pBox)
+        {
+          pAb = pBox->BxAbstractBox;
+          if (pointselect && pBox->BxType != BoPicture)
+            {
+              /* moving a polyline point */
+              still = FALSE;
+              xmin = ymin = 0;
+              xmax = ymax = 9999;
+            }
+          else
+            {
+              /* moving the whole box */
+              still = TRUE;
+              pointselect = 0;
+            }
+          /* Loop as long as a box that can be moved is not found */
+          while (still)
+            {
+              /* check if the moving is allowed */
+              if (still)
+                {
+                  /* no box found yet, check the enclosing box */
+                  if (pAb != NULL)
+                    pAb = pAb->AbEnclosing;
+                  if (pAb == NULL)
+                    {
+                      pBox = NULL;
+                      still = FALSE;
+                    }
+                  else
+                    pBox = pAb->AbBox;
+                }
+            }
+
+          if (pBox)
+            {
+              /* A box is found */
+              x = pBox->BxXOrg - pFrame->FrXOrg;
+              y = pBox->BxYOrg - pFrame->FrYOrg;
+              width = pBox->BxWidth;
+              height = pBox->BxHeight;
+              pEl = pBox->BxAbstractBox->AbElement;
+              if (pointselect == 0 || pBox->BxType == BoPicture)
+                /* moving the whole box */
+                {
+                  /* set positions related to the window */
+                  xmin -= pFrame->FrXOrg;
+                  xmax -= pFrame->FrXOrg;
+                  ymin -= pFrame->FrYOrg;
+                  ymax -= pFrame->FrYOrg;
+                  /* execute the interaction */
+                  GeometryMove (frame, &x, &y, width, height, pBox, xmin,
+                                xmax, ymin, ymax, xm, ym);
+                  /* get back changes */
+                  x += pFrame->FrXOrg;
+                  y += pFrame->FrYOrg;
+                  /* get the position of reference point */
+                  switch (pBox->BxHorizEdge)
+                    {
+                    case Right:
+                      xref = width;
+                      break;
+                    case VertMiddle:
+                      xref = width / 2;
+                      break;
+                    case VertRef:
+                      xref = pBox->BxVertRef;
+                      break;
+                    default:
+                      xref = 0;
+                      break;
+                    }
+                  switch (pBox->BxVertEdge)
+                    {
+                    case Bottom:
+                      yref = height;
+                      break;
+                    case HorizMiddle:
+                      yref = height / 2;
+                      break;
+                    case HorizRef:
+                      yref = pBox->BxHorizRef;
+                      break;
+                    default:
+                      yref = 0;
+                      break;
+                    }
+                  NewPosition (pAb, x, xref, y, yref, frame, TRUE);
+                }
+              APPgraphicModify (pEl, pointselect, frame, FALSE, open);
+              // now update attribute panels
+              TtaUpdateAttrMenu (FrameTable[frame].FrDoc);
+            }
         }
     }
 }

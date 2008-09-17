@@ -1877,6 +1877,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
   else return;
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+  if (first == NULL && DocumentTypes[doc] == docSVG &&
+      TtaGetSelectedDocument () == NULL)
+    {
+      // get the main SVG element as the selected element
+      first = TtaGetRootElement (doc);
+      elType = TtaGetElementType (first);
+    }
   if (first)
     {
       parent = TtaGetParent (first);
@@ -2238,13 +2245,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
           /* <svg/> */
           if (isFormattedView)
             {
-              created = AskSurroundingBox(doc,
-                                          svgAncestor,
-                                          svgCanvas,
-                                          entry,
-                                          &x1, &y1, &x2, &y2,
-                                          &x3, &y3, &x4, &y4,
-                                          &lx, &ly);
+              created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
+                                          entry, &x1, &y1, &x2, &y2,
+                                          &x3, &y3, &x4, &y4, &lx, &ly);
             }
           else
             {
@@ -2280,13 +2283,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
           if (isFormattedView)
             {
-              created = AskSurroundingBox(doc,
-                                          svgAncestor,
-                                          svgCanvas,
-                                          entry,
-                                          &x1, &y1, &x2, &y2,
-                                          &x3, &y3, &x4, &y4,
-                                          &lx, &ly);
+              created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
+                                          entry, &x1, &y1, &x2, &y2,
+                                          &x3, &y3, &x4, &y4, &lx, &ly);
             }
           else
             {
@@ -2573,15 +2572,11 @@ void CreateGraphicElement (Document doc, View view, int entry)
            XHTML <div/> / MathML <math/> element */
         {
           created = TRUE;
-
           if (isFormattedView)
             {
               /* Ask the position and size */
-              AskSurroundingBox(doc,
-                                svgAncestor,
-                                svgCanvas,
-                                9,
-                                &x1, &y1, &x2, &y2,
+              AskSurroundingBox(doc, svgAncestor, svgCanvas,
+                                9, &x1, &y1, &x2, &y2,
                                 &x3, &y3, &x4, &y4,
                                 &lx, &ly);
 
@@ -2734,11 +2729,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
           if (isFormattedView)
             {
               /* Ask where the user wants to insert the text */
-              AskSurroundingBox(doc,
-                                svgAncestor,
-                                svgCanvas,
-                                entry,
-                                &x1, &y1, &x2, &y2,
+              AskSurroundingBox(doc, svgAncestor, svgCanvas,
+                                entry, &x1, &y1, &x2, &y2,
                                 &x3, &y3, &x4, &y4,
                                 &lx, &ly);
 
@@ -3655,20 +3647,30 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
 
   /* Check whether the element is a Path or a polyline/polygon */
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == SVG_EL_path)
-    /* It's a Path */
-    isPath = TRUE;
-  else if (elType.ElTypeNum == SVG_EL_polyline ||
-          elType.ElTypeNum == SVG_EL_polygon)
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (elType.ElSSchema != svgSchema)
     {
-      /* It's a Polygon/polyline */
-      isPath = FALSE; isLine = FALSE;
-    
+      if (elType.ElTypeNum != HTML_EL_AREA)
+        return;
+      attrType.AttrTypeNum = HTML_ATTR_coords;
+    }
+  else if (elType.ElTypeNum == SVG_EL_path)
+    {
+    /* It's a Path */
+      isPath = TRUE;
+      attrType.AttrTypeNum = SVG_ATTR_d;
     }
   else if (elType.ElTypeNum == SVG_EL_line_)
-    isLine = TRUE;
-  else
+    {
+      isLine = TRUE;
+      attrType.AttrTypeNum = SVG_ATTR_x1;
+    }
+  else if (elType.ElTypeNum != SVG_EL_polyline &&
+          elType.ElTypeNum != SVG_EL_polygon)
+    /* It's not a Polygon/polyline */
     return;
+  else
+    attrType.AttrTypeNum = SVG_ATTR_points;
 
   /* Get the attribute value from the GRAPHICS leaf */
   leaf = TtaGetLastChild(el);
@@ -3678,14 +3680,6 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
     buffer = TtaGetPointsAttributeValue (leaf, w, h);
 
   /* Check if the attribute already exists */
-  attrType.AttrSSchema = svgSchema;
-  if(isPath)
-    attrType.AttrTypeNum = SVG_ATTR_d;
-  if(isLine)
-    attrType.AttrTypeNum = SVG_ATTR_x1;
-  else
-    attrType.AttrTypeNum = SVG_ATTR_points;
-
   attr = TtaGetAttribute (el, attrType);
   /* check if the undo sequence is open */
   if (withUndo)

@@ -251,11 +251,17 @@ extern void TtaGivePolylinePoint ( Element element,
                                    TypeUnit unit,
                                    int *x,
                                    int *y );
+extern void TtaGivePolylineAngle ( Element element,
+                                   int rank,
+                                   double *angle );
 extern void TtaGivePathPoint ( Element element,
                                int rank,
                                TypeUnit unit,
                                int *x,
                                int *y );
+extern void TtaGivePathAngle ( Element element,
+                               int rank,
+                               double *angle );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
 extern ThotBool CheckGeometricProperties ( Document doc,
@@ -512,11 +518,17 @@ extern void TtaGivePolylinePoint ( Element element,
                                      TypeUnit unit,
                                      int *x,
                                      int *y );
+extern void TtaGivePolylineAngle ( Element element,
+                                     int rank,
+                                     double *angle );
 extern void TtaGivePathPoint ( Element element,
                                  int rank,
                                  TypeUnit unit,
                                  int *x,
                                  int *y );
+extern void TtaGivePathAngle ( Element element,
+                                 int rank,
+                                 double *angle );
 extern int TtaGetPageNumber ( Element pageElement );
 extern int TtaGetPageView ( Element pageElement );
 extern ThotBool CheckGeometricProperties ( Document doc,

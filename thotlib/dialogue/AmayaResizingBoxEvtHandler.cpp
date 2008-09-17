@@ -118,7 +118,7 @@ AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler (AmayaFrame * p_frame, in
   pAb = m_Box->BxAbstractBox;
   if (pAb && pAb->AbLeafType == LtCompound)
     pAb = pAb->AbFirstEnclosed;
-  m_IsEllipse = (pAb && pAb->AbLeafType == LtGraphics && (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
+  m_IsEllipse = (pAb && pAb->AbLeafType == LtGraphics && pAb->AbShape == 'a');
 
   /* locate the mouse position in the box */
   if (xm < m_Box->BxClipX + *m_pWidth/2 - DELTA_SEL)
@@ -135,10 +135,7 @@ AmayaResizingBoxEvtHandler::AmayaResizingBoxEvtHandler (AmayaFrame * p_frame, in
   else
     m_VDirection = 1;
   /* Shows the initial box size */
-  if (m_IsEllipse)
-    InvertEllipse (m_FrameId, m_pX, m_pY, *m_pWidth, *m_pHeight, m_pX + m_Xref, m_pY);
-  else
-    BoxGeometry (m_FrameId, m_pX, m_pY, *m_pWidth, *m_pHeight, m_pX + m_Xref, m_pY);
+  BoxGeometry (m_FrameId, m_pX, m_pY, *m_pWidth, *m_pHeight, m_pX + m_Xref, m_pY);
 }
 
 /*----------------------------------------------------------------------
@@ -254,7 +251,7 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
       if (m_Xmin == m_Xmax)
         /* X moves frozen */
         dl = 0;
-      else if (*m_pWidth + dl < 2)
+      else if (*m_pWidth + dl < 10)
         dl = 0;
     }
   
@@ -263,13 +260,21 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
       if (m_Ymin == m_Ymax)
         /* Y moves frozen */
         dh = 0;
-      else if (*m_pHeight + dh < 2)
+      else if (*m_pHeight + dh < 10)
         dh = 0;
     }
   
   dx = 0;
   dy = 0;
-  
+  if (m_IsEllipse)
+    {
+      // keep the ratio of the circle
+      if (dl > dh)
+        dh = dl;
+      else
+        dl = dh;
+    }
+
   /* Should we move the box */
   if (dl || dh)
     {
@@ -281,10 +286,13 @@ void AmayaResizingBoxEvtHandler::OnMouseMove( wxMouseEvent& event )
       if (ratio)
         {
           imageDesc = (ThotPictInfo *) m_Box->BxPictInfo;
-          if (dl)
-            *m_pHeight = *m_pWidth * imageDesc->PicHeight /imageDesc->PicWidth;
-          else
-            *m_pWidth = *m_pHeight * imageDesc->PicWidth /imageDesc->PicHeight;
+          if (imageDesc)
+            {
+              if (dl)
+                *m_pHeight = *m_pWidth * imageDesc->PicHeight /imageDesc->PicWidth;
+              else
+                *m_pWidth = *m_pHeight * imageDesc->PicWidth /imageDesc->PicHeight;
+            }
         }
 
       m_pX = m_pX + dx;

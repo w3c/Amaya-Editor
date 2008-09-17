@@ -1928,10 +1928,8 @@ ThotBool AskShapePoints (Document doc, Element svgAncestor, Element svgCanvas,
   --------------------------------------------------------------------*/
 ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
                             Element svgCanvas, int shape,
-                            int *x1, int *y1,
-                            int *x2, int *y2,
-                            int *x3, int *y3,
-                            int *x4, int *y4,
+                            int *x1, int *y1, int *x2, int *y2,
+                            int *x3, int *y3, int *x4, int *y4,
                             int *lx, int *ly)
 {
   PtrAbstractBox pAb;
@@ -2066,8 +2064,7 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
 /*----------------------------------------------------------------------
   AskPathEdit
   --------------------------------------------------------------------*/
-ThotBool AskPathEdit (Document doc,
-		      int edit_type, Element el, int point)
+ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
 {
   Element svgCanvas = NULL, svgAncestor = NULL, el2;
   PtrAbstractBox pAb;

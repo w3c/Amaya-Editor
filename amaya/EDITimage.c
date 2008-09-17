@@ -23,6 +23,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "SVG.h"
+#include "svgedit.h"
 
 static Document   ImgDocument;
 static ThotBool   CreateNewImage, CreateNewObject = FALSE;
@@ -157,13 +158,21 @@ static void CreateAreaMap (Document doc, View view, const char *shape)
   ElementType         elType, parentType;
   AttributeType       attrType;
   Attribute           attr, attrRef, attrShape, attrRefimg, newuseMap;
-  char                *url;
+  char                *url, text[500];
   int                 length, w, h;
   int                 firstchar, lastchar;
   int                 docModified, profile;
+  int                 x1, x2, x3, x4, y1, y2, y3, y4, lx, ly, entry;
   DisplayMode         dispMode;
   ThotBool            oldStructureChecking;
   ThotBool            lock = TRUE;
+  ThotBool            created = FALSE;
+
+  if (view != 1)
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_SELECTION);
+     return;
+    }
 
   /* get the first selected element */
   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
@@ -340,13 +349,11 @@ static void CreateAreaMap (Document doc, View view, const char *shape)
   else
     /* Create an AREA element */
     {
+      
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
       TtaSetStructureChecking (FALSE, doc);
       elType.ElTypeNum = HTML_EL_AREA;
-      /* Should we ask the user to give coordinates */
-      // @@@@@@@@@ TODO creation as SVG element@@@@@@@@@@@@@@@@@@
-      //if (shape[0] == 'R' || shape[0] == 'a')
-      //  TtaAskFirstCreation ();
-
       el = TtaNewTree (doc, elType, "");
       if (!newElem)
         newElem = el;
@@ -357,12 +364,6 @@ static void CreateAreaMap (Document doc, View view, const char *shape)
         TtaInsertSibling (el, child, FALSE, doc);
       TtaSetStructureChecking (oldStructureChecking, doc);
       child = TtaGetFirstChild (el);
-      /* For polygons, sets the value after the Ref_IMG attribute is
-         created */
-      // @@@@@@@@@ TODO creation as SVG element@@@@@@@@@@@@@@@@@@
-      //if (shape[0] != 'p')
-      //  TtaSetGraphicsShape (child, shape[0], doc);
-
       /* create the shape attribute */
       attrType.AttrTypeNum = HTML_ATTR_shape;
       attrShape = TtaGetAttribute (el, attrType);
@@ -371,85 +372,105 @@ static void CreateAreaMap (Document doc, View view, const char *shape)
           attrShape = TtaNewAttribute (attrType);
           TtaAttachAttribute (el, attrShape, doc);
         }
-      
-      /* Create the coords attribute */
-      attrType.AttrTypeNum = HTML_ATTR_coords;
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      
-      if (shape[0] == 'R')
-        TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle,
-                              el, doc);
-      else if (shape[0] == 'a')
-        TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle,
-                              el, doc);
+
+      if (shape[0] == 'R' || shape[0] == 'a')
+        {
+          /* ask the user to give coordinates */
+          if (shape[0] == 'R')
+            entry = 1;
+          else
+            entry = 3;
+          created = AskSurroundingBox(doc, image, image,
+                                      entry, &x1, &y1, &x2, &y2,
+                                      &x3, &y3, &x4, &y4, &lx, &ly);
+          if (created)
+            {
+              if (shape[0] == 'R')
+                {
+                  TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle,
+                                        el, doc);
+                  sprintf (text, "%d,%d %d,%d", x1, y1, x1+lx, y1+ly);
+                }
+              else
+                {
+                 TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle,
+                                      el, doc);
+                 sprintf (text, "%d,%d,%d", x1+lx/2, y1+lx/2, lx/2);
+                }
+              TtaSetGraphicsShape (child, shape[0], doc);
+             /* Create the coords attribute */
+              attrType.AttrTypeNum = HTML_ATTR_coords;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (el, attr, doc);
+                }
+              TtaSetAttributeText (attr, text, el, doc);
+              ParseAreaCoords (el, doc);          
+            }
+        }
       else if (shape[0] == 'p')
         {
-          /* create the AreaRef_IMG attribute */
-          attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
-          attrRef = TtaNewAttribute (attrType);
-          TtaAttachAttribute (el, attrRef, doc);
-          TtaSetAttributeReference (attrRef, el, doc, image);
-          TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon,
-                                el, doc);
-          TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
-          TtaChangeBoxSize (child, doc, 1, w, h, UnPixel);
-        }
 
-      /* ask Thot to display changes made in the document */
-      TtaSetDisplayMode (doc, dispMode);
-      TtaSelectElement (doc, child);
-      if (shape[0] == 'p')
-        {
-          TtcInsertGraph (doc, 1, 'p');
-          if (TtaGetElementVolume (child) < 3)
+          /* For polygons, sets the value after the Ref_IMG attribute is
+             created */
+          TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon, el, doc);
+          TtaSetGraphicsShape (child, shape[0], doc);
+          created = AskShapePoints (doc, image, image, 6, el);
+          if(created)
             {
-              /* the polyline doesn't have enough points */
-              if (newMap)
-                TtaDeleteTree (newMap, doc);
-              else
-                TtaDeleteTree (el, doc);
-              TtaCancelLastRegisteredSequence (doc);
-              if (!docModified)
-                TtaSetDocumentUnmodified (doc);
-              TtaSelectElement (doc, image);
-              return;
+             /* Create the coords attribute */
+              attrType.AttrTypeNum = HTML_ATTR_coords;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (el, attr, doc);
+                }
+              UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
             }
         }
+
       /* Compute coords attribute */
-      SetAreaCoords (doc, el, 0, image);
-
-      /* check the attribute ALT is not allready present 
-       * it should surely be allready created because of mandatory attributs auto-creation */
-      attrType.AttrTypeNum = HTML_ATTR_ALT;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr == 0)
+      TtaSetDisplayMode (doc, dispMode);
+      if (created)
         {
-          /* create the attribute ALT */
+          /* check the attribute ALT is not allready present 
+           * it should surely be allready created because of mandatory attributs auto-creation */
           attrType.AttrTypeNum = HTML_ATTR_ALT;
-          attr = TtaNewAttribute (attrType);
-          TtaAttachAttribute (el, attr, doc);
-          if (ImgAlt[0] == EOS)
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == 0)
             {
-              /* abandon the creation of the area */
-              if (newMap)
-                TtaDeleteTree (newMap, doc);
-              else
-                TtaDeleteTree (el, doc);
-              TtaCancelLastRegisteredSequence (doc);
-              if (!docModified)
-                TtaSetDocumentUnmodified (doc);
-              TtaSelectElement (doc, image);
-              return;
+              /* create the attribute ALT */
+              attrType.AttrTypeNum = HTML_ATTR_ALT;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              if (ImgAlt[0] == EOS)
+                strcpy (ImgAlt, "Area");
+              TtaSetAttributeText (attr, ImgAlt, el, doc);
             }
-          TtaSetAttributeText (attr, ImgAlt, el, doc);
+          ImgAlt[0] = EOS;
+          /* The link element is a new created one */
+          IsNewAnchor = TRUE;
+          /* FrameUpdating creation of Area and selection of destination */
+          SelectDestination (doc, el, FALSE, FALSE);
+          TtaSelectElement (doc, el);
         }
-      ImgAlt[0] = EOS;
-      /* The link element is a new created one */
-      IsNewAnchor = TRUE;
-      /* FrameUpdating creation of Area and selection of destination */
-      SelectDestination (doc, el, FALSE, FALSE);
+      else
+        {
+          if (newMap)
+            TtaDeleteTree (newMap, doc);
+          else
+            TtaDeleteTree (el, doc);
+          TtaCancelLastRegisteredSequence (doc);
+          if (!docModified)
+            TtaSetDocumentUnmodified (doc);
+          TtaSelectElement (doc, image);
+          return;
+        }
     }
+
   if (div)
     TtaRegisterElementCreate (div, doc);
   else if (newElem)

@@ -182,6 +182,46 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 
 
 /*----------------------------------------------------------------------
+  Moving
+  This function returns the new position (x, y) of the reference point
+  of the box.
+  ----------------------------------------------------------------------*/
+static void Moving (int frame, int *x, int *y, int width, int height,
+                    PtrBox box, int xmin, int xmax, int ymin, int ymax,
+                    int xm, int ym)
+{ 
+  TTALOGDEBUG_10( TTA_LOG_SVGEDIT, _T("Moving frame=%d width=%d height=%d box=%d xmin=%d xmax=%d ymin=%d ymax=%d xm=%d ym=%d"), frame, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
+
+  AmayaFrame * p_frame = FrameTable[frame].WdFrame;
+  AmayaMovingBoxEvtHandler * p_movingBoxEvtHandler =
+    new AmayaMovingBoxEvtHandler( p_frame,
+                                  x, y, width, height,
+                                  box, xmin, xmax, ymin, ymax,
+                                  xm, ym, 0, 0);
+  /* now wait for the polygon creation end */
+  ThotEvent ev;
+  while(!p_movingBoxEvtHandler->IsFinish())
+    TtaHandleOneEvent (&ev);
+
+  delete p_movingBoxEvtHandler;
+}
+
+/*----------------------------------------------------------------------
+  GeometryMove draws a box at a specific origin location (x,y) in
+  frame and of size (width, height) when interracting with
+  the user to mofify the box position (button press).
+  xmin, xmax, ymin, ymax are the maximum values allowed.
+  xm and ym gives the initial mouse coordinates in the frame.
+  This function returns the new position (x, y) of the origin.
+  ----------------------------------------------------------------------*/
+void GeometryMove (int frame, int *x, int *y, int width, int height,
+                   PtrBox box, int xmin, int xmax, int ymin, int ymax,
+                   int xm, int ym)
+{
+  Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
+}
+
+/*----------------------------------------------------------------------
   GeometryCreate draws a box at a specific origin location (x, y) in
   frame and of the initial size (width, height) when interracting with
   the user to mofify a box size (button press).
@@ -486,8 +526,7 @@ ThotBool TransformSVG (int frame, Document doc,
                        void *CTM, void *inverse,
                        int ancestorX, int ancestorY,
                        int canvasWidth, int canvasHeight,
-                       int transform_type,
-                       Element el)
+                       int transform_type, Element el)
 {
   AmayaFrame * p_frame;
   AmayaTransformEvtHandler *p_TransformEvtHandler;
@@ -518,18 +557,15 @@ ThotBool TransformSVG (int frame, Document doc,
 /*----------------------------------------------------------------------
   ShapeEdit
   ----------------------------------------------------------------------*/
-ThotBool ShapeEdit (int frame, Document doc, 
-                    void *inverse,
+ThotBool ShapeEdit (int frame, Document doc,  void *inverse,
                     int ancestorX, int ancestorY,
                     int canvasWidth, int canvasHeight,
-                    Element el,
-                    int point_edited
-                    )
+                    Element el, int point_edited)
 {
-  AmayaFrame * p_frame;
+  AmayaFrame               *p_frame;
   AmayaEditShapeEvtHandler *p_EditShapeEvtHandler;
-  ThotEvent ev;
-  ThotBool hasBeenEdited;
+  ThotEvent                 ev;
+  ThotBool                  hasBeenEdited;
 
   p_frame = FrameTable[frame].WdFrame;
   p_EditShapeEvtHandler = new AmayaEditShapeEvtHandler(p_frame,
@@ -614,8 +650,7 @@ ThotBool PathCreation (int frame, Document doc,  void *inverse,
 ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame * p_frame,
                                 int x0, int y0, int width, int height,
                                 void *inverseCTM, ThotBool convert,
-                                char *msg, int *x, int *y
-                                )
+                                char *msg, int *x, int *y)
 {
   int FrameId;
   int newx, newy;
@@ -702,8 +737,7 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame * p_frame,
 void SVGToMouseCoordinates (Document doc, AmayaFrame * p_frame,
                             int x0, int y0, int width, int height,
                             void *CTM, float x, float y,
-                            int *newx, int *newy
-                            )
+                            int *newx, int *newy)
 {
   int FrameId;
   float a,b,c,d,e,f;

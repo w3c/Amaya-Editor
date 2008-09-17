@@ -56,6 +56,10 @@ extern void ApplyDirectResize ( PtrBox pBox,
                                 int pointselect,
                                 int xm,
                                 int ym );
+extern void ApplyDirectTranslate ( PtrBox pBox,
+                                   int frame,
+                                   int xm,
+                                   int ym );
 extern void LocateClickedChar ( PtrBox pBox,
                                 int frame,
                                 ThotBool extend,
@@ -117,6 +121,10 @@ extern void ApplyDirectResize ( PtrBox pBox,
                                   int pointselect,
                                   int xm,
                                   int ym );
+extern void ApplyDirectTranslate ( PtrBox pBox,
+                                     int frame,
+                                     int xm,
+                                     int ym );
 extern void LocateClickedChar ( PtrBox pBox,
                                   int frame,
                                   ThotBool extend,

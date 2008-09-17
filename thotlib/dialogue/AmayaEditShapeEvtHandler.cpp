@@ -295,7 +295,7 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 
   ThotBool same_size;
   int rx,ry,lx,ly, x, y;
-  int x1,y1,x2,y2,  x3=0,y3=0,x4=0,y4=0;
+  int x1, y1, x2, y2;
   int dx, dy;
   float ratio = 0.;
 
