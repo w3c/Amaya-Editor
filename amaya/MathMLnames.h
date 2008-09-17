@@ -11,6 +11,7 @@ static ElemMapping    MathMLElemMappingTable[] =
    {"cdata_line", SPACE, MathML_EL_CDATA_line, L_OtherValue, FALSE},
    {"doctype", SPACE, MathML_EL_DOCTYPE, L_OtherValue, FALSE},
    {"doctype_line", SPACE, MathML_EL_DOCTYPE_line, L_OtherValue, FALSE},
+   {"maction", SPACE, MathML_EL_MACTION, L_MathMLValue, FALSE},
    {"maligngroup", 'E', MathML_EL_MALIGNGROUP, L_MathMLValue, FALSE},
    {"malignmark", 'E', MathML_EL_MALIGNMARK, L_MathMLValue, FALSE},
    {"math", SPACE, MathML_EL_MathML, L_MathMLValue, TRUE},

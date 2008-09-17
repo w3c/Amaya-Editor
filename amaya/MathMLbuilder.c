@@ -540,6 +540,36 @@ void SetIntMovelimitsAttr (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  CheckMinus
+  Element el is a MO. If it contains only the character '-', replace this
+  character by a minus operator (Unicode x02212)
+  ----------------------------------------------------------------------*/
+static void  CheckMinus (Element el, Document doc)
+{
+  Element	      content;
+  Language	      lang;
+  CHAR_T              text[2];
+
+  content = TtaGetFirstChild (el);
+  if (content)
+    {
+      if (TtaGetElementType (content).ElTypeNum == MathML_EL_TEXT_UNIT)
+	{
+	  if (TtaGetElementVolume (content) == 1)
+	    /* the MO element contains a single character */
+	    {
+	      TtaGiveBufferContent (content, text, 2, &lang);
+	      if (text[0] == '-')
+		{
+		  text[0] = 0x2212;
+                  TtaSetBufferContent (content, text, lang, doc);
+		}
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   CheckLargeOp
   If el is a MO element,
   if it's a large operator (&Sum; for instance), put a presentation
@@ -4279,11 +4309,12 @@ void EvaluateChildRendering (Element el, Document doc)
 void      MathMLElementComplete (ParserData *context, Element el, int *error)
 {
   Document             doc;   
-  ElementType		elType, parentType;
-  Element		child, parent, new_, prev, next;
+  ElementType	       elType, parentType;
+  Element	       child, parent, new_, prev, next;
   AttributeType        attrType;
   Attribute            attr;
   SSchema              MathMLSSchema;
+  int                  selection, i;
   ThotBool             ok;
 
   ok = TRUE;
@@ -4314,6 +4345,9 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
             SetFontstyleAttr (el, doc);
           break;
         case MathML_EL_MO:
+	  /* if the content is a single character '-', replace it by the
+	     minus operator (x2212) */
+	  CheckMinus (el, doc);
           SetIntAddSpaceAttr (el, doc);
           SetIntVertStretchAttr (el, doc, 0, NULL);
           /* if the MO element is a child of a MROW (or equivalent) and if it
@@ -4476,6 +4510,29 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
           CreatePlaceholders (TtaGetFirstChild (el), doc);
           break;
         case MathML_EL_MACTION:
+	  /* get the 'selection' attribute */
+	  attrType.AttrSSchema = MathMLSSchema;
+          attrType.AttrTypeNum = MathML_ATTR_selection;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr)
+	    selection = TtaGetAttributeValue (attr);
+	  else
+	    selection = 1;   /* default value */
+          /* put attribute IntHidden on all children of element maction
+	     except the one at rank 'selection' */
+	  child = TtaGetFirstChild (el);
+	  attrType.AttrTypeNum = MathML_ATTR_IntHidden;
+	  for (i = 1; child; i++)
+	    {
+	      if (i != selection)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (child, attr, doc);
+		  TtaSetAttributeValue (attr, MathML_ATTR_IntHidden_VAL_Yes_,
+					child, doc);
+		}
+	      TtaNextSibling (&child);
+	    }
           /* Create placeholders within the MACTION element */
           CreatePlaceholders (TtaGetFirstChild (el), doc);
           break;

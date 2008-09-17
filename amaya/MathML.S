@@ -27,7 +27,8 @@ ATTR
 				    of an entity }
    Ghost_restruct = TEXT;	  { to help structure transformation }
    IntDisplaystyle = true, false; { for internal use }
-
+   IntHidden = Yes_;              { for internal use: hide unselected
+	                            subexpressions in maction element }
 CONST
    C_Empty = ' ';
    C_Space = ' '; 
@@ -503,6 +504,7 @@ EXCEPT
    EntityName:	        Invisible; 
    Ghost_restruct:	Invisible;
    IntDisplaystyle:	Invisible;
+   IntHidden:	        Invisible;
    IntPlaceholder:   	Invisible;
    IntFontstyle:	Invisible;
    IntParseMe:	        Invisible;

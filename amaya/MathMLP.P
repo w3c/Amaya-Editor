@@ -1851,6 +1851,12 @@ ATTRIBUTES
                 END;
         END;
 
+  IntHidden:
+        BEGIN
+        Visibility: 0;
+        IN Structure_view Visibility: Enclosing =;
+        END;
+
   IntMovelimits(UnderOverBase):
         HorizPos: Left = Enclosing . Left;
   IntMovelimits(Overscript):
