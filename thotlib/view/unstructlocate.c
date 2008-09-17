@@ -341,8 +341,8 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                     }
                   if (active && sel_active == NULL)
                     dist = d + 1;
-                  else if (active == NULL && sel_active)
-                    d = dist + 1;
+                  //else if (active == NULL && sel_active)
+                  //  d = dist + 1;
 
                   if (prevMatch != matchCell && matchCell)
                     // ignore previous boxes out of the current cell
