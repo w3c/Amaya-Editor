@@ -1964,6 +1964,9 @@ void TemplateCreateRepeat(Document doc, View view)
   ElementType selType, selType2;
   int         firstChar, lastChar, firstChar2, lastChar2;
   SSchema     sstempl = TtaGetSSchema ("Template", doc);
+  const char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_REPEATCOMP);
+  const char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_REPEATLABEL);
+  char        buffer[128];
 
   ElementType repType;
   Element     rep, use;
@@ -1988,7 +1991,8 @@ void TemplateCreateRepeat(Document doc, View view)
           parent  = TtaGetParent(selElem);
           parent2 = TtaGetParent(selElem2);
 
-          if(firstChar==0 && firstChar2==0 && parent == parent2)
+          QueryStringFromUser(label, title, buffer, 127);
+          if(firstChar==0 && firstChar2==0 && parent == parent2 && buffer[0]!=0)
             {
               dispMode = TtaGetDisplayMode (doc);
               if (dispMode == DisplayImmediately)
@@ -2001,15 +2005,17 @@ void TemplateCreateRepeat(Document doc, View view)
                    selType.ElTypeNum==Template_EL_useSimple))
                 use = selElem;
               else
-                use = Template_CreateUseFromSelection(doc);
+                use = Template_CreateUseFromSelection(doc, TRUE);
               if(use)
                 {
                   TtaExtendUndoSequence(doc);
                   
                   rep = TtaNewElement(doc, repType);
+                  
                   TtaInsertSibling(rep, use, FALSE, doc);
+                  SetAttributeStringValue(rep, Template_ATTR_title, buffer);
                   TtaRegisterElementCreate(rep, doc);
-
+                  
                   TtaRegisterElementDelete (use, doc);
                   TtaRemoveTree(use, doc);
                   
@@ -2054,7 +2060,7 @@ void TemplateCreateRepeatComp(Document doc, View view)
 void TemplateCreateUseBox(Document doc, View view)
 {
 #ifdef TEMPLATES
-  Template_CreateUseFromSelection(doc);
+  Template_CreateUseFromSelection(doc, FALSE);
 #endif /* TEMPLATES */
 }
 
@@ -2065,7 +2071,7 @@ void TemplateCreateUseBox(Document doc, View view)
 void TemplateCreateUseCompBox(Document doc, View view)
 {
 #ifdef TEMPLATES
-  Template_CreateUseFromSelection(doc);
+  Template_CreateUseFromSelection(doc, TRUE);
 #endif /* TEMPLATES */
 }
 
@@ -2083,7 +2089,6 @@ static ThotBool Template_CreateInlineUse(Document doc)
   char          *proposed, *label = NULL, *types=NULL;
   ThotBool       option, res = FALSE;
   
-  
   if(t && sstempl)
     {
       proposed = Template_GetInlineLevelDeclarations(t, TRUE, TRUE);
@@ -2094,7 +2099,10 @@ static ThotBool Template_CreateInlineUse(Document doc)
           GenerateInlineElement(Template_EL_useEl, sstempl, 0, NULL, TRUE);
           
           TtaGiveFirstSelectedElement(doc, &selElem, &firstChar, &lastChar);
-          use = TtaGetParent(selElem);
+          
+          use = selElem;
+          TtaNextSibling(&use);
+
           SetAttributeStringValue(use, Template_ATTR_title, label);
           SetAttributeStringValue(use, Template_ATTR_types, types);
           res = TRUE;
@@ -2168,9 +2176,12 @@ static ThotBool Template_CreateEmptyBlockUse(Document doc)
 /*----------------------------------------------------------------------
   Template_CreateUseFromSelection
   Create a xt:use with the selection.
-  Return the xt:component element.
+  If selection is empty, insert an inline xt:use.
+  If createComp is false, create a xt:use with types at the selected block. 
+  If createComp is true, create a component with the selection.
+  Return the xt:use element.
   ----------------------------------------------------------------------*/
-Element Template_CreateUseFromSelection(Document doc)
+Element Template_CreateUseFromSelection(Document doc, ThotBool createComp)
 {
 #ifdef TEMPLATES
   ThotBool    oldStructureChecking;
@@ -2195,9 +2206,6 @@ Element Template_CreateUseFromSelection(Document doc)
       TtaGiveFirstSelectedElement(doc, &selElem, &firstChar, &lastChar);
       TtaGiveLastSelectedElement(doc, &selElem2, &firstChar2, &lastChar2);
 
-//      printf(">> %d %d - %s\n", firstChar, lastChar, TtaGetElementTypeName(TtaGetElementType(selElem)));
-//      printf("   %d %d - %s\n", firstChar2, lastChar2, TtaGetElementTypeName(TtaGetElementType(selElem2)));
-      
       if(selElem && selElem2)
         {
           selType =  TtaGetElementType(selElem);
@@ -2217,28 +2225,55 @@ Element Template_CreateUseFromSelection(Document doc)
                 Template_CreateEmptyBlockUse(doc);
               else
                 {
-                  // Create a xt:component from selection and create a xt:use using it 
                   prev = selElem;
                   TtaPreviousSibling(&prev);
-                  
-                  comp = Template_CreateComponentFromSelection(doc);
-                  if(comp)
+
+                  if(createComp)
                     {
-                      TtaExtendUndoSequence(doc);
+                      // Create a xt:component from selection and create a xt:use using it 
+                      comp = Template_CreateComponentFromSelection(doc);
+                      if(comp)
+                        {
+                          TtaExtendUndoSequence(doc);
+                          
+                          useType.ElSSchema = sstempl;
+                          useType.ElTypeNum = Template_EL_useEl;
+                          use = TtaNewElement(doc, useType);
+                          if(prev)
+                            TtaInsertSibling(use, prev, FALSE, doc);
+                          else
+                            TtaInsertFirstChild(&use, parent, doc);
+                          
+                          GiveAttributeStringValueFromNum(comp, Template_ATTR_name, buffer, &sz);
+                          SetAttributeStringValue(use, Template_ATTR_types, buffer);
+                          TtaRegisterElementCreate(use, doc);
+                          
+                          TtaSelectElement(doc, use);
+                          TtaCloseUndoSequence(doc);
+                        }
+                    }
+                  else
+                    {
+                      // Create a xt:use around the selection
+                      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
                       
+                      TtaRegisterElementDelete (selElem, doc);
+                      TtaRemoveTree(selElem, doc);
+
                       useType.ElSSchema = sstempl;
-                      useType.ElTypeNum = Template_EL_useEl;
+                      useType.ElTypeNum = Template_EL_useSimple;
                       use = TtaNewElement(doc, useType);
                       if(prev)
                         TtaInsertSibling(use, prev, FALSE, doc);
                       else
                         TtaInsertFirstChild(&use, parent, doc);
                       
-                      GiveAttributeStringValueFromNum(comp, Template_ATTR_name, buffer, &sz);
-                      SetAttributeStringValue(use, Template_ATTR_types, buffer);
+                      TtaInsertFirstChild(&selElem, use, doc);
+                      
+                      SetAttributeStringValue(use, Template_ATTR_types, TtaGetElementTypeName(TtaGetElementType(selElem)));
+                      
                       TtaRegisterElementCreate(use, doc);
                       
-                      TtaSelectElement(doc, use);
                       TtaCloseUndoSequence(doc);
                     }
                 }

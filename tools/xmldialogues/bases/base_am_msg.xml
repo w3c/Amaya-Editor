@@ -7417,6 +7417,10 @@
 	<message xml:lang="es">Color del código fuente</message>
 	<message xml:lang="de">Farbcode</message>
 </label>
+<label define="AM_TEMPLATE_REPEATLABEL">
+	<message xml:lang="en">Repeat label:</message>
+	<message xml:lang="fr">Titre de la répétition :</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

@@ -76,7 +76,8 @@ extern void TemplateCreateUseBox ( Document doc,
                                    View view );
 extern void TemplateCreateUseCompBox ( Document doc,
                                        View view );
-extern Element Template_CreateUseFromSelection ( Document doc );
+extern Element Template_CreateUseFromSelection ( Document doc,
+                                                 ThotBool createComp );
 extern Element Template_CreateComponentFromSelection ( Document doc );
 extern ThotBool TemplateComponentWillBeDeleted ( NotifyElement *event );
 
@@ -152,7 +153,8 @@ extern void TemplateCreateUseBox ( Document doc,
                                      View view );
 extern void TemplateCreateUseCompBox ( Document doc,
                                          View view );
-extern Element Template_CreateUseFromSelection ( Document doc );
+extern Element Template_CreateUseFromSelection ( Document doc,
+                                                   ThotBool createComp );
 extern Element Template_CreateComponentFromSelection ( Document doc );
 extern ThotBool TemplateComponentWillBeDeleted ( NotifyElement *event );
 
