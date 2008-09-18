@@ -2447,13 +2447,13 @@ void      CheckFence (Element el, Document doc)
                           else if (text[0] == 0x301b)
                             c = 2;    /* RightDoubleBracket */
                           else if (text[0] == 0x2308)
-                            c = 3;    /* LeftCeiling */
+                            c = 5;    /* LeftCeiling */
                           else if (text[0] == 0x2309)
-                            c = 4;    /* RightCeiling */
+                            c = 6;    /* RightCeiling */
                           else if (text[0] == 0x230a)
-                            c = 5;    /* LeftFloor */
+                            c = 3;    /* LeftFloor */
                           else if (text[0] == 0x230b)
-                            c = 6;    /* RightFloor */
+                            c = 4;    /* RightFloor */
                           else
                             c = (char) text[0];
                           content = TtaNewElement (doc, elType);
