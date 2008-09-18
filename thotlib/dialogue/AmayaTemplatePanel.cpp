@@ -45,7 +45,7 @@ AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_TEXT_BOX", "TemplateCreateTextBox", LIB, Templa
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USE_BOX", "TemplateCreateUseBox", LIB, TemplateUseBox)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USECOMP_BOX", "TemplateCreateUseBox", LIB, TemplateUseCompBox)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEAT_SECTION", "TemplateCreateRepeat", LIB, TemplateRepeat)
-AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEATCOMP_SECTION", "TemplateCreateRepeat", LIB, TemplateRepeatComp)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEATCOMP_SECTION", "TemplateCreateRepeatComp", LIB, TemplateRepeatComp)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_FREE_BOX", "TemplateCreateFreeBox", LIB, TemplateFreeBox)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_UNION", "TemplateCreateUnion", LIB, TemplateUnion)
 AMAYA_END_TOOLBAR_DEF_TABLE()

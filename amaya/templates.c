@@ -1952,10 +1952,42 @@ void TemplateCreateFreeBox(Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  TemplateCreateUnion
+  Create a xt:union around the selection.
+  ----------------------------------------------------------------------*/
+void TemplateCreateUnion(Document doc, View view)
+{
+#ifdef TEMPLATES
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
   TemplateCreateRepeat
   Create a xt:repeat around the selection.
   ----------------------------------------------------------------------*/
 void TemplateCreateRepeat(Document doc, View view)
+{
+  Template_CreateRepeatFromSelection(doc, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  TemplateCreateRepeatComp
+  Create a xt:component with the selection and use it in a new xt:repeat
+  ----------------------------------------------------------------------*/
+void TemplateCreateRepeatComp(Document doc, View view)
+{
+  Template_CreateRepeatFromSelection(doc, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  Template_CreateRepeatFromSelection
+  Create a xt:repeat with the selection.
+  If selection is empty, insert an inline xt:use.
+  If createComp is false, create a xt:use with types at the selected block. 
+  If createComp is true, create a component with the selection.
+  Return the xt:use element.
+  ----------------------------------------------------------------------*/
+Element Template_CreateRepeatFromSelection(Document doc, ThotBool createComp)
 {
 #ifdef TEMPLATES
   ThotBool    oldStructureChecking;
@@ -1972,7 +2004,7 @@ void TemplateCreateRepeat(Document doc, View view)
   Element     rep, use;
 
   if (!TtaGetDocumentAccessMode(doc))
-    return;
+    return NULL;
   
   if(doc && TtaGetDocumentAccessMode(doc) && sstempl &&
       IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
@@ -2005,7 +2037,7 @@ void TemplateCreateRepeat(Document doc, View view)
                    selType.ElTypeNum==Template_EL_useSimple))
                 use = selElem;
               else
-                use = Template_CreateUseFromSelection(doc, TRUE);
+                use = Template_CreateUseFromSelection(doc, createComp);
               if(use)
                 {
                   TtaExtendUndoSequence(doc);
@@ -2028,29 +2060,12 @@ void TemplateCreateRepeat(Document doc, View view)
               
               TtaSetStructureChecking (oldStructureChecking, doc);
               TtaSetDisplayMode (doc, dispMode);
+              return rep;
             }
         }
     }
 #endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  TemplateCreateUnion
-  Create a xt:union around the selection.
-  ----------------------------------------------------------------------*/
-void TemplateCreateUnion(Document doc, View view)
-{
-#ifdef TEMPLATES
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  TemplateCreateRepeatComp
-  Create a xt:repeat around the selection.
-  ----------------------------------------------------------------------*/
-void TemplateCreateRepeatComp(Document doc, View view)
-{
-  
+  return NULL;
 }
 
 /*----------------------------------------------------------------------
