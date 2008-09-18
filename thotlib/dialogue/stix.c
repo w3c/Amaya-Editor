@@ -1225,13 +1225,13 @@ void DrawStixHorizArrow (int frame, int x, int y, int l, int h,
       DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame);
     }
   else
-    /* wide horizontal brace. Display it from several components */
+    /* wide horizontal arrow. Display it from several components */
     if (type == 0)
-      /* draw an overbrace */
+      /* arrow to the right */
       DrawCompoundHorizArrow (frame, x, y, l, h, size, fg, 0x23, 0x23, 0x25);
     else
-      /* draw an underbrace */
-      DrawCompoundHorizArrow (frame, x, y, l, h, size, fg, 0x22, 0x23, 0x23);
+      /* arrow to the left */
+      DrawCompoundHorizArrow (frame, x, y, l, h, size, fg, 0x21, 0x23, 0x23);
 
 }
 

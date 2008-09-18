@@ -288,7 +288,7 @@ BOXES
         BEGIN
         LineWeight: 1 pt;
         Height: Enclosing . Height;
-        Width: SqrtBase . Width + ROOT_OFFSET;
+        Width: Enclosing . Width;
         VertPos: Top = Enclosing . Top;
         HorizPos: Left = Enclosing . Left;
         {HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;}
@@ -842,9 +842,9 @@ RULES
           END;
 
    Index:
-           BEGIN
+        BEGIN
         HorizRef: Enclosed . HRef;
-           HorizPos: Left = Enclosing . Left;
+        HorizPos: Left = Enclosing . Left;
         VertPos: HRef = RootBase . Top + 0.5;
         Width: ROOT_OFFSET min;
            Size: Enclosing * 50 %;
