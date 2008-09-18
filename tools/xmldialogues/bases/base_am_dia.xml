@@ -1074,30 +1074,35 @@
 	<message xml:lang="fr">Tourner</message>
 	<message xml:lang="es">Rotar</message>
 	<message xml:lang="de">Drehen</message>
+	<message xml:lang="it">Ruotare</message>
 </label>
 <label define="BSVG_Skew">
 	<message xml:lang="en">Skew</message>
 	<message xml:lang="fr">Incliner</message>
 	<message xml:lang="es">Inclinar</message>
 	<message xml:lang="de">Schrägstellen</message>
+	<message xml:lang="it">Inclinare</message>
 </label>
 <label define="BSVG_Scale">
 	<message xml:lang="en">Scale</message>
 	<message xml:lang="fr">Redimensionner</message>
 	<message xml:lang="es">Escalar</message>
 	<message xml:lang="de">Skalieren</message>
+<message xml:lang="it">Scala</message>
 </label>
 <label define="BSVG_Tranlate">
 	<message xml:lang="en">Move</message>
 	<message xml:lang="fr">Déplacer</message>
 	<message xml:lang="es">Mover</message>
 	<message xml:lang="de">Verschieben</message>
+<message xml:lang="it">Muovere</message>
 </label>
 <label define="BSVG_Ungroup">
 	<message xml:lang="en">Ungroup</message>
 	<message xml:lang="fr">Dégrouper</message>
 	<message xml:lang="es">Desagrupar</message>
 	<message xml:lang="de">Gruppierung aufheben</message>
+<message xml:lang="it">NoGruppo</message>
 </label>
 <label define="BCCut">
 	<message xml:lang="en">Cut</message>
@@ -1733,6 +1738,7 @@
 	<message xml:lang="fr">Zoom normal</message>
 	<message xml:lang="es">Zoom a tamaño real</message>
 	<message xml:lang="de">normale Vergrößerung</message>
+<message xml:lang="it">Zoom normale</message>
 </label>
 <label define="BParagraph">
 	<message xml:lang="en">Paragraph (p)</message>
@@ -2976,86 +2982,101 @@
 	<message xml:lang="fr">Ligne</message>
 	<message xml:lang="de">Linie</message>
 	<message xml:lang="es">Linea</message>
+<message xml:lang="it">Linea</message>
 </label>
 <label define="BSVG_SimpleArrow">
 	<message xml:lang="en">Arrow</message>
 	<message xml:lang="fr">Flèche</message>
 	<message xml:lang="es">Flecha</message>
 	<message xml:lang="de">Pfeil</message>
+<message xml:lang="it">Freccia</message>
 </label>
 <label define="BSVG_Text">
 	<message xml:lang="en">Text</message>
 	<message xml:lang="fr">Texte</message>
 	<message xml:lang="es">Texto</message>
 	<message xml:lang="de">Text</message>
+<message xml:lang="it">Testo</message>
 </label>
 <label define="BSVG_ForeignObject">
 	<message xml:lang="en">ForeignObject</message>
 	<message xml:lang="fr">ForeignObject</message>
 	<message xml:lang="es">ForeignObject</message>
 	<message xml:lang="de">fremdes Objekt</message>
+<message xml:lang="it">OggettoEsterno</message>
 </label>
 <label define="BSVG_Group">
 	<message xml:lang="en">Group</message>
 	<message xml:lang="fr">Groupe</message>
 	<message xml:lang="es">Grupo</message>
 	<message xml:lang="de">Gruppierung</message>
+<message xml:lang="it">Gruppo</message>
 </label>
 <label define="BSVG_Square">
 	<message xml:lang="en">Square</message>
 	<message xml:lang="fr">Carré</message>
 	<message xml:lang="es">Cuadrado</message>
 	<message xml:lang="de">Quadrat</message>
+<message xml:lang="it">Quadrato</message>
 </label>
 <label define="BSVG_Rectangle">
 	<message xml:lang="en">Rectangle</message>
 	<message xml:lang="fr">Rectangle</message>
 	<message xml:lang="es">Rectángulo</message>
 	<message xml:lang="de">Rechteck</message>
+	<message xml:lang="it">Rettangolo</message>
 </label>
 <label define="BSVG_Diamond">
   <message xml:lang="en">Diamond</message>
   <message xml:lang="fr">Losange</message>
   <message xml:lang="es">Rombo</message>
 	<message xml:lang="de">Raute</message>
+	<message xml:lang="it">Rombo</message>
 </label>
 <label define="BSVG_IsoscelesTriangle">
 	<message xml:lang="en">Triangle</message>
 	<message xml:lang="fr">Triangle</message>
 	<message xml:lang="es">Triángulo</message>
 	<message xml:lang="de">Dreieck</message>
+	<message xml:lang="it">Triangolo</message>
 </label>
 <label define="BSVG_Circle">
 	<message xml:lang="en">Circle</message>
 	<message xml:lang="fr">Ligne</message>
 	<message xml:lang="es">Círculo</message>
 	<message xml:lang="de">Kreis</message>
+	<message xml:lang="it">Cerchio</message>
 </label>
 <label define="BSVG_Ellipse">
 	<message xml:lang="en">Ellipse</message>
 	<message xml:lang="fr">Ellipse</message>
 	<message xml:lang="es">Elipse</message>
 	<message xml:lang="de">Elipse</message>
+	<message xml:lang="it">Ellisse</message>
 </label>
 <label define="BSVG_Polyline">
 	<message xml:lang="en">Polyline</message>
 	<message xml:lang="fr">Multiligne</message>
 	<message xml:lang="de">Linienzug</message>
+	<message xml:lang="it">PiuLinee</message>
 </label>
 <label define="BSVG_Polygon">
 	<message xml:lang="en">Polygon</message>
 	<message xml:lang="fr">Polygone</message>
 	<message xml:lang="de">Vieleck</message>
+	<message xml:lang="it">Poligono</message>
 </label>
 <label define="BSVG_Spline">
 	<message xml:lang="en">Open curve</message>
 	<message xml:lang="fr">Courbe ouverte</message>
 	<message xml:lang="de">offene Kurve</message>
+	<message xml:lang="it">Curva aperta</message>
 </label>
 <label define="BSVG_Closed">
 	<message xml:lang="en">Closed curve</message>
 	<message xml:lang="fr">Courbe fermée</message>
 	<message xml:lang="de">geschlossene Kurve</message>
+	<message xml:lang="it">Curva chiusa</message>
 </label>
 <!--
 <label define="BSVG_Cube">
@@ -4287,6 +4308,7 @@
 	<message xml:lang="ja">スペルチェック</message>
 	<message xml:lang="es">Limpiar código</message>
 	<message xml:lang="de">Quelltext bereinigen</message>
+	<message xml:lang="it">Codice pulito</message>
 </label>
 <label define="TableE">
 	<message xml:lang="en">Edit table</message>
@@ -5058,53 +5080,62 @@
 	<message xml:lang="fr">Modèles</message>
 	<message xml:lang="es">Plantillas</message>
 	<message xml:lang="de">Vorlagen</message>
+	<message xml:lang="it">Schemi</message>
 </label>
 <label define="BCreateTemplateFromDocument">
 	<message xml:lang="en">Create template from current document</message>
 	<message xml:lang="fr">Créer un modèle depuis le document courant</message>
 	<message xml:lang="es">Crear plantilla a partir de documento actual</message>
 	<message xml:lang="de">Eine Vorlage aus dem aktuellen Dokument erstellen</message>
+	<message xml:lang="it">Crea uno schema dal documento corrente</message>
 </label>
 <label define="BTemplateCreateTextBox">
 	<message xml:lang="en">Create a text area</message>
 	<message xml:lang="fr">Créer une zone de texte</message>
 	<message xml:lang="es">Crear área de texto</message>
 	<message xml:lang="de">Ein Textfeld erstellen</message>
+	<message xml:lang="it">Crea area di testo</message>
 </label>
 <label define="BTemplateCreateUseBox">
 	<message xml:lang="en">Use a component or an element</message>
 	<message xml:lang="fr">Utiliser un composant ou un élément</message>
 	<message xml:lang="es">Usar componente o elemento</message>
 	<message xml:lang="de">Eine Komponente oder Element verwenden</message>
+	<message xml:lang="it">Usa un componente o un elemento</message>
 </label>
 <label define="BTemplateCreateUseCompBox">
 	<message xml:lang="en">Create and use a component</message>
 	<message xml:lang="fr">Créer et utiliser un composant</message>
 	<message xml:lang="es">Crear y usar componente</message>
 	<message xml:lang="de">Erstellen und Verwenden einer Komponente</message>
+	<message xml:lang="it">Crea e usa un componente</message>
 </label>
 <label define="BTemplateCreateRepeat">
 	<message xml:lang="en">Repeat the current use</message>
 	<message xml:lang="fr">Répéter l'utilisation courant</message>
 	<message xml:lang="es">Repetir uso actual</message>
 	<message xml:lang="de">Aktuelle Anwendung wiederholen</message>
+	<message xml:lang="it">Ripeti uso corrente</message>
 </label>
 <label define="BTemplateCreateRepeatComp">
 	<message xml:lang="en">Create and repeat a component</message>
 	<message xml:lang="fr">Créer et répéter un composant</message>
 	<message xml:lang="es">Crear y repetir componente</message>
 	<message xml:lang="de">Erstellen und vervielfältigen einer Komponente</message>
+	<message xml:lang="it">Crea e ripeti un componente</message>
 </label>
 <label define="BTemplateCreateFreeBox">
 	<message xml:lang="en">Create a free editing box</message>
 	<message xml:lang="fr">Créer une zone d'édition libre</message>
 	<message xml:lang="es">Crear caja de edición libre</message>
 	<message xml:lang="de">Eine freie Editierbox erstellen</message>
+	<message xml:lang="it">Crea un box da editare</message>
 </label>
 <label define="BTemplateCreateUnion">
 	<message xml:lang="en">Create a new types union</message>
 	<message xml:lang="fr">Créer une nouvelle union de types</message>
 	<message xml:lang="es">Crear nueva unión de tipos</message>
+	<message xml:lang="it">Crea una nuona unione di tipi</message>
 </label>
 <label define="JavascriptDom_">
 	<message xml:lang="en">&amp;Javascript/DOM</message>
@@ -5179,6 +5210,7 @@
 	<message xml:lang="tw">關于 Amaya at W3C</message>
 	<message xml:lang="es">Buscar actualizaciones</message>
 	<message xml:lang="de">Nach Aktualisierungen suchen</message>
+	<message xml:lang="it">Controlla per aggiornare</message>
 </label>
 <label define="BHelpIndex">
 	<message xml:lang="en">Amaya Help...</message>

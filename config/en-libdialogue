@@ -354,7 +354,7 @@
 352 Scream
 353 Thought
 354 Capacitor
-355 Current source
+355 Power source
 356 Diode
 357 Ground Point
 358 Inductor
@@ -410,7 +410,7 @@
 408 Split Arrow
 409 S-Shape Arrow
 410 Striped Arrow
-411 Create template from current document...
+411 Create template from current document
 412 Create a text area
 413 Use a component or an element
 414 Create and use a component

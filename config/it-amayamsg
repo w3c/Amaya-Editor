@@ -442,8 +442,8 @@
 439 Ricorda le password per i siti
 440 Siti
 441 Elimina tutti
-442 **XML namespaces generated for new XHTML+RDFa documents
-443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+442 XML namespace generati da nuovi documenti XHTML+RDFa 
+443 Seleziona un namespace nell'elenco sotto o aggiungi uno nuovo (syntax prefix="uri")
 444 Si è verificato un errore mentre si caricavano oggetti di javascript/DOM
 445 E' in esecuzione uno script che si cercherà di fermare prima possibile. Per favore prova più tardi.
 446 Javascript/DOM non è disponibile in questa vista.
@@ -470,44 +470,44 @@
 467 Disattiva il foglio di stile selezionato
 468 Apri il foglio di stile selezionato
 469 Profilo Amaya:
-470 **Show "Tip of the day" at startup
-471 **Choose font family and size:
-472 **Template has error(s), it will not be used:
-473 **Close
-474 **Component '%s' has multiple definition.
-475 **Library '%s' can not be loaded.
-476 **Can not convert an instance document to template.
-477 **The document is already a template
-478 **Template creation fails
-479 **Text area
-480 **Element label:
-481 **Bag area
-482 **Repeat element
-483 **New component
-484 **Component is used, you can not remove it.
-485 **at the top left corner
-486 **at the bottom left corner
-487 **on the left
-488 **at the top right corner
-489 **at the bottom right corner
-490 **on the right
-491 **at the top
-492 **at the bottom
-493 **in the center
-494 **to the left and above
-495 **to the left and below
-496 **to the left of
-497 **to the right and above
-498 **to the right and below
-499 **to the right of
-500 **above
-501 **below
-502 **in front of
-503 **There are %d objects: 
-504 **New use
-505 **Optional use
-506 **Color source code
-507 **Repeat label:
-508 **New union
-509 **Union
-510 **Union name:
+470 Visualizza "Il suggerimento del giorno"
+471 Scegli il tipo di font e la grandezza:
+472 Lo schema contiene errori e non sarà  usato:
+473 Chiudi
+474 Il componente '%s' ha definizioni multiple.
+475 La libreria '%s' non puo' essere caricata.
+476 Non posso convertire un'istanza del documento in schema.
+477 Il documento è già uno schema
+478 La creazione dello shema è fallita
+479 Area di testo
+480 Elemento etichetta:
+481 Zona multi elementi
+482 Ripeti elemento
+483 Nuovo componente
+484 Il componente è usato, non puoi cancellarlo.
+485 in alto a sinistra
+486 in basso a sinistra
+487 a sinistra
+488 in alto a destra
+489 in basso a destra
+490 a destra
+491 in alto
+492 in basso
+493 al centro
+494 sopra a sinistra
+495 sotto a sinitra
+496 a sinistra di
+497 sopra a destra
+498 sotto a destra
+499 a destra di
+500 sopra
+501 sotto
+502 davanti
+503 Ci sono %d oggetti:
+504 Uso nuovo
+505 Uso opzionale
+506 Colore del codice sorgente
+507 Titolo della ripetizione:
+508 Nuova unione
+509 Unione
+510 Nome di l'unione:

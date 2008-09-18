@@ -256,10 +256,10 @@
 254 Aggiungi una colonna
 255 Suggerimento del giorno
 256 Visualizza il suggerimento all'avvio
-257 **Previous tip
+257 Suggerimento precedente
 258 Prossimo suggerimento
 259 Sapevi che...
-260 **Close
+260 Chiudi
 261 Amaya può adattarsi al tuo uso: ci sono cinque diversi profili con un insieme differente di voci di menu e pannelli. Vedi Preferenze.
 262 I panelli possono essere visualizzati a sinistra o a destra o personalizzati pannello per pannello. Vedi Preferenze.
 263 Con il tasto F2 o Escape si può selezionare l'elemento genitore nella struttura, per applicare a questi elementi le funzioni di editing (copia, incolla, attributi, etc.).
@@ -270,108 +270,108 @@
 268 Quando c'è un pulsante rosso nella barra di stato, si possono vedere gli errori cliccandoci sopra .
 269 Si può selezionare un antenato della selezione corrente clicccando sul suo nome nel path di controllo visualizzato nella barra di stato.
 270 Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.
-271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
-272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
-274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
-275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
+271 e attivi "Mostra obiettivi" nel menu "Viste", gli obiettivi sono visualizzati in modo particolare. Questo è utile per la creazione di collegamenti: un obiettivo può essere scelto cliccandoci sopra. 
+272 Quando un oggetto SVG viene ruotato, il centro è indicato con una croce. Si puo' usare il mouse per muoverlo.
+273 Le forme di base SVG hanno delle maniglie che possono essere usate per modificarle. Si puo' cambiare la gradezza deI triangoli blu e dei quadrati verdi. Per l'elemento 
+274 Nel disegno SVG , le linee sono crete con una precisione di 15º se si tiene premuto il tasto shift. Questo è utile quando si vogliono disegnare linee diritte.
+275 Quando si ridimensiona un'immagine o un oggetto SVG, tenendo premuto il tasto shift si memorizza il cambiamento.
+276 Usa Edita>Preferenze>Lingua delle finestre di dialogo per scegliere la lingua dell'interfaccia utente.
 277 Classico
 278 Moderno
 279 Senza tema
-280 **Title/Description
-281 **Generate a description
-282 **Square
-283 **Rounded Square
-284 **Rectangle
-285 **Rounded rectangle
-286 **Diamond
-287 **Parallelogram
-288 **Trapezium
-289 **Equilateral triangle
-290 **Isosceles triangle
-291 **Right triangle
-292 **Circle
-293 **Ellipse
-294 **Line
-295 **Arrow
-296 **Double Arrow
-297 **Zigzag
-298 **Group
-299 **Ungroup
-300 **Bring to front
-301 **Send to back
-302 **One level up
-303 **One level down
-304 **90° left
-305 **90° right
-306 **Rotate
-307 **Vertical symmetry
-308 **Horizontal symmetry
-309 **Scale
-310 **Skew
-311 **Move
-312 **Align bottom
-313 **Align center
-314 **Align left
-315 **Align middle
-316 **Align right
-317 **Align top
-318 **Distribute bottom
-319 **Distribute center
-320 **Distribute left
-321 **Distribute middle
-322 **Distribute right
-323 **Distribute top
-324 **Distribute vertical spacing
-325 **Distribute horizontal spacing
-326 **Closed Bezier curve
-327 **Bezier curve
-328 **Polyline
-329 **Polygon
-330 **Foreign Object
-331 **Image
-332 **SVG Canvas
-333 **Text
-334 **Cone
-335 **Cube
-336 **Cylinder
-337 **Octahedron
-338 **Parallelepiped
-339 **Pyramid
-340 **Beaker
-341 **Funnel
-342 **Bunsen burner
-343 **Buchner flask
-344 **Boiling flask
-345 **Burette
-346 **Erlenmeyer flask
-347 **Test tube
-348 **Pipette
-349 **Rectangular
-350 **Rounded rectangular
-351 **Round
-352 **Scream
-353 **Thought
-354 **Capacitor
-355 **Current source
-356 **Diode
-357 **Ground Point
-358 **Inductor
-359 **LED
-360 **Op-amp
-361 **Resistor
-362 **Switch
-363 **Transistor
-364 **Voltage source
-365 **Zener diode
-366 **Pentagon
-367 **Hexagon
-368 **Heptagon
-369 **Octogon
-370 **Star (4 branches)
-371 **Star (5 branches)
-372 **Star (6 branches)
+280 Titolo/Descrizione
+281 Produrre una descrizione
+282 Quadrato
+283 Quadrato arrotondato
+284 Rettangolo
+285 Rettangolo arrotondato
+286 Rombo
+287 Parallelogramma
+288 Trapezio
+289 Triangolo equilatero
+290 Triangolo isoscele
+291 Triangolo rettangolo
+292 Cerchio
+293 Ellisse
+294 Linea
+295 Freccia
+296 Freccia doppia
+297 Zigzag
+298 Gruppo
+299 NoGruppo
+300 Porta in primo piano
+301 Porta in fondo
+302 Sopra di un livello
+303 Sotto di un livello
+304 90 gradi a sinistra
+305 90 gradi a destra
+306 Ruotare
+307 Simmetria verticale
+308 Simmetria orizzontale
+309 Scala
+310 Inclina
+311 Muovi
+312 Allinea in basso
+313 Allinea al centro
+314 Allinea a sinistra
+315 Allinea nel mezzo
+316 Allinea a destra
+317 Allinea in alto
+318 Distribuisci in basso
+319 Distribuisci al centro
+320 Distribuisci a sinistra
+321 Distribuisci in mezzo
+322 Distribuisci a destra
+323 Distribuisci in alto
+324 Distribuisci gli spazi verticali
+325 Distribuisci gli spazi orizzontali
+326 Curve Bezier chiuse
+327 Curve Bezier
+328 PiuLinee
+329 Poligono
+330 Oggetto esterno
+331 Immagine
+332 SVG Canvas
+333 Testo
+334 Cono
+335 Cubo
+336 Cilindro
+337 Ottaedro
+338 Parallelepipedo
+339 Piramide
+340 Beaker
+341 Imbuto
+342 Becco di Bunsen
+343 Filtro Buchner
+344 Boccetta d'ebollizione
+345 Buretta
+346 Beuta
+347 Provetta
+348 Pipetta
+349 Rettangolo
+350 Rettangolo arrotondato
+351 Tondo
+352 Grido
+353 Pensiero
+354 Condensatore
+355 Fonte di energia
+356 Diodo
+357 Messa a terra
+358 Induttore
+359 LED
+360 Op-amp
+361 Resistore
+362 Interruttore
+363 Transistor
+364 Generatore di tensione
+365 Diodo zener
+366 Pentagono
+367 Esagono
+368 Eptagono
+369 Ottagono
+370 Stella (4 punte)
+371 Stella (5 punte)
+372 Stella (6 punte)
 373 AND
 374 NAND
 375 OR
@@ -379,45 +379,45 @@
 377 XOR
 378 XNOR
 379 NOT
-380 **Cross
-381 **Frame
-382 **Ring
-383 **Cloud
-384 **Scroll
-385 **Sun
-386 **Lightning_Bolt
-387 **Moon
-388 **Smiley
-389 **Heart
-390 **Flower
-391 **Prohibited
-392 **2-Way Rounded Arrow
-393 **3-Way Arrow Callout
-394 **3-Way Arrow
-395 **4-Way_Arrow_Callout
-396 **4-Way Arrow
-397 **Chevron
-398 **Circular Arrow
-399 **Corner Arrow
-400 **Corner Double Arrow Callout
-401 **Corner Double Arrow
-402 **Double Arrow Callout
-403 **Double Arrow
-404 **Notched Arrow
-405 **Rounded Arrow
-406 **Simple Arrow Callout
-407 **Simple Arrow
-408 **Split Arrow
-409 **S-Shape Arrow
-410 **Striped Arrow
-411 **Create template from current document...
-412 **Create a text area
-413 **Use a component or an element
-414 **Create and use a component
-415 **Repeat the current use
-416 **Create and repeat a component
-417 **Create a free editing box
-418 **Create a new types union
-419 **(%d,%d) Button up to close
-420 **(%d,%d) Double click to close
-421 **(%d,%d) Click to close
+380 Croce
+381 Quadro
+382 Anello
+383 Nuvola
+384 Pergamena
+385 Sole
+386 Fulmine
+387 Luna
+388 Smiley
+389 Cuore
+390 Fiore
+391 Proibito
+392 2-Frecce arrotondate
+393 3-Frecce legenda
+394 3-Frecce
+395 4-Frecce_legenda
+396 4-Frecce 
+397 Chevron
+398 Freccia circolare
+399 Freccia in angolo
+400 Doppia freccia legenda in angolo
+401 Doppia freccia in angolo
+402 Doppia freccia legenda
+403 Doppia freccia
+404 Freccia dentellata
+405 Freccia arrotondata
+406 Freccia semplice legenda
+407 Freccia semplice
+408 Freccia divisa
+409 Freccia forma-S 
+410  Freccia striata 
+411 Crea lo schema dal documento corrente
+412 Crea area di testo
+413 Usa un componente o un elemento
+414 Crea e usa un component
+415 Ripeti uso corrente 
+416 Crea e ripeti un componente
+417 Crea un box da editare
+418 Crea una nuova unione di tipi
+419 (%d,%d) Tasto fino alla fine
+420 (%d,%d) Doppio scatto da chiudersi
+421 (%d,%d) Scatto da chiudersi

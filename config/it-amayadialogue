@@ -66,11 +66,11 @@
 64 Apri il collegamento
 65 Apri il collegamento in una nuova scheda
 66 Apri il collegamento in una nuova finestra
-67 **Rotate
-68 **Skew
-69 **Scale
-70 **Move
-71 **Ungroup
+67 Ruotare
+68 Inclinare
+69 Scala
+70 Muovere
+71 NoGruppo
 72 Taglia
 73 Copia
 74 Incolla
@@ -112,7 +112,7 @@
 110 Schermo intero
 111 Ingrandisci
 112 Rimpicciolisci
-113 **Normal zoom
+113 Zoom normale
 114 Paragrafo (p)
 115 Intestazione
 116 h1
@@ -186,21 +186,21 @@
 184 Multiscript (mmultiscripts)
 185 Matrice (mtable)
 186 Graphics
-187 **Line
-188 **Arrow
-189 **Text
-190 **ForeignObject
-191 **Group
-192 **Square
-193 **Rectangle
-194 **Diamond
-195 **Triangle
-196 **Circle
-197 **Ellipse
-198 **Polyline
-199 **Polygon
-200 **Open curve
-201 **Closed curve
+187 Linea
+188 Freccia
+189 Testo
+190 OggettoEsterno
+191 Gruppo
+192 Quadrato
+193 Rettangolo
+194 Rombo
+195 Triangolo
+196 Cerchio
+197 Ellisse
+198 PiuLinee
+199 Poligono
+200 Curva aperta
+201 Curva chiusa
 202 Modulo
 203 form
 204 Pulsante (input)
@@ -285,7 +285,7 @@
 283 Aggiungi/Togli ID...
 284 Controllo ortografico...
 285 Trasforma...
-286 **Code clean up
+286 Codice pulito
 287 Modifica tabella
 288 Cambia la cella a data
 289 Cambia la cella a intestazione
@@ -336,22 +336,22 @@
 334 Informazioni per il lock...
 335 Copia delle informazioni per il lock...
 336 Lock?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
-345 **Create a new types union
+337 Schemi
+338 Crea uno schema dal documento corrente
+339 Crea area di testo
+340 Usa un componente o un elemento
+341 Crea e usa un componente
+342 Ripeti uso corrente
+343 Crea e ripeti un componente
+344 Crea un box da editare
+345 Crea una nuona unione di tipi
 346 &Javascript/DOM
 347 Attiva/Disattiva
 348 Esegui un comando
 349 Esegui un comando
 350 Aggiungi uno script esterno
 351 Inserisci uno script
-352 **Check for update
+352 Controlla per aggiornare
 353 Aiuto Amaya...
 354 Suggerimenti del giorno...
 355 Informazioni su Amaya
