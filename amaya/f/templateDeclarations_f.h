@@ -33,6 +33,10 @@ extern char* Template_GetBlockLevelDeclarations ( XTigerTemplate t,
 extern char* Template_GetInlineLevelDeclarations ( XTigerTemplate t,
                                                    ThotBool addAny,
                                                    ThotBool addSimple );
+extern char* Template_GetAllDeclarations ( XTigerTemplate t,
+                                           ThotBool addAnys,
+                                           ThotBool addAny,
+                                           ThotBool addSimple );
 extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                    const char *name,
                                                    SimpleTypeType xtype );
@@ -162,6 +166,10 @@ extern char* Template_GetBlockLevelDeclarations ( XTigerTemplate t,
 extern char* Template_GetInlineLevelDeclarations ( XTigerTemplate t,
                                                      ThotBool addAny,
                                                      ThotBool addSimple );
+extern char* Template_GetAllDeclarations ( XTigerTemplate t,
+                                             ThotBool addAnys,
+                                             ThotBool addAny,
+                                             ThotBool addSimple );
 extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                      const char *name,
                                                      SimpleTypeType xtype );

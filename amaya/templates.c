@@ -1958,6 +1958,49 @@ void TemplateCreateFreeBox(Document doc, View view)
 void TemplateCreateUnion(Document doc, View view)
 {
 #ifdef TEMPLATES
+  SSchema        sstempl = TtaGetSSchema ("Template", doc);
+  Element        head, sibling, unionEl;
+  ElementType    unionType;
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  char          *proposed, *name = NULL, *types=NULL;
+  
+  if(t && sstempl)
+    {
+      proposed = Template_GetAllDeclarations(t, TRUE, FALSE, TRUE);
+      if(QueryUnionFromUser(proposed, NULL, &name, &types, TRUE))
+        {
+          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
+          head = TemplateFindHead(doc);
+          sibling = TtaGetLastChild(head);
+
+          unionType.ElSSchema = sstempl;
+          unionType.ElTypeNum = Template_EL_union;
+          unionEl = TtaNewElement(doc, unionType);
+          
+          if(sibling)
+            TtaInsertSibling(unionEl, sibling, FALSE, doc);
+          else
+            {
+              sibling = unionEl;
+              TtaInsertFirstChild(&sibling, head, doc);
+            }
+          SetAttributeStringValue(unionEl, Template_ATTR_name, name);
+          SetAttributeStringValue(unionEl, Template_ATTR_includeAt, types);
+          
+          TtaRegisterElementCreate(unionEl, doc);
+          
+          TtaSelectElement(doc, unionEl);
+          TtaCloseUndoSequence(doc);
+          
+          Template_DeclareNewUnion (t, name, types, "");
+        }
+      
+      TtaFreeMemory(proposed);
+      TtaFreeMemory(name);
+      TtaFreeMemory(types);
+    }  
+
 #endif /* TEMPLATES */
 }
 

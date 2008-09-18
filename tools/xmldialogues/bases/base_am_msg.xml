@@ -7421,6 +7421,18 @@
 	<message xml:lang="en">Repeat label:</message>
 	<message xml:lang="fr">Titre de la répétition :</message>
 </label>
+<label define="AM_TEMPLATE_NEWUNION">
+	<message xml:lang="en">New union</message>
+	<message xml:lang="fr">Nouvelle union</message>
+</label>
+<label define="AM_TEMPLATE_UNION">
+	<message xml:lang="en">Union</message>
+	<message xml:lang="fr">Union</message>
+</label>
+<label define="AM_TEMPLATE_UNIONNAME">
+	<message xml:lang="en">Union name:</message>
+	<message xml:lang="fr">Nom de l'union :</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

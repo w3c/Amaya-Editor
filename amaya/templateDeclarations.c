@@ -875,6 +875,84 @@ char* Template_GetInlineLevelDeclarations(XTigerTemplate t, ThotBool addAny, Tho
   return NULL;  
 }
 
+/*----------------------------------------------------------------------
+  Retrieve all declarations
+  ----------------------------------------------------------------------*/
+char* Template_GetAllDeclarations(XTigerTemplate t, ThotBool addAnys, ThotBool addAny, ThotBool addSimple)
+{
+#ifdef TEMPLATES
+  ForwardIterator iter;
+  SearchSetNode   node;
+  Declaration     decl;
+  char*           str;
+  
+  if(t)
+    {
+      str = (char*)TtaGetMemory(MAX_LENGTH);
+      str[0] = EOS;
+      
+      if(addAnys)
+        {
+          if(addAny)
+            {
+              strcat(str, UNION_ANY);
+              strcat(str, " ");
+            }
+          strcat(str, UNION_ANYCOMPONENT);
+          strcat(str, " ");
+          strcat(str, UNION_ANYSIMPLE);
+          strcat(str, " ");
+          strcat(str, UNION_ANYELEMENT);
+          strcat(str, " ");
+        }
+
+      if(addSimple)
+        {
+          strcat(str, TYPE_STRING);
+          strcat(str, " ");
+        }
+      
+      // Components
+      iter = SearchSet_GetForwardIterator(t->components);
+      ITERATOR_FOREACH(iter, SearchSetNode, node)
+        {
+          decl = (Declaration) node->elem;
+          strcat(str, decl->name);
+          strcat(str, " ");
+        }
+      TtaFreeMemory(iter);
+      
+      // Union
+      iter = SearchSet_GetForwardIterator(t->unions);
+      ITERATOR_FOREACH(iter, SearchSetNode, node)
+        {
+          decl = (Declaration) node->elem;
+          if(strcmp(decl->name, UNION_ANY) && 
+              strcmp(decl->name, UNION_ANYCOMPONENT) &&
+              strcmp(decl->name, UNION_ANYSIMPLE) &&
+              strcmp(decl->name, UNION_ANYELEMENT) )
+            {
+              strcat(str, decl->name);
+              strcat(str, " ");
+            }
+        }
+      TtaFreeMemory(iter);      
+
+      // XML elements
+      iter = SearchSet_GetForwardIterator(t->elements);
+      ITERATOR_FOREACH(iter, SearchSetNode, node)
+        {
+          decl = (Declaration) node->elem;
+          strcat(str, decl->name);
+          strcat(str, " ");
+        }
+      TtaFreeMemory(iter);      
+      
+      return str;
+    }
+#endif /* TEMPLATES */
+  return NULL;  
+}
 
 /*----------------------------------------------------------------------
   Add a declaration to a template for a new simple type.

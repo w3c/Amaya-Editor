@@ -772,6 +772,7 @@ TemplateCreateUseCompBox
 TemplateCreateRepeat
 TemplateCreateRepeatComp
 TemplateCreateFreeBox
+TemplateCreateUnion
 
 [spell]
 SpellCheck

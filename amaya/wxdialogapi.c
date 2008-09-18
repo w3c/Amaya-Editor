@@ -1516,14 +1516,13 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
             SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));      
       
       wxSizer* sz = dialog.GetSizer();
-      box = XRCCTRL(dialog, "wxID_LIST_TYPES", wxCheckListBox);
-      box->Hide();
-      
       box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
       sz->Insert(2, box, 1, wxEXPAND);
-      
-      
+            
       box->Append(arr);
+      
+      dialog.SetSize(200, 320);
+      dialog.Layout();
       
       if(dialog.ShowModal()==wxID_OK)
         {
@@ -1552,3 +1551,73 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
   return FALSE;
 }
 
+/*----------------------------------------------------------------------
+  QueryUnionFromUser
+  Query the label, the types and the option value for a new xt:use
+  to a user.
+  Return FALSE if user cancel the query or an error occurs.
+  ----------------------------------------------------------------------*/
+ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** label, char**types, ThotBool newUnion)
+{
+#ifdef TEMPLATES
+  unsigned int i, n;
+  wxDialog dialog;
+  wxString strs = TtaConvMessageToWX(proposed);
+  wxArrayString arr = wxStringTokenize(strs);
+  wxCheckListBox* box;
+  
+  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
+    {
+      
+      dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, newUnion?AM_TEMPLATE_NEWUNION:AM_TEMPLATE_UNION)));
+      
+      
+      XRCCTRL(dialog, "wxID_LABEL_LABEL", wxStaticText)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_UNIONNAME)));
+      XRCCTRL(dialog, "wxID_CANCEL", wxButton)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL) ));
+      XRCCTRL(dialog, "wxID_OK", wxButton)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));      
+
+      XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->Hide();
+      if(!newUnion)
+        {
+          if(label!=0 && *label!=0)
+            XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetValue(TtaConvMessageToWX(*label));
+          XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->Disable();
+        }
+      
+      wxSizer* sz = dialog.GetSizer();
+      box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
+      sz->Insert(2, box, 1, wxEXPAND);
+      sz->Layout();
+      
+      box->Append(arr);
+      
+      dialog.SetSize(200, 320);
+      dialog.Layout();
+      
+      if(dialog.ShowModal()==wxID_OK)
+        {
+          strs.Clear();
+          n = box->GetCount();
+          for(i=0; i<n; i++)
+            {
+              if(box->IsChecked(i))
+                {
+                  strs += box->GetString(i);
+                  strs += wxT(" ");
+                }
+            }
+          strs.Trim();
+          
+          if(label && newUnion)
+            *label = TtaStrdup((const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8));
+          if(types)
+            *types = TtaStrdup((const char*)strs.mb_str(wxConvUTF8));
+          return TRUE;
+        }
+    }
+#endif /* TEMPLATES */
+  return FALSE;
+}

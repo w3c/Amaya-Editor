@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  
   <object class="wxDialog" name="TemplateNewUseDlgWX">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
@@ -32,15 +31,7 @@
         <flag>wxALL|wxEXPAND</flag>
         <border>4</border>
       </object>
-      <object class="sizeritem">
-        <object class="wxListBox" name="wxID_LIST_TYPES" subclass="wxCheckListBox">
-          <size>180,300</size>
-        </object>
-        <option>1</option>
-        <flag>wxEXPAND</flag>
-        <border>0</border>
-        <minsize>120,120</minsize>
-      </object>
+      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
