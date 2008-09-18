@@ -66,12 +66,14 @@ extern void TemplateCreateTextBox ( Document doc,
                                     View view );
 extern void TemplateCreateFreeBox ( Document doc,
                                     View view );
-extern void TemplateCreateRepeat ( Document doc,
-                                   View view );
 extern void TemplateCreateUnion ( Document doc,
                                   View view );
+extern void TemplateCreateRepeat ( Document doc,
+                                   View view );
 extern void TemplateCreateRepeatComp ( Document doc,
                                        View view );
+extern Element Template_CreateRepeatFromSelection ( Document doc,
+                                                    ThotBool createComp );
 extern void TemplateCreateUseBox ( Document doc,
                                    View view );
 extern void TemplateCreateUseCompBox ( Document doc,
@@ -143,12 +145,14 @@ extern void TemplateCreateTextBox ( Document doc,
                                       View view );
 extern void TemplateCreateFreeBox ( Document doc,
                                       View view );
-extern void TemplateCreateRepeat ( Document doc,
-                                     View view );
 extern void TemplateCreateUnion ( Document doc,
                                     View view );
+extern void TemplateCreateRepeat ( Document doc,
+                                     View view );
 extern void TemplateCreateRepeatComp ( Document doc,
                                          View view );
+extern Element Template_CreateRepeatFromSelection ( Document doc,
+                                                      ThotBool createComp );
 extern void TemplateCreateUseBox ( Document doc,
                                      View view );
 extern void TemplateCreateUseCompBox ( Document doc,
