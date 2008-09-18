@@ -17,23 +17,6 @@ body {background-color: #FFFFFF}</style>
 Manuel d'utilisation d'Amaya</div>
 
 <div class="PageBody">
-<dl>
-  <dt><strong>Auteurs :</strong></dt>
-    <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
-  <dt><strong>Collaborateurs :</strong></dt>
-    <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen, Laurent
-      Carcone</dd>
-</dl>
-
-<p>Ce manuel présente l'interface utilisateur d'Amaya. L'interface utilisateur
-sur votre machine peut-être un peu différente puisqu'elle dépend de la
-plateforme et la configuration choisie. Ce manuel n'est pas exhaustif, son but
-est simplement d'aider les utilisateurs à découvrir les principales
-caractéristiques du logiciel.</p>
-
-<p>Beaucoup de commandes d'Amaya sont identiques à celles fournies par les
-traitements de texte classiques. Elles ne sont pas présentées ici. Seuls les
-aspects spécifiques d'Amaya sont décrits.</p>
 <hr />
 
 <div>
@@ -362,7 +345,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
         annotations et aux documents modifiés</a> </li>
     </ul>
   </li>
-  <li><a href="Configure.html.fr#Configurer">Configurer Amaya</a>
+  <li><a href="Configure.html.fr#Configurer">Configurer Amaya</a> 
     <ul>
       <li><a href="Configure.html.fr#plusieurs">Une ou plusieurs instances
         d'Amaya</a></li>
@@ -378,9 +361,9 @@ aspects spécifiques d'Amaya sont décrits.</p>
         <code>AmayaTemp</code></a></li>
     </ul>
     <ul>
-      <li><a href="Configure.html.fr#Menus">Préférences</a>
+      <li><a href="Configure.html.fr#Menus">Préférences</a> 
         <ul>
-          <li><a href="Configure.html.fr#General">Les préférences générales</a>
+          <li><a href="Configure.html.fr#General">Les préférences générales</a> 
             <ul>
               <li><a href="Configure.html.fr#Profile">Profil</a></li>
               <li><a href="Configure.html.fr#Position">Position des panneaux
@@ -392,7 +375,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
               <li><a href="Configure.html.fr#rapides">Accès rapides</a></li>
             </ul>
           </li>
-          <li><a href="Configure.html.fr#L405">Préférences de navigation</a>
+          <li><a href="Configure.html.fr#L405">Préférences de navigation</a> 
             <ul>
               <li><a href="Configure.html.fr#Options1">Options</a></li>
               <li><a href="Configure.html.fr#Endroit">Endroit
@@ -402,7 +385,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
               langues</a></li>
             </ul>
           </li>
-          <li><a href="Configure.html.fr#L470">Préférences de publication</a>
+          <li><a href="Configure.html.fr#L470">Préférences de publication</a> 
             <ul>
               <li><a href="Configure.html.fr#Charset">Charset pour les nouveaux
                 documents</a></li>
@@ -415,7 +398,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
                 redirections PUT automatiques sur ces domaines</a></li>
             </ul>
           </li>
-          <li><a href="Configure.html.fr#L1595">Préférences de cache</a>
+          <li><a href="Configure.html.fr#L1595">Préférences de cache</a> 
             <ul>
               <li><a href="Configure.html.fr#Options3">Options</a></li>
               <li><a href="Configure.html.fr#L1701">Répertoire du cache</a></li>
@@ -427,7 +410,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
             </ul>
           </li>
           <li><a href="Configure.html.fr#L5991">Préférences des mots de
-            passe</a>
+            passe</a> 
             <ul>
               <li><a href="Configure.html.fr#Vider1">Enregistrer les mots de
                 passe</a></li>
@@ -438,7 +421,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
           <li><a href="Configure.html.fr#L599">Préférences du proxy</a></li>
           <li><a href="Configure.html.fr#Proxy1">Proxy HTTP</a></li>
           <li><a href="Configure.html.fr#Liste">Liste du domaine proxy</a></li>
-          <li><a href="Configure.html.fr#L632">Préférences des couleurs</a>
+          <li><a href="Configure.html.fr#L632">Préférences des couleurs</a> 
             <ul>
               <li><a href="Configure.html.fr#Options31">Option</a></li>
             </ul>
@@ -451,7 +434,7 @@ aspects spécifiques d'Amaya sont décrits.</p>
           l'utilisateur</a></li>
           <li><a href="Configure.html.fr#Serveur">Serveur de
           publication</a></li>
-          <li><a href="Configure.html.fr#Serveurs">Serveurs d'annotations</a>
+          <li><a href="Configure.html.fr#Serveurs">Serveurs d'annotations</a> 
             <ul>
               <li><a href="Configure.html.fr#Options4">Options</a></li>
             </ul>

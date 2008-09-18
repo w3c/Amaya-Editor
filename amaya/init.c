@@ -2285,7 +2285,7 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
     {
       *x += 300;
       *y += 200;
-      *h = 500;
+      *h = 700;
       *w = 800;
     }
   else if (docType == docLibrary)
@@ -2320,6 +2320,9 @@ void WhereOpenView(Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow
 
   /* previous document */
   doc = oldDoc;
+  if (DocumentURLs[doc] && !strcmp (DocumentURLs[doc], "empty"))
+    // load by default in the current empty page
+    replaceOldDoc = TRUE;
 
   if (replaceOldDoc && oldDoc > 0)
     /* the new document will replace another document in the same window */
