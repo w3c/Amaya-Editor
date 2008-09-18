@@ -2299,15 +2299,13 @@ void TtaSetFontZoom (int zoom)
   ----------------------------------------------------------------------*/
 int GetCurrentFontHeight (int size, TypeUnit unit, int zoom)
 {
-  if (zoom)
+  if (unit == UnRelative)
     {
-      if (unit == UnRelative)
-        {
-          size = ThotFontPointSize (size);
-          unit = UnPoint;
-        }
-      size = size + (size * zoom / 10);
+      size = ThotFontPointSize (size);
+      unit = UnPoint;
     }
+  if (zoom)
+    size = size + (size * zoom / 10);
   /* the minimum size is 6 points */
   if (size < 6 && unit == UnPoint)
     size = 6;

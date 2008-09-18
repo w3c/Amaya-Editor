@@ -1854,7 +1854,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   if (profile == L_Strict || profile == L_Basic)
     {
       /* cannot insert here */
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_SELECTION);
       return;
     }
   else if (DocumentTypes[doc] != docSVG && DocumentMeta[doc])
@@ -1896,7 +1896,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
     }
   else
     {
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_SELECTION);
       return;
     }
 

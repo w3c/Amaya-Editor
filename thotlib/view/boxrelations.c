@@ -2402,7 +2402,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 }
               else
                 {
-                  // iherit from enclosing
+                  // inherit from enclosing
                   pDimAb->DimAbRef = pParentAb;
                   pDimAb->DimValue = 0;
                 }
