@@ -603,9 +603,10 @@ ThotBool AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
 
   ret = FALSE;
   // template elements
-  if (pSS &&
-      pSS->SsName && !strcmp (pSS->SsName, "Template"))
+  if (pSS && pSS->SsName && !strcmp (pSS->SsName, "Template"))
     return TRUE;
+  else if (pSS && pEl && typeNum > MAX_BASIC_TYPE && pSS != pEl->ElStructSchema)
+    return FALSE;
 
   if (pSS &&
       pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsPairedElement &&

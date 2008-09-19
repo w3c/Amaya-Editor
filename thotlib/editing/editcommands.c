@@ -4561,7 +4561,7 @@ void TtcPaste (Document doc, View view)
                       {
                          ContentEditing (TEXT_PASTE);
                       }
-		      else
+                      else
                       {
                         if (i < len)
                           i = len;
