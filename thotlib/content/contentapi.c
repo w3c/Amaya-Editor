@@ -617,21 +617,36 @@ void TtaRemoveFinalSpaces (Element element, Document document,
               else
                 last = 0;
               i = pBuf->BuLength - 1;
-              /* there is almost one space at the end of the text element ? */
-              while (i >= 0 &&
-                     (pBuf->BuContent[i] == SPACE ||
-                      pBuf->BuContent[i] == __CR__ || pBuf->BuContent[i] == EOL) &&
-                     // keep the last space
-                     ((i > 0 &&
-                       (pBuf->BuContent[i-1] == SPACE ||
-                        pBuf->BuContent[i-1] == __CR__ || pBuf->BuContent[i-1] == EOL)) ||
-                      (i == 0 && pPrev &&
-                       (pPrev->BuContent[last] == SPACE ||
-                        pPrev->BuContent[last] == __CR__ || pPrev->BuContent[last] == EOL))))
-                {
-                  i--;
-                  delta++;
-                }
+              /* is there at least one space at the end of the text element ? */
+	      if (!strcmp (pEl->ElStructSchema->SsName, "MathML") ||
+		  !strcmp (pEl->ElStructSchema->SsName, "SVG"))
+		/* for MathML and SVG remove all trailing spaces */
+		while (i >= 0 &&
+		       (pBuf->BuContent[i] == SPACE ||
+			pBuf->BuContent[i] == __CR__ ||
+			pBuf->BuContent[i] == EOL))
+		  {
+		    i--;
+		    delta++;
+		  }
+	      else
+		/* for all other XML dialects, keep the last trailing space */
+		while (i >= 0 &&
+		       (pBuf->BuContent[i] == SPACE ||
+			pBuf->BuContent[i] == __CR__ ||
+			pBuf->BuContent[i] == EOL) &&
+		       ((i > 0 &&
+			 (pBuf->BuContent[i-1] == SPACE ||
+			  pBuf->BuContent[i-1] == __CR__ ||
+			  pBuf->BuContent[i-1] == EOL)) ||
+			(i == 0 && pPrev &&
+			 (pPrev->BuContent[last] == SPACE ||
+			  pPrev->BuContent[last] == __CR__ ||
+			  pPrev->BuContent[last] == EOL))))
+		  {
+		    i--;
+		    delta++;
+		  }
               still = (i < 0);
               if (still)
                 {
