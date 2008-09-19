@@ -2285,8 +2285,8 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
     {
       *x += 300;
       *y += 200;
-      *h = 700;
-      *w = 800;
+      *h = 600;
+      *w = 700;
     }
   else if (docType == docLibrary)
     {

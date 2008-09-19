@@ -2451,7 +2451,9 @@ ThotBool DoubleClick (NotifyElement *event)
 
 
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
-  if (usedouble)
+  if (usedouble &&
+      (DocumentMeta[event->document] == NULL ||
+       DocumentMeta[event->document]->method != CE_HELP))
     {
       /* don't let Thot perform normal operation */
       return (ActivateElement (event->element, event->document));
@@ -2465,9 +2467,7 @@ ThotBool DoubleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool SimpleClick (NotifyElement *event)
 {
-
 #ifdef LC
-
 #define MAX_NS 20
   char     *declarations[MAX_NS];
   char     *prefixes[MAX_NS];
@@ -2478,7 +2478,6 @@ ThotBool SimpleClick (NotifyElement *event)
       declarations[i] = NULL;
       prefixes[i] = NULL;
     }
-
 
   TtaGiveElemNamespaceDeclarations (event->document, event->element,
 				    &declarations[0], &prefixes[0]);
@@ -2497,11 +2496,12 @@ ThotBool SimpleClick (NotifyElement *event)
     }
   printf ("\n");
 #endif /* LC */
-
   ThotBool  usedouble;
 
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
-  if (usedouble)
+  if (usedouble &&
+      (DocumentMeta[event->document] == NULL ||
+       DocumentMeta[event->document]->method != CE_HELP))
     {
       DisplayUrlAnchor (event->element, event->document);
       return TRUE;
@@ -2514,7 +2514,7 @@ ThotBool SimpleClick (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  SimpleLClick     The user has clicked an element.         
+  SimpleLClick     The user has clicked with the Left button.         
   ----------------------------------------------------------------------*/
 ThotBool SimpleLClick (NotifyElement *event)
 {
