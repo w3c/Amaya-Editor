@@ -143,7 +143,7 @@ void NameSpaceGenerated (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void GraphicsSelectionChanged (NotifyElement * event)
 {
-  Element      asc, use, svgCanvas;
+  Element      asc, use;
   AttributeType    attrType;
   ElementType  elType;
   int          elemType = 0;
@@ -875,216 +875,7 @@ ThotBool AttrBaselineShiftDelete (NotifyAttribute *event)
   return FALSE; /* let Thot perform normal operation */
 }
 
-#endif /* _SVG */
 
-/*----------------------------------------------------------------------
-  CheckSVGRoot checks that the svg root element includes element el.
-  -----------------------------------------------------------------------*/
-void CheckSVGRoot (Document doc, Element el)
-{
-#ifdef _SVG
-  Element          SvgRoot, child;
-  ElementType      elType;
-  AttributeType    attrType;
-  SSchema	   SvgSchema;
-  PRule            rule;
-  TypeUnit         unit;
-  int              x, y, w, h, val;
-  int              wR, hR, dummy;
-  int              dw,dh;
-
-  dw = 0;
-  dh = 0;
-  SvgSchema = GetSVGSSchema (doc);
-  elType.ElTypeNum = SVG_EL_SVG;
-  elType.ElSSchema = SvgSchema;
-  attrType.AttrSSchema = SvgSchema;
-  SvgRoot = TtaGetTypedAncestor (el, elType);
-  while (SvgRoot)
-    {
-      /* check first the position of the new element in pixel value */
-      TtaGiveBoxPosition (el, doc, 1, UnPixel, &x, &y);
-      /* get the unit of the SVG width */
-      rule = TtaGetPRule (SvgRoot, PRWidth);
-      if (rule)
-        unit = (TypeUnit)TtaGetPRuleUnit (rule);
-      else
-        unit = UnPixel;
-      dh = dw = 0;
-      TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &wR, &dummy);
-      elType = TtaGetElementType (el);
-      if (x < 0 && elType.ElTypeNum != SVG_EL_tspan)
-        {
-          /* translate the whole SVG contents */
-          child = TtaGetFirstChild (SvgRoot);
-          val = -x;
-          while (child)
-            {
-              elType = TtaGetElementType (child);
-              if (elType.ElTypeNum == SVG_EL_polyline ||
-                  elType.ElTypeNum == SVG_EL_polygon)
-                TranslateElement (el, doc, val, UnPixel, TRUE, FALSE);
-              else
-                {
-                  if (elType.ElTypeNum == SVG_EL_circle_ ||
-                      elType.ElTypeNum == SVG_EL_ellipse)
-                    attrType.AttrTypeNum = SVG_ATTR_cx;
-                  else if (elType.ElTypeNum == SVG_EL_rect ||
-                           elType.ElTypeNum == SVG_EL_text_ ||
-                           elType.ElTypeNum == SVG_EL_tspan ||
-                           elType.ElTypeNum == SVG_EL_image ||
-                           elType.ElTypeNum == SVG_EL_foreignObject ||
-                           elType.ElTypeNum == SVG_EL_SVG)
-                    attrType.AttrTypeNum = SVG_ATTR_x;
-                  else if (elType.ElTypeNum == SVG_EL_line_)
-                    {
-                      attrType.AttrTypeNum = SVG_ATTR_x1;
-                      /************** convert to the right value */
-                      UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
-                      attrType.AttrTypeNum = SVG_ATTR_x2;
-                    }
-                  else
-                    attrType.AttrTypeNum = 0;
-                  if (attrType.AttrTypeNum != 0)
-                    /************** convert to the right value */
-                    UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
-                }
-              /* check if the SVG width includes that element */
-              TtaGiveBoxPosition (child, doc, 1, UnPixel, &x, &dummy);
-              TtaGiveBoxSize (child, doc, 1, UnPixel, &w, &h);
-              TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &wR, &hR);
-              dw = w + x - wR;
-              if (dw > 0)
-                {
-                  /* increase the width of the SVG element */
-                  attrType.AttrTypeNum = SVG_ATTR_width_;
-                  /************** convert to the right value */
-                  UpdateAttrText (SvgRoot, doc, attrType, x + w, FALSE, TRUE);
-                }
-              /* next element */
-              TtaNextSibling (&child);
-            }
-        }
-      else if ( elType.ElTypeNum != SVG_EL_line_)
-        {
-          /* check if the SVG width includes that element */
-          TtaGiveBoxPosition (el, doc, 1, UnPixel, &x, &dummy);
-          TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
-          dw = w + x - wR;
-          if (dw > 0)
-            {
-              /* increase the width of the SVG element */
-              attrType.AttrTypeNum = SVG_ATTR_width_;
-              /************** convert to the right value */
-              UpdateAttrText (SvgRoot, doc, attrType, x + w, FALSE, TRUE);
-            }
-        }
-      /* get the unit of the SVG width */
-      rule = TtaGetPRule (SvgRoot, PRHeight);
-      if (rule)
-        unit = (TypeUnit)TtaGetPRuleUnit (rule);
-      else
-        unit = UnPixel;
-      TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &dummy, &hR);
-      elType = TtaGetElementType (el);
-      if (y < 0 && elType.ElTypeNum != SVG_EL_tspan)
-        {
-          /* translate the whole SVG contents */
-          child = TtaGetFirstChild (SvgRoot);
-          val = -y;
-          while (child)
-            {
-              elType = TtaGetElementType (child);
-              if (elType.ElTypeNum == SVG_EL_polyline ||
-                  elType.ElTypeNum == SVG_EL_polygon)
-                TranslateElement (el, doc, val, UnPixel, FALSE, FALSE);
-              else
-                {
-                  if (elType.ElTypeNum == SVG_EL_circle_ ||
-                      elType.ElTypeNum == SVG_EL_ellipse)
-                    attrType.AttrTypeNum = SVG_ATTR_cy;
-                  else if (elType.ElTypeNum == SVG_EL_rect ||
-                           elType.ElTypeNum == SVG_EL_text_ ||
-                           elType.ElTypeNum == SVG_EL_tspan ||
-                           elType.ElTypeNum == SVG_EL_image ||
-                           elType.ElTypeNum == SVG_EL_foreignObject ||
-                           elType.ElTypeNum == SVG_EL_SVG)
-                    attrType.AttrTypeNum = SVG_ATTR_y;
-                  else if (elType.ElTypeNum == SVG_EL_line_)
-                    {
-                      attrType.AttrTypeNum = SVG_ATTR_y1;
-                      /************** convert to the right value */
-                      UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
-                      attrType.AttrTypeNum = SVG_ATTR_y2;
-                    }
-                  else
-                    attrType.AttrTypeNum = 0;
-                  if (attrType.AttrTypeNum != 0)
-                    /************** convert to the right value */
-                    UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
-                }
-              /* check if the SVG height includes that element */
-              TtaGiveBoxPosition (child, doc, 1, UnPixel, &dummy, &y);
-              TtaGiveBoxSize (child, doc, 1, UnPixel, &w, &h);
-              TtaGiveBoxSize (SvgRoot, doc, 1, UnPixel, &wR, &hR);
-              dh = h + y - hR;
-              if (dh > 0)
-                {
-                  /* increase the height of the root element */
-                  attrType.AttrTypeNum = SVG_ATTR_height_;
-                  /************** convert to the right value */
-                  UpdateAttrText (SvgRoot, doc, attrType, y + h, FALSE, TRUE);
-                }
-              /* next element */
-              TtaNextSibling (&child);
-            }
-        }
-      else if ( elType.ElTypeNum != SVG_EL_line_)
-        {
-          /* check if the SVG height includes that element */
-          TtaGiveBoxPosition (el, doc, 1, UnPixel, &dummy, &y);
-          TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
-          dh = h + y - hR;
-          if (dh > 0)
-            {
-              /* increase the height of the root element */
-              attrType.AttrTypeNum = SVG_ATTR_height_;
-              /************** convert to the right value */
-              UpdateAttrText (SvgRoot, doc, attrType, y + h, FALSE, TRUE);
-            }
-        }
-
-      if (dw > 0 || dh > 0)
-        {
-          if (dw < 0)
-            dw = 0;
-          if (dh < 0)
-            dh = 0;
-          /* handle included polylines */
-          child = TtaGetFirstChild (SvgRoot);
-          while (child)
-            {
-              elType = TtaGetElementType (child);
-              if (elType.ElTypeNum == SVG_EL_polyline ||
-                  elType.ElTypeNum == SVG_EL_polygon)
-                /************** convert to the right value */
-                UpdatePositionOfPoly (child, doc, 0, 0, wR + dw, hR + dh);
-              /* next element */
-              TtaNextSibling (&child);
-            }
-        }
-
-      /* check enclosing SGV */
-      el = TtaGetParent (SvgRoot);
-      if (el)
-        SvgRoot = TtaGetTypedAncestor (el, elType);
-      else
-        SvgRoot = NULL;
-    }
-#endif /* _SVG */
-}
-
-#ifdef _SVG
 /*----------------------------------------------------------------------
   NewGraphElement
   An element will be pasted
@@ -1114,61 +905,34 @@ void GraphElemPasted (NotifyElement *event)
 {
   ElementType    elType;
   SSchema	       SvgSchema;
-  /*  AttributeType  attrType;
-      Attribute      attr;*/
-  Element        parent;
-  int            profile;
+  Element        el;
+  int            profile, doc;
 
   XLinkPasted (event);
-  /* check that the svg element includes that element */
-  /*****  CheckSVGRoot (event->document, event->element); ****/
-  SetGraphicDepths (event->document, event->element);
-
+  el = event->element;
+  doc = event->document;
   /* it's a compound document */
-  profile = TtaGetDocumentProfile (event->document);
-  if (DocumentTypes[event->document] == docMath ||
+  profile = TtaGetDocumentProfile (doc);
+  if (DocumentTypes[doc] == docMath ||
       profile == L_Strict || profile == L_Basic)
     return;
-  else if (DocumentTypes[event->document] != docSVG &&
-           DocumentMeta[event->document])
-    DocumentMeta[event->document]->compound = TRUE;
+  else if (DocumentTypes[doc] != docSVG &&
+           DocumentMeta[doc])
+    DocumentMeta[doc]->compound = TRUE;
 
   /* Set the namespace declaration if it's an <svg> element that is not
      within an element belonging to the SVG namespace */
-  SvgSchema = GetSVGSSchema (event->document);
-  elType = TtaGetElementType (event->element);
+  SvgSchema = GetSVGSSchema (doc);
+  elType = TtaGetElementType (el);
   if (elType.ElTypeNum == SVG_EL_SVG && elType.ElSSchema == SvgSchema)
     /* it's an <svg> element */
-    {
-      parent = TtaGetParent (event->element);
-      if (parent)
-        {
-          elType = TtaGetElementType (parent);
-          if (elType.ElSSchema != SvgSchema)
-            /* the parent element is not in the SVG namespace */
-            {
-              /* Put a namespace declaration on the pasted <svg> element */
-              TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
-              TtaSetANamespaceDeclaration (event->document, event->element,
-                                           "svg", SVG_URI);
-              /* put a version attribute on the <svg> element */
-              /*attrType.AttrSSchema = SvgSchema;
-                attrType.AttrTypeNum = SVG_ATTR_version;
-                attr = TtaNewAttribute (attrType);
-                TtaAttachAttribute (event->element, attr, event->document);
-                TtaSetAttributeText (attr, SVG_VERSION, event->element,
-                event->document);*/
-            }
-        }
-    }
-  else if (elType.ElTypeNum == SVG_EL_title &&
-           elType.ElSSchema == SvgSchema)
+    SVGCreated (event);
+ else if (elType.ElTypeNum == SVG_EL_title && elType.ElSSchema == SvgSchema)
     /* the pasted element is a title element. Update the window title */
-    UpdateTitle (event->element, event->document);
-
+    UpdateTitle (el, doc);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
-  MakeUniqueName (event->element, event->document, TRUE, FALSE);
+  MakeUniqueName (el, doc, TRUE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -1878,7 +1642,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
   if (first == NULL && DocumentTypes[doc] == docSVG &&
-      TtaGetSelectedDocument () == NULL)
+      TtaGetSelectedDocument () == 0)
     {
       // get the main SVG element as the selected element
       first = TtaGetRootElement (doc);
@@ -1910,8 +1674,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   svgSchema = GetSVGSSchema (doc);
   attrType.AttrSSchema = svgSchema;
   elType = TtaGetElementType (selEl);
-  if (elType.ElTypeNum == SVG_EL_SVG &&
-      elType.ElSSchema == svgSchema)
+  if (elType.ElTypeNum == SVG_EL_SVG && elType.ElSSchema == svgSchema)
     svgCanvas = selEl;
   else
     {
@@ -4221,15 +3984,19 @@ ThotBool SVGElementTypeInMenu (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void SVGCreated (NotifyElement * event)
 {
-  ElementType	elType, parentType;
-  Element       parent;
+  ElementType	  elType, parentType;
+  Element       parent, el;
   AttributeType	attrType;
-  Attribute	attr;
+  Attribute	    attr;
+  int           w = 0 , h = 0, doc;
+  char          text[20];
 
-  elType = TtaGetElementType (event->element);
+  el = event->element;
+  doc = event->document;
+  elType = TtaGetElementType (el);
   /* Set the namespace declaration if the parent element is in a different
      namespace */
-  parent = TtaGetParent (event->element);
+  parent = TtaGetParent (el);
   if (parent)
     {
       parentType = TtaGetElementType (parent);
@@ -4238,19 +4005,37 @@ void SVGCreated (NotifyElement * event)
            declaration on the  <svg> element */
         {
           TtaSetUriSSchema (elType.ElSSchema, SVG_URI);
-          TtaSetANamespaceDeclaration (event->document, event->element, "svg",
-                                       SVG_URI);
+          TtaSetANamespaceDeclaration (doc, el, "svg", SVG_URI);
+          TtaGiveBoxSize (parent, doc, 1, UnPixel, &w, &h);
         }
     }
+  // now force a width and height attribute
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_width_;
-  attr = TtaGetAttribute (event->element, attrType);
-  if (attr)
-    ParseWidthHeightAttribute (attr, event->element, event->document, FALSE);
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+    }
+  if (w == 0)
+    TtaSetAttributeText (attr, "500", el, doc);
+  else
+    {
+      memset (text, 0, sizeof(text));
+      sprintf (text, "%d", w);
+      TtaSetAttributeText (attr, text, el, doc);
+    }
+  ParseWidthHeightAttribute (attr, el, doc, FALSE);
   attrType.AttrTypeNum = SVG_ATTR_height_;
-  attr = TtaGetAttribute (event->element, attrType);
-  if (attr)
-    ParseWidthHeightAttribute (attr, event->element, event->document, FALSE);
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+    }
+  TtaSetAttributeText (attr, "300", el, doc);
+  ParseWidthHeightAttribute (attr, el, doc, FALSE);
 }
 
 /*----------------------------------------------------------------------

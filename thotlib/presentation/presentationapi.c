@@ -2581,7 +2581,6 @@ void TtaGiveBoxSize (Element element, Document document, View view,
                    (strcmp (pAb->AbElement->ElStructSchema->SsName,"SVG") ||
                     TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
                                       pAb->AbElement->ElStructSchema)))
-           // else if (IsSVGComponent (pAb->AbElement))
             {
               *width = pAb->AbBox->BxWidth;
               *height = pAb->AbBox->BxHeight;

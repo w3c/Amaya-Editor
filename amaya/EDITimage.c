@@ -157,9 +157,9 @@ static void CreateAreaMap (Document doc, View view, const char *shape)
   Element             newMap, newElem;
   ElementType         elType, parentType;
   AttributeType       attrType;
-  Attribute           attr, attrRef, attrShape, attrRefimg, newuseMap;
-  char                *url, text[500];
-  int                 length, w, h;
+  Attribute           attr, attrShape, attrRefimg, newuseMap;
+  char                *url, text[100];
+  int                 length;
   int                 firstchar, lastchar;
   int                 docModified, profile;
   int                 x1, x2, x3, x4, y1, y2, y3, y4, lx, ly, entry;
@@ -385,6 +385,7 @@ static void CreateAreaMap (Document doc, View view, const char *shape)
                                       &x3, &y3, &x4, &y4, &lx, &ly);
           if (created)
             {
+              memset (text, 0, sizeof(text));
               if (shape[0] == 'R')
                 {
                   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle,
