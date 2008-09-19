@@ -1238,7 +1238,9 @@ static void PutInBuffer (unsigned char c)
     len = 1;
   if (c != EOS)
     {
-      if (LgBuffer + len >= AllmostFullBuffer && currentState == 0)
+      if (LgBuffer + len >= AllmostFullBuffer &&
+          // simplete text or cdata
+          (currentState == 0 || currentState == 24))
         TextToDocument ();
       if (LgBuffer + len >= MaxBufferLength)
         {
