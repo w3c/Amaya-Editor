@@ -106,6 +106,13 @@ extern PathSegment TtaNewPathSegArc ( int xstart,
                                       ThotBool sweep,
                                       ThotBool newSubpath );
 extern void TtaQuadraticToCubicPathSeg ( void *quadratic_segment );
+extern ThotBool TtaEndPointToCenterParam ( void *segment,
+                                           double *cx,
+                                           double *cy,
+                                           double *rx,
+                                           double *ry,
+                                           double *theta1,
+                                           double *dtheta );
 extern void TtaSplitPathSeg ( void *segment,
                               Document doc,
                               Element el );
@@ -373,6 +380,13 @@ extern PathSegment TtaNewPathSegArc ( int xstart,
                                         ThotBool sweep,
                                         ThotBool newSubpath );
 extern void TtaQuadraticToCubicPathSeg ( void *quadratic_segment );
+extern ThotBool TtaEndPointToCenterParam ( void *segment,
+                                             double *cx,
+                                             double *cy,
+                                             double *rx,
+                                             double *ry,
+                                             double *theta1,
+                                             double *dtheta );
 extern void TtaSplitPathSeg ( void *segment,
                                 Document doc,
                                 Element el );

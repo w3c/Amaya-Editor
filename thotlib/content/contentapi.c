@@ -1958,16 +1958,120 @@ void TtaQuadraticToCubicPathSeg (void *quadratic_segment)
 }
 
 /*----------------------------------------------------------------------
+  TtaEndPointToCenterParam
+  ---------------------------------------------------------------------- */
+ThotBool TtaEndPointToCenterParam(void *segment,
+				  double *cx, double *cy,
+				  double *rx, double *ry,
+				  double *phi,
+				  double *theta1, double *dtheta
+				  )
+{
+  PtrPathSeg       pPa = (PtrPathSeg)segment;
+  int x1, y1, x2, y2;
+  double g;
+  double sinf, cosf, k1, k2, k3, k4, k5;
+  double x1_, y1_, cx_, cy_;
+
+  /****************** See SVG spec: Appendix F.6 ***********/
+  /* Note: sometimes, argument of sqrt are negative value near zero
+     (error of approximation) so take the absolute value.
+  */
+	  
+  /* Not a segment */
+  if(!pPa || pPa->PaShape != PtEllipticalArc)
+    return FALSE;
+  
+  x1 = pPa->XStart;
+  y1 = pPa->YStart;
+  x2 = pPa->XEnd;
+  y2 = pPa->YEnd;
+  *rx = pPa->XRadius;
+  *ry = pPa->YRadius;
+  *phi = pPa->XAxisRotation*M_PI/180;
+
+  /* Nothing or a line */
+  if((x1 == x2 && y1 == y2) || (*rx == 0 || *ry == 0))
+    return FALSE;
+
+  /* Take the absolute values */
+  if(*rx < 0)*rx = -*rx;
+  if(*ry < 0)*ry = -*ry;
+
+  sinf = sin(*phi);
+  cosf = cos(*phi);
+  k1 = ((double)(x1-x2))/2;
+  k2 = ((double)(y1-y2))/2;
+  x1_ = cosf*k1 + sinf*k2;
+  y1_ = -sinf*k1 + cosf*k2;
+
+  /* Check whether the arc is large enough */
+  g = (x1_*x1_)/(*rx * *rx) + (y1_*y1_)/(*ry * *ry);
+  
+  if(g > 1)
+    {
+      g = sqrt(g);
+      *rx *= g;
+      *ry *= g;
+    }
+  
+  k5 = (*rx)*(*rx)*y1_*y1_+(*ry)*(*ry)*x1_*x1_;
+  if(k5 == 0)return FALSE;
+  k1 = sqrt(fabs(((*rx)*(*rx)*(*ry)*(*ry)
+		  - (*rx)*(*rx)*y1_*y1_ - (*ry)*(*ry)*x1_*x1_)
+		 /k5));
+  
+  if(pPa->LargeArc == pPa->Sweep)
+    k1 = -k1;
+  
+  cx_ = k1*(*rx)*y1_/(*ry);
+  cy_ = -k1*(*ry)*x1_/(*rx);
+  
+  *cx = cosf*cx_ - sinf*cx_ + ((double)(x1+x2))/2;
+  *cy = sinf*cx_ + cosf*cy_ + ((double)(y1+y2))/2;
+  
+  k1 = (x1_ - cx_)/(*rx);
+  k2 = (y1_ - cy_)/(*ry);
+  k3 = (-x1_ - cx_)/(*rx);
+  k4 = (-y1_ - cy_)/(*ry);
+  
+  k5 = sqrt(fabs(k1*k1+k2*k2));
+  if(k5 == 0)return FALSE;
+  k5 = k1/k5;
+  if(k5 < -1)k5 = -1;
+  else if(k5 > 1)k5 = 1;
+  
+  *theta1 = acos(k5);
+  if(k2 < 0)*theta1 = - *theta1;
+  
+  k5 = sqrt(fabs((k1*k1+k2*k2)*(k3*k3+k4*k4)));
+  if(k5 == 0)return FALSE;
+  
+  k5 = (k1*k3+k2*k4)/k5;
+  if(k5 < -1)k5 = -1;
+  else if(k5 > 1)k5 = 1;
+  
+  *dtheta = acos(k5);
+  if(k1*k4-k3*k2 < 0)*dtheta = -*dtheta;
+  
+  if(!pPa->Sweep && *dtheta > 0)
+    *dtheta -= 2*M_PI;
+  else if(pPa->Sweep && *dtheta < 0)
+    *dtheta += 2*M_PI;
+  
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
   TtaSplitPathSeg
   ---------------------------------------------------------------------- */
 void TtaSplitPathSeg (void *segment, Document doc, Element el)
 {
   PtrPathSeg       pPa = (PtrPathSeg)segment;
   PtrPathSeg       newSeg;
-  int x0, y0, x1, y1, x2, y2, x3, y3;
   PtrElement pElAsc;
-  double x1_, y1_, cx, cy, cx_, cy_, rx, ry, theta1, dtheta, f, g;
-  double sinf, cosf, k1, k2, k3, k4, k5;
+  int x0, y0, x1, y1, x2, y2, x3, y3;
+  double k1, k2, rx, ry, cx, cy, theta1, dtheta, phi;
 
   if(pPa == NULL)
     return;
@@ -2037,10 +2141,8 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
       y1 = pPa->YStart;
       x2 = pPa->XEnd;
       y2 = pPa->YEnd;
-      ry = pPa->YRadius;
       rx = pPa->XRadius;
-      f = pPa->XAxisRotation*M_PI/180;
-      
+      ry = pPa->YRadius;
 
       if(x1 == x2 && y1 == y2)
         return;
@@ -2054,81 +2156,18 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
         }
       else
         {
-          /****************** See SVG spec: Appendix F ***********/
-          /* Note: sometimes, argument of sqrt are negative value near zero
-             (error of approximation) so take the absolute value.
-          */
-	  
-          if(rx < 0)rx = -rx;
-          if(ry < 0)ry = -ry;
-          sinf = sin(f);
-          cosf = cos(f);
-          k1 = ((double)(x1-x2))/2;
-          k2 = ((double)(y1-y2))/2;
-          x1_ = cosf*k1 + sinf*k2;
-          y1_ = -sinf*k1 + cosf*k2;
-          g = (x1_*x1_)/(rx*rx) + (y1_*y1_)/(ry*ry);
+	  TtaEndPointToCenterParam(segment,
+				   &cx, &cy,
+				   &rx, &ry,
+				   &phi,
+				   &theta1, &dtheta
+				   );
 
-          if(g > 1)
-            {
-              g = sqrt(g);
-              rx *= g;
-              ry *= g;
-            }
-
-          k5 = rx*rx*y1_*y1_+ry*ry*x1_*x1_;
-          if(k5 == 0)return;
-          k1 = sqrt(fabs((rx*rx*ry*ry - rx*rx*y1_*y1_ - ry*ry*x1_*x1_)
-                         /k5));
-
-          if(pPa->LargeArc == pPa->Sweep)
-            k1 = -k1;
-
-          cx_ = k1*rx*y1_/ry;
-          cy_ = -k1*ry*x1_/rx;
-
-          cx = cosf*cx_ - sinf*cx_ + ((double)(x1+x2))/2;
-          cy = sinf*cx_ + cosf*cy_ + ((double)(y1+y2))/2;
-
-          k1 = (x1_ - cx_)/rx;
-          k2 = (y1_ - cy_)/ry;
-          k3 = (-x1_ - cx_)/rx;
-          k4 = (-y1_ - cy_)/ry;
-
-          k5 = sqrt(fabs(k1*k1+k2*k2));
-          if(k5 == 0)return;
-          k5 = k1/k5;
-          if(k5 < -1)k5 = -1;
-          else if(k5 > 1)k5 = 1;
-
-          theta1 = acos(k5);
-          if(k2 < 0)theta1 = - theta1;
-
-          k5 = sqrt(fabs((k1*k1+k2*k2)*(k3*k3+k4*k4)));
-          if(k5 == 0)return;
-
-          k5 = (k1*k3+k2*k4)/k5;
-          if(k5 < -1)k5 = -1;
-          else if(k5 > 1)k5 = 1;
-
-          dtheta = acos(k5);
-          if(k1*k4-k3*k2 < 0)dtheta = -dtheta;
-
-          if(!pPa->Sweep && dtheta > 0)
-            dtheta -= 2*M_PI;
-          else if(pPa->Sweep && dtheta < 0)
-            dtheta += 2*M_PI;
-
-          /****************************************************************/
-
-          /* Now we choose a new point (x3, y3) at theta = dtheta/2
-
-          */
-
+          /* Now we choose a new point (x3, y3) at theta = dtheta/2 */
           k1 = rx*cos(theta1+dtheta/2);
           k2 = ry*sin(theta1+dtheta/2);
-          x3 = (int)((cosf * k1 - sinf * k2) + cx);
-          y3 = (int)((sinf * k1 + cosf * k2) + cy);
+          x3 = (int)((cos(phi) * k1 - sin(phi) * k2) + cx);
+          y3 = (int)((sin(phi) * k1 + cos(phi) * k2) + cy);
 
           pPa->LargeArc = (fabs(dtheta/2) > M_PI);
           pPa->Sweep = (dtheta > 0);
@@ -2136,7 +2175,7 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
           newSeg = (PtrPathSeg)TtaNewPathSegArc (x3, y3, x2, y2,
                                                  (int)rx,
                                                  (int)ry,
-                                                 (int)f,
+                                                 (int)(phi*180./M_PI),
                                                  pPa->LargeArc,
                                                  pPa->Sweep,
                                                  FALSE);

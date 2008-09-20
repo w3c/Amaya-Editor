@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CheckSVGRoot ( Document doc,
-                           Element el );
 extern char *GetElementData ( Document doc,
                               Element el,
                               SSchema sschema,
@@ -196,8 +194,6 @@ extern void EditSVG_GenerateDescription ( Document document,
 
 #else /* __STDC__ */
 
-extern void CheckSVGRoot ( Document doc,
-                             Element el );
 extern char *GetElementData ( Document doc,
                                 Element el,
                                 SSchema sschema,

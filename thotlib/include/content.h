@@ -780,6 +780,16 @@ extern ThotBool CheckGeometricProperties(Document doc, Element leaf,
 					 int *rx, int *ry);
 
 extern void TtaQuadraticToCubicPathSeg (void *quadratic_segment);
+
+/*----------------------------------------------------------------------
+  TtaEndPointToCenterParam
+  ---------------------------------------------------------------------- */
+extern ThotBool TtaEndPointToCenterParam(void *segment,
+					 double *cx, double *cy,
+					 double *rx, double *ry,
+					 double *phi,
+					 double *theta1, double *dtheta);
+
 extern void TtaSplitPathSeg (void *segment, Document doc, Element el);
 extern ThotBool TtaInsertPointInCurve (Document doc, Element el,
 				       ThotBool before, int point_number);

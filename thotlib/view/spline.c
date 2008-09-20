@@ -259,6 +259,8 @@ void  EllipticSplit2 (int frame, int x, int y,
 		     double xradius, double yradius, 
 		     double Phi, int large, int sweep, void *mesh)
 {
+  /* TODO: use TtaEndPointToCenterParam */
+
 #ifdef _GL
   double   xmid, ymid, Phicos, Phisin; 
   double   rx_p2, ry_p2, translate, xprim, yprim;
@@ -474,6 +476,8 @@ void  EllipticSplit (int frame, int x, int y,
 		     int Phi, int large, int sweep, 
 		     ThotPoint **points, int *npoints, int *maxpoints)
 {
+  /* TODO: use TtaEndPointToCenterParam */
+
   double xmid, ymid, 
     Phicos, Phisin, 
     rx_p2, ry_p2, 
