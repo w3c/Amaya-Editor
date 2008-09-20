@@ -1960,15 +1960,14 @@ void TtaQuadraticToCubicPathSeg (void *quadratic_segment)
 /*----------------------------------------------------------------------
   TtaEndPointToCenterParam
   ---------------------------------------------------------------------- */
-ThotBool TtaEndPointToCenterParam(void *segment,
-				  double *cx, double *cy,
+ThotBool TtaEndPointToCenterParam(int x1, int y1, int x2, int y2,
 				  double *rx, double *ry,
 				  double *phi,
+				  ThotBool largeArc, ThotBool sweep,
+				  double *cx, double *cy,
 				  double *theta1, double *dtheta
 				  )
 {
-  PtrPathSeg       pPa = (PtrPathSeg)segment;
-  int x1, y1, x2, y2;
   double g;
   double sinf, cosf, k1, k2, k3, k4, k5;
   double x1_, y1_, cx_, cy_;
@@ -1978,17 +1977,8 @@ ThotBool TtaEndPointToCenterParam(void *segment,
      (error of approximation) so take the absolute value.
   */
 	  
-  /* Not a segment */
-  if(!pPa || pPa->PaShape != PtEllipticalArc)
-    return FALSE;
-  
-  x1 = pPa->XStart;
-  y1 = pPa->YStart;
-  x2 = pPa->XEnd;
-  y2 = pPa->YEnd;
-  *rx = pPa->XRadius;
-  *ry = pPa->YRadius;
-  *phi = pPa->XAxisRotation*M_PI/180;
+  /* Degree to radian */
+  *phi = (*phi)*M_PI/180.;
 
   /* Nothing or a line */
   if((x1 == x2 && y1 == y2) || (*rx == 0 || *ry == 0))
@@ -2006,13 +1996,13 @@ ThotBool TtaEndPointToCenterParam(void *segment,
   y1_ = -sinf*k1 + cosf*k2;
 
   /* Check whether the arc is large enough */
-  g = (x1_*x1_)/(*rx * *rx) + (y1_*y1_)/(*ry * *ry);
+  g = (x1_*x1_)/((*rx)*(*rx)) + (y1_*y1_)/((*ry)*(*ry));
   
   if(g > 1)
     {
       g = sqrt(g);
-      *rx *= g;
-      *ry *= g;
+      (*rx) *= g;
+      (*ry) *= g;
     }
   
   k5 = (*rx)*(*rx)*y1_*y1_+(*ry)*(*ry)*x1_*x1_;
@@ -2021,7 +2011,7 @@ ThotBool TtaEndPointToCenterParam(void *segment,
 		  - (*rx)*(*rx)*y1_*y1_ - (*ry)*(*ry)*x1_*x1_)
 		 /k5));
   
-  if(pPa->LargeArc == pPa->Sweep)
+  if(largeArc == sweep)
     k1 = -k1;
   
   cx_ = k1*(*rx)*y1_/(*ry);
@@ -2054,9 +2044,9 @@ ThotBool TtaEndPointToCenterParam(void *segment,
   *dtheta = acos(k5);
   if(k1*k4-k3*k2 < 0)*dtheta = -*dtheta;
   
-  if(!pPa->Sweep && *dtheta > 0)
+  if(!sweep && (*dtheta > 0))
     *dtheta -= 2*M_PI;
-  else if(pPa->Sweep && *dtheta < 0)
+  else if(sweep && (*dtheta < 0))
     *dtheta += 2*M_PI;
   
   return TRUE;
@@ -2143,6 +2133,7 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
       y2 = pPa->YEnd;
       rx = pPa->XRadius;
       ry = pPa->YRadius;
+      phi = pPa->XAxisRotation;
 
       if(x1 == x2 && y1 == y2)
         return;
@@ -2156,12 +2147,14 @@ void TtaSplitPathSeg (void *segment, Document doc, Element el)
         }
       else
         {
-	  TtaEndPointToCenterParam(segment,
-				   &cx, &cy,
-				   &rx, &ry,
-				   &phi,
-				   &theta1, &dtheta
-				   );
+	  if(!TtaEndPointToCenterParam(x1, y1, x2, y2,
+				       &rx, &ry,
+				       &phi,
+				       pPa->LargeArc, pPa->Sweep,
+				       &cx, &cy,
+				       &theta1, &dtheta
+				       ))
+	    return;
 
           /* Now we choose a new point (x3, y3) at theta = dtheta/2 */
           k1 = rx*cos(theta1+dtheta/2);

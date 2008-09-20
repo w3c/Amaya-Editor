@@ -259,7 +259,51 @@ void  EllipticSplit2 (int frame, int x, int y,
 		     double xradius, double yradius, 
 		     double Phi, int large, int sweep, void *mesh)
 {
-  /* TODO: use TtaEndPointToCenterParam */
+  /* TODO: use TtaEndPointToCenterParam
+
+  double   phi, Phicos, Phisin;
+  double   cprim, Rxcos, Rysin, cX, cY;
+  double   x3, y3, theta, deltatheta, thetabegin;
+
+  if(x1 == x2 && y1 == y2)
+    return;
+
+  if (xradius == 0 || yradius == 0)
+    {
+      MeshNewPoint ((double) x1, (double) y1, mesh); 
+      MeshNewPoint ((double) x2, (double) y2, mesh); 
+      return;
+    }
+
+  if(!TtaEndPointToCenterParam(x1, y1, x2, y2,
+			       &xradius, &yradius,
+			       &phi,
+			       large, sweep,
+			       &cX, &cY,
+			       &theta, &deltatheta)
+     )
+    return;
+
+  Phicos = cos(phi);
+  Phisin = sin(phi);
+
+  thetabegin = theta;
+  theta = 0;
+  if (sweep)
+    cprim = A_DEGREE;
+  else
+    cprim = -1 * A_DEGREE;
+  deltatheta = fabs (deltatheta);
+  while (fabs (theta) < deltatheta)
+    {
+      Rxcos = xradius * cos (thetabegin + theta);
+      Rysin = yradius * sin (thetabegin + theta);
+      x3 = Phicos*Rxcos - Phisin*Rysin + cX;
+      y3 = Phisin*Rxcos + Phicos*Rysin + cY; 
+      MeshNewPoint ((double) x3, (double) y3, mesh); 
+      theta += cprim;
+    }  
+ */
 
 #ifdef _GL
   double   xmid, ymid, Phicos, Phisin; 

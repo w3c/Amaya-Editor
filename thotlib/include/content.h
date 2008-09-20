@@ -784,11 +784,13 @@ extern void TtaQuadraticToCubicPathSeg (void *quadratic_segment);
 /*----------------------------------------------------------------------
   TtaEndPointToCenterParam
   ---------------------------------------------------------------------- */
-extern ThotBool TtaEndPointToCenterParam(void *segment,
-					 double *cx, double *cy,
+extern ThotBool TtaEndPointToCenterParam(int x1, int y1, int x2, int y2,
 					 double *rx, double *ry,
 					 double *phi,
-					 double *theta1, double *dtheta);
+					 ThotBool largeArc, ThotBool sweep,
+					 double *cx, double *cy,
+					 double *theta1, double *dtheta
+					 );
 
 extern void TtaSplitPathSeg (void *segment, Document doc, Element el);
 extern ThotBool TtaInsertPointInCurve (Document doc, Element el,
