@@ -456,8 +456,6 @@ void Declaration_Destroy (Declaration dec)
   }
   else if (dec->nature == ComponentNat)
   {
-    doc = TtaGetDocument(dec->componentType.content);
-    TtaDeleteTree (dec->componentType.content, doc);
     dec->componentType.content = NULL;
   }
   else if (dec->nature==UnionNat)
