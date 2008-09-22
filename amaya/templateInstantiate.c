@@ -244,14 +244,14 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
     return;
   
 #ifdef AMAYA_DEBUG
- static int off = 0;
-  int i;
-  off++;
-  printf("ParseTemplate ");
-  for(i=0; i<off; i++)
-    printf(" ");
-  DumpTemplateElement(el, doc);
-  printf("\n");
+// static int off = 0;
+//  int i;
+//  off++;
+//  printf("ParseTemplate ");
+//  for(i=0; i<off; i++)
+//    printf(" ");
+//  DumpTemplateElement(el, doc);
+//  printf("\n");
 #endif /* AMAYA_DEBUG */
   
   name = TtaGetSSchemaName (elType.ElSSchema);
@@ -265,7 +265,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           TtaDeleteTree(el, doc);
           //We must stop searching into this tree
 #ifdef AMAYA_DEBUG
-          off--;
+//          off--;
 #endif /* AMAYA_DEBUG */
           return;
         case Template_EL_component :
@@ -340,7 +340,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
       child = aux;
     }
 #ifdef AMAYA_DEBUG
-  off--;
+//  off--;
 #endif /* AMAYA_DEBUG */
 #endif /* TEMPLATES */
 }
