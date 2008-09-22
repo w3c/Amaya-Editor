@@ -5600,7 +5600,8 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           endOfSniffedFile = TRUE;
                           end = strstr (&buffer[i], ">");
                           ptrns = strstr (&buffer[i], "xmlns");
-                          if (ptrns && ptrns < end)
+                          if (ptrns)
+                          while (ptrns && ptrns < end)
                             {
                               *isXML = TRUE;
                               ptrns += 5;
@@ -5615,7 +5616,10 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                       *isknown = TRUE;
                                       *docProfile = L_Transitional;
                                     }
+                                  ptrns = NULL;
                                 }
+                              else
+                                ptrns = strstr (ptrns, "xmlns");
                             }
                           else
                             /* No namespace, we consider the document as an html one */
@@ -5633,7 +5637,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           *docProfile = L_SVG;
                           end = strstr (&buffer[i], ">");
                           ptrns = strstr (&buffer[i], "xmlns");
-                          if (ptrns && ptrns < end)
+                          while (ptrns && ptrns < end)
                             {
                               *isXML = TRUE;
                               ptrns += 5;
@@ -5646,7 +5650,10 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                       /* The svg namespace declaration is found */
                                       *isknown = TRUE;
                                     }
+                                  ptrns = NULL;
                                 }
+                              else
+                                ptrns = strstr (ptrns, "xmlns");
                             }
                         }
                       else if (!strncasecmp ((char *)&buffer[i], "math", 4))
@@ -5661,7 +5668,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           *docProfile = L_MathML;
                           end = strstr (&buffer[i], ">");
                           ptrns = strstr (&buffer[i], "xmlns");
-                          if (ptrns && ptrns < end)
+                          while (ptrns && ptrns < end)
                             {
                               *isXML = TRUE;
                               ptrns += 5;
@@ -5672,7 +5679,10 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                   if (ptr && ptr < end)
                                     /* The MathML namespace declaration is found */
                                     *isknown = TRUE;
+                                  ptrns = NULL;
                                 }
+                              else
+                                 ptrns = strstr (ptrns, "xmlns");
                             }
                         }
                       else if (!strncasecmp ((char *)&buffer[i], "library", 7))
@@ -5686,7 +5696,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           *thotType = docTemplate;
                           end = strstr (&buffer[i], ">");
                           ptrns = strstr (&buffer[i], "xmlns");
-                          if (ptrns && ptrns < end)
+                          while (ptrns && ptrns < end)
                             {
                               *isXML = TRUE;
                               ptrns += 5;
@@ -5697,7 +5707,10 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                   if (ptr && ptr < end)
                                     /* The xtiger namespace declaration is found */
                                     *isknown = TRUE;
+                                  ptrns = NULL;
                                 }
+                              else
+                                 ptrns = strstr (ptrns, "xmlns");
                             }
                         }
                       else
@@ -5708,7 +5721,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                           /* We consider the document as a xml one */
                           end = strstr (&buffer[i], ">");
                           ptrns = strstr (&buffer[i], "xmlns");
-                          if (ptrns && ptrns < end)
+                          while (ptrns && ptrns < end)
                             {
                               *thotType = docXml;
                               ptrns += 5;
@@ -5725,7 +5738,10 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
                                       CurrentNameSpace[j++] = *ptr;
                                       ptr++;
                                     }
+                                  ptrns = NULL;
                                 }
+                              else
+                                 ptrns = strstr (ptrns, "xmlns");
                             }
                           if (CurrentNameSpace[0] == EOS)
                             {
