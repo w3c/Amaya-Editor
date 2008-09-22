@@ -89,6 +89,7 @@ extern ThotBool UnionDoubleClicked ( NotifyElement* event );
 extern ThotBool TemplateNameAttributeDeleted ( NotifyAttribute* event );
 extern ThotBool TemplateNameAttributeModified ( NotifyAttribute* event );
 extern ThotBool TemplateNameAttributeCreated ( NotifyAttribute* event );
+extern ThotBool TemplateNameAttrInMenu ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
@@ -175,6 +176,7 @@ extern ThotBool UnionDoubleClicked ( NotifyElement* event );
 extern ThotBool TemplateNameAttributeDeleted ( NotifyAttribute* event );
 extern ThotBool TemplateNameAttributeModified ( NotifyAttribute* event );
 extern ThotBool TemplateNameAttributeCreated ( NotifyAttribute* event );
+extern ThotBool TemplateNameAttrInMenu ( NotifyAttribute * event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

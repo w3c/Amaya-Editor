@@ -7,7 +7,7 @@
  
 /*
  * Authors: Francesc Campoy Flores
- *          Émilien Kia
+ *          Emilien Kia
  *
  */
 
@@ -2564,7 +2564,9 @@ ThotBool TemplateNameAttributeModified(NotifyAttribute* event)
   ----------------------------------------------------------------------*/
 ThotBool TemplateNameAttributeCreated(NotifyAttribute* event)
 {
-  MakeUniqueName(event->element, event->document, event->attribute, FALSE);
+  ThotBool ret;
+
+  ret = MakeUniqueName(event->element, event->document, event->attribute, FALSE);
   return TRUE;
 }
 
