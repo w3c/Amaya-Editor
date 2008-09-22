@@ -51,7 +51,9 @@ ELEMENTS
       END;
 
    TEXT_UNIT:
-        ElemTextModify.Post -> CheckNewLines;
+      BEGIN
+         ElemTextModify.Post -> CheckNewLines;
+      END;
 
 ATTRIBUTES
    currentType :
