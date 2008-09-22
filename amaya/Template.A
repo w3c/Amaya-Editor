@@ -2,14 +2,14 @@ APPLICATION Template;
 
 DEFAULT
    BEGIN
-  	ElemActivate.Pre -> DoubleClick;
+  	  ElemActivate.Pre -> DoubleClick;
 	  ElemClick.Pre -> SimpleClick;
 	  ElemRClick.Pre -> SimpleRClick;
 	  ElemLClick.Pre -> SimpleLClick;
 	  ElemNew.Pre -> TemplateElementWillBeCreated;
 	  ElemDelete.Pre -> TemplateElementWillBeDeleted;
-    ElemSelect.Post -> SelectionChanged;
-    AttrMenu.Pre ->    TemplateAttrInMenu;
+      ElemSelect.Post -> SelectionChanged;
+      AttrMenu.Pre ->    TemplateAttrInMenu;
    END;
    
 ELEMENTS
@@ -44,6 +44,11 @@ ELEMENTS
          ElemLClick.Pre -> OptionButtonClicked;
       END;}
 
+   union :
+      BEGIN
+         ElemLClick.Post -> UnionClicked;
+         ElemActivate.Pre -> UnionDoubleClicked;
+      END;
 
    TEXT_UNIT:
         ElemTextModify.Post -> CheckNewLines;
@@ -53,5 +58,13 @@ ATTRIBUTES
       BEGIN
          AttrExport.Pre -> CurrentTypeWillBeExported;
       END;
-   
+
+   name :
+      BEGIN
+        AttrMenu.Pre ->    TemplateNameAttrInMenu;
+        AttrCreate.Post -> TemplateNameAttributeCreated;
+        {AttrCreate.Post -> UpdateAttrNAME;}
+        AttrModify.Pre -> TemplateNameAttributeModified;
+        AttrDelete.Pre ->  TemplateNameAttributeDeleted;
+      END;
 END

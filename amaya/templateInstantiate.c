@@ -15,6 +15,7 @@
 #include "AHTURLTools_f.h"
 #include "wxdialogapi_f.h"
 #include "EDITimage_f.h"
+#include "HTMLedit_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLtable_f.h"
 #include "html2thot_f.h"
@@ -1233,3 +1234,22 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
   TtaFreeMemory(iter);
 #endif /* TEMPLATES */
 }
+
+/*----------------------------------------------------------------------
+  Template_SetName
+  Set the xt:component or xt:union element xt:name attribute.
+  Make it unique.
+  Return TRUE if the name is not modified.
+  ----------------------------------------------------------------------*/
+ThotBool Template_SetName (Document doc, Element elem, const char* name, ThotBool withUndo)
+{
+#ifdef TEMPLATES 
+  if(doc && elem && name)
+    {
+      SetAttributeStringValue(elem, Template_ATTR_name, name);
+      return !MakeUniqueName(elem, doc, TRUE, withUndo);
+    }
+#endif /* TEMPLATES */
+  return FALSE;
+}
+

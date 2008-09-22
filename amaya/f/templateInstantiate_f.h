@@ -50,6 +50,10 @@ extern void InstantiateRepeat ( XTigerTemplate t,
 extern void Template_InsertXTigerPI ( Document doc,
                                       XTigerTemplate t );
 extern void Template_PreInstantiateComponents ( XTigerTemplate t );
+extern ThotBool Template_SetName ( Document doc,
+                                   Element elem,
+                                   const char* name,
+                                   ThotBool withUndo );
 
 #else /* __STDC__ */
 
@@ -97,6 +101,10 @@ extern void InstantiateRepeat ( XTigerTemplate t,
 extern void Template_InsertXTigerPI ( Document doc,
                                         XTigerTemplate t );
 extern void Template_PreInstantiateComponents ( XTigerTemplate t );
+extern ThotBool Template_SetName ( Document doc,
+                                     Element elem,
+                                     const char* name,
+                                     ThotBool withUndo );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

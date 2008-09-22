@@ -68,6 +68,8 @@ extern void TemplateCreateFreeBox ( Document doc,
                                     View view );
 extern void TemplateCreateUnion ( Document doc,
                                   View view );
+extern void Template_ModifyUnionElement ( Document doc,
+                                          Element unionEl );
 extern void TemplateCreateRepeat ( Document doc,
                                    View view );
 extern void TemplateCreateRepeatComp ( Document doc,
@@ -82,6 +84,11 @@ extern Element Template_CreateUseFromSelection ( Document doc,
                                                  ThotBool createComp );
 extern Element Template_CreateComponentFromSelection ( Document doc );
 extern ThotBool TemplateComponentWillBeDeleted ( NotifyElement *event );
+extern void UnionClicked ( NotifyElement* event );
+extern ThotBool UnionDoubleClicked ( NotifyElement* event );
+extern ThotBool TemplateNameAttributeDeleted ( NotifyAttribute* event );
+extern ThotBool TemplateNameAttributeModified ( NotifyAttribute* event );
+extern ThotBool TemplateNameAttributeCreated ( NotifyAttribute* event );
 
 #else /* __STDC__ */
 
@@ -147,6 +154,8 @@ extern void TemplateCreateFreeBox ( Document doc,
                                       View view );
 extern void TemplateCreateUnion ( Document doc,
                                     View view );
+extern void Template_ModifyUnionElement ( Document doc,
+                                            Element unionEl );
 extern void TemplateCreateRepeat ( Document doc,
                                      View view );
 extern void TemplateCreateRepeatComp ( Document doc,
@@ -161,6 +170,11 @@ extern Element Template_CreateUseFromSelection ( Document doc,
                                                    ThotBool createComp );
 extern Element Template_CreateComponentFromSelection ( Document doc );
 extern ThotBool TemplateComponentWillBeDeleted ( NotifyElement *event );
+extern void UnionClicked ( NotifyElement* event );
+extern ThotBool UnionDoubleClicked ( NotifyElement* event );
+extern ThotBool TemplateNameAttributeDeleted ( NotifyAttribute* event );
+extern ThotBool TemplateNameAttributeModified ( NotifyAttribute* event );
+extern ThotBool TemplateNameAttributeCreated ( NotifyAttribute* event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2717,7 +2717,7 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt,
 #ifdef TEMPLATES
   else if (!strcmp(name, "Template"))
     {
-      /* it's an element from the SVG namespace, look for the
+      /* it's an element from the XTiger namespace, look for the
          id attribute from the same namespace */
       attrIDType.AttrTypeNum = Template_ATTR_name;
       attrID = TtaGetAttribute (el, attrIDType);
@@ -4450,6 +4450,10 @@ void UpdateAttrNAME (NotifyAttribute * event)
            elType.ElTypeNum == HTML_EL_MAP ||
            elType.ElTypeNum == HTML_EL_map))
         TtaIsValidID (event->attribute, TRUE);
+#ifdef TEMPLATES
+      else if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "Template"))
+        TtaIsValidID (event->attribute, TRUE);
+#endif /* TEMPLATES */
     }
   //else
     MakeUniqueName (event->element, event->document, TRUE, TRUE);

@@ -1506,7 +1506,9 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
     }
   }
   
-  if (elType.ElSSchema == templateSSchema && elType.ElTypeNum == Template_EL_TEXT_UNIT)
+  if (elType.ElSSchema == templateSSchema && (
+      elType.ElTypeNum == Template_EL_TEXT_UNIT || 
+      elType.ElTypeNum == Template_EL_component))
   {
     return FALSE;
   }
@@ -1963,45 +1965,91 @@ void TemplateCreateUnion(Document doc, View view)
   ElementType    unionType;
   XTigerTemplate t = GetXTigerDocTemplate(doc);
   char          *proposed, *name = NULL, *types=NULL;
+
+  Element     selElem;
+  ElementType selType;
+  int         firstChar, lastChar;
+  
   
   if(t && sstempl)
     {
-      proposed = Template_GetAllDeclarations(t, TRUE, FALSE, TRUE);
-      if(QueryUnionFromUser(proposed, NULL, &name, &types, TRUE))
+      TtaGiveFirstSelectedElement(doc, &selElem, &firstChar, &lastChar);
+      selType =  TtaGetElementType(selElem);
+      if(selType.ElSSchema==sstempl && selType.ElTypeNum==Template_EL_union)
+        Template_ModifyUnionElement(doc, selElem);
+      else
         {
-          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
-          head = TemplateFindHead(doc);
-          sibling = TtaGetLastChild(head);
-
-          unionType.ElSSchema = sstempl;
-          unionType.ElTypeNum = Template_EL_union;
-          unionEl = TtaNewElement(doc, unionType);
-          
-          if(sibling)
-            TtaInsertSibling(unionEl, sibling, FALSE, doc);
-          else
+          proposed = Template_GetAllDeclarations(t, TRUE, FALSE, TRUE);
+          if(QueryUnionFromUser(proposed, NULL, &name, &types, TRUE))
             {
-              sibling = unionEl;
-              TtaInsertFirstChild(&sibling, head, doc);
-            }
-          SetAttributeStringValue(unionEl, Template_ATTR_name, name);
-          SetAttributeStringValue(unionEl, Template_ATTR_includeAt, types);
-          
-          TtaRegisterElementCreate(unionEl, doc);
-          
-          TtaSelectElement(doc, unionEl);
-          TtaCloseUndoSequence(doc);
-          
-          Template_DeclareNewUnion (t, name, types, "");
+              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+    
+              head = TemplateFindHead(doc);
+              sibling = TtaGetLastChild(head);
+    
+              unionType.ElSSchema = sstempl;
+              unionType.ElTypeNum = Template_EL_union;
+              unionEl = TtaNewElement(doc, unionType);
+              
+              if(sibling)
+                TtaInsertSibling(unionEl, sibling, FALSE, doc);
+              else
+                {
+                  sibling = unionEl;
+                  TtaInsertFirstChild(&sibling, head, doc);
+                }
+              Template_SetName(doc, unionEl, name, TRUE);
+              
+              SetAttributeStringValue(unionEl, Template_ATTR_includeAt, types);
+              TtaSetAccessRight(unionEl, ReadOnly, doc);
+              
+              TtaRegisterElementCreate(unionEl, doc);
+              
+              TtaSelectElement(doc, unionEl);
+              TtaCloseUndoSequence(doc);
+              
+              Template_DeclareNewUnion (t, name, types, "");
+              TtaFreeMemory(proposed);
+              TtaFreeMemory(name);
+              TtaFreeMemory(types);
+            }          
         }
-      
-      TtaFreeMemory(proposed);
-      TtaFreeMemory(name);
-      TtaFreeMemory(types);
     }  
 
 #endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Template_ModifyUnionElement
+  Query the user to modify an xt:union
+  ----------------------------------------------------------------------*/
+void Template_ModifyUnionElement(Document doc, Element unionEl)
+{
+  XTigerTemplate t = GetXTigerDocTemplate(doc);
+  SSchema        sstempl = TtaGetSSchema ("Template", doc);
+  ElementType    unionType;
+  char          *proposed, *checked, *name, *types=NULL;
+  
+  if(doc && unionEl && t && sstempl)
+    {
+      unionType = TtaGetElementType(unionEl);
+      if(unionType.ElSSchema==sstempl && unionType.ElTypeNum==Template_EL_union)
+        {
+          proposed = Template_GetAllDeclarations(t, TRUE, FALSE, TRUE);
+          checked  = GetAttributeStringValueFromNum(unionEl, Template_ATTR_includeAt, NULL);
+          name     = GetAttributeStringValueFromNum(unionEl, Template_ATTR_name, NULL);
+          if(QueryUnionFromUser(proposed, checked, &name, &types, FALSE))
+            {
+              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              SetAttributeStringValueWithUndo(unionEl, Template_ATTR_includeAt, types);
+              TtaCloseUndoSequence(doc);
+            }
+          TtaFreeMemory(proposed);
+          TtaFreeMemory(checked);
+          TtaFreeMemory(name);
+          TtaFreeMemory(types);
+        }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2369,6 +2417,7 @@ Element Template_CreateComponentFromSelection(Document doc)
   ElementType compType;
   Element     comp = NULL;
   char        buffer[128];
+  int         sz = 128;
 
   const char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_NEWCOMP);
   const char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
@@ -2429,8 +2478,9 @@ Element Template_CreateComponentFromSelection(Document doc)
                       TtaRegisterElementDelete (current, doc);
                       child = current;
                     }
+                  if(!Template_SetName(doc, comp, buffer, TRUE))
+                      GiveAttributeStringValueFromNum(comp, Template_ATTR_name, buffer, &sz);
                   
-                  SetAttributeStringValue(comp, Template_ATTR_name, buffer);
                   TtaCloseUndoSequence(doc);
                   TtaSelectElement(doc, comp);
                   
@@ -2465,6 +2515,73 @@ ThotBool TemplateComponentWillBeDeleted (NotifyElement *event)
     }
 #endif /* TEMPLATES */ 
   return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  UnionClicked
+  Called when a xt:union is clicked 
+  ----------------------------------------------------------------------*/
+void UnionClicked(NotifyElement* event)
+{
+  if(event->document && event->element)
+    TtaSelectElement(event->document, event->element);
+}
+
+/*----------------------------------------------------------------------
+  UnionDoubleClicked
+  Called when a xt:union is double clicked 
+  ----------------------------------------------------------------------*/
+ThotBool UnionDoubleClicked(NotifyElement* event)
+{
+  Template_ModifyUnionElement(event->document, event->element);
+  TtaSelectElement(event->document, event->element);
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  TemplateNameAttributeDeleted
+  Called when a xt:name will be deleted 
+  ----------------------------------------------------------------------*/
+ThotBool TemplateNameAttributeDeleted(NotifyAttribute* event)
+{
+  // Prevent xt:name deletion
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  TemplateNameAttributeModified
+  Called when a xt:name will be modified 
+  ----------------------------------------------------------------------*/
+ThotBool TemplateNameAttributeModified(NotifyAttribute* event)
+{
+  // Prevent xt:name modification
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  TemplateNameAttributeCreated
+  Called when a xt:name have been created 
+  ----------------------------------------------------------------------*/
+ThotBool TemplateNameAttributeCreated(NotifyAttribute* event)
+{
+  MakeUniqueName(event->element, event->document, event->attribute, FALSE);
+  return TRUE;
+}
+
+
+/*----------------------------------------------------------------------
+  TemplateNameAttrInMenu
+  Called by Thot when building the Attributes menu for template elements.
+  ----------------------------------------------------------------------*/
+ThotBool TemplateNameAttrInMenu (NotifyAttribute * event)
+{
+#ifdef TEMPLATES
+  ElementType type = TtaGetElementType(event->element);
+  if(type.ElTypeNum==Template_EL_component || 
+      type.ElTypeNum==Template_EL_union)
+    return TRUE;
+#endif /* TEMPLATES */
+    return FALSE;
 }
 
 

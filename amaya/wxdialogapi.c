@@ -1560,10 +1560,12 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
 ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** label, char**types, ThotBool newUnion)
 {
 #ifdef TEMPLATES
-  unsigned int i, n;
+  int i;
+  unsigned int n, count;
   wxDialog dialog;
   wxString strs = TtaConvMessageToWX(proposed);
-  wxArrayString arr = wxStringTokenize(strs);
+  wxArrayString arr = wxStringTokenize(strs), arrchecked;
+  
   wxCheckListBox* box;
   
   if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
@@ -1583,7 +1585,12 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
       if(!newUnion)
         {
           if(label!=0 && *label!=0)
-            XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetValue(TtaConvMessageToWX(*label));
+            {
+              XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetValue(TtaConvMessageToWX(*label));
+              i = arr.Index(TtaConvMessageToWX(*label));
+              if(i!=wxNOT_FOUND)
+                arr.RemoveAt(i);
+            }
           XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->Disable();
         }
       
@@ -1593,6 +1600,16 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
       sz->Layout();
       
       box->Append(arr);
+      if(checked && checked[0]!=EOS)
+        {
+          arrchecked = wxStringTokenize(TtaConvMessageToWX(checked));
+          count =  box->GetCount();
+          for(i=0; i<(int)count; i++)
+            {
+              if(arrchecked.Index(box->GetString(i))!=wxNOT_FOUND)
+                box->Check(i);
+            }
+        }
       
       dialog.SetSize(200, 320);
       dialog.Layout();
@@ -1601,7 +1618,7 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
         {
           strs.Clear();
           n = box->GetCount();
-          for(i=0; i<n; i++)
+          for(i=0; i<(int)n; i++)
             {
               if(box->IsChecked(i))
                 {

@@ -89,15 +89,15 @@ EXCEPT
   {option:             NoReplicate, NoBreakByReturn, NoCreate;}
   bag:                NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak, ClickableSurface;
   {Hiding unkown and language attributes}
-	Unknown_attribute:  Invisible;
-	Language:           Invisible;
+  Unknown_attribute:  Invisible;
+  Language:           Invisible;
   types :             GiveTypes, DuplicateAttr;
   option:             DuplicateAttr;
   currentType:        Invisible;
-  ref_name:		        GiveName;
-  name:			          GiveName;
+  ref_name:		      GiveName;
+  name:			      GiveName;
   title:              GiveName;
   prompt:             Invisible;
-  xmlid:		          CssId;
+  xmlid:		      CssId;
 	
 END

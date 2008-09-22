@@ -234,6 +234,9 @@ XTigerTemplate GetXTigerDocTemplate (Document doc)
 
   if (Templates_Map == NULL)
     InitializeTemplateEnvironment ();
+
+  if(doc==0)
+    return NULL;
   
   iter = HashMap_GetForwardIterator(Templates_Map);
   ITERATOR_FOREACH(iter, HashMapNode, node)
