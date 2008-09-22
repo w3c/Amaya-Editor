@@ -1881,6 +1881,7 @@ Document GetTemplateDocument (XTigerTemplate t)
 }
 
 /*----------------------------------------------------------------------
+ * Doc can be an instance or a template.
   ----------------------------------------------------------------------*/
 void SetTemplateDocument (XTigerTemplate t, Document doc)
 {
