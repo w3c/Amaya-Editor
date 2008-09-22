@@ -35,6 +35,7 @@ extern void ParseHTMLSpecificStyle ( Element el,
                                      ThotBool destroy );
 extern int IsImplicitClassName ( char *class_,
                                  Document doc );
+extern void SetBodyAbsolutePosition ( Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element el,
                                      int specificity,
@@ -107,6 +108,7 @@ extern void ParseHTMLSpecificStyle ( Element el,
                                        ThotBool destroy );
 extern int IsImplicitClassName ( char *class_,
                                    Document doc );
+extern void SetBodyAbsolutePosition ( Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
                                        Element el,
                                        int specificity,

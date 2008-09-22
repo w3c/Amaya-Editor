@@ -4796,6 +4796,9 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
 #ifdef TEMPLATES
           // Fill template internal structures and prepare the instance if any
           Template_FillFromDocument (newdoc);
+          if (method == CE_TEMPLATE)
+            // avoid positionned boxes to overlap the xt:head
+            SetBodyAbsolutePosition (newdoc);
 #endif /* TEMPLATES */
         }
       else
@@ -7015,7 +7018,6 @@ void InitAmaya (NotifyEvent * event)
 
   TtaRegisterDocumentPageTypeFunction(ChooseDocumentPage);
   TtaSetPopupDocContextMenuFunction((PopupDocContextMenuFuction)AmayaPopupDocContextMenu);
-  
   InsertableElement_Init();
   
   /* Register Amaya-specific ToolPanel classes. */

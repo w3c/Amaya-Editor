@@ -28,7 +28,8 @@
 #include "templateUtils_f.h"
 #include "fetchHTMLname_f.h"
 #include "Template.h"
-
+#include "styleparser_f.h"
+#
 #ifdef TEMPLATES
 #define TEMPLATE_SCHEMA_NAME "Template"
 #endif /* TEMPLATES */
@@ -444,7 +445,10 @@ void CreateTemplate(Document doc, char *templatePath)
     }
   // Save changes
   TtaSetStructureChecking (TRUE, doc);
-  
+  if (DocumentTypes[doc] == docHTML)
+    // avoid positionned boxes to overlap the xt:head section
+    SetBodyAbsolutePosition (doc);
+
   TtaClearUndoHistory (doc);
   RemoveParsingErrors (doc);
 

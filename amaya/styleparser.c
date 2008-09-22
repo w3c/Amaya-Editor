@@ -7499,6 +7499,24 @@ int IsImplicitClassName (char *class_, Document doc)
  ************************************************************************/
 
 /*----------------------------------------------------------------------
+  SetBodyAbsolutePosition:
+  ----------------------------------------------------------------------*/
+void SetBodyAbsolutePosition (Document doc)
+{
+  Element              root, body;
+  ElementType          elType;
+
+  if (DocumentTypes[doc] != docHTML)
+    return;
+  root = TtaGetMainRoot (doc);
+  elType =  TtaGetElementType(root);
+  elType.ElTypeNum = HTML_EL_BODY;
+  body = TtaSearchTypedElement (elType, SearchInTree, root);
+  if (body)
+    ParseHTMLSpecificStyle (body, "position:absolute", doc, 200, FALSE);
+}
+
+/*----------------------------------------------------------------------
   HTMLSetBackgroundColor:
   ----------------------------------------------------------------------*/
 void HTMLSetBackgroundColor (Document doc, Element el, int specificity,
