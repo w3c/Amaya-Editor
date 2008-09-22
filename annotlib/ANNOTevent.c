@@ -957,12 +957,10 @@ void ANNOT_Post_callback (int doc, int status, char *urlName, char *outputfile,
 
   /* restore REMOTELOAD contextext's */  
   ctx = (REMOTELOAD_context *) context;
-
   if (!ctx)
     return;
 
   ResetStop (doc);
-
   source_doc = ctx->source_doc;
   isReplyTo = ctx->isReplyTo;
 

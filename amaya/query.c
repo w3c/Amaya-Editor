@@ -3271,7 +3271,6 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, const char *formdata,
                                  me->request);
       status = posted ? YES : NO; 
     }
-#ifdef ANNOTATIONS
   else if (mode & AMAYA_FILE_POST)
     {
       unsigned long filesize;
@@ -3321,7 +3320,6 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, const char *formdata,
                              (HTAnchor *) me->anchor, 
                              me->request);
     }
-#endif /* ANNOTATIONS */
   else if (formdata)
     status = HTGetFormAnchor(me->formdata, (HTAnchor *) me->anchor,
                              me->request);
@@ -3420,7 +3418,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   char               *esc_url;
   int                 UsePreconditions;
   char                url_name[MAX_LENGTH];
-  char               *resource_name;
+  char               *resource_name, *localfilename;
   char               *tmp2;
   char                file_name[MAX_LENGTH];
   ThotBool            lost_update_check = TRUE;
@@ -3458,11 +3456,8 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 
   /* get the size of the file */
   if (!AM_GetFileSize (fileName, &file_size) || file_size == 0L)
-    {
-      /* file was empty */
-      /*errmsg here */
-      return (HT_ERROR);
-    }
+    /* file was empty */
+    return (HT_ERROR);
 
   /* prepare the request context */
   if (THD_TRACE)
@@ -3476,10 +3471,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
       return (HT_ERROR);
     }
 
-  /*
-  ** Set up the original URL name
-  */
-
+  /* Set up the original URL name */
   /* are we using content-location? */
   if (DocumentMeta[docid]->content_location)
     resource_name = DocumentMeta[docid]->content_location;
@@ -3545,15 +3537,10 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
       me->outputfile = (char  *) NULL; 
     }
 
-#ifdef _WX
-  char * localfilename = TtaGetRealFileName (fileName);
+  localfilename = TtaGetRealFileName (fileName);
   /* @@IV 18/08/2004 eencode spaces in the local filename */
   fileURL = EscapeURL (localfilename);
   TtaFreeMemory(localfilename);
-#else /* _WX */
-  /* @@IV 18/08/2004 eencode spaces in the local filename */
-  fileURL = EscapeURL (fileName);
-#endif /* _WX */
   if (fileURL)
     {
       strcpy (file_name, fileURL);
@@ -3581,16 +3568,11 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
      in the following lines */
   dest_anc_parent = HTAnchor_parent (me->dest);
 
-  /*
-  **  Set the Content-Type of the file we are uploading 
-  */
+  /* Set the Content-Type of the file we are uploading  */
   /* we try to use any content-type previosuly associated
      with the parent. If it doesn't exist, we try to guess it
      from the URL */
   /* @@ JK: trying to use the content type we stored */
-  /*
-    tmp2 = HTAtom_name (HTAnchor_format (dest_anc_parent));
-  */
   tmp2 = NULL;
   if (!tmp2 || !strcmp (tmp2, "www/unknown"))
     {
@@ -3611,12 +3593,9 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   /* we go thru setOutputFormat, rather than change the parent's
      anchor, as that's the place that libwww expects it to be */
   HTAnchor_setFormat (HTAnchor_parent (me->source), HTAtom_for (tmp2));
-
   HTRequest_setOutputFormat (me->request, HTAtom_for (tmp2));
 
-  /*
-  **  Set the Charset of the file we are uploading 
-  */
+  /*  Set the Charset of the file we are uploading  */
   /* we set the charset as indicated in the document's metadata
      structure (and only if it exists) */
   charset = TtaGetDocumentCharset (docid);
@@ -3637,15 +3616,11 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
         }
     }
 
-  /*
-  ** define other request characteristics
-  */
+  /* define other request characteristics  */
   HTRequest_setPreemptive (me->request, NO);
 
-  /*
-  ** Make sure that the first request is flushed immediately and not
-  ** buffered in the output buffer
-  */
+  /* Make sure that the first request is flushed immediately and not
+     buffered in the output buffer */
   if (mode & AMAYA_FLUSH_REQUEST)
     HTRequest_setFlush(me->request, YES);
    
@@ -3685,9 +3660,6 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 
 #if 0
   /* Throw away any reponse body */
-  /*
-    HTRequest_setOutputStream (me->request, HTBlackHole());        
-  */
   HTRequest_setOutputStream (me->request, NULL);
 #endif
 
@@ -3696,7 +3668,6 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
                 me->status_urlName);
 
-   
 #ifdef DAV
   /* MKP: for a PUT request, try to add an "If" header (lock information)
    * for a HEAD request, leave this for check_handler */
@@ -3724,6 +3695,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 
   return (status == YES ? 0 : -1);
 }
+
 
 /*----------------------------------------------------------------------
   StopRequest

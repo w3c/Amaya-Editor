@@ -54,6 +54,13 @@ extern void RestartParser ( Document doc,
                             ThotBool show_errors,
                             ThotBool check_ids );
 extern void RedisplaySourceFile ( Document doc );
+extern void SaveWiki_callback ( int doc,
+                                int status,
+                                char *urlName,
+                                char *outputfile,
+                                char *proxyName,
+                                AHTHeaders *http_headers,
+                                void * context );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void DoSynchronize ( Document doc,
                             View view,
@@ -131,6 +138,13 @@ extern void RestartParser ( Document doc,
                               ThotBool show_errors,
                               ThotBool check_ids );
 extern void RedisplaySourceFile ( Document doc );
+extern void SaveWiki_callback ( int doc,
+                                  int status,
+                                  char *urlName,
+                                  char *outputfile,
+                                  char *proxyName,
+                                  AHTHeaders *http_headers,
+                                  void * context );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void DoSynchronize ( Document doc,
                               View view,

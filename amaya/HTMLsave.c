@@ -118,6 +118,12 @@ static AttSearch    SRC_attr_tab[] = {
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
 
+/* the structure used for storing the context of the 
+   SaveWikiFile_callback function */
+typedef struct WIKI_context {
+  char *localfile;
+  char *output;
+} WIKI_context;
 
 /*----------------------------------------------------------------------
   CheckValidProfile
@@ -2103,6 +2109,69 @@ static ThotBool HasSavingName (Document doc, View view, char *url,
     }
 }
 
+/*-----------------------------------------------------------------------
+  SaveWikiFile callback
+  -----------------------------------------------------------------------*/
+void SaveWiki_callback (int doc, int status, char *urlName, char *outputfile,
+                        char *proxyName, AHTHeaders *http_headers, void * context)
+{
+  WIKI_context       *ctx;
+
+  ctx = (WIKI_context *) context;
+  if (!ctx)
+    return;
+  TtaFreeMemory (ctx->localfile);
+  TtaFreeMemory (ctx->output);
+  TtaFreeMemory (ctx);
+}
+
+/*----------------------------------------------------------------------
+  SafeSaveFileThroughNet
+  Send a file through the Network (using the PUT HTTP method) and double
+  check for errors using a following GET.
+  Return:
+  0 if the file has been saved,
+  1 if the save failed, 
+  2 if nothing is done
+  ----------------------------------------------------------------------*/
+static int SaveWikiFile (Document doc, char *localfile,
+                         char *remotefile, const char *content_type,
+                         ThotBool use_preconditions)
+{
+  WIKI_context       *ctx;
+  char               *server, *url;
+  int                 len, res = 2;
+
+  server = TtaGetEnvString ("WIKI_SERVER");
+  len = strlen(server);
+  if (len && !strncmp (remotefile, server, len))
+    {
+      /* Save */
+      url = TtaStrdup (TtaGetEnvString ("WIKI_POST_URI"));
+      if (url == NULL)
+        // not enough resource
+         return 1;
+
+      /* launch the request */
+      //ActiveTransfer (doc);
+      /* create the context for the callback */
+      ctx = (WIKI_context*)TtaGetMemory (sizeof (WIKI_context));
+      memset (ctx,  0, sizeof (WIKI_context));
+      ctx->localfile = TtaStrdup (DocumentURLs[doc]);
+      ctx->output = (char *)TtaGetMemory (MAX_LENGTH); // requested by GetObjectWWW
+      ctx->output[0]  = EOS;
+      res = GetObjectWWW (doc, doc, url, localfile,
+                           ctx->output,
+                          AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
+                          NULL, NULL, 
+                          (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))  SaveWiki_callback,
+                          (void *) ctx, NO, content_type);
+    }
+  /* it's not the wiki server! */
+  return res;
+  
+}
+
 /*----------------------------------------------------------------------
   SafeSaveFileThroughNet
   Send a file through the Network (using the PUT HTTP method) and double
@@ -2123,12 +2192,15 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   unsigned long     file_size = 0;
 #endif
 
+  res = SaveWikiFile (doc, localfile, remotefile, content_type,use_preconditions);
+  if (res != 2)
+    return res;
+
   verify_publish = TtaGetEnvString("VERIFY_PUBLISH");
   /* verify the PUT by default */
   if (verify_publish == NULL)
     verify_publish = "yes";
-  
-  
+
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "Save %s to %s type=%s", localfile, remotefile, content_type);
   AM_GetFileSize (localfile, &file_size);

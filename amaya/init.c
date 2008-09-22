@@ -6861,6 +6861,9 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_1", "", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_2", "", FALSE);
+  TtaSetEnvString ("WIKI_SERVER", "http://sweetwiki.inria.fr/", FALSE);
+  TtaSetEnvString ("WIKI_GET_PARAMS", "?templateoff=true&xslname=queryoff", FALSE);
+  TtaSetEnvString ("WIKI_POST_URI", "http://sweetwiki.inria.fr/interop/data/Tools/OfficeConverter.jsp?web=Main", FALSE);
   // set the default access mode
 #ifdef _MACOS
   TtaSetEnvString ("ACCESSKEY_MOD", "Ctrl", FALSE);

@@ -91,8 +91,8 @@ char *EscapeURL (const char *url)
 {
   char *buffer;
   char *ptr, *server, *param;
-  int   buffer_len, par_len;
-  int   new_chars, len, url_len;
+  int   buffer_len, par_len = 0;
+  int   new_chars, len = 0, url_len;
   int   buffer_free_mem;
   void *status;
 
@@ -101,16 +101,18 @@ char *EscapeURL (const char *url)
       url_len =  strlen (url);
       buffer_free_mem = url_len + 20;
       // a patch for sweetwiki
-      server = TtaStrdup ("http://sweetwiki.inria.fr/");
-      param = TtaStrdup ("?templateoff=true&xslname=queryoff");
-      len = strlen(server);
-      par_len = strlen (param);
-      if (strncmp (url, server, len) ||
+      server = TtaGetEnvString ("WIKI_SERVER");
+      param = TtaGetEnvString ("WIKI_GET_PARAMS");
+      if (server)
+        len = strlen(server);
+      if (len == 0 || param == NULL ||
+          strncmp (url, server, len) ||
           // or already included
-          url_len < 4 ||
-          strncmp (&url[url_len-4], ".jsp", 4))
+          url_len < 4 || strncmp (&url[url_len-4], ".jsp", 4))
         // it's not necessary to add these parameters
         par_len = 0;
+      else
+        par_len = strlen (param);
 
       buffer_free_mem += par_len;
       buffer = (char *)TtaGetMemory (buffer_free_mem + 1);
@@ -175,8 +177,6 @@ char *EscapeURL (const char *url)
             }
         }
       buffer[buffer_len] = EOS;
-      TtaFreeMemory (server);
-      TtaFreeMemory (param);
     }
   else
     buffer = NULL;
