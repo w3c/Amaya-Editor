@@ -54,6 +54,7 @@
 #include "fetchXMLname_f.h"
 #include "HTMLhistory_f.h"
 #include "UIcss_f.h"
+#include "styleparser_f.h"
 
 #ifdef TEMPLATES
 #include "templates.h"
@@ -2575,7 +2576,7 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
   char             *tempdoc = NULL;
   char              docname[MAX_LENGTH];
   char              tempdir[MAX_LENGTH];
-  int               line, index;
+  int               line, index, method = 0;
   int		            position, distance;
   ThotBool          saveBefore, modified;
 
@@ -2590,7 +2591,11 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
     /* it's a structured document */
     otherDoc = DocumentSource[doc];
   else if (DocumentTypes[doc] == docSource)
-    otherDoc = GetDocFromSource (doc);
+    {
+      otherDoc = GetDocFromSource (doc);
+      if (DocumentMeta[otherDoc])
+      method = DocumentMeta[otherDoc]->method;
+    }
   else
     otherDoc = 0;
 
@@ -2730,6 +2735,12 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
     }
   if (otherDoc)
     {
+      // keep the method of the synchornized document
+      if (DocumentMeta[otherDoc])
+        DocumentMeta[otherDoc]->method = method;
+      if (method == CE_TEMPLATE && DocumentTypes[otherDoc] == docHTML)
+        // avoid positionned boxes to overlap the xt:head section
+        SetBodyAbsolutePosition (otherDoc);
       if (DocumentTypes[doc] != docCSS)
         {
           TtaSetItemOff (otherDoc, 1, File, BSynchro);

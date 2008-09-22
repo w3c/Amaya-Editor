@@ -1766,8 +1766,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
       attr = TtaGetAttribute (el, attrType);
       if (attr &&
           DocumentMeta[doc] && 
-          DocumentMeta[doc]->method != CE_MAKEBOOK &&
-          DocumentMeta[doc]->method != CE_TEMPLATE)
+          DocumentMeta[doc]->method != CE_MAKEBOOK)
         {
           length = TtaGetTextAttributeLength (attr);
           utf8path = (char*)TtaGetMemory (length + 1);
