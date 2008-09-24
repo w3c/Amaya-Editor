@@ -2846,6 +2846,11 @@ void SaveAll (Document doc, View view)
     return;
 
   Saving_All_lock = TRUE;
+  
+  /* In case we SaveAll from the modified source and the formatted doc is already modified */
+  if (TtaIsDocumentModified (doc) &&
+      DocumentTypes[doc] != docTemplate)
+    SaveDocument (doc, view);
 
   for (document = 1; document < DocumentTableLength; document++)
     {
