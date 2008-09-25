@@ -2071,6 +2071,78 @@ char *ConvertLineAttributesToPath (Element el)
 }
 
 /*----------------------------------------------------------------------
+  GraphicLeafComplete
+  ----------------------------------------------------------------------*/
+void GraphicLeafComplete(Document doc, Element el)
+{
+  Element leaf;
+  ThotBool             shape_recognition;
+  ElementType	       elType;
+  int w, h, rx = 0,ry = 0;
+  PresentationContext  ctxt;
+  PresentationValue    pval;
+  ThotBool	       closedShape;
+  PRule		       fillPatternRule, newPRule;
+
+  leaf = CreateGraphicLeaf (el, doc, &closedShape);
+  /* if it's a closed shape, move the FillPattern rule to that leaf */
+  if (closedShape && leaf)
+    {
+      fillPatternRule = TtaGetPRule (el, PRFillPattern);
+      if (fillPatternRule != NULL)
+	{
+	  newPRule = TtaCopyPRule (fillPatternRule);
+	  TtaAttachPRule (leaf, newPRule, doc);
+	  TtaRemovePRule (el, fillPatternRule, doc);
+	}
+    }
+
+  if (!TtaGetEnvBoolean ("ENABLE_SHAPE_RECOGNITION", &shape_recognition))
+    shape_recognition = TRUE;
+
+  elType = TtaGetElementType (el);
+
+  /* Check the geometric properties of the leaf */
+  if(shape_recognition && (elType.ElTypeNum == SVG_EL_polygon ||
+			   elType.ElTypeNum == SVG_EL_path))
+    {
+      if (CheckGeometricProperties(doc, leaf, &w, &h, &rx, &ry))
+	{
+	  ctxt = TtaGetSpecificStyleContext (doc);
+	  /* the specific presentation is not a CSS rule */
+	  ctxt->cssSpecificity = 2000;
+	  ctxt->destroy = FALSE;
+	  pval.typed_data.real = FALSE;
+	  pval.typed_data.unit = UNIT_PX;
+
+	  pval.typed_data.value = w;
+	  TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);
+	  pval.typed_data.value = h;
+	  TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
+
+	  if(rx)
+	    {
+	      pval.typed_data.value = rx;
+	      TtaSetStylePresentation (PRXRadius, el, NULL, ctxt, pval);
+	    }
+		  
+	  if(ry)
+	    {
+	      pval.typed_data.value = ry;
+	      TtaSetStylePresentation (PRYRadius, el, NULL, ctxt, pval);
+	    }
+
+	  /* Update transform attribute */
+	  UpdateTransformMatrix(doc, el);
+
+	  /* Update points attribute */
+	  UpdatePointsOrPathAttribute(doc, el, w, h, FALSE);
+	}
+    }
+
+}
+
+/*----------------------------------------------------------------------
   SVGElementComplete
   Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
@@ -2082,14 +2154,10 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
   AttributeType        attrType;
   Attribute            attr;
   int                  length;
-  PRule		       fillPatternRule, newPRule;
   SSchema	       SVGSSchema;
   char                 *href, *buffer;
-  ThotBool	       closedShape, ok, closed;
-  ThotBool             shape_recognition;
+  ThotBool	       ok, closed;
 
-  if (!TtaGetEnvBoolean ("ENABLE_SHAPE_RECOGNITION", &shape_recognition))
-    shape_recognition = TRUE;
   *error = 0;
   doc = context->doc;
   elType = TtaGetElementType (el);
@@ -2253,9 +2321,10 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	case SVG_EL_path:
         case SVG_EL_polyline:
         case SVG_EL_polygon:
+	  GraphicLeafComplete(doc, el);
 	  /* this element may use markers. Check its marker-start, marker-end
 	     and maker-mid attributes and copy the referred marker(s) */
-	  ProcessMarkers (el, doc);
+	  //ProcessMarkers (el, doc);
 	  break;
 
         case SVG_EL_a:
@@ -2309,60 +2378,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
              of the element, if it has not been done when creating attributes
              (points, rx, ry) */
-          leaf = CreateGraphicLeaf (el, doc, &closedShape);
-          /* if it's a closed shape, move the FillPattern rule to that leaf */
-          if (closedShape && leaf)
-            {
-              fillPatternRule = TtaGetPRule (el, PRFillPattern);
-              if (fillPatternRule != NULL)
-                {
-                  newPRule = TtaCopyPRule (fillPatternRule);
-                  TtaAttachPRule (leaf, newPRule, doc);
-                  TtaRemovePRule (el, fillPatternRule, doc);
-                }
-            }
-
-          /* Check the geometric properties of the leaf */
-          if(shape_recognition && (elType.ElTypeNum == SVG_EL_polygon ||
-                                   elType.ElTypeNum == SVG_EL_path))
-            {
-              int w, h, rx = 0,ry = 0;
-              PresentationContext  ctxt;
-              PresentationValue    pval;
-
-              if (CheckGeometricProperties(doc, leaf, &w, &h, &rx, &ry))
-                {
-                  ctxt = TtaGetSpecificStyleContext (doc);
-                  /* the specific presentation is not a CSS rule */
-                  ctxt->cssSpecificity = 2000;
-                  ctxt->destroy = FALSE;
-                  pval.typed_data.real = FALSE;
-                  pval.typed_data.unit = UNIT_PX;
-
-                  pval.typed_data.value = w;
-                  TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);
-                  pval.typed_data.value = h;
-                  TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
-
-                  if(rx)
-                    {
-                      pval.typed_data.value = rx;
-                      TtaSetStylePresentation (PRXRadius, el, NULL, ctxt, pval);
-                    }
-		  
-                  if(ry)
-                    {
-                      pval.typed_data.value = ry;
-                      TtaSetStylePresentation (PRYRadius, el, NULL, ctxt, pval);
-                    }
-
-                  /* Update transform attribute */
-                  UpdateTransformMatrix(doc, el);
-
-                  /* Update points attribute */
-                  UpdatePointsOrPathAttribute(doc, el, w, h, FALSE);
-                }
-            }
+	  GraphicLeafComplete(doc, el);
           break;
         }
     }

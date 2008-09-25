@@ -56,6 +56,8 @@ extern void ParsePointsBuffer ( char *text,
                                 Element leaf,
                                 Document doc );
 extern char *ConvertLineAttributesToPath ( Element el );
+extern void GraphicLeafComplete ( Document doc,
+                                  Element el );
 extern void SVGElementComplete ( ParserData *context,
                                  Element el,
                                  int *error );
@@ -167,6 +169,8 @@ extern void ParsePointsBuffer ( char *text,
                                   Element leaf,
                                   Document doc );
 extern char *ConvertLineAttributesToPath ( Element el );
+extern void GraphicLeafComplete ( Document doc,
+                                    Element el );
 extern void SVGElementComplete ( ParserData *context,
                                    Element el,
                                    int *error );
