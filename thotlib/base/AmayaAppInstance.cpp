@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #ifdef _WX
 #include "logdebug.h"
 #include "AmayaAppInstance.h"

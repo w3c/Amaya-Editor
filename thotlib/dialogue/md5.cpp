@@ -1,15 +1,18 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #ifdef _WX
-
 #include <wx/wx.h>
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "application.h"
 
-
 #include "md5.h"
 #include "base64.h"
-
 #include <iostream>
 #include <string.h>
 #include <wx/strconv.h>
@@ -42,13 +45,11 @@ wxString wxHashStream::GetHashStringResult()const
 }
 
 
-
 //
 //
 // Macro predefintion
 //
 //
-
 
 #define STORE32L(x, y)                                                                     \
      { (y)[3] = (unsigned char)(((x)>>24)&255); (y)[2] = (unsigned char)(((x)>>16)&255);   \

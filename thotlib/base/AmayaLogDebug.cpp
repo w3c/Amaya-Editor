@@ -1,9 +1,14 @@
-#ifdef _WX
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
 
+#ifdef _WX
 #include "wx/wx.h"
 
 #ifdef __WXDEBUG__
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"

@@ -1,5 +1,11 @@
-#ifdef _WX
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
 
+#ifdef _WX
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 #include "wx/valgen.h"

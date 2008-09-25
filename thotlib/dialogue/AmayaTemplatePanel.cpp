@@ -1,8 +1,13 @@
-#ifdef _WX
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1996-2008
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
 
+#ifdef _WX
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
-
 
 #include "thot_gui.h"
 #include "thot_sys.h"

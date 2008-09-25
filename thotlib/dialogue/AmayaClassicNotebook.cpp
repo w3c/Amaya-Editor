@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1996-2008
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #ifdef _WX
 #include "wx/wx.h"
 #include "wx/string.h"

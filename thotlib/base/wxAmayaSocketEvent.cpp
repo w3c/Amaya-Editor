@@ -1,9 +1,13 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #ifdef _WX
-
 #include "wx/wx.h"
-
 #include "logdebug.h"
-
 #include "wxAmayaSocketEvent.h"
 #include "wxAmayaSocketEventLoop.h"
 
