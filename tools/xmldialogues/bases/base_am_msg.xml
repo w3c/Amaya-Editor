@@ -1982,7 +1982,7 @@
 </label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_CAUSE">
 	<message xml:lang="en">Server reports an error: %s</message>
-	<message xml:lang="fr">Le serveur rapporte une erreur :</message>
+	<message xml:lang="fr">Le serveur rapporte une erreur : %s</message>
 	<message xml:lang="de">Der Server meldet einen Fehler: %s</message>
 	<message xml:lang="it">Il server riporta un errore: %s</message>
 	<message xml:lang="tr">Sunucu hatası veriyor: %s</message>

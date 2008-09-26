@@ -1307,7 +1307,7 @@ void ANNOT_Post (Document doc, View view)
                           AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
                           NULL, NULL, 
                           (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))ANNOT_Post_callback,
-                          (void *) ctx, NO, NULL);
+                          (void *) ctx, NO, "application/xml");
     } 
   else
     {
@@ -1331,18 +1331,13 @@ void ANNOT_Post (Document doc, View view)
                    ANNOTATION_CLASSNAME);
           free_url = TRUE;
 	  
-          res = GetObjectWWW (doc,
-                              0,
-                              url,
-                              rdf_file,
+          res = GetObjectWWW (doc, 0, url, rdf_file,
                               ctx->remoteAnnotIndex,
                               AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
                               NULL,
                               NULL, 
                               (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))  ANNOT_Post_callback,
-                              (void *) ctx,
-                              NO,
-                              NULL);
+                              (void *) ctx, NO, "application/xml");
         }
       else /* USE PUT */
         {
@@ -1964,25 +1959,19 @@ void ANNOT_Delete (Document doc, View view)
         {
           /* launch the request */
           ANNOT_UpdateTransfer (doc);
-          res = GetObjectWWW (doc,
-                              0,
-                              annot->annot_url,
-                              NULL,
+          res = GetObjectWWW (doc, 0, annot->annot_url, NULL,
                               ctx->output_file,
                               AMAYA_ASYNC | AMAYA_DELETE | AMAYA_FLUSH_REQUEST,
-                              NULL,
-                              NULL, 
+                              NULL, NULL, 
                               (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))  ANNOT_Delete_callback,
                               (void *) ctx,
-                              NO,
-                              NULL);
+                              NO, NULL);
           /* do something with res in case of error (invoke the callback? */
         }
       else
         {
           /* invoke the callback with an error */
-          ANNOT_Delete_callback (doc, HT_ERROR, NULL, NULL, NULL, NULL,
-                                 (void *) ctx);
+          ANNOT_Delete_callback (doc, HT_ERROR, NULL, NULL, NULL, NULL, (void *) ctx);
         }
     }
   else

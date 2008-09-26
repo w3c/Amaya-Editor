@@ -4144,9 +4144,8 @@ void Reload (Document doc, View view)
   if (IsW3Path (pathname))
     {
       /* load the document from the Web */
-      toparse = GetObjectWWW (doc, 0, pathname, form_data, tempfile, 
-                              mode,
-                              NULL, NULL,
+      toparse = GetObjectWWW (doc, 0, pathname, form_data,
+                              tempfile, mode, NULL, NULL,
                               (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) Reload_callback, 
                               (void *) ctx, YES, NULL);
     }
@@ -6865,8 +6864,9 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_1", "", FALSE);
   TtaSetEnvString ("LOCAL_HTML_DOCTYPE_2", "", FALSE);
   TtaSetEnvString ("WIKI_SERVER", "http://sweetwiki.inria.fr/", FALSE);
-  TtaSetEnvString ("WIKI_GET_PARAMS", "?templateoff=true&xslname=queryoff", FALSE);
+  TtaSetEnvString ("WIKI_GET_PARAMS", "templateoff=true&xslname=queryoff", FALSE);
   TtaSetEnvString ("WIKI_POST_URI", "http://sweetwiki.inria.fr/interop/data/Tools/OfficeConverter.jsp?web=Main", FALSE);
+  TtaSetEnvString ("WIKI_POST_PARAMS", "name=WIKI:name&web=WIKI:hasForWeb", FALSE);
   // set the default access mode
 #ifdef _MACOS
   TtaSetEnvString ("ACCESSKEY_MOD", "Ctrl", FALSE);

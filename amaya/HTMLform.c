@@ -47,11 +47,10 @@
 #include "HTMLsave_f.h"
 #include "AHTURLTools_f.h"
 
-static char        *FormBuf;    /* temporary buffer used to build the query
-                                   string */
-static int          FormLength;  /* size of the temporary buffer */
-static int          FormBufIndex; /* gives the index of the last char + 1 added to
-                                     the buffer (only used in AddBufferWithEos) */
+char        *FormBuf;    /* temporary buffer used to build the query string */
+int          FormLength;  /* size of the temporary buffer */
+int          FormBufIndex; /* gives the index of the last char + 1 added to
+                              the buffer (only used in AddBufferWithEos) */
 static ThotBool     Document_state;
 static Element      Option [MAX_OPTIONS];
 
@@ -87,7 +86,7 @@ void RestoreDocumentStatus (NotifyOnTarget *event)
   AddToBuffer
   reallocates memory and concatenates a string into buffer	
   ----------------------------------------------------------------------*/
-static void AddToBuffer (const char *orig)
+void AddToBuffer (const char *orig)
 {
   void               *status;
   int                 lg;
@@ -99,10 +98,11 @@ static void AddToBuffer (const char *orig)
       if (lg < PARAM_INCREMENT)
         lg = PARAM_INCREMENT;
       status = TtaRealloc (FormBuf, sizeof (char) * (FormLength + lg));      
-      if (status != NULL)
+      if (status)
         {
-          FormBuf = (char *)status;
+          // the buffer is now extended
           FormLength += lg;
+          FormBuf = (char *)status;
           strcat (FormBuf, orig);
         }
     }

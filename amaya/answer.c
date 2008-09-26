@@ -707,7 +707,7 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
             {
               sprintf (AmayaLastHTTPErrorMsg, 
                        TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-                       error->par);
+                       (char *) error->par);
               TtaSetStatus (me->docid, 1, AmayaLastHTTPErrorMsg, NULL);
             }
           else

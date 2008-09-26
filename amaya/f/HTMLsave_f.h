@@ -61,6 +61,10 @@ extern void SaveWiki_callback ( int doc,
                                 char *proxyName,
                                 AHTHeaders *http_headers,
                                 void * context );
+extern void GiveProtertyValue ( Document doc,
+                                char *property,
+                                char *value,
+                                int *length );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void DoSynchronize ( Document doc,
                             View view,
@@ -145,6 +149,10 @@ extern void SaveWiki_callback ( int doc,
                                   char *proxyName,
                                   AHTHeaders *http_headers,
                                   void * context );
+extern void GiveProtertyValue ( Document doc,
+                                  char *property,
+                                  char *value,
+                                  int *length );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void DoSynchronize ( Document doc,
                               View view,

@@ -115,7 +115,7 @@ char *EscapeURL (const char *url)
         par_len = strlen (param);
 
       buffer_free_mem += par_len;
-      buffer = (char *)TtaGetMemory (buffer_free_mem + 1);
+      buffer = (char *)TtaGetMemory (buffer_free_mem + 2);
       ptr = (char *) url;
       buffer_len = 0;
       while (*ptr)
@@ -143,7 +143,7 @@ char *EscapeURL (const char *url)
             {
               buffer_free_mem = 20;
               status = TtaRealloc (buffer, sizeof (char) 
-                                   * (buffer_len + buffer_free_mem + 1));
+                                   * (buffer_len + buffer_free_mem + 2));
               if (status)
                 buffer = (char *) status;
               else
@@ -172,6 +172,12 @@ char *EscapeURL (const char *url)
           if (*ptr == EOS && par_len)
             {
               // add parameters
+              if (param[0] != '?' && strstr (url, "?") == NULL)
+                {
+                  // add the missing character
+                  buffer[buffer_len++] = '?';
+                  buffer_free_mem--;
+                }
               ptr = param;
               par_len = 0;
             }

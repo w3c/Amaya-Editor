@@ -115,7 +115,7 @@
 113 La sauvegarde distante de %s semble corrompue, ignorer ?
 114 URL %s redirigée sur %s, ignorer ?
 115 Le relecture de %s a échouée, ignorer ?
-116 Le serveur rapporte une erreur :
+116 Le serveur rapporte une erreur : %s
 117 Le serveur ne supporte pas cette méthode d'accès
 118 Filtrer
 119 transferts actifs

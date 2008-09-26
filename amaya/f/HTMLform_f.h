@@ -8,6 +8,7 @@
 
 extern ThotBool SaveDocumentStatus ( NotifyOnTarget *event );
 extern void RestoreDocumentStatus ( NotifyOnTarget *event );
+extern void AddToBuffer ( const char *orig );
 extern void SubmitForm ( Document doc,
                          Element element );
 extern ThotBool HandleReturn ( NotifyOnTarget *event );
@@ -24,6 +25,7 @@ extern void SelectOneOption ( Document doc,
 
 extern ThotBool SaveDocumentStatus ( NotifyOnTarget *event );
 extern void RestoreDocumentStatus ( NotifyOnTarget *event );
+extern void AddToBuffer ( const char *orig );
 extern void SubmitForm ( Document doc,
                            Element element );
 extern ThotBool HandleReturn ( NotifyOnTarget *event );
