@@ -597,6 +597,18 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
             case 7: /* reset the previous selection */
               ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
               break;
+            case 8:
+              /* check if the curseur is within the box */
+              if (x >= xOrg && x <= xOrg + width &&
+                  y >= yOrg && y <= yOrg + height)
+                {
+                  /* send event TteElemRClick.Pre to the application */
+                  el = pAb->AbElement;
+                  if (NotifyClick (TteElemRClick, TRUE, el, doc))
+                    /* the application asks Thot to do nothing */
+                    return TRUE;
+                }
+              break;
             default: break;
             }
         }

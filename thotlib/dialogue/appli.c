@@ -839,6 +839,19 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
 			     FrameTable[frame].FrHeight);
 		
               }
+#if !defined (_WINDOWS) && !defined (_MACOS)
+            else if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
+              {	
+		ClickFrame = frame;
+		ClickX = x;
+		ClickY = y;
+		if (LocateSelectionInView (frame, ClickX, ClickY, 8, &Selecting))
+		  return FALSE;
+		/* open in a new tab */
+		FrameToView (frame, &document, &view);
+		TtaExecuteMenuAction ("FollowTheLinkNewTab", document, view, FALSE);
+              }
+#endif /* _WINDOWS */
             else
               {
                 /* a simple selection */
@@ -873,8 +886,8 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        if (LocateSelectionInView (frame, ClickX, ClickY, 6, &Selecting))
-          return FALSE;
+	if (LocateSelectionInView (frame, ClickX, ClickY, 6, &Selecting))
+	  return FALSE;
       }
       break;
     }
