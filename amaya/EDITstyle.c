@@ -1823,6 +1823,7 @@ static void PutClassName (Attribute attr, char *className, char *buf,
 static int BuildClassList (Document doc, char *buf, int size, const char *first)
 {
   Element             el;
+  ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
   CSSInfoPtr          css;
@@ -1847,12 +1848,15 @@ static int BuildClassList (Document doc, char *buf, int size, const char *first)
   if (DocumentTypes[doc] == docHTML)
     {
       /* looks for the class attribute defined in the HTML DTD */
-      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+      el = TtaGetMainRoot (doc);
+      elType = TtaGetElementType (el);
+      attrType.AttrSSchema = elType.ElSSchema;
+      elType.ElTypeNum = HTML_EL_BODY;
+      el = TtaSearchTypedElement (elType, SearchInTree, el);
       if (attrType.AttrSSchema)
         {
           /* this document contains HTML elements */
           attrType.AttrTypeNum = HTML_ATTR_Class;
-          el = TtaGetMainRoot (doc);
           while (el)
             {
               TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
