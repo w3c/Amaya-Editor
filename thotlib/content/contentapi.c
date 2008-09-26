@@ -4687,7 +4687,7 @@ static double UnsignedAngle(double dx1, double dy1,
   r2 = Norm(dx2, dy2);
 
   if(r1 == 0 || r2 == 0)
-    return -1;
+    return 0;
 
   cosA = s/(r1*r2);
 
@@ -4697,6 +4697,59 @@ static double UnsignedAngle(double dx1, double dy1,
   if(cosA < -1.)cosA = -1.;
 
   return acos(cosA);
+}
+
+/*----------------------------------------------------------------------
+  ThetaAngle
+  ----------------------------------------------------------------------*/
+static double ThetaAngle(double dx, double dy)
+{
+  /*       (1)(dx)
+       s = (0)(dy) = Norm(dx, dy)*cosA
+
+       det = dy;
+   */
+
+  double norm, cosA, A;
+
+  norm = Norm(dx, dy);
+  if(norm == 0)
+    return 0;
+
+  cosA = dx/norm;
+
+  /* Avoid errors when cosA is slightly greater/lower that 1/-1
+    because of float approximations */
+  if(cosA > 1.)cosA = 1.;
+  if(cosA < -1.)cosA = -1.;
+
+  A = acos(cosA);
+  return (dy < 0 ? -A : A);
+}
+
+/*----------------------------------------------------------------------
+  BisectorAngle
+  ----------------------------------------------------------------------*/
+static double BisectorAngle(double x0, double y0, double x1,
+			    double y1, double x2, double y2)
+{
+  double norm1, norm2, dx1, dy1, dx2, dy2;
+  double dx, dy;
+
+  norm1= Norm(x1-x0, y1-y0);
+  norm2= Norm(x2-x1, y2-y1);
+  if(norm1 == 0 || norm2 == 0)
+    return 0;
+
+  dx1 = (x1-x0)/norm1;
+  dy1 = (y1-y0)/norm1;
+  dx2 = (x2-x1)/norm2;
+  dy2 = (y2-y1)/norm2;
+
+  dx = dx1 + dx2;
+  dy = dy1 + dy2;
+
+  return ThetaAngle(dx, dy);
 }
 
 /*----------------------------------------------------------------------
@@ -4769,18 +4822,20 @@ void TtaGivePolylineAngle (Element element, int rank, double *angle)
 	      yNext = buff->BuNext->BuPoints[1].YCoord;
 	    }
 
+	  /* TODO: zero-length path segments
+	     F.5 'path' element implementation notes */
+
 	  if (first)
 	    /* first point in the polyline */
-	    /* @@@@ to be checked @@@@ */
-	    *angle = (UnsignedAngle(100, 0, xNext-x, yNext-y)*180)/M_PI;
+	    *angle = ThetaAngle(xNext-x, yNext-y);
 	  else if (last)
 	    /* last point in the polyline */
-	    /* @@@@ to be checked @@@@ */
-	    *angle = (UnsignedAngle(xPrev-x, yPrev-y, 100, 0)*180)/M_PI;
+	    *angle = ThetaAngle(x-xPrev, y-yPrev);
 	  else
 	    /* any other point in the polyline : bisector of the angle */
-	    /* @@@@ to be checked @@@@ */
-	    *angle = (UnsignedAngle(xPrev-x, yPrev-y, xNext-x, yNext-y)*180)/(2*M_PI);
+	    *angle = BisectorAngle(xPrev, yPrev, x, y, xNext, yNext);
+
+	  (*angle)*=(180/M_PI);
         }
     }
 }

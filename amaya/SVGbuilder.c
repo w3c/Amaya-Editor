@@ -586,7 +586,8 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
   att (marker-start, marker-end, or marker-mid) which is attached to
   element el (a <path>, a <line>, a <polyline> or a <polygon>).
   ----------------------------------------------------------------------*/
-static void CopyAMarker (Element marker, Element el, Element leaf, int vertex, Document doc)
+static void CopyAMarker (Element marker, Element el, Element leaf,
+			 int vertex, Document doc)
 {
   ElementType          elType;
   Element              copy, child;
@@ -616,12 +617,16 @@ static void CopyAMarker (Element marker, Element el, Element leaf, int vertex, D
   attr = TtaGetAttribute (copy, attrType);
   if (attr)
     TtaRemoveAttribute (copy, attr, doc);
-  /* insert the copy in the tree as the last child of the host element */
-  child = TtaGetLastChild (el);
-  if (child)
-    TtaInsertSibling (copy, child, FALSE, doc);
-  else
-    TtaInsertFirstChild (&copy, el, doc);
+
+/*   /\* insert the copy in the tree as the last child of the host element *\/ */
+/*   child = TtaGetLastChild (el); */
+/*   if (child) */
+/*     TtaInsertSibling (copy, child, FALSE, doc); */
+/*   else */
+/*     TtaInsertFirstChild (&copy, el, doc); */
+
+  /* @@@@ For the moment, markers are the first children @@@@ */ 
+  TtaInsertFirstChild (&copy, el, doc);
 
   /* add a transform (translate) to the copied marker to place it on the
      relevant vertex of the host element */
@@ -2324,7 +2329,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	  GraphicLeafComplete(doc, el);
 	  /* this element may use markers. Check its marker-start, marker-end
 	     and maker-mid attributes and copy the referred marker(s) */
-	  //ProcessMarkers (el, doc);
+	  ProcessMarkers (el, doc);
 	  break;
 
         case SVG_EL_a:
