@@ -544,7 +544,6 @@ char   *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
   
   ----------------------------------------------------------------------
   MKP: this function is now used in davlib.c file for the WebDAV requests 
-
   ---------------------------------------------------------------------- */
 AHTReqContext *AHTReqContext_new (int docid)
 {
@@ -552,14 +551,12 @@ AHTReqContext *AHTReqContext_new (int docid)
   AHTDocId_Status    *docid_status;
 
   if ((me = (AHTReqContext *) TtaGetMemory (sizeof (AHTReqContext))) == NULL)
-    outofmem ((char*)__FILE__, (char*)"AHTReqContext_new");
+    return NULL;
 
   /* clear the structure */
   memset ((void *) me, 0, sizeof (AHTReqContext));
-
   /* Bind the Context object together with the Request Object */
   me->request = HTRequest_new ();
-  
   /* clean the associated file structure) */
   HTRequest_setOutputStream (me->request, NULL);
  
@@ -3063,7 +3060,6 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, const char *formdata,
       TtaSetStatus (docid, 1, 
                     TtaGetMessage (AMAYA, AM_GET_UNSUPPORTED_PROTOCOL),
                     urlName);
-
       if (error_html)
         /* so we can show the error message */
         DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
@@ -3089,19 +3085,20 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, const char *formdata,
     ref = NULL;
 
   /* should we abort the request if we could not normalize the url? */
-  if (ref == NULL || ref[0] == EOS) {
-    /*error */
-    outputfile[0] = EOS;
-    TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
-    if (ref)
-      TtaFreeMemory (ref); 
-    if (error_html)
-      /* so we can show the error message */
-      DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
-    InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
-                                 context_tcbf, HT_ERROR);
-    return HT_ERROR;
-  }
+  if (ref == NULL || ref[0] == EOS)
+    {
+      /*error */
+      outputfile[0] = EOS;
+      TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
+      if (ref)
+        TtaFreeMemory (ref); 
+      if (error_html)
+        /* so we can show the error message */
+        DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
+      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
+                                   context_tcbf, HT_ERROR);
+      return HT_ERROR;
+    }
 
   /* verify if that file name existed */
   if (TtaFileExist (outputfile))
@@ -3233,7 +3230,7 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, const char *formdata,
 
   me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
   TtaFreeMemory (ref);
-   
+  ref = NULL;
   TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &bool_tmp);
   if (!bool_tmp && (mode & AMAYA_NOCACHE))
     HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
@@ -3266,32 +3263,28 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, const char *formdata,
     {
       /* this call doesn't give back a ThotBool */
       HTParentAnchor * posted = NULL;
-
       posted = HTPostFormAnchor (me->formdata, (HTAnchor *) me->anchor, 
                                  me->request);
       status = posted ? YES : NO; 
     }
   else if (mode & AMAYA_FILE_POST)
     {
-      unsigned long filesize;
-      char *fileURL;
+      unsigned long  filesize;
+      char          *fileURL;
 
       /* @@@ a very ugly patch :)))
          I'm copying here some of the functionality I use in the PUT
          I need to put the common parts in another module */
       AM_GetFileSize (formdata, &filesize);
       me->block_size = filesize;
-
       fileURL = HTParse (formdata, "file:/", PARSE_ALL);
       me->source = HTAnchor_findAddress (fileURL);
       HT_FREE (fileURL);
-
-      /* hardcoded ... */
-      AHTRequest_setCustomAcceptHeader (me->request, "application/xml");
+      AHTRequest_setCustomAcceptHeader (me->request, content_type);
       HTAnchor_setFormat (HTAnchor_parent (me->source),
-                          HTAtom_for ("application/xml"));
+                          HTAtom_for (content_type));
       HTAnchor_setFormat (me->anchor,
-                          HTAtom_for ("application/xml"));
+                          HTAtom_for (content_type));
       HTAnchor_setLength ((HTParentAnchor *) me->source, me->block_size);
       /* @@ here I need to actually read the file and put it in document,
          then, when I kill the request, I need to kill it */

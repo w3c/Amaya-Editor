@@ -55,6 +55,7 @@
 #include "HTMLhistory_f.h"
 #include "UIcss_f.h"
 #include "styleparser_f.h"
+#include "HTMLform_f.h"
 
 #ifdef TEMPLATES
 #include "templates.h"
@@ -125,6 +126,12 @@ typedef struct WIKI_context {
   char *localfile;
   char *output;
 } WIKI_context;
+// use HTMLform buffer to store post parameters
+extern char  *FormBuf;    /* temporary buffer used to build the query string */
+extern int    FormLength;  /* size of the temporary buffer */
+extern int    FormBufIndex; /* gives the index of the last char + 1 added to
+                              the buffer (only used in AddBufferWithEos) */
+
 
 /*----------------------------------------------------------------------
   CheckValidProfile
@@ -1203,7 +1210,7 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
   Element       next, elDecl;
   ElementType   elType;
   Attribute     attr;
-  AttributeType	attrType, attrType2;
+  AttributeType	attrType, attrType1, attrType2;
   SSchema       nature;
   Language      lang;
   char         *ptr, *s;
@@ -1493,6 +1500,8 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
               meta = NULL;
               attrType.AttrTypeNum = HTML_ATTR_http_equiv;
               attr = NULL;
+              attrType1.AttrSSchema = attrType.AttrSSchema;
+              attrType1.AttrTypeNum = HTML_ATTR_property;
               attrType2.AttrSSchema = attrType.AttrSSchema;
               attrType2.AttrTypeNum = HTML_ATTR_meta_name;
               while (el)
@@ -1521,7 +1530,9 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
                         }
                       else
                         {
-                          attr = TtaGetAttribute (el, attrType2);
+                          attr = TtaGetAttribute (el, attrType1);
+                          if (attr == NULL)
+                            attr = TtaGetAttribute (el, attrType2);
                           if (attr == NULL)
                             // a meta with only a content
                             TtaDeleteTree (el, doc);                          
@@ -2124,6 +2135,83 @@ void SaveWiki_callback (int doc, int status, char *urlName, char *outputfile,
   TtaFreeMemory (ctx->localfile);
   TtaFreeMemory (ctx->output);
   TtaFreeMemory (ctx);
+  if (status < 0)
+    {
+      DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
+      ResetStop (doc);
+      if (AmayaLastHTTPErrorMsg[0] == EOS)
+        sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
+                 DocumentURLs[doc]);
+      InitInfo ("", AmayaLastHTTPErrorMsg);
+      TtaSetDocumentModified (doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  GiveProtertyValue looks for the value of the given porperty within
+  the document.
+  value is the allocated string that will receive the value and length
+  the length of that string.
+  Return:
+  - value into the value paramerter
+  - the length of the reurned value
+  ----------------------------------------------------------------------*/
+void GiveProtertyValue (Document doc, char *property, char *value, int *length)
+{
+  Element	            root, el;
+  ElementType        elType;
+  AttributeType       attrpType, attrcType;
+  Attribute	          attrp, attrc;
+  SearchDomain        scope = SearchInTree;
+  char                buffer[MAX_LENGTH];
+  int                 l;
+  ThotBool            found = FALSE;
+
+  root = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (root);
+  elType.ElTypeNum = HTML_EL_HEAD;
+  root = TtaSearchTypedElement (elType, SearchInTree, root);
+  if (root)
+    {
+      attrpType.AttrSSchema = elType.ElSSchema;
+      attrcType.AttrSSchema = elType.ElSSchema;
+      if (!attrpType.AttrSSchema)
+        return;
+
+      // look for the right property attribute
+      attrpType.AttrTypeNum = HTML_ATTR_property;
+      attrcType.AttrTypeNum = HTML_ATTR_meta_content;
+      while (root && !found)
+        {
+          TtaSearchAttribute (attrpType, scope, root, &el, &attrp);
+          if (attrp)
+            {
+              l = MAX_LENGTH - 1;
+              TtaGiveTextAttributeValue (attrp, buffer, &l);
+              found = (strcmp (buffer, property) == 0);
+              if (found)
+                {
+                  // the property is found out
+                  root = NULL;
+                  attrc = TtaGetAttribute (el, attrcType);
+                  if (attrc)
+                    {
+                      TtaGiveTextAttributeValue (attrc, value, length);
+                      return;
+                    }
+                }
+              else
+                // it's not the right property
+                root = el;
+              scope = SearchForward;
+            }
+          else
+            root = NULL;
+        }
+    }
+  // default return
+  value[0] = EOS;
+  *length = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -2139,34 +2227,94 @@ static int SaveWikiFile (Document doc, char *localfile,
                          char *remotefile, const char *content_type,
                          ThotBool use_preconditions)
 {
+#define PARAM_INCREMENT 100
   WIKI_context       *ctx;
-  char               *server, *url;
-  int                 len, res = 2;
+  char               *server, *url, *params, *end, *ptr;
+  char                prop[PARAM_INCREMENT], value[MAX_LENGTH];
+  int                 len, l, res = 2;
 
   server = TtaGetEnvString ("WIKI_SERVER");
   len = strlen(server);
   if (len && !strncmp (remotefile, server, len))
     {
       /* Save */
-      url = TtaStrdup (TtaGetEnvString ("WIKI_POST_URI"));
+      url = TtaGetEnvString ("WIKI_POST_URI");
+      params = TtaGetEnvString ("WIKI_POST_PARAMS");
       if (url == NULL)
         // not enough resource
          return 1;
+
+      FormLength = strlen (url) + PARAM_INCREMENT;
+      FormBuf = (char *)(char *)TtaGetMemory (FormLength);
+      FormBuf[0] = EOS;
+      AddToBuffer (url);
+      if (params)
+        {
+          if (params[0] != '?' && strstr (url, "?") == NULL)
+            AddToBuffer ("?");
+          // look for dynamic parameters
+          while (params && *params != EOS)
+            {
+               ptr = strstr (params, "=");
+              if (ptr)
+                {
+                  end = strstr (ptr, "&");
+                  if (end == NULL)
+                    end = &ptr[strlen (ptr)];
+                }
+              else
+                end = NULL;
+              if (end)
+                {
+                  // add a property and its value
+                  len = (int)(ptr - params) + 1;
+                  if (len >= MAX_LENGTH)
+                    len = MAX_LENGTH - 1;
+                  strncpy (prop, params, len);
+                  prop[len] = EOS;
+                  AddToBuffer (prop);
+
+                  // look for the property value in the document
+                  len = (int)(end - ptr) - 1;
+                  if (len >= MAX_LENGTH)
+                    len = MAX_LENGTH - 1;
+                  strncpy (prop, &ptr[1], len);
+                  prop[len] = EOS;
+                  l = MAX_LENGTH - 1;
+                  GiveProtertyValue (doc, prop, value, &l);
+                  if (l == 0)
+                    // use the default property value
+                    AddToBuffer (prop);
+                  else
+                    AddToBuffer (value);
+
+                    // move to the next parameter
+                    params = end;
+                }
+              else
+                // use the default property value
+                AddToBuffer (params);
+            }
+        }
 
       /* launch the request */
       //ActiveTransfer (doc);
       /* create the context for the callback */
       ctx = (WIKI_context*)TtaGetMemory (sizeof (WIKI_context));
-      memset (ctx,  0, sizeof (WIKI_context));
+      //memset (ctx,  0, sizeof (WIKI_context));
       ctx->localfile = TtaStrdup (DocumentURLs[doc]);
       ctx->output = (char *)TtaGetMemory (MAX_LENGTH); // requested by GetObjectWWW
       ctx->output[0]  = EOS;
-      res = GetObjectWWW (doc, doc, url, localfile,
+      res = GetObjectWWW (doc, doc, FormBuf, localfile,
                            ctx->output,
                           AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
                           NULL, NULL, 
                           (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*))  SaveWiki_callback,
-                          (void *) ctx, NO, content_type);
+                          (void *) ctx, NO, "multipart/form-data");
+      // The request is now done
+      FormLength = 0;
+      TtaFreeMemory (FormBuf);
+      FormBuf = NULL;
     }
   /* it's not the wiki server! */
   return res;
