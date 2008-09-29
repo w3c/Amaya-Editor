@@ -55,7 +55,7 @@ static ThotBool Set_ColumnSelected = FALSE;
   ----------------------------------------------------------------------------*/
 AmayaPathControl::AmayaPathControl(wxWindow* parent, wxWindowID id,
                             const wxPoint& pos, const wxSize& size, long style):
-wxControl(parent, id, pos, size, style),
+wxControl(parent, id, pos, size, wxBORDER_NONE),
 m_focused(NULL),
 m_height(0)
 {
@@ -87,6 +87,9 @@ void AmayaPathControl::SetSelection(Element elem)
   Attribute           attr;
   const char*         elname;
   
+#ifdef _WINDOWS
+  dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   m_items.DeleteContents(true);
   m_items.clear();
   m_focused = NULL;
@@ -215,6 +218,9 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
   PreCalcPositions();
   
   wxPaintDC dc(this);
+#ifdef _WINDOWS
+  dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   wxSize sz = GetClientSize();
   
   wxSize szSep;
