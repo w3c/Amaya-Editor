@@ -328,7 +328,7 @@ void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
       y = cy2;
       /* ...and in the SVG canvas */
       MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                            inverse, TRUE, TtaGetMessage (LIB, SIMPLE_CLICK),
+                            inverse, TRUE, TtaGetMessage (LIB, TMSG_SIMPLECLICK),
                             &x, &y);
       cx = x;
       cy = y;
@@ -517,7 +517,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
         case 3:
           /* Moving center of rotation  */
           if (MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
-                                     inverse, FALSE, TtaGetMessage (LIB, SIMPLE_CLICK),
+                                     inverse, FALSE, TtaGetMessage (LIB, TMSG_SIMPLECLICK),
                                      &mouse_x, &mouse_y))
             {
               cx2 = mouse_x;

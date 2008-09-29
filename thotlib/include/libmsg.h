@@ -422,8 +422,8 @@
 #define TemplateFreeBox		417
 #define TemplateUnion		418
 #define BUTTON_UP		419
-#define DOUBLE_CLICK		420
-#define SIMPLE_CLICK		421
+#define TMSG_DOUBLECLICK		420
+#define TMSG_SIMPLECLICK		421
 #define TMSG_LIB_MSG_MAX		422
 
 #endif

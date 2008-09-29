@@ -168,10 +168,10 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
               y2 = 2*lastY2-lastY3;
             }
           MouseCoordinatesToSVG(document, pFrame, x0,y0, width,height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x1, &y1);
           MouseCoordinatesToSVG(document, pFrame, x0,y0, width,height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x2, &y2);
           x3 = 2*pPa->XStart - pPa->XCtrlStart;
           y3 = 2*pPa->YStart - pPa->YCtrlStart;
@@ -286,7 +286,7 @@ void AmayaCreatePathEvtHandler::OnMouseMove( wxMouseEvent& event )
   DrawPathFragment(shape, TRUE);
   clear = true;
   MouseCoordinatesToSVG(document, pFrame, x0,y0, width,height,
-                        inverse, FALSE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                        inverse, FALSE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                         &currentX, &currentY);
 #ifndef _WINDOWS
   pFrame->GetCanvas()->Refresh();
@@ -564,7 +564,7 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
 
   /* Are we in the SVG ? */
   if (!MouseCoordinatesToSVG (document, pFrame, x0,y0, width,height,
-                              NULL, FALSE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                              NULL, FALSE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                               &currentX, &currentY))
     return;
 
@@ -604,7 +604,7 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
       x1 = currentX;
       y1 = currentY;
       MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
-                             NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                             NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                              &x1, &y1);
 
       TtaAddPointInPolyline (leaf, nb_points, UnPixel, x1, y1, document, FALSE);
@@ -625,19 +625,19 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
           x1 = lastX2;
           y1 = lastY2;
           MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x1, &y1);
 
           x2 = symX;
           y2 = symY;
           MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x2, &y2);
 
           x4 = lastX1;
           y4 = lastY1;
           MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x4, &y4);
 
 	  
@@ -651,25 +651,25 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
           x1 = lastX3;
           y1 = lastY3;
           MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x1, &y1);
 
           x2 = lastX2;
           y2 = lastY2;
           MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x2, &y2);
 
           x3 = symX;
           y3 = symY;
           MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x3, &y3);
 
           x4 = lastX1;
           y4 = lastY1;
           MouseCoordinatesToSVG(document, pFrame, x0,y0, width,height,
-                                NULL, TRUE, TtaGetMessage (LIB, DOUBLE_CLICK),
+                                NULL, TRUE, TtaGetMessage (LIB, TMSG_DOUBLECLICK),
                                 &x4, &y4);
 
           TtaAppendPathSeg (leaf, TtaNewPathSegCubic (x1, y1, x4 ,y4,
