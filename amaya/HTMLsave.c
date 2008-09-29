@@ -2059,8 +2059,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
   Return TRUE if there is a document name
   with_suffix is TRUE if the document name has a suffix
   ----------------------------------------------------------------------*/
-static ThotBool HasSavingName (Document doc, View view, char *url,
-                               ThotBool *with_suffix)
+ThotBool HasSavingName (Document doc, View view, char *url, ThotBool *with_suffix)
 {
   char            msg[MAX_LENGTH], suffix[MAX_LENGTH];
   char            documentname[MAX_LENGTH];

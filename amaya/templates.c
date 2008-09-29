@@ -1661,12 +1661,16 @@ ThotBool TemplateAttrInMenu (NotifyAttribute * event)
 void CreateTemplateFromDocument(Document doc, View view)
 {
 #ifdef TEMPLATES
-  char buffer[MAX_LENGTH], suffix[10];
+  char     buffer[MAX_LENGTH], suffix[10];
+  ThotBool with_suffix;
 
   if (IsW3Path (DocumentURLs[doc]) &&
-      DocumentMeta[doc] && DocumentMeta[doc]->content_location)
+      DocumentMeta[doc] && DocumentMeta[doc]->full_content_location)
+    {
     // use the location instead of the current URI
-    strcpy (buffer, DocumentMeta[doc]->content_location);
+    
+    strcpy (buffer, DocumentMeta[doc]->full_content_location);
+    }
   else
     strcpy (buffer, DocumentURLs[doc]);
 
