@@ -1663,17 +1663,21 @@ void CreateTemplateFromDocument(Document doc, View view)
 #ifdef TEMPLATES
   char buffer[MAX_LENGTH], suffix[10];
 
-  // removet the current suffix
-  strcpy (buffer, DocumentURLs[doc]);
-  TtaExtractSuffix (buffer, suffix);
-  if (suffix[0] == EOS && IsW3Path (buffer) &&
+  if (IsW3Path (DocumentURLs[doc]) &&
       DocumentMeta[doc] && DocumentMeta[doc]->content_location)
     // use the location instead of the current URI
     strcpy (buffer, DocumentMeta[doc]->content_location);
+  else
+    strcpy (buffer, DocumentURLs[doc]);
+
+  // remove the current suffix
+  TtaExtractSuffix (buffer, suffix);
   // the new suffix
   strcat(buffer, ".xtd");
   DontReplaceOldDoc = TRUE;
   CreateTemplate(doc, buffer);
+  // by default .xtd files are xml files
+  TtaSetDocumentCharset (doc, UTF_8, FALSE);
 #endif /* TEMPLATES */
 }
 
@@ -2420,7 +2424,7 @@ Element Template_CreateComponentFromSelection(Document doc)
   int         sz = 128;
 
   const char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_NEWCOMP);
-  const char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
+  const char *label = TtaGetMessage (AMAYA, AM_NAME);
 
   if(doc && t && TtaGetDocumentAccessMode(doc) &&
       TtaGetDocumentAccessMode(doc) && sstempl &&
