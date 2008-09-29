@@ -2826,6 +2826,7 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
 
 /*----------------------------------------------------------------------
   RemoveANamespaceDeclaration removes a namespace declaration
+  nsPrefix could be NULL if the prefix is unknown
   ----------------------------------------------------------------------*/
 void RemoveANamespaceDeclaration (PtrDocument pDoc, PtrElement element,
                                   const char *nsPrefix, const char *nsUri)
@@ -2854,11 +2855,11 @@ void RemoveANamespaceDeclaration (PtrDocument pDoc, PtrElement element,
           while (prefixDecl)
             {
               if ((prefixDecl->NsPrefixElem == element &&
-		   !strcmp (uriDecl->NsUriName, nsUri) &&
-		   nsPrefix == NULL) ||
-		  (prefixDecl->NsPrefixElem == element &&
-		   !strcmp (uriDecl->NsUriName, nsUri) &&
-		   nsPrefix != NULL && !strcmp (prefixDecl->NsPrefixName, nsPrefix)))
+                   !strcmp (uriDecl->NsUriName, nsUri) &&
+                   nsPrefix == NULL) ||
+                  (prefixDecl->NsPrefixElem == element &&
+                   !strcmp (uriDecl->NsUriName, nsUri) &&
+                   nsPrefix && !strcmp (prefixDecl->NsPrefixName, nsPrefix)))
                 {
                   if (prevDecl)
                     prevDecl->NsNextPrefixDecl = prefixDecl->NsNextPrefixDecl;

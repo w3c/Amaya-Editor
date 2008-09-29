@@ -2562,10 +2562,9 @@ ThotBool TemplateNameAttributeModified(NotifyAttribute* event)
   TemplateNameAttributeCreated
   Called when a xt:name have been created 
   ----------------------------------------------------------------------*/
-ThotBool TemplateNameAttributeCreated(NotifyAttribute* event)
+void TemplateNameAttributeCreated(NotifyAttribute* event)
 {
   MakeUniqueName(event->element, event->document, TRUE, FALSE);
-  return TRUE;
 }
 
 

@@ -88,7 +88,7 @@ extern void UnionClicked ( NotifyElement* event );
 extern ThotBool UnionDoubleClicked ( NotifyElement* event );
 extern ThotBool TemplateNameAttributeDeleted ( NotifyAttribute* event );
 extern ThotBool TemplateNameAttributeModified ( NotifyAttribute* event );
-extern ThotBool TemplateNameAttributeCreated ( NotifyAttribute* event );
+extern void TemplateNameAttributeCreated ( NotifyAttribute* event );
 extern ThotBool TemplateNameAttrInMenu ( NotifyAttribute * event );
 
 #else /* __STDC__ */
@@ -175,7 +175,7 @@ extern void UnionClicked ( NotifyElement* event );
 extern ThotBool UnionDoubleClicked ( NotifyElement* event );
 extern ThotBool TemplateNameAttributeDeleted ( NotifyAttribute* event );
 extern ThotBool TemplateNameAttributeModified ( NotifyAttribute* event );
-extern ThotBool TemplateNameAttributeCreated ( NotifyAttribute* event );
+extern void TemplateNameAttributeCreated ( NotifyAttribute* event );
 extern ThotBool TemplateNameAttrInMenu ( NotifyAttribute * event );
 
 #endif /* __STDC__ */
