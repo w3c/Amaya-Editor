@@ -797,6 +797,9 @@ extern ThotBool TtaInsertPointInCurve (Document doc, Element el,
 				       ThotBool before, int point_number);
 extern ThotBool TtaDeletePointInCurve (Document doc, Element el,
 				       int point_number);
+
+extern int TtaNumberOfPointsInPath(Element el);
+
 #endif /* __CEXTRACT__ */
 
 #endif

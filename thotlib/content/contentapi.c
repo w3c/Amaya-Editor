@@ -1433,7 +1433,6 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
     }
 }
 
-
 /*----------------------------------------------------------------------
   TtaRemovePathData
   Remove the path data attached to an element
@@ -1470,6 +1469,32 @@ void TtaRemovePathData (Document document, Element element)
 }
 
 /*----------------------------------------------------------------------
+  TtaNumberOfPointsInPath
+  ----------------------------------------------------------------------*/
+int TtaNumberOfPointsInPath(Element el)
+{
+  PtrElement pEl = ((PtrElement)el);
+  PtrPathSeg          pPa;
+  int n = 0;
+
+  if(pEl)
+    {
+      if(pEl->ElLeafType == LtPath)
+	{
+	  for(pPa = pEl->ElFirstPathSeg; pPa; pPa=pPa->PaNext)
+	    {
+	      if (!pPa->PaPrevious || pPa->PaNewSubpath)
+		n++;
+
+	      n++;
+	    }
+	}
+    }  
+
+  return n;
+}
+
+/*----------------------------------------------------------------------
   TtaGetPathAttributeValue returns the path attribute value corresponding to
   the current set of path segments
   ---------------------------------------------------------------------- */
@@ -1479,7 +1504,7 @@ char *TtaGetPathAttributeValue (Element el, int width, int height)
   PtrPathSeg          b;
   int                 length, l, add;
   char               *path;
-  int nbPoints;
+  int nbSegments;
 #define SIZE_OF_ONE_SEGMENT 50
 
   double w = width, h = height;
@@ -1490,8 +1515,8 @@ char *TtaGetPathAttributeValue (Element el, int width, int height)
     {
       if(pEl->ElLeafType == LtPath)
         {
-          nbPoints = pEl->ElVolume;
-          length = nbPoints * SIZE_OF_ONE_SEGMENT;
+          nbSegments = pEl->ElVolume;
+          length = nbSegments * SIZE_OF_ONE_SEGMENT;
           path = (char *)TtaGetMemory (length);
           path[0] = EOS;
           b = pEl->ElFirstPathSeg;
@@ -4858,8 +4883,9 @@ void TtaGivePolylineAngle (Element element, int rank, double *angle)
   ----------------------------------------------------------------------*/
 void TtaGivePathPoint (Element element, int rank, TypeUnit unit, int *x, int *y)
 {
-  PtrPathSeg       pPa, prevPa;
+  PtrPathSeg       pPa;
   int              i;
+  ThotBool firstPoint = FALSE;
 
   UserErrorCode = 0;
   *x = 0;
@@ -4872,28 +4898,44 @@ void TtaGivePathPoint (Element element, int rank, TypeUnit unit, int *x, int *y)
     TtaError (ERR_invalid_element_type);
   else if (unit != UnPoint && unit != UnPixel)
     TtaError (ERR_invalid_parameter);
-  else if (rank > ((PtrElement) element)->ElVolume + 1)
+  else if (rank > TtaNumberOfPointsInPath(element) + 1)
     TtaError (ERR_invalid_parameter);
   else
     {
-      pPa = ((PtrElement) element)->ElFirstPathSeg;
-      prevPa = NULL;
-      for (i = 1; i < rank && pPa; i++)
+      i = 1;
+      for(pPa = ((PtrElement) element)->ElFirstPathSeg;
+	  pPa;
+	  pPa = pPa->PaNext)
 	{
-	  prevPa = pPa;
-	  pPa = pPa->PaNext;
+	  if(!pPa->PaPrevious || pPa->PaNewSubpath)
+	    {
+	      /* First point of a subpath */
+	      if(i == rank)
+		{
+		  firstPoint = TRUE;
+		  break;
+		}
+	      i++;
+	    }
+
+	  if(i == rank)
+	    break;
+	  i++;
 	}
+	  
       if (pPa)
         {
-	  *x = pPa->XStart;
-	  *y = pPa->YStart;
+	  if(firstPoint)
+	    {
+	      *x = pPa->XStart;
+	      *y = pPa->YStart;
+	    }
+	  else 
+	    {
+	      *x = pPa->XEnd;
+	      *y = pPa->YEnd;
+	    }
         }
-      else if (prevPa && rank == ((PtrElement) element)->ElVolume + 1)
-	/* end point */
-	{
-	  *x = prevPa->XEnd;
-	  *y = prevPa->YEnd;
-	}
     }
 }
 
@@ -4914,8 +4956,52 @@ void TtaGivePathPoint (Element element, int rank, TypeUnit unit, int *x, int *y)
   ----------------------------------------------------------------------*/
 void TtaGivePathAngle (Element element, int rank, double *angle)
 {
-  /* @@@@ to be written @@@@ */
-  *angle = 0;
+  PtrPathSeg       pPa;
+  int              i;
+  ThotBool firstPoint = FALSE, lastPoint = FALSE;
+
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!((PtrElement) element)->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (((PtrElement) element)->ElLeafType != LtPath)
+    TtaError (ERR_invalid_element_type);
+  else if (rank > TtaNumberOfPointsInPath(element) + 1)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      i = 1;
+      for(pPa = ((PtrElement) element)->ElFirstPathSeg;
+	  pPa;
+	  pPa = pPa->PaNext)
+	{
+	  if(!pPa->PaPrevious || pPa->PaNewSubpath)
+	    {
+	      /* First point of a subpath */
+	      if(i == rank)
+		{
+		  firstPoint = TRUE;
+		  break;
+		}
+	      i++;
+	    }
+
+	  if(i == rank)
+	    {
+	      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
+		lastPoint = TRUE;
+	      break;
+	    }
+	  i++;
+	}
+	  
+      if(pPa)
+        {
+	  /* @@@@ to be written @@@@ */
+	  *angle = 0;
+        }
+    }
 }
 
 /*----------------------------------------------------------------------

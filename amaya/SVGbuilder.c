@@ -750,7 +750,7 @@ static void CopyMarkersSubtree (Element el, Element marker, int att,
 	  elType.ElTypeNum == SVG_EL_polygon)
 	length = TtaGetPolylineLength (leaf) - 1;
       else if (elType.ElTypeNum == SVG_EL_path)
-	length = TtaGetElementVolume (leaf);
+	length = TtaNumberOfPointsInPath (leaf) - 1;
       else
 	length = 1;
       if (att == SVG_ATTR_marker_start)

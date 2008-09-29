@@ -67,6 +67,7 @@ extern void TtaChangeLimitOfPolyline ( Element element,
                                        Document document );
 extern void TtaRemovePathData ( Document document,
                                 Element element );
+extern int TtaNumberOfPointsInPath ( Element el );
 extern char *TtaGetPathAttributeValue ( Element el,
                                         int width,
                                         int height );
@@ -347,6 +348,7 @@ extern void TtaChangeLimitOfPolyline ( Element element,
                                          Document document );
 extern void TtaRemovePathData ( Document document,
                                   Element element );
+extern int TtaNumberOfPointsInPath ( Element el );
 extern char *TtaGetPathAttributeValue ( Element el,
                                           int width,
                                           int height );

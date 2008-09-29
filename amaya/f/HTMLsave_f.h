@@ -54,6 +54,10 @@ extern void RestartParser ( Document doc,
                             ThotBool show_errors,
                             ThotBool check_ids );
 extern void RedisplaySourceFile ( Document doc );
+extern ThotBool HasSavingName ( Document doc,
+                                View view,
+                                char *url,
+                                ThotBool *with_suffix );
 extern void SaveWiki_callback ( int doc,
                                 int status,
                                 char *urlName,
@@ -142,6 +146,10 @@ extern void RestartParser ( Document doc,
                               ThotBool show_errors,
                               ThotBool check_ids );
 extern void RedisplaySourceFile ( Document doc );
+extern ThotBool HasSavingName ( Document doc,
+                                  View view,
+                                  char *url,
+                                  ThotBool *with_suffix );
 extern void SaveWiki_callback ( int doc,
                                   int status,
                                   char *urlName,
