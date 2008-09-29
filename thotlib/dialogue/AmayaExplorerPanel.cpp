@@ -76,6 +76,9 @@ bool AmayaExplorerToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoi
   
   char    *s;
   wxString path;
+#ifdef _WINDOWS
+  SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   wxGenericDirCtrl* dirCtrl = XRCCTRL(*this, "wxID_DIRCTRL_EXPLORER", wxGenericDirCtrl);
   
   // Initial selection in the set of folders

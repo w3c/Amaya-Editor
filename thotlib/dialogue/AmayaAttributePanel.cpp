@@ -112,6 +112,9 @@ bool AmayaAttributeToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPo
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_ATTRIBUTE")))
     return false;
   
+#ifdef _WINDOWS
+  SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   m_pVPanelParent = XRCCTRL(*this, "wxID_PANEL_ATTRVALUE", wxPanel);
   m_pVPanelSizer = m_pVPanelParent->GetSizer();
 

@@ -87,7 +87,9 @@ bool AmayaElementToolPanel::Create(wxWindow* parent, wxWindowID id,
 {
   if (! wxPanel::Create(parent, id, pos, size, style, name))
     return false;
-
+#ifdef _WINDOWS
+  SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   m_notebook = new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TOP);
   wxSizer* sz = new wxBoxSizer(wxVERTICAL);
   sz->Add(m_notebook, 1, wxEXPAND);

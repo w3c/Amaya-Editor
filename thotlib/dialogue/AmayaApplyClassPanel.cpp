@@ -63,6 +63,9 @@ bool AmayaApplyClassToolPanel::Create(wxWindow* parent, wxWindowID id, const wxP
 {
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_APPLYCLASS")))
     return false;
+#ifdef _WINDOWS
+  SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   XRCCTRL(*this,"wxID_LIST_APPLYCLASS",wxListBox)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL_CLASS)));
   XRCCTRL(*this,"wxID_REFRESH",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
   XRCCTRL(*this,"wxID_APPLY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));

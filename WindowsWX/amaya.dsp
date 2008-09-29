@@ -57,7 +57,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy           ..\..\wxWidgets\lib\vc_dll\*.dll           bin\          	copy           ..\..\wxWidgets\lib\vc_dll\wxjpeg.lib           bin\ 
+PreLink_Cmds=copy             ..\..\wxWidgets\lib\vc_dll\*.dll             bin\            	copy             ..\..\wxWidgets\lib\vc_dll\wxjpeg.lib             bin\ 
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
@@ -88,7 +88,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PreLink_Cmds=copy            ..\..\wxWidgets\lib\vc_dll\*.dll            bin\          	copy           ..\..\wxWidgets\lib\vc_dll\wxjpeg.lib           bin\ 
+PreLink_Cmds=copy              ..\..\wxWidgets\lib\vc_dll\*.dll              bin\            	copy             ..\..\wxWidgets\lib\vc_dll\wxjpeg.lib             bin\ 
 # End Special Build Tool
 
 !ENDIF 
@@ -147,6 +147,10 @@ SOURCE=..\amaya\wxdialog\ListDlgWX.cpp
 # Begin Source File
 
 SOURCE=..\amaya\wxdialog\ListEditDlgWX.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wxdialog\ListNSDlgWX.cpp
 # End Source File
 # Begin Source File
 
@@ -224,10 +228,6 @@ SOURCE=..\amaya\AHTMemConv.c
 # Begin Source File
 
 SOURCE=..\amaya\AHTURLTools.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\thotlib\dialogue\AmayaTransformEvtHandler.cpp
 # End Source File
 # Begin Source File
 

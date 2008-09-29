@@ -407,6 +407,9 @@ bool AmayaMathMLPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& po
 {
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_MATHML")))
     return false;
+#ifdef _WINDOWS
+  SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   m_pBook = XRCCTRL(*this,"wxID_MATHS_CHOICEBOOK", wxChoicebook);
   m_pBook->SetPageText(0, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_1)));
   m_pBook->SetPageText(1, TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_MATH_PANEL_2)));

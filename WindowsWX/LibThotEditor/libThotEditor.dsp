@@ -283,6 +283,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaToolBar.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaTransformEvtHandler.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaWindow.cpp
 # End Source File
 # Begin Source File

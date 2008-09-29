@@ -77,6 +77,9 @@ bool StyleListToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& 
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("StyleListPanel")))
     return false;
 
+#ifdef _WINDOWS
+  SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   m_list = XRCCTRL(*this,"wxID_CHECKLIST_CSS",wxCheckListBox);
   
   XRCCTRL(*this,"wxID_BUTTON_ADD_CSS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PANEL_CSS_ADD)));

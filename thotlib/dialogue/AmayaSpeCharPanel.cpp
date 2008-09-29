@@ -108,6 +108,9 @@ bool AmayaSpeCharToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoin
 {
   if(!wxPanel::Create(parent, id, pos, size, style, name))
     return false;
+#ifdef _WINDOWS
+  SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+#endif /* _WINDOWS */
   Initialize();
   return true;
 }
