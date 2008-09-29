@@ -1249,7 +1249,7 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
 
   if (removeTemplate)
     // remove the XTiger namespace
-    TtaRemoveANamespaceDeclaration (doc, root, NULL, Template_URI);
+    TtaRemoveANamespaceDeclaration (doc, root, "xt", Template_URI);
 
   /* Look for all natures used in the document */
   if (DocumentMeta[doc] && DocumentMeta[doc]->compound)
