@@ -237,7 +237,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 #ifdef TEMPLATES
   AttributeType attType;
   Attribute     att;
-  Element       aux, child; //Needed when deleting trees
+  Element       aux, child, ancestor; //Needed when deleting trees
   char         *name;
   ElementType   elType = TtaGetElementType (el);
 
@@ -261,19 +261,19 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
       switch(elType.ElTypeNum)
         {
         case Template_EL_head :
+#ifdef AMAYA_DEBUG
+//          off--;
           printf("!!! Find a xt:head : remove it !\n");
+#endif /* AMAYA_DEBUG */
           //Remove it and all of its children
           TtaDeleteTree(el, doc);
           //We must stop searching into this tree
-#ifdef AMAYA_DEBUG
-//          off--;
-#endif /* AMAYA_DEBUG */
           return;
         case Template_EL_component :
           // remove the name attribute
           attType.AttrSSchema = elType.ElSSchema;
           attType.AttrTypeNum = Template_ATTR_name;
-          name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);           
+          name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
           TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
           // replace the component by a use
           if (NeedAMenu (el, doc))
@@ -300,9 +300,6 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
             TtaSetAttributeText (att, name, el, doc);
           TtaFreeMemory(name);
           break;
-          /*case Template_EL_option :
-          aux = NULL;
-          break;*/
         case Template_EL_bag :
           //Link to types
           //Allow editing the content
@@ -314,8 +311,11 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
              checked, though */
             // add the initial indicator
           name = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
-          if (name && !strcmp (name, "string"))
-            AddPromptIndicator (el, doc);
+          if (name)
+            {
+              if (!strcmp (name, "string"))
+                AddPromptIndicator (el, doc);
+            }
           TtaFreeMemory (name);
           if (!TtaGetFirstChild (el))
             InstantiateUse (t, el, doc, FALSE);

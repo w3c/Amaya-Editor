@@ -116,7 +116,7 @@ void GiveAttributeStringValueFromNum (Element el, int att, char* buff, int* sz)
 
 
 /*----------------------------------------------------------------------
-Returns the value of a string attribute
+  Returns the value of a string attribute or NULL
 ----------------------------------------------------------------------*/
 char *GetAttributeStringValueFromNum (Element el, int att, int* sz)
 {
@@ -129,12 +129,14 @@ char *GetAttributeStringValueFromNum (Element el, int att, int* sz)
 	attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
 	attType.AttrTypeNum = att;
 	attribute = TtaGetAttribute(el, attType);
+	if (attribute == NULL)
+    return NULL;
 
-	size = TtaGetTextAttributeLength(attribute);
-	aux = (char*) TtaGetMemory(size+1);
+	size = TtaGetTextAttributeLength (attribute);
+	aux = (char*) TtaGetMemory (size+1);
 	TtaGiveTextAttributeValue (attribute, aux, &size);
   aux[size] = EOS;
-  if(sz)
+  if (sz)
     *sz = size;
 	return aux;
 #else
@@ -210,6 +212,32 @@ char *GetAttributeStringValue (Element el, Attribute attribute, int* sz)
 	return aux;
 #else
 	return NULL;
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  GetAncestorComponentName returns the name of the ancestor component
+  or NULL;
+  ----------------------------------------------------------------------*/
+char *GetAncestorComponentName (Element *el)
+{
+#ifdef TEMPLATES
+  ElementType   elType;
+  Element       anc = NULL;
+  char         *name;
+
+  elType = TtaGetElementType (*el);
+  elType.ElTypeNum = Template_EL_component;
+  anc = TtaGetParent (*el);
+  anc = TtaGetExactTypedAncestor (anc, elType);
+  if (anc)
+    {
+      name = GetAttributeStringValueFromNum (anc, Template_ATTR_name, NULL); 
+      *el = anc;
+      return name;
+    }
+#else
+  return NULL;
 #endif /* TEMPLATES */
 }
 

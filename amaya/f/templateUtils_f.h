@@ -29,6 +29,7 @@ extern void SetAttributeIntValue ( Element el,
 extern char *GetAttributeStringValue ( Element el,
                                        Attribute attribute,
                                        int* sz );
+extern char *GetAncestorComponentName ( Element *el );
 extern Element GetFirstEditableElement ( Element el );
 extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                               Element parent,
@@ -72,6 +73,7 @@ extern void SetAttributeIntValue ( Element el,
 extern char *GetAttributeStringValue ( Element el,
                                          Attribute attribute,
                                          int* sz );
+extern char *GetAncestorComponentName ( Element *el );
 extern Element GetFirstEditableElement ( Element el );
 extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                                 Element parent,

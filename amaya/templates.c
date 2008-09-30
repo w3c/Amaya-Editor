@@ -1662,7 +1662,6 @@ void CreateTemplateFromDocument(Document doc, View view)
 {
 #ifdef TEMPLATES
   char     buffer[MAX_LENGTH], suffix[10];
-  ThotBool with_suffix;
 
   if (IsW3Path (DocumentURLs[doc]) &&
       DocumentMeta[doc] && DocumentMeta[doc]->full_content_location)
@@ -1826,13 +1825,15 @@ void TemplateCreateTextBox(Document doc, View view)
               selType = TtaGetElementType(selElem);
               firstChar = lastChar = 0;
             }
-
-          if(selType.ElTypeNum==1)
+          if (selType.ElTypeNum == 1)
             {
+              // request the element label
               QueryStringFromUser(label, title, buffer, 127);
+              if (buffer[0] == EOS)
+                return;
+
               useType.ElSSchema = sstempl;
               useType.ElTypeNum = Template_EL_useSimple;
-
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
 
@@ -1903,16 +1904,17 @@ void TemplateCreateFreeBox(Document doc, View view)
     {
       TtaGiveFirstSelectedElement(doc, &selElem, &firstChar, &lastChar);
       TtaGiveLastSelectedElement(doc, &selElem2, &firstChar2, &lastChar2);
-
-      if(selElem && selElem2)
+      if (selElem && selElem2)
         {
+          // request the element label
+          QueryStringFromUser(label, title, buffer, 127);
+          if (buffer[0] == EOS)
+            return;
+
           selType =  TtaGetElementType(selElem);
           selType2 =  TtaGetElementType(selElem2);
-
-          QueryStringFromUser(label, title, buffer, 127);
           bagType.ElSSchema = sstempl;
           bagType.ElTypeNum = Template_EL_bag;
-
           parent  = TtaGetParent(selElem);
           parent2 = TtaGetParent(selElem2);
 
@@ -2113,16 +2115,17 @@ Element Template_CreateRepeatFromSelection(Document doc, ThotBool createComp)
 
       if(selElem && selElem2)
         {
+          // request the element label
+          QueryStringFromUser(label, title, buffer, 127);
+          if (buffer[0] == EOS)
+            return NULL;
+
           selType =  TtaGetElementType(selElem);
           selType2 =  TtaGetElementType(selElem2);
-
           repType.ElSSchema = sstempl;
-          repType.ElTypeNum = Template_EL_repeat;
-
+          repType.ElTypeNum = Template_EL_repeat;          
           parent  = TtaGetParent(selElem);
           parent2 = TtaGetParent(selElem2);
-
-          QueryStringFromUser(label, title, buffer, 127);
           if(firstChar==0 && firstChar2==0 && parent == parent2 && buffer[0]!=0)
             {
               dispMode = TtaGetDisplayMode (doc);

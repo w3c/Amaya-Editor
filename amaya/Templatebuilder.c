@@ -40,6 +40,7 @@
 #include "HTMLactions_f.h"
 #include "css_f.h"
 #include "templateDeclarations_f.h"
+#include "templateUtils_f.h"
 #include "templates_f.h"
 #include "Xml2thot_f.h"
 #include "XHTMLbuilder_f.h"
@@ -234,6 +235,12 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
   Document		     doc;
   ElementType	     elType;
+  Element          ancestor;
+	AttributeType    attType;
+  Attribute        att;
+  char            *name, *ancestor_name, *ptr;
+ char              msgBuffer[MaxMsgLength];
+  int              len;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
@@ -266,9 +273,57 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
           if (!NeedAMenu (el, doc))
             TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
         }
-      CheckMandatoryAttribute (el, doc, Template_ATTR_types);
-      // the label is no longer mandatory
-      // CheckMandatoryAttribute (el, doc, Template_ATTR_title);
+      CheckMandatoryAttribute (el, doc, Template_ATTR_title);
+      // check if the name is not already 
+      attType.AttrSSchema = elType.ElSSchema;
+      attType.AttrTypeNum = Template_ATTR_types;
+      att = TtaGetAttribute(el, attType);
+      if (att)
+        {
+          name = GetAttributeStringValue (el, att, NULL);
+          if (name)
+            {
+              ancestor = el;
+              ancestor_name = GetAncestorComponentName (&ancestor);
+              while (ancestor_name)
+                {
+                  // look for the ancestor name in the current name
+                  ptr = strstr (name , ancestor_name);
+                  len = strlen (ancestor_name);
+                  if (len && ptr && 
+                      (ptr == name || ptr[-1] == SPACE) &&
+                      (ptr[len] == EOS || ptr[len] == SPACE))
+                    {
+                      // a loop is detected
+                      sprintf (msgBuffer, "Remove type %s for use element",
+                               ancestor_name);
+                      XmlParseError (errorParsing, (unsigned char *)msgBuffer,
+                                     TtaGetElementLineNumber(el));
+                      if (ptr[len] == EOS)
+                        ptr[0] = EOS;
+                      else
+                        strcpy (ptr, &ptr[len+1]);
+                      TtaSetAttributeText(att, name, el, doc);
+                      TtaFreeMemory (ancestor_name);
+                      ancestor_name = NULL;
+                    }
+                  else
+                    {
+                      TtaFreeMemory (ancestor_name);
+                      ancestor_name = GetAncestorComponentName (&ancestor);
+                    }
+                }
+              TtaFreeMemory (name);
+            }
+          else
+            XmlParseError (errorParsing,
+                           (unsigned char *)"Missing mandatory attribute types for use element",
+                           TtaGetElementLineNumber(el));
+        }
+      else
+        XmlParseError (errorParsing,
+                       (unsigned char *)"Missing mandatory attribute types for use element",
+                       TtaGetElementLineNumber(el));
       break;
 
     case Template_EL_bag:
