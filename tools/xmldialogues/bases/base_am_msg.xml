@@ -7487,11 +7487,11 @@
 </label>
 <label define="AM_TEMPLATE_USE">
 	<message xml:lang="en">Use elements</message>
-	<message xml:lang="fr">Utilisation d'éléments</message>
+	<message xml:lang="fr">Utiliser les éléments</message>
 </label>
 <label define="AM_TEMPLATE_USELABEL">
-	<message xml:lang="en">Use label</message>
-	<message xml:lang="fr">Nom de l'uUtilisation</message>
+	<message xml:lang="en">Label</message>
+	<message xml:lang="fr">Label</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
