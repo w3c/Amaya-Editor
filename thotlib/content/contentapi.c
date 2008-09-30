@@ -4755,21 +4755,21 @@ static double ThetaAngle(double dx, double dy)
 /*----------------------------------------------------------------------
   BisectorAngle
   ----------------------------------------------------------------------*/
-static double BisectorAngle(double x0, double y0, double x1,
-			    double y1, double x2, double y2)
+static double BisectorAngle(double dxPrev, double dyPrev,
+			    double dxNext, double dyNext)
 {
   double norm1, norm2, dx1, dy1, dx2, dy2;
   double dx, dy;
 
-  norm1= Norm(x1-x0, y1-y0);
-  norm2= Norm(x2-x1, y2-y1);
+  norm1= Norm(dxPrev, dyPrev);
+  norm2= Norm(dxNext, dyNext);
   if(norm1 == 0 || norm2 == 0)
     return 0;
 
-  dx1 = (x1-x0)/norm1;
-  dy1 = (y1-y0)/norm1;
-  dx2 = (x2-x1)/norm2;
-  dy2 = (y2-y1)/norm2;
+  dx1 = dxPrev/norm1;
+  dy1 = dyPrev/norm1;
+  dx2 = dxNext/norm2;
+  dy2 = dyNext/norm2;
 
   dx = dx1 + dx2;
   dy = dy1 + dy2;
@@ -4858,7 +4858,7 @@ void TtaGivePolylineAngle (Element element, int rank, double *angle)
 	    *angle = ThetaAngle(x-xPrev, y-yPrev);
 	  else
 	    /* any other point in the polyline : bisector of the angle */
-	    *angle = BisectorAngle(xPrev, yPrev, x, y, xNext, yNext);
+	    *angle = BisectorAngle(x-xPrev, y-yPrev, xNext-x, yNext-y);
 
 	  (*angle)*=(180/M_PI);
         }
@@ -4940,6 +4940,79 @@ void TtaGivePathPoint (Element element, int rank, TypeUnit unit, int *x, int *y)
 }
 
 /*----------------------------------------------------------------------
+  GivePathSegmentAngle
+
+  before = the segment is before the point
+  ----------------------------------------------------------------------*/
+static ThotBool GivePathSegmentAngle(PtrPathSeg pPa,
+				     ThotBool before,
+				     double *dx,
+				     double *dy)
+{
+  double rx, ry, cx, cy, phi, theta, dtheta;
+  int x1, y1, x2, y2;
+
+  if(pPa == NULL)
+    return FALSE;
+
+  *dx = 1.;
+  *dy = 0.;
+
+  switch (pPa->PaShape)
+    {
+    case PtLine:
+      *dx = pPa->XEnd - pPa->XStart;
+      *dy = pPa->YEnd - pPa->YStart;
+      break;
+    case PtQuadraticBezier:
+    case PtCubicBezier:
+      if(before)
+	{
+	  *dx = pPa->XEnd - pPa->XCtrlEnd;
+	  *dy = pPa->YEnd - pPa->YCtrlEnd;
+	}
+      else
+	{
+	  *dx = pPa->XCtrlStart - pPa->XStart;
+	  *dy = pPa->YCtrlStart - pPa->YStart;
+	}
+      break;
+    case PtEllipticalArc:
+      x1 = pPa->XStart;
+      y1 = pPa->YStart;
+      x2 = pPa->XEnd;
+      y2 = pPa->YEnd;
+      rx = pPa->XRadius;
+      ry = pPa->YRadius;
+      phi = pPa->XAxisRotation;
+
+      if(!TtaEndPointToCenterParam(x1, y1, x2, y2,
+				   &rx, &ry,
+				   &phi,
+				   pPa->LargeArc, pPa->Sweep,
+				   &cx, &cy,
+				   &theta, &dtheta
+				   ))
+	return FALSE;
+
+      if(before)
+	theta += dtheta;
+
+      *dx = -cos(phi)*rx*sin(theta) - sin(phi)*ry*cos(theta);
+      *dy = -sin(phi)*rx*sin(theta) + cos(phi)*ry*cos(theta);
+
+      if(dtheta < 0)
+	{
+	  *dx = -*dx;
+	  *dy = -*dy;
+	}
+      break;
+    }
+
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
   TtaGivePathAngle
 
   Returns the bisector angle of a vertex in a Path basic element.
@@ -4957,8 +5030,9 @@ void TtaGivePathPoint (Element element, int rank, TypeUnit unit, int *x, int *y)
 void TtaGivePathAngle (Element element, int rank, double *angle)
 {
   PtrPathSeg       pPa;
+  PtrPathSeg       pPaPrevious = NULL, pPaNext = NULL;
   int              i;
-  ThotBool firstPoint = FALSE, lastPoint = FALSE;
+  double           dxPrevious, dyPrevious, dxNext, dyNext;
 
   UserErrorCode = 0;
   if (element == NULL)
@@ -4981,7 +5055,8 @@ void TtaGivePathAngle (Element element, int rank, double *angle)
 	      /* First point of a subpath */
 	      if(i == rank)
 		{
-		  firstPoint = TRUE;
+		  pPaPrevious = NULL;
+		  pPaNext = pPa;
 		  break;
 		}
 	      i++;
@@ -4990,17 +5065,37 @@ void TtaGivePathAngle (Element element, int rank, double *angle)
 	  if(i == rank)
 	    {
 	      if(!pPa->PaNext || pPa->PaNext->PaNewSubpath)
-		lastPoint = TRUE;
+		{
+		  /* Last point of a subpath */
+		  pPaPrevious = pPa;
+		  pPaNext = NULL;
+		}
+	      else
+		{
+		  /* Point between two segments */
+		  pPaPrevious = pPa;
+		  pPaNext = pPa->PaNext;
+		}
 	      break;
 	    }
 	  i++;
 	}
-	  
-      if(pPa)
-        {
-	  /* @@@@ to be written @@@@ */
-	  *angle = 0;
-        }
+
+      /* TODO: zero-length path segments
+	 F.5 'path' element implementation notes */
+
+      *angle = 0;
+      GivePathSegmentAngle(pPaPrevious, TRUE, &dxPrevious, &dyPrevious);
+      GivePathSegmentAngle(pPaNext, FALSE, &dxNext, &dyNext);
+
+      if(pPaPrevious && pPaNext)
+	*angle = BisectorAngle(dxPrevious, dyPrevious, dxNext, dyNext);
+      else if(pPaPrevious)
+	*angle = ThetaAngle(dxPrevious, dyPrevious);
+      else if(pPaNext)
+	*angle = ThetaAngle(dxNext, dyNext);
+
+      (*angle)*=(180/M_PI);
     }
 }
 
