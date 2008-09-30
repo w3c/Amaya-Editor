@@ -130,6 +130,30 @@ BOXES
 #endif
    END;
 
+  UsedTypes: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10;
+    Content: (Text 'types=' AttributeValue);
+    HorizPos: Left = Creator . Left + 10 px;
+    VertPos: Top = Creator . Top + 4 px;
+    Size: TAG_FONTSIZE;
+		PaddingTop: 			  5 px;
+		PaddingBottom: 			5 px;
+		PaddingLeft: 		  	5 px;
+		PaddingRight: 			5 px;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTRVALUE_Color;
+    Background: White;
+    FillPattern: backgroundcolor;
+    ShowBox;
+    IN Structure_view BEGIN
+      Visibility: 0;
+ 	    END;
+#endif
+   END;
+
   AttrName: BEGIN
 #ifdef INSTANCE
     Visibility: 0;
@@ -734,7 +758,7 @@ RULES
 #else
     Background : LightBlue4;
     FillPattern: backgroundcolor;
-    ShowBox; 
+    ShowBox;
 #endif
     CreateBefore(ElementName);
   	CreateWith(VerticalLine);
@@ -783,7 +807,7 @@ RULES
     CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     {LineBreak: No;}
-    {Display: Block;}
+    Display: Block;
     VertPos: Top  	= Previous AnyElem . Bottom;
     MarginTop	: 3 px;
     HorizPos: Left  	= Enclosing . Left; 
@@ -859,8 +883,7 @@ ATTRIBUTES
 
   option:
   BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
+	CreateBefore(AttrNameAndValue);
 	END;    
 
   name:
@@ -912,11 +935,6 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;    
 
-  types:
-  BEGIN
-	CreateBefore(AttrNameAndValue);
-	END;    
-
   currentType:
   BEGIN
 	CreateBefore(AttrName);
@@ -928,6 +946,16 @@ ATTRIBUTES
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
+
+  types:
+  BEGIN
+#ifndef INSTANCE
+    if Empty
+      CreateLast(UsedTypes);
+#endif
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
 
   useAt:
   BEGIN

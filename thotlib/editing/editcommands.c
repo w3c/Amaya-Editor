@@ -864,10 +864,11 @@ static void CopyBuffers (SpecFont font, int variant, int frame, int startInd,
 /*----------------------------------------------------------------------
   Debute l'insertion de caracteres dans une boite de texte.      
   Parameter toDelete is TRUE if a delete of previous character is requested
+  Return TRUE if the text insertion is accepted else FALSE
   ----------------------------------------------------------------------*/
-static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
-                                PtrTextBuffer pBuffer, int ind, int prev,
-                                ThotBool toDelete)
+static ThotBool StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
+                                    PtrTextBuffer pBuffer, int ind, int prev,
+                                    ThotBool toDelete)
 {
   PtrBox              pBox;
   PtrTextBuffer       pPreviousBuffer;
@@ -896,24 +897,34 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
             {
               LastInsertAttr = pBox->BxAbstractBox->AbCreatorAttr;
               LastInsertAttrElem = pBox->BxAbstractBox->AbElement;
-              if (!APPattrModify (LastInsertAttr, LastInsertAttrElem, frame, TRUE))
-                /* register the editing operation in the history */
-                RegisterInHistory (LastInsertAttrElem, LastInsertAttr, frame,
-                                   FirstSelectedCharInAttr, LastSelectedCharInAttr);
+            }
+          if (!APPattrModify (LastInsertAttr, LastInsertAttrElem, frame, TRUE))
+            /* register the editing operation in the history */
+            RegisterInHistory (LastInsertAttrElem, LastInsertAttr, frame,
+                               FirstSelectedCharInAttr, LastSelectedCharInAttr);
+          else
+            {
+              // insertion not accepted
+              TextInserting = FALSE;
+              return FALSE;
             }
         }
-      else if (LastInsertElText != pBox->BxAbstractBox->AbElement)
+      else
         {
           /* it's a text element */
-          LastInsertElText = pBox->BxAbstractBox->AbElement;
+          if (LastInsertElText != pBox->BxAbstractBox->AbElement)
+            LastInsertElText = pBox->BxAbstractBox->AbElement;
           if (!APPtextModify (LastInsertElText, frame, TRUE))
             /* register the editing operation in the history */
             RegisterInHistory (LastInsertElText, NULL, frame,
                                FirstSelectedChar, LastSelectedChar);
+          else
+            {
+              // insertion not accepted
+              TextInserting = FALSE;
+              return FALSE;
+            }
         }
-      else if (SelectedDocument && !SelectedDocument->DocEditSequence)
-        RegisterInHistory (LastInsertElText, NULL, frame,
-                           FirstSelectedChar, LastSelectedChar);
 
       /* Memorize  the enclosing cell */
       LastInsertCell = GetParentCell (pBox);
@@ -980,6 +991,7 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
             }
         }
     }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -3033,8 +3045,7 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
               /* prend la boite d'script courant ou au besoin */
               /* cree un nouveau texte avec le bon script */
               if (!toDelete)
-                notification = GiveAbsBoxForLanguage (frame, &pAb,
-                                                      keyboard);
+                notification = GiveAbsBoxForLanguage (frame, &pAb, keyboard);
               else
                 script = TtaGetCharacterScript (c);
               if (notification)
@@ -3064,8 +3075,12 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                       variant = pAb->AbFontVariant;
                       /* initialise l'insertion */
                       if (!TextInserting)
-                        StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind,
-                                            previousChars, toDelete);
+                        {
+                        if (!StartTextInsertion (pAb, frame, pSelBox,
+                                                pBuffer, ind,
+                                                previousChars, toDelete))
+                          return FALSE;
+                        }
                       font = pSelBox->BxFont;
 		      
                       if (pBuffer == NULL)
