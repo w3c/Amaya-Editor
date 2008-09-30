@@ -794,10 +794,10 @@ static ThotBool     Selecting = FALSE;
 ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                                  int thot_mod_mask, int x, int y )
 {
-#if !defined (_WINDOWS) && !defined (_MACOS)
+#if !defined (_MACOS)
   Document       document;
   View           view;
-#endif /* !_WINDOWS && ! _MACOS */
+#endif /* !_MACOS */
   PtrBox         box;
   int            ctrlpt;
     
@@ -839,7 +839,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
 			     FrameTable[frame].FrHeight);
 		
               }
-#if !defined (_WINDOWS) && !defined (_MACOS)
+#if !defined (_MACOS)
             else if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
               {	
 		ClickFrame = frame;
@@ -851,7 +851,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
 		FrameToView (frame, &document, &view);
 		TtaExecuteMenuAction ("FollowTheLinkNewTab", document, view, FALSE);
               }
-#endif /* _WINDOWS */
+#endif /* MACOS */
             else
               {
                 /* a simple selection */

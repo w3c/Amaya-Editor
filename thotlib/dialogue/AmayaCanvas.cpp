@@ -370,7 +370,7 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
                            thot_mod_mask,
                            event.GetX(), event.GetY() );
 
-#if !defined (_WINDOWS) && !defined (_MACOS)
+#if !defined (_MACOS)
   if (!(event.GetButton() == THOT_LEFT_BUTTON &&
 	((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)))
     {	
@@ -378,7 +378,7 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
       TtaRedirectFocus();
       event.Skip();
     }
-#else /* _LINUX */
+#else /* !_MACOS */
   // force the focus when clicking on the canvas because the focus is locked on panel buttons
   TtaRedirectFocus();
   event.Skip();
