@@ -152,8 +152,6 @@ int GetAttributeIntValueFromNum (Element el, int att)
 #ifdef TEMPLATES
   AttributeType attType;
   Attribute     attribute;
-  char         *aux;
-  int           size;
 
   attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
   attType.AttrTypeNum = att;
@@ -232,13 +230,12 @@ char *GetAncestorComponentName (Element *el)
   anc = TtaGetExactTypedAncestor (anc, elType);
   if (anc)
     {
-      name = GetAttributeStringValueFromNum (anc, Template_ATTR_name, NULL); 
+      name = GetAttributeStringValueFromNum (anc, Template_ATTR_name, NULL);
       *el = anc;
       return name;
     }
-#else
-  return NULL;
 #endif /* TEMPLATES */
+  return NULL;
 }
 
 

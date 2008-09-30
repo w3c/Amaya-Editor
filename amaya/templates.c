@@ -2123,7 +2123,7 @@ Element Template_CreateRepeatFromSelection(Document doc, ThotBool createComp)
           selType =  TtaGetElementType(selElem);
           selType2 =  TtaGetElementType(selElem2);
           repType.ElSSchema = sstempl;
-          repType.ElTypeNum = Template_EL_repeat;          
+          repType.ElTypeNum = Template_EL_repeat;
           parent  = TtaGetParent(selElem);
           parent2 = TtaGetParent(selElem2);
           if(firstChar==0 && firstChar2==0 && parent == parent2 && buffer[0]!=0)
@@ -2307,7 +2307,6 @@ Element Template_CreateUseFromSelection(Document doc, ThotBool createComp)
   int         firstChar, lastChar, firstChar2, lastChar2;
   SSchema     sstempl = TtaGetSSchema ("Template", doc),
               sshtml  = TtaGetSSchema ("HTML", doc);
-  Attribute   optionAttr;
   XTigerTemplate t;
 
   ElementType useType;
@@ -2318,6 +2317,10 @@ Element Template_CreateUseFromSelection(Document doc, ThotBool createComp)
 
   if (!TtaGetDocumentAccessMode(doc))
     return NULL;
+
+  const char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_USE);
+  const char *label = TtaGetMessage (AMAYA, AM_NAME);
+
 
   if(doc && TtaGetDocumentAccessMode(doc) && sstempl &&
       IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
@@ -2412,6 +2415,7 @@ Element Template_CreateUseFromSelection(Document doc, ThotBool createComp)
 
                           GiveAttributeStringValueFromNum(comp, Template_ATTR_name, buffer, &sz);
                           SetAttributeStringValue(use, Template_ATTR_types, buffer);
+                          SetAttributeStringValue(use, Template_ATTR_title, buffer);
                           TtaRegisterElementCreate(use, doc);
 
                           TtaSelectElement(doc, use);
@@ -2421,6 +2425,8 @@ Element Template_CreateUseFromSelection(Document doc, ThotBool createComp)
                     }
                   else
                     {
+                      QueryStringFromUser(label, title, buffer, 127);
+
                       // Create a xt:use around the selection
                       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
@@ -2438,6 +2444,8 @@ Element Template_CreateUseFromSelection(Document doc, ThotBool createComp)
                       TtaInsertFirstChild(&selElem, use, doc);
 
                       SetAttributeStringValue(use, Template_ATTR_types, TtaGetElementTypeName(TtaGetElementType(selElem)));
+                      if(buffer[0]!=EOS)
+                        SetAttributeStringValue(use, Template_ATTR_title, buffer);
 
                       TtaRegisterElementCreate(use, doc);
 
@@ -2445,10 +2453,6 @@ Element Template_CreateUseFromSelection(Document doc, ThotBool createComp)
                     }
                 }
             }
-/*          else if(selElem==selElem2)
-            {
-              printf(">> %d - %d / %d - %d\n", firstChar, lastChar, firstChar2, lastChar2);
-            }*/
           else if(lastChar<firstChar)
               use = Template_CreateInlineUse(doc);
 
