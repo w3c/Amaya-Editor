@@ -20,6 +20,12 @@ extern void GiveAttributeStringValueFromNum ( Element el,
 extern char *GetAttributeStringValueFromNum ( Element el,
                                               int att,
                                               int* sz );
+extern int GetAttributeIntValueFromNum ( Element el,
+                                         int att );
+extern void SetAttributeIntValue ( Element el,
+                                   int att,
+                                   int value,
+                                   ThotBool undo );
 extern char *GetAttributeStringValue ( Element el,
                                        Attribute attribute,
                                        int* sz );
@@ -57,6 +63,12 @@ extern void GiveAttributeStringValueFromNum ( Element el,
 extern char *GetAttributeStringValueFromNum ( Element el,
                                                 int att,
                                                 int* sz );
+extern int GetAttributeIntValueFromNum ( Element el,
+                                           int att );
+extern void SetAttributeIntValue ( Element el,
+                                     int att,
+                                     int value,
+                                     ThotBool undo );
 extern char *GetAttributeStringValue ( Element el,
                                          Attribute attribute,
                                          int* sz );

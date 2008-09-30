@@ -4,12 +4,12 @@
 2 Nouveau document MathML
 3 Nouveau document SVG
 4 Nouvelle feuille de style
-5 À partir du modèle
+5 ï¿½ partir du modï¿½le
 6 Dans un nouvel onglet
-7 Dans nouvelle fenêtre
+7 Dans nouvelle fenï¿½tre
 8 Effacer
 9 Clic
-10 Document sauvé : %s
+10 Document sauvï¿½ : %s
 11 Attribut
 12 URL
 13 Texte
@@ -19,16 +19,16 @@
 17 Recherche de %s
 18 Impossible de charger %s
 19 C'est fini !
-20 Sélectionner la destination
+20 Sï¿½lectionner la destination
 21 Destination invalide
 22 Inserer l'URI ou parcourir
 23 Titre
 24 Changer le titre
-25 Document modifié - Voulez-vous l'enregistrer ?
+25 Document modifiï¿½ - Voulez-vous l'enregistrer ?
 26 Recherche de %s
-27 Dépassement de la limite de redirections
-28 Création impossible du document %s
-29 Création impossible du répertoire %s
+27 Dï¿½passement de la limite de redirections
+28 Crï¿½ation impossible du document %s
+29 Crï¿½ation impossible du rï¿½pertoire %s
 30 En attente d'un socket
 31 Lecture %s
 32 Ecriture %s
@@ -38,24 +38,24 @@
 36 Statut inconnu
 37 Dialogue d'authentification
 38 Authentification pour
-39 Manque d'autorisation pour accéder à %s
-40 %s chargé mais ne comporte pas de données
+39 Manque d'autorisation pour accï¿½der ï¿½ %s
+40 %s chargï¿½ mais ne comporte pas de donnï¿½es
 41 Interruption du transfert !
-42 Indisponibilité momentanée de %s. Réessayez plus tard
-43 %s chargé
+42 Indisponibilitï¿½ momentanï¿½e de %s. Rï¿½essayez plus tard
+43 %s chargï¿½
 44 Sauvegarde de %s
 45 Impossible d'enregistrer dans : %s
 46 French system error messages
-47 Une ancre ne peut pas contenir ces éléments
-48 Impossible de créer une ancre dans une ancre
+47 Une ancre ne peut pas contenir ces ï¿½lï¿½ments
+48 Impossible de crï¿½er une ancre dans une ancre
 49 Pas de support GET pour cette URL : %s
 50 Pas de support PUT pour cette URL : %s
 51 Cette version d'Amaya ne supporte pas cette option
-52 Fin d'écriture de %s
+52 Fin d'ï¿½criture de %s
 53 Impossible de normaliser %s
-54 Impossible de créer le répertoire temporaire %s
+54 Impossible de crï¿½er le rï¿½pertoire temporaire %s
 55 Aucune transformation possible
-56 La transformation a echoué
+56 La transformation a echouï¿½
 57 HTML.trans erreur de syntaxe ligne %s
 58 Maths
 59 Graphique
@@ -63,10 +63,10 @@
 61 Authentification requise pour le domaine \'%s\' du serveur \'%s\'
 62 Domaine: %s
 63 Serveur: %s
-64 Éditeur/Navigateur
-65 Délai expiré - le serveur n'a pas répondu
-66 %s existe déjà. Forcer l'écriture ?
-67 %s a changé. Forcer l'écriture ?
+64 ï¿½diteur/Navigateur
+65 Dï¿½lai expirï¿½ - le serveur n'a pas rï¿½pondu
+66 %s existe dï¿½jï¿½. Forcer l'ï¿½criture ?
+67 %s a changï¿½. Forcer l'ï¿½criture ?
 68 Image de fond
 69 Image de fond interdite ici
 70 CSS
@@ -76,58 +76,58 @@
 74 Copier les images
 75 Transformer les URL
 76 Adresse du document
-77 Répertoire des images
+77 Rï¿½pertoire des images
 78 Adresse de l'objet
 79 Fichier CSS
 80 Ouvrir CSS
-81 Désactiver CSS
-82 Réactiver CSS
+81 Dï¿½sactiver CSS
+82 Rï¿½activer CSS
 83 Retirer CSS
-84 Le navigateur/éditeur du W3C
-85 (envoyez vos questions à www-amaya@w3.org)
-86 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio), tous droits réservés.
+84 Le navigateur/ï¿½diteur du W3C
+85 (envoyez vos questions ï¿½ www-amaya@w3.org)
+86 Copyright  ï¿½  1994-%s INRIA et W3Cï¿½ (MIT, ERCIM, Keio), tous droits rï¿½servï¿½s.
 87 w3.org/Amaya/
-88 Erreur interne : URL de longueur supérieure à %s caractères
-89 Seul le type par défaut est autorisé
-90 Mise à jour des liens : %s%% a été traité
-91 Rien à enregistrer
+88 Erreur interne : URL de longueur supï¿½rieure ï¿½ %s caractï¿½res
+89 Seul le type par dï¿½faut est autorisï¿½
+90 Mise ï¿½ jour des liens : %s%% a ï¿½tï¿½ traitï¿½
+91 Rien ï¿½ enregistrer
 92 repeat-y
 93 Entrer le nom d'utilisateur :
-94 Il y a %d requêtes en cours
+94 Il y a %d requï¿½tes en cours
 95 Pas de fichier CSS possible
 96 Ne pas enregistrer
 97 no-repeat
-98 Le document n'a pas de nom. Sauvé en :
+98 Le document n'a pas de nom. Sauvï¿½ en :
 99 Plugins
 100 Erreur inconnue lors de la sauvegarde de %s
 101 Impossible d'ouvrir une connexion vers le serveur
-102 Accès interdit à %s
-103 Opération réussie pour %s
-104 La ressource %s a été créée
-105 La ressource %s a été mise à jour
-106 L'opération a fini avec un code %s
-107 Le serveur n'a pas compris la syntaxe de la requête
-108 La réponse du serveur n'a pas de corps
-109 Cette opération n'est pas permise
-110 L'accès à %s requiert votre authentification
-111 Vérification ...
-112 L'enregistrement distante de %s a échouée, enregistrer sur disque ?
+102 Accï¿½s interdit ï¿½ %s
+103 Opï¿½ration rï¿½ussie pour %s
+104 La ressource %s a ï¿½tï¿½ crï¿½ï¿½e
+105 La ressource %s a ï¿½tï¿½ mise ï¿½ jour
+106 L'opï¿½ration a fini avec un code %s
+107 Le serveur n'a pas compris la syntaxe de la requï¿½te
+108 La rï¿½ponse du serveur n'a pas de corps
+109 Cette opï¿½ration n'est pas permise
+110 L'accï¿½s ï¿½ %s requiert votre authentification
+111 Vï¿½rification ...
+112 L'enregistrement distante de %s a ï¿½chouï¿½e, enregistrer sur disque ?
 113 La sauvegarde distante de %s semble corrompue, ignorer ?
-114 URL %s redirigée sur %s, ignorer ?
-115 Le relecture de %s a échouée, ignorer ?
+114 URL %s redirigï¿½e sur %s, ignorer ?
+115 Le relecture de %s a ï¿½chouï¿½e, ignorer ?
 116 Le serveur rapporte une erreur : %s
-117 Le serveur ne supporte pas cette méthode d'accès
+117 Le serveur ne supporte pas cette mï¿½thode d'accï¿½s
 118 Filtrer
 119 transferts actifs
 120 transferts en attente
-121 Table des matières
+121 Table des matiï¿½res
 122 Table des liens
-123 Mode de répétition
+123 Mode de rï¿½pï¿½tition
 124 repeat
 125 repeat-x
-126 La précédente session Amaya s'est mal terminée. Voulez-vous recharger les documents modifiés ?
-127 Echec de l'authentification. Voulez-vous réessayer ?
-128 L'opération sera redirigée. Voulez-vous continuer ?
+126 La prï¿½cï¿½dente session Amaya s'est mal terminï¿½e. Voulez-vous recharger les documents modifiï¿½s ?
+127 Echec de l'authentification. Voulez-vous rï¿½essayer ?
+128 L'opï¿½ration sera redirigï¿½e. Voulez-vous continuer ?
 129 Lignes
 130 Colonnes
 131 Bordure (pixel)
@@ -135,29 +135,29 @@
 133 Donner texte de remplacement !
 134 Imprimer l'URL
 135 Appliquer
-136 Défauts
+136 Dï¿½fauts
 137 Vider le cache
 138 Cache
 139 Activer le cache
-140 Stocker dans le cache les documents protégés
-141 Mode déconnecté
-142 Ignorer l'en-tête Expires:
-143 Répertoire du cache
+140 Stocker dans le cache les documents protï¿½gï¿½s
+141 Mode dï¿½connectï¿½
+142 Ignorer l'en-tï¿½te Expires:
+143 Rï¿½pertoire du cache
 144 Taille du cache (Mo)
-145 Taille maximale des entrées du cache (Mo)
+145 Taille maximale des entrï¿½es du cache (Mo)
 146 Proxy
 147 Proxy HTTP
 148 Liste des domaines du proxy (e.g., lists.w3.org)
-149 Générale
-150 Page de démarrage
-151 Délai des infobulles (ms)
-152 Délai de double-clic (ms)
-153 Taille caractères des menus
-154 Zoom caractères
+149 Gï¿½nï¿½rale
+150 Page de dï¿½marrage
+151 Dï¿½lai des infobulles (ms)
+152 Dï¿½lai de double-clic (ms)
+153 Taille caractï¿½res des menus
+154 Zoom caractï¿½res
 155 Langue des dialogues
 156 Preserver les lignes dans le coller
 157 Produire des fichiers de sauvegarde
-158 Enregistrer la géométrie en quittant
+158 Enregistrer la gï¿½omï¿½trie en quittant
 159 Montrer les images de fond
 160 Montrer boutons
 161 Montrer adresse
@@ -167,31 +167,31 @@
 165 Charger les images (img)
 166 Cliquer deux fois pour suivre un lien
 167 Publication
-168 Utiliser les ETAGS et les pré-conditions
-169 Vérifier chaque PUT avec un GET
-170 Nom par défaut pour les URLs finissant par un '/'
-171 Géométrie
-172 Enregistrer la géométrie courante
-173 Restaurer la géométrie défaut
-174 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
+168 Utiliser les ETAGS et les prï¿½-conditions
+169 Vï¿½rifier chaque PUT avec un GET
+170 Nom par dï¿½faut pour les URLs finissant par un '/'
+171 Gï¿½omï¿½trie
+172 Enregistrer la gï¿½omï¿½trie courante
+173 Restaurer la gï¿½omï¿½trie dï¿½faut
+174 Ces changements seront effectifs lors de l'ouverture d'une fenï¿½tre
 175 Couleur du texte
 176 Couleur de fond
 177 Couleur des menus
 178 Couleur de fond des menus
-179 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en même-temps.
-180 Liste des langues préférées comme "fr, en" :
-181 Ces changements seront effectifs lors du prochain démarrage.
+179 Impossible d'initialiser le cache. Vous avez peut-ï¿½tre specifiï¿½ un rï¿½pertoire invalide ou vous exï¿½cutez un autre Amaya en mï¿½me-temps.
+180 Liste des langues prï¿½fï¿½rï¿½es comme "fr, en" :
+181 Ces changements seront effectifs lors du prochain dï¿½marrage.
 182 Autoriser la redirection automatique du PUT vers ces domaines
 183 Sans feuilles de style
 184 Transformer en
-185 (séparer chaque entrée avec un espace)
+185 (sï¿½parer chaque entrï¿½e avec un espace)
 186 Ne pas utiliser le proxy dans ces domaines
 187 Utiliser le proxy uniquement dans ces domaines
-188 Nom du caractère
-189 Répertoire utilisateur
-190 Repertoire témporaire
+188 Nom du caractï¿½re
+189 Rï¿½pertoire utilisateur
+190 Repertoire tï¿½mporaire
 191 Par palette
-192 Négociation de langues
+192 Nï¿½gociation de langues
 193 Annotations
 194 Lien
 195 Nom de l'utilisateur
@@ -199,96 +199,96 @@
 197 Serveur d'annotations
 198 Charger automatiquement les annotations locales
 199 Charger automatiquement les annotations distantes
-200 Désactiver le chargement automatique des annotations distantes au démarrage
-201 Couleur de sélection
-202 Couleur de fond de sélection
+200 Dï¿½sactiver le chargement automatique des annotations distantes au dï¿½marrage
+201 Couleur de sï¿½lection
+202 Couleur de fond de sï¿½lection
 203 Orientation
 204 Portrait
 205 Paysage
 206 Garder les espaces multiples
 207 Erreur(s) dans le code source
 208 Erreur fatale - Corriger le code source pour continuer
-209 Essayer l'entrée "Fichier/Lire comme"
-210 Caractères invalides
+209 Essayer l'entrï¿½e "Fichier/Lire comme"
+210 Caractï¿½res invalides
 211 Profil du document :
-212 Erreurs détectées - voir Fichier > Montrer les erreurs
-213 Le codage de ce document n'est pas supporté par Amaya
+212 Erreurs dï¿½tectï¿½es - voir Fichier > Montrer les erreurs
+213 Le codage de ce document n'est pas supportï¿½ par Amaya
 214 Editer et enregistrer ce document changera son type
 215 Non disponible
 216 Parcourir
-217 Sélecteur de fichiers
-218 Sélection
+217 Sï¿½lecteur de fichiers
+218 Sï¿½lection
 219 Filtre local des annotations
 220 Montrer les erreurs
 221 Cacher
 222 Montrer tout
 223 Cacher tout
-224 * signifie caché, - signifie partiellement caché
+224 * signifie cachï¿½, - signifie partiellement cachï¿½
 225 Options de filtrage
 226 Par auteur
 227 Par type
 228 Par serveur
-229 Accés rapides
+229 Accï¿½s rapides
 230 Ignorer
 231 Position des panneaux d'outils :
-232 à gauche
-233 à droite
-234 Elément Style
-235 Impossible de créer un XPointer
-236 Impossible de débuter un XPointer sur un élément ajouté par Amaya
-237 Impossible de terminer un XPointer sur un élément ajouté par Amaya
-238 Je ne peux pas déplacer l'annotation là
+232 ï¿½ gauche
+233 ï¿½ droite
+234 Elï¿½ment Style
+235 Impossible de crï¿½er un XPointer
+236 Impossible de dï¿½buter un XPointer sur un ï¿½lï¿½ment ajoutï¿½ par Amaya
+237 Impossible de terminer un XPointer sur un ï¿½lï¿½ment ajoutï¿½ par Amaya
+238 Je ne peux pas dï¿½placer l'annotation lï¿½
 239 Je ne peux pas bouger l'annotation vers un autre document
-240 Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.
+240 Pas de nom d'utilisateur dï¿½clarï¿½. Voir le menu Annotations/Configure.
 241 Impossible de construire un XPointer pour cette annotation
 242 Faire une nouvelle annotation
-243 La publication de l'annotation a échoué
-244 La destruction de l'annotation a échoué
-245 Annotation détruite!
+243 La publication de l'annotation a ï¿½chouï¿½
+244 La destruction de l'annotation a ï¿½chouï¿½
+245 Annotation dï¿½truite!
 246 Impossible de charger l'index des annotations
 247 Erreur
-248 Sélectionner un codage
-249 Sélectionner un type MIME
+248 Sï¿½lectionner un codage
+249 Sï¿½lectionner un type MIME
 250 Changer le codage
 251 Changer le type MIME
 252 Changer
 253 Ce type de document n'a pas de charset
-254 L'URL doit être de type HTTP pour utiliser
+254 L'URL doit ï¿½tre de type HTTP pour utiliser
 255 Erreur: type MIME incorrect
 256 Inconnu
-257 Styles ignorés - voir Montrer les erreurs
-258 Ce document est déjà affiché dans une autre fenêtre.
-259 Enregistrer cette instance peut provoquer des problèmes de mise à jour.
-260 Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs
-261 Confirmez-vous l'opération ?
+257 Styles ignorï¿½s - voir Montrer les erreurs
+258 Ce document est dï¿½jï¿½ affichï¿½ dans une autre fenï¿½tre.
+259 Enregistrer cette instance peut provoquer des problï¿½mes de mise ï¿½ jour.
+260 Ajouter ou modifier le doctype du document supprimera certains ï¿½lï¿½ments ou attributs
+261 Confirmez-vous l'opï¿½ration ?
 262 Utiliser le type MIME application/xhtml+xml pour les documents XHTML
 263 Charset pour les nouveaux documents
-264 Verrou réussit!
-265 Verrou a échué!
+264 Verrou rï¿½ussit!
+265 Verrou a ï¿½chuï¿½!
 266 En attente d'un verrou sur %s...
-267 Document %s est verrouillé!
-268 Document %s a été verrouillé par %s (temps d'expiration %s)
+267 Document %s est verrouillï¿½!
+268 Document %s a ï¿½tï¿½ verrouillï¿½ par %s (temps d'expiration %s)
 269 Surpasser le verrou?
 270 Copier les informations du verrou??
-271 Essayez déverrouillé le document...
-272 Déverrouillage a réussit!
-273 Dérrouillage a échoué!
-274 En attente d'une libération du verrou...
-275 Document %s est déverrouillé!
-276 Déverrouillé le document?
-277 Propriétes du document
-278 Propriétes du document ne sont pas disponibles
-279 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
-280 En attente des propriétes du document...
-281 Désolé, WebDAV ne support pas URLs comme %s
-282 Sauvegarde du verrou dans la base local a échoué
-283 Impossible éffacer verrou de la base local
-284 Désolé, cette opération est interdit pour %s
-285 Opération a échué! Cause: Faute de dépendence
-286 Opération a échué! Cause: %s
+271 Essayez dï¿½verrouillï¿½ le document...
+272 Dï¿½verrouillage a rï¿½ussit!
+273 Dï¿½rrouillage a ï¿½chouï¿½!
+274 En attente d'une libï¿½ration du verrou...
+275 Document %s est dï¿½verrouillï¿½!
+276 Dï¿½verrouillï¿½ le document?
+277 Propriï¿½tes du document
+278 Propriï¿½tes du document ne sont pas disponibles
+279 Propriï¿½tes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
+280 En attente des propriï¿½tes du document...
+281 Dï¿½solï¿½, WebDAV ne support pas URLs comme %s
+282 Sauvegarde du verrou dans la base local a ï¿½chouï¿½
+283 Impossible ï¿½ffacer verrou de la base local
+284 Dï¿½solï¿½, cette opï¿½ration est interdit pour %s
+285 Opï¿½ration a ï¿½chuï¿½! Cause: Faute de dï¿½pendence
+286 Opï¿½ration a ï¿½chuï¿½! Cause: %s
 287 Ressayez?
 288 WebDAV
-289 Référence personnelle de l'utilisateur (URL)
+289 Rï¿½fï¿½rence personnelle de l'utilisateur (URL)
 290 Liste des ressources de l'utilisateur (URL URL)
 291 Profondeur du Verrou
 292 infini
@@ -297,69 +297,69 @@
 295 Autre (Secondes)
 296 Type du Verrou
 297 exclusif
-298 partagée
+298 partagï¿½e
 299 Notification
-300 Notification général
-301 Notification à la sortie
+300 Notification gï¿½nï¿½ral
+301 Notification ï¿½ la sortie
 302 Animation
 303 Bibliotheque SVG
 304 Option de copie
 305 Copier
-306 Réferencer
-307 Ajouter un modèle dans la librairie
+306 Rï¿½ferencer
+307 Ajouter un modï¿½le dans la librairie
 308 URL du nouveau fichier SVG ...
 309 Titre de la librairie
 310 URL de la librairie
-311 Créer une librairie
+311 Crï¿½er une librairie
 312 Parcourir les librairies
-313 Créer ou chercher une librairie
-314 La sélection contient des éléments non SVG. Effectuer une autre sélection SVP
+313 Crï¿½er ou chercher une librairie
+314 La sï¿½lection contient des ï¿½lï¿½ments non SVG. Effectuer une autre sï¿½lection SVP
 315 Le titre de la librairie est obligatoire
-316 Déplacer le curseur de position dans le document édité pour définir une nouvelle position clé...
-317 Position clé définie. Déplacer le curseur de temps pour définir la durée de l'animation...
-318 Sélectionner la couleur de départ de l'élément...
-319 Couleur de départ définie. Déplacer le curseur de temps pour définir la durée de l'animation...
-320 Sélectionner la couleur de fin...
-321 Animation définie.
-322 Attribut animé
-323 Elément sans ID
+316 Dï¿½placer le curseur de position dans le document ï¿½ditï¿½ pour dï¿½finir une nouvelle position clï¿½...
+317 Position clï¿½ dï¿½finie. Dï¿½placer le curseur de temps pour dï¿½finir la durï¿½e de l'animation...
+318 Sï¿½lectionner la couleur de dï¿½part de l'ï¿½lï¿½ment...
+319 Couleur de dï¿½part dï¿½finie. Dï¿½placer le curseur de temps pour dï¿½finir la durï¿½e de l'animation...
+320 Sï¿½lectionner la couleur de fin...
+321 Animation dï¿½finie.
+322 Attribut animï¿½
+323 Elï¿½ment sans ID
 324 Ajouter ID
 325 Supprimer ID
 326 Ajouter/Supprimer IDs
-327 Appliquer opération
-328 Entrer le nom d'un élément
+327 Appliquer opï¿½ration
+328 Entrer le nom d'un ï¿½lï¿½ment
 329 Appliquer CSS
-330 Type d'écran courant
+330 Type d'ï¿½cran courant
 331 Nouvelle Rubrique
-332 Propriétés du signet
-333 Propriétés de la rubrique
-334 Hiérarchie des rubriques:
+332 Propriï¿½tï¿½s du signet
+333 Propriï¿½tï¿½s de la rubrique
+334 Hiï¿½rarchie des rubriques:
 335 Titre :
 336 Appelle:
 337 Auteur:
-338 Crée:
-339 Dernière modification:
+338 Crï¿½e:
+339 Derniï¿½re modification:
 340 Description:
-341 Sélectionnez un élément
+341 Sï¿½lectionnez un ï¿½lï¿½ment
 342 Toutes les CSS
-343 Règles de style CSS appliqué l'élément <%s> \n
-344 Les lignes bleues sont des liens activés par un double (ou simple) click\n
+343 Rï¿½gles de style CSS appliquï¿½ l'ï¿½lï¿½ment <%s> \n
+344 Les lignes bleues sont des liens activï¿½s par un double (ou simple) click\n
 345 Charger les objets (object, embed, iframe)
-346 Pas de règle de style pour cet élément
-347 Pas de position d'insertion définie. Sélectionnez d'abord
+346 Pas de rï¿½gle de style pour cet ï¿½lï¿½ment
+347 Pas de position d'insertion dï¿½finie. Sï¿½lectionnez d'abord
 348 Informations du document
 349 Type du document
 350 Type MIME
 351 Codage
 352 Taille du contenu
 353 Provenance
-354 Préférences
-355 Caractère (&xxx;)
-356 Création d'un objet
-357 Répertoire
+354 Prï¿½fï¿½rences
+355 Caractï¿½re (&xxx;)
+356 Crï¿½ation d'un objet
+357 Rï¿½pertoire
 358 Fichier
 359 Remplacer le document
-360 Dans une nouvelle fenêtre
+360 Dans une nouvelle fenï¿½tre
 361 Anti-aliasing
 362 Date au format ISO
 363 Ouvrir les nouveaux documents dans
@@ -368,137 +368,137 @@
 366 Nombre max d'url dans l'historique
 367 Vider la liste des urls
 368 Montrer tous les raccourcis
-369 Longueur de ligne fixée (0 = valeur par défaut)
-370 Modèle
+369 Longueur de ligne fixï¿½e (0 = valeur par dï¿½faut)
+370 Modï¿½le
 371 Enregistrer le document sous...
-372 Le modèle n'existe pas
-373 Montrer les cadres des modèles
+372 Le modï¿½le n'existe pas
+373 Montrer les cadres des modï¿½les
 374 Appliquer ferme le dialogue
-375 Non autorisé
-376 Element protégé
-377 La sélection ne peut pas traverser un élément de ce type
-378 Pas d'en-tête trouvé
-379 Enregistrer quand même
+375 Non autorisï¿½
+376 Element protï¿½gï¿½
+377 La sï¿½lection ne peut pas traverser un ï¿½lï¿½ment de ce type
+378 Pas d'en-tï¿½te trouvï¿½
+379 Enregistrer quand mï¿½me
 380 Serveur inconnu
-381 Document modifié (412)
-382 Conflit avec l'état de la ressource
-383 Sélection invalide
-384 Elément inconnu
-385 %d éléments changés
+381 Document modifiï¿½ (412)
+382 Conflit avec l'ï¿½tat de la ressource
+383 Sï¿½lection invalide
+384 Elï¿½ment inconnu
+385 %d ï¿½lï¿½ments changï¿½s
 386 Le titre est obligatoire
-387 Modèles
+387 Modï¿½les
 388 Nombre d'occurrences
 389 Nombre maximal d'occurrences atteint
 390 Nombre minimum d'occurrences atteint
-391 Vérifier les IDs dupliqués
-392 Ajouter la feuille xsl pour les éléments MathML
-393 Insérer opérateur
-394 Choisir la façon dont l'opérateur doit être affiché
-395 Insérer une intégrale
-396 Choisir le type d'intégrale
+391 Vï¿½rifier les IDs dupliquï¿½s
+392 Ajouter la feuille xsl pour les ï¿½lï¿½ments MathML
+393 Insï¿½rer opï¿½rateur
+394 Choisir la faï¿½on dont l'opï¿½rateur doit ï¿½tre affichï¿½
+395 Insï¿½rer une intï¿½grale
+396 Choisir le type d'intï¿½grale
 397 Attributs du fence
-398 Choisir les symboles ouvrant, séparateur et fermant
-399 Nombre de symboles opérateurs
-400 Nombre de coordonnées
+398 Choisir les symboles ouvrant, sï¿½parateur et fermant
+399 Nombre de symboles opï¿½rateurs
+400 Nombre de coordonnï¿½es
 401 Longueur du N-uplet
-402 Nombre d'éléments
+402 Nombre d'ï¿½lï¿½ments
 403 Nombre de variables
-404 Degré
-405 Degré de la variable numéro %d
-406 Document composé
+404 Degrï¿½
+405 Degrï¿½ de la variable numï¿½ro %d
+406 Document composï¿½
 407 Copier les ressources (styles et scripts)
-408 Où enregistrer les ressources
-409 Où enregistrer les images
+408 Oï¿½ enregistrer les ressources
+409 Oï¿½ enregistrer les images
 410 Document
 411 Images, Styles et Scripts
 412 Courriel
-413 Paramètres pour l'envoi de courriels :
+413 Paramï¿½tres pour l'envoi de courriels :
 414 Adresse du serveur SMTP :
 415 Port :
-416 (25 par défaut)
-417 Adresse d'envoi (champ Expéditeur) :
+416 (25 par dï¿½faut)
+417 Adresse d'envoi (champ Expï¿½diteur) :
 418 Destinataires :
 419 Envoyer par courriel
 420 Sujet :
 421 Envoyer en tant que :
 422 Corps du message
-423 Pièce jointe
+423 Piï¿½ce jointe
 424 Archive zip
 425 Ne pas envoyer
 426 Envoyer
-427 L'adresse et le port du serveur doivent être renseignés dans les Préférences
+427 L'adresse et le port du serveur doivent ï¿½tre renseignï¿½s dans les Prï¿½fï¿½rences
 428 Message :
 429 Message textuel alternatif :
-430 Le serveur est inaccessible ou ne répond pas
-431 Le serveur vous a rejeté
-432 L'adresse de l'envoyeur est mal formatée
-433 L'adresse d'un destinataire est mal formatée
-434 Le contenu du courriel est mal formatée
-435 Courriel non envoyé
-436 Courriel envoyé
+430 Le serveur est inaccessible ou ne rï¿½pond pas
+431 Le serveur vous a rejetï¿½
+432 L'adresse de l'envoyeur est mal formatï¿½e
+433 L'adresse d'un destinataire est mal formatï¿½e
+434 Le contenu du courriel est mal formatï¿½e
+435 Courriel non envoyï¿½
+436 Courriel envoyï¿½
 437 Mots de passe
 438 Voulez-vous qu'Amaya se souvienne de ce mot de passe ?
 439 Enregistrer les mots de passe
 440 Sites
 441 Tout effacer
-442 Espaces de noms XML générés pour les nouveaux documents XHTML+RDFa
+442 Espaces de noms XML gï¿½nï¿½rï¿½s pour les nouveaux documents XHTML+RDFa
 443 Choisir un espace de noms dans la liste ou en saisir un nouveau (syntaxe: prefix="uri")
 444 Une erreur s'est produite pendant la construction des objets javascript/DOM
-445 Un script est encore en cours d'exécution mais sera interrompu dès que possible. Veuillez ressayer ultérieurement.
-446 Javascript/DOM ne peut être activé dans cette vue.
+445 Un script est encore en cours d'exï¿½cution mais sera interrompu dï¿½s que possible. Veuillez ressayer ultï¿½rieurement.
+446 Javascript/DOM ne peut ï¿½tre activï¿½ dans cette vue.
 447 Rentrez une commande javascript :
-448 La commande a retourné la valeur: %s
-449 La commande n'a retourné aucune valeur
-450 SpiderMonkey a retourné l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
+448 La commande a retournï¿½ la valeur: %s
+449 La commande n'a retournï¿½ aucune valeur
+450 SpiderMonkey a retournï¿½ l'erreur suivante:\n\nFile: %s\nLine: %d\n\n%s
 451 Nouveau
-452 Paramétrable
-453 Créer
-454 Créer le lien en cliquant
+452 Paramï¿½trable
+453 Crï¿½er
+454 Crï¿½er le lien en cliquant
 455 Detruire le lien
-456 Sauver sans modèle
-457 Avec le thème ...
+456 Sauver sans modï¿½le
+457 Avec le thï¿½me ...
 458 Pleine largeur
-459 Avec une légende
+459 Avec une lï¿½gende
 460 Dimension
 461 Position
-462 Mode d'édition XML
+462 Mode d'ï¿½dition XML
 463 Liste des styles
 464 Ajouter une feuille de style...
-465 Retirer les styles sélectionnées
-466 Activer les feuilles de style sélectionnées
-467 Désactiver les feuilles de style sélectionnées
-468 Ouvir les feuilles de style sélectionnées
+465 Retirer les styles sï¿½lectionnï¿½es
+466 Activer les feuilles de style sï¿½lectionnï¿½es
+467 Dï¿½sactiver les feuilles de style sï¿½lectionnï¿½es
+468 Ouvir les feuilles de style sï¿½lectionnï¿½es
 469 Profil Amaya :
-470 Afficher le "Conseil du jour" au démarrage
-471 Choisissez la police de caractères :
-472 Le modèle a des erreurs, il ne sera pas utilisé:
+470 Afficher le "Conseil du jour" au dï¿½marrage
+471 Choisissez la police de caractï¿½res :
+472 Le modï¿½le a des erreurs, il ne sera pas utilisï¿½:
 473 Fermer
-474 Le composant '%s' a une définition multiple.
-475 La bibliothèque '%s' ne peut être chargée.
-476 Conversion d'une instance en modèle impossible.
-477 Le document est déjà un modèle
-478 La création du modèle a échouée
+474 Le composant '%s' a une dï¿½finition multiple.
+475 La bibliothï¿½que '%s' ne peut ï¿½tre chargï¿½e.
+476 Conversion d'une instance en modï¿½le impossible.
+477 Le document est dï¿½jï¿½ un modï¿½le
+478 La crï¿½ation du modï¿½le a ï¿½chouï¿½e
 479 Zone texte
-480 Label de l'élément :
-481 Zone multi éléments
-482 Elément de répétition
+480 Label de l'ï¿½lï¿½ment :
+481 Zone multi ï¿½lï¿½ments
+482 Elï¿½ment de rï¿½pï¿½tition
 483 Nouveau composant
-484 Ce composant est utilisé, vous ne pouvez le détruire.
-485 dans le coin supérieur gauche
-486 dans le coin inférieur gauche
-487 à gauche
-488 dans le coin supérieur droit
-489 dans le coin inférieur droit
-490 à droite
+484 Ce composant est utilisï¿½, vous ne pouvez le dï¿½truire.
+485 dans le coin supï¿½rieur gauche
+486 dans le coin infï¿½rieur gauche
+487 ï¿½ gauche
+488 dans le coin supï¿½rieur droit
+489 dans le coin infï¿½rieur droit
+490 ï¿½ droite
 491 en haut
 492 en bas
 493 au centre
-494 à gauche et au dessus de
-495 à gauche et en dessous de
-496 à gauche de
-497 à droite et au dessus de
-498 à droite et en dessous de
-499 à droite de
+494 ï¿½ gauche et au dessus de
+495 ï¿½ gauche et en dessous de
+496 ï¿½ gauche de
+497 ï¿½ droite et au dessus de
+498 ï¿½ droite et en dessous de
+499 ï¿½ droite de
 500 au dessus de
 501 en dessous de
 502 devant
@@ -506,7 +506,9 @@
 504 Nouvelle utilisation
 505 Utilisation optionnelle
 506 Colorier le code source
-507 Titre de la répétition :
+507 Titre de la rï¿½pï¿½tition :
 508 Nouvelle union
 509 Union
 510 Nom de l'union :
+511 Utilisation d'ï¿½lï¿½ments
+512 Nom de l'uUtilisation

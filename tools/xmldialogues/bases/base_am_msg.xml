@@ -7485,6 +7485,14 @@
 	<message xml:lang="de">Vereinigungsname:</message>
 	<message xml:lang="it">Nome di l'unione:</message>
 </label>
+<label define="AM_TEMPLATE_USE">
+	<message xml:lang="en">Use elements</message>
+	<message xml:lang="fr">Utilisation d'éléments</message>
+</label>
+<label define="AM_TEMPLATE_USELABEL">
+	<message xml:lang="en">Use label</message>
+	<message xml:lang="fr">Nom de l'uUtilisation</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

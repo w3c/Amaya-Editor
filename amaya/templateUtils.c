@@ -16,7 +16,7 @@
 #include <stdarg.h>
 
 /*----------------------------------------------------------------------
-GetSchemaFromDocType: Returns the name of the schema corresponding to 
+GetSchemaFromDocType: Returns the name of the schema corresponding to
 a doc type.
 ----------------------------------------------------------------------*/
 const char *GetSchemaFromDocType (DocumentType docType)
@@ -42,7 +42,7 @@ const char *GetSchemaFromDocType (DocumentType docType)
 }
 
 /*----------------------------------------------------------------------
-Set the value of a string attribute 
+Set the value of a string attribute
 ----------------------------------------------------------------------*/
 void SetAttributeStringValue (Element el, int att, const char* value)
 {
@@ -92,7 +92,7 @@ void SetAttributeStringValueWithUndo (Element el, int att, char* value)
 }
 
 /*----------------------------------------------------------------------
-Returns the value of a string attribute without copy it 
+Returns the value of a string attribute without copy it
 ----------------------------------------------------------------------*/
 void GiveAttributeStringValueFromNum (Element el, int att, char* buff, int* sz)
 {
@@ -104,7 +104,7 @@ void GiveAttributeStringValueFromNum (Element el, int att, char* buff, int* sz)
   attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
   attType.AttrTypeNum = att;
   attribute = TtaGetAttribute(el, attType);
-  
+
   size = TtaGetTextAttributeLength(attribute);
   TtaGiveTextAttributeValue (attribute, buff, &size);
   buff[size] = EOS;
@@ -116,7 +116,7 @@ void GiveAttributeStringValueFromNum (Element el, int att, char* buff, int* sz)
 
 
 /*----------------------------------------------------------------------
-Returns the value of a string attribute 
+Returns the value of a string attribute
 ----------------------------------------------------------------------*/
 char *GetAttributeStringValueFromNum (Element el, int att, int* sz)
 {
@@ -129,7 +129,7 @@ char *GetAttributeStringValueFromNum (Element el, int att, int* sz)
 	attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
 	attType.AttrTypeNum = att;
 	attribute = TtaGetAttribute(el, attType);
-	
+
 	size = TtaGetTextAttributeLength(attribute);
 	aux = (char*) TtaGetMemory(size+1);
 	TtaGiveTextAttributeValue (attribute, aux, &size);
@@ -143,7 +143,59 @@ char *GetAttributeStringValueFromNum (Element el, int att, int* sz)
 }
 
 /*----------------------------------------------------------------------
-Returns the value of a string attribute 
+Returns the value of an int attribute
+----------------------------------------------------------------------*/
+int GetAttributeIntValueFromNum (Element el, int att)
+{
+#ifdef TEMPLATES
+  AttributeType attType;
+  Attribute     attribute;
+  char         *aux;
+  int           size;
+
+  attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+  attType.AttrTypeNum = att;
+  attribute = TtaGetAttribute(el, attType);
+
+  return TtaGetAttributeValue(attribute);
+#else
+  return NULL;
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+Set the value of a int attribute and registering it in undo sequence if wanted
+----------------------------------------------------------------------*/
+void SetAttributeIntValue (Element el, int att, int value, ThotBool undo)
+{
+#ifdef TEMPLATES
+  Document      doc = TtaGetDocument(el);
+  AttributeType attType;
+  Attribute     attribute;
+
+  if (doc == 0 || !TtaGetDocumentAccessMode(doc))
+    return;
+  attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+  attType.AttrTypeNum = att;
+  attribute = TtaGetAttribute(el, attType);
+  if (attribute == NULL)
+    {
+      attribute = TtaNewAttribute (attType);
+      TtaAttachAttribute(el, attribute, doc);
+      if(undo)
+        TtaRegisterAttributeCreate(attribute, el, doc);
+    }
+  TtaSetAttributeValue(attribute, value, el, doc);
+  if(undo)
+    TtaRegisterAttributeReplace(attribute, el, doc);
+#endif /* TEMPLATES */
+}
+
+
+
+
+/*----------------------------------------------------------------------
+Returns the value of a string attribute
 ----------------------------------------------------------------------*/
 char *GetAttributeStringValue (Element el, Attribute attribute, int* sz)
 {
@@ -170,16 +222,16 @@ Element GetFirstEditableElement (Element el)
 {
   Element res = NULL;
   Element current = TtaGetFirstChild(el);
-  
+
   while(!res && current)
   {
     res = GetFirstEditableElement(current);
     TtaNextSibling(&current);
   }
-  
+
   if(!res && !TtaIsReadOnly(el))
     res = el;
-  
+
   return res;
 }
 
@@ -192,7 +244,7 @@ ThotBool TemplateCanInsertFirstChild(ElementType elementType, Element parent, Do
 #ifdef TEMPLATES
   SSchema         templateSSchema = TtaGetSSchema ("Template", document);
   ElementType     parType;
-  
+
   while(parent)
     {
       parType = TtaGetElementType(parent);
@@ -222,7 +274,7 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
   char          buffer[MAX_LENGTH];
   int           sz;
   int           useAt, type;
-  
+
   /* Prevent from showing attributes for template instance but not templates. */
   if(IsTemplateInstanceDocument(event->document))
     {
@@ -263,7 +315,7 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
                          useAt = TtaGetAttributeValue(attr);
                        else
                          useAt = Template_ATTR_useAt_VAL_required;
-                       /* Get 'type' attr value. */                       
+                       /* Get 'type' attr value. */
                        attrType.AttrTypeNum = Template_ATTR_type;
                        attr = TtaGetAttribute(elem, attrType);
                        if(attr)
@@ -317,7 +369,7 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
                  }
             }
         }
-      
+
       return TRUE;
     }
   else
@@ -370,7 +422,7 @@ void DumpTemplateElement(Element el, Document doc)
   char           buffer[MAX_LENGTH];
   int            len;
   Language       lang;
-  
+
   if(el && doc)
     {
       elType = TtaGetElementType(el);
@@ -384,7 +436,7 @@ void DumpTemplateElement(Element el, Document doc)
           buffer[len] = EOS;
           printf(" \"%s\"", buffer);
         }
-      
+
       if(elType.ElSSchema==schema)
         {
           switch(elType.ElTypeNum)
@@ -395,7 +447,7 @@ void DumpTemplateElement(Element el, Document doc)
                 TtaFreeMemory(str);
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_templateVersion, NULL);
                 printf(" templateVersion=%s", str);
-                TtaFreeMemory(str);                
+                TtaFreeMemory(str);
                 break;
               case Template_EL_component:
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_name, NULL);
@@ -482,7 +534,7 @@ void DumpSubtree(Element el, Document doc, int off)
 #ifdef AMAYA_DEBUG
   Element child = TtaGetFirstChild(el);
   int i;
-  
+
   for(i=0; i<off; i++)
     printf("  ");
   DumpTemplateElement(el, doc);
@@ -508,7 +560,7 @@ ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
   Element       root;
   char         *localFile, *s;
   ThotBool      res = FALSE;
-  
+
   localFile = GetLocalPath (newdoc, newpath);
   // update all links
   SetRelativeURLs (doc, newpath, NULL, FALSE, FALSE, FALSE);

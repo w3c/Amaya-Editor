@@ -151,7 +151,7 @@ int CharNum_IN_Line (Document doc, int CharNum)
 
           child = TtaGetFirstChild(el);
 
-          // input the length of child one by one 
+          // input the length of child one by one
           for (k=0; k < count_child; k++)
             {
               length_child = TtaGetElementVolume(child);
@@ -178,7 +178,7 @@ int CharNum_IN_Line (Document doc, int CharNum)
           if (child == NULL)
             {
               len = i;
-              child = prev;			
+              child = prev;
             }
           else if (child !=NULL)
             {
@@ -186,7 +186,7 @@ int CharNum_IN_Line (Document doc, int CharNum)
               len_of_line = TtaGetElementVolume(child);
               time++;
               count_child = 1;
-		
+
               /* Consider "Annotation Icon" if Annotation Icon is on the line */
               if (len != len_of_line)
                 {
@@ -203,7 +203,7 @@ int CharNum_IN_Line (Document doc, int CharNum)
                   memory_of_child = len_of_child;
                   child = TtaGetFirstChild(el);
 
-                  // input the length of child one by one 
+                  // input the length of child one by one
                   for (k=0; k < count_child; k++)
                     {
                       length_child = TtaGetElementVolume(child);
@@ -232,7 +232,7 @@ int CharNum_IN_Line (Document doc, int CharNum)
 Element GetElemWithChar ( Document doc, char *nameVal)
 {
   Element             el;
-  char               *CharNum;  
+  char               *CharNum;
   Element             child, prev;
   ElementType         elType;
   int                 i,line, len,len1,len_of_line,count_child=1;
@@ -244,7 +244,7 @@ Element GetElemWithChar ( Document doc, char *nameVal)
 
   if (!nameVal)
     return NULL;
-  
+
   /* Extract The Char scheme value */
   CharNum = strstr(nameVal,"=");
   CharNum = &CharNum[1];
@@ -278,7 +278,7 @@ Element GetElemWithChar ( Document doc, char *nameVal)
           memory_of_child = len_of_child;
           child = TtaGetFirstChild(el);
 
-          // input the length of child one by one 
+          // input the length of child one by one
           for (k = 0; k < count_child; k++)
             {
               length_child = TtaGetElementVolume(child);
@@ -306,7 +306,7 @@ Element GetElemWithChar ( Document doc, char *nameVal)
           if (child == NULL)
             {
               len = i;
-              child = prev;			
+              child = prev;
             }
           else if (child != NULL)
             {
@@ -316,7 +316,7 @@ Element GetElemWithChar ( Document doc, char *nameVal)
               line++;
               len_of_line = len1;
               count_child = 1;
-	    	
+
               /* Consider "Annotation Icon" if Annotation Icon is on the line */
               if (len != len1)
                 {
@@ -333,7 +333,7 @@ Element GetElemWithChar ( Document doc, char *nameVal)
                   memory_of_child = len_of_child;
                   child = TtaGetFirstChild(el);
 
-                  // input the length of child one by one 
+                  // input the length of child one by one
                   for (k=0; k < count_child; k++)
                     {
                       length_child = TtaGetElementVolume(child);
@@ -369,7 +369,7 @@ Element GetElemWithChar ( Document doc, char *nameVal)
             TtaSelectString(doc,child,(i-time)+1,(i-time));
 
           //else if behind Icon
-				
+
           else if ((i-time) > len_of_child[0])
             {
               sum_length_child = len_of_child[0];
@@ -379,7 +379,7 @@ Element GetElemWithChar ( Document doc, char *nameVal)
                     {
                       for (j=1; j <=k; j++)
                         TtaNextSibling(&child);
-							
+
                       TtaSelectString (doc, child,(i-time+1) - sum_length_child,(i-time) - sum_length_child);
                       TtaFreeMemory(memory_of_child);
                       break;
@@ -423,7 +423,7 @@ Element GetElemWithLine ( Document doc, char *nameVal)
   LineNum++;
   line = atoi(LineNum);
   if (line >= 0)
-    { 
+    {
       el = TtaGetMainRoot (doc);
       elType = TtaGetElementType (el);
       elType.ElTypeNum = TextFile_EL_Line_;
@@ -431,11 +431,11 @@ Element GetElemWithLine ( Document doc, char *nameVal)
 
       for (i = 1; i <= line; i++)
         TtaNextSibling (&el);
-	 
+
       if (el)
         {
           child = TtaGetFirstChild (el);
-		
+
           if (child)
             {
               if (index > 0)
@@ -478,7 +478,7 @@ Element GetElemWithLine ( Document doc, char *nameVal)
   ----------------------------------------------------------------------*/
 Element GetElemWithLineRange ( Document doc, char *nameVal)
 {
-  Element             el, el2;  
+  Element             el, el2;
   Element             child, child2;
   ElementType         elType, elType2;
   char               *name, *Line_first, *memory_Line;
@@ -506,8 +506,8 @@ Element GetElemWithLineRange ( Document doc, char *nameVal)
   name++;
   line2 = atoi (name);
   TtaFreeMemory (memory_Line);
- 
-  //define the first Element 
+
+  //define the first Element
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
   elType.ElTypeNum = TextFile_EL_Line_;
@@ -515,7 +515,7 @@ Element GetElemWithLineRange ( Document doc, char *nameVal)
 
   for (i = 1; i <= line1; i++)
     TtaNextSibling (&el);
-	
+
   child = TtaGetFirstChild (el);
   //define the second Element
   el2 = TtaGetMainRoot (doc);
@@ -523,7 +523,7 @@ Element GetElemWithLineRange ( Document doc, char *nameVal)
   elType2.ElTypeNum = TextFile_EL_Line_;
   el2 = TtaSearchTypedElement (elType2, SearchForward, el2);
 
-  for (i = 1; i < line2; i++)		 
+  for (i = 1; i < line2; i++)
     TtaNextSibling (&el2);
 
   child2 = TtaGetFirstChild(el2);
@@ -539,7 +539,7 @@ Element GetElemWithLineRange ( Document doc, char *nameVal)
 	  }
   else if (line1 == line2)
 	  TtaSelectString(doc,child,1,0);
-	  
+
   return child;
 }
 
@@ -764,7 +764,7 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
           if (child == NULL)
             {
               len = i;
-              child = prev;			
+              child = prev;
             }
           else
             {
@@ -773,10 +773,10 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
               time++;
               len_of_line = len_of_text;
               count_child = 1;
-	    	
+
               /* Consider "Annotation Icon" if Annotation Icon is on the line */
               if (len != len_of_text)
-                { 
+                {
                   // analysis the structure of the line including "Annotation Icon"
                   while (len != len_of_line)
                     {
@@ -827,7 +827,7 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
             {
 							for (j=1; j <=k; j++)
                 TtaNextSibling(&child);
-							
+
 							TtaSelectString (doc, child,
                                (i-time+1) - sum_length_child,(i-time) - sum_length_child);
               TtaFreeMemory(child_string);
@@ -868,7 +868,7 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
               TtaNextSibling(&child2);
               length_child = TtaGetElementVolume(child2);
               len_of_line += length_child;
-              count_child++; // count the number of child in the line			
+              count_child++; // count the number of child in the line
             }
 
           child_string2 = (int *)TtaGetMemory( (sizeof(int)) * (count_child + 1) );
@@ -895,7 +895,7 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
 
       // interpret Char Scheme value and calculate the element including the ending position
       while (child2 && ((len < i && time == 0) || ((len+time) < i && time >=1 )))
-        {	
+        {
           i -= len;
           prev = child2;
           TtaNextSibling (&el2);
@@ -945,14 +945,14 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
                       TtaFreeMemory(child_string2);
                       child_string2 = NULL;
                     }
-                }			
+                }
             }
           if (len == 0 && time == i)
             break;
         }
     }
 
-  //extend the range from first position to second 
+  //extend the range from first position to second
   if (i-time <= len_of_text)
     TtaExtendSelection(doc,child2,(i-time)+1);
   else if (child_string2 && i-time > child_string2[0])
@@ -965,7 +965,7 @@ Element GetElemWithCharRange ( Document doc, char *nameVal)
             {
 							for (j=1; j <=k; j++)
                 TtaNextSibling(&child2);
-							
+
               TtaExtendSelection(doc,child2,(i-time+1) - sum_length_child);
 							TtaFreeMemory(child_string2);
               child_string2 = NULL;
@@ -1005,7 +1005,7 @@ Element GetElemWithMatch ( Document  doc, char *nameVal)
   int                 error_flag;
   int                 *firstCh, *lastCh;
   int                 Char;
-  
+
   length = strlen(nameVal);
   if (!nameVal)
     return NULL;
@@ -1057,15 +1057,15 @@ Element GetElemWithMatch ( Document  doc, char *nameVal)
 /*----------------------------------------------------------------------
   SearchTextattribute
   Depending on the value, inplement which of functions to identifier
-  the position or range 
+  the position or range
   ----------------------------------------------------------------------*/
 Element SearchTextattribute (Document doc, char *nameVal)
 {
   Element             elFound;
 
   if (strncmp (nameVal,"line",4) == 0 && strstr(nameVal, ",") == NULL)
-    elFound = GetElemWithLine(doc,nameVal); 
-  else if (strncmp(nameVal,"char",4) == 0 && strstr(nameVal,",") == NULL) 
+    elFound = GetElemWithLine(doc,nameVal);
+  else if (strncmp(nameVal,"char",4) == 0 && strstr(nameVal,",") == NULL)
     elFound = GetElemWithChar(doc,nameVal);
   else if (strncmp(nameVal,"line",4) == 0 &&strstr(nameVal, ",") != NULL)
     elFound = GetElemWithLineRange(doc,nameVal);
@@ -1136,7 +1136,7 @@ Element GetElemWithAttr (Document doc, AttributeType attrType, char *nameVal,
 /*----------------------------------------------------------------------
   SearchNAMEattribute
   search in document doc an element having an attribut NAME or ID (defined
-  in DTD HTML, MathML, SVG, Template or generic XML) whose value is nameVal.         
+  in DTD HTML, MathML, SVG, Template or generic XML) whose value is nameVal.
   Return that element or NULL if not found.
   If ignoreAtt is not NULL, it is an attribute that should be ignored when
   comparing NAME attributes.
@@ -1231,7 +1231,7 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
         }
 
     }
-#endif /* TEMPLATES */          
+#endif /* TEMPLATES */
 #ifdef XML_GENERIC
   if (!elFound)
     {
@@ -1326,7 +1326,7 @@ void Do_follow_link_callback (int targetDocument, int status, char *urlName,
   Element             anchor;
   AttributeType       attrType;
   Attribute           PseudoAttr, HrefAttr;
-  SSchema             docSchema; 
+  SSchema             docSchema;
   View                view;
   Do_follow_link_context  *ctx = (Do_follow_link_context *) context;
   char               *sourceDocUrl, *utf8path;
@@ -1337,7 +1337,7 @@ void Do_follow_link_callback (int targetDocument, int status, char *urlName,
     return;
 
   doc = ctx->doc;
-  sourceDocUrl = ctx->sourceDocUrl;  
+  sourceDocUrl = ctx->sourceDocUrl;
   anchor = ctx->anchor;
   utf8path = ctx->utf8path;
   elSource = ctx->elSource;
@@ -1383,13 +1383,13 @@ void Do_follow_link_callback (int targetDocument, int status, char *urlName,
     }
 
   NormalizeURL (utf8path, doc, newurl, newname, NULL);
-  
-  if ((utf8path[0] == '#' || !strcmp(newurl, DocumentURLs[doc]))
+
+  if ((utf8path[0] == '#' || (DocumentURLs[doc] && !strcmp(newurl, DocumentURLs[doc])))
           && targetDocument != 0)
     {
       if (!elFound)
         elFound = TtaGetMainRoot(doc);
-        
+
       elType = TtaGetElementType (elFound);
       if (elType.ElTypeNum == HTML_EL_LINK &&
           !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
@@ -1408,8 +1408,8 @@ void Do_follow_link_callback (int targetDocument, int status, char *urlName,
             {
               /* jump in the same document */
               /* record current position in the history */
-              AddDocHistory (doc, DocumentURLs[doc], 
-                             DocumentMeta[doc]->initial_url, 
+              AddDocHistory (doc, DocumentURLs[doc],
+                             DocumentMeta[doc]->initial_url,
                              DocumentMeta[doc]->form_data,
                              DocumentMeta[doc]->method);
             }
@@ -1511,7 +1511,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
     Follow_exclusive = TRUE;
   if (anchor == NULL || HrefAttr == NULL)
     return FALSE;
-  
+
   info = pathname = NULL;
   elType = TtaGetElementType (anchor);
   attrType.AttrTypeNum = 0;
@@ -1545,7 +1545,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
       length--;
       while (utf8path[length] == ' ')
         utf8path[length--] = EOS;
-       
+
       /* save the context */
       ctx = (Do_follow_link_context*)TtaGetMemory (sizeof (Do_follow_link_context));
       ctx->anchor = anchor;
@@ -1555,15 +1555,15 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
       /* save the complete URL of the source document */
       ctx->sourceDocUrl = TtaStrdup (DocumentURLs[doc]);
       TtaSetSelectionMode (TRUE);
-      
+
       NormalizeURL (utf8path, doc, newurl, newname, NULL);
-                         
+
       if (utf8path[0] == '#' || !strcmp(newurl, DocumentURLs[doc]))
         {
           /* the target element is part of the same document */
           targetDocument = doc;
           /* manually invoke the callback */
-          Do_follow_link_callback (targetDocument, 0, NULL, NULL, NULL, NULL, 
+          Do_follow_link_callback (targetDocument, 0, NULL, NULL, NULL, NULL,
                                   (void *) ctx);
         }
       else
@@ -1584,7 +1584,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
                   TtaFreeMemory (utf8value);
                 }
             }
-           
+
           if (info)
             length += strlen (info);
           if (length < MAX_LENGTH)
@@ -1601,7 +1601,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
               TtaFreeMemory (info);
             }
           /* interrupt current transfer */
-          StopTransfer (doc, 1);	   
+          StopTransfer (doc, 1);
           /* get the referred document */
           if (!strncmp (pathname, "mailto:", 7))
             {
@@ -1651,13 +1651,13 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
               if (IsUndisplayedName (pathname))
                 /* it's not necessary to open a new window */
                 DontReplaceOldDoc = FALSE;
-               
+
               /* Set the Help document in ReadOnly mode */
               root = TtaGetMainRoot (doc);
               readonly = (TtaGetAccessRight (root) == ReadOnly);
               /* Load the new document */
-              targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
-                                            method, history, 
+              targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc,
+                                            method, history,
                                             (void (*)(int, int, char*, char*, char*,
                                                       const AHTHeaders*, void*)) Do_follow_link_callback,
                                             (void *) ctx);
@@ -1742,10 +1742,10 @@ void CheckRefresh (Document doc)
                               if (IsUndisplayedName (pathname))
                                 /* it's not necessary to open a new window */
                                 DontReplaceOldDoc = FALSE;
-			      
+
                               /* Load the new document */
-                              doc = GetAmayaDoc (pathname, NULL, doc, doc, 
-                                                 CE_RELATIVE, FALSE, 
+                              doc = GetAmayaDoc (pathname, NULL, doc, doc,
+                                                 CE_RELATIVE, FALSE,
                                                  NULL, NULL);
                               el = NULL;
                             }
@@ -1759,7 +1759,7 @@ void CheckRefresh (Document doc)
 }
 
 /*----------------------------------------------------------------------
-  DblClickOnButton     The user has double-clicked a BUTTON element.         
+  DblClickOnButton     The user has double-clicked a BUTTON element.
   ----------------------------------------------------------------------*/
 static void DblClickOnButton (Element element, Document document)
 {
@@ -1784,7 +1784,7 @@ static void DblClickOnButton (Element element, Document document)
   else
     {
       /* interrupt current transfer */
-      StopTransfer (document, 1);	   
+      StopTransfer (document, 1);
       SubmitForm (document, element);
     }
 }
@@ -1870,7 +1870,7 @@ static ThotBool ActivateElement (Element element, Document doc)
         /* it 's a double click on a submit or reset button */
         {
           /* interrupt current transfer and submit the corresponding form */
-          StopTransfer (doc, 1);	   
+          StopTransfer (doc, 1);
           SubmitForm (doc, element);
         }
       else if (elType.ElTypeNum == HTML_EL_BUTTON_)
@@ -1899,7 +1899,7 @@ static ThotBool ActivateElement (Element element, Document doc)
           if (elType1.ElTypeNum == HTML_EL_Image_Input)
             {
               /* interrupt current transfer */
-              StopTransfer (doc, 1);	   
+              StopTransfer (doc, 1);
               SubmitForm (doc, element);
               return (TRUE);
             }
@@ -2037,7 +2037,7 @@ static void DisplayUrlAnchor (Element element, Document doc)
       /* Get a buffer for the target URL */
       length = TtaGetTextAttributeLength (HrefAttr);
       length++;
-	
+
       utf8value = (char *)TtaGetMemory (length);
       if (utf8value != NULL)
         {
@@ -2094,7 +2094,7 @@ static void DisplayUrlAnchor (Element element, Document doc)
                   strcat (pathname, ")");
                 }
             }
-       
+
           TtaSetStatus (doc, 1, pathname, NULL);
           TtaFreeMemory (pathname);
           TtaFreeMemory (documentname);
@@ -2144,7 +2144,7 @@ void NextLinkOrFormElement (Document doc, View view)
   int                 i;
   int                 firstChar, lastChar;
 
-  schema = TtaGetSSchema ("HTML", doc);  
+  schema = TtaGetSSchema ("HTML", doc);
   attrType1.AttrTypeNum = HTML_ATTR_NAME;
   attrType1.AttrSSchema = schema;
   attrType2.AttrTypeNum = HTML_ATTR_HREF_;
@@ -2182,7 +2182,7 @@ void NextLinkOrFormElement (Document doc, View view)
           else
             /* stop the search */
             found = TRUE;
-        }  
+        }
       else if (el == startEl)
         {
           /* we made a complete cycle and no other element was found */
@@ -2207,7 +2207,7 @@ void NextLinkOrFormElement (Document doc, View view)
               TtaSelectElement (doc, el);
               found =TRUE;
               break;
-	      
+
             case HTML_EL_Text_Area:
             case HTML_EL_Text_Input:
             case HTML_EL_File_Input:
@@ -2231,7 +2231,7 @@ void NextLinkOrFormElement (Document doc, View view)
                 }
               found =TRUE;
               break;
-	      
+
             default:
               break;
             }
@@ -2328,7 +2328,7 @@ void PreviousLinkOrFormElement (Document doc, View view)
           else
             /* stop the search */
             found = TRUE;
-        }  
+        }
       else if (el == startEl)
         {
           /* we made a complete cycle and no other element was found */
@@ -2353,7 +2353,7 @@ void PreviousLinkOrFormElement (Document doc, View view)
               TtaSelectElement (doc, el);
               found =TRUE;
               break;
-	      
+
             case HTML_EL_Text_Area:
             case HTML_EL_Text_Input:
             case HTML_EL_File_Input:
@@ -2377,7 +2377,7 @@ void PreviousLinkOrFormElement (Document doc, View view)
                 }
               found =TRUE;
               break;
-	      
+
             default:
               attr = NULL;
               break;
@@ -2443,14 +2443,14 @@ ThotBool IgnoreEvent (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  DoubleClick     The user has double-clicked an element.         
+  DoubleClick     The user has double-clicked an element.
   ----------------------------------------------------------------------*/
 ThotBool DoubleClick (NotifyElement *event)
 {
   ThotBool usedouble;
 
 
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
   if (usedouble &&
       (DocumentMeta[event->document] == NULL ||
        DocumentMeta[event->document]->method != CE_HELP))
@@ -2463,7 +2463,7 @@ ThotBool DoubleClick (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  SimpleClick     The user has clicked an element.         
+  SimpleClick     The user has clicked an element.
   ----------------------------------------------------------------------*/
 ThotBool SimpleClick (NotifyElement *event)
 {
@@ -2514,7 +2514,7 @@ ThotBool SimpleClick (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  SimpleLClick     The user has clicked with the Left button.         
+  SimpleLClick     The user has clicked with the Left button.
   ----------------------------------------------------------------------*/
 ThotBool SimpleLClick (NotifyElement *event)
 {
@@ -2523,7 +2523,7 @@ ThotBool SimpleLClick (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  SimpleRClick     The user has clicked an element.         
+  SimpleRClick     The user has clicked an element.
   ----------------------------------------------------------------------*/
 ThotBool SimpleRClick (NotifyElement *event)
 {
@@ -2596,7 +2596,7 @@ void UpdateXmlElementListTool (Element el, Document doc)
 
 
 /*----------------------------------------------------------------------
-  UpdateTitle update the content of the Title field on top of the 
+  UpdateTitle update the content of the Title field on top of the
   main window, according to the contents of element el.
   ----------------------------------------------------------------------*/
 void UpdateTitle (Element el, Document doc)
@@ -2859,9 +2859,9 @@ void FreeDocumentResource (Document doc)
       DocumentTypes[doc] = docFree;
     }
 }
- 
+
 /*----------------------------------------------------------------------
-  DocumentClosed                                                  
+  DocumentClosed
   ----------------------------------------------------------------------*/
 void DocumentClosed (NotifyDialog * event)
 {
@@ -2874,23 +2874,23 @@ void DocumentClosed (NotifyDialog * event)
     return;
 #ifdef DAV
   /* NEED : deal with last document when exiting the application.
-   * 
+   *
    * Now, when exiting the application, if the document is locked
    * by the user (the lock information must be in the local base),
    * this function will ask whether the user wants to unlock it.
    * If user agrees, an UNLOCK request will be sent. But, under
    * Windows machines, this request will be killed when the application
    * exit, and no unlock will be done.
-   */ 
+   */
   DAVFreeLock (event->document);
 #endif /* DAV */
-  
-#ifdef _SVG 
+
+#ifdef _SVG
   Get_timeline_of_doc (event->document, &doc, &tm_view);
   if (doc)
     {
       TtaCloseView (doc, tm_view);
-      Free_timeline_of_doc (event->document);	   
+      Free_timeline_of_doc (event->document);
     }
 #endif /* _SVG */
   doc = TtaGetSelectedDocument ();
@@ -2930,7 +2930,7 @@ static ThotBool IsSelInElement (Element firstSel, Element lastSel, ElementType e
 }
 
 /*----------------------------------------------------------------------
-  A new element has been selected. Update menus accordingly.      
+  A new element has been selected. Update menus accordingly.
   ----------------------------------------------------------------------*/
 void UpdateContextSensitiveMenus (Document doc, View view)
 {
@@ -3082,10 +3082,10 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       newSelInElem = (TtaGetExactTypedAncestor (firstSel, elType) != NULL);
     }
 
-  /* 
+  /*
    * elements PICTURE, Object, Applet, Big_text, Small_text, Subscript,
    * Superscript, Font_  are not permitted in a Preformatted element.
-   * The corresponding menu entries must be turned off 
+   * The corresponding menu entries must be turned off
    */
   if (newSelInElem != SelectionInPRE)
     {
@@ -3111,9 +3111,9 @@ void UpdateContextSensitiveMenus (Document doc, View view)
           TtaSetItemOn (doc, 1, Types, TSup);
         }
     }
-  /* 
+  /*
    * Disable the "Comment" entry of menu "Context" if current selection
-   * is within a comment 
+   * is within a comment
    */
   if (firstSel == NULL)
     newSelInElem = FALSE;
@@ -3142,7 +3142,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetToggleItem (doc, 1, Types, TEmphasis, newSelInElem);
 #ifdef _WX
       TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, newSelInElem );
-#endif /* _WX */	
+#endif /* _WX */
     }
 
   elType.ElTypeNum = HTML_EL_Strong;
@@ -3195,7 +3195,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetToggleItem (doc, 1, Types, TInsertion, newSelInElem);
 #ifdef _WX
       TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_INS, newSelInElem );
-#endif /* _WX */	
+#endif /* _WX */
     }
 
   elType.ElTypeNum = HTML_EL_del;
@@ -3212,7 +3212,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetToggleItem (doc, 1, Types, TDeletion, newSelInElem);
 #ifdef _WX
       TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_DEL, newSelInElem );
-#endif /* _WX */	
+#endif /* _WX */
     }
 
   elType.ElTypeNum = HTML_EL_Def;
@@ -3314,7 +3314,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetToggleItem (doc, 1, Types, TSub, newSelInElem);
 #ifdef _WX
       TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_SUB, newSelInElem );
-#endif /* _WX */	
+#endif /* _WX */
     }
 
   elType.ElTypeNum = HTML_EL_Superscript;
@@ -3325,7 +3325,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       TtaSetToggleItem (doc, 1, Types, TSup, newSelInElem);
 #ifdef _WX
       TtaSwitchPanelButton( doc, 1, WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_SUP, newSelInElem );
-#endif /* _WX */	
+#endif /* _WX */
     }
 
   elType.ElTypeNum = HTML_EL_Quotation;
@@ -3464,7 +3464,7 @@ void ResetHighlightedElement ()
 /*----------------------------------------------------------------------
   SynchronizeSourceView
   A new element has been selected. If the Source view is open,
-  synchronize it with the new selection.      
+  synchronize it with the new selection.
   ----------------------------------------------------------------------*/
 void SynchronizeSourceView (NotifyElement *event)
 {
@@ -3477,7 +3477,7 @@ void SynchronizeSourceView (NotifyElement *event)
   int                 firstChar, lastChar, line, i, view;
   int		      val, x, y, width, height;
   ThotBool	      otherDocIsStruct, done;
-   
+
   if (!event)
     return;
   doc = event->document;
@@ -3547,7 +3547,7 @@ void SynchronizeSourceView (NotifyElement *event)
                 }
             }
           while (!otherEl && el);
-	 
+
           done = (otherEl == HighlightElement);
           if (otherEl && !done)
             /* different element found */
@@ -3883,7 +3883,7 @@ static ThotBool ShowTextLine (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  SimpleClickInText The user has clicked a log message.         
+  SimpleClickInText The user has clicked a log message.
   ----------------------------------------------------------------------*/
 ThotBool SimpleClickInText (NotifyElement *event)
 {
@@ -3898,13 +3898,13 @@ ThotBool SimpleClickInText (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  DoubleClickInText The user has double-clicked a log message.         
+  DoubleClickInText The user has double-clicked a log message.
   ----------------------------------------------------------------------*/
 ThotBool DoubleClickInText (NotifyElement *event)
 {
   ThotBool usedouble;
 
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
   if (usedouble)
     /* don't let Thot perform normal operation */
     return (ShowTextLine (event->element, event->document));
@@ -3913,7 +3913,7 @@ ThotBool DoubleClickInText (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  RightClickInText The user has right-clicked a log message.         
+  RightClickInText The user has right-clicked a log message.
   ----------------------------------------------------------------------*/
 ThotBool RightClickInText (NotifyElement *event)
 {
@@ -3968,7 +3968,7 @@ void CheckSynchronize (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  A new element has been selected. Update menus accordingly.      
+  A new element has been selected. Update menus accordingly.
   ----------------------------------------------------------------------*/
 void SelectionChanged (NotifyElement *event)
 {
@@ -3990,7 +3990,7 @@ void SelectionChanged (NotifyElement *event)
   SynchronizeNSDeclaration (event);
 
   UnFrameMath ();
-  
+
   if (DocumentTypes[doc] != docLog)
     {
       if (DocumentTypes[doc] != docSource && DocumentTypes[doc] != docCSS)
@@ -4152,7 +4152,7 @@ static void SplitFontOrPhrase (Document doc, Element elem, Element first,
                 {
                   // remove the element
                   TtaRegisterElementDelete (child, doc);
-                  TtaRemoveTree (child, doc);                      
+                  TtaRemoveTree (child, doc);
                 }
               else
                 {
@@ -4352,7 +4352,7 @@ void SetCharFontOrPhrase (int doc, int elemtype)
         }
       else
         GenerateInlineElement (elemtype, NULL, 0, "", TRUE);
-      TtaCloseUndoSequence (doc);      
+      TtaCloseUndoSequence (doc);
     }
 
   UpdateContextSensitiveMenus (doc, 1);

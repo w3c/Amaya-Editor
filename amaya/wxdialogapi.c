@@ -65,7 +65,7 @@ int link_Last_used_filter = 0;
   ----------------------------------------------------------------------*/
 void ShowMessage(const char* message, const char* title)
 {
-  
+
   wxMessageDialog messagedialog( NULL,
          TtaConvMessageToWX(message),
          TtaConvMessageToWX(title),
@@ -268,7 +268,7 @@ ThotBool CreateSelectIntegralDlgWX ( int ref, ThotWindow parent)
     + parent : parent window
     + title : dialog title
     + extrabutton : if it is present there is 3 button
-    + confirmbutton : 
+    + confirmbutton :
     + label : the message to show at dialog center
   returns:
     + true : the dialogue has been created
@@ -367,7 +367,7 @@ ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent, const char *title,
     wx_filter = APPIMAGENAMEFILTER;
   else if (doc_type == docLibrary)
     wx_filter = APPLIBRARYNAMEFILTER;
-  else 
+  else
     {
       wx_filter = APPFILENAMEFILTER;
     }
@@ -721,7 +721,7 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
   if (p_dlg->ShowModal() == wxID_OK)
     {
       wxString url = p_dlg->GetPath();
-      // allocate a temporary buffer to copy the 'const char *' url buffer 
+      // allocate a temporary buffer to copy the 'const char *' url buffer
       strncpy( SavePath, (const char*)url.mb_str(wxConvUTF8), MAX_LENGTH-1);
       SavePath[MAX_LENGTH-1] = EOS;
       // destroy the dlg before calling thotcallback because it's a child of this
@@ -786,7 +786,7 @@ ThotBool CreateCSSDlgWX (int ref, int subref, ThotWindow parent, char *title,
 #ifdef _WX
   wxArrayString wx_items;
   wxString      wx_title  = TtaConvMessageToWX( title );
-  
+
   /* build the css filename list */
   int i = 0;
   int index = 0;
@@ -823,7 +823,7 @@ ThotBool CreateCSSDlgWX (int ref, int subref, ThotWindow parent, char *title,
     }
 #else /* _WX */
   return FALSE;
-#endif /* _WX */  
+#endif /* _WX */
 }
 
 
@@ -831,7 +831,7 @@ ThotBool CreateCSSDlgWX (int ref, int subref, ThotWindow parent, char *title,
 /*----------------------------------------------------------------------
   ShowNonSelListDlgWX
   ----------------------------------------------------------------------*/
-void ShowNonSelListDlgWX (ThotWindow parent, char *title, char* label, 
+void ShowNonSelListDlgWX (ThotWindow parent, char *title, char* label,
                           char *button, void* strings)
 {
 #ifdef _WX
@@ -839,11 +839,11 @@ void ShowNonSelListDlgWX (ThotWindow parent, char *title, char* label,
   wxString      wx_label  = TtaConvMessageToWX( label );
   wxString      wx_button = TtaConvMessageToWX( button );
   wxArrayString wx_items;
-  
+
   ForwardIterator  iter = DLList_GetForwardIterator((DLList)strings);
   DLListNode       node;
   const char*      str;
-  
+
   ITERATOR_FOREACH(iter, DLListNode, node)
     {
       str = (const char*)node->elem;
@@ -854,14 +854,14 @@ void ShowNonSelListDlgWX (ThotWindow parent, char *title, char* label,
 
   NonSelListDlgWX dlg(parent, wx_title, wx_label, wx_items, wx_button);
   dlg.ShowModal();
-#endif /* _WX */  
+#endif /* _WX */
 }
 
 
 
 
 /*----------------------------------------------------------------------
-  CreateListDlgWX proposes 
+  CreateListDlgWX proposes
   params:
   returns:
   ----------------------------------------------------------------------*/
@@ -871,7 +871,7 @@ ThotBool CreateListDlgWX (int ref, int subref, ThotWindow parent, char *title,
 #ifdef _WX
   wxString      wx_title = TtaConvMessageToWX( title );
   wxArrayString wx_items;
-  
+
   /* build the css filename list */
   int i = 0;
   int index = 0;
@@ -908,7 +908,7 @@ ThotBool CreateListDlgWX (int ref, int subref, ThotWindow parent, char *title,
     }
 #else /* _WX */
   return FALSE;
-#endif /* _WX */  
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -922,7 +922,7 @@ ThotBool CreateCheckedListDlgWX (int ref, ThotWindow parent, char *title,
 #ifdef _WX
   wxString      wx_title = TtaConvMessageToWX( title );
   wxArrayString wx_items;
-  
+
   /* build the css filename list */
   int i = 0;
   int index = 0;
@@ -946,7 +946,7 @@ ThotBool CreateCheckedListDlgWX (int ref, ThotWindow parent, char *title,
 						       nb_item,
 						       wx_items,
 						       (bool *)checks);
-      
+
       if ( TtaRegisterWidgetWX( ref, p_dlg ) )
 	/* the dialog has been sucesfully registred */
 	return TRUE;
@@ -957,7 +957,7 @@ ThotBool CreateCheckedListDlgWX (int ref, ThotWindow parent, char *title,
   return FALSE;
 #else /* _WX */
   return FALSE;
-#endif /* _WX */  
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1055,7 +1055,7 @@ ThotBool CreateTextDlgWX (int ref, int subref, ThotWindow parent,
   wxString wx_label   = TtaConvMessageToWX( label );
   wxString wx_value = TtaConvMessageToWX( value );
 
-  
+
   wxTextEntryDialog dlg(parent, wx_label, wx_title, wx_value);
   if(dlg.ShowModal()==wxID_OK)
     {
@@ -1210,7 +1210,7 @@ ThotBool CreateListEditDlgWX (int ref, ThotWindow parent,
   wxString      wx_selected_item = TtaConvMessageToWX( selected_item );
   wxString      wx_list_title    = TtaConvMessageToWX( list_title );
   wxArrayString wx_items;
-  
+
   /* convert the (char *) list to wxArrayString */
   int i = 0;
   int index = 0;
@@ -1243,7 +1243,7 @@ ThotBool CreateListEditDlgWX (int ref, ThotWindow parent,
     }
 #else /* _WX */
   return FALSE;
-#endif /* _WX */  
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1259,7 +1259,7 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
   wxString      wx_title = TtaConvMessageToWX( title );
   wxString      wx_label = TtaConvMessageToWX( label );
   wxArrayString wx_items;
-  
+
   /* build the enum list strings */
   int i = 0;
   int index = 0;
@@ -1275,7 +1275,7 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
       /* TODO: change the message when there is no items, should never occured */
       ShowMessage(TtaGetMessage(AMAYA, AM_NO_CSS), title);
       return FALSE;
-    }  
+    }
 
   wxSingleChoiceDialog dlg(parent, wx_label, wx_title, wx_items);
   dlg.SetSelection(selection);
@@ -1301,9 +1301,9 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
 {
   wxString      wx_title = TtaConvMessageToWX( title );
   wxString      wx_label = TtaConvMessageToWX( label );
-  
+
   value = wxGetNumberFromUser(wx_label, wxT(""), wx_title, value, 0, 100, parent);
-  
+
   if(value==wxNOT_FOUND)
     {
       if (ref == MathsDialogue + FormMaths)
@@ -1319,7 +1319,7 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
           ThotCallback (ref, INTEGER_DATA, (char*)1);
         }
     }
-  
+
   TtaRedirectFocus ();
   return TRUE;
 }
@@ -1361,7 +1361,7 @@ void*  CreateListNSDlgWX (int ref, ThotWindow parent, int nb_item,
 #ifdef _WX
   wxArrayString wx_items;
   wxArrayString wx_items_rdfa;
-  
+
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return NULL;
@@ -1399,7 +1399,7 @@ void*  CreateListNSDlgWX (int ref, ThotWindow parent, int nb_item,
 
 #else /* _WX */
   return FALSE;
-#endif /* _WX */  
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1422,7 +1422,7 @@ void UpdateListNSDlgWX (int nb_item, const char *items, void * p_dlg)
   ((ListNSDlgWX *) p_dlg)->NSUpdate(wx_items);
 #else /* _WX */
   return;
-#endif /* _WX */  
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1455,7 +1455,7 @@ ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc,
       descWidget  = XRCCTRL(dialog, "wxID_DESC", wxTextCtrl);
       cancel = XRCCTRL(dialog, "wxID_CANCEL", wxButton);
       confirm = XRCCTRL(dialog, "wxID_OK", wxButton);
-       
+
       if(titleLabel && titleWidget && descWidget && descLabel
 	 && cancel && confirm)
         {
@@ -1502,7 +1502,7 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
   wxString strs = TtaConvMessageToWX(proposed);
   wxArrayString arr = wxStringTokenize(strs);
   wxCheckListBox* box;
-  
+
   if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
     {
       dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_NEWUSE)));
@@ -1513,17 +1513,17 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
       XRCCTRL(dialog, "wxID_CANCEL", wxButton)->
             SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL) ));
       XRCCTRL(dialog, "wxID_OK", wxButton)->
-            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));      
-      
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
+
       wxSizer* sz = dialog.GetSizer();
       box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
       sz->Insert(2, box, 1, wxEXPAND);
-            
+
       box->Append(arr);
-      
+
       dialog.SetSize(200, 320);
       dialog.Layout();
-      
+
       if(dialog.ShowModal()==wxID_OK)
         {
           strs.Clear();
@@ -1537,7 +1537,7 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
                 }
             }
           strs.Trim();
-          
+
           if(label)
             *label = TtaStrdup((const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8));
           if(types)
@@ -1565,21 +1565,21 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
   wxDialog dialog;
   wxString strs = TtaConvMessageToWX(proposed);
   wxArrayString arr = wxStringTokenize(strs), arrchecked;
-  
+
   wxCheckListBox* box;
-  
+
   if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
     {
-      
+
       dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, newUnion?AM_TEMPLATE_NEWUNION:AM_TEMPLATE_UNION)));
-      
-      
+
+
       XRCCTRL(dialog, "wxID_LABEL_LABEL", wxStaticText)->
             SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_UNIONNAME)));
       XRCCTRL(dialog, "wxID_CANCEL", wxButton)->
             SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL) ));
       XRCCTRL(dialog, "wxID_OK", wxButton)->
-            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));      
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
 
       XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->Hide();
       if(!newUnion)
@@ -1593,12 +1593,12 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
             }
           XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->Disable();
         }
-      
+
       wxSizer* sz = dialog.GetSizer();
       box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
       sz->Insert(2, box, 1, wxEXPAND);
       sz->Layout();
-      
+
       box->Append(arr);
       if(checked && checked[0]!=EOS)
         {
@@ -1610,10 +1610,10 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
                 box->Check(i);
             }
         }
-      
+
       dialog.SetSize(200, 320);
       dialog.Layout();
-      
+
       if(dialog.ShowModal()==wxID_OK)
         {
           strs.Clear();
@@ -1627,9 +1627,104 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
                 }
             }
           strs.Trim();
-          
+
           if(label && newUnion)
             *label = TtaStrdup((const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8));
+          if(types)
+            *types = TtaStrdup((const char*)strs.mb_str(wxConvUTF8));
+          return TRUE;
+        }
+    }
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  QueryUseFromUser
+  Query the label, the types and the option value for a xt:use
+  to a user.
+  Return FALSE if user cancel the query or an error occurs.
+  ----------------------------------------------------------------------*/
+ThotBool QueryUseFromUser(const char* proposed, const char* checked, char* label, int labelsz, char**types, ThotBool* option)
+{
+#ifdef TEMPLATES
+  int i;
+  unsigned int n, count;
+  wxDialog dialog;
+  wxString strs = TtaConvMessageToWX(proposed);
+  wxArrayString arr = wxStringTokenize(strs), arrchecked;
+
+  wxCheckListBox* box;
+
+  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
+    {
+
+      dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_USE)));
+
+
+      XRCCTRL(dialog, "wxID_LABEL_LABEL", wxStaticText)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_USELABEL)));
+      XRCCTRL(dialog, "wxID_CANCEL", wxButton)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL) ));
+      XRCCTRL(dialog, "wxID_OK", wxButton)->
+            SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
+
+      if(option==NULL)
+        XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->Hide();
+      else
+        XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->SetValue(*option);
+
+      if(label!=0 && *label!=0)
+        {
+          XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetValue(TtaConvMessageToWX(label));
+          i = arr.Index(TtaConvMessageToWX(label));
+          if(i!=wxNOT_FOUND)
+            arr.RemoveAt(i);
+        }
+      if(labelsz==0)
+        XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->Disable();
+
+
+      wxSizer* sz = dialog.GetSizer();
+      box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
+      sz->Insert(2, box, 1, wxEXPAND);
+      sz->Layout();
+
+      box->Append(arr);
+      if(checked && checked[0]!=EOS)
+        {
+          arrchecked = wxStringTokenize(TtaConvMessageToWX(checked));
+          count =  box->GetCount();
+          for(i=0; i<(int)count; i++)
+            {
+              if(arrchecked.Index(box->GetString(i))!=wxNOT_FOUND)
+                box->Check(i);
+            }
+        }
+
+      dialog.SetSize(200, 320);
+      dialog.Layout();
+
+      if(dialog.ShowModal()==wxID_OK)
+        {
+          strs.Clear();
+          n = box->GetCount();
+          for(i=0; i<(int)n; i++)
+            {
+              if(box->IsChecked(i))
+                {
+                  strs += box->GetString(i);
+                  strs += wxT(" ");
+                }
+            }
+          strs.Trim();
+
+          if(label && labelsz)
+            strncpy(label, (const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8), labelsz);
+
+          if(option)
+            *option = XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->IsChecked();
+
           if(types)
             *types = TtaStrdup((const char*)strs.mb_str(wxConvUTF8));
           return TRUE;
