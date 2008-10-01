@@ -82,6 +82,27 @@ ThotWidget CatWidget(int ref);
 #endif /* _WINDOWS */
 
 #ifdef _SVG
+
+/*----------------------------------------------------------------------
+  GetGraphicsUnit
+  -----------------------------------------------------------------------*/
+Element GetGraphicsUnit(Element element)
+{
+  Element leaf;
+  ElementType   elType;
+
+  for(leaf = TtaGetFirstChild(element);
+      leaf;
+      TtaNextSibling(&leaf))
+    {
+      elType = TtaGetElementType(leaf);
+      if(elType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
+	break;
+    }
+
+  return leaf;
+}
+
 /*----------------------------------------------------------------------
   StyleElemPasted
   An element style has been pasted.

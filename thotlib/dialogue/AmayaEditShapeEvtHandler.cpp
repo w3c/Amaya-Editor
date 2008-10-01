@@ -45,6 +45,7 @@
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaEditShapeEvtHandler.h"
+#include "svgedit.h"
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
@@ -186,7 +187,7 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler (AmayaFrame * p_frame,
   e_box = e_ab->AbBox;
 
   /* Get the GRAPHICS leaf */
-  leaf = TtaGetLastChild((Element)el);
+  leaf = GetGraphicsUnit(el);
   if (!leaf)
     {
       finished = true;

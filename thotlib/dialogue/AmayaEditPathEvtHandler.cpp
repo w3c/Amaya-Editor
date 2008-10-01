@@ -35,6 +35,7 @@
 #include "windowdisplay_f.h"
 #include "viewapi_f.h"
 #include "content.h"
+#include "svgedit.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -116,7 +117,8 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame *p_frame,
     }
 
   /* Get the GRAPHICS leaf */
-  leaf = TtaGetLastChild((Element)el);
+  leaf = GetGraphicsUnit(el);
+
   if (!leaf)
     {
       finished = true;

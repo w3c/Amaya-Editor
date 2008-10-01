@@ -45,6 +45,7 @@
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaCreatePathEvtHandler.h"
+#include "svgedit.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaCreatePathEvtHandler, wxEvtHandler)
 
@@ -125,7 +126,8 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
   box = pAb -> AbBox;
 
   /* Get the GRAPHICS leaf */
-  leaf = TtaGetLastChild((Element)el);
+  leaf = GetGraphicsUnit((Element)el);
+
   if (!leaf)
     {
       finished = true;

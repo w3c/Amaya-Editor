@@ -602,7 +602,7 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   ThotBool             oldStructureChecking, strokeWidth;
 
   /* @@@@ disable the marker feature for the moment @@@@ */
-  return;
+    return;
 
   elType = TtaGetElementType (el);
   oldStructureChecking = TtaGetStructureChecking (doc);
@@ -618,15 +618,12 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   if (attr)
     TtaRemoveAttribute (copy, attr, doc);
 
-/*   /\* insert the copy in the tree as the last child of the host element *\/ */
-/*   child = TtaGetLastChild (el); */
-/*   if (child) */
-/*     TtaInsertSibling (copy, child, FALSE, doc); */
-/*   else */
-/*     TtaInsertFirstChild (&copy, el, doc); */
-
-  /* @@@@ For the moment, markers are the first children @@@@ */ 
-  TtaInsertFirstChild (&copy, el, doc);
+  /* insert the copy in the tree as the last child of the host element */
+  child = TtaGetLastChild (el);
+  if (child)
+    TtaInsertSibling (copy, child, FALSE, doc);
+  else
+    TtaInsertFirstChild (&copy, el, doc);
 
   /* add a transform (translate) to the copied marker to place it on the
      relevant vertex of the host element */

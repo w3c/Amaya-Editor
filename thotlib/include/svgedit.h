@@ -3,6 +3,7 @@
 #ifndef __SVGEDIT_H__
 #define __SVGEDIT_H__
 
+extern Element GetGraphicsUnit(Element element);
 
 extern void GetArrowCoord(int *x1, int *y1, int *x2, int *y2);
 extern ThotBool AskSurroundingBox(
