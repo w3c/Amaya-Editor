@@ -2064,6 +2064,10 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
           if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
             /* It's a simple graphic shape */
             {
+              if (pParent && pParent->ElParent &&
+                  TypeHasException (ExcIsMarker, pParent->ElParent->ElTypeNumber,
+                                    pParent->ElParent->ElStructSchema))
+                return (NULL);
               pBox = IsOnShape (pAb, lowerX, y, pointselect);
               if (pBox)
                 {
