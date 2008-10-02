@@ -75,6 +75,7 @@
 #define ExcListItemBreak 49
 
 /* Draw exceptions */
+#define ExcIsMarker 309
 #define ExcSelectParent 310
 #define ExcHighlightChildren 311
 #define ExcExtendedSelection 312

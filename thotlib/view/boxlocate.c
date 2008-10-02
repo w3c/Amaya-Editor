@@ -280,6 +280,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
 {
   PtrBox              pBox;
   PtrElement          pEl = NULL, firstEl;
+  PtrDocument         selecteddoc;
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb;
   PtrElement          el = NULL;
@@ -439,7 +440,8 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
               if (SkipClickEvent)
                 /* the application asks Thot to do nothing */
                 return SkipClickEvent;
-	  
+              // keep in memory the current selected document
+              selecteddoc = SelectedDocument;
               ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 
               if(FrameTable[frame].FrView == 1 &&
@@ -513,8 +515,9 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                       /* click on an SVG element. Does the user want to
                          move it ? */
                       GetDocAndView (frame, &pDoc, &view);
-                      if(!(pDoc->DocReadOnly) &&
-                         !(ElementIsReadOnly(pEl)))
+                      if (!pDoc->DocReadOnly && !ElementIsReadOnly(pEl) &&
+                          // it's a possible synchrosize
+                          (selecteddoc == NULL || selecteddoc == SelectedDocument))
                         {
                           *Selecting = FALSE;
                           if(AskTransform(doc, NULL, NULL,

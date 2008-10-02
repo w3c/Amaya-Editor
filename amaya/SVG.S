@@ -2472,8 +2472,8 @@ EXCEPT
 
    { exceptions for elements }
    SVG:           IsDraw, MoveResize, NoMove, ClickableSurface;
-   g:             NoMove, NoResize,
-                  NoCreate, IsGroup, NoShowBox;
+   g:             NoMove, NoResize, NoCreate, IsGroup, NoShowBox;
+   marker_:       IsMarker;
    defs:          NoMove, NoResize, NoShowBox, NoCreate;
    linearGradient:NoMove, NoResize, NoShowBox, NoCreate;
    stop:                NoMove, NoResize, NoShowBox, NoCreate;
