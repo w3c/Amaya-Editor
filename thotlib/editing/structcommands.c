@@ -2839,11 +2839,11 @@ static ThotBool CanInsertBySplitting (PtrElement *pEl, int charSplit,
   CreateNewElement
   The user wants to create a new given typed element (typeNum, pSS), for
   the pDoc document, near the current selection.
-  Before is set TRUE when the new element should be inserted before,
+  before is set TRUE when the new element should be inserted before,
   FALSE if it should replace the selection.
   ----------------------------------------------------------------------*/
 ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
-                       ThotBool Before)
+                       ThotBool before)
 {
   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
   PtrElement          pElem, pElSplit, pSplitEl, pNextEl, pParent;
@@ -2930,12 +2930,11 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
               if (firstSel == lastSel && firstChar == 1)
                 firstChar = 0; 
             }
-          if (Before)
+          if (before ||  (pSS && !strcmp (pSS->SsName, "Template")))
+            /* don't try to surround or transform template elements */
             InsertionPoint = TRUE;
           else if (firstChar <= 1 && lastChar == 0)
-            /* le premier et le dernier element selectionnes sont
-               entierement selectionne's */
-            /* on essaie de changer le type des elements selectionne's */
+            /* first and last selected elements are complete */
             {
               /* on essaie d'abord de transformer l'ensemble des elements
                  selectionne's en un element du type demande' */
@@ -2948,6 +2947,7 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                   lastChar = 0;
                   SelectSiblings (&firstSel, &lastSel, &firstChar, &lastChar);
                 }
+
               if (firstSel->ElParent != lastSel->ElParent)
                 ok = FALSE;
               else
@@ -2967,11 +2967,12 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                 {
                   elType.ElTypeNum = typeNum;
                   elType.ElSSchema = (SSchema) pSS;
- 
+                  
                   if (TransformIntoFunction != NULL)
                     ok = (*(Func2)TransformIntoFunction) (
-                                                          (void*)&elType, /* SG : the @ should be passed in order to be c++ compliant */
-                                                          (void*)((Document) IdentDocument (pSelDoc)));
+                                        (void*)&elType,
+                                        /* SG : the @ should be passed in order to be c++ compliant */
+                                         (void*)((Document) IdentDocument (pSelDoc)));
                 }
               /* si ca n'a pas marche' et si plusieurs elements sont
                  selectionne's, on essaie de transformer chaque element
@@ -3065,7 +3066,7 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
           else
             {
               pEl = firstSel;
-              createAfter = FALSE;
+              createAfter = !before;
               if (lastSel->ElTerminal &&
                   (lastSel->ElLeafType == LtText ||
                    lastSel->ElLeafType == LtPicture) &&

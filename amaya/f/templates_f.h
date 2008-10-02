@@ -36,6 +36,12 @@ extern ThotBool Template_CanInsertRepeatChild ( Element el );
 extern char *Template_GetListTypes ( XTigerTemplate t,
                                      Element el );
 extern ThotBool BagButtonClicked ( NotifyElement *event );
+extern void DoReplicateUseElement ( XTigerTemplate t,
+                                    Document doc,
+                                    int view,
+                                    Element el,
+                                    Element repeatEl,
+                                    char *name );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
@@ -123,6 +129,12 @@ extern ThotBool Template_CanInsertRepeatChild ( Element el );
 extern char *Template_GetListTypes ( XTigerTemplate t,
                                        Element el );
 extern ThotBool BagButtonClicked ( NotifyElement *event );
+extern void DoReplicateUseElement ( XTigerTemplate t,
+                                      Document doc,
+                                      int view,
+                                      Element el,
+                                      Element repeatEl,
+                                      char *name );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );

@@ -130,6 +130,12 @@ BOXES
 #endif
    END;
 
+  Option_space: BEGIN
+    Content: (Text '  ');
+    HorizPos: Left = Creator . Left + 10 px;
+    VertPos: Top = Creator . Top + 4 px;
+   END;
+
   UsedTypes: BEGIN
 #ifdef INSTANCE
     Visibility: 0;
@@ -155,9 +161,6 @@ BOXES
    END;
 
   AttrName: BEGIN
-#ifdef INSTANCE
-    Visibility: 0;
-#else
     Visibility: 0;
     Content: (Text ' ' AttributeName Text '=');
     IN Structure_view BEGIN
@@ -167,13 +170,9 @@ BOXES
       Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
       Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
  	    END;
-#endif
    END;
 
   AttrValue: BEGIN
-#ifdef INSTANCE
-    Visibility: 0;
-#else
     Visibility: 0;
     Content: (AttributeValue);
     IN Structure_view BEGIN
@@ -183,7 +182,6 @@ BOXES
       Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
       Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
       END;
-#endif
    END;
 
   UnionAttrName: BEGIN
@@ -422,6 +420,20 @@ BOXES
 		Visibility: 0;
 	END;
 #endif
+
+ IndexBox: BEGIN
+        Content: Picture 'AmayaSrcSyncIndex.gif';
+        HorizPos: Left = Root . Left;
+        VertPos: Top = Creator . Top;
+        VertOverflow : Yes;
+        HorizOverflow : Yes;
+        Width: Enclosed . Width;
+        Height: Enclosed . Height;
+        Inline: No;
+        Visibility: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
 
 RULES
  Document:
@@ -782,7 +794,7 @@ RULES
 		BorderRightColor: 	Blue;
 		PaddingLeft: 				5 px;
 		PaddingRight: 			2 px;
-		PaddingTop: 				2 px;
+		PaddingTop: 				5 px;
 		PaddingBottom: 			2 px;
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
@@ -889,38 +901,48 @@ ATTRIBUTES
   name:
   BEGIN
 	CreateBefore(ComponentName);
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   ref_name:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   title:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   includeAt:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(UnionAttrName);
 	CreateBefore(UnionAttrValue);
+#endif
 	END;    
 
   exclude:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(UnionAttrName);
 	CreateBefore(UnionAttrValue);
+#endif
 	END;    
 
   src:
   BEGIN
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
+#ifndef INSTANCE
+#endif
 	END;    
 	
   minOccurs:
@@ -937,61 +959,95 @@ ATTRIBUTES
 
   currentType:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 	
   type:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   types:
   BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 #ifndef INSTANCE
     if Empty
       CreateLast(UsedTypes);
 #endif
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
+	END;
+
+  types= 'string':
+  BEGIN
+  if option
+    CreateFirst (Option_space);
 	END;
 
   useAt:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   defaultAt:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   fixed:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   values:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   version:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
 
   templateVersion:
   BEGIN
+#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+#endif
 	END;    
+
+  Highlight:
+  BEGIN
+  if TEXT_UNIT
+     CreateAfter (IndexBox);
+  if SYMBOL_UNIT
+     CreateAfter (IndexBox);
+  if PICTURE_UNIT
+     CreateAfter (IndexBox);
+  if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
+     CreateLast (IndexBox);
+  END;
 
   Unknown_attribute:
 	BEGIN

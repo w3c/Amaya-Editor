@@ -2,14 +2,14 @@ APPLICATION Template;
 
 DEFAULT
    BEGIN
-  	  ElemActivate.Pre -> DoubleClick;
-	  ElemClick.Pre -> SimpleClick;
-	  ElemRClick.Pre -> SimpleRClick;
-	  ElemLClick.Pre -> SimpleLClick;
-	  ElemNew.Pre -> TemplateElementWillBeCreated;
-	  ElemDelete.Pre -> TemplateElementWillBeDeleted;
-      ElemSelect.Post -> SelectionChanged;
-      AttrMenu.Pre ->    TemplateAttrInMenu;
+  	ElemActivate.Pre -> DoubleClick;
+    ElemClick.Pre -> SimpleClick;
+    ElemRClick.Pre -> SimpleRClick;
+    ElemLClick.Pre -> SimpleLClick;
+    ElemNew.Pre -> TemplateElementWillBeCreated;
+    ElemDelete.Pre -> TemplateElementWillBeDeleted;
+    ElemSelect.Post -> SelectionChanged;
+    AttrMenu.Pre ->    TemplateAttrInMenu;
    END;
    
 ELEMENTS

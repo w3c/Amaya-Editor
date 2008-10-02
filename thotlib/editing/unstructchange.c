@@ -1519,12 +1519,43 @@ ThotBool IsXMLEditMode ()
 }
 
 
+
+/*----------------------------------------------------------------------
+  AllChildrenReadOnly
+  ----------------------------------------------------------------------*/
+static ThotBool AllChildrenReadOnly (PtrElement el)
+{
+  PtrElement prev, next;
+
+  if (el)
+    {
+      prev = el->ElPrevious;
+      while (prev)
+        {
+          if (ElementIsReadOnly (prev))
+            prev = prev->ElPrevious;
+          else
+            return FALSE;
+        }
+      next = el->ElNext;
+      while (next)
+        {
+          if (ElementIsReadOnly (next))
+            next = next->ElNext;
+          else
+            return FALSE;
+        }
+    }
+  return TRUE;
+}
+
 /*----------------------------------------------------------------------
   TtcCreateElement handles the Return (or Enter) key.
   ----------------------------------------------------------------------*/
 void TtcCreateElement (Document doc, View view)
 {
-  PtrElement          firstSel, lastSel, pListEl, pE, pE1, pNew, pSibling, parent;
+  PtrElement          firstSel, lastSel, pListEl, pE, pE1, pNew;
+  PtrElement           pSibling, parent;
   PtrElement          pClose, pAncest, pElem, pParent, pElDelete, pPrevious;
   PtrElement          pNext, pElReplicate, pAggregEl, pSib, firstEl, lastEl;
   PtrDocument         pDoc;
@@ -1536,7 +1567,7 @@ void TtcCreateElement (Document doc, View view)
   ThotBool            empty, list, optional, deleteEmpty, histSeq,
                       xmlmode, previous, following, specialBreak,
                       insertionPoint, extendHistory, prevHist;
-  ThotBool            lock = TRUE;
+  ThotBool            lock = TRUE, isTemplate;
   DisplayMode         dispMode;
 
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
@@ -1556,6 +1587,26 @@ void TtcCreateElement (Document doc, View view)
         ActiveFrame = frame;
     }
   extendHistory = FALSE;
+
+  // check editing within template instances
+  if (firstSel == lastSel &&
+      ((firstChar == 0 && lastChar == 0) || firstChar >= firstSel->ElVolume) &&
+      firstSel->ElParent && firstSel->ElStructSchema &&
+      !strcmp (firstSel->ElStructSchema->SsName, "Template") ||
+      (ElementIsReadOnly (firstSel) &&
+       !strcmp (firstSel->ElParent->ElStructSchema->SsName, "Template")))
+    {
+      // move the selection to a level that allows editing
+      if (firstSel->ElLeafType == LtText)
+        // don't duplicate a text element
+        firstSel = firstSel->ElParent;
+      while (firstSel->ElParent && AllChildrenReadOnly (firstSel) &&
+             ElementIsReadOnly (firstSel->ElParent))
+        firstSel = firstSel->ElParent;
+      lastSel = firstSel;
+      firstChar = lastChar = 0;
+    }
+
   xmlmode = IsXMLEditMode ();
   if (!xmlmode)
     /* We should perhaps do the following whatever the editing mode,
@@ -1586,20 +1637,26 @@ void TtcCreateElement (Document doc, View view)
               dispMode = TtaGetDisplayMode (doc);
               if (dispMode == DisplayImmediately)
                 TtaSetDisplayMode (doc, DeferredDisplay);
+              // detect if a template element is created
+              isTemplate = (firstSel->ElStructSchema &&
+                             !strcmp (firstSel->ElStructSchema->SsName, "Template"));
+              ok = FALSE;
               if (!TypeHasException (ExcIsCell, firstSel->ElTypeNumber, firstSel->ElStructSchema))
-                {
-                  // duplicate first the first selected element
-                  CreateNewElement (firstSel->ElTypeNumber, firstSel->ElStructSchema,
-                                    pDoc, TRUE);
-                  TtaExtendUndoSequence (doc);
-                }
+                // duplicate first the first selected element
+                ok = CreateNewElement (firstSel->ElTypeNumber, firstSel->ElStructSchema,
+                                       pDoc, !isTemplate);
+              if (ok)
+                TtaExtendUndoSequence (doc);
               // keep the new selection
               GetCurrentSelection (&pDoc, &pE, &pE1, &i, &j);
-              // restore the initial selection
-              SelectElement (pDoc, firstSel, TRUE, FALSE, TRUE);
-              if (lastSel != firstSel)
-                ExtendSelection (lastSel, 0, TRUE, FALSE, FALSE);
-              CutCommand (FALSE, FALSE);
+              if (!isTemplate && ok && pE != firstSel)
+                {
+                  // restore the initial selection
+                  SelectElement (pDoc, firstSel, TRUE, FALSE, TRUE);
+                  if (lastSel != firstSel)
+                    ExtendSelection (lastSel, 0, TRUE, FALSE, FALSE);
+                  CutCommand (FALSE, FALSE);
+                }
               // set the new selection
               SelectElement (pDoc, pE, TRUE, TRUE, TRUE);
               if (dispMode == DisplayImmediately)
@@ -1693,7 +1750,7 @@ void TtcCreateElement (Document doc, View view)
                       pAncest = pAncest->ElParent;
                     pListEl = AncestorList (pAncest);
                   }
-                if (TypeHasException (ExcNoBreakByReturn,pParent->ElTypeNumber,
+                if (TypeHasException (ExcNoBreakByReturn, pParent->ElTypeNumber,
                                       pParent->ElStructSchema))
                   /* the parent element can't be split with the Return key.
                      Do not delete the empty element, but create a new copy
@@ -1802,10 +1859,7 @@ void TtcCreateElement (Document doc, View view)
                             createAfter = TRUE;
                             pElReplicate = pParent;
                             pAncest = pElReplicate->ElParent;
-                            while (pAncest && pAncest->ElStructSchema &&
-                                   !strcmp (pAncest->ElStructSchema->SsName, "Template"))
-                              pAncest = pAncest->ElParent;
-
+                            //pAncest = ParentNotTemplate (pAncest);
                             while (pAncest && pAncest != pListEl)
                               {
                                 pElReplicate = pAncest;
@@ -1824,16 +1878,13 @@ void TtcCreateElement (Document doc, View view)
                         pElDelete = pElem;
                         createAfter = FALSE;
                         pElReplicate = pParent;
-                            pAncest = pElReplicate->ElParent;
-                            while (pAncest && pAncest->ElStructSchema &&
-                                   !strcmp (pAncest->ElStructSchema->SsName, "Template"))
-                              pAncest = pAncest->ElParent;
-
-                            while (pAncest != pListEl)
-                              {
-                                pElReplicate = pAncest;
-                                pAncest = pAncest->ElParent;
-                              }
+                        pAncest = pElReplicate->ElParent;
+                        //pAncest = ParentNotTemplate (pAncest);
+                        while (pAncest != pListEl)
+                          {
+                            pElReplicate = pAncest;
+                            pAncest = pAncest->ElParent;
+                          }
                       }
                     else if (!TypeHasException (ExcNoCreate,
                                                 pParent->ElTypeNumber,
@@ -2015,7 +2066,8 @@ void TtcCreateElement (Document doc, View view)
                 {
                   specialBreak = TRUE;
                   pElReplicate = pE;
-                  pListEl = ParentNotTemplate(pE);
+                  pListEl = pE->ElParent;
+                  //pListEl = ParentNotTemplate(pE);
                 }
             }
 
@@ -2067,9 +2119,7 @@ void TtcCreateElement (Document doc, View view)
                 {
                   pAncest = lastEl;
                   /* ignore the next Template ancestors */
-                  while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
-                         !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
-                    pAncest = pAncest->ElParent;
+                  //pAncest = ParentNotTemplate (pAncest);
                   pListEl = AncestorList (pAncest);
                 }
               /* si c'est la fin d'une liste de Textes on remonte */
@@ -2083,17 +2133,15 @@ void TtcCreateElement (Document doc, View view)
                                          pListEl->ElTypeNumber,
                                          pListEl->ElStructSchema))
                     {
-                      pE1 = ParentNotTemplate(pListEl);
+                      pE1 = pListEl->ElParent;//pE1 = ParentNotTemplate(pListEl);
                       if (pE1 && GetElementConstruct (pE1, &nComp) == CsAny)
                         pListEl = pE1;
                       else
                         {
                           pAncest = pListEl;
                           /* ignore the next Template ancestors */
-                          while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
-                                 !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
-                            pAncest = pAncest->ElParent;
-                        pListEl = AncestorList (pAncest);
+                          //pAncest = ParentNotTemplate (pAncest);
+                          pListEl = AncestorList (pAncest);
                         }
                     }
                 }
@@ -2134,9 +2182,9 @@ void TtcCreateElement (Document doc, View view)
                       pE = pE->ElParent;
                     }
                 }
-              while (pE != pListEl && pListEl != NULL && pE != NULL &&
-                    (pE->ElStructSchema &&
-                     strcmp (pE->ElStructSchema->SsName, "Template")));
+              while (pE != pListEl && pListEl && pE /*&&
+                     (pE->ElStructSchema &&
+                       strcmp (pE->ElStructSchema->SsName, "Template"))*/);
 
               /* a priori, on creera le meme type d'element */
               if (pElReplicate)

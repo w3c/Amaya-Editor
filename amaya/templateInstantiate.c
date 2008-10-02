@@ -810,7 +810,7 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
 #ifdef TEMPLATES
   ElementType elType;
   Element     child;
-  char        currentType[MAX_LENGTH];
+  char        currentType[MAX_LENGTH], *ptr;
   Declaration decl;
   
   if (t && el && doc)
@@ -827,6 +827,14 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
             case Template_EL_useSimple:
               GiveAttributeStringValueFromNum(el, Template_ATTR_currentType,
                                               (char*)currentType, NULL);
+              if (currentType[0] == EOS)
+                {
+                  GiveAttributeStringValueFromNum(el, Template_ATTR_types,
+                                                  (char*)currentType, NULL);
+                  ptr = strstr (currentType, " ");
+                  if (ptr)
+                    *ptr = EOS;
+                }
               decl = Template_GetDeclaration(t, currentType);
               if (decl)
                 {

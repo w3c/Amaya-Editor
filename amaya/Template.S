@@ -10,6 +10,8 @@ ATTR
   { generic attributes for internal use }
   Unknown_attribute = TEXT;	{ to store an unknown attribute }
   xmlid = Text;		{ id }
+  Highlight = Yes_;    { to show the HTML element corresponding to the
+			  current selection in the source view }
 
 CONST
 
@@ -78,26 +80,27 @@ STRUCT
     ) = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
-  XMLPI:              ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
-  PI_line:            Hidden, MarkupPreserve;
-  Comment\240:        ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
-  Comment_line:       Hidden, MarkupPreserve;
-  useEl:              NoReplicate, NoBreakByReturn, ClickableSurface;
-  component:          NewRoot;
-  useSimple:          NoReplicate, NoBreakByReturn;
-  repeat:             NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface;
-  {option:             NoReplicate, NoBreakByReturn, NoCreate;}
-  bag:                NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak, ClickableSurface;
+  XMLPI:             ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+  PI_line:           Hidden, MarkupPreserve;
+  Comment\240:       ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
+  Comment_line:      Hidden, MarkupPreserve;
+  useEl:             NoBreakByReturn, ClickableSurface;
+  component:         NewRoot;
+  useSimple:         NoBreakByReturn;
+  repeat:            NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface, ListItemBreak;
+  {option:           NoReplicate, NoBreakByReturn, NoCreate;}
+  bag:               NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak, ClickableSurface;
   {Hiding unkown and language attributes}
-  Unknown_attribute:  Invisible;
-  Language:           Invisible;
-  types :             GiveTypes, DuplicateAttr;
-  option:             DuplicateAttr;
-  currentType:        Invisible;
+  Highlight:        Invisible;
+  Unknown_attribute:Invisible;
+  Language:         Invisible;
+  types :           GiveTypes, DuplicateAttr;
+  option:           DuplicateAttr;
+  currentType:      Invisible;
   ref_name:		      GiveName;
-  name:			      GiveName;
-  title:              GiveName;
-  prompt:             Invisible;
+  name:			        GiveName;
+  title:            GiveName;
+  prompt:           Invisible;
   xmlid:		      CssId;
 	
 END

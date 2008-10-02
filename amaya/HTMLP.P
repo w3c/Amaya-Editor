@@ -8335,7 +8335,7 @@ ATTRIBUTES
            CreateAfter (IndexBox);
   if Image_Input
            CreateAfter (IndexBox);
-        if not TEXT_UNIT and not PICTURE_UNIT and not SYMBOL_UNIT and not IMG and not Image_Input
+  if not TEXT_UNIT and not PICTURE_UNIT and not SYMBOL_UNIT and not IMG and not Image_Input
            CreateLast (IndexBox);
         END;
 #endif

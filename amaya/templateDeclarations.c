@@ -2570,29 +2570,29 @@ ThotBool Template_CanInsertElementInBagElement (Document doc, const char* type, 
   \param parent Parent of the new element.
   \param position Position where insert element.
   ----------------------------------------------------------------------*/
-ThotBool Template_CanInsertElementInUse (Document doc, ElementType type, char* useType, Element parent, int position)
+ThotBool Template_CanInsertElementInUse (Document doc, ElementType type,
+                                         char* useType, Element parent, int position)
 {
 #ifdef TEMPLATES
   XTigerTemplate  t;
   Element         elem;
   t = GetXTigerDocTemplate(doc);
   if (t && useType)
-  {
-    // Allow only simple type element.
-    if (Template_GetSimpleTypeDeclaration(t, useType))
     {
-      if (position==0)
-        return TtaCanInsertFirstChild(type, parent, doc);
-      else
-      {
-        for(elem = TtaGetFirstChild(parent); position>0 && elem; position--, TtaNextSibling(&elem));
-        if (elem)
+      // Allow only simple type element.
+      if (Template_GetSimpleTypeDeclaration (t, useType))
         {
-          return TtaCanInsertSibling(type, elem, FALSE, doc);
+          if (position == 0)
+            return TtaCanInsertFirstChild(type, parent, doc);
+          else
+            {
+              for (elem = TtaGetFirstChild(parent); position>0 &&
+                     elem; position--, TtaNextSibling(&elem));
+              if (elem)
+                return TtaCanInsertSibling (type, elem, FALSE, doc);
+            }       
         }
-      }       
     }
-  }
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -2604,8 +2604,8 @@ ThotBool Template_CanInsertElementInUse (Document doc, ElementType type, char* u
   Use it to test if a xt:component or a xt:use is used in a template.
   // Param validity must be tested by caller.
   ----------------------------------------------------------------------*/
-static ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc,
-                                                    Element elem, const char* name)
+ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc,
+                                           Element elem, const char* name)
 {
 #ifdef TEMPLATES
   ElementType  elType;
@@ -2633,7 +2633,8 @@ static ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc
               return SearchSet_Search(set, (void*) name, NULL)!=NULL;
             }
         }
-      else if(elType.ElTypeNum==Template_EL_useEl || elType.ElTypeNum==Template_EL_useSimple)
+      else if(elType.ElTypeNum==Template_EL_useEl ||
+              elType.ElTypeNum==Template_EL_useSimple)
         {
           schema = TtaGetSSchema ("Template", doc);
           if(elType.ElSSchema == schema)
@@ -2651,7 +2652,7 @@ static ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc
       child = TtaGetFirstChild(elem);
       while(child)
         {
-          if(Template_IsUsedComponentInSubtree(t, doc, child, name))
+          if (Template_IsUsedComponentInSubtree (t, doc, child, name))
             return TRUE;
           TtaNextSibling(&child);
         }
@@ -2666,7 +2667,7 @@ static ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc
   Test if a component is used by xt:use or xt:union.
   Use it to test if a xt:component or a xt:use is used in a template.
   ----------------------------------------------------------------------*/
-ThotBool Template_IsUsedComponent(XTigerTemplate t, Document doc, const char* name)
+ThotBool Template_IsUsedComponent (XTigerTemplate t, Document doc, const char* name)
 {
 #ifdef TEMPLATES
   Element elem;
