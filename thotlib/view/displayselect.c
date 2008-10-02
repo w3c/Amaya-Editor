@@ -868,8 +868,9 @@ void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
   ViewFrame          *pFrame;
 
   if (pAb && pAb->AbElement && pAb->AbElement->ElStructSchema &&
-      !TypeHasException (ExcIsMarker, pAb->AbElement->ElTypeNumber,
-                         pAb->AbElement->ElStructSchema))
+      (!status ||
+       !TypeHasException (ExcIsMarker, pAb->AbElement->ElTypeNumber,
+                          pAb->AbElement->ElStructSchema)))
     {
       if (pAb->AbSelected)
         {
