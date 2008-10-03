@@ -3457,7 +3457,8 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
     attrType.AttrTypeNum = SVG_ATTR_points;
 
   /* Get the attribute value from the GRAPHICS leaf */
-  leaf = TtaGetLastChild(el);
+  leaf = GetGraphicsUnit(el);
+
   if(isPath)
     buffer = TtaGetPathAttributeValue (leaf, w, h);
   else
