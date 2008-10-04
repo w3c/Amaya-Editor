@@ -4796,8 +4796,16 @@ static double BisectorAngle(double dxPrev, double dyPrev,
 void TtaGivePolylineAngle (Element element, int rank, double *angle)
 {
   PtrTextBuffer       buff, prevBuff;
-  int                 x, y, xPrev, yPrev, xNext, yNext;
+  int                 x, y, xPrev, yPrev, xNext, yNext, xStart, yStart;
   ThotBool            first, last;
+
+  /* TODO:
+
+     - zero-length path segments F.5 'path' element implementation notes.
+     - when it's a <polygon/>, its last point is not the last element of the
+       polyline buffer.
+     - directionality of the first & last point in a closed polyline.
+ */
 
   UserErrorCode = 0;
   *angle = 0;
@@ -4811,8 +4819,12 @@ void TtaGivePolylineAngle (Element element, int rank, double *angle)
     {
       /* Looking for the buffer containing the point which rank is: rank */
       first = (rank == 1);
+
       last = (rank == ((PtrElement) element)->ElNPoints - 1);
       buff = ((PtrElement) element)->ElPolyLineBuffer;
+      xStart = buff->BuPoints[1].XCoord;
+      yStart = buff->BuPoints[1].YCoord;
+
       prevBuff = NULL;
       while (rank >= buff->BuLength && buff->BuNext != NULL)
         {
@@ -4846,9 +4858,6 @@ void TtaGivePolylineAngle (Element element, int rank, double *angle)
 	      xNext = buff->BuNext->BuPoints[1].XCoord;
 	      yNext = buff->BuNext->BuPoints[1].YCoord;
 	    }
-
-	  /* TODO: zero-length path segments
-	     F.5 'path' element implementation notes */
 
 	  if (first)
 	    /* first point in the polyline */
@@ -4966,6 +4975,7 @@ static ThotBool GivePathSegmentAngle(PtrPathSeg pPa,
       break;
     case PtQuadraticBezier:
     case PtCubicBezier:
+      /* Directionnality is given by the start/end handles */
       if(before)
 	{
 	  *dx = pPa->XEnd - pPa->XCtrlEnd;
@@ -4995,12 +5005,22 @@ static ThotBool GivePathSegmentAngle(PtrPathSeg pPa,
 				   ))
 	return FALSE;
 
+      /*
+       * For T going from theta1 to theta1 + dtheta,
+       *(x(T))   (cosf -sinf)(rx*cos(T))   (cx)
+       *(y(T)) = (sinf  cosf)(ry*cos(T)) + (cy)
+       *
+       *(x'(T))   *dx
+       *(y'(T)) = *dy
+       *
+       */
       if(before)
 	theta += dtheta;
 
       *dx = -cos(phi)*rx*sin(theta) - sin(phi)*ry*cos(theta);
       *dy = -sin(phi)*rx*sin(theta) + cos(phi)*ry*cos(theta);
 
+      /* Parameter T is decreasing */
       if(dtheta < 0)
 	{
 	  *dx = -*dx;
@@ -5029,7 +5049,7 @@ static ThotBool GivePathSegmentAngle(PtrPathSeg pPa,
   ----------------------------------------------------------------------*/
 void TtaGivePathAngle (Element element, int rank, double *angle)
 {
-  PtrPathSeg       pPa;
+  PtrPathSeg       pPa, pPaStart;
   PtrPathSeg       pPaPrevious = NULL, pPaNext = NULL;
   int              i;
   double           dxPrevious, dyPrevious, dxNext, dyNext;
@@ -5052,11 +5072,24 @@ void TtaGivePathAngle (Element element, int rank, double *angle)
 	{
 	  if(!pPa->PaPrevious || pPa->PaNewSubpath)
 	    {
+	      pPaStart = pPa;
+
 	      /* First point of a subpath */
 	      if(i == rank)
 		{
-		  pPaPrevious = NULL;
-		  pPaNext = pPa;
+		  while(pPa->PaNext && !(pPa->PaNext->PaNewSubpath))
+		    pPa = pPa->PaNext;
+
+		  if(pPa->XEnd == pPaStart->XStart &&
+		     pPa->YEnd == pPaStart->YStart)
+		    {
+		      /* A closed subpath */
+		      pPaPrevious = pPa;
+		    }
+		  else
+		    pPaPrevious = NULL;
+
+		  pPaNext = pPaStart;
 		  break;
 		}
 	      i++;
@@ -5068,7 +5101,15 @@ void TtaGivePathAngle (Element element, int rank, double *angle)
 		{
 		  /* Last point of a subpath */
 		  pPaPrevious = pPa;
-		  pPaNext = NULL;
+
+		  if(pPa->XEnd == pPaStart->XStart &&
+		     pPa->YEnd == pPaStart->YStart)
+		    {
+		      /* A closed subpath */
+		      pPaNext = pPaStart;
+		    }
+		  else
+		    pPaNext = NULL;
 		}
 	      else
 		{
