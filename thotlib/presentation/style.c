@@ -1826,7 +1826,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtHorizRef:
       rule->PrPosRule.PoDistUnit = int_unit;
       rule->PrPosRule.PoDistance = value;
-      rule->PrPosRule.PoRelation = RlSelf;
+      rule->PrPosRule.PoRelation = RlEnclosed;
       rule->PrPosRule.PoPosDef = HorizRef;
       rule->PrPosRule.PoPosRef = HorizRef;
       break;

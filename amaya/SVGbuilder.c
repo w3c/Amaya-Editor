@@ -602,7 +602,7 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   ThotBool             oldStructureChecking, strokeWidth;
 
   /* @@@@ disable the marker feature for the moment @@@@ */
-  //  return;
+  /* return; */
 
   elType = TtaGetElementType (el);
   oldStructureChecking = TtaGetStructureChecking (doc);
