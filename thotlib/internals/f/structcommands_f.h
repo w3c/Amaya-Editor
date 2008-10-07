@@ -40,7 +40,7 @@ extern ThotBool EmptyElement ( PtrElement pEl );
 extern ThotBool CreateNewElement ( int typeNum,
                                    PtrSSchema pSS,
                                    PtrDocument pDoc,
-                                   ThotBool Before );
+                                   ThotBool before );
 extern ThotBool TtaCreateElement ( ElementType elementType,
                                    Document document );
 extern ThotBool TtaInsertElement ( ElementType elementType,
@@ -85,7 +85,7 @@ extern ThotBool EmptyElement ( PtrElement pEl );
 extern ThotBool CreateNewElement ( int typeNum,
                                      PtrSSchema pSS,
                                      PtrDocument pDoc,
-                                     ThotBool Before );
+                                     ThotBool before );
 extern ThotBool TtaCreateElement ( ElementType elementType,
                                      Document document );
 extern ThotBool TtaInsertElement ( ElementType elementType,

@@ -1799,15 +1799,17 @@ ThotBool TtaIsTranscludedElement (Element element)
    ---------------------------------------------------------------------- */
 char *TtaGetElementTypeName (ElementType elementType)
 {
+  PtrSSchema schema = (PtrSSchema) elementType.ElSSchema;
+
   UserErrorCode = 0;
   nameBuffer[0] = EOS;
-  if (elementType.ElSSchema == NULL)
+  if (schema == NULL || schema->SsName == NULL)
     TtaError (ERR_invalid_parameter);
-  else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
-           elementType.ElTypeNum < 1)
+  else if (elementType.ElTypeNum > schema->SsNRules || elementType.ElTypeNum < 1)
     TtaError (ERR_invalid_element_type);
   else
-    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrName, ELEM_NAME_LENGTH);
+    strncpy (nameBuffer, schema->SsRule->SrElem[elementType.ElTypeNum - 1]->SrName,
+             ELEM_NAME_LENGTH);
   return nameBuffer;
 }
 

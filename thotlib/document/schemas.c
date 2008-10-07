@@ -2774,8 +2774,9 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
 void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
                               const char *nsPrefix, const char *nsUri)
 {
-  PtrNsUriDescr   uriDecl;
-  ThotBool        found;
+  PtrNsUriDescr    uriDecl;
+  PtrNsPrefixDescr prefixDecl;
+  ThotBool         found;
 
   if (element == NULL || element->ElTerminal || ElementIsHidden (element))
     // don't set a namespace declaration for terminal and hidden elements
@@ -2796,7 +2797,26 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
               if (uriDecl->NsUriName)
                 {
                   if (strcmp (uriDecl->NsUriName, nsUri) == 0)
-                    found = TRUE;
+                    {
+                      found = TRUE;
+                      prefixDecl = uriDecl->NsPtrPrefix;
+                      while (prefixDecl)
+                        {
+                          if (prefixDecl->NsPrefixElem == element)
+                            {
+                              if (nsPrefix &&
+                                  (prefixDecl->NsPrefixName == NULL ||
+                                   strcmp (nsPrefix, prefixDecl->NsPrefixName)))
+                                {
+                                  TtaFreeMemory (prefixDecl->NsPrefixName);
+                                  prefixDecl->NsPrefixName = TtaStrdup (nsPrefix);
+                                }
+                              // already registered
+                              return;
+                            }
+                          prefixDecl = prefixDecl->NsNextPrefixDecl;
+                        }
+                    }
                   else
                     uriDecl = uriDecl->NsNextUriDecl;
                 }
@@ -3093,7 +3113,7 @@ void GiveElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl,
 
   /* Search all the namespace declarations declared for this element */
   uriDecl = pDoc->DocNsUriDecl;
-  while (uriDecl != NULL)
+  while (uriDecl)
     {
       prefixDecl = uriDecl->NsPtrPrefix;
       while (prefixDecl != NULL)
@@ -3102,8 +3122,8 @@ void GiveElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl,
               (uriDecl->NsUriName || prefixDecl->NsPrefixName))
             {
               /* A Namespace declaration has been found for this element */
-	      *&prefixes[i] = prefixDecl->NsPrefixName;
-	      *&declarations[i] = uriDecl->NsUriName;
+              *&prefixes[i] = prefixDecl->NsPrefixName;
+              *&declarations[i] = uriDecl->NsUriName;
               i++;
             }
           prefixDecl = prefixDecl->NsNextPrefixDecl;
