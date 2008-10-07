@@ -3496,7 +3496,7 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
           v = 0;
           while (isdigit(buffer[i]))
             value[v++] = buffer[i++];
-          value[i] = EOS;
+          value[v] = EOS;
           new_ = (attr == NULL);
           if (new_)
             {
