@@ -123,7 +123,9 @@ typedef struct _RELOAD_context
   int        distance; /* distance from the top of the window to the top of this
                    element (% of the window height) */
   int        visibility; /* register the current visibility */
-  ThotBool   maparea; /* register the current maparea */
+  ThotBool   maparea; /* register the current maparea status */
+  ThotBool   withSrc; /* register source open */
+  ThotBool   withStruct; /* register structure open */
 } RELOAD_context;
 
 /* How are Network accesses provided ? */
