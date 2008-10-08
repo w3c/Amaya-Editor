@@ -3906,6 +3906,7 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
   RELOAD_context    *ctx;
   int                visibility;
   ThotBool           stopped_flag = FALSE, keep;
+  ThotBool           withStruct = FALSE, withSrc = FALSE;
 
 #ifdef _JAVA
   /* Switch OFF the Javascipt/DOM engine before loading the document */
@@ -3920,6 +3921,8 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
   method = ctx->method;
   visibility = ctx->visibility;
   MapAreas[doc] = ctx->maparea;
+  withSrc = ctx->withSrc;
+  withStruct = ctx->withStruct;
   if (!DocumentURLs[doc])
     /* the user has closed the corresponding document. Just free resources */
     {
@@ -4056,6 +4059,10 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
   if (form_data)
     TtaFreeMemory (form_data);
   TtaFreeMemory (ctx);
+  if (withSrc)
+    ShowSource (newdoc, 1);
+  if (withStruct)
+    ShowStructure (newdoc, 1);
 }
 
 
@@ -4064,27 +4071,41 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
   ----------------------------------------------------------------------*/
 void Reload (Document doc, View view)
 {
-  char               *tempfile;
-  char               *pathname;
-  char               *documentname;
-  char               *form_data;
-  int                 method;
   RELOAD_context     *ctx;
-  int                 toparse;
-  int                 mode;
-  int		       position;
-  int		       distance;
+  char               *tempfile, *pathname;
+  char               *documentname, *form_data;
+  char                viewName[30];
+  int                 toparse, method;
+  int                 mode, position, distance;
+  ThotBool            withStruct = FALSE, withSrc = FALSE;
 
-  /* if it is a source document, reload its corresponding document */
-  if (DocumentTypes[doc] == docSource)
-    doc = GetDocFromSource (doc);
   if (DocumentURLs[doc] == NULL)
     /* the document has not been loaded yet */
     return;
 
+  /* if it is a source document, reload its corresponding document */
+  if (DocumentTypes[doc] == docSource)
+    {
+      doc = GetDocFromSource (doc);
+      withSrc = TRUE;
+    }
+  else if (DocumentTypes[doc] != docCSS &&
+           DocumentTypes[doc] != docLog &&
+           DocumentTypes[doc] != docText)
+    {
+      // check if the source or structure view is open
+      withSrc = DocumentSource[doc] != 0;
+      if (!withSrc)
+        {
+          strcpy (viewName, "Structure_view");  
+          view = TtaGetViewFromName (doc, viewName);
+          withStruct = (view != 0 && TtaIsViewOpen (doc, view));
+        }
+    }
+
   /* abort all current exchanges concerning this document */
   StopTransfer (doc, 1);
-  if (!CanReplaceCurrentDocument (doc, view))
+  if (!CanReplaceCurrentDocument (doc, 1))
     /* abort the command */
     return;
   /* reload the document */
@@ -4098,7 +4119,6 @@ void Reload (Document doc, View view)
 #endif //TODO
   
   NormalizeURL (DocumentURLs[doc], 0, pathname, documentname, NULL);
-
   if (!IsW3Path (pathname) && !TtaFileExist (pathname))
     {
       /* Free Memory */
@@ -4141,6 +4161,8 @@ void Reload (Document doc, View view)
   ctx->distance = distance;
   ctx->visibility = TtaGetSensibility (doc, 1);
   ctx->maparea = MapAreas[doc];
+  ctx->withSrc = withSrc;
+  ctx->withStruct = withStruct;
   if (IsW3Path (pathname))
     {
       /* load the document from the Web */
@@ -4248,8 +4270,8 @@ void ShowSource (Document doc, View view)
   CHARSET          charset;
   char            *localFile;
   char            *s;
-  char  	   documentname[MAX_LENGTH];
-  char  	   tempdir[MAX_LENGTH];
+  char  	         documentname[MAX_LENGTH];
+  char  	         tempdir[MAX_LENGTH];
   Document         sourceDoc;
   NotifyElement    event;
 
