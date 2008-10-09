@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern int TtaGetPixelValue ( int val,
                               int unit,
                               Element element,
@@ -203,6 +204,7 @@ extern void ColApplyCSSRule ( Element el,
 
 #else /* __STDC__ */
 
+extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern int TtaGetPixelValue ( int val,
                                 int unit,
                                 Element element,

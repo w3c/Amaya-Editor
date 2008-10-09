@@ -32,6 +32,10 @@ XmlEntity        *pXhtmlEntityTable = XhtmlEntityTable;
 XmlEntity        *pMathEntityTable = MathEntityTable;
 
 #include "fetchXMLname_f.h"
+#ifdef TEMPLATES
+#include "templates.h"
+#include "templates_f.h"
+#endif /* TEMPLATES */
 
 /* Global variables used by the entity mapping */
 static int        XHTMLSup = 0;
@@ -99,18 +103,20 @@ SSchema GetXLinkSSchema (Document doc)
    --------------------------------------------------------------------*/
 SSchema GetTemplateSSchema (Document doc)
 {
-  SSchema       TemplateSSchema;
+  SSchema       TemplateSSchema = NULL;
   
-  TemplateSSchema = TtaGetSSchema ("Template",doc);
+#ifdef TEMPLATES
+  TemplateSSchema = TtaGetSSchema ("Template", doc);
   if (TemplateSSchema == NULL)
     {
-      if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_INSTANCE)
+      if (IsTemplateInstanceDocument(doc))
         TemplateSSchema = TtaNewNature (doc, TtaGetDocumentSSchema(doc), NULL,
                                     "Template", "TemplatePI");
       else
         TemplateSSchema = TtaNewNature (doc, TtaGetDocumentSSchema(doc), NULL,
                                         "Template", "TemplateP");
     }
+#endif /* TEMPLATES */
   return (TemplateSSchema);
 }
     

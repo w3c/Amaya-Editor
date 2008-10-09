@@ -24,6 +24,17 @@
 #include "nodialog.h"
 #include "style.h"
 
+
+/*----------------------------------------------------------------------
+  IsTemplateInstanceDocument: Test if a document is a template instance
+  doc : Document to test
+  return : TRUE if the document is a template instance
+  ----------------------------------------------------------------------*/
+ThotBool IsTemplateInstanceDocument(Document doc)
+{
+  return FALSE;
+}
+
 /*----------------------------------------------------------------------
   TtaGetPixelValue converts a logical value into a pixel value for
   a given element.
