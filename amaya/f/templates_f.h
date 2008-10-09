@@ -8,6 +8,7 @@
 
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern ThotBool IsTemplateDocument ( Document doc );
+extern char *GetUsedTypeName ( Element el );
 extern ThotBool IsInternalTemplateDocument ( Document doc );
 extern char* GetDocumentInstanceTemplateUrl ( Document doc );
 extern ThotBool CheckPromptIndicator ( Element el,
@@ -54,6 +55,8 @@ extern void Template_CheckAndPrepareInstance ( char *localFileName,
 extern ThotBool ClosingTemplateDocument ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
+extern ThotBool IsBeginningSelected ( Element el,
+                                      Document doc );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
@@ -101,6 +104,7 @@ extern ThotBool TemplateNameAttrInMenu ( NotifyAttribute * event );
 
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern ThotBool IsTemplateDocument ( Document doc );
+extern char *GetUsedTypeName ( Element el );
 extern ThotBool IsInternalTemplateDocument ( Document doc );
 extern char* GetDocumentInstanceTemplateUrl ( Document doc );
 extern ThotBool CheckPromptIndicator ( Element el,
@@ -147,6 +151,8 @@ extern void Template_CheckAndPrepareInstance ( char *localFileName,
 extern ThotBool ClosingTemplateDocument ( NotifyDialog* dialog );
 extern ThotBool IsTemplateElement ( Element elem );
 extern Element GetFirstTemplateParentElement ( Element elem );
+extern ThotBool IsBeginningSelected ( Element el,
+                                        Document doc );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
 extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );

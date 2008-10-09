@@ -7,7 +7,7 @@
 
 /*
  * Authors: Francesc Campoy Flores
- *          Émilien Kia
+ *          Emilien Kia
  *
  */
 
@@ -57,7 +57,7 @@ ThotBool IsTemplateInstanceDocument(Document doc)
 #ifdef TEMPLATES
   XTigerTemplate t = GetXTigerDocTemplate(doc);
   if (t)
-    return (t->state & templInstance) != 0;
+    return ((t->state & templInstance) != 0);
   else
     return FALSE;
 #else /* TEMPLATES */
@@ -82,6 +82,37 @@ ThotBool IsTemplateDocument (Document doc)
   return FALSE;
 }
 
+
+/*----------------------------------------------------------------------
+  GetUsedTypeName returns the name of the current used type or the first
+  name of the types attribute
+  The returned string must be freed
+  ----------------------------------------------------------------------*/
+char *GetUsedTypeName (Element el)
+{
+  char        *name = NULL;
+#ifdef TEMPLATES
+  char        *ptr;
+
+  if (IsTemplateElement (el))
+    {
+      name = GetAttributeStringValueFromNum (el, Template_ATTR_currentType, NULL);
+      if (name == NULL)
+        {
+          // use the first type
+          name = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
+          if (name)
+            {
+              ptr = strstr (name, " ");
+              if (ptr)
+                *ptr = EOS;
+            }
+          return name;
+        }
+    }
+#endif /* TEMPLATES */
+  return name;
+}
 
 /*----------------------------------------------------------------------
   Test if a document is an internal template.
@@ -1268,9 +1299,7 @@ void Template_FillFromDocument (Document doc)
       printf("plop : %d\n", t->state);
 #endif
       SetTemplateDocument (t, doc);
-
-      Template_PrepareTemplate(t);
-
+      Template_PrepareTemplate(t, doc);
       if (IsTemplateInstanceDocument(doc))
         {
 #ifdef AMAYA_DEBUG
@@ -1551,7 +1580,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
               (elType.ElTypeNum != Template_EL_useSimple &&
                elType.ElTypeNum != Template_EL_useEl))
             return TRUE; // don't let Thot do the job
-          t = GetXTigerDocTemplate(doc);
+          t = GetXTigerDocTemplate (doc);
           el = NULL;
           i = 0;
           next = TtaGetFirstChild (ancestor);
@@ -1563,18 +1592,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
             }
           if (el)
             next = el;
-          name = GetAttributeStringValueFromNum (next, Template_ATTR_currentType, NULL);
-          if (name == NULL)
-            {
-              // use the first type
-              name = GetAttributeStringValueFromNum (next, Template_ATTR_types, NULL);
-              if (name)
-                {
-                  ptr = strstr (name, " ");
-                  if (ptr)
-                    *ptr = EOS;
-                }
-            }
+          name = GetUsedTypeName (next);
           DoReplicateUseElement (t, doc, view, el, ancestor, name);
           TtaFreeMemory(name);
           return TRUE; // don't let Thot do the job
@@ -1627,7 +1645,8 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
         return FALSE;
     }
 
-  if (elType.ElSSchema == templateSSchema &&
+  if (!IsTemplateInstanceDocument(doc) &&
+       elType.ElSSchema == templateSSchema &&
       (elType.ElTypeNum == Template_EL_TEXT_UNIT ||
        elType.ElTypeNum == Template_EL_component))
       return FALSE;

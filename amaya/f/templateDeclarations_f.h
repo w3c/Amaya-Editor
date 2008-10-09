@@ -33,7 +33,7 @@ extern char* Template_GetBlockLevelDeclarations ( XTigerTemplate t,
 extern char* Template_GetInlineLevelDeclarations ( XTigerTemplate t,
                                                    ThotBool addAny,
                                                    ThotBool addSimple );
-extern char* Template_GetAllDeclarations ( XTigerTemplate t,
+extern char *Template_GetAllDeclarations ( XTigerTemplate t,
                                            ThotBool addAnys,
                                            ThotBool addAny,
                                            ThotBool addSimple );
@@ -133,6 +133,10 @@ extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                  char* useType,
                                                  Element parent,
                                                  int position );
+extern ThotBool Template_IsUsedComponentInSubtree ( XTigerTemplate t,
+                                                    Document doc,
+                                                    Element elem,
+                                                    const char* name );
 extern ThotBool Template_IsUsedComponent ( XTigerTemplate t,
                                            Document doc,
                                            const char* name );
@@ -166,7 +170,7 @@ extern char* Template_GetBlockLevelDeclarations ( XTigerTemplate t,
 extern char* Template_GetInlineLevelDeclarations ( XTigerTemplate t,
                                                      ThotBool addAny,
                                                      ThotBool addSimple );
-extern char* Template_GetAllDeclarations ( XTigerTemplate t,
+extern char *Template_GetAllDeclarations ( XTigerTemplate t,
                                              ThotBool addAnys,
                                              ThotBool addAny,
                                              ThotBool addSimple );
@@ -266,6 +270,10 @@ extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                    char* useType,
                                                    Element parent,
                                                    int position );
+extern ThotBool Template_IsUsedComponentInSubtree ( XTigerTemplate t,
+                                                      Document doc,
+                                                      Element elem,
+                                                      const char* name );
 extern ThotBool Template_IsUsedComponent ( XTigerTemplate t,
                                              Document doc,
                                              const char* name );

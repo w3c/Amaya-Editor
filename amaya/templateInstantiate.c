@@ -351,7 +351,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
   CreateTemplate
   Create a template from any document.
   ----------------------------------------------------------------------*/
-void CreateTemplate(Document doc, char *templatePath)
+void CreateTemplate (Document doc, char *templatePath)
 {
 #ifdef TEMPLATES
   Element           root, head, elem, xt, title, child, last;
@@ -360,14 +360,14 @@ void CreateTemplate(Document doc, char *templatePath)
   SSchema           templSchema;
   XTigerTemplate    t;
   
-  if(IsTemplateInstanceDocument(doc))
+  if (IsTemplateInstanceDocument(doc))
     {
       ShowMessage(TtaGetMessage (AMAYA, AM_TEMPLATE_ERR_INSTANCE),
           TtaGetMessage (AMAYA, AM_TEMPLATE_ERR_CREATION));
       return;
     }
 
-  if(IsTemplateDocument(doc))
+  if (IsTemplateDocument(doc))
     {
       ShowMessage(TtaGetMessage (AMAYA, AM_TEMPLATE_ERR_TEMPLATE),
           TtaGetMessage (AMAYA, AM_TEMPLATE_ERR_CREATION));
@@ -470,7 +470,7 @@ void CreateTemplate(Document doc, char *templatePath)
   // like LoadTemplate(..)
   t = LookForXTigerTemplate(templatePath);
   t->doc = doc;
-  Template_PrepareTemplate(t);
+  Template_PrepareTemplate(t, doc);
   //  DocumentTypes[doc] = docTemplate;
   t->state |= templloaded|templTemplate;
 

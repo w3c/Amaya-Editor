@@ -264,17 +264,20 @@ void Template_PreParseDeclarations (XTigerTemplate t, Element el)
   Template_PrepareTemplate: Prepare template after loading it
   and before using it.
   ----------------------------------------------------------------------*/
-void Template_PrepareTemplate(XTigerTemplate t)
+void Template_PrepareTemplate (XTigerTemplate t, Document doc)
 {
 #ifdef TEMPLATES
+  SSchema          templateSSchema;
   ForwardIterator  iter;
   HashMapNode      node;
   XTigerTemplate   templ = NULL;
+  ElementType	     searchedType1, searchedType2, searchedType3, elType;
+  Element	         root, el, asc;
+  Declaration      dec;
+  char            *name;
 
   Template_Clear(t);
-  
   Template_PreParseDeclarations(t, 0);
-
   iter = HashMap_GetForwardIterator(t->libraries);
   // Load dependancies
   ITERATOR_FOREACH(iter, HashMapNode, node)
@@ -303,9 +306,46 @@ void Template_PrepareTemplate(XTigerTemplate t)
   Template_ParseDeclarations (t, NULL);
   Template_MoveUnknownDeclarationToXmlElement (t);
   Template_FillDeclarations (t);
-  
   Template_PreInstantiateComponents (t);
   Template_CalcBlockLevel (t);
+
+  // check the block level of each use element
+  if (DocumentTypes[doc] != docHTML)
+    return;
+  root = TtaGetRootElement (doc);
+  elType = TtaGetElementType (root);
+  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+  templateSSchema = TtaGetSSchema ("Template", doc);
+  searchedType1.ElSSchema = templateSSchema;
+  searchedType1.ElTypeNum = Template_EL_useEl;
+  searchedType2.ElSSchema = templateSSchema;
+  searchedType2.ElTypeNum = Template_EL_useSimple;
+  searchedType3.ElSSchema = templateSSchema;
+  searchedType3.ElTypeNum = Template_EL_bag;
+  el = root;
+  while (el)
+    {
+      el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
+                                        searchedType3, searchedType1,
+                                        searchedType1, SearchForward, el);
+      if (el)
+        {
+          //look at the refered type
+          name = GetUsedTypeName (el);
+          dec = Template_GetDeclaration (t, name);
+          TtaFreeMemory (name);
+          if (dec && dec->blockLevel)
+            {
+             asc = TtaGetTypedAncestor (el, elType);
+             if (asc)
+               {
+                 // move the element after the pseudo paragraph
+                 TtaRemoveTree (el, doc);
+                 TtaInsertSibling (el, asc, FALSE, doc);
+               }
+            }
+        }
+    }
 #endif /* TEMPLATES */
 }
 

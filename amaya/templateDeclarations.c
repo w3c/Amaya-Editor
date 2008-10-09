@@ -196,9 +196,7 @@ XTigerTemplate LookForXTigerTemplate (const char *templatePath)
     InitializeTemplateEnvironment ();
   t = (XTigerTemplate) HashMap_Get(Templates_Map, (void*)templatePath);
   if (!t)
-  {
     t = NewXTigerTemplate(templatePath);
-  }
   return t;
 #else /* TEMPLATES */
   return NULL;
@@ -223,7 +221,7 @@ XTigerTemplate GetXTigerTemplate (const char *templatePath)
 }
 
 /*----------------------------------------------------------------------
-  Get the XTiger document template 
+  Get the XTiger document template or template instance
   ----------------------------------------------------------------------*/
 XTigerTemplate GetXTigerDocTemplate (Document doc)
 {
@@ -235,7 +233,7 @@ XTigerTemplate GetXTigerDocTemplate (Document doc)
   if (Templates_Map == NULL)
     InitializeTemplateEnvironment ();
 
-  if(doc==0)
+  if (doc == 0)
     return NULL;
   
   iter = HashMap_GetForwardIterator(Templates_Map);
@@ -243,7 +241,7 @@ XTigerTemplate GetXTigerDocTemplate (Document doc)
     {
       t = (XTigerTemplate)node->elem;
       if (t)
-        if (t->doc==doc)
+        if (t->doc == doc)
           {
             res = t;
             break;
@@ -257,14 +255,15 @@ XTigerTemplate GetXTigerDocTemplate (Document doc)
 }
 
 /*----------------------------------------------------------------------
-  Close a XTiger template
+  Close a XTiger template or template instance
   ----------------------------------------------------------------------*/
-void Template_Close(XTigerTemplate t)
+void Template_Close (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
     {
       HashMap_DestroyElement(Templates_Map, t->uri);
+      Template_Clear (t);
     }
 #endif /* TEMPLATES */
 }
@@ -450,16 +449,14 @@ void Declaration_Destroy (Declaration dec)
   Document doc;
   
   if (dec->nature == XmlElementNat)
-  {
-    TtaFreeMemory (dec->elementType.name);
-    dec->elementType.name = NULL;
-  }
+    {
+      TtaFreeMemory (dec->elementType.name);
+      dec->elementType.name = NULL;
+    }
   else if (dec->nature == ComponentNat)
-  {
     dec->componentType.content = NULL;
-  }
   else if (dec->nature==UnionNat)
-  {
+    {
     SearchSet_Destroy (dec->unionType.include);
     dec->unionType.include = NULL;
     SearchSet_Destroy (dec->unionType.exclude);
@@ -475,7 +472,7 @@ void Declaration_Destroy (Declaration dec)
     if (dec->unionType.excludeStr)
       TtaFreeMemory(dec->unionType.excludeStr);
     dec->unionType.excludeStr = NULL;
-  }
+    }
   /* Do nothing for UnknownNat */
   
   TtaFreeMemory (dec->name);
@@ -503,15 +500,15 @@ ThotBool Declaration_GetElementType (Declaration dec, ElementType *type)
   if (dec)
     {
       if (dec->nature==XmlElementNat)
-      {
+        {
         GIType (dec->name, type, dec->usedIn->doc);
         return TRUE;
-      }
+        }
       else if (dec->nature==ComponentNat)
-      {
+        {
         *type = TtaGetElementType(TtaGetFirstChild(dec->componentType.content));
         return TRUE;
-      }
+        }
     }
 #endif /* TEMPLATES */
   return FALSE;
@@ -585,10 +582,10 @@ void Declaration_CalcBlockLevel (Declaration dec)
           dec->blockLevel = FALSE;
           if (dec->componentType.content)
             {
-              elem = TtaGetFirstChild(dec->componentType.content);                  
+              elem = TtaGetFirstChild (dec->componentType.content);                  
               while (elem)
                 {
-                  if (!IsCharacterLevelType(TtaGetElementType(elem)))
+                  if (!IsCharacterLevelType (TtaGetElementType(elem)))
                     {
                       dec->blockLevel = TRUE;
                       break;
@@ -716,7 +713,7 @@ void Template_CalcBlockLevel (XTigerTemplate t)
 /*----------------------------------------------------------------------
   Retrieve block-level declarations
   ----------------------------------------------------------------------*/
-char* Template_GetBlockLevelDeclarations(XTigerTemplate t, ThotBool addAny)
+char* Template_GetBlockLevelDeclarations (XTigerTemplate t, ThotBool addAny)
 {
 #ifdef TEMPLATES
   ForwardIterator iter;
@@ -794,7 +791,8 @@ char* Template_GetBlockLevelDeclarations(XTigerTemplate t, ThotBool addAny)
 /*----------------------------------------------------------------------
   Retrieve inline-level declarations
   ----------------------------------------------------------------------*/
-char* Template_GetInlineLevelDeclarations(XTigerTemplate t, ThotBool addAny, ThotBool addSimple)
+char* Template_GetInlineLevelDeclarations (XTigerTemplate t, ThotBool addAny,
+                                           ThotBool addSimple)
 {
 #ifdef TEMPLATES
   ForwardIterator iter;
@@ -879,7 +877,8 @@ char* Template_GetInlineLevelDeclarations(XTigerTemplate t, ThotBool addAny, Tho
 /*----------------------------------------------------------------------
   Retrieve all declarations
   ----------------------------------------------------------------------*/
-char* Template_GetAllDeclarations(XTigerTemplate t, ThotBool addAnys, ThotBool addAny, ThotBool addSimple)
+char *Template_GetAllDeclarations (XTigerTemplate t, ThotBool addAnys,
+                                   ThotBool addAny, ThotBool addSimple)
 {
 #ifdef TEMPLATES
   ForwardIterator iter;
@@ -1716,7 +1715,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
             fprintf (file, " block");
           else
             fprintf (file, " inline");
-          if (dec->declaredIn!=t)
+          if (dec->declaredIn != t)
             fprintf (file, " (declared in %s)", dec->declaredIn->uri);
           FPrintElement(file, dec->componentType.content, 1);
         }
@@ -1897,9 +1896,7 @@ void Template_AddReference (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    {
-      t->ref++;
-    }
+    t->ref++;
 #endif /* TEMPLATES */
 }
 

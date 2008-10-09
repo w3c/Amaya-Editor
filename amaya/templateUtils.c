@@ -301,7 +301,7 @@ ThotBool ValidateTemplateAttrInMenu (NotifyAttribute * event)
   int           useAt, type;
 
   /* Prevent from showing attributes for template instance but not templates. */
-  if(IsTemplateInstanceDocument(event->document))
+  if (IsTemplateInstanceDocument(event->document))
     {
       /* Prevent if attribute's element is not a descendant of xt:use */
       /* Dont prevent if descendant of xt:bag. */
