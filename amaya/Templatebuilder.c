@@ -11,7 +11,6 @@
  *
  * Authors: V. Quint
  *          I. Vatton
- *          P. Cheyrou-Lagreze
  */
 
 #define THOT_EXPORT extern
@@ -234,12 +233,12 @@ printf ("==>Complete component %s:%d\n",s,elType.ElTypeNum);
 void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
   Document		     doc;
-  ElementType	     elType;
-  Element          ancestor;
+  ElementType	     elType, childType;
+  Element          ancestor, child;
 	AttributeType    attType;
   Attribute        att;
   char            *name, *ancestor_name, *ptr;
- char              msgBuffer[MaxMsgLength];
+  char             msgBuffer[MaxMsgLength];
   int              len;
 
   doc = context->doc;
@@ -342,6 +341,22 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     case Template_EL_repeat :
       // children must be use elements
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);
+      // Children must be components or use elements
+      child = TtaGetFirstChild (el);
+      while (child)
+        {
+          childType = TtaGetElementType (child);
+          if (childType.ElSSchema != elType.ElSSchema ||
+              (childType.ElTypeNum != Template_EL_useSimple &&
+               childType.ElTypeNum != Template_EL_useEl &&
+               childType.ElTypeNum != Template_EL_component &&
+               childType.ElTypeNum != Template_EL_Comment_))
+            // report an error
+            XmlParseError (errorParsing,
+                           (unsigned char *)"Invalid child of repeat element",
+                           TtaGetElementLineNumber(child));
+          TtaNextSibling (&child);
+        }
       break;
     default:
       break;
