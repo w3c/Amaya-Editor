@@ -12,13 +12,12 @@
 <body xml:lang="fr" lang="fr">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Document.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Attributes.html.fr" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Attributes.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
@@ -29,16 +28,16 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <p>Amaya propose deux modes d'édition :</p>
 <ul>
-  <li>Le mode XML est très efficace pour manipuler les différents type de
-    structures XML, mais cela implique que l'utilisateur ait une bonne
+  <li>Le mode XML est très efficace pour manipuler les différents types de
+    structure XML, mais cela implique que l'utilisateur ait une bonne
     connaissance de la structure du document. Les manipulations simples
-    réalisées via quelques touches de clavier sont génériques en mode XML :
-    elles s'appliquent à tous les types d'éléments de n'importe quel
-    vocabulaire XML, quelque soit leur sémantique. Cela marche bien avec le
-    texte HTML, mais aussi les équations MathML ou les dessins SVG.</li>
-  <li>Le mode Texte permet aux utilisateurs de gérer les éléments HTML de la
-    même façon que les traitement de texte. Ce mode ne s'applique pas aux
-    autre vocabulaires XML.</li>
+    réalisées via quelques touches de clavier sont génériques : elles
+    s'appliquent à tous les types d'éléments de n'importe quel vocabulaire XML,
+    quelque soit leur sémantique. Cela marche bien avec le texte HTML, mais
+    aussi les équations MathML ou les dessins SVG.</li>
+  <li>Le mode Texte permet aux utilisateurs de gérer les éléments HTML de façon
+    identique aux traitements de texte. Ce mode ne s'applique pas aux autres
+    vocabulaires XML.</li>
 </ul>
 
 <p>Vous pouvez facilement changer de mode d'édition (<a
@@ -47,8 +46,8 @@ coin en bas à droite de la fenêtre.</p>
 
 <h3 id="Boutons"><a name="Types" id="Types">Boutons et menus</a></h3>
 
-<p>La manière la plus simple de créer de nouveaux éléments dans un document
-est de placer le point d'insertion à la position voulue et d'utiliser le menu
+<p>La manière la plus simple de créer de nouveaux éléments dans un document est
+de placer le point d'insertion à la position voulue et d'utiliser le menu
 <strong>Insertion</strong> ou l'outil <strong>Eléments</strong>, pour les
 éléments les plus communs (images, titres, listes...). Ces commandes créent
 simplement l'élément correspondant à la position courante.</p>
@@ -58,15 +57,13 @@ simplement l'élément correspondant à la position courante.</p>
   <li>insérer (ou remplacer la sélection courante par) un élément XHTML :
     division (<img alt="Bouton Division"
     src="../../resources/icons/16x16/XHTML_Div.png" />), titre (<img
-    alt="Bouton Titre niveau 1"
-    src="../../resources/icons/16x16/XHTML_H1.png" /> ,<img
-    alt="Bouton Titre niveau 2"
+    alt="Bouton Titre niveau 1" src="../../resources/icons/16x16/XHTML_H1.png"
+    /> ,<img alt="Bouton Titre niveau 2"
     src="../../resources/icons/16x16/XHTML_H2.png" /> ,<img
-    alt="Bouton Titre niveau 3"
-    src="../../resources/icons/16x16/XHTML_H3.png" />), paragraphe
-    (<strong>P</strong>)<strong></strong>, table (<img alt="Bouton Table"
-    src="../../resources/icons/16x16/XHTML_Table.png" />), ancre cible ou
-    élément cible (<img alt="Bouton Cible"
+    alt="Bouton Titre niveau 3" src="../../resources/icons/16x16/XHTML_H3.png"
+    />), paragraphe (<strong>P</strong>)<strong></strong>, table (<img
+    alt="Bouton Table" src="../../resources/icons/16x16/XHTML_Table.png" />),
+    ancre cible ou élément cible (<img alt="Bouton Cible"
     src="../../resources/icons/16x16/XHTML_Target.png" />), ancre lien (<img
     alt="Bouton Lien" src="../../resources/icons/16x16/XHTML_Link.png" />),
     liste (<img alt="Bouton Liste"
@@ -83,22 +80,21 @@ simplement l'élément correspondant à la position courante.</p>
     src="../../resources/icons/16x16/XHTML_object.png" />).</li>
   <li>ouvrir/fermer (ou englober la sélection courante dans) un élément
     <em>en-ligne</em> de XHTML : <em>mise en évidence</em> (<img
-    src="../../resources/icons/16x16/XHTML_I.png"
-    alt="Bouton Mise en evidence" />), <strong>important</strong> (<img
+    src="../../resources/icons/16x16/XHTML_I.png" alt="Bouton Mise en evidence"
+    />), <strong>important</strong> (<img
     src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />)
     <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
     alt="Bouton Code" />), <ins>insertion</ins> (<img alt="Bouton Insertion"
-    src="../../resources/icons/16x16/XHTML_ins.png" />),
-    <del>suppression</del> (<img alt="Bouton Suppression"
+    src="../../resources/icons/16x16/XHTML_ins.png" />), <del>suppression</del>
+    (<img alt="Bouton Suppression"
     src="../../resources/icons/16x16/XHTML_del.png" />), <sup>exposant</sup>
-    (<img alt="Bouton Exposant"
-    src="../../resources/icons/16x16/XHTML_sup.png" />), et <sub>indice</sub>
-    (<img alt="Bouton Indice" src="../../resources/icons/16x16/XHTML_sub.png"
-    />).</li>
+    (<img alt="Bouton Exposant" src="../../resources/icons/16x16/XHTML_sup.png"
+    />), et <sub>indice</sub> (<img alt="Bouton Indice"
+    src="../../resources/icons/16x16/XHTML_sub.png" />).</li>
 </ul>
 
-<p class="Note">Note : Dans le profil Lite d'Amaya seul un sous-ensemble de
-ces boutons est disponible.</p>
+<p class="Note">Note : Dans le profil Lite d'Amaya seul un sous-ensemble de ces
+boutons est disponible.</p>
 
 <p>Pour plus d'information sur ces éléments <a href="HTML.html.fr">voir la
 liste de tous les éléments HTML 4.0</a>.</p>
@@ -106,28 +102,28 @@ liste de tous les éléments HTML 4.0</a>.</p>
 <h3 id="Point">Point d'insertion</h3>
 
 <p>Quand vous créez de nouveaux éléments, il est important de sélectionner un
-<em>point d'insertion</em>, et non du texte ou même un caractère unique : si
-la sélection courante n'est pas vide, Amaya tente de <a
+<em>point d'insertion</em>, et non du texte ou même un caractère unique : si la
+sélection courante n'est pas vide, Amaya tente de <a
 href="Changing.html.fr#L631"><em>transformer</em></a> la partie sélectionnée
 dans le type de l'élément choisi.</p>
 
 <p>Dans certains cas, l'élément désiré ne peut pas être créé exactement à la
 position choisie à cause des contraintes imposées par le langage HTML. Amaya
 tente alors de créer l'élément à l'endroit le plus proche possible. Par
-exemple, si le point d'insertion se trouve à l'intérieur d'un paragraphe, à
-la fin de la dernière ligne, quand vous cliquez sur le bouton <img
-src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" /> , Amaya ne crée
-pas la nouvelle en-tête à cette position (elle serait invalide) mais après le
+exemple, si le point d'insertion se trouve à l'intérieur d'un paragraphe, à la
+fin de la dernière ligne, quand vous cliquez sur le bouton <img
+src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" /> , Amaya ne crée pas
+la nouvelle en-tête à cette position (elle serait invalide) mais après le
 paragraphe, à la position valide la plus proche.</p>
 
-<p>Dans d'autres cas, Amaya modifie la structure existante pour créer
-l'élément désiré tout en respectant les contraintes du langage. Si le point
-d'insertion est quelque part dans un item de liste (<code>li</code>) quand
-vous créez une en-tête (avec le bouton <img
-src="../../resources/icons/16x16/XHTML_H2.png" alt="H2" /> depuis l'outil
-<strong>Elément</strong> ou à partir du menu), l'item et la liste à laquelle
-il appartient sont automatiquement divisés afin de créer l'en-tête demandé et
-de se conformer aux contraintes du langage HTML.</p>
+<p>Dans d'autres cas, Amaya modifie la structure existante pour créer l'élément
+désiré tout en respectant les contraintes du langage. Si le point d'insertion
+est quelque part dans un item de liste (<code>li</code>) quand vous créez une
+en-tête (avec le bouton <img src="../../resources/icons/16x16/XHTML_H2.png"
+alt="H2" /> depuis l'outil <strong>Elément</strong> ou à partir du menu),
+l'item et la liste à laquelle il appartient sont automatiquement divisés afin
+de créer l'en-tête demandé et de se conformer aux contraintes du langage
+HTML.</p>
 
 <h3 id="Sous-menu"><a name="Structure" id="Structure">Sous-menu Eléments
 cachés</a></h3>
@@ -135,10 +131,10 @@ cachés</a></h3>
 <p>Pour créer des éléments dans la partie <code>head</code> du document,
 utilisez le sous-menu <strong>Eléments cachés</strong> du menu
 <strong>Insertion</strong>. Attention ces éléments ne sont affichés que dans
-les <a href="Views.html.fr#Structure">vues</a> structure et source. Vous
-devez ouvrir la vue structure. Mettez le point d'insertion à la position
-désirée et choisissez le type d'élément à créer dans le sous-menu
-<strong>Eléments cachés.</strong></p>
+les <a href="Views.html.fr#Structure">vues</a> structure et source. Vous devez
+ouvrir la vue structure. Mettez le point d'insertion à la position désirée et
+choisissez le type d'élément à créer dans le sous-menu <strong>Eléments
+cachés.</strong></p>
 
 <p>Le menu <strong>Eléments cachés</strong> vous permet aussi de créer des
 commentaires. Les commentaires sont seulement visibles dans les <a
@@ -155,10 +151,10 @@ cellules (<code>td</code> ou <code>th</code>) dans chaque ligne.</p>
 <p>Quand Amaya crée de tels éléments, il crée aussi leurs composants. Pour
 créer une table, Amaya affiche un dialogue qui vous permet de choisir de la
 créer avec ou sans légende, le nombre de lignes et de colonnes désirées et
-d'autre options de présentation. Le point d'insertion est automatiquement
-placé dans la première cellule créée. Vous pouvez saisir le contenu de ce
-composant immédiatement ou plus tard. Vous pouvez vous déplacer jusqu'au
-prochain composant (vide) avec la souris ou avec les flèches de direction.</p>
+d'autre options de présentation. Le point d'insertion est automatiquement placé
+dans la première cellule créée. Vous pouvez saisir le contenu de ce composant
+immédiatement ou plus tard. Vous pouvez vous déplacer jusqu'au prochain
+composant (vide) avec la souris ou avec les flèches de direction.</p>
 
 <p>HTML définit certains éléments de niveau de caractère qui permettent
 d'associer du style aux chaînes de caractères. Voir <a
@@ -168,82 +164,79 @@ créer de tels éléments.</p>
 <h3 id="touche"><a name="L906" id="L906">La touche Entrée</a></h3>
 
 <p>Lorsque vous écrivez un nouveau document ou une nouvelle partie dans un
-document, vous êtes souvent amenés à créer de nouveaux éléments. Pour cela,
-il suffit de presser la touche <kbd>Entrée</kbd>. L'élément courant est clos
-et un nouveau est créé juste après.</p>
+document, vous êtes souvent amenés à créer de nouveaux éléments. Pour cela, il
+suffit de presser la touche <kbd>Entrée</kbd>. L'élément courant est clos et un
+nouveau est créé juste après.</p>
 
 <p>Quand le curseur est au début ou à la fin d'un élément préformaté ou d'une
 division (<code>pre</code> ou <code>div</code>), la touche <kbd>Entrée</kbd>
-crée une nouvelle ligne dans le <code>pre</code> ou un nouveau paragraphe
-dans l'élément <code>div</code>.</p>
+crée une nouvelle ligne dans le <code>pre</code> ou un nouveau paragraphe dans
+l'élément <code>div</code>.</p>
 
 <p>Dans certains cas le comportement de la touche <kbd>Entrée</kbd> dépend du
 mode d'édition courant :</p>
 <ul>
   <li>Mode XML 
-    <p>Pour créer un paragraphe après un <code>pre</code> ou une division
-    après un <code>div</code>, vous devez sélectionner le <code>pre</code> ou
-    le <code>div</code> en entier avec la touche <kbd>F2</kbd> et presser la
+    <p>Pour créer un paragraphe après un <code>pre</code> ou une division après
+    un <code>div</code>, vous devez sélectionner le <code>pre</code> ou le
+    <code>div</code> en entier avec la touche <kbd>F2</kbd> et presser la
     touche <kbd>Entrée</kbd>. De la même façon, vous pouvez créer un nouveau
-    paragraphe après une table en sélectionnant la table entière et en
-    pressant la touche <kbd>Entrée</kbd>.</p>
+    paragraphe après une table en sélectionnant la table entière et en pressant
+    la touche <kbd>Entrée</kbd>.</p>
     <p>Quand un élément complet comme <code>h2</code> ou <code>li</code> est
-    sélectionné, la touche <kbd>Entrée</kbd> crée un nouveau <code>h2</code>
-    ou <code>li</code> après.<br />
+    sélectionné, la touche <kbd>Entrée</kbd> crée un nouveau <code>h2</code> ou
+    <code>li</code> après.<br />
     </p>
   </li>
   <li>Mode Texte 
     <p>Quand le curseur est au début ou à la fin d'un item de liste
-    (<code>li</code>), un nouvel item de liste frère et de même type est
-    créé, au lieu d'un nouveau paragraphe dans l'item de liste. De plus, dans
-    un item de liste vide, la touche <kbd>Entrée</kbd> crée un paragraphe qui
-    coupe la liste en deux.</p>
+    (<code>li</code>), un nouvel item de liste frère et de même type est créé,
+    au lieu d'un nouveau paragraphe dans l'item de liste. De plus, dans un item
+    de liste vide, la touche <kbd>Entrée</kbd> crée un paragraphe qui coupe la
+    liste en deux.</p>
     <p>Quand le curseur est dans un élément comme <code>p</code>,
     <code>address</code>, <code>dt</code>, <code>h1</code>, <code>h2</code>,
     etc. (ils sont appelés des éléments <em>blocs</em>) la touche
-    <kbd>Entrée</kbd> coupe l'élément en deux éléments frères de même
-    type.</p>
+    <kbd>Entrée</kbd> coupe l'élément en deux éléments frères de même type.</p>
     <p>Quand le point d'insertion est dans un élément HTML comme
-    <code>strong</code>, <code>em</code>, <code>code</code>,
-    <code>span</code>, <code>a</code>, etc. (ils sont appelés des éléments
-    <em>en-ligne</em>) la touche <kbd>Entrée</kbd> coupe l'élément
-    <em>en-ligne</em> et l'événement est transmis à l'élément parent. Comme
-    les éléments en-ligne peuvent s'englober dans une structure HTML, la
-    coupure peut se faire à plusieurs niveaux, jusqu'à l'élément
-    <em>bloc</em> ou l'item de liste qui va traiter l'événement comme indiqué
-    plus haut.</p>
-    <p>Quand la touche <kbd>Entrée</kbd> est activée au début ou à la fin
-    d'un élément <em>bloc</em>, un nouveau paragraphe (élément
-    <code>p</code>) est créé, quelque soit le type de l'élément <em>bloc</em>
-    courant.</p>
+    <code>strong</code>, <code>em</code>, <code>code</code>, <code>span</code>,
+    <code>a</code>, etc. (ils sont appelés des éléments <em>en-ligne</em>) la
+    touche <kbd>Entrée</kbd> coupe l'élément <em>en-ligne</em> et l'événement
+    est transmis à l'élément parent. Comme les éléments en-ligne peuvent
+    s'englober dans une structure HTML, la coupure peut se faire à plusieurs
+    niveaux, jusqu'à l'élément <em>bloc</em> ou l'item de liste qui va traiter
+    l'événement comme indiqué plus haut.</p>
+    <p>Quand la touche <kbd>Entrée</kbd> est activée au début ou à la fin d'un
+    élément <em>bloc</em>, un nouveau paragraphe (élément <code>p</code>) est
+    créé, quelque soit le type de l'élément <em>bloc</em> courant.</p>
   </li>
 </ul>
 
 <p>Quand le nouvel élément créé est simplement un paragraphe, vous pouvez
 changer immédiatement le type de cet élément, en sélectionnant le type désiré
 dans le menu <strong>Insertion</strong> ou en cliquant sur le bouton
-correspondant de l'outil <strong>Eléments</strong>. Vous pouvez aussi
-continuer à taper et <a href="Changing.html.fr#L653">changer le type</a> de
-l'élément plus tard.</p>
+correspondant de l'outil <strong>Eléments</strong>. Vous pouvez aussi continuer
+à taper et <a href="Changing.html.fr#L653">changer le type</a> de l'élément
+plus tard.</p>
 
 <h4 id="end-anchor">Sortir des ancres, des éléments en-ligne, etc.</h4>
 
 <p>Quand un paragraphe ou un autre bloc de texte se termine par une ancre ou
-une chaîne de caractères stylée (en gras, en italique ou dans tout autre
-style) ou tout autre élément <em>en-ligne</em>, si vous placez le point
-d'insertion à la fin du paragraphe et tapez du texte les caractères sont
-ajoutés à l'intérieur de l'ancre ou de l'élément <em>en-ligne</em>.</p>
+une chaîne de caractères stylée (en gras, en italique ou dans tout autre style)
+ou tout autre élément <em>en-ligne</em>, si vous placez le point d'insertion à
+la fin du paragraphe et tapez du texte les caractères sont ajoutés à
+l'intérieur de l'ancre ou de l'élément <em>en-ligne</em>.</p>
 <dl>
   <dt>Dans le mode XML seulement</dt>
-    <dd>Si vous voulez saisir du simple texte après cet élément, il vous
-      suffit de mettre le curseur à la fin de l'ancre ou de l'élément
-      en-ligne et presser la touche <kbd>Entrée</kbd> pour sortir de
-      l'élément et de taper.</dd>
+    <dd>Si vous voulez saisir du simple texte après cet élément, il vous suffit
+      de mettre le curseur à la fin de l'ancre ou de l'élément en-ligne et
+      presser la touche <kbd>Entrée</kbd> pour sortir de l'élément et de
+    taper.</dd>
     <dd>La même méthode s'applique pour insérer du simple texte avant le
       premier élément en-ligne du bloc de texte. Si vous voulez saisir du
       simple texte avant cet élément, il vous suffit de placer le curseur au
-      début de l'élément et de presser la touche <kbd>Entrée</kbd> et
-      continuer à taper.</dd>
+      début de l'élément et de presser la touche <kbd>Entrée</kbd> et continuer
+      à taper.</dd>
   <dt>Dans le mode Texte et XML</dt>
     <dd>Tous les éléments <strong>Type d'information</strong> et
       <strong>Eléments caractères</strong> peuvent être ouvert/fermés avec la
@@ -257,10 +250,10 @@ ajoutés à l'intérieur de l'ancre ou de l'élément <em>en-ligne</em>.</p>
 <h4 id="multi-enter">Création de structures imbriquées</h4>
 
 <p>En mode d'édition XML (seulement), quand le point d'insertion est dans un
-élément vide, une pression sur la touche <kbd>Entrée</kbd> remplace cet
-élément par un autre élément vide au niveau supérieur de la structure du
-document. Ce comportement permet de créer très rapidement des structures
-emboîtées complexes.</p>
+élément vide, une pression sur la touche <kbd>Entrée</kbd> remplace cet élément
+par un autre élément vide au niveau supérieur de la structure du document. Ce
+comportement permet de créer très rapidement des structures emboîtées
+complexes.</p>
 
 <p>Considérez par exemple la structure suivante :</p>
 <ol>
@@ -285,22 +278,22 @@ emboîtées complexes.</p>
     <kbd>Entrée</kbd> : cela crée un nouveau paragraphe dans l'item de
   liste.</li>
   <li>A la fin de ce paragraphe, pressez la touche <kbd>Entrée</kbd> : cela
-    crée un nouveau paragraphe. Par contre, en pressant encore la même
-    touche, vous remplacez ce paragraphe dans un item vide 2.</li>
+    crée un nouveau paragraphe. Par contre, en pressant encore la même touche,
+    vous remplacez ce paragraphe dans un item vide 2.</li>
   <li>Entrez le contenu de la première ligne du second item.</li>
-  <li>A la fin de la première ligne de l'item 2, créez une liste nouvelle
-    avec son premier item (cliquez par exemple sur le bouton <img
-    alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" />
-    ). La nouvelle liste sera automatiquement emboîtée.</li>
-  <li>Entrez le contenu du premier item de la nouvelle liste et créez l'item
-    b en appuyant deux fois sur la touche <kbd>Entrée</kbd> à la fin de
-    l'item a.</li>
-  <li>Entrez le contenu de l'item b. Quand le point d'insertion est à la fin
-    de l'item b, créez l'item 3 en appuyant quatre fois sur la touche
+  <li>A la fin de la première ligne de l'item 2, créez une liste nouvelle avec
+    son premier item (cliquez par exemple sur le bouton <img
+    alt="Numbered List " src="../../resources/icons/16x16/XHTML_Num.png" /> ).
+    La nouvelle liste sera automatiquement emboîtée.</li>
+  <li>Entrez le contenu du premier item de la nouvelle liste et créez l'item b
+    en appuyant deux fois sur la touche <kbd>Entrée</kbd> à la fin de l'item
+  a.</li>
+  <li>Entrez le contenu de l'item b. Quand le point d'insertion est à la fin de
+    l'item b, créez l'item 3 en appuyant quatre fois sur la touche
     <kbd>Entrée</kbd>.</li>
-  <li>Entrez le contenu du dernier item. Pour créer le paragraphe qui suit
-    ces listes, pressez la touche <kbd>Entrée</kbd> trois fois lorsque le
-    point d'insertion est à la fin de l'item 3.</li>
+  <li>Entrez le contenu du dernier item. Pour créer le paragraphe qui suit ces
+    listes, pressez la touche <kbd>Entrée</kbd> trois fois lorsque le point
+    d'insertion est à la fin de l'item 3.</li>
 </ol>
 
 <p>La touche <kbd>Entrée</kbd> fonctionne de la même manière que précédemment
@@ -310,11 +303,11 @@ nouveaux éléments avant l'élément courant.</p>
 <p>Par exemple, pour ajouter un paragraphe initial dans un item de liste,
 déplacez le point d'insertion devant le premier caractère de cet item et
 pressez la touche <kbd>Entrée</kbd>. Si vous appuyez deux fois sur
-<kbd>Entrée</kbd>, vous obtenez un nouvel item avant l'item en cours. Ceci
-est utile pour insérer un nouvel item avant le premier.</p>
+<kbd>Entrée</kbd>, vous obtenez un nouvel item avant l'item en cours. Ceci est
+utile pour insérer un nouvel item avant le premier.</p>
 
-<p class="Note"><strong>Note :</strong> Dans le mode XML, cette utilisation
-de la touche <kbd>Entrée</kbd> ne s'applique pas seulement aux listes et aux
+<p class="Note"><strong>Note :</strong> Dans le mode XML, cette utilisation de
+la touche <kbd>Entrée</kbd> ne s'applique pas seulement aux listes et aux
 paragraphes, mais à tous les éléments.</p>
 
 <h4 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h4>
@@ -331,14 +324,14 @@ définitions. Considérez l'exemple suivant :</p>
 </blockquote>
 
 <p>C'est une liste de définitions (<code>dl</code>) contenant deux termes
-(<code>dt</code>) suivis par une définition (<code>dd</code>). Pour ajouter
-un nouveau paragraphe à l'intérieur de la définition (<code>dd</code>),
-placez le point d'insertion à la fin (après le mot "termes") et appuyez sur
-la touche <kbd>Entrée</kbd>. Si vous pressez <kbd>Entrée</kbd> deux fois,
-vous sortez de la définition en cours (<code>dd</code>) et vous créez un
-nouveau terme (<code>dt</code>). Entrez le contenu de ce nouveau terme et
-pressez une fois la touche <kbd>Entrée</kbd> : vous créez encore un nouveau
-terme (<code>dt</code>). La presser deux fois crée une nouvelle définition
+(<code>dt</code>) suivis par une définition (<code>dd</code>). Pour ajouter un
+nouveau paragraphe à l'intérieur de la définition (<code>dd</code>), placez le
+point d'insertion à la fin (après le mot "termes") et appuyez sur la touche
+<kbd>Entrée</kbd>. Si vous pressez <kbd>Entrée</kbd> deux fois, vous sortez de
+la définition en cours (<code>dd</code>) et vous créez un nouveau terme
+(<code>dt</code>). Entrez le contenu de ce nouveau terme et pressez une fois la
+touche <kbd>Entrée</kbd> : vous créez encore un nouveau terme
+(<code>dt</code>). La presser deux fois crée une nouvelle définition
 (<code>dd</code>).</p>
 
 <p>Si vous voulez créer un nouveau terme avec sa définition <em>avant</em> le
@@ -349,8 +342,8 @@ créée immédiatement après le nouveau terme.</p>
 
 <h3 id="touches">Les touches Suppr et Arrière</h3>
 
-<p>Le comportement des touches <kbd>Suppr</kbd> et <kbd>Arrière</kbd> ne
-dépend pas du mode d'édition:</p>
+<p>Le comportement des touches <kbd>Suppr</kbd> et <kbd>Arrière</kbd> ne dépend
+pas du mode d'édition:</p>
 <ul>
   <li>Si le point d'insertion se trouve au début ou à la fin d'un élément
     <em>bloc</em> (un élément comme <code>p</code>, <code>address</code>,
@@ -360,11 +353,11 @@ dépend pas du mode d'édition:</p>
     l'élément contenant le point d'insertion.</li>
   <li>Si le point d'insertion se trouve dans un élément en-ligne (un élément
     HTML comme <code>strong</code>, <code>em</code>, <code>code</code>,
-    <code>span</code>, <code>a</code>, etc.),  les touches <kbd>Suppr</kbd>
-    et <kbd>Arrière</kbd> détruisent seulement les caractères, en traversant
-    les limites d'éléments <em>en-ligne</em> sans aucun effet sur la
-    structure. Cependant, quand un élément <em>en-ligne</em> devient vide, il
-    est lui-même détruit.</li>
+    <code>span</code>, <code>a</code>, etc.),  les touches <kbd>Suppr</kbd> et
+    <kbd>Arrière</kbd> détruisent seulement les caractères, en traversant les
+    limites d'éléments <em>en-ligne</em> sans aucun effet sur la structure.
+    Cependant, quand un élément <em>en-ligne</em> devient vide, il est lui-même
+    détruit.</li>
 </ul>
 
 <h3 id="Changer"><a name="Changing" id="Changing">Changer le titre du
@@ -380,12 +373,12 @@ structure</a>.</p>
 <h3 id="date">Insérer la date de mise à jour</h3>
 
 <p>L'entrée de menu <strong>Outils/Insérer date de mise à jour</strong> vous
-permet d'insérer la date courante soit au format ISO (YYY-MM-DD) soit au
-format européen (DD-MM-YYYY). Le format de la date est fixé par le menu des
+permet d'insérer la date courante soit au format ISO (YYY-MM-DD) soit au format
+européen (DD-MM-YYYY). Le format de la date est fixé par le menu des
 Préférences.</p>
 
-<p>Une fois cette date insérée, Amaya la met automatiquement à jour chaque
-fois que le document est sauvé et maintenir ainsi la dernière date de mise à
+<p>Une fois cette date insérée, Amaya la met automatiquement à jour chaque fois
+que le document est sauvé et maintenir ainsi la dernière date de mise à
 jour.</p>
 
 <p></p>
