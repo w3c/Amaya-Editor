@@ -926,16 +926,16 @@ ATTRIBUTES
   includeAt:
   BEGIN
 #ifndef INSTANCE
-	CreateBefore(UnionAttrName);
-	CreateBefore(UnionAttrValue);
+	CreateFirst(UnionAttrName);
+	CreateFirst(UnionAttrValue);
 #endif
 	END;    
 
   exclude:
   BEGIN
 #ifndef INSTANCE
-	CreateBefore(UnionAttrName);
-	CreateBefore(UnionAttrValue);
+	CreateFirst(UnionAttrName);
+	CreateFirst(UnionAttrValue);
 #endif
 	END;    
 

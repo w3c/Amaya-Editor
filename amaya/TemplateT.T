@@ -40,6 +40,7 @@ RULES
 
   head:
     begin
+    create '\12';
     create SOT;
     create 'head';
     create Attributes;
@@ -52,6 +53,7 @@ RULES
 
   component:
     begin
+    create '\12';
     create SOT;
     create 'component';
     create Attributes;
@@ -64,6 +66,7 @@ RULES
 
   union:
     begin
+    create '\12';
     create SOT;
     create 'union';
     create Attributes;
@@ -76,6 +79,7 @@ RULES
 
   import:
     begin
+    create '\12';
     create SOT;
     create 'import';
     create Attributes;
@@ -94,18 +98,6 @@ RULES
     create 'repeat>\12' after;
   end;
 
-  {option:
-    begin
-    create SOT;
-    create 'option';
-    create Attributes;
-    create tagend;
-    indent +2;
-    indent -2 after;
-    create SCT after;
-    create 'option>\12' after;
-  end;
-}
   useEl: 
     begin
     create SOT;
