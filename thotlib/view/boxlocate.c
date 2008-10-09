@@ -1494,6 +1494,8 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   int x1,y1,x2,y2,x3,y3,x4,y4;
 
   /* relative coords of the box (easy work) */
+  if (pAb == NULL)
+    return NULL;
   pBox = pAb->AbBox;
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
