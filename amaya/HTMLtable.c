@@ -3776,8 +3776,11 @@ void CellAlignDeleted (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 ThotBool DeleteColElement (NotifyElement * event)
 {
-  /* reject the command */
-  return TRUE;
+  if (DeletedTable)
+    return FALSE;
+  else
+    /* reject the command */
+    return TRUE;
 }
 
 /*----------------------------------------------------------------------
