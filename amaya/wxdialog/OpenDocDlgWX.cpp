@@ -48,7 +48,7 @@ BEGIN_EVENT_TABLE(OpenDocDlgWX, AmayaDialog)
   EVT_COMBOBOX(XRCID("wxID_PROFILE"),             OpenDocDlgWX::OnProfileSelected )
   EVT_CHECKBOX(XRCID("wxID_USE_TEMPLATE"),        OpenDocDlgWX::OnUseTemplate )
   EVT_COMBOBOX(XRCID("wxID_TEMPLATEFILENAME"),    OpenDocDlgWX::OnTemplateSelected )
-  EVT_TEXT_ENTER(XRCID("wxID_TEMPLATEFILENAME"),  OpenDocDlgWX::OnTemplateSelected )
+  EVT_TEXT_ENTER(XRCID("wxID_TEMPLATEFILENAME"),  OpenDocDlgWX::OnOpenWithTemplate )
   EVT_BUTTON(XRCID("wxID_BUTTON_TEMPLATE"),       OpenDocDlgWX::OnTemplateButton )
 
 END_EVENT_TABLE()
@@ -387,6 +387,17 @@ void OpenDocDlgWX::OnUseTemplate( wxCommandEvent& event )
   UseTemplate(event.IsChecked());
 }
 
+
+/*----------------------------------------------------------------------
+  OnOpenButton called when the user validate his selection with template
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void OpenDocDlgWX::OnOpenWithTemplate( wxCommandEvent& event )
+{
+  OnTemplateSelected (event);
+  OnOpenButton (event);
+}
 
 /*----------------------------------------------------------------------
   OnOpenButton called when the user validate his selection

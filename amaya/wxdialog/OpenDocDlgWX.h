@@ -39,6 +39,7 @@ private:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
   void UpdateTemplateList ();
+  void OnOpenWithTemplate( wxCommandEvent& event );
   void OnOpenButton( wxCommandEvent& event );
   void OnClearButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );

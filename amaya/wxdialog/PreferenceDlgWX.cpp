@@ -79,6 +79,7 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_UPDATE_UI( XRCID("wxID_BUTTON_MOVEUP_TEMPLATE"), PreferenceDlgWX::OnUpdateTemplateMoveUp )
   EVT_UPDATE_UI( XRCID("wxID_BUTTON_MOVEDOWN_TEMPLATE"), PreferenceDlgWX::OnUpdateTemplateMoveDown )
   EVT_UPDATE_UI( XRCID("wxID_BUTTON_ADD_TEMPLATE"),     PreferenceDlgWX::OnUpdateTemplateAdd )
+  EVT_TEXT(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"), PreferenceDlgWX::OnTemplateKey)
   EVT_LISTBOX(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"), PreferenceDlgWX::OnTemplateSelected)
 #endif /* TEMPLATES*/
   // Passwords tab callbacks
@@ -91,7 +92,6 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_LISTBOX(XRCID("wxID_LIST_NS"),                PreferenceDlgWX::OnNSSelected)
 
 END_EVENT_TABLE()
-
 
 
   /*----------------------------------------------------------------------
@@ -1359,6 +1359,8 @@ void PreferenceDlgWX::OnTemplateDel(wxCommandEvent& event)
   if (sel != wxNOT_FOUND)
   {
     box->Delete(sel);
+    // clear the input area
+    XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->SetValue( TtaConvMessageToWX(""));
     // Update the list of templates
     UpdateTemplateList();
   }
@@ -1421,6 +1423,13 @@ void PreferenceDlgWX::OnUpdateTemplateMoveDown(wxUpdateUIEvent& event)
 {
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   event.Enable (box->GetSelection() != wxNOT_FOUND && box->GetSelection() != (int)box->GetCount()-1);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnTemplateKey(wxCommandEvent& event)
+{
+  // useful to accept up/down keys
 }
 
 /*----------------------------------------------------------------------

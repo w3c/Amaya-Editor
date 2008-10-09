@@ -100,6 +100,7 @@ private:
   void OnUpdateTemplateMoveUp(wxUpdateUIEvent& event);
   void OnUpdateTemplateMoveDown(wxUpdateUIEvent& event);
   void OnTemplateSelected(wxCommandEvent& event);
+  void OnTemplateKey(wxCommandEvent& event);
 
   // "Emails" tab
   void SetupLabelDialog_Emails();
