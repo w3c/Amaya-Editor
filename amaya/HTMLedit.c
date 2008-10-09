@@ -132,7 +132,8 @@ Element GetNoTemplateChild (Element el, ThotBool first)
             el = TtaGetLastChild (el);
           elType = TtaGetElementType (el);
         }
-      while (el && !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
+      while (el && !TtaIsLeaf (elType) &&
+             !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"));
     }
   return el;
 }
