@@ -542,7 +542,10 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
                                Mode, GL_UNSIGNED_BYTE,
                                (GLvoid *) img->PicPixmap);    
               if (img->PicPixmap != PictureLogo && !Printing)
-                TtaFreeMemory (img->PicPixmap);
+                {
+                  TtaFreeMemory (img->PicPixmap);
+                  img->PicPixmap = NULL;
+                }
             }
         }
       else

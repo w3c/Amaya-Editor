@@ -1296,7 +1296,7 @@ void Template_FillFromDocument (Document doc)
   if (t)
     {
 #ifdef AMAYA_DEBUG
-      printf("plop : %d\n", t->state);
+      printf("state: %d\n", t->state);
 #endif
       SetTemplateDocument (t, doc);
       Template_PrepareTemplate(t, doc);

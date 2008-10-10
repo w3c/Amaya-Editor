@@ -1432,7 +1432,7 @@ static void CopyDeclarationSetElements(SearchSet src, SearchSet dst, XTigerTempl
       newdecl = Declaration_Clone((Declaration)node->elem);
       newdecl->usedIn = t;
       newnode = SearchSet_Find(dst, node->elem);
-      if (newnode==NULL)
+      if (newnode == NULL)
         SearchSet_Insert(dst, newdecl);
       else
       {
@@ -1652,6 +1652,7 @@ void PrintElement(Element elem, int dec)
   ----------------------------------------------------------------------*/
 void PrintDeclarations (XTigerTemplate t, FILE *file)
 {
+#ifdef AMAYA_DEBUG
 #ifdef TEMPLATES
   ForwardIterator iter;
   SearchSetNode     node;
@@ -1715,7 +1716,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
             fprintf (file, " block");
           else
             fprintf (file, " inline");
-          if (dec->declaredIn != t)
+          if (dec->declaredIn != t && dec->declaredIn->uri)
             fprintf (file, " (declared in %s)", dec->declaredIn->uri);
           FPrintElement(file, dec->componentType.content, 1);
         }
@@ -1757,12 +1758,14 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
       TtaFreeMemory(iter);  
     }
 #endif /* TEMPLATES */
+#endif /* AMAYA_DEBUG */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void DumpAllDeclarations()
 {
+#ifdef AMAYA_DEBUG
 #ifdef TEMPLATES
   char localname[MAX_LENGTH];
   FILE *file;
@@ -1794,12 +1797,14 @@ void DumpAllDeclarations()
   
   TtaWriteClose (file);
 #endif /* TEMPLATES */
+#endif /* AMAYA_DEBUG */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void DumpDeclarations (XTigerTemplate t)
 {
+#ifdef AMAYA_DEBUG
 #ifdef TEMPLATES
   char localname[MAX_LENGTH];
   FILE *file;
@@ -1816,12 +1821,14 @@ void DumpDeclarations (XTigerTemplate t)
 
   TtaWriteClose (file);
 #endif /* TEMPLATES */
+#endif /* AMAYA_DEBUG */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void DumpTemplateReferences ()
 {
+#ifdef AMAYA_DEBUG
 #ifdef TEMPLATES
   XTigerTemplate  t;
   ForwardIterator iter;
@@ -1838,9 +1845,8 @@ void DumpTemplateReferences ()
     }
   TtaFreeMemory(iter);
 #endif /* TEMPLATES */
+#endif /* AMAYA_DEBUG */
 }
-
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
