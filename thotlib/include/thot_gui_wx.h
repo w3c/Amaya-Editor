@@ -87,7 +87,7 @@ typedef struct {
 typedef unsigned long  ThotPixel;    /* replace Pixel */
 typedef unsigned long  ThotKeySym;   /* replace KeySym */
 typedef unsigned long  ThotDisplay;  /* replace Display */
-typedef unsigned long  ThotDrawable; /* replace Drawable */
+typedef void * ThotDrawable; /* replace Drawable */
 typedef unsigned long  ThotVisual;   /* replace Visual */
 
 #endif /* _WX */

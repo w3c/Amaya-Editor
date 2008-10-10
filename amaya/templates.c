@@ -1290,13 +1290,10 @@ void Template_FillFromDocument (Document doc)
   XTigerTemplate t = GetXTigerTemplate (DocumentURLs[doc]);
   Element        root;
 
-#ifdef AMAYA_DEBUG
-  printf("Template_FillFromDocument\n");
-#endif
   if (t)
     {
 #ifdef AMAYA_DEBUG
-      printf("state: %d\n", t->state);
+      printf("Template_FillFromDocument state: %d\n", t->state);
 #endif
       SetTemplateDocument (t, doc);
       Template_PrepareTemplate(t, doc);
@@ -1339,16 +1336,19 @@ ThotBool Template_CheckAndPrepareTemplate(char* docURL)
 #ifdef TEMPLATES
   XTigerTemplate t = NULL; //GetXTigerTemplate(docURL);
 
-#ifdef AMAYA_DEBUG
-  printf("Template_CheckAndPrepareTemplate %s\n", docURL);
-#endif
   if (IsXTiger(docURL))
     {
+#ifdef AMAYA_DEBUG
+      printf("Template_CheckAndPrepareTemplate %s templTemplate\n", docURL);
+#endif
       t = LookForXTigerTemplate(docURL);
       t->state |= templTemplate;
     }
   else if (IsXTigerLibrary(docURL))
     {
+#ifdef AMAYA_DEBUG
+      printf("Template_CheckAndPrepareTemplate %s templLibrary\n", docURL);
+#endif
       t = LookForXTigerLibrary(docURL);
       t->state |= templLibrary;
     }

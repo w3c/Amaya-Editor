@@ -2546,7 +2546,7 @@ ThotBool Template_CanInsertElementInBagElement (Document doc, ElementType type, 
   Template_CanInsertTypeInBagElement
   Test if something can be insert in a bag
   ----------------------------------------------------------------------*/
-ThotBool Template_CanInsertElementInBagElement (Document doc, const char* type, Element bag)
+ThotBool Template_CanInsertTypeInBagElement (Document doc, const char* type, Element bag)
 {
   ThotBool res = FALSE;
 #ifdef TEMPLATES

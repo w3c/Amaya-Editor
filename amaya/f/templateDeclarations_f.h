@@ -125,9 +125,9 @@ extern ThotBool Template_CanInsertTypeInBag ( Document doc,
 extern ThotBool Template_CanInsertElementInBagElement ( Document doc,
                                                         ElementType type,
                                                         Element bag );
-extern ThotBool Template_CanInsertElementInBagElement ( Document doc,
-                                                        const char* type,
-                                                        Element bag );
+extern ThotBool Template_CanInsertTypeInBagElement ( Document doc,
+                                                     const char* type,
+                                                     Element bag );
 extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                  ElementType type,
                                                  char* useType,
@@ -262,9 +262,9 @@ extern ThotBool Template_CanInsertTypeInBag ( Document doc,
 extern ThotBool Template_CanInsertElementInBagElement ( Document doc,
                                                           ElementType type,
                                                           Element bag );
-extern ThotBool Template_CanInsertElementInBagElement ( Document doc,
-                                                          const char* type,
-                                                          Element bag );
+extern ThotBool Template_CanInsertTypeInBagElement ( Document doc,
+                                                       const char* type,
+                                                       Element bag );
 extern ThotBool Template_CanInsertElementInUse ( Document doc,
                                                    ElementType type,
                                                    char* useType,

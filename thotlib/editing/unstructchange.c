@@ -1333,6 +1333,20 @@ static void ReturnCreateNewElem (PtrElement pListEl, PtrElement pEl,
     /* it's really a List */
     {
       *typeNum = pEl->ElTypeNumber;
+      // detect the creation of non template element within a template
+      if (!strcmp (pSSList->SsName, "Template") &&
+          pSSList != pEl->ElStructSchema)
+        {
+          // look for an element of the target language
+          do 
+            {
+              pListEl =  pListEl->ElParent;
+              if (pListEl &&  pListEl->ElStructSchema)
+                pSSList = pListEl->ElStructSchema;
+            }
+          while  (!strcmp (pSSList->SsName, "Template"));
+        }
+
       TypeListe = GetTypeNumIdentity (pListEl->ElTypeNumber, pSSList);
       /* le type des elements qui constituent la liste */
       TypeElListe = pSSList->SsRule->SrElem[TypeListe - 1]->SrListItem;
@@ -1744,10 +1758,6 @@ void TtcCreateElement (Document doc, View view)
                 else
                   {
                     pAncest = pParent;
-                    /* ignore the next Template ancestors */
-                    while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
-                           !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
-                      pAncest = pAncest->ElParent;
                     pListEl = AncestorList (pAncest);
                   }
                 if (TypeHasException (ExcNoBreakByReturn, pParent->ElTypeNumber,
@@ -1917,10 +1927,6 @@ void TtcCreateElement (Document doc, View view)
                 if (list && pListEl == NULL)
                   {
                     pAncest = pElem;
-                    /* ignore the next Template ancestors */
-                    while (pAncest->ElParent && pAncest->ElParent->ElStructSchema &&
-                           !strcmp (pAncest->ElParent->ElStructSchema->SsName, "Template"))
-                      pAncest = pAncest->ElParent;
                     pListEl = AncestorList (pAncest);
                     if (pListEl != NULL)
                       if (!TypeHasException (ExcNoCreate,
