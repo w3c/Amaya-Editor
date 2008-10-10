@@ -141,10 +141,10 @@ BOXES
     Visibility: 0;
 #else
     Visibility: 10;
-    Content: (Text 'types=' AttributeValue);
-    HorizPos: Left = Creator . Left + 10 px;
-    VertPos: Top = Creator . Top + 4 px;
-    Size: TAG_FONTSIZE;
+    Content: (AttributeValue Text ' ');
+    HorizPos: Right = Enclosing . Right;
+    VertPos: Top = Enclosing . Top - 5 px;
+    Size: 8 pt;
 		PaddingTop: 			  5 px;
 		PaddingBottom: 			5 px;
 		PaddingLeft: 		  	5 px;
@@ -978,7 +978,7 @@ ATTRIBUTES
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 #ifndef INSTANCE
-    if Empty
+    {if Empty}
       CreateLast(UsedTypes);
 #endif
 	END;
