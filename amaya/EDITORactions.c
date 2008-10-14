@@ -694,7 +694,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
   NormalizeURL (url, 0, pathname, documentname, NULL);
   if (doc == 0 || DontReplaceOldDoc)
     {
-      doc = InitDocAndView (doc, !DontReplaceOldDoc /* replaceOldDoc */, InNewWindow /* inNewWindow */,
+      doc = InitDocAndView (doc, !DontReplaceOldDoc, InNewWindow,
                             documentname, (DocumentType)docType, 0, FALSE, profile, extraProfile,
                             CE_ABSOLUTE);
       InitDocHistory (doc);
@@ -708,7 +708,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
                      DocumentMeta[doc]->form_data,
                      DocumentMeta[doc]->method);
       doc = InitDocAndView (doc,
-                            !DontReplaceOldDoc /* replaceOldDoc */, InNewWindow /* inNewWindow */,
+                            !DontReplaceOldDoc, InNewWindow,
                             documentname, (DocumentType)docType, 0, FALSE, profile, extraProfile,
                             CE_ABSOLUTE);
     }
