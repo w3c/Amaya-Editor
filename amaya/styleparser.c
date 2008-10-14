@@ -7513,7 +7513,7 @@ void SetBodyAbsolutePosition (Document doc)
   elType.ElTypeNum = HTML_EL_BODY;
   body = TtaSearchTypedElement (elType, SearchInTree, root);
   if (body)
-    ParseHTMLSpecificStyle (body, "position:absolute", doc, 200, FALSE);
+    ParseHTMLSpecificStyle (body, (char *)"position:absolute", doc, 200, FALSE);
 }
 
 /*----------------------------------------------------------------------

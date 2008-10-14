@@ -27,6 +27,7 @@
 #include "fetchHTMLname_f.h"
 #include "html2thot_f.h"
 #include "wxdialogapi_f.h"
+#include "templates_f.h"
 #include "message.h"
 
 #define UNION_ANY            "any"
@@ -375,7 +376,7 @@ static Declaration Declaration_Create(const XTigerTemplate t, const char *name,
   dec->usedIn     = t;
   dec->name = TtaStrdup (name);
   dec->nature = xtype;
-  dec->blockLevel = FALSE;
+  dec->blockLevel = 0;
   return dec;
 #else
   return NULL;
@@ -389,10 +390,7 @@ Declaration Declaration_Clone (Declaration dec)
 {
 #ifdef TEMPLATES
   Declaration newdec = Declaration_Create (dec->declaredIn, dec->name, dec->nature);
-//  Element         el;
-//  ForwardIterator iter;
-//  HashMapNode     node;
-  
+  newdec->blockLevel = dec->blockLevel;
   switch (dec->nature)
     {
     case SimpleTypeNat:
@@ -410,22 +408,6 @@ Declaration Declaration_Clone (Declaration dec)
       newdec->unionType.include  = NULL;
       newdec->unionType.exclude  = NULL;
       newdec->unionType.expanded = NULL;
-/*      newdec->unionType.include = KeywordHashMap_CreateFromList(NULL, -1, NULL);
-      newdec->unionType.exclude = KeywordHashMap_CreateFromList(NULL, -1, NULL);
-      iter = HashMap_GetForwardIterator(dec->unionType.include);
-      ITERATOR_FOREACH(iter, HashMapNode, node)
-        {
-          HashMap_Set(newdec->unionType.include,
-                      TtaStrdup((const char*)node->key), NULL);
-        }
-      TtaFreeMemory(iter);
-      iter = HashMap_GetForwardIterator(dec->unionType.exclude);
-      ITERATOR_FOREACH(iter, HashMapNode, node)
-        {
-          HashMap_Set(newdec->unionType.exclude,
-                      TtaStrdup((const char*)node->key), NULL);
-        }
-      TtaFreeMemory(iter);*/
       break;
     case UnknownNat:
       /* Do nothing. */
@@ -446,8 +428,6 @@ Declaration Declaration_Clone (Declaration dec)
 void Declaration_Destroy (Declaration dec)
 {
 #ifdef TEMPLATES
-  Document doc;
-  
   if (dec->nature == XmlElementNat)
     {
       TtaFreeMemory (dec->elementType.name);
@@ -480,7 +460,6 @@ void Declaration_Destroy (Declaration dec)
   TtaFreeMemory (dec);
 #endif /* TEMPLATES */
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -555,42 +534,77 @@ int Declaration_CompareToString (Declaration dec, const char* name)
   Declaration_CalcBlockLevel
   Calculate if the declaration's element is block level or inlined.
   ----------------------------------------------------------------------*/
-void Declaration_CalcBlockLevel (Declaration dec)
+void Declaration_CalcBlockLevel (XTigerTemplate t, Declaration dec)
 {
 #ifdef TEMPLATES
-  Element         elem;
+  Element         elem, child;
   ElementType     elType;
   SearchSet       set;
-  Declaration     unionDecl;
+  Declaration     sub_dcl;
   ForwardIterator iter;
   SearchSetNode   node;
+  char           *s, *name;
 
-  if (dec)
+  if (dec && dec->blockLevel == 0)
     {
-      switch(dec->nature)
+      //not already calculated
+      switch (dec->nature)
         {
         case SimpleTypeNat:
           /* Simple types are always inline.*/
-          dec->blockLevel = FALSE;
+          dec->blockLevel = 1;
           break;
         case XmlElementNat:
           /* XmlElement : test with html2thot::IsBlockElement.*/
           GIType (dec->name, &elType, dec->usedIn->doc);
           if (TtaIsLeaf (elType))
-            dec->blockLevel = FALSE;
-          else 
-            dec->blockLevel = !IsCharacterLevelType (elType);
+            dec->blockLevel = 1;
+          else if (IsCharacterLevelType (elType))
+            dec->blockLevel = 1;
+          else
+            dec->blockLevel = 2;
           break;
         case ComponentNat:
-          dec->blockLevel = FALSE;
+          dec->blockLevel = 1;
           if (dec->componentType.content)
             {
               elem = TtaGetFirstChild (dec->componentType.content);                  
               while (elem)
                 {
-                  if (!IsCharacterLevelType (TtaGetElementType(elem)))
+                  elType = TtaGetElementType (elem);
+                  s = TtaGetSSchemaName (elType.ElSSchema);
+                  child = elem;
+                  while (s &&
+                         (!strcmp (s, "Template") &&
+                          elType.ElTypeNum == Template_EL_repeat) ||
+                         (!strcmp (s, "HTML") &&
+                          elType.ElTypeNum == HTML_EL_Pseudo_paragraph))
                     {
-                      dec->blockLevel = TRUE;
+                      // ignore repeat and pseudo paragraphs
+                      child =  TtaGetFirstChild (child);
+                      elType = TtaGetElementType (child);
+                      s = TtaGetSSchemaName (elType.ElSSchema);
+                    }
+                  if (TtaIsLeaf (elType))
+                    dec->blockLevel = 1;
+                  else if (!strcmp (s, "Template"))
+                    {
+                      // check the blocklevel of the component
+                      name = GetUsedTypeName (elem);
+                      sub_dcl = Template_GetDeclaration (t, name);
+                      if (sub_dcl && sub_dcl->blockLevel == 0)
+                        Declaration_CalcBlockLevel (t, sub_dcl);
+                      if (sub_dcl)
+                        {
+                          dec->blockLevel = sub_dcl->blockLevel;
+                          if (dec->blockLevel == 2)
+                            break;
+                        }
+                      TtaFreeMemory(name);
+                    }
+                  else if (!IsCharacterLevelType (elType))
+                    {
+                      dec->blockLevel = 2;
                       break;
                     }
                   TtaNextSibling(&elem);
@@ -598,21 +612,21 @@ void Declaration_CalcBlockLevel (Declaration dec)
             }
           break;
         case UnionNat:
-          if (dec->name[0]=='a' && dec->name[1]=='n' && dec->name[2]=='y')
+          if (dec->name[0] == 'a' && dec->name[1] == 'n' && dec->name[2] == 'y')
             {
               if (!strcmp(dec->name, UNION_ANY))
                 {
-                  dec->blockLevel = TRUE;
+                  dec->blockLevel = 2;
                   break;
                 }
               else if (!strcmp(dec->name, UNION_ANYSIMPLE))
                 {
-                  dec->blockLevel = FALSE;
+                  dec->blockLevel = 1;
                   break;
                 }
               else if (!strcmp(dec->name, UNION_ANYELEMENT))
                 {
-                  dec->blockLevel = TRUE;
+                  dec->blockLevel = 2;
                   break;
                 }
               else if (!strcmp(dec->name, UNION_ANYCOMPONENT))
@@ -620,31 +634,32 @@ void Declaration_CalcBlockLevel (Declaration dec)
                   iter = SearchSet_GetForwardIterator(dec->usedIn->components);
                   ITERATOR_FOREACH(iter, SearchSetNode, node)
                     {
-                      unionDecl = (Declaration)node->elem;
-                      if (unionDecl)
+                      sub_dcl = (Declaration)node->elem;
+                      if (sub_dcl && sub_dcl->blockLevel == 0)
+                        Declaration_CalcBlockLevel (t, sub_dcl);
+                      if (sub_dcl)
                         {
-                          Declaration_CalcBlockLevel(unionDecl);
-                          if (unionDecl->blockLevel)
-                            {
-                              dec->blockLevel = TRUE;
-                              break;
-                            }
+                          dec->blockLevel = sub_dcl->blockLevel;
+                          if (sub_dcl->blockLevel == 2)
+                            break;
                         }
                     }
                   TtaFreeMemory(iter);
                   break;
                 }
             }
-          set = Template_ExpandUnion(dec->usedIn, dec);
-          iter = SearchSet_GetForwardIterator(set);
-          ITERATOR_FOREACH(iter, SearchSetNode, node)
+          set = Template_ExpandUnion (dec->usedIn, dec);
+          iter = SearchSet_GetForwardIterator (set);
+          ITERATOR_FOREACH (iter, SearchSetNode, node)
             {
-              unionDecl = (Declaration)node->elem;
-              if (unionDecl)
+              sub_dcl = (Declaration)node->elem;
+              if (sub_dcl && sub_dcl->blockLevel == 0)
+                Declaration_CalcBlockLevel (t, sub_dcl);
+              if (sub_dcl)
                 {
-                  Declaration_CalcBlockLevel(unionDecl);
-                  if (unionDecl->blockLevel)
-                    dec->blockLevel = TRUE;
+                  dec->blockLevel = sub_dcl->blockLevel;
+                  if (sub_dcl->blockLevel == 2)
+                    break;
                 }
             }
           TtaFreeMemory(iter);
@@ -665,16 +680,16 @@ void Template_CalcBlockLevel (XTigerTemplate t)
 #ifdef TEMPLATES
   ForwardIterator iter;
   SearchSetNode   node;
-  Declaration     decl;
+  Declaration     dec;
   ElementType     elType;
 
   // Simple types.
   iter = SearchSet_GetForwardIterator(t->simpleTypes);
   ITERATOR_FOREACH(iter, SearchSetNode, node)
     {
-      decl = (Declaration) node->elem;
-      if (decl)
-        decl->blockLevel = FALSE; // Always inline;
+      dec = (Declaration) node->elem;
+      if (dec)
+        dec->blockLevel = 1; // Always inline;
     }
   TtaFreeMemory(iter);
 
@@ -682,11 +697,16 @@ void Template_CalcBlockLevel (XTigerTemplate t)
   iter = SearchSet_GetForwardIterator(t->elements);
   ITERATOR_FOREACH(iter, SearchSetNode, node)
     {
-      decl = (Declaration) node->elem;
-      if (decl)
+      dec = (Declaration) node->elem;
+      if (dec)
         {
-          GIType (decl->name, &elType, t->doc);
-          decl->blockLevel = !IsCharacterLevelType(elType);
+          GIType (dec->name, &elType, t->doc);
+          if (TtaIsLeaf (elType))
+            dec->blockLevel = 1;
+          else if (IsCharacterLevelType (elType))
+            dec->blockLevel = 1;
+          else
+            dec->blockLevel = 2;
         }
     }
   TtaFreeMemory(iter);
@@ -695,9 +715,9 @@ void Template_CalcBlockLevel (XTigerTemplate t)
   iter = SearchSet_GetForwardIterator(t->components);
   ITERATOR_FOREACH(iter, SearchSetNode, node)
     {
-      decl = (Declaration) node->elem;
-      if (decl)
-          Declaration_CalcBlockLevel(decl);
+      dec = (Declaration) node->elem;
+      if (dec)
+          Declaration_CalcBlockLevel(t, dec);
     }
   TtaFreeMemory(iter);
 
@@ -705,9 +725,9 @@ void Template_CalcBlockLevel (XTigerTemplate t)
   iter = SearchSet_GetForwardIterator(t->unions);
   ITERATOR_FOREACH(iter, SearchSetNode, node)
     {
-      decl = (Declaration) node->elem;
-      if (decl)
-          Declaration_CalcBlockLevel(decl);
+      dec = (Declaration) node->elem;
+      if (dec)
+          Declaration_CalcBlockLevel(t, dec);
     }
   TtaFreeMemory(iter);
 #endif /* TEMPLATES */
@@ -746,7 +766,7 @@ char* Template_GetBlockLevelDeclarations (XTigerTemplate t, ThotBool addAny)
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           decl = (Declaration) node->elem;
-          if (decl && decl->blockLevel)
+          if (decl && decl->blockLevel == 2)
             {
               strcat(str, decl->name);
               strcat(str, " ");
@@ -759,7 +779,7 @@ char* Template_GetBlockLevelDeclarations (XTigerTemplate t, ThotBool addAny)
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           decl = (Declaration) node->elem;
-          if (decl && decl->blockLevel)
+          if (decl && decl->blockLevel == 2)
             {
               if(strcmp(decl->name, UNION_ANY) && 
                   strcmp(decl->name, UNION_ANYCOMPONENT) &&
@@ -777,7 +797,7 @@ char* Template_GetBlockLevelDeclarations (XTigerTemplate t, ThotBool addAny)
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           decl = (Declaration) node->elem;
-          if (decl && decl->blockLevel)
+          if (decl && decl->blockLevel == 2)
             {
               strcat(str, decl->name);
               strcat(str, " ");
@@ -831,7 +851,7 @@ char* Template_GetInlineLevelDeclarations (XTigerTemplate t, ThotBool addAny,
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           decl = (Declaration) node->elem;
-          if (decl && !decl->blockLevel)
+          if (decl && !decl->blockLevel == 2)
             {
               strcat(str, decl->name);
               strcat(str, " ");
@@ -844,9 +864,9 @@ char* Template_GetInlineLevelDeclarations (XTigerTemplate t, ThotBool addAny,
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           decl = (Declaration) node->elem;
-          if (decl && !decl->blockLevel)
+          if (decl && decl->blockLevel == 1)
             {
-              if(strcmp(decl->name, UNION_ANY) && 
+              if (strcmp(decl->name, UNION_ANY) && 
                   strcmp(decl->name, UNION_ANYCOMPONENT) &&
                   strcmp(decl->name, UNION_ANYSIMPLE) &&
                   strcmp(decl->name, UNION_ANYELEMENT) )
@@ -863,7 +883,7 @@ char* Template_GetInlineLevelDeclarations (XTigerTemplate t, ThotBool addAny,
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           decl = (Declaration) node->elem;
-          if (decl && !decl->blockLevel)
+          if (decl && decl->blockLevel == 1)
             {
               strcat(str, decl->name);
               strcat(str, " ");
@@ -1055,7 +1075,7 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
     return;
   
   Declaration old = Template_GetDeclaration (t, dec->name);
-  if (old==NULL) //New type, not a redefinition
+  if (old == NULL) //New type, not a redefinition
     {
       switch (dec->nature)
         {
@@ -1078,9 +1098,7 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
         dec->usedIn = t;
     }
   else //A redefinition. Using the old memory zone to keep consistent pointers
-    {
-      TtaFreeMemory (dec);
-    }
+    TtaFreeMemory (dec);
 #endif /* TEMPLATES */
 }
 
@@ -1546,20 +1564,20 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
                 case XmlElementNat:
                 case ComponentNat:
                   fprintf (file, "\n%s+ %s ",indentation,aux->name);
-                  if (aux->blockLevel)
+                  if (aux->blockLevel == 2)
                     fprintf (file, " block");
                   else
                     fprintf (file, " inline");
-                  if (aux->declaredIn!=t)
+                  if (aux->declaredIn != t)
                     fprintf (file, " (declared in %s)", aux->declaredIn->uri);
                   break;
                 case UnionNat:
                   fprintf (file, "\n%s+ %s ",indentation,aux->name);
-                  if (aux->blockLevel)
+                  if (aux->blockLevel == 2)
                     fprintf (file, " block");
                   else
                     fprintf (file, " inline");
-                  if (aux->declaredIn!=t)
+                  if (aux->declaredIn != t)
                     fprintf (file, " (declared in %s)", aux->declaredIn->uri);
                   Template_PrintUnion (aux, indent+1, t, file);
                 default:
@@ -1587,20 +1605,20 @@ void Template_PrintUnion (Declaration dec, int indent, XTigerTemplate t, FILE *f
               case XmlElementNat:
               case ComponentNat:
                 fprintf (file, "\n%s+ %s ",indentation,aux->name);
-                if (aux->blockLevel)
+                if (aux->blockLevel == 2)
                   fprintf (file, " block");
                 else
                   fprintf (file, " inline");
-                if (aux->declaredIn!=t)
+                if (aux->declaredIn != t)
                   fprintf (file, " (declared in %s)", aux->declaredIn->uri);
                 break;
               case UnionNat:
                 fprintf (file, "\n%s+ %s ",indentation,aux->name);
-                if (aux->blockLevel)
+                if (aux->blockLevel == 2)
                   fprintf (file, " block");
                 else
                   fprintf (file, " inline");
-                if (aux->declaredIn!=t)
+                if (aux->declaredIn != t)
                   fprintf (file, " (declared in %s)", aux->declaredIn->uri);
                 Template_PrintUnion (aux, indent+1, t, file);
               default:
@@ -1675,11 +1693,11 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         {
           dec = (Declaration) node->elem;
           fprintf (file, "\n(%p) %s ", dec, dec->name);
-          if (dec->blockLevel)
+          if (dec->blockLevel == 2)
             fprintf (file, " block");
           else
             fprintf (file, " inline");
-          if (dec->declaredIn!=t)
+          if (dec->declaredIn != t && dec->declaredIn->uri)
             fprintf (file, " (declared in %s)", dec->declaredIn->uri);
         }
       TtaFreeMemory(iter);  
@@ -1695,11 +1713,11 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         {
           dec = (Declaration) node->elem;
           fprintf (file, "\n(%p) %s ", dec, dec->name);
-          if (dec->blockLevel)
+          if (dec->blockLevel == 2)
             fprintf (file, " block");
           else
             fprintf (file, " inline");
-          if (dec->declaredIn!=t)
+          if (dec->declaredIn != t && dec->declaredIn->uri)
             fprintf (file, " (declared in %s)", dec->declaredIn->uri);
         }
       TtaFreeMemory(iter);  
@@ -1715,7 +1733,7 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         {
           dec = (Declaration) node->elem;
           fprintf (file, "\n(%p) %s ", dec, dec->name);
-          if (dec->blockLevel)
+          if (dec->blockLevel == 2)
             fprintf (file, " block");
           else
             fprintf (file, " inline");
@@ -1736,11 +1754,11 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
         {
           dec = (Declaration) node->elem;
           fprintf (file, "\n(%p) %s ", dec, dec->name);
-          if (dec->blockLevel)
+          if (dec->blockLevel == 2)
             fprintf (file, " block");
           else
             fprintf (file, " inline");
-          if (dec->declaredIn!=t)
+          if (dec->declaredIn != t && dec->declaredIn->uri)
             fprintf (file, " (declared in %s)", dec->declaredIn->uri);
           Template_PrintUnion (dec, 1, t, file);
         }

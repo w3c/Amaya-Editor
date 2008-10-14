@@ -426,7 +426,7 @@ ThotBool IsXMLElementInline (ElementType elType, Document doc)
         ptr = XHTMLElemMappingTable;
 #ifdef TEMPLATES
       else if (strcmp ("Template", name) == 0)
-        ptr = TemplateElemMappingTable;
+        return FALSE;
 #endif /* TEMPLATES */
       else
         ptr = NULL;

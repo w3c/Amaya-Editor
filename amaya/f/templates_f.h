@@ -9,6 +9,8 @@
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern ThotBool IsTemplateDocument ( Document doc );
 extern char *GetUsedTypeName ( Element el );
+extern ThotBool IsInLineTemplateElement ( Element el,
+                                          Document doc );
 extern ThotBool IsInternalTemplateDocument ( Document doc );
 extern char* GetDocumentInstanceTemplateUrl ( Document doc );
 extern ThotBool CheckPromptIndicator ( Element el,
@@ -105,6 +107,8 @@ extern ThotBool TemplateNameAttrInMenu ( NotifyAttribute * event );
 extern ThotBool IsTemplateInstanceDocument ( Document doc );
 extern ThotBool IsTemplateDocument ( Document doc );
 extern char *GetUsedTypeName ( Element el );
+extern ThotBool IsInLineTemplateElement ( Element el,
+                                            Document doc );
 extern ThotBool IsInternalTemplateDocument ( Document doc );
 extern char* GetDocumentInstanceTemplateUrl ( Document doc );
 extern ThotBool CheckPromptIndicator ( Element el,

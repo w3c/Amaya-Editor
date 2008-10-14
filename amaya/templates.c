@@ -123,6 +123,39 @@ char *GetUsedTypeName (Element el)
 }
 
 /*----------------------------------------------------------------------
+  IsInLineTemplateElement returns TRUE if the template element can be
+  inserted into a paragraph
+  ----------------------------------------------------------------------*/
+ThotBool IsInLineTemplateElement (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  XTigerTemplate t;
+  ElementType    elType;
+  Declaration    dec;
+  char          *name = NULL;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == Template_EL_useEl ||
+      elType.ElTypeNum == Template_EL_useSimple)
+    {
+      t = GetXTigerDocTemplate(doc);
+      if (t)
+        {
+          name = GetUsedTypeName (el);
+          dec = Template_GetDeclaration (t, name);
+          TtaFreeMemory (name);
+          if (dec)
+            return !dec->blockLevel;
+          else
+            return FALSE;
+        }
+    }
+#else /* TEMPLATES */
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
   Test if a document is an internal template.
   (no instance is opened and it is not edited)
   ----------------------------------------------------------------------*/
@@ -131,7 +164,7 @@ ThotBool IsInternalTemplateDocument(Document doc)
 #ifdef TEMPLATES
   XTigerTemplate t = GetXTigerDocTemplate(doc);
   if (t)
-    return (t->state&templInternal)!=0;
+    return (t->state & templInternal) != 0;
   else
     return FALSE;
 #else /* TEMPLATES */
@@ -1093,7 +1126,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   Document        doc = event->document;
   Element         el = event->element;
   Element         child;
-  ElementType     elType;
+  ElementType     elType, childType;
   XTigerTemplate  t;
   Declaration     decl;
   Element         firstEl;
@@ -1117,13 +1150,15 @@ ThotBool UseButtonClicked (NotifyElement *event)
   t = GetXTigerDocTemplate(doc);
   if (!t)
     return FALSE; /* let Thot perform normal operation */
-  elType = TtaGetElementType(el);
 
-  firstEl = TtaGetFirstChild(el);
-  if (firstEl)
-    {
-      RepeatButtonClicked(event);
-    }
+  elType = TtaGetElementType (el);
+  firstEl = TtaGetFirstChild (el);
+  childType = TtaGetElementType (firstEl);
+  if (firstEl &&
+      // TemplateObject is just a place holder
+      (childType.ElSSchema != elType.ElSSchema ||
+      childType.ElTypeNum != Template_EL_TemplateObject))
+    RepeatButtonClicked(event);
   else
     {
       types = GetAttributeStringValueFromNum(el, Template_ATTR_types, NULL);

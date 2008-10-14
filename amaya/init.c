@@ -4087,6 +4087,11 @@ void Reload (Document doc, View view)
     /* the document has not been loaded yet */
     return;
 
+  // synchronize information
+  HighlightDocument = 0;
+  HighlightElement = NULL;
+  HighLightAttribute = NULL;
+
   /* if it is a source document, reload its corresponding document */
   if (DocumentTypes[doc] == docSource)
     {
@@ -7061,7 +7066,11 @@ void InitAmaya (NotifyEvent * event)
   AutoSave_list = NULL;
   AutoSave_list_len = 0;
   InitAutoSave ();
-
+  // synchronize information
+  HighlightDocument = 0;
+  HighlightElement = NULL;
+  HighLightAttribute = NULL;
+  // load information
   CurrentDocument = 0;
   DocBook = 0;
   DontReplaceOldDoc = FALSE;

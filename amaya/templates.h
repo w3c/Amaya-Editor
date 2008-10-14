@@ -69,7 +69,6 @@ typedef enum _TypeNature
 typedef enum _SimpleTypeType {XTNumber, XTString, XTBoolean} SimpleTypeType;
 
 /* Structure of a Declaration */
-
 typedef struct _XmlElement
 {
 	char	*name;
@@ -102,8 +101,8 @@ struct _Declaration
 {
 	char          *name;
 	TypeNature     nature;
-	// TODO Change blockLevel with a triplet (block,inline,both) to use with union
-  ThotBool       blockLevel; // TRUE if the element is a block (not inline)
+	// TODO Change blockLevel with a triplet (block,inline, both) to use with union
+  int            blockLevel; // 0=unknown, 1=inline, 2=block, 3 = both
 	XTigerTemplate declaredIn; // The template which declare the decl
   XTigerTemplate usedIn;     // The template which embed the decl
 	union

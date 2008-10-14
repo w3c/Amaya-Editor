@@ -26,7 +26,8 @@ extern int Declaration_Compare ( Declaration dec1,
                                  Declaration dec2 );
 extern int Declaration_CompareToString ( Declaration dec,
                                          const char* name );
-extern void Declaration_CalcBlockLevel ( Declaration dec );
+extern void Declaration_CalcBlockLevel ( XTigerTemplate t,
+                                         Declaration dec );
 extern void Template_CalcBlockLevel ( XTigerTemplate t );
 extern char* Template_GetBlockLevelDeclarations ( XTigerTemplate t,
                                                   ThotBool addAny );
@@ -163,7 +164,8 @@ extern int Declaration_Compare ( Declaration dec1,
                                    Declaration dec2 );
 extern int Declaration_CompareToString ( Declaration dec,
                                            const char* name );
-extern void Declaration_CalcBlockLevel ( Declaration dec );
+extern void Declaration_CalcBlockLevel ( XTigerTemplate t,
+                                           Declaration dec );
 extern void Template_CalcBlockLevel ( XTigerTemplate t );
 extern char* Template_GetBlockLevelDeclarations ( XTigerTemplate t,
                                                     ThotBool addAny );

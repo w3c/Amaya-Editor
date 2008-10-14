@@ -120,7 +120,7 @@ Element Template_InsertBagChild (Document doc, Element el, Declaration decl, Tho
     }
 
     selType = TtaGetElementType (sel);
-    if (decl->blockLevel && 
+    if (decl->blockLevel == 2 && 
         (TtaIsLeaf (selType) || !IsTemplateElement (sel)))
       {
         // force the insertion of a block level element at the right position
@@ -946,6 +946,13 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
             TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
         }
       }
+    }
+  else
+    {
+      // insert almost a pseudo element
+      elType.ElTypeNum = Template_EL_TemplateObject;
+      cont = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&cont, el, doc);
     }
   TtaFreeMemory (text);
   TtaFreeMemory (types);

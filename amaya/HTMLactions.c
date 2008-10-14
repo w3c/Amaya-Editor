@@ -97,9 +97,6 @@ typedef struct _Do_follow_link_context {
 
 /* info about the last element highlighted when synchronizing with the
    source view */
-static Document	    HighlightDocument = 0;
-static Element	    HighlightElement = NULL;
-static Attribute    HighLightAttribute = NULL;
 static ThotBool     Follow_exclusive = FALSE;
 static ThotBool     Refresh_exclusive = FALSE;
 static ThotBool     SelectionChanging = FALSE;

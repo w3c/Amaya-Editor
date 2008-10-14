@@ -273,7 +273,7 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
   XTigerTemplate   templ = NULL;
   ElementType	     searchedType1, searchedType2, searchedType3;
   ElementType      elType, parentType;
-  Element	         root, el, asc, sibling, parent;
+  Element	         root, el, asc, prev, next, parent;
   Declaration      dec;
   char            *name;
 
@@ -311,7 +311,7 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
   Template_CalcBlockLevel (t);
 
   // check the block level of each use element
-  if (DocumentTypes[doc] != docHTML ||  !IsTemplateDocument(doc))
+  if (DocumentTypes[doc] != docHTML)
     return;
   root = TtaGetRootElement (doc);
   elType = TtaGetElementType (root);
@@ -334,13 +334,15 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
           //look at the refered type
           name = GetUsedTypeName (el);
           dec = Template_GetDeclaration (t, name);
-          TtaFreeMemory (name);
-          if (dec && dec->blockLevel)
+          if (dec && dec->blockLevel == 2)
             {
              asc = TtaGetTypedAncestor (el, elType);
              if (asc)
                {
                  // chech if the parent is a repeat
+#ifdef AMAYA_DEBUG
+printf ("Move %s out of the pseudo paragraph\n",name);
+#endif /* AMAYA_DEBUG */
                  parent = TtaGetParent (el);
                  parentType = TtaGetElementType (parent);
                  if (parentType.ElSSchema == templateSSchema &&
@@ -349,18 +351,25 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
                      el = parent;
                      parent = TtaGetParent (el);
                    }
-                 sibling = el;
-                 TtaPreviousSibling (&sibling);
-                 // move the element after the pseudo paragraph
-                 TtaRemoveTree (el, doc);
-                 TtaInsertSibling (el, asc, FALSE, doc);
+                 prev = el;
+                 TtaPreviousSibling (&prev);
+                 while (el)
+                   {
+                     // move the element and next siblings after the pseudo paragraph
+                     next = el;
+                     TtaNextSibling (&next);
+                     TtaRemoveTree (el, doc);
+                     TtaInsertSibling (el, asc, FALSE, doc);
+                     el = next;
+                   }
                  // next origin of the search
-                 if (sibling)
-                   el = sibling;
+                 if (prev)
+                   el = prev;
                  else
                    el = parent;
                }
             }
+          TtaFreeMemory (name);
         }
     }
 #endif /* TEMPLATES */
