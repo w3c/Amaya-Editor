@@ -55,6 +55,14 @@ static Element Creating_repeat = NULL;
 ThotBool IsTemplateInstanceDocument(Document doc)
 {
 #ifdef TEMPLATES
+  // check first indicators
+  if (DocumentMeta[doc])
+    {
+    if (DocumentMeta[doc]->method == CE_INSTANCE)
+      return TRUE;
+    else if (DocumentMeta[doc]->method == CE_TEMPLATE)
+      return FALSE;
+    }
   XTigerTemplate t = GetXTigerDocTemplate(doc);
   if (t)
     return ((t->state & templInstance) != 0);
@@ -1141,11 +1149,11 @@ ThotBool UseButtonClicked (NotifyElement *event)
                   newEl = Template_InsertUseChildren(doc, el, decl);
                   for (child = TtaGetFirstChild(newEl); child; TtaNextSibling(&child))
                     {
-                      TtaRegisterElementCreate(child, doc);
+                      TtaRegisterElementCreate (child, doc);
                     }
 
                   TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
-                  TtaRegisterElementTypeChange(el, Template_EL_useEl, doc);
+                  TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
 
                   /* xt:currentType attribute.*/
                   SetAttributeStringValueWithUndo(el, Template_ATTR_currentType, result);
@@ -1155,11 +1163,11 @@ ThotBool UseButtonClicked (NotifyElement *event)
                   TtaSetDocumentModified (doc);
                   TtaSetStructureChecking (oldStructureChecking, doc);
 
-                  firstEl = GetFirstEditableElement(newEl);
+                  firstEl = GetFirstEditableElement (newEl);
                   if (firstEl)
                     {
                       TtaSelectElement (doc, firstEl);
-                      TtaSetStatusSelectedElement(doc, view, firstEl);
+                      TtaSetStatusSelectedElement (doc, view, firstEl);
                     }
                   else
                     {
@@ -1359,11 +1367,12 @@ ThotBool Template_CheckAndPrepareTemplate(char* docURL)
 
 
 /*----------------------------------------------------------------------
-  Template_CheckAndPrepareInstance checks if it is a template instance needs.
+  Template_CheckAndPrepareInstance checks if it is a template instance.
   If it's an instance and the template is not loaded, load it into a
   temporary file
   ----------------------------------------------------------------------*/
-void Template_CheckAndPrepareInstance (char *localFileName, Document doc, char* docURL)
+void Template_CheckAndPrepareInstance (char *localFileName, Document doc,
+                                       char* docURL)
 {
 #ifdef TEMPLATES
   XTigerTemplate   t;
@@ -1371,8 +1380,7 @@ void Template_CheckAndPrepareInstance (char *localFileName, Document doc, char* 
   gzFile           stream;
   char             buffer[2000];
   int              res;
-  char            *template_version = NULL,
-    *template_url = NULL;
+  char            *template_version = NULL, *template_url = NULL;
 
   stream = TtaGZOpen (localFileName);
   if (stream != 0)
@@ -1430,8 +1438,6 @@ void Template_CheckAndPrepareInstance (char *localFileName, Document doc, char* 
                       t = GetXTigerTemplate(template_url);
                     }
                   Template_PrepareInstance(docURL, doc, template_version, template_url);
-                  template_version = NULL;
-                  template_url     = NULL;
                   Template_AddReference (t);
                   *ptr = '"';
                 }
@@ -1839,7 +1845,8 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateFreeBox);
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateUnion);
     }
-  else if (DocumentURLs[doc] && IsXTiger (DocumentURLs[doc]))
+  else if (DocumentURLs[doc] && DocumentTypes[doc] != docSource &&
+           IsXTiger (DocumentURLs[doc]))
     {
       // Template document
       TtaSetItemOff (doc, 1, Tools, BCreateTemplateFromDocument);
@@ -1892,8 +1899,8 @@ void Template_PrepareInstance(char *fileName, Document doc, char* template_versi
   if (!t)
     t = NewXTigerTemplate(fileName);
   t->state           = templInstance;
-  t->templateVersion = template_version;
-  t->base_uri        = template_url;
+  t->templateVersion = TtaStrdup (template_version);
+  t->base_uri        = TtaStrdup (template_url);
   t->doc             = doc;
   t->ref             = 1;
 

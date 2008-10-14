@@ -574,16 +574,17 @@ void DumpSubtree(Element el, Document doc, int off)
 }
 
 /*----------------------------------------------------------------------
- * Save an opened document to a specified path in order to open.
- * param doc Original doc to save
- * param newdoc Document where reopen it
- * param newpath URI where save the doc
+  Save an opened document to a specified path in order to open.
+  The parameter doc is the original doc to be saved
+  The parameter newdoc is the new document
+  The parameter newpath is the newdoc URI
+  Return the saved localFile (to be freed) or NULL
   ----------------------------------------------------------------------*/
-ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
+char *SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
 {
   ElementType   elType;
   Element       root;
-  char         *localFile, *s;
+  char         *localFile = NULL, *s;
   ThotBool      res = FALSE;
 
   localFile = GetLocalPath (newdoc, newpath);
@@ -614,7 +615,13 @@ ThotBool SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
   else
     /* docType = docXml; */
     res = TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
-  return res;
+  if (res)
+    return localFile;
+  else
+    {
+      TtaFreeMemory (localFile);
+      return NULL;
+    }
 }
 
 /*----------------------------------------------------------------------

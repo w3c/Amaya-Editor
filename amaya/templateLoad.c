@@ -51,11 +51,11 @@ void AddElementDeclaration (XTigerTemplate t, Element el)
 #ifdef TEMPLATES
   char *name;
 
-  if(!t)
+  if (!t)
     return;
 
   name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
-  if(name)
+  if (name)
   {
     Template_DeclareNewElement (t, name);
     TtaFreeMemory (name);
@@ -75,7 +75,7 @@ void Template_AddLibraryToImport (XTigerTemplate t, Element el)
   char* src = NULL;
   char tempfile[MAX_LENGTH], tempname[MAX_LENGTH];
 
-  if(t)
+  if (t)
   {
     src = GetAttributeStringValueFromNum(el, Template_ATTR_src, NULL);
 
@@ -103,11 +103,11 @@ void Template_CheckTypesAttribute (XTigerTemplate t, Element el)
   ForwardIterator iter;
   StringSetNode   node;
   
-  if(!t)
+  if (!t)
     return;
 
   types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
-  if(types)
+  if (types)
   {
     set = StringSet_CreateFromString(types, " ");
     iter = StringSet_GetForwardIterator(set);
@@ -131,7 +131,7 @@ void Template_CheckTypesAttribute (XTigerTemplate t, Element el)
 void Template_AddHeadParameters(XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
-  if(!t)
+  if (!t)
     return;
 
   t->version = GetAttributeStringValueFromNum(el, Template_ATTR_version, NULL);
@@ -166,12 +166,12 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
         {
         case Template_EL_component:
           name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
-          if(name && name[0])
+          if (name && name[0])
             {
               old = Template_GetDeclaration(t, name);
-              if(old)
+              if (old)
                 {
-                  if(old->nature==UnknownNat)
+                  if (old->nature==UnknownNat)
                     {
                       Template_RemoveUnknownDeclaration(t, old);
                       Template_DeclareNewComponent (t, name, el);                      
@@ -190,7 +190,7 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
           name    = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
           include   = GetAttributeStringValueFromNum (el, Template_ATTR_includeAt, NULL);
           exclude   = GetAttributeStringValueFromNum (el, Template_ATTR_exclude, NULL);
-          if(name)
+          if (name)
             Template_DeclareNewUnion (t, name, include, exclude);
           TtaFreeMemory (name);
           TtaFreeMemory (include);
@@ -228,10 +228,10 @@ void Template_PreParseDeclarations (XTigerTemplate t, Element el)
 #ifdef TEMPLATES
   ElementType type;
   
-  if(!t)
+  if (!t)
     return;
 
-  if(el == NULL)
+  if (el == NULL)
     el = TtaGetMainRoot(t->doc);
 
   type = TtaGetElementType (el);  
@@ -271,8 +271,9 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
   ForwardIterator  iter;
   HashMapNode      node;
   XTigerTemplate   templ = NULL;
-  ElementType	     searchedType1, searchedType2, searchedType3, elType;
-  Element	         root, el, asc;
+  ElementType	     searchedType1, searchedType2, searchedType3;
+  ElementType      elType, parentType;
+  Element	         root, el, asc, sibling, parent;
   Declaration      dec;
   char            *name;
 
@@ -282,7 +283,7 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
   // Load dependancies
   ITERATOR_FOREACH(iter, HashMapNode, node)
     {
-      if(!Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem))
+      if (!Template_LoadXTigerTemplateLibrary ((XTigerTemplate)node->elem))
         Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_BADLIB),
               ((XTigerTemplate)node->elem)->uri);
     }
@@ -296,10 +297,10 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
 
   TtaFreeMemory(iter);
 
-  if(t->base_uri)
+  if (t->base_uri)
     {
       templ = GetXTigerTemplate(t->base_uri);
-      if(templ)
+      if (templ)
         Template_AddLibraryDeclarations(t, templ);
     }
   
@@ -310,7 +311,7 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
   Template_CalcBlockLevel (t);
 
   // check the block level of each use element
-  if (DocumentTypes[doc] != docHTML)
+  if (DocumentTypes[doc] != docHTML ||  !IsTemplateDocument(doc))
     return;
   root = TtaGetRootElement (doc);
   elType = TtaGetElementType (root);
@@ -339,9 +340,25 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
              asc = TtaGetTypedAncestor (el, elType);
              if (asc)
                {
+                 // chech if the parent is a repeat
+                 parent = TtaGetParent (el);
+                 parentType = TtaGetElementType (parent);
+                 if (parentType.ElSSchema == templateSSchema &&
+                     parentType.ElTypeNum == Template_EL_repeat)
+                   {
+                     el = parent;
+                     parent = TtaGetParent (el);
+                   }
+                 sibling = el;
+                 TtaPreviousSibling (&sibling);
                  // move the element after the pseudo paragraph
                  TtaRemoveTree (el, doc);
                  TtaInsertSibling (el, asc, FALSE, doc);
+                 // next origin of the search
+                 if (sibling)
+                   el = sibling;
+                 else
+                   el = parent;
                }
             }
         }
@@ -377,8 +394,8 @@ DocumentType LoadTemplate (Document doc, char* templatename)
     }
 
   //If types are not loaded we load the template and we parse it
-  t = GetXTigerTemplate(templatename);
-  if (t==NULL)
+  t = GetXTigerTemplate (templatename);
+  if (t == NULL)
     {
       // The template is not loaded, load it !
 
@@ -392,13 +409,12 @@ DocumentType LoadTemplate (Document doc, char* templatename)
                             (void *) /*ctx*/ NULL);
       
       t = GetXTigerDocTemplate(newdoc);
-      
       if (t)
         {
 #ifdef AMAYA_DEBUG  
     printf("XTiger template %s loaded.\n", t->uri);
 #endif /* AMAYA_DEBUG */
-          if(Template_HasErrors(t))
+          if (Template_HasErrors(t))
             Template_ShowErrors(t);
           else
             docType = DocumentTypes[newdoc];
@@ -407,12 +423,9 @@ DocumentType LoadTemplate (Document doc, char* templatename)
       W3Loading = docLoading;
     }
   else
-    {
-      // The template is already loaded, use it.
-      docType = DocumentTypes[t->doc];
-    }
+    // The template is already loaded, use it.
+    docType = DocumentTypes[t->doc];
   
-
   return docType;
 #else /* TEMPLATES */
   return docFree;
@@ -445,7 +458,7 @@ ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
     t = GetXTigerDocTemplate(newdoc);
     
 #ifdef AMAYA_DEBUG  
-    if(Template_HasErrors(t))
+    if (Template_HasErrors(t))
       printf("XTiger library %s has error(s)\n", t->uri);
     else
       printf("XTiger library %s loaded successfully.\n", t->uri);

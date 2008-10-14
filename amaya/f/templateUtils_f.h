@@ -43,9 +43,9 @@ extern void DumpTemplateElement ( Element el,
 extern void DumpSubtree ( Element el,
                           Document doc,
                           int off );
-extern ThotBool SaveDocumentToNewDoc ( Document doc,
-                                       Document newdoc,
-                                       char* newpath );
+extern char *SaveDocumentToNewDoc ( Document doc,
+                                    Document newdoc,
+                                    char* newpath );
 extern Element TemplateFindHead ( Document doc );
 
 #else /* __STDC__ */
@@ -87,9 +87,9 @@ extern void DumpTemplateElement ( Element el,
 extern void DumpSubtree ( Element el,
                             Document doc,
                             int off );
-extern ThotBool SaveDocumentToNewDoc ( Document doc,
-                                         Document newdoc,
-                                         char* newpath );
+extern char *SaveDocumentToNewDoc ( Document doc,
+                                      Document newdoc,
+                                      char* newpath );
 extern Element TemplateFindHead ( Document doc );
 
 #endif /* __STDC__ */

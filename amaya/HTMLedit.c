@@ -1766,10 +1766,8 @@ void ChangeTitle (Document doc, View view)
   ElementType         elType;
   Element             el, child;
   Language            lang;
-#ifndef _WX   
-  unsigned char       *title;
-#endif /* _WX */
   int                 length;
+  ThotBool            created;
 
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
@@ -1810,41 +1808,16 @@ void ChangeTitle (Document doc, View view)
         }
       length = MAX_LENGTH;
       TtaGiveTextContent (child, (unsigned char *)Answer_text, &length, &lang);
-#ifndef _WX
-      // with wxWidgets, we want directly UTF8 for input
-      title = TtaConvertMbsToByte ((unsigned char *)Answer_text, TtaGetDefaultCharset ());
-      strcpy (Answer_text, (char *)title);
-      TtaFreeMemory (title);
-#endif /* _WX */
       CurrentDocument = doc;
-
-#if defined(_GTK)
-      TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1),
-                  TtaGetMessage (AMAYA, AM_CHANGE_TITLE), TRUE, 2, 'L', D_CANCEL);
-      TtaNewTextForm (BaseDialog + TitleText, BaseDialog + TitleForm, "",
-                      50, 1, FALSE);
-      /* initialise the text field in the dialogue box */
-      TtaSetTextForm (BaseDialog + TitleText, Answer_text);
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + TitleForm, FALSE);
-#endif /* #if defined(_GTK) */
-#ifdef _WINGUI       
-      CreateTitleDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
-#endif /* _WINGUI */
-#ifdef _WX
-      {
-        ThotBool created;
-        created = CreateTitleDlgWX ( BaseDialog + TitleForm,
-                                     TtaGetViewFrame (doc, view),
-                                     Answer_text);
-        if (created)
-          {
-            TtaSetDialoguePosition ();
-            TtaShowDialogue (BaseDialog + TitleForm, FALSE);
-          }
-      }   
-#endif /* _WX */
-    }
+      created = CreateTitleDlgWX ( BaseDialog + TitleForm,
+                                   TtaGetViewFrame (doc, view),
+                                   Answer_text);
+      if (created)
+        {
+          TtaSetDialoguePosition ();
+          TtaShowDialogue (BaseDialog + TitleForm, FALSE);
+        }
+    }   
 }
 
 /*----------------------------------------------------------------------

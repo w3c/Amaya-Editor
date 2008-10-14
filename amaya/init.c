@@ -3577,7 +3577,7 @@ Document LoadDocument (Document doc, char *pathname,
                                          documentname, docType, 0, FALSE,
                                          docProfile, extraProfile, method);
             }
-          else if (method == CE_ABSOLUTE  || method == CE_HELP || method == CE_INSTANCE  ||
+          else if (method == CE_ABSOLUTE  || method == CE_HELP ||
                    method == CE_FORM_POST || method == CE_FORM_GET)
             /* replace the current document by a new one */
             newdoc = InitDocAndView (doc,
@@ -3825,6 +3825,10 @@ Document LoadDocument (Document doc, char *pathname,
       /* Now we forget the method CE_INIT. It's a standard method */
       if (DocumentMeta[newdoc]->method == CE_INIT)
         DocumentMeta[newdoc]->method = CE_ABSOLUTE;
+      // Check if we are loading a template
+      if (DocumentMeta[newdoc]->method == CE_ABSOLUTE &&
+          IsXTiger (documentname))
+        DocumentMeta[newdoc]->method = CE_TEMPLATE;
 
       if (IsXMLDocType (newdoc) ||
 #ifdef ANNOTATIONS
@@ -4749,7 +4753,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
     tempfile[0] = EOS;
    
 #ifdef TEMPLATES
-  Template_CheckAndPrepareTemplate(urlName);
+  if (method != CE_LOG && method != CE_HELP)
+    Template_CheckAndPrepareTemplate(urlName);
 #endif /* TEMPLATES */  
   
   /* now the new window is open */

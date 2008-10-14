@@ -246,23 +246,29 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
   switch  (elType.ElTypeNum)
     {
     case Template_EL_head:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_version);
+      if (!IsTemplateInstanceDocument (doc))
+        CheckMandatoryAttribute (el, doc, Template_ATTR_version);
     case Template_EL_Template:
       SetDocumentAsXTigerTemplate(doc);
       break;
 
     case Template_EL_component:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_name);
-      // check if the component is complete
-      CheckNotEmptyComponent (el, doc);
+      if (!IsTemplateInstanceDocument (doc))
+        {
+          CheckMandatoryAttribute (el, doc, Template_ATTR_name);
+          // check if the component is complete
+          CheckNotEmptyComponent (el, doc);
+        }
       break;
 
     case Template_EL_union:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_name);
+      if (!IsTemplateInstanceDocument (doc))
+        CheckMandatoryAttribute (el, doc, Template_ATTR_name);
       break;
 
     case Template_EL_import:
-      CheckMandatoryAttribute (el, doc, Template_ATTR_src);
+      if (!IsTemplateInstanceDocument (doc))
+        CheckMandatoryAttribute (el, doc, Template_ATTR_src);
       break;
 
     case Template_EL_useEl:
@@ -276,7 +282,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
       // check if the name is not already 
       attType.AttrSSchema = elType.ElSSchema;
       attType.AttrTypeNum = Template_ATTR_types;
-      att = TtaGetAttribute(el, attType);
+      att = TtaGetAttribute (el, attType);
       if (att)
         {
           name = GetAttributeStringValue (el, att, NULL);

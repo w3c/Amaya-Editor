@@ -237,7 +237,7 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
 #ifdef TEMPLATES
   AttributeType attType;
   Attribute     att;
-  Element       aux, child, ancestor; //Needed when deleting trees
+  Element       aux, child; //Needed when deleting trees
   char         *name;
   ElementType   elType = TtaGetElementType (el);
 
@@ -496,11 +496,10 @@ void CreateInstance(char *templatePath, char *instancePath,
 {
 #ifdef TEMPLATES
   Document          doc = 0, newdoc = 0;
-  ElementType       elType;
   Element           root, title, text;
-  CHARSET           charset;
-  char             *s, *charsetname;
-  ThotBool          changes = FALSE;
+  ElementType       elType;
+  CHARSET           charset, ocharset;
+  char             *s, *charsetname, *ocharsetname, *localFile;
 
   XTigerTemplate t = GetXTigerTemplate(templatePath);
   if (t == NULL)
@@ -516,80 +515,82 @@ void CreateInstance(char *templatePath, char *instancePath,
     newdoc = TtaGetNextDocumentIndex ();
   else
     newdoc = basedoc;
+  
+  // close current undo sepquence in the template document
+  if (TtaHasUndoSequence (doc))
+    TtaCloseUndoSequence (doc);
+
+  // update the charset if needed
+  charsetname = TtaGetEnvString ("DOCUMENT_CHARSET");
+  charset = TtaGetCharset (charsetname);
+  ocharsetname = DocumentMeta[doc]->charset;
+  ocharset =  TtaGetCharset (ocharsetname);
+  if (charset != UNDEFINED_CHARSET &&
+      DocumentMeta[doc]->charset &&
+      strcmp (charsetname, DocumentMeta[doc]->charset))
+    {
+      TtaSetDocumentCharset (doc, charset, FALSE);
+      DocumentMeta[doc]->charset = TtaStrdup (charsetname);
+      SetNamespacesAndDTD (doc, FALSE);
+    }
 
   // register the document type to open the right page model
   DocumentTypes[newdoc] = docType;
-  if (!TtaHasUndoSequence (doc))
+  // Generate the instance content as a copy of the template
+  localFile = SaveDocumentToNewDoc(doc, newdoc, instancePath);
+  Template_PrepareInstance (instancePath, newdoc, t->version, templatePath);
+  Template_AddReference (t);
+
+  // Revert template changes
+  TtaSetDocumentCharset (doc, ocharset, FALSE);
+  DocumentMeta[doc]->charset = ocharsetname;
+  // Now parse the instance
+  // The xtiger PI will be added and components will be removed
+  GetAmayaDoc (instancePath, NULL, basedoc, basedoc, CE_INSTANCE,
+               !DontReplaceOldDoc, NULL, NULL);
+  if (DocumentMeta[newdoc])
+    DocumentMeta[newdoc]->method = CE_ABSOLUTE;
+  // Generate the HTML document title
+  root = TtaGetRootElement(newdoc);
+  elType = TtaGetElementType (root);
+  // get the target document type
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "HTML") == 0)
     {
-      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-      root = TtaGetRootElement(doc);
-      elType = TtaGetElementType (root);
-      // get the target document type
-      s = TtaGetSSchemaName (elType.ElSSchema);
-      // Do special stuff for HTML documents
-      if (strcmp (s, "HTML") == 0)
+      // Initialize the document title
+      elType.ElTypeNum = HTML_EL_TITLE;
+      title = TtaSearchTypedElement (elType, SearchInTree, root);
+      text = TtaGetFirstChild (title);
+      while (text)
         {
-          // Initialize the document title
-          elType.ElTypeNum = HTML_EL_TITLE;
-          title = TtaSearchTypedElement (elType, SearchInTree, root);
-          text = TtaGetFirstChild (title);
-          while (text)
+          elType = TtaGetElementType (text);
+          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && Answer_text[0] != EOS)
             {
-              elType = TtaGetElementType (text);
-              if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && Answer_text[0] != EOS)
-                {
-                  TtaSetTextContent (text, (unsigned char*)Answer_text,
-                                     TtaGetDefaultLanguage (), doc);
-                  text = NULL;
-                }
-              else if ((elType.ElTypeNum == Template_EL_useEl ||
-                        elType.ElTypeNum == Template_EL_useSimple) &&
-                       !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
-                // Ignore the template use element
-                text = TtaGetFirstChild (text);
-              else
-                // Look for the first text child
-                TtaNextSibling (&text);
+              TtaSetTextContent (text, (unsigned char*)Answer_text,
+                                 TtaGetDefaultLanguage (), newdoc);
+              text = NULL;
+              SetNewTitle (newdoc);
             }
+          else if ((elType.ElTypeNum == Template_EL_useEl ||
+                    elType.ElTypeNum == Template_EL_useSimple) &&
+                   !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+            // Ignore the template use element
+            text = TtaGetFirstChild (text);
+          else
+            // Look for the first text child
+            TtaNextSibling (&text);
         }
-
-      // update the charset if needed
-      charsetname = TtaGetEnvString ("DOCUMENT_CHARSET");
-      charset = TtaGetCharset (charsetname);
-      if (charset != UNDEFINED_CHARSET &&
-          DocumentMeta[doc]->charset &&
-          strcmp (charsetname, DocumentMeta[doc]->charset))
-        {
-          TtaSetDocumentCharset (doc, charset, FALSE);
-          DocumentMeta[doc]->charset = TtaStrdup (charsetname);
-          SetNamespacesAndDTD (doc, FALSE);
-        }
-
-      // Parse template to fill structure and remove extra data
-      ParseTemplate (t, root, doc, FALSE);
-      
-      // Insert XTiger PI
-      Template_InsertXTigerPI(doc, t);
-      
-      // Save HTML special changes
-      TtaCloseUndoSequence (doc);
-      changes = TRUE;
-
-      // Save document
-      SaveDocumentToNewDoc(doc, newdoc, instancePath);
-
-      // Revert HTML special changes
-      if (changes)
-        TtaUndoNoRedo (doc);
-      
-      TtaClearUndoHistory (doc);
-      RemoveParsingErrors (doc);
-      // now load the document as an instance
-      GetAmayaDoc (instancePath, NULL, basedoc, basedoc, CE_INSTANCE,
-                   !DontReplaceOldDoc, NULL, NULL);
-      TtaSetDocumentModified (newdoc);
-      UpdateTemplateMenus(newdoc);
     }
+
+  // Insert XTiger PI
+  Template_InsertXTigerPI(newdoc, t);   
+  // Parse template to fill structure and remove extra data
+  ParseTemplate (t, root, newdoc, FALSE);
+  TtaFreeMemory (localFile);
+  TtaClearUndoHistory (newdoc);
+  RemoveParsingErrors (newdoc);
+  TtaSetDocumentModified (newdoc);
+  UpdateTemplateMenus(newdoc);
 #endif /* TEMPLATES */
 }
 
@@ -1117,7 +1118,8 @@ void Template_InsertXTigerPI(Document doc, XTigerTemplate t)
     return;
 
   root =  TtaGetMainRoot (doc);
-
+  if (root == NULL)
+    return;
   //Look for PIs
   /* check if the document has a DOCTYPE declaration */
 #ifdef ANNOTATIONS
@@ -1170,7 +1172,8 @@ void Template_InsertXTigerPI(Document doc, XTigerTemplate t)
           strcat (buffer, "\"");
           TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
           TtaSetStructureChecking (TRUE, doc);
-          TtaFreeMemory(charsetname);
+          TtaFreeMemory (charsetname);
+          TtaRegisterElementCreate (piElem, doc);
         }
     }
   
@@ -1200,6 +1203,7 @@ void Template_InsertXTigerPI(Document doc, XTigerTemplate t)
       strcat (buffer, "\"");
     }
   TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
+  TtaRegisterElementCreate (elNew, doc);
   TtaSetStructureChecking (TRUE, doc);
 
   // update the document title
@@ -1207,11 +1211,25 @@ void Template_InsertXTigerPI(Document doc, XTigerTemplate t)
     {
       elType.ElTypeNum = HTML_EL_TITLE;
       elFound = TtaSearchTypedElement (elType, SearchInTree, root);
-      if (elFound)
+      text = TtaGetFirstChild (elFound);
+      while (text)
         {
-          elFound = TtaGetFirstChild (elFound);
-          TtaSetTextContent (elFound, (unsigned char *)Answer_text,
-                             TtaGetDefaultLanguage (), doc);
+          elType = TtaGetElementType (text);
+          if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && Answer_text[0] != EOS)
+            {
+              TtaRegisterElementReplace (text, doc);
+              TtaSetTextContent (text, (unsigned char*)Answer_text,
+                                 TtaGetDefaultLanguage (), doc);
+              text = NULL;
+            }
+          else if ((elType.ElTypeNum == Template_EL_useEl ||
+                    elType.ElTypeNum == Template_EL_useSimple) &&
+                   !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+            // Ignore the template use element
+            text = TtaGetFirstChild (text);
+          else
+            // Look for the first text child
+            TtaNextSibling (&text);
         }
     }
 #endif /* TEMPLATES */
@@ -1225,25 +1243,29 @@ void Template_InsertXTigerPI(Document doc, XTigerTemplate t)
 void Template_PreInstantiateComponents (XTigerTemplate t)
 {
 #ifdef TEMPLATES 
-  if (!t)
-    return;
-
-#ifdef AMAYA_DEBUG
-  DumpAllDeclarations();
-#endif /* AMAYA_DEBUG */  
-  ForwardIterator iter = SearchSet_GetForwardIterator(GetComponents(t));
+  ForwardIterator iter;
   Declaration     dec;
   SearchSetNode   node;
 
-#ifdef AMAYA_DEBUG
-  printf("Template_PreInstantiateComponents %s\n", t->uri);
-#endif /* AMAYA_DEBUG */  
-  ITERATOR_FOREACH(iter, SearchSetNode, node)
+  if (!t)
+    return;
+
+  if (Template_IsInstance (t))
     {
-      dec = (Declaration) node->elem;
-      ParseTemplate(t, GetComponentContent(dec), GetTemplateDocument(t), TRUE);
+#ifdef AMAYA_DEBUG
+      DumpAllDeclarations();
+#endif /* AMAYA_DEBUG */  
+      iter = SearchSet_GetForwardIterator(GetComponents(t));
+#ifdef AMAYA_DEBUG
+      printf("Template_PreInstantiateComponents %s\n", t->uri);
+#endif /* AMAYA_DEBUG */  
+      ITERATOR_FOREACH(iter, SearchSetNode, node)
+        {
+          dec = (Declaration) node->elem;
+          ParseTemplate(t, GetComponentContent(dec), GetTemplateDocument(t), TRUE);
+        }
+      TtaFreeMemory(iter);
     }
-  TtaFreeMemory(iter);
 #endif /* TEMPLATES */
 }
 

@@ -5904,10 +5904,12 @@ void StartXmlParser (Document doc, char *fileName,
   char           *s;
   int             error;
   ThotBool        isXHTML, xmlDec, xmlDoctype;
-  ThotBool        isXml = FALSE;
+  ThotBool        isXml = FALSE, isXtiger;
 
 #ifdef TEMPLATES
   // load the referred template if it's an instance
+  isXtiger = IsXTiger(pathURL);
+ if (!isXtiger)
   Template_CheckAndPrepareInstance(fileName, doc, pathURL);
 #endif /* TEMPLATES */
 
@@ -6061,7 +6063,7 @@ void StartXmlParser (Document doc, char *fileName,
       /* Check the Thot abstract tree for XHTML documents */
       if (isXHTML)
         {
-          CheckAbstractTree (XMLcontext.doc, IsXTiger (documentName));
+          CheckAbstractTree (XMLcontext.doc, isXtiger);
           if (MapAreas[doc])
             ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
         }
