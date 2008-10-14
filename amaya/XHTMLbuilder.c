@@ -337,7 +337,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
     /* It's a block-level element. Is it within a character-level element? */
     if (elType.ElTypeNum != HTML_EL_Comment_ &&
         elType.ElTypeNum != HTML_EL_ASP_element &&
-        elType.ElTypeNum != HTML_EL_XMLPI)
+        elType.ElTypeNum != HTML_EL_XMLPI &&
+	elType.ElTypeNum != HTML_EL_SCRIPT_)
       BlockInCharLevelElem (el);
 
   typenum = elType.ElTypeNum;
