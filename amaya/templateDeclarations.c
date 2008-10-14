@@ -559,7 +559,7 @@ void Declaration_CalcBlockLevel (Declaration dec)
 {
 #ifdef TEMPLATES
   Element         elem;
-  ElementType     type;
+  ElementType     elType;
   SearchSet       set;
   Declaration     unionDecl;
   ForwardIterator iter;
@@ -575,8 +575,11 @@ void Declaration_CalcBlockLevel (Declaration dec)
           break;
         case XmlElementNat:
           /* XmlElement : test with html2thot::IsBlockElement.*/
-          GIType (dec->name, &type, dec->usedIn->doc);
-          dec->blockLevel = !IsCharacterLevelType (type);
+          GIType (dec->name, &elType, dec->usedIn->doc);
+          if (TtaIsLeaf (elType))
+            dec->blockLevel = FALSE;
+          else 
+            dec->blockLevel = !IsCharacterLevelType (elType);
           break;
         case ComponentNat:
           dec->blockLevel = FALSE;
@@ -663,7 +666,7 @@ void Template_CalcBlockLevel (XTigerTemplate t)
   ForwardIterator iter;
   SearchSetNode   node;
   Declaration     decl;
-  ElementType     type;
+  ElementType     elType;
 
   // Simple types.
   iter = SearchSet_GetForwardIterator(t->simpleTypes);
@@ -682,8 +685,8 @@ void Template_CalcBlockLevel (XTigerTemplate t)
       decl = (Declaration) node->elem;
       if (decl)
         {
-          GIType (decl->name, &type, t->doc);
-          decl->blockLevel = !IsCharacterLevelType(type);
+          GIType (decl->name, &elType, t->doc);
+          decl->blockLevel = !IsCharacterLevelType(elType);
         }
     }
   TtaFreeMemory(iter);
