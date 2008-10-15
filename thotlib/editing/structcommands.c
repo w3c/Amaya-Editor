@@ -3069,9 +3069,15 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
               createAfter = !before;
               if (lastSel->ElTerminal &&
                   (lastSel->ElLeafType == LtText ||
-                   lastSel->ElLeafType == LtPicture) &&
-                  firstChar > 1)
-                createAfter = TRUE;
+                   lastSel->ElLeafType == LtPicture))
+                  {
+                    if (lastChar == 0)
+                      // beginning of the element
+                      createAfter = FALSE;
+                    else
+                      // end of the element
+                      createAfter = TRUE;
+                  }
             }
           /* on verifie si on peut couper un element ascendant en deux et
              creer le nouvel element entre les deux parties obtenues */
