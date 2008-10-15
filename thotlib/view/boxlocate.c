@@ -208,8 +208,7 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
   PtrElement      child;
   PtrAbstractBox  pAb;
   PtrBox          box;
-  ViewFrame      *pFrame;
-  PtrFlow         pFlow = NULL;
+  int             lowerX = x, higherX = x;
 
   if (FrameTable[frame].FrView != 1 || FirstSelectedElement == NULL ||
       FirstSelectedElement != LastSelectedElement ||
@@ -218,10 +217,20 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
     return NULL;
 
   pAb = FirstSelectedElement->ElAbstractBox[0];
+  if (pAb->AbBox)
+    {
+#ifdef _GL
+      /* Transform windows coordinate x, y to the transformed system 
+         of the current box */
+      x = 0;
+      GetBoxTransformedCoord (pAb, frame, &lowerX, &higherX, &x, &y);
+#else /* _GL */
+      ViewFrame      *pFrame;
+      PtrFlow         pFlow = NULL;
   // take into account the document scroll
-  pFrame = &ViewFrameTable[frame - 1];
-  x += pFrame->FrXOrg;
-  y += pFrame->FrYOrg;
+      pFrame = &ViewFrameTable[frame - 1];
+      x += pFrame->FrXOrg;
+      y += pFrame->FrYOrg;      
   if (pAb && pAb->AbBox)
     pFlow = GetRelativeFlow (pAb->AbBox, frame);
   if (pFlow)
@@ -230,6 +239,9 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
       x += pFlow->FlXStart;
       y += pFlow->FlYStart;
     }
+#endif /* _GL */
+    }
+
   if (!FirstSelectedElement->ElTerminal &&
       FirstSelectedElement->ElFirstChild &&
       FirstSelectedElement->ElFirstChild->ElTerminal)
@@ -241,7 +253,7 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
            (child->ElGraph == 'a' || child->ElGraph == 'R')))
         {
           pAb = child->ElAbstractBox[0];
-          box = IsOnShape (pAb, x, y, ctrlpt);
+          box = IsOnShape (pAb, lowerX, y, ctrlpt);
           if (child->ElLeafType != LtPicture || *ctrlpt != 0)
             return box;
         }
@@ -252,7 +264,7 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
     {
       if (pAb && pAb->AbBox)
         {
-          box = IsOnShape (pAb, x, y, ctrlpt);
+          box = IsOnShape (pAb, lowerX, y, ctrlpt);
           if (*ctrlpt != 0)
             return box;
         }
@@ -1485,13 +1497,13 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 {
   ThotFont            font;
   PtrBox              pBox;
+  PtrAbstractBox      enc;
   int                 controlPoint;
   int                 arc, xm, xp;
   double              value1, value2, value3;
   int                 width, height;
   int                 rx,ry;
-  PtrAbstractBox      enc;
-  int x1,y1,x2,y2,x3,y3,x4,y4;
+  int                 x1,y1,x2,y2,x3,y3,x4,y4;
 
   /* relative coords of the box (easy work) */
   if (pAb == NULL)
@@ -1623,7 +1635,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
             }
         }
 
-      if(controlPoint != 0)
+      if (controlPoint != 0)
         {
           *selpoint = controlPoint;
           return pBox;
