@@ -5038,7 +5038,15 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
             {
               /* compress or complete the current line */
               if (pLine->LiSpaceWidth == 0)
-                ShiftLine (pLine, pAb, pBox, xDelta, frame);
+                {
+                  if (pBox == pLine->LiFirstBox && pBox == pLine->LiLastBox &&
+                      (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle ||
+                       (pBox->BxAbstractBox->AbLeftMarginUnit == UnAuto &&
+                        pBox->BxAbstractBox->AbRightMarginUnit == UnAuto)))
+                    XMove (pBox, NULL, -xDelta/2, frame);
+                  else
+                    ShiftLine (pLine, pAb, pBox, xDelta, frame);
+                }
               else
                 {
                   CompressLine (pLine, pAb, xDelta, frame, spaceDelta);
