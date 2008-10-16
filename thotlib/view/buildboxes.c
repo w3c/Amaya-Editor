@@ -2807,7 +2807,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pBox = GetBox (pAb);
       pAb->AbBox = pBox;
     }
-
   if (pBox)
     {
       // zoom apply to SVG only

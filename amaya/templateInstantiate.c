@@ -230,45 +230,36 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
 
 /*----------------------------------------------------------------------
   ParseTemplate
+  loading is TRUE when the document is not already loaded
+  parentLine points to the enclosing pseudo paragraph or paragraph
+  Return the parentline to be considered for next elements
   ----------------------------------------------------------------------*/
-static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
-                           ThotBool loading)
+static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
+                              Element parentLine, ThotBool loading)
 {
 #ifdef TEMPLATES
   AttributeType attType;
   Attribute     att;
-  Element       aux, child; //Needed when deleting trees
+  Element       next, child, savedInline, prev;
+  Declaration   dec;
   char         *name;
-  ElementType   elType = TtaGetElementType (el);
+  ElementType   elType, parentType;
 
   if (!t || !el)
-    return;
-  
-#ifdef AMAYA_DEBUG
-// static int off = 0;
-//  int i;
-//  off++;
-//  printf("ParseTemplate ");
-//  for(i=0; i<off; i++)
-//    printf(" ");
-//  DumpTemplateElement(el, doc);
-//  printf("\n");
-#endif /* AMAYA_DEBUG */
-  
+    return parentLine;
+
+  savedInline = parentLine;
+  elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp (name, "Template"))
     {
-      switch(elType.ElTypeNum)
+      switch (elType.ElTypeNum)
         {
         case Template_EL_head :
-#ifdef AMAYA_DEBUG
-//          off--;
-          printf("!!! Find a xt:head : remove it !\n");
-#endif /* AMAYA_DEBUG */
           //Remove it and all of its children
           TtaDeleteTree(el, doc);
           //We must stop searching into this tree
-          return;
+          return parentLine;
         case Template_EL_component :
           // remove the name attribute
           attType.AttrSSchema = elType.ElSSchema;
@@ -315,6 +306,34 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
             {
               if (!strcmp (name, "string"))
                 AddPromptIndicator (el, doc);
+              else
+                {
+                  // avoid to have a block element within a pseudo paragraph
+                  dec = Template_GetDeclaration (t, name);
+                  if (dec && dec->blockLevel == 2 && parentLine)
+                    {
+                      // move the use element after the paragraph
+                      child = TtaGetParent (el);
+                      parentType = TtaGetElementType (child);
+                      if (parentType.ElSSchema != elType.ElSSchema ||
+                          parentType.ElTypeNum == Template_EL_repeat)
+                        // not need to move the parent element
+                          child = el;
+                      next = child;
+                      prev = parentLine;
+                      while (child)
+                        {
+                          // move the element and next siblings after the pseudo paragraph
+                          TtaNextSibling (&next);
+                          TtaRemoveTree (child, doc);
+                          TtaInsertSibling (child, prev, FALSE, doc);
+                          prev = child;
+                          child = next;
+                        }
+                      // elements are now out of the parent line
+                      savedInline = NULL;
+                    }
+                }
             }
           TtaFreeMemory (name);
           if (!TtaGetFirstChild (el))
@@ -331,18 +350,20 @@ static void ParseTemplate (XTigerTemplate t, Element el, Document doc,
           break;
         }
     }
+  else if (!strcmp (name, "HTML") &&
+           (elType.ElTypeNum == HTML_EL_Pseudo_paragraph ||
+            elType.ElTypeNum == HTML_EL_Paragraph))
+    parentLine = el;
 
   child = TtaGetFirstChild (el);
   while (child)
     {
-      aux = child;
-      TtaNextSibling (&aux);
-      ParseTemplate (t, child, doc, loading);
-      child = aux;
+      next = child;
+      TtaNextSibling (&next);
+      parentLine = ParseTemplate (t, child, doc, parentLine, loading);
+      child = next;
     }
-#ifdef AMAYA_DEBUG
-//  off--;
-#endif /* AMAYA_DEBUG */
+  return savedInline;
 #endif /* TEMPLATES */
 }
 
@@ -585,7 +606,7 @@ void CreateInstance(char *templatePath, char *instancePath,
   // Insert XTiger PI
   Template_InsertXTigerPI(newdoc, t);   
   // Parse template to fill structure and remove extra data
-  ParseTemplate (t, root, newdoc, FALSE);
+  ParseTemplate (t, root, newdoc, NULL, FALSE);
   TtaFreeMemory (localFile);
   TtaClearUndoHistory (newdoc);
   RemoveParsingErrors (newdoc);
@@ -861,8 +882,8 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
             }
         }
 
-      child = TtaGetFirstChild (el);
       // fix access right to children
+      child = TtaGetFirstChild (el);
       while (child)
         {
           Template_FixAccessRight (t, child, doc);
@@ -1269,7 +1290,7 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           dec = (Declaration) node->elem;
-          ParseTemplate(t, GetComponentContent(dec), GetTemplateDocument(t), TRUE);
+          ParseTemplate(t, GetComponentContent(dec), GetTemplateDocument(t), NULL, TRUE);
         }
       TtaFreeMemory(iter);
     }
