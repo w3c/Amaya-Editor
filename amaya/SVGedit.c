@@ -1615,7 +1615,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   DisplayMode       dispMode;
   Language          lang;
   int		            c1, i, dir, svgDir, profile;
-  int               docModified, error;
+  int               docModified, error, w, h;
   int               x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
   int               tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
   _ParserData       context;
@@ -1748,6 +1748,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               first = svgCanvas;
               newSVG = TRUE;
             }
+
           if (svgCanvas)
             /* a root SVG element was created. Create the required attributes*/
             {
@@ -1757,10 +1758,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
                 attr = TtaNewAttribute (attrType);
                 TtaAttachAttribute (svgCanvas, attr, doc);
                 TtaSetAttributeText (attr, SVG_VERSION, svgCanvas, doc);*/
+              parent = TtaGetParent (svgCanvas);
+              TtaGiveBoxSize (parent, doc, 1, UnPixel, &w, &h);
+              sprintf (buffer, "%d\0", w);
               attrType.AttrTypeNum = SVG_ATTR_width_;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (svgCanvas, attr, doc);
-              TtaSetAttributeText (attr, "500", svgCanvas, doc);
+              TtaSetAttributeText (attr, buffer, svgCanvas, doc);
               ParseWidthHeightAttribute (attr, svgCanvas, doc, FALSE);
 
               attrType.AttrTypeNum = SVG_ATTR_height_;
@@ -1768,6 +1772,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
               TtaAttachAttribute (svgCanvas, attr, doc);
               TtaSetAttributeText (attr, "300", svgCanvas, doc);
               ParseWidthHeightAttribute (attr, svgCanvas, doc, FALSE);
+              // center the svg element
+              attrType.AttrTypeNum = SVG_ATTR_style_;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (svgCanvas, attr, doc);
+              strcpy (buffer, "margin-left: auto; margin-right: auto");
+              TtaSetAttributeText (attr, buffer, svgCanvas, doc);
+              ParseHTMLSpecificStyle (svgCanvas, buffer, doc, 1000, FALSE);
               // point to this default selection
               selEl = svgCanvas;
             }

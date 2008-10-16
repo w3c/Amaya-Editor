@@ -2005,13 +2005,13 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
 ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
                        int transform_type, Element el)
 {
-  PtrAbstractBox pAb;
-  PtrBox pBox;
+  PtrAbstractBox      pAb;
+  PtrBox              pBox, svgBox;
   ViewFrame          *pFrame;
-  int frame;
-  PtrTransform CTM, inverse;
-  int canvasWidth,canvasHeight,ancestorX,ancestorY;
-  ThotBool transformApplied;
+  PtrTransform        CTM, inverse;
+  int                 frame;
+  int                 canvasWidth, canvasHeight, ancestorX, ancestorY;
+  ThotBool            transformApplied;
 
   frame = ActiveFrame;
   if(frame <= 0)
@@ -2020,10 +2020,9 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
   /* The svgCanvas and ancestor are not explicitly given */
   if (svgCanvas == NULL || svgAncestor == NULL)
     {
-      if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
-	/* Can not find the <svg> elements */
-	return FALSE;
-
+      if (!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
+        /* Can not find the <svg> elements */
+        return FALSE;
     }
 
   /* Get the current transform matrix */
@@ -2036,24 +2035,28 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
       /* Get the inverse of the CTM and free the CTM */
       inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
 
-      if(inverse == NULL)
-	{
-      /* Transform not inversible */
-	  TtaFreeTransform(CTM);
-	  return FALSE;
-	}
+      if (inverse == NULL)
+        {
+          /* Transform not inversible */
+          TtaFreeTransform(CTM);
+          return FALSE;
+        }
     }
 
   pFrame = &ViewFrameTable[frame - 1];
   /* Get the size of the SVG Canvas */
-  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
+  pAb = ((PtrElement)svgCanvas)->ElAbstractBox[0];
+  if (pAb == NULL || pAb->AbBox == NULL)
+    return FALSE;
+  svgBox =  pAb->AbBox;
+  canvasWidth = svgBox->BxW;
+  canvasHeight = svgBox->BxH;
 
   /* Get the origin of the ancestor */
-  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
-  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if(pAb && pAb -> AbBox)
-    pBox = pAb -> AbBox;
-  else return FALSE;
+  pAb = ((PtrElement)svgAncestor)->ElAbstractBox[0];
+  if (pAb == NULL || pAb->AbBox == NULL)
+    return FALSE;
+  pBox = pAb->AbBox;
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 

@@ -138,14 +138,14 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
 
   *hasBeenTransformed = FALSE;
 
-  pAb = ((PtrElement)el) -> ElAbstractBox[0];
+  pAb = ((PtrElement)el)->ElAbstractBox[0];
   if (!pAb || !pAb->AbBox)
     {
       Finished = true;
       return;
     }
 
-  box = pAb -> AbBox;
+  box = pAb->AbBox;
   if (pFrame)
     {
       /* attach this handler to the canvas */

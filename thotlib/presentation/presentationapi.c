@@ -602,17 +602,17 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
           if (isDimH)
             {
               /* a dimension rule */
-              dx = width - pAb->AbBox->BxWidth;
+              dx = width - pAb->AbBox->BxW;
               unit = pRStd->PrDimRule.DrUnit;
               if (pAb->AbWidth.DimAbRef)
                 /* the width is a percent of an other box width */
-                widthRef = pAb->AbWidth.DimAbRef->AbBox->BxWidth;
+                widthRef = pAb->AbWidth.DimAbRef->AbBox->BxW;
               else if (pAb->AbEnclosing == NULL)
                 /* the width is a percent of the window width */
                 GetSizesFrame (frame, &widthRef, &heightRef);
               else
                 /* the width is a percent of the parent box width */
-                widthRef = pAb->AbEnclosing->AbBox->BxWidth;
+                widthRef = pAb->AbEnclosing->AbBox->BxW;
             }
           else
             {
@@ -624,7 +624,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
                 GetSizesFrame (frame, &widthRef, &heightRef);
               else
                 /* the width is a percent of the parent box width */
-                widthRef = pAb->AbEnclosing->AbBox->BxWidth;
+                widthRef = pAb->AbEnclosing->AbBox->BxW;
             }
           if (unit == UnPercent)
             /* get the new percent value */
@@ -773,17 +773,17 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
           if (isDimV)
             {
               /* a dimension rule */
-              dy = height - pAb->AbBox->BxHeight;
+              dy = height - pAb->AbBox->BxH;
               unit = pRStd->PrDimRule.DrUnit;
               if (pAb->AbHeight.DimAbRef)
                 /* the height is a percent of an other box height */
-                heightRef = pAb->AbHeight.DimAbRef->AbBox->BxHeight;
+                heightRef = pAb->AbHeight.DimAbRef->AbBox->BxH;
               else if (pAb->AbEnclosing == NULL)
                 /* the height is a percent of the window height */
                 GetSizesFrame (frame, &widthRef, &heightRef);
               else
                 /* the height is a percent of the parent box height */
-                heightRef = pAb->AbEnclosing->AbBox->BxHeight;
+                heightRef = pAb->AbEnclosing->AbBox->BxH;
             }
           else
             {
@@ -795,7 +795,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
                 GetSizesFrame (frame, &widthRef, &heightRef);
               else
                 /* the height is a percent of the parent box height */
-                heightRef = pAb->AbEnclosing->AbBox->BxHeight;
+                heightRef = pAb->AbEnclosing->AbBox->BxH;
             }
           if (unit == UnPercent)
             /* get the new percent value */
@@ -2582,8 +2582,8 @@ void TtaGiveBoxSize (Element element, Document document, View view,
                     TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
                                       pAb->AbElement->ElStructSchema)))
             {
-              *width = pAb->AbBox->BxWidth;
-              *height = pAb->AbBox->BxHeight;
+              *width = pAb->AbBox->BxW;
+              *height = pAb->AbBox->BxH;
             }
           else
             {
@@ -2591,8 +2591,8 @@ void TtaGiveBoxSize (Element element, Document document, View view,
               *width = pAb->AbBox->BxClipW;
               *height = pAb->AbBox->BxClipH;
 #else /* _GL */
-              *width = pAb->AbBox->BxWidth;
-              *height = pAb->AbBox->BxHeight;
+              *width = pAb->AbBox->BxW;
+              *height = pAb->AbBox->BxH;
 #endif /* _GL */
 
               /* Convert values to pixels */
@@ -2602,8 +2602,8 @@ void TtaGiveBoxSize (Element element, Document document, View view,
                     GetSizesFrame (frame, &x, &y);
                   else
                     {
-                      x = pAb->AbEnclosing->AbBox->BxWidth;
-                      y = pAb->AbEnclosing->AbBox->BxHeight;
+                      x = pAb->AbEnclosing->AbBox->BxW;
+                      y = pAb->AbEnclosing->AbBox->BxH;
                     }
                   *width = LogicalValue (*width, UnPercent, (PtrAbstractBox) x, 0);
                   *height = LogicalValue (*height, UnPercent, (PtrAbstractBox) y, 0);

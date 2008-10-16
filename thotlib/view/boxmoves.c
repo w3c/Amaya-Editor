@@ -1112,7 +1112,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
   BoxRelation        *pRel;
   PtrPosRelations     pPosRel;
   int                 i;
-  ThotBool            notEmpty;
+  ThotBool            notEmpty, isSysOrg;
   ThotBool            toHorizPack;
 
   if (pBox && (delta != 0 || pBox->BxXToCompute))
@@ -1156,6 +1156,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                  and update streched dimensions that depends on it
               */
               pPosRel = pBox->BxPosRelations;
+              isSysOrg = IsSystemOrigin (pAb, frame);
               while (pPosRel)
                 {
                   i = 0;
@@ -1166,7 +1167,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                       if (pRel->ReBox->BxAbstractBox &&
                           // don't move children of a new system origin
                           (!IsParentBox (pBox, pRel->ReBox) ||
-                           !IsSystemOrigin (pAb, frame)))
+                           !isSysOrg))
                         {
                           /* Relation out of structure */
                           if (pRel->ReOp == OpHorizDep &&
@@ -1193,7 +1194,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                   pPosRel = pPosRel->PosRNext;
                 }
 
-              if (IsSystemOrigin (pAb, frame))
+              if (isSysOrg)
                 // don't transmit the moving
                 delta = 0;
               else if (pBox->BxXToCompute)
@@ -1258,7 +1259,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
   BoxRelation        *pRel;
   PtrPosRelations     pPosRel;
   int                 i;
-  ThotBool            notEmpty;
+  ThotBool            notEmpty, isSysOrg;
   ThotBool            toVertPack;
 
   if (pBox && (delta || pBox->BxYToCompute))
@@ -1302,6 +1303,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
               /* Move boxes which are out of structure relations with it
                  and update streched dimensions that depends on it
               */
+              isSysOrg = IsSystemOrigin (pAb, frame);
               pPosRel = pBox->BxPosRelations;
               while (pPosRel != NULL)
                 {
@@ -1312,8 +1314,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                       pRel = &pPosRel->PosRTable[i];
                       if (pRel->ReBox->BxAbstractBox &&
                           // don't move children of a new system origin
-                          (!IsParentBox (pBox, pRel->ReBox) ||
-                           !IsSystemOrigin (pAb, frame)))
+                          (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
                         {
                           /* Relation out of structure */
                           if (pRel->ReOp == OpVertDep &&
@@ -1340,7 +1341,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                   pPosRel = pPosRel->PosRNext;
                 }
 
-              if (IsSystemOrigin (pAb, frame))
+              if (isSysOrg)
                 // don't transmit the moving
                 delta = 0;
               else if (pBox->BxYToCompute)
@@ -2001,7 +2002,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
   int                 orgTrans, middleTrans, endTrans;
   int                 extraL, extraR;
   int                 addL = 0, addR = 0;
-  ThotBool            notEmpty, toMove, position;
+  ThotBool            notEmpty, toMove, position, isSysOrg;
   ThotBool            absoluteMove, externalRef;
 
   if (pBox == NULL || (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
@@ -2050,7 +2051,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
               TtaFreeMemory ((STRING) pBox->BxPictInfo);
               pBox->BxPictInfo = NULL;
             }
-	  
           /* Check the validity of dependency rules */
           toMove = TRUE;
           if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
@@ -2094,7 +2094,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
               middleTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
               endTrans = 0;
             }
-	  
+          // take into account only the left margin and border for SVG content
+          isSysOrg = IsSystemOrigin (pAb, frame);
           if (ReadyToDisplay &&
               pBox->BxType != BoSplit &&
               pBox->BxType != BoMulScript &&
@@ -2145,8 +2146,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                   pRefAb = pRel->ReBox->BxAbstractBox;
                   if (pRefAb &&
                       // don't move children of a new system origin
-                      (!IsParentBox (pBox, pRel->ReBox) ||
-                       !IsSystemOrigin (pAb, frame)))
+                      (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
                     {
                       /* Ignore the back relation of a stretchable box */
                       if (!pBox->BxHorizFlex ||
@@ -2252,7 +2252,13 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
           /* Keep in mind if the box positionning is absolute or not */
           absoluteMove = IsXPosComplete (pBox);
           /* internal boxes take into account margins borders and paddings */
-          if (l || r)
+          if (isSysOrg)
+            {
+              orgTrans = l;
+              middleTrans = 0;
+              endTrans = 0;
+            }
+          else if (l || r)
             {
               orgTrans += l;
               middleTrans += (l - r)/2;
@@ -2261,6 +2267,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                 /* internal boxes must be translated */
                 absoluteMove = TRUE;
             }
+
           /* Moving included boxes or reevalution of the block of lines? */
           if (pAb->AbLeafType == LtCompound &&
               !pAb->AbNew && /* children are not already created */
@@ -2286,9 +2293,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                         // the current update should be stopped
                         return;
                 }
-              else if (pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost &&
-                       // don't move children of a new system origin
-                       !IsSystemOrigin (pAb, frame))
+              else if (pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
                 {
                   pRefAb = pAb->AbFirstEnclosed;
                   while (pRefAb)
@@ -2588,7 +2593,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   int                 orgTrans, middleTrans, endTrans;
   int                 extraT, extraB;
   int                 addT = 0, addB = 0;
-  ThotBool            notEmpty, toMove;
+  ThotBool            notEmpty, toMove, isSysOrg;
   ThotBool            absoluteMove, externalRef;
   
   if (pBox == NULL || (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
@@ -2677,7 +2682,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               middleTrans = pBox->BxHeight / 2 - (pBox->BxHeight + delta + diff) / 2;
               endTrans = 0;
             }
-
+          // take into account only the left margin and border for SVG content
+          isSysOrg = IsSystemOrigin (pAb, frame);
           if (ReadyToDisplay &&
               pBox->BxType != BoSplit &&
               pBox->BxType != BoMulScript &&
@@ -2716,8 +2722,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                   pRefAb = pRel->ReBox->BxAbstractBox;
                   if (pRefAb &&
                       // don't move children of a new system origin
-                      (!IsParentBox (pBox, pRel->ReBox) ||
-                       !IsSystemOrigin (pAb, frame)))
+                      (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
                     {
                       /* Ignore the back relation of a stretchable box */
                       if (!pBox->BxVertFlex ||
@@ -2827,7 +2832,13 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
           /* Keep in mind if the box positionning is absolute or not */
           absoluteMove = IsYPosComplete (pBox);
           /* internal boxes take into account margins borders and paddings */
-          if (t || b)
+          if (isSysOrg)
+            {
+              orgTrans = t;
+              middleTrans = 0;
+              endTrans = 0;
+            }
+          else if (t || b)
             {
               orgTrans = t;
               middleTrans = (t - b)/2;
@@ -2849,8 +2860,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
             }
           else if (pAb->AbLeafType == LtCompound &&
                    pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost &&
-                   // don't move children of a new system origin
-                   !IsSystemOrigin (pAb, frame) &&
                    (absoluteMove || pAb->AbHeight.DimAbRef ||
                     pAb->AbHeight.DimValue >= 0))
             {
@@ -3222,7 +3231,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   int                 i;
   ThotBool            toComplete;
   ThotBool            notEmpty;
-  ThotBool            checkParent;
+  ThotBool            checkParent, isSysOrg;
   ThotBool            absoluteMove;
 
   if (pBox == NULL || pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
@@ -3261,6 +3270,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
             UpdateBoxRegion (frame, pBox, delta, 0, 0, 0);
         }
 
+      isSysOrg = IsSystemOrigin (pAb, frame);
       /* Keep in mind if the box positionning is absolute or not */
       absoluteMove = IsXPosComplete (pBox);
       /*
@@ -3346,8 +3356,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                       pRel->ReBox->BxType != BoGhost &&
                       pRel->ReBox->BxType != BoFloatGhost &&
                       // don't move children of a new system origin
-                      (!IsParentBox (pBox, pRel->ReBox) ||
-                       !IsSystemOrigin (pAb, frame)))
+                      (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
                     {
                       /* Left, Right, Middle, and Vertical axis */
                       if (pRel->ReOp == OpHorizRef)
@@ -3403,8 +3412,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                                 pAb == pRel->ReBox->BxAbstractBox->AbHorizPos.PosAbRef) ||
                                pRel->ReOp == OpWidth)
                         {
-                          if (!IsParentBox (pBox, pRel->ReBox) ||
-                              !IsSystemOrigin (pAb, frame))
+                          if (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg)
                             MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, delta, frame, TRUE);
                         }
                     }
@@ -3456,9 +3464,8 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   PtrPosRelations     pPosRel;
   BoxRelation        *pRel;
   int                 i;
-  ThotBool            toComplete;
-  ThotBool            notEmpty;
-  ThotBool            checkParent;
+  ThotBool            toComplete, notEmpty;
+  ThotBool            checkParent, isSysOrg;
   ThotBool            absoluteMove;
 
   if (pBox == NULL || pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
@@ -3548,6 +3555,8 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                 }
             }
         }
+
+      isSysOrg = IsSystemOrigin (pAb, frame);
       /* Check the validity of dependency rules */
       checkParent = TRUE;
       if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
@@ -3577,8 +3586,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                       pRel->ReBox->BxType != BoGhost &&
                       pRel->ReBox->BxType != BoFloatGhost &&
                       // don't move children of a new system origin
-                      (!IsParentBox (pBox, pRel->ReBox) ||
-                       !IsSystemOrigin (pAb, frame)))
+                      (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
                     {
                       /* Top, Bottom, Middle, and Baseline */
                       if (pRel->ReOp == OpVertRef)
@@ -3636,7 +3644,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                                pRel->ReOp == OpHeight)
                         {
                           if (!IsParentBox (pBox, pRel->ReBox) ||
-                              !IsSystemOrigin (pAb, frame))
+                              !isSysOrg)
                             MoveBoxEdge (pRel->ReBox,
                                          pBox, pRel->ReOp, delta,
                                          frame, FALSE);
@@ -3725,7 +3733,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   int                 val, width;
   int                 left;
   int                 x, i, j;
-  ThotBool            movingChild, toMove;
+  ThotBool            movingChild, toMove, isSysOrg;
   ThotBool            absoluteMove, isExtra;
 
   /*
@@ -3765,6 +3773,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       else
         x = 0;
       
+      isSysOrg = IsSystemOrigin (pAb, frame);
       /* Initially the inside left and the inside right are the equal */
       width = x;
       /* left gives the current left limit of mobile boxes */

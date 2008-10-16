@@ -185,20 +185,20 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
         thick += 2;
 
       /* The box is smaller than the handle */
-      if(!(pAb->AbLeafType == LtGraphics && pAb->AbRealShape == 'g'))
-	{
-	  if (thick > pBox->BxWidth)
-	    thick = pBox->BxWidth;
-	  if (thick > pBox->BxHeight)
-	    thick = pBox->BxHeight;
-	}
+      if (pAb->AbLeafType != LtGraphics || pAb->AbRealShape != 'g')
+        {
+          if (thick > pBox->BxW)
+            thick = pBox->BxW;
+          if (thick > pBox->BxH)
+            thick = pBox->BxH;
+        }
 
       /* selection points */
       GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
       if (pEl->ElSystemOrigin)
         {
-          leftX = 0;
-          topY = 0;
+          leftX = pBox->BxLMargin + pBox->BxLBorder;
+          topY = pBox->BxTMargin + pBox->BxTBorder;
         }
       else
         {
@@ -213,26 +213,25 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
       middleY = topY + (pBox->BxH / 2);
 
       if(could_resize)
-	h = FRAME_HANDLE;
+        h = FRAME_HANDLE;
       else
-	h = DEFAULT_HANDLE;
+        h = DEFAULT_HANDLE;
 
       if (svg_or_img)
         {
-	  /* Frame */
+          /* Frame */
           DrawRectangle (frame, 1, 0, leftX, topY, pBox->BxW, pBox->BxH - 1,
-			 ResizeFgSelColor, 0, 0);
-
+                         ResizeFgSelColor, 0, 0);
 
           /* 8 control points */
-	  DrawHandle(h, frame, thick, leftX, topY);
-	  DrawHandle(h, frame, thick, middleX, topY);
-	  DrawHandle(h, frame, thick, rightX, topY);
-	  DrawHandle(h, frame, thick, leftX, middleY);
-	  DrawHandle(h, frame, thick, rightX, middleY);
-	  DrawHandle(h, frame, thick, leftX, bottomY);
-	  DrawHandle(h, frame, thick, middleX, bottomY);
-	  DrawHandle(h, frame, thick, rightX, bottomY);
+          DrawHandle(h, frame, thick, leftX, topY);
+          DrawHandle(h, frame, thick, middleX, topY);
+          DrawHandle(h, frame, thick, rightX, topY);
+          DrawHandle(h, frame, thick, leftX, middleY);
+          DrawHandle(h, frame, thick, rightX, middleY);
+          DrawHandle(h, frame, thick, leftX, bottomY);
+          DrawHandle(h, frame, thick, middleX, bottomY);
+          DrawHandle(h, frame, thick, rightX, bottomY);
         }
       else if (pAb->AbLeafType == LtPolyLine && pBox->BxNChars > 1)
         {

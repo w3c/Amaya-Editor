@@ -2186,6 +2186,7 @@ static void TransmitMBP (PtrBox pBox, PtrBox pRefBox, int frame,
 /*----------------------------------------------------------------------
   CheckMBP checks margins, borders and paddings of the current box.
   The parameter evalAuto says if auto values are computed or not.
+  pAb and pBox point to the abstract box and the checked box.
   Return TRUE when any value was updated.
   ----------------------------------------------------------------------*/
 ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto)

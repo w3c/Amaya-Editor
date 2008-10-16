@@ -590,8 +590,8 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   pBox = pAb->AbBox;
   if (IsSystemOrigin (pAb, frame))
     {
-      x = 0;
-      y = 0;
+      x = pBox->BxLMargin + pBox->BxLBorder;
+      y = pBox->BxTMargin + pBox->BxTBorder;
     }
   else
     {

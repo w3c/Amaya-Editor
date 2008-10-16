@@ -208,44 +208,40 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
   PtrElement      child;
   PtrAbstractBox  pAb;
   PtrBox          box;
-  int             lowerX = x, higherX = x;
+  ViewFrame      *pFrame;
+  PtrFlow         pFlow = NULL;
+  int             lowerX, higherX;
+  ThotBool        isSVG, isDraw;
 
+  isSVG = IsSVGComponent (FirstSelectedElement);
   if (FrameTable[frame].FrView != 1 || FirstSelectedElement == NULL ||
-      FirstSelectedElement != LastSelectedElement ||
-      IsSVGComponent (FirstSelectedElement))
+      FirstSelectedElement != LastSelectedElement || isSVG)
     // cannot apply to that element
     return NULL;
 
   pAb = FirstSelectedElement->ElAbstractBox[0];
-  if (pAb->AbBox)
-    {
-#ifdef _GL
-      /* Transform windows coordinate x, y to the transformed system 
-         of the current box */
-      x = 0;
-      GetBoxTransformedCoord (pAb, frame, &lowerX, &higherX, &x, &y);
-#else /* _GL */
-      ViewFrame      *pFrame;
-      PtrFlow         pFlow = NULL;
-  // take into account the document scroll
+  if (pAb == NULL || pAb->AbBox == NULL)
+    return NULL;
+
+  isDraw = TypeHasException (ExcIsDraw, FirstSelectedElement->ElTypeNumber,
+                             FirstSelectedElement->ElStructSchema);
       pFrame = &ViewFrameTable[frame - 1];
-      x += pFrame->FrXOrg;
-      y += pFrame->FrYOrg;      
-  if (pAb && pAb->AbBox)
-    pFlow = GetRelativeFlow (pAb->AbBox, frame);
-  if (pFlow)
-    {
-      /* apply the box shift */
-      x += pFlow->FlXStart;
-      y += pFlow->FlYStart;
-    }
-#endif /* _GL */
-    }
 
   if (!FirstSelectedElement->ElTerminal &&
       FirstSelectedElement->ElFirstChild &&
       FirstSelectedElement->ElFirstChild->ElTerminal)
     {
+      // take into account the document scroll
+      x += pFrame->FrXOrg;
+      y += pFrame->FrYOrg;      
+      pFlow = GetRelativeFlow (pAb->AbBox, frame);
+      if (pFlow)
+        {
+          /* apply the box shift */
+          x += pFlow->FlXStart;
+          y += pFlow->FlYStart;
+        }
+
       child = FirstSelectedElement->ElFirstChild;
       // manage HTML area this way
       if (child->ElLeafType == LtPicture ||
@@ -253,15 +249,22 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
            (child->ElGraph == 'a' || child->ElGraph == 'R')))
         {
           pAb = child->ElAbstractBox[0];
-          box = IsOnShape (pAb, lowerX, y, ctrlpt);
+          box = IsOnShape (pAb, x, y, ctrlpt);
           if (child->ElLeafType != LtPicture || *ctrlpt != 0)
             return box;
         }
     }
-  else if (FirstSelectedElement->ElAbstractBox[0] &&
-           TypeHasException (ExcIsDraw, FirstSelectedElement->ElTypeNumber,
-                             FirstSelectedElement->ElStructSchema))
+  else if (isDraw)
     {
+#ifdef _GL
+      /* Transform windows coordinate x, y to the transformed system 
+         of the current box */
+      lowerX = x, higherX = x;
+      x = 0;
+      GetBoxTransformedCoord (pAb, frame, &lowerX, &higherX, &x, &y);
+#endif /* _GL */
+      lowerX += pFrame->FrXOrg;
+      y += pFrame->FrYOrg;      
       if (pAb && pAb->AbBox)
         {
           box = IsOnShape (pAb, lowerX, y, ctrlpt);
@@ -1509,10 +1512,10 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   if (pAb == NULL)
     return NULL;
   pBox = pAb->AbBox;
-  x -= pBox->BxXOrg;
-  y -= pBox->BxYOrg;
-  width = pBox->BxWidth;
-  height = pBox->BxHeight;
+  x = x - pBox->BxXOrg - pBox->BxLMargin;
+  y = y - pBox->BxYOrg - pBox->BxTMargin;
+  width = pBox->BxW;
+  height = pBox->BxH;
   *selpoint = 0;
   
   /* Keep in mind the selected characteristic point        */
@@ -2884,8 +2887,8 @@ void ApplyDirectResize (PtrBox pBox, int frame, int pointselect, int xm, int ym)
         {
           x = pBox->BxXOrg - pFrame->FrXOrg;
           y = pBox->BxYOrg - pFrame->FrYOrg;
-          width = pBox->BxWidth;
-          height = pBox->BxHeight;
+          width = pBox->BxW;
+          height = pBox->BxH;
           /* On retablit les positions par rapport a la fenetre */
           xmin -= pFrame->FrXOrg;
           if (okH)
@@ -3005,8 +3008,8 @@ void ApplyDirectTranslate (PtrBox pBox, int frame, int xm, int ym)
               /* A box is found */
               x = pBox->BxXOrg - pFrame->FrXOrg;
               y = pBox->BxYOrg - pFrame->FrYOrg;
-              width = pBox->BxWidth;
-              height = pBox->BxHeight;
+              width = pBox->BxW;
+              height = pBox->BxH;
               pEl = pBox->BxAbstractBox->AbElement;
               if (pointselect == 0 || pBox->BxType == BoPicture)
                 /* moving the whole box */
