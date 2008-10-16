@@ -165,9 +165,8 @@ TypeBrowserFile WidgetParent;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static int AmayaPopupDocContextMenu(int doc, int view, int window,
-				    wxWindow* win,
-				    int x, int y)
+static int AmayaPopupDocContextMenu (int doc, int view, int window,
+                                     wxWindow* win, int x, int y)
 {
   wxMenu     *p_menu = TtaGetDocContextMenu ( window );
   if (p_menu && doc)
@@ -188,10 +187,9 @@ static int AmayaPopupDocContextMenu(int doc, int view, int window,
       ThotBool        bTemplate = IsTemplateInstanceDocument(doc);
       ThotBool        do_insert = TRUE, do_append = TRUE;
 #endif /* TEMPLATES */
-      
 #ifdef _SVG
       ElementType     elementType;
-      SSchema	      svgSchema;
+      SSchema	        svgSchema;
 #endif /* _SVG */
 
       /* First items of the context menu can be displayed/hidden. */
@@ -203,58 +201,59 @@ static int AmayaPopupDocContextMenu(int doc, int view, int window,
       /* By default, the first item until the "cut" command
 	 are not displayed... */
       for(i = 0; i < CUT_POS; i++)
-	display_item[i] = FALSE;
+        display_item[i] = FALSE;
 
       /* ... and cut, paste etc are displayed. */
       for(i = CUT_POS; i < NB_ITEM; i++)
-	display_item[i] = TRUE;
+        display_item[i] = TRUE;
 
       /* Is the element a link? */
       if(CanFollowTheLink(doc))
-	{
-	  for(i = 0; i < 4; i++)
-	    display_item[i] = TRUE;
-	}
+        {
+          for(i = 0; i < 4; i++)
+            display_item[i] = TRUE;
+        }
 
 #ifdef _SVG
       /* Is it an SVG element? */
       TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
-      if(el)
-	{
-	  svgSchema = GetSVGSSchema (doc);
-	  elementType = TtaGetElementType(el);
-	  if(elementType.ElSSchema == svgSchema && view == 1)
-	    {
-	      if(!TtaIsLeaf(elementType) ||
-		 elementType.ElTypeNum == SVG_EL_TEXT_UNIT)
-		/* Display the SVG transforms if a non-terminal SVG element
-		   or a TEXT_UNIT is selected */
-		{
-		  display_item[4] = TRUE;
-		  display_item[5] = TRUE;
-		  display_item[6] = TRUE;
-		  display_item[7] = TRUE;
-		  display_item[8] = (elementType.ElTypeNum == SVG_EL_g);
-		  display_item[9] = TRUE;
-		}
-	      else if(elementType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
-		{
-		  /* Remove cut, copy, paste commands */
-		  for(i = 0; i < 3; i++)
-		    display_item[CUT_POS+i] = FALSE;
-		}
-
-	      
-	    }
-	}
+      if (el)
+        {
+          svgSchema = GetSVGSSchema (doc);
+          elementType = TtaGetElementType(el);
+          parent = TtaGetParent (el);
+          parentType = TtaGetElementType (parent);
+          if (elementType.ElSSchema == svgSchema && view == 1 &&
+              parentType.ElSSchema == svgSchema)
+            {
+              if(!TtaIsLeaf(elementType) ||
+                 elementType.ElTypeNum == SVG_EL_TEXT_UNIT)
+                /* Display the SVG transforms if a non-terminal SVG element
+                   or a TEXT_UNIT is selected */
+                {
+                  display_item[4] = TRUE;
+                  display_item[5] = TRUE;
+                  display_item[6] = TRUE;
+                  display_item[7] = TRUE;
+                  display_item[8] = (elementType.ElTypeNum == SVG_EL_g);
+                  display_item[9] = TRUE;
+                }
+              else if(elementType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
+                {
+                  /* Remove cut, copy, paste commands */
+                  for(i = 0; i < 3; i++)
+                    display_item[CUT_POS+i] = FALSE;
+                }
+            }
+        }
 #endif /* _SVG */
 
       /* Remove all the item that must not be displayed */
       for(i = NB_ITEM - 1; i >= 0; i--)
-	{
-	  if(!display_item[i])
-	    items[i] = p_menu->Remove(p_menu->FindItemByPosition(i));
-	}
+        {
+          if(!display_item[i])
+            items[i] = p_menu->Remove(p_menu->FindItemByPosition(i));
+        }
 
 #ifdef TEMPLATES
       TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
