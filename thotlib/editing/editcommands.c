@@ -4528,7 +4528,9 @@ void TtcPaste (Document doc, View view)
               !ViewFrameTable[frame - 1].FrSelectOnePosition &&
               (firstEl != lastEl ||
                !TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
-                                  firstEl->ElStructSchema)))
+                                  firstEl->ElStructSchema)) &&
+              (firstEl->ElTerminal ||
+               strcmp (firstEl->ElStructSchema->SsName, "SVG")))
             /* delete the current selection */
             ContentEditing (TEXT_SUP);
 #ifdef _WINGUI

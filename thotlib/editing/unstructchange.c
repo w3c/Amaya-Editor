@@ -798,6 +798,25 @@ void PasteCommand ()
               before = FALSE;
               pNextEl = NextElement (pEl);
             }
+          else if (!firstSel->ElTerminal &&
+                   !strcmp (firstSel->ElStructSchema->SsName, "SVG"))
+            {
+              before = FALSE;
+              pEl = firstSel;
+              if (TypeHasException (ExcIsDraw, pEl->ElTypeNumber, pEl->ElStructSchema))
+                {
+                  within = TRUE;
+                  pNextEl = NULL;
+                  pEl = (PtrElement)TtaGetLastChild ((Element)pEl);
+                }
+              else
+                {
+                  within = FALSE;
+                  /* the element that will follow the pasted elements is the first
+                     one in the current selection */
+                  pNextEl = firstSel;
+                }
+            }
           else if (firstChar < 2)
             /* paste before element firstSel */
             {
