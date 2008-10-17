@@ -1484,7 +1484,7 @@ ThotBool SetElementData (Document doc, Element el,
       TtaNextSibling(&child);
     }
 
-  remove = (value == NULL || *value == '\0');
+  remove = (value == NULL || *value == EOS);
 
   if(child == NULL)
     {

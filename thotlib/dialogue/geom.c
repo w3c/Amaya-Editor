@@ -426,11 +426,17 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   ThotBool                    created = FALSE;
 
   // register the current svg canvas
-  BoxCanvas = svgBox;
+  BoxCanvas = NULL;
 
   /* Create the handler */
   canvasWidth = svgBox->BxW;
   canvasHeight = svgBox->BxH;
+  if (svgBox)
+    {
+      // MBP apply to the leaf box and not control points
+      ancestorX += svgBox->BxLMargin + svgBox->BxLBorder + svgBox->BxLPadding;
+      ancestorY +=  svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
+    }
   p_frame = FrameTable[frame].WdFrame;
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
                                                             doc,
