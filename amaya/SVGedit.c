@@ -57,8 +57,8 @@
 static ThotIcon   iconGraph;
 static ThotIcon   iconGraphNo;
 static ThotIcon   mIcons[12];
-static ThotBool PaletteDisplayed = FALSE;
-
+static ThotBool   PaletteDisplayed = FALSE;
+static Element    PastedGraphics = NULL;
 extern int ActiveFrame;
 
 #ifdef _GTK
@@ -903,7 +903,16 @@ ThotBool AttrBaselineShiftDelete (NotifyAttribute *event)
   -----------------------------------------------------------------------*/
 ThotBool NewGraphElem (NotifyOnValue *event)
 {
+  ElementType    elType;
   int           profile;
+
+  // keep in memory tthe parent of the pasted element
+  elType = TtaGetElementType (event->element);
+  if (elType.ElSSchema &&
+      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    PastedGraphics = event->element;
+  else
+    PastedGraphics = NULL;
 
   /* is it a compound document? */
   profile = TtaGetDocumentProfile (event->document);
@@ -925,8 +934,7 @@ ThotBool NewGraphElem (NotifyOnValue *event)
 void GraphElemPasted (NotifyElement *event)
 {
   ElementType    elType;
-  SSchema	       SvgSchema;
-  Element        el;
+  Element        el, parent;
   int            profile, doc;
 
   XLinkPasted (event);
@@ -937,20 +945,31 @@ void GraphElemPasted (NotifyElement *event)
   if (DocumentTypes[doc] == docMath ||
       profile == L_Strict || profile == L_Basic)
     return;
-  else if (DocumentTypes[doc] != docSVG &&
-           DocumentMeta[doc])
+  else if (DocumentTypes[doc] != docSVG && DocumentMeta[doc])
     DocumentMeta[doc]->compound = TRUE;
 
   /* Set the namespace declaration if it's an <svg> element that is not
      within an element belonging to the SVG namespace */
-  SvgSchema = GetSVGSSchema (doc);
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == SVG_EL_SVG && elType.ElSSchema == SvgSchema)
-    /* it's an <svg> element */
-    SVGCreated (event);
- else if (elType.ElTypeNum == SVG_EL_title && elType.ElSSchema == SvgSchema)
-    /* the pasted element is a title element. Update the window title */
-    UpdateTitle (el, doc);
+  if (elType.ElSSchema &&
+      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    {
+      if (elType.ElTypeNum == SVG_EL_SVG)
+        /* it's an <svg> element */
+        SVGCreated (event);
+      else if (elType.ElTypeNum == SVG_EL_title)
+        /* the pasted element is a title element. Update the window title */
+        UpdateTitle (el, doc);
+      else
+        {
+          // check if the element must be shifted
+          parent = TtaGetParent (el);
+          if (parent == PastedGraphics)
+            // translate 
+            TtaApplyMatrixTransform (doc, el, 1, 0, 0, 1, 4, 4);
+        }
+    }
+
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
   MakeUniqueName (el, doc, TRUE, FALSE);
