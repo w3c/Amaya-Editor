@@ -597,7 +597,7 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   int                  x, y, length;
   float                scale;
   double               angle;
-  PresentationContext  context;
+  PresentationContext  context = NULL;
   PresentationValue    presValue;
   ThotBool             oldStructureChecking, strokeWidth;
 
