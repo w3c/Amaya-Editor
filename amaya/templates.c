@@ -1634,7 +1634,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
           if (el)
             next = el;
           name = GetUsedTypeName (next);
-          DoReplicateUseElement (t, doc, view, el, ancestor, name);
+          DoReplicateUseElement (t, doc, 1, el, ancestor, name);
           TtaFreeMemory(name);
           return TRUE; // don't let Thot do the job
         }
@@ -1647,7 +1647,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
                elType.ElTypeNum == Template_EL_useEl))
             return TRUE; // don't let Thot do the job
           if (ancestor != parent)
-            return  TtaIsReadOnly (parent); // let or not Thot do the job
+            return  (TtaIsReadOnly (parent) != 0); // let or not Thot do the job
           types = GetAttributeStringValueFromNum (ancestor, Template_ATTR_currentType, NULL);
           b = Template_CanInsertElementInUse (doc, elType, types,
                                               parent, event->position);
