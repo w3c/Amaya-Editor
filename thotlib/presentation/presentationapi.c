@@ -2635,9 +2635,11 @@ void TtaGiveBoxSize (Element element, Document document, View view,
   edge of the box.
   yCoord:  distance from the upper edge of the parent box to the upper
   edge of the box.
+  inner is TRUE when the inner parent origin is considered else the outside
+  of the parent origin is considered.
   ----------------------------------------------------------------------*/
 void TtaGiveBoxPosition (Element element, Document document, View view,
-                         TypeUnit unit, int *xCoord, int *yCoord)
+                         TypeUnit unit, ThotBool inner, int *xCoord, int *yCoord)
 {
   PtrAbstractBox      pAb;
   PtrBox              pBox;
@@ -2691,6 +2693,15 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
                       h = pAb->AbEnclosing->AbBox->BxH;
                       x = pAb->AbEnclosing->AbBox->BxXOrg - pFrame->FrXOrg;
                       y = pAb->AbEnclosing->AbBox->BxYOrg - pFrame->FrYOrg;
+                      if (inner)
+                        {
+                        x +=  pAb->AbEnclosing->AbBox->BxLMargin
+                          + pAb->AbEnclosing->AbBox->BxLBorder
+                          + pAb->AbEnclosing->AbBox->BxLPadding;
+                        y += pAb->AbEnclosing->AbBox->BxTMargin
+                          + pAb->AbEnclosing->AbBox->BxTBorder
+                          + pAb->AbEnclosing->AbBox->BxTPadding;
+                        }
                     }
                   else
                     {

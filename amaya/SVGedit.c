@@ -1760,7 +1760,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
                 TtaSetAttributeText (attr, SVG_VERSION, svgCanvas, doc);*/
               parent = TtaGetParent (svgCanvas);
               TtaGiveBoxSize (parent, doc, 1, UnPixel, &w, &h);
-              sprintf (buffer, "%d\0", w);
+              sprintf (buffer, "%d", w);
               attrType.AttrTypeNum = SVG_ATTR_width_;
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (svgCanvas, attr, doc);
@@ -3704,38 +3704,35 @@ void MoveElementInParentSpace(Document doc, Element el, float x, float y)
 }
 
 /*----------------------------------------------------------------------
-  
-
+  GetPositionAndSizeInParentSpace returns the relative position in the
+  parent element and the size.
 ----------------------------------------------------------------------*/
 void GetPositionAndSizeInParentSpace (Document doc, Element el, float *X,
                                       float *Y, float *width, float *height)
 { 
 #ifdef _SVG
-  Element	   parent;
-  SSchema          svgSchema;
+  Element	         parent;
   ElementType      elType;
-  int dummy1,dummy2;
+  int              dummy1,dummy2;
 
-  if (!el)return;
-  parent = TtaGetParent(el);
+  if (!el)
+    return;
 
   /* Check whether the parent is an SVG element */
-  svgSchema = GetSVGSSchema (doc);
+  parent = TtaGetParent(el);
   elType = TtaGetElementType (parent);
-  if (elType.ElSSchema != svgSchema)
+  if (elType.ElSSchema == NULL || strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
     return;
 
   /* Get the position and size of the box
-
-  X,Y---width-----
-  |             |
-  height          |
-  |             |
-  ---------------
-
+   * X,Y---width-----
+   *  |             |
+   * height         |
+   *  |             |
+   *  ---------------
   */
 
-  TtaGiveBoxPosition (el, doc, 1, UnPixel, &dummy1, &dummy2);
+  TtaGiveBoxPosition (el, doc, 1, UnPixel, TRUE, &dummy1, &dummy2);
   *X = (float)(dummy1);
   *Y = (float)(dummy2);
 
@@ -4116,7 +4113,7 @@ void TspanCreated (NotifyElement * event)
           !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
         /* it's a text element. Get its position */
         {
-          TtaGiveBoxPosition (ancestor, event->document, 1, UnPixel, &x, &y);
+          TtaGiveBoxPosition (ancestor, event->document, 1, UnPixel, FALSE, &x, &y);
           ancestor = NULL;
         }
       else

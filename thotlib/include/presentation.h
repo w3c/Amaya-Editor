@@ -598,9 +598,12 @@ extern void TtaGiveBoxSize (Element element, Document document, View view,
    edge of the box, in units.
    yCoord:  distance from the upper edge of the parent box to the upper
    edge of the box, in units.
+   inner is TRUE when the inner parent origin is considered else the outside
+   of the parent origin is considered.
   ----------------------------------------------------------------------*/
 extern void TtaGiveBoxPosition (Element element, Document document, View view,
-                                TypeUnit unit, /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);
+                                TypeUnit unit, ThotBool inner,
+                                /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);
 
 /*----------------------------------------------------------------------
    TtaGiveBoxAbsPosition

@@ -42,13 +42,13 @@
 #include "appdialogue_tv.h"
 
 /* Thot Clipboard information */
-static ThotPictInfo PictClipboard;
-static LeafType     ClipboardType;
-static Language     ClipboardLanguage = 0;
+static ThotPictInfo       PictClipboard;
+static LeafType           ClipboardType;
+static Language           ClipboardLanguage = 0;
 /* X Clipboard */
 static struct _TextBuffer XClipboard;
+static ThotBool           NewInsert;
 
-static ThotBool     NewInsert;
 #include "abspictures_f.h"
 #include "actions_f.h"
 #include "appdialogue_f.h"
@@ -1885,12 +1885,12 @@ ThotBool AskShapePoints (Document doc, Element svgAncestor, Element svgCanvas,
                          int shape, Element el)
 {
   PtrAbstractBox pAb;
-  PtrBox pBox;
-  ViewFrame          *pFrame;
-  int frame;
-  PtrTransform CTM, inverse;
-  int canvasWidth,canvasHeight,ancestorX,ancestorY;
-  ThotBool created = FALSE;
+  PtrBox         pBox, svgBox;
+  ViewFrame     *pFrame;
+  int            frame;
+  PtrTransform   CTM, inverse;
+  int            ancestorX, ancestorY;
+  ThotBool       created = FALSE;
 
   frame = ActiveFrame;
   if(frame <= 0 || svgCanvas == NULL || svgAncestor == NULL )
@@ -1911,21 +1911,23 @@ ThotBool AskShapePoints (Document doc, Element svgAncestor, Element svgCanvas,
         return FALSE;
     }
 
-  pFrame = &ViewFrameTable[frame - 1];
-  /* Get the size of the SVG Canvas */
-  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
-  /* Get the origin of the ancestor */
-  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
+  /* Get the box of the SVG Canvas */
+  pAb = ((PtrElement)svgCanvas)->ElAbstractBox[0];
+  if (pAb == NULL || pAb->AbBox == NULL)
+    return FALSE;
+  svgBox =  pAb->AbBox;
+
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
   if (pAb && pAb -> AbBox)
     pBox = pAb -> AbBox;
-  else return FALSE;
+  else
+    return FALSE;
+  pFrame = &ViewFrameTable[frame - 1];
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
   /* Call the interactive module */
-  created = PathCreation (frame, doc, inverse,
-                          ancestorX, ancestorY, canvasWidth, canvasHeight,
-                          shape, el);
+  created = PathCreation (frame, doc, inverse, svgBox,
+                          ancestorX, ancestorY, shape, el);
 
   /* Free the inverse of the CTM */
   if(inverse != NULL)
@@ -1945,11 +1947,11 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
                             int *lx, int *ly)
 {
   PtrAbstractBox pAb;
-  PtrBox         pBox;
+  PtrBox         pBox, svgBox;
   ViewFrame     *pFrame;
   PtrTransform   CTM, inverse;
   int            frame;
-  int            canvasWidth, canvasHeight, ancestorX, ancestorY;
+  int            ancestorX, ancestorY;
   ThotBool       created = FALSE;
 
   frame = ActiveFrame;
@@ -1959,8 +1961,7 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
   *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = *x4 = *y4 = *lx = * ly = 0;
   /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
-
-  if(CTM == NULL)
+  if (CTM == NULL)
     inverse = NULL;
   else
     {
@@ -1973,23 +1974,25 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
         return FALSE;
     }
 
-  pFrame = &ViewFrameTable[frame - 1];
-  /* Get the size of the SVG Canvas */
-  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
+  /* Get the box of the SVG Canvas */
+  pAb = ((PtrElement)svgCanvas)->ElAbstractBox[0];
+  if (pAb == NULL || pAb->AbBox == NULL)
+    return FALSE;
+  svgBox =  pAb->AbBox;
 
   /* Get the origin of the ancestor */
-  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
   if(pAb && pAb -> AbBox)
     pBox = pAb -> AbBox;
-  else return FALSE;
+  else
+    return FALSE;
+  pFrame = &ViewFrameTable[frame - 1];
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
   
   /* Call the interactive module */
-  created = ShapeCreation (frame, doc, (void *)inverse,
-                           ancestorX, ancestorY,
-                           canvasWidth, canvasHeight, shape,
+  created = ShapeCreation (frame, doc, (void *)inverse, svgBox,
+                           ancestorX, ancestorY, shape,
                            x1, y1, x2, y2, x3, y3, x4, y4, lx, ly);
 
   /* Free the inverse of the CTM */
@@ -2010,7 +2013,7 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
   ViewFrame          *pFrame;
   PtrTransform        CTM, inverse;
   int                 frame;
-  int                 canvasWidth, canvasHeight, ancestorX, ancestorY;
+  int                 ancestorX, ancestorY;
   ThotBool            transformApplied;
 
   frame = ActiveFrame;
@@ -2027,14 +2030,12 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
 
   /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
-
-  if(CTM == NULL)
-      inverse = NULL;
+  if (CTM == NULL)
+    inverse = NULL;
   else
     {
       /* Get the inverse of the CTM and free the CTM */
       inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
-
       if (inverse == NULL)
         {
           /* Transform not inversible */
@@ -2043,27 +2044,24 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
         }
     }
 
-  pFrame = &ViewFrameTable[frame - 1];
-  /* Get the size of the SVG Canvas */
+  /* Get the box of the SVG Canvas */
   pAb = ((PtrElement)svgCanvas)->ElAbstractBox[0];
   if (pAb == NULL || pAb->AbBox == NULL)
     return FALSE;
   svgBox =  pAb->AbBox;
-  canvasWidth = svgBox->BxW;
-  canvasHeight = svgBox->BxH;
 
   /* Get the origin of the ancestor */
   pAb = ((PtrElement)svgAncestor)->ElAbstractBox[0];
   if (pAb == NULL || pAb->AbBox == NULL)
     return FALSE;
   pBox = pAb->AbBox;
+  pFrame = &ViewFrameTable[frame - 1];
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
   /* Call the interactive module */
-  transformApplied = TransformSVG (frame, doc, CTM, inverse,
-                                   ancestorX, ancestorY, canvasWidth, canvasHeight,
-                                   transform_type, el);
+  transformApplied = TransformSVG (frame, doc, CTM, inverse, svgBox,
+                                   ancestorX, ancestorY, transform_type, el);
 
   /* Free the transform matrix */
   if(CTM)TtaFreeTransform(CTM);
@@ -2081,24 +2079,23 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
   --------------------------------------------------------------------*/
 ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
 {
-  Element svgCanvas = NULL, svgAncestor = NULL, el2;
+  Element        svgCanvas = NULL, svgAncestor = NULL, el2;
   PtrAbstractBox pAb;
-  PtrBox pBox;
-  ViewFrame          *pFrame;
-  int frame;
-  PtrTransform CTM, inverse;
-  int canvasWidth,canvasHeight,ancestorX,ancestorY;
-  ThotBool transformApplied;
+  PtrBox         pBox, svgBox;
+  ViewFrame     *pFrame;
+  PtrTransform   CTM, inverse;
+  int            frame;
+  int            ancestorX, ancestorY;
+  ThotBool       transformApplied;
 
   frame = ActiveFrame;
-
-  if(frame <= 0)return FALSE;
+  if(frame <= 0)
+    return FALSE;
 
   /* Get the ancestor and svg canvas */
   el2 = el;
 
-  if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
-  
+  if (!GetAncestorCanvasAndObject (doc, &el, &svgAncestor, &svgCanvas))
     return FALSE;
 
   if(el2 != el)
@@ -2108,40 +2105,41 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
 
   /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(el, svgAncestor);
-
-  if(CTM == NULL)
-      inverse = NULL;
+  if (CTM == NULL)
+    inverse = NULL;
   else
     {
       /* Get the inverse of the CTM and free the CTM */
       inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
       TtaFreeTransform(CTM);
 
-      if(inverse == NULL)
-	{
-      /* Transform not inversible */
-	  TtaFreeTransform(CTM);
-	  return FALSE;
-	}
+      if (inverse == NULL)
+        {
+          /* Transform not inversible */
+          TtaFreeTransform(CTM);
+          return FALSE;
+        }
     }
 
-  pFrame = &ViewFrameTable[frame - 1];
   /* Get the size of the SVG Canvas */
-  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
+  pAb = ((PtrElement)svgCanvas)->ElAbstractBox[0];
+  if (pAb == NULL || pAb->AbBox == NULL)
+    return FALSE;
+  svgBox =  pAb->AbBox;
 
   /* Get the origin of the ancestor */
-  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
   if(pAb && pAb -> AbBox)
     pBox = pAb -> AbBox;
-  else return FALSE;
+  else
+    return FALSE;
+  pFrame = &ViewFrameTable[frame - 1];
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
   /* Call the interactive module */
-  transformApplied = PathEdit (frame, doc,  inverse,
-                               ancestorX, ancestorY, canvasWidth, canvasHeight,
-                               el, point);
+  transformApplied = PathEdit (frame, doc,  inverse, svgBox,
+                               ancestorX, ancestorY, el, point);
   /* Free the transform matrix */
   if(inverse)
     TtaFreeTransform(inverse);
@@ -2157,38 +2155,33 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   --------------------------------------------------------------------*/
 ThotBool AskShapeEdit (Document doc, Element el, int point)
 {
-  Element svgCanvas = NULL, svgAncestor = NULL, el2;
+  Element        svgCanvas = NULL, svgAncestor = NULL, el2;
+  Element        leaf;
   PtrAbstractBox pAb;
-  PtrBox pBox;
-  ViewFrame          *pFrame;
-  int frame;
-  PtrTransform CTM, inverse;
-  int canvasWidth,canvasHeight,ancestorX,ancestorY;
-  ThotBool hasBeenEdited;
-  Element leaf;
-
-  char shape;
-  int x,y,w,h,rx,ry;
+  PtrBox         pBox, svgBox;
+  ViewFrame     *pFrame;
+  PtrTransform   CTM, inverse;
+  char           shape;
+  int            frame, x, y, w, h, rx, ry;
+  int            ancestorX, ancestorY;
+  ThotBool       hasBeenEdited;
 
   frame = ActiveFrame;
-
-  if(frame <= 0)return FALSE;
+  if(frame <= 0)
+    return FALSE;
 
   /* Get the ancestor and svg canvas */
   el2 = el;
-
-  if(!GetAncestorCanvasAndObject(doc, &el, &svgAncestor, &svgCanvas))
+  if (!GetAncestorCanvasAndObject (doc, &el, &svgAncestor, &svgCanvas))
     return FALSE;
-
-  if(el2 != el)
+  if (el2 != el)
     /* el has changed: it was not a direct child of svgCanvas. Hence
        transforming it is forbidden. */
     return FALSE;
 
   /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(el, svgAncestor);
-
-  if(CTM == NULL)
+  if (CTM == NULL)
     inverse = NULL;
   else
     {
@@ -2196,84 +2189,83 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
       inverse = (PtrTransform)(TtaInverseTransform ((PtrTransform)CTM));
       TtaFreeTransform(CTM);
 
-      if(inverse == NULL)
-	{
-	  /* Transform not inversible */
-	  TtaFreeTransform(CTM);
-	  return FALSE;
-	}
+      if (inverse == NULL)
+        {
+          /* Transform not inversible */
+          TtaFreeTransform(CTM);
+          return FALSE;
+        }
     }
 
-  pFrame = &ViewFrameTable[frame - 1];
   /* Get the size of the SVG Canvas */
-  TtaGiveBoxSize (svgCanvas, doc, 1, UnPixel, &canvasWidth, &canvasHeight);
+  pAb = ((PtrElement)svgCanvas)->ElAbstractBox[0];
+  if (pAb == NULL || pAb->AbBox == NULL)
+    return FALSE;
+  svgBox =  pAb->AbBox;
 
   /* Get the origin of the ancestor */
-  //TtaGiveBoxPosition (svgAncestor, doc, 1, UnPixel, &ancestorX, &ancestorY);
   pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
   if(pAb && pAb -> AbBox)
     pBox = pAb -> AbBox;
-  else return FALSE;
+  else
+    return FALSE;
+  pFrame = &ViewFrameTable[frame - 1];
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
   /* Call the interactive module */
-  hasBeenEdited = ShapeEdit (frame,
-			     doc, 
-			     inverse,
-			     ancestorX, ancestorY,
-			     canvasWidth, canvasHeight,
-			     el, point);
+  hasBeenEdited = ShapeEdit (frame, doc, inverse, svgBox,
+                             ancestorX, ancestorY, el, point);
 
   /* Free the transform matrix */
-  if(inverse)TtaFreeTransform(inverse);
-
+  if(inverse)
+    TtaFreeTransform(inverse);
 
   /* Update the attribute */
   if(hasBeenEdited)
     {
       leaf =  TtaGetLastChild(el);
-      if(leaf && 
-	 ((PtrElement)leaf)->ElAbstractBox[0])
-	{
-	  pAb = ((PtrElement)leaf)->ElAbstractBox[0];
-	  pBox = pAb->AbBox;
-	  shape = pAb->AbShape;
+      if (leaf && 
+          ((PtrElement)leaf)->ElAbstractBox[0])
+        {
+          pAb = ((PtrElement)leaf)->ElAbstractBox[0];
+          pBox = pAb->AbBox;
+          shape = pAb->AbShape;
+          
+          if (pBox)
+            {
+              
+              if(shape == 1 || shape == 'C')
+                {
+                  rx = pBox->BxRx;
+                  ry = pBox->BxRy;
+                }
+              else
+                {
+                  rx = 0;
+                  ry = 0;
+                }
 
-	  if(pBox)
-	    {
-
-	      if(shape == 1 || shape == 'C')
-		{
-		  rx = pBox->BxRx;
-		  ry = pBox->BxRy;
-		}
-	      else
-		{
-		  rx = 0;
-		  ry = 0;
-		}
-
-	      x = pBox->BxXOrg;
-	      y = pBox->BxYOrg;
-	      w = pBox->BxW;
-	      h = pBox->BxH;
-	      if(shape == 'g')
-		{
-		  if((pAb->AbEnclosing->AbHorizPos.PosEdge == Left
-		      && pAb->AbEnclosing->AbVertPos.PosEdge == Top) ||
-		     (pAb->AbEnclosing->AbHorizPos.PosEdge == Right
-		      && pAb->AbEnclosing->AbVertPos.PosEdge == Bottom))
-		      /* draw a \ */
-		    UpdateShapeElement(doc, el, shape, x,y,x+w,y+h, 0, 0);
-		  else
-		    /* draw a / */
-		    UpdateShapeElement(doc, el, shape, x+w,y,x,y+h, 0, 0);
-		}
-	      else
-		UpdateShapeElement(doc, el, shape, x,y,w,h, rx, ry);
-	    }
-	}
+              x = pBox->BxXOrg;
+              y = pBox->BxYOrg;
+              w = pBox->BxW;
+              h = pBox->BxH;
+              if (shape == 'g')
+                {
+                  if ((pAb->AbEnclosing->AbHorizPos.PosEdge == Left
+                      && pAb->AbEnclosing->AbVertPos.PosEdge == Top) ||
+                     (pAb->AbEnclosing->AbHorizPos.PosEdge == Right
+                      && pAb->AbEnclosing->AbVertPos.PosEdge == Bottom))
+                    /* draw a \ */
+                    UpdateShapeElement(doc, el, shape, x,y,x+w,y+h, 0, 0);
+                  else
+                    /* draw a / */
+                    UpdateShapeElement(doc, el, shape, x+w,y,x,y+h, 0, 0);
+                }
+              else
+                UpdateShapeElement(doc, el, shape, x,y,w,h, rx, ry);
+            }
+        }
     }
   return hasBeenEdited;
 }

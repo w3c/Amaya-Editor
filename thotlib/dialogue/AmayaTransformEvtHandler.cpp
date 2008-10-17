@@ -463,7 +463,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
           /* Rotate */
 
           /*   We want to apply a rotation of angle theta and center (cx,cy)
-               such that (x1,y1) is moved to (x2,y2):
+               such that (x1,y1) is moved to (x2,y2)
 
                (dx1)               (x2,y2)
                v1= (dy1)                /

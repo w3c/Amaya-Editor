@@ -94,13 +94,9 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
   ,width(canvasWidth)
   ,height(canvasHeight)
   ,shape(shape)
-  ,el(el)
-  ,box(NULL)
   ,created(created)
   ,nb_points(1)
 {
-  PtrAbstractBox pAb;
-
   if (pFrame)
     {
       /* attach this handler to the canvas */
@@ -111,23 +107,12 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
       pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
       pFrame->GetCanvas()->CaptureMouse();
     }
-
   state = 0;
   clear = false;
   *created = FALSE;
 
-  /* Get the box of the SVG element */
-  pAb = ((PtrElement)el) -> ElAbstractBox[0];
-  if (!pAb || !(pAb->AbBox))
-    {
-      finished = true;
-      return;
-    }
-  box = pAb -> AbBox;
-
   /* Get the GRAPHICS leaf */
-  leaf = GetGraphicsUnit((Element)el);
-
+  leaf = GetGraphicsUnit (el);
   if (!leaf)
     {
       finished = true;
@@ -139,7 +124,7 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
  *----------------------------------------------------------------------*/
 AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
 {
-  int x1,y1,x2,y2,x3,y3,x4,y4;
+  int                 x1,y1,x2,y2,x3,y3,x4,y4;
   PtrPathSeg          pPa;
 
   if (shape == 8)

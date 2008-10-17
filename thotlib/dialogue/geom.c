@@ -39,6 +39,7 @@
 
 static int          GridSize = 1;
 #define DO_ALIGN(val) ((val + (GridSize/2)) / GridSize) * GridSize
+static PtrBox       BoxCanvas = NULL;
 
 #include "appli_f.h"
 #include "buildboxes_f.h"
@@ -405,30 +406,32 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
   --------------------
 
   The returned value are the one of the surrounding rectangle
-
   1--lx---2
   |       |
   ly Shape |
   |       |
   3-------4
-
   ----------------------------------------------------------------------*/
 ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
-                        int ancestorX, int ancestorY,
-                        int canvasWidth, int canvasHeight,
+                        PtrBox svgBox, int ancestorX, int ancestorY,
                         int shape,
                         int *x1, int *y1, int *x2, int *y2,
                         int *x3, int *y3, int *x4, int *y4,
                         int *lx, int *ly)
 {
-  ThotBool created = FALSE;
-  AmayaFrame * p_frame;
-  AmayaCreateShapeEvtHandler * p_CreateShapeEvtHandler;
-  ThotEvent ev;
+  AmayaFrame                 *p_frame;
+  AmayaCreateShapeEvtHandler *p_CreateShapeEvtHandler;
+  int                         canvasWidth, canvasHeight;
+  ThotEvent                   ev;
+  ThotBool                    created = FALSE;
 
-  p_frame = FrameTable[frame].WdFrame;
+  // register the current svg canvas
+  BoxCanvas = svgBox;
 
   /* Create the handler */
+  canvasWidth = svgBox->BxW;
+  canvasHeight = svgBox->BxH;
+  p_frame = FrameTable[frame].WdFrame;
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
                                                             doc,
                                                             inverseCTM,
@@ -447,8 +450,11 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
     TtaHandleOneEvent (&ev);
   
   delete p_CreateShapeEvtHandler;
-
-  if (!created)return FALSE;
+  if (!created)
+    {
+      BoxCanvas = NULL;
+      return FALSE;
+    }
 
   /* Size of the construct */
   *lx = abs(*x4 - *x1);
@@ -463,7 +469,6 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   else if (!(shape == 0 || (shape >= 12 && shape <= 14)))
     {
       /* Shape */
-
       if (shape == 20)
         /* equilateral triangle
 	        
@@ -494,13 +499,14 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
       created = (*lx >= MINSIZE && *ly >= MINSIZE);
     }
   else
-    {
-      /* Line, arrows etc. Check that it is not reduced to one point */
-      created = (*lx > 0 || *ly > 0);
-    }
+    /* Line, arrows etc. Check that it is not reduced to one point */
+    created = (*lx > 0 || *ly > 0);
 
   if (!created)
-    return FALSE;
+    {
+      BoxCanvas = NULL;
+      return FALSE;
+    }
   /* Compute the position of point (2) and (3) */
   *x2 = *x4;
   *y2 = *y1;
@@ -516,6 +522,7 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
                         inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x4, y4);
   TtaSetStatus (doc, 1, "", NULL);
+  BoxCanvas = NULL;
   return TRUE;
 }
 
@@ -523,16 +530,21 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   TransformSVG
   ----------------------------------------------------------------------*/
 ThotBool TransformSVG (int frame, Document doc, 
-                       void *CTM, void *inverse,
+                       void *CTM, void *inverse, PtrBox svgBox,
                        int ancestorX, int ancestorY,
-                       int canvasWidth, int canvasHeight,
                        int transform_type, Element el)
 {
-  AmayaFrame * p_frame;
+  AmayaFrame               *p_frame;
   AmayaTransformEvtHandler *p_TransformEvtHandler;
-  ThotEvent ev;
-  ThotBool transformApplied;
+  int                       canvasWidth, canvasHeight;
+  ThotEvent                 ev;
+  ThotBool                  transformApplied;
 
+  // register the current svg canvas
+  BoxCanvas = svgBox;
+
+  canvasWidth = svgBox->BxW;
+  canvasHeight = svgBox->BxH;
   p_frame = FrameTable[frame].WdFrame;
   p_TransformEvtHandler = new AmayaTransformEvtHandler(p_frame,
                                                        doc,
@@ -550,23 +562,28 @@ ThotBool TransformSVG (int frame, Document doc,
     TtaHandleOneEvent (&ev);
   
   delete p_TransformEvtHandler;
-
+  BoxCanvas = NULL;
   return transformApplied;
 }
 
 /*----------------------------------------------------------------------
   ShapeEdit
   ----------------------------------------------------------------------*/
-ThotBool ShapeEdit (int frame, Document doc,  void *inverse,
+ThotBool ShapeEdit (int frame, Document doc,  void *inverse, PtrBox svgBox,
                     int ancestorX, int ancestorY,
-                    int canvasWidth, int canvasHeight,
                     Element el, int point_edited)
 {
   AmayaFrame               *p_frame;
   AmayaEditShapeEvtHandler *p_EditShapeEvtHandler;
+  int                       canvasWidth, canvasHeight;
   ThotEvent                 ev;
   ThotBool                  hasBeenEdited;
 
+  // register the current svg canvas
+  BoxCanvas = svgBox;
+
+  canvasWidth = svgBox->BxW;
+  canvasHeight = svgBox->BxH;
   p_frame = FrameTable[frame].WdFrame;
   p_EditShapeEvtHandler = new AmayaEditShapeEvtHandler(p_frame,
                                                        doc,
@@ -583,22 +600,34 @@ ThotBool ShapeEdit (int frame, Document doc,  void *inverse,
     TtaHandleOneEvent (&ev);
   
   delete p_EditShapeEvtHandler;
-
+  BoxCanvas = NULL;
   return hasBeenEdited;
 }
 
 /*----------------------------------------------------------------------
   PathEdit
   ----------------------------------------------------------------------*/
-ThotBool PathEdit (int frame, Document doc,  void *inverse,
-                   int ancestorX, int ancestorY, int canvasWidth, int canvasHeight,
+ThotBool PathEdit (int frame, Document doc,  void *inverse, PtrBox svgBox,
+                   int ancestorX, int ancestorY,
                    Element el, int point_edited)
 {
-  AmayaFrame * p_frame;
+  AmayaFrame              *p_frame;
   AmayaEditPathEvtHandler *p_EditPathEvtHandler;
-  ThotEvent ev;
-  ThotBool transformApplied;
+  int                      canvasWidth, canvasHeight;
+  ThotEvent                ev;
+  ThotBool                 transformApplied;
 
+  // register the current svg canvas
+  BoxCanvas = NULL;
+
+  canvasWidth = svgBox->BxW;
+  canvasHeight = svgBox->BxH;
+  if (svgBox)
+    {
+      // MBP apply to the leaf box and not control points
+      ancestorX += svgBox->BxLMargin + svgBox->BxLBorder + svgBox->BxLPadding;
+      ancestorY +=  svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
+    }
   p_frame = FrameTable[frame].WdFrame;
   p_EditPathEvtHandler = new AmayaEditPathEvtHandler(p_frame, doc, inverse,
                                                      ancestorX, ancestorY,
@@ -610,32 +639,44 @@ ThotBool PathEdit (int frame, Document doc,  void *inverse,
     TtaHandleOneEvent (&ev);
   
   delete p_EditPathEvtHandler;
+  BoxCanvas = NULL;
   return transformApplied;
 }
 
 /*----------------------------------------------------------------------
   PathCreation
   ----------------------------------------------------------------------*/
-ThotBool PathCreation (int frame, Document doc,  void *inverse,
+ThotBool PathCreation (int frame, Document doc,  void *inverse, PtrBox svgBox,
                        int ancestorX, int ancestorY,
-                       int canvasWidth, int canvasHeight,
                        int shape, Element el)
 {
   AmayaFrame                *p_frame;
   AmayaCreatePathEvtHandler *p_CreatePathEvtHandler;
+  int                        canvasWidth, canvasHeight;
   ThotEvent                  ev;
   ThotBool                   created;
 
+  // register the current svg canvas
+  BoxCanvas = NULL;
+
+  canvasWidth = svgBox->BxW;
+  canvasHeight = svgBox->BxH;
+  if (svgBox)
+    {
+      // MBP apply to the leaf box and not control points
+      ancestorX += svgBox->BxLMargin + svgBox->BxLBorder + svgBox->BxLPadding;
+      ancestorY +=  svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
+    }
   p_frame = FrameTable[frame].WdFrame;
   p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame, doc, inverse,
-                                                         ancestorX, ancestorY,
+                                                          ancestorX, ancestorY,
                                                          canvasWidth, canvasHeight,
                                                          shape, el, &created);
   while(!p_CreatePathEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
   delete p_CreatePathEvtHandler;
-
+  BoxCanvas = NULL;
   return created;
 }
 
@@ -647,18 +688,18 @@ ThotBool PathCreation (int frame, Document doc,  void *inverse,
   modified.
   Return TRUE if the mouse is inside the SVG Canvas 
   ----------------------------------------------------------------------*/
-ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame * p_frame,
+ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame *p_frame,
                                 int x0, int y0, int width, int height,
                                 void *inverseCTM, ThotBool convert,
                                 char *msg, int *x, int *y)
 {
-  int FrameId;
-  int newx, newy;
-  int newx2, newy2;
-  char buffer[200];
+  int      frame;
+  int      newx, newy;
+  int      newx2, newy2;
+  char     buffer[200];
+  float    a, b, c, d, e, f;
   ThotBool inside = TRUE;
 
-  float a,b,c,d,e,f;
   if (inverseCTM)
     {
       /* Get the coefficients of the Matrix */
@@ -675,22 +716,23 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame * p_frame,
       a = 1; b = 0; c = 0; d = 1; e = 0; f = 0;
     }
 
+  if (BoxCanvas)
+    {
+      // take into account MBP of the canvas
+      x0 = x0 - BoxCanvas->BxLMargin - BoxCanvas->BxLBorder - BoxCanvas->BxLPadding;
+      y0 = y0 - BoxCanvas->BxTMargin - BoxCanvas->BxTBorder - BoxCanvas->BxTPadding;
+    }
 
-  FrameId = p_frame->GetFrameId();
-
+  frame = p_frame->GetFrameId();
   width = LogicalValue (width, UnPixel, NULL,
-                        ViewFrameTable[FrameId - 1].FrMagnification);
-
+                        ViewFrameTable[frame - 1].FrMagnification);
   height = LogicalValue (height, UnPixel, NULL,
-                         ViewFrameTable[FrameId - 1].FrMagnification);
-
+                         ViewFrameTable[frame - 1].FrMagnification);
   /* Mouse coordinates to SVG ancestor coordinates */
   newx = LogicalValue (*x - x0, UnPixel, NULL,
-                       ViewFrameTable[FrameId - 1].FrMagnification);
-
+                       ViewFrameTable[frame - 1].FrMagnification);
   newy = LogicalValue (*y - y0, UnPixel, NULL,
-                       ViewFrameTable[FrameId - 1].FrMagnification);
-
+                       ViewFrameTable[frame - 1].FrMagnification);
   /* SVG ancestor coordinates to SVG canvas */
   newx2 = (int)(a * newx + c * newy + e);
   newy2 = (int)(b * newx + d * newy + f);
@@ -734,13 +776,13 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame * p_frame,
 /*----------------------------------------------------------------------
   MouseCoordinatesToSVG
   ----------------------------------------------------------------------*/
-void SVGToMouseCoordinates (Document doc, AmayaFrame * p_frame,
+void SVGToMouseCoordinates (Document doc, AmayaFrame *p_frame,
                             int x0, int y0, int width, int height,
                             void *CTM, float x, float y,
                             int *newx, int *newy)
 {
-  int FrameId;
-  float a,b,c,d,e,f;
+  int   frame;
+  float a, b, c, d, e, f;
 
   if (CTM)
     {
@@ -758,14 +800,21 @@ void SVGToMouseCoordinates (Document doc, AmayaFrame * p_frame,
       a = 1; b = 0; c = 0; d = 1; e = 0; f = 0;
     }
 
-  FrameId = p_frame->GetFrameId();
+  if (BoxCanvas)
+    {
+      // take into account MBP of the canvas
+      x0 = x0 + BoxCanvas->BxLMargin + BoxCanvas->BxLBorder + BoxCanvas->BxLPadding;
+      y0 = y0 + BoxCanvas->BxTMargin + BoxCanvas->BxTBorder + BoxCanvas->BxTPadding;
+    }
+
+  frame = p_frame->GetFrameId();
   *newx = x0 + PixelValue ( (int)(a * x + c * y + e),
                             UnPixel, NULL,
-                            ViewFrameTable[FrameId - 1].FrMagnification);
+                            ViewFrameTable[frame - 1].FrMagnification);
 
   *newy = y0 + PixelValue ( (int)(b * x + d * y + f),
                             UnPixel, NULL,
-                            ViewFrameTable[FrameId - 1].FrMagnification);
+                            ViewFrameTable[frame - 1].FrMagnification);
 }
 
 /*----------------------------------------------------------------------

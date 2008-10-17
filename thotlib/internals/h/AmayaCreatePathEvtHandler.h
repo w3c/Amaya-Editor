@@ -20,15 +20,15 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
 
     AmayaCreatePathEvtHandler();
     AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
-			      Document doc,
-			      void *inverse,
-			      int ancestorX,
-			      int ancestorY,
-			      int canvasWidth,
-			      int canvasHeight,
-			      int shape,
-			      Element el,
-			      ThotBool *created);
+                              Document doc,
+                              void *inverse,
+                              int ancestorX,
+                              int ancestorY,
+                              int canvasWidth,
+                              int canvasHeight,
+                              int shape,
+                              Element el,
+                              ThotBool *created);
 
   virtual ~AmayaCreatePathEvtHandler();
 
@@ -64,7 +64,6 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   void *inverse;
   int x0, y0, width,height;
   int shape;
-  Element el;
   PtrBox box;
   ThotBool *created;
 
