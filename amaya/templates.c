@@ -2046,11 +2046,8 @@ void TemplateCreateTextBox(Document doc, View view)
                       SetAttributeStringValue(use, Template_ATTR_title, buffer);
                     }
                 }
-
               TtaSetStructureChecking (oldStructureChecking, doc);
-
             }
-
         }
     }
 #endif /* TEMPLATES */
@@ -2078,7 +2075,7 @@ void TemplateCreateFreeBox(Document doc, View view)
 
   if (!TtaGetDocumentAccessMode(doc))
     return;
-
+  //CheckSelectionLevel (TransDoc);
   if (doc && TtaGetDocumentAccessMode(doc) && sstempl &&
       IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
     {
