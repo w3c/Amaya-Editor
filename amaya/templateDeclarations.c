@@ -851,7 +851,7 @@ char* Template_GetInlineLevelDeclarations (XTigerTemplate t, ThotBool addAny,
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           decl = (Declaration) node->elem;
-          if (decl && decl->blockLevel == 2)
+          if (decl && decl->blockLevel == 1)
             {
               strcat(str, decl->name);
               strcat(str, " ");

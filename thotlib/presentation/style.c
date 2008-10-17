@@ -505,7 +505,8 @@ static void RemoveElementPRule (PtrElement el, PRuleType type, unsigned int extr
     
   /* update the presentation */
   doc = TtaGetDocument ((Element) el);
-  ApplyASpecificStyleRule (cur, el, LoadedDocument[doc -1], TRUE);
+  if (doc)
+    ApplyASpecificStyleRule (cur, el, LoadedDocument[doc -1], TRUE);
 
   /* Free the PRule */
   FreePresentRule(cur, el->ElStructSchema);
