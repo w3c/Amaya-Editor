@@ -127,7 +127,8 @@ extern ThotBool MouseCoordinatesToSVG ( Document doc,
                                         ThotBool convert,
                                         char *msg,
                                         int *x,
-                                        int *y );
+                                        int *y,
+                                        ThotBool displayCoordinates );
 extern void SVGToMouseCoordinates ( Document doc,
                                     AmayaFrame *p_frame,
                                     int x0,
@@ -268,7 +269,8 @@ extern ThotBool MouseCoordinatesToSVG ( Document doc,
                                           ThotBool convert,
                                           char *msg,
                                           int *x,
-                                          int *y );
+                                          int *y,
+                                          ThotBool displayCoordinates );
 extern void SVGToMouseCoordinates ( Document doc,
                                       AmayaFrame *p_frame,
                                       int x0,

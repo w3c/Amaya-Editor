@@ -420,12 +420,12 @@ void AmayaEditPathEvtHandler::OnMouseMove( wxMouseEvent& event )
       y2 = mouse_y;
 
       MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                            inverse, TRUE, TtaGetMessage (LIB, BUTTON_UP),
-                            &x1, &y1);
+                            inverse, TRUE, NULL,
+                            &x1, &y1, FALSE);
 
       MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                            inverse, TRUE, TtaGetMessage (LIB, BUTTON_UP),
-                            &x2, &y2);
+                            inverse, TRUE, NULL,
+                            &x2, &y2, FALSE);
 
       dx = x2 - x1;
       dy = y2 - y1;

@@ -328,8 +328,8 @@ void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
       y = cy2;
       /* ...and in the SVG canvas */
       MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                            inverse, TRUE, TtaGetMessage (LIB, TMSG_SIMPLECLICK),
-                            &x, &y);
+                            inverse, TRUE, NULL,
+                            &x, &y, FALSE);
       cx = x;
       cy = y;
       ButtonDown = false;
@@ -340,7 +340,7 @@ void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
     case 7:
     case 8:
       /* The user was skewing the shape: come back to the initial interface */
-      type = 4;      
+      type = 4;
       ButtonDown = false;
       /* Redisplay the arrows */
       AmayaTransformEvtHandler::UpdatePositions();
@@ -397,6 +397,7 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
   float det;
   float skew,sx,sy;
   ThotBool shift = event.ShiftDown();
+  char *msg;
 
   /* DELTA is the sensitivity toward mouse moves. */
 #define DELTA 0
@@ -428,11 +429,17 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
       x2 = mouse_x;
       y2 = mouse_y;
       MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                            inverse, TRUE, TtaGetMessage (LIB, BUTTON_UP),
-                            &x1, &y1);
+                            inverse, TRUE, NULL,
+                            &x1, &y1, FALSE);
+
+      if(type == 0)
+	msg = TtaGetMessage (LIB, BUTTON_UP);
+      else
+	msg = TtaGetMessage (LIB, TMSG_DOUBLECLICK);
+
       MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
-                            inverse, TRUE, TtaGetMessage (LIB, BUTTON_UP),
-                            &x2, &y2);
+                            inverse, TRUE, msg,
+                            &x2, &y2, FALSE);
 
       /* If it is a rotation, clear the center */
       if (type == 2 || type == 3)
@@ -517,8 +524,8 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
         case 3:
           /* Moving center of rotation  */
           if (MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
-                                     inverse, FALSE, TtaGetMessage (LIB, TMSG_SIMPLECLICK),
-                                     &mouse_x, &mouse_y))
+                                     inverse, FALSE, NULL,
+                                     &mouse_x, &mouse_y, FALSE))
             {
               cx2 = mouse_x;
               cy2 = mouse_y;

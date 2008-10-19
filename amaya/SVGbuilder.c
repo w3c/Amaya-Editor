@@ -698,7 +698,12 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
 
   /* add a translate to put the reference point of the marker on the vertex of
      the host element, using the 'refX' and 'refY' attributes of the marker */
+  attrType.AttrTypeNum = SVG_ATTR_refX;
+  attr = TtaGetAttribute (marker, attrType);
+
   /* @@@@ to be written @@@@ */
+
+
 
   /* add a transform to scale the coordinate system based on the viewBox and
      the markerHeight and the markerWidth attributes of the marker */

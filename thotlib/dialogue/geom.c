@@ -520,13 +520,13 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   *y3 = *y4;
   /* Convert the coordinates x1,y1 x2,y2 x3,y3 x4,y4 */
   MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
-                        inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x1, y1);
+                        inverseCTM, TRUE, NULL, x1, y1, FALSE);
   MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
-                        inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x2, y2);
+                        inverseCTM, TRUE, NULL, x2, y2, FALSE);
   MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
-                        inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x3, y3);
+                        inverseCTM, TRUE, NULL, x3, y3, FALSE);
   MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
-                        inverseCTM, TRUE, TtaGetMessage (LIB, BUTTON_UP), x4, y4);
+                        inverseCTM, TRUE, NULL, x4, y4, FALSE);
   TtaSetStatus (doc, 1, "", NULL);
   BoxCanvas = NULL;
   return TRUE;
@@ -697,7 +697,8 @@ ThotBool PathCreation (int frame, Document doc,  void *inverse, PtrBox svgBox,
 ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame *p_frame,
                                 int x0, int y0, int width, int height,
                                 void *inverseCTM, ThotBool convert,
-                                char *msg, int *x, int *y)
+                                char *msg, int *x, int *y,
+				ThotBool displayCoordinates)
 {
   int      frame;
   int      newx, newy;
@@ -773,8 +774,18 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame *p_frame,
     }
 
   /* Display the coordinates in the status bar */
-  sprintf(buffer, msg, newx2, newy2);
-  TtaSetStatus (doc, 1, buffer, NULL);
+  if(msg != NULL)
+    {
+      if(displayCoordinates)
+	{
+	  sprintf(buffer, "(%d,%d) - ", newx2, newy2);
+	  strcat(buffer, msg);
+	}
+      else
+	strcpy(buffer, msg);
+
+      TtaSetStatus (doc, 1, buffer, NULL);
+    }
   return inside;
 }
 

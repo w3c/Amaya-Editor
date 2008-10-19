@@ -175,8 +175,8 @@ void AmayaCreateShapeEvtHandler::OnMouseDown( wxMouseEvent& event )
     return;
   /* Are we in the SVG ? */
   if (!MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
-                              transform, FALSE, TtaGetMessage (LIB, BUTTON_UP),
-                              px1, py1))
+                              transform, FALSE, NULL,
+                              px1, py1, FALSE))
     return;
 
   nb_points = 1;
@@ -201,8 +201,8 @@ void AmayaCreateShapeEvtHandler::OnMouseUp( wxMouseEvent& event )
 
   /* Are we in the SVG ? */
   if (!MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
-                              transform, FALSE, TtaGetMessage (LIB, BUTTON_UP),
-                              px2, py2))
+                              transform, FALSE, NULL,
+                              px2, py2, FALSE))
     return;
   nb_points = 2;
   *created = TRUE;
@@ -246,7 +246,7 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   
   MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
                          transform, FALSE, TtaGetMessage (LIB, BUTTON_UP),
-                         &x, &y);
+                         &x, &y, TRUE);
   if (nb_points == 0)
     {
       /* First point */

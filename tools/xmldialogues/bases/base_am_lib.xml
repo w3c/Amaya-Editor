@@ -5176,25 +5176,25 @@ xml:lang="ja">文書タブ右にあるボタンで、表示されているメニ
 <message xml:lang="it">Crea una nuova unione di tipi</message>
 </label>
 <label define="BUTTON_UP">
-	<message xml:lang="en">(%d,%d) Button up to close</message>
-	<message xml:lang="fr">(%d,%d) Bouton relaché pour terminer</message>
-	<message xml:lang="es">(%d,%d) Botón hasta cierre</message>
-	<message xml:lang="de">(%d,%d) Knopf bis zum Abschluss</message>
-	<message xml:lang="it">(%d,%d) Tasto fino alla fine</message>
+	<message xml:lang="en">Button up to close</message>
+	<message xml:lang="fr">Bouton relaché pour terminer</message>
+	<message xml:lang="es">Botón hasta cierre</message>
+	<message xml:lang="de">Knopf bis zum Abschluss</message>
+	<message xml:lang="it">Tasto fino alla fine</message>
 </label>
 <label define="TMSG_DOUBLECLICK">
-	<message xml:lang="en">(%d,%d) Double click to close</message>
-	<message xml:lang="fr">(%d,%d) Double clic pour terminer</message>
-	<message xml:lang="es">(%d,%d) Tecleo doble a cerrarse</message>
-	<message xml:lang="de">(%d,%d) Doppeltes Klicken zum zu schließen</message>
-	<message xml:lang="it">(%d,%d) Doppio scatto da chiudersi</message>
+	<message xml:lang="en">Double click to close</message>
+	<message xml:lang="fr">Double clic pour terminer</message>
+	<message xml:lang="es">Tecleo doble a cerrarse</message>
+	<message xml:lang="de">Doppeltes Klicken zum zu schließen</message>
+	<message xml:lang="it">Doppio scatto da chiudersi</message>
 </label>
 <label define="TMSG_SIMPLECLICK">
-	<message xml:lang="en">(%d,%d) Click to close</message>
-	<message xml:lang="fr">(%d,%d) Cliquer pour terminer</message>
-	<message xml:lang="es">(%d,%d) Tecleo a cerrarse</message>
-	<message xml:lang="de">(%d,%d) Klicken zum zu schließen</message>
-	<message xml:lang="it">(%d,%d) Scatto da chiudersi</message>
+	<message xml:lang="en">Click to close</message>
+	<message xml:lang="fr">Cliquer pour terminer</message>
+	<message xml:lang="es">Tecleo a cerrarse</message>
+	<message xml:lang="de">Klicken zum zu schließen</message>
+	<message xml:lang="it">Scatto da chiudersi</message>
 </label>
 
 <!-- End of SVG panel -->
