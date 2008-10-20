@@ -741,7 +741,8 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
       UpdateAttrText (el, doc, attrType, dim, FALSE, FALSE);
     }
   else if (elType.ElTypeNum == SVG_EL_polyline ||
-           elType.ElTypeNum == SVG_EL_polygon)
+           elType.ElTypeNum == SVG_EL_polygon ||
+           elType.ElTypeNum == SVG_EL_g)
     {
       /* make it a transform (scale) attribute */
       TtaGiveBoxSize (el, doc, 1, UnPixel, &width, &height);
@@ -1633,6 +1634,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   SSchema	          docSchema, svgSchema;
   DisplayMode       dispMode;
   Language          lang;
+  float             valx,valy;
   int		            c1, i, dir, svgDir, profile;
   int               docModified, error, w, h;
   int               x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
@@ -2014,16 +2016,15 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
       if (entry == -2 && LastSVGelement != NULL)
         {
+          // load the temporary document without display
           tmpDoc = GetAmayaDoc (LastSVGelement, NULL,
                                 0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
           TtaFreeMemory(LastSVGelement);
           LastSVGelement = NULL;
-
           parent = TtaGetMainRoot(tmpDoc);
           elType.ElSSchema = svgSchema;
           elType.ElTypeNum = SVG_EL_SVG;
           parent = TtaSearchTypedElement(elType, SearchForward, parent);
-
           if (parent)
             {
 	      
@@ -2039,12 +2040,43 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   next = elem;
                   TtaNextSibling(&child);
                 }
-              created = TRUE;
+
+              if (isFormattedView)
+                {
+                  created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
+                                              1, &x1, &y1, &x2, &y2,
+                                              &x3, &y3, &x4, &y4, &lx, &ly);
+                }
+              else
+                {
+                  /* TODO: add a dialog box ? */
+                  x1 = y1 = 0;
+                  lx = 500;
+                  ly = 300;
+                  created = TRUE;
+                }
+
+              if (created)
+                {
+                  /* create a transform=translate attribute */
+                  TtaGiveBoxSize (newEl, doc, 1, UnPixel, &w, &h);
+                  valx = valy = 1;
+                  if (w)
+                    valx = (float)(x2-x1) / (float)w;
+                  if (h)
+                    valy = (float)(y3-y1) / (float)h;
+                  //TtaGiveBoxPosition (newEl, doc, 1, UnPixel, TRUE, &x4, &y4);
+                  attrType.AttrTypeNum = SVG_ATTR_transform;
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (newEl, attr, doc);
+                  sprintf(buffer, "translate(%d,%d) scale(%f,%f)", x1, y1, valx,valy);
+                  TtaSetAttributeText (attr, buffer, newEl, doc);
+                  ParseTransformAttribute (attr, newEl, doc, FALSE);
+                }
             }
           TtaRemoveDocumentReference (tmpDoc);
 
           selEl = newEl;
-
           /* Update the title */
           SetElementData(doc, newEl, svgSchema, SVG_EL_title,
                          LastSVGelementTitle);
@@ -2086,7 +2118,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
         {
           /* Basic Shapes and lines */
           selEl = newEl;
-
           /*
             1-------------2
             |             |
@@ -2094,7 +2125,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
             |             |
             3-------------4
           */
-
           if (isFormattedView)
             {
               created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
@@ -2623,7 +2653,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
             }
         }
       
-      if(created)
+      if (created)
         {
           sprintf (buffer,  "stroke: black; stroke-opacity: 1; stroke-width: 1;");
           if (isFilled)
@@ -3591,7 +3621,6 @@ void UpdateShapeElement(Document doc, Element el,
   SSchema      svgSchema = GetSVGSSchema (doc);
   AttributeType attrType;
   attrType.AttrSSchema = svgSchema;
-
   DisplayMode     dispMode;
 
   dispMode = TtaGetDisplayMode (doc);
@@ -3600,7 +3629,6 @@ void UpdateShapeElement(Document doc, Element el,
     TtaSetDisplayMode (doc, DeferredDisplay);
 
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
 
   /* Apply the translate */
   UpdateTransformMatrix(doc, el);

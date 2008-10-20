@@ -239,12 +239,12 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
   pFrame = &ViewFrameTable[frame - 1];
 
   if (pFrame->FrAbstractBox != NULL)
-    pBox = pFrame->FrAbstractBox->AbBox;
+    pBox = pRootAb->AbBox;
   
   if (pBox != NULL)
     {
       pBox = pBox->BxNext;
-      while (pBox)
+      while (pBox && pBox->BxAbstractBox && pBox->BxAbstractBox->AbElement)
         {
           pAb = pBox->BxAbstractBox;
           if (matchCell)
