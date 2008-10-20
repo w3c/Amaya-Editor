@@ -51,7 +51,7 @@ extern void ChangeTheme (const char *theme);
 // AmayaStyleToolPanel
 //
 //
-
+static int Current_StylePanel = -1;
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaStyleToolDef)
@@ -167,8 +167,6 @@ wxString AmayaStyleToolPanel::GetDefaultAUIConfig()
 }
 
 
-
-
 /*----------------------------------------------------------------------
  *       Class:  AmayaStyleToolPanel
  *      Method:  RaiseDoctypePanels
@@ -176,18 +174,26 @@ wxString AmayaStyleToolPanel::GetDefaultAUIConfig()
  -----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::RaiseDoctypePanels(int doctype)
 {
-  int i;
-  for(i=0; i<3; i++)
-    GetSizer()->Hide((size_t)i);
-  
   switch(doctype)
   {
     case WXAMAYA_DOCTYPE_SVG:
-      GetSizer()->Show((size_t)1);
+      if (Current_StylePanel == -1 || Current_StylePanel == 0)
+        {
+          if (Current_StylePanel == 0)
+            GetSizer()->Hide((size_t)0);
+          GetSizer()->Show ((size_t)1);
+          Current_StylePanel = 1;
+        }
       break;      
     case WXAMAYA_DOCTYPE_XHTML:
     default:
-      GetSizer()->Show((size_t)0);
+      if (Current_StylePanel == -1 || Current_StylePanel == 1)
+        {
+          if (Current_StylePanel == 1)
+            GetSizer()->Hide ((size_t)1);
+          GetSizer()->Show ((size_t)0);
+          Current_StylePanel = 0;
+        }
       break;
   }
   Layout();
