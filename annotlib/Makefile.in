@@ -14,9 +14,8 @@ include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H -DANNOTATIONS \
 	  -I.. -I../amaya  -I@srcdir@/f -I@top_srcdir@/amaya \
-	  -I@top_srcdir@/amaya/f -I../libwww \
-	  -I@top_srcdir@/../libwww/Library/src \
-	  -I@top_srcdir@/../libwww/modules/expat/lib \
+	  -I@top_srcdir@/amaya/f \
+	   @LIBWWW_CFLAGS@ \
 	   @AMAYA_RAPTOR_INCLUDES@ @THOTINCLUDES@ $(GUI_INCLUDES)
 
 

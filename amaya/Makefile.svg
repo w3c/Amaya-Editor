@@ -31,7 +31,7 @@ SVG_SCHEMAS= $(AMAYA)/SVG.S $(AMAYA)/SVGP.P $(AMAYA)/SVGT.T \
 	$(AMAYA)/Timeline.S $(AMAYA)/TimelineP.P $(AMAYA)/TimelineT.T
 
 svg_schema= compSVG compSVGP compSVGT \
-	compTimeline compTimelineP compTimelineT
+	compTimeline compTimelineP compTimelineT SVG.h
 
 
 #

@@ -60,12 +60,11 @@ fi
 # --- creating amaya.desktop
 $ECHO "--> Creating $GNOMEKDEDIR/applications/amaya.desktop file"
 $ECHO "[Desktop Entry]" > $GNOMEKDEDIR/applications/amaya.desktop
-$ECHO "Encoding=UTF-8" >> $GNOMEKDEDIR/applications/amaya.desktop
 $ECHO "Name=Amaya" >> $GNOMEKDEDIR/applications/amaya.desktop
 $ECHO "Comment=Edit the Web" >> $GNOMEKDEDIR/applications/amaya.desktop
 $ECHO "Comment[fr]=Editez le Web" >> $GNOMEKDEDIR/applications/amaya.desktop
 $ECHO "Categories=Application;Network;Development;" >> $GNOMEKDEDIR/applications/amaya.desktop
-$ECHO "Exec=env XLIB_SKIP_ARGB_VISUALS=1 G_SLICE="always-malloc" $PREFIX/$AMAYA_INSTALLDIR/$AMAYAGUI/bin/amaya_bin %u" >> $GNOMEKDEDIR/applications/amaya.desktop
+$ECHO "Exec=amaya %u" >> $GNOMEKDEDIR/applications/amaya.desktop
 $ECHO "Icon=amaya.png" >> $GNOMEKDEDIR/applications/amaya.desktop
 $ECHO "Terminal=false" >> $GNOMEKDEDIR/applications/amaya.desktop
 $ECHO "Type=Application" >> $GNOMEKDEDIR/applications/amaya.desktop

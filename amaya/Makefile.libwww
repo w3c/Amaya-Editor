@@ -18,39 +18,14 @@ AMAYA_LIBWWW_OBJ= \
 
 AMAYA_LIBWWW_OPTION_LIBS=
 
-#MKP: added -lwwwdav
-AMAYA_LIBWWW_LIBS= \
-		-L../$(LIBWWW)/Library/src/.libs \
-			$(LIBWWW_RDF_PARSER) \
-			-lwwwzip \
-			-lwwwapp \
-			-lwwwhtml \
-			-lwwwhttp \
-			-lwwwmime \
-			-lwwwftp \
-			-lwwwfile \
-			-lwwwdir \
-			-lwwwcache \
-			-lwwwstream \
-			-lwwwtrans \
-			-lwwwcore \
-			-lwwwutils \
-			$(WWWDAV) \
-		-L../$(LIBWWW)/modules/md5/.libs \
-			-lmd5 \
-			../$(LIBWWW)/modules/expat/.libs/libexpat.a
-#		-L../$(LIBWWW)/modules/expat/.libs \
-#			-lexpat \
+AMAYA_LIBWWW_LIBS= @LIBWWW_LDFLAGS@
 
 AMAYA_LIBWWW_EXTRA_LIBS=
 
-AMAYA_LIBWWW_INCLUDES= -I../libwww \
-		-I$(THOTDIR)/../libwww/Library/src \
-		-I$(THOTDIR)../libwww/modules/md5 \
-		-I$(THOTDIR)/../libwww/modules/expat/lib
+AMAYA_LIBWWW_INCLUDES= @LIBWWW_CFLAGS@
 
 # this dependency calls the ../Makefile rule that compiles libwww
-AMAYA_LIBWWW_SRC= amaya_comp_libwww
+AMAYA_LIBWWW_SRC= @BUILDLIBWWW@
 
-amaya_comp_libwww : force
+libwww : force
 		@(cd .. ; $(MAKE) libwww)

@@ -580,6 +580,7 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
   return TRUE;
 }
 
+
 /*----------------------------------------------------------------------
   CopyAMarker
   Make a copy of the marker pointed by the value attrVal of attribute
@@ -587,7 +588,7 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
   element el (a <path>, a <line>, a <polyline> or a <polygon>).
   ----------------------------------------------------------------------*/
 static void CopyAMarker (Element marker, Element el, Element leaf,
-			 int vertex, Document doc)
+                         int vertex, Document doc)
 {
   ElementType          elType;
   Element              copy, child;
@@ -977,7 +978,7 @@ static void CheckHrefAttr (Element el, Document doc)
 static void NextWhiteSpace(char **ptr)
 {
   while (**ptr != EOS && **ptr != SPACE && **ptr != BSPACE &&
-	 **ptr != EOL && **ptr != TAB && **ptr != CR)
+	 **ptr != EOL && **ptr != TAB && **ptr != __CR__)
     (*ptr)++;
 }
 
@@ -1187,7 +1188,7 @@ static ThotBool EvaluateSystemLanguage (Attribute attr)
                         {
                           while (*pref != EOS && *pref != ',' &&
                                  *pref != SPACE && *pref != BSPACE &&
-                                 *pref != EOL && *pref != TAB && *pref != CR)
+                                 *pref != EOL && *pref != TAB && *pref != __CR__)
                             pref++;
                           if (*pref == ',')
                             pref++;
@@ -1198,7 +1199,7 @@ static ThotBool EvaluateSystemLanguage (Attribute attr)
                     {
                       while (*ptr != EOS && *ptr != ',' && *ptr != SPACE &&
                              *ptr != BSPACE && *ptr != EOL && *ptr != TAB &&
-                             *ptr != CR)
+                             *ptr != __CR__)
                         ptr++;
                       if (*ptr == ',')
                         ptr++;
@@ -1562,7 +1563,7 @@ static char *GetFloat (char *ptr, float* number)
   /* skip the following spaces */
   while (*ptr != EOS &&
          (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
-          *ptr == EOL    || *ptr == TAB   || *ptr == CR))
+          *ptr == EOL    || *ptr == TAB   || *ptr == __CR__))
     ptr++;
   return (ptr);
 }
@@ -1938,7 +1939,7 @@ static char *GetNumber (char *ptr, int* number, ThotBool *error)
   /* skip the following spaces */
   while (*ptr != EOS &&
          (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
-          *ptr == EOL    || *ptr == TAB   || *ptr == CR))
+          *ptr == EOL    || *ptr == TAB   || *ptr == __CR__))
     ptr++;
   return (ptr);
 }

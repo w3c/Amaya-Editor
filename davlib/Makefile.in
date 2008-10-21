@@ -13,37 +13,13 @@ include ../Options
 
 INCLUDES =-DHAVE_CONFIG_H -I.. \
 	  -I../amaya -I@srcdir@/f -I@top_srcdir@/amaya \
-	  -I@top_srcdir@/amaya/f -I../libwww \
+	  -I@top_srcdir@/amaya/f \
+	  @LIBWWW_CFLAGS@ \
 	  -I@top_srcdir@/thotlib/include \
-	  -I@top_srcdir@/../libwww/Library/src \
-	  -I@top_srcdir@/../libwww/modules/expat/lib \
 	  -I$(DAVLIB)/tree/h -I$(DAVLIB)/h \
 	  $(GUI_INCLUDES)
 
 OPTIONS	= @AMAYA_OPTIONS@ $(AMAYA_DAV_OPTIONS)
-
-LIBWWW_LIBS= \
-		-L../$(LIBWWW)/Library/src/.libs \
-			-lwwwapp \
-			-lwwwhttp \
-			-lwwwxml \
-			-lwwwhtml \
-			-lwwwmime \
-			-lwwwcache \
-			-lwwwstream \
-			-lwwwfile \
-			-lwwwdir \
-			-lwwwtrans \
-			-lwwwcore \
-			-lwwwutils \
-			-lwwwzip \
-			-lwwwftp \
-			-lwwwdav \
-		-L../$(LIBWWW)/modules/md5/.libs \
-			-lmd5 \
-		-L../$(LIBWWW)/modules/expat/.libs \
-			-lexpat \
-		-ldl -L/usr/lib
 
 
 prefix = @prefix@
@@ -52,7 +28,7 @@ libdir = @libdir@
 
 ############################################
 
-all : tree awparser.o AHTLockBase.o HTHome dav_obj davlib.a
+all : tree awparser.o AHTLockBase.o dav_obj davlib.a
 
 dav_obj : $(AMAYA_DAV_OBJ)
 
@@ -108,8 +84,7 @@ AMAYA_DAV_OBJ= \
 	awnode.o \
 	awstring.o \
 	awpair.o \
-	list.o \
-	../$(LIBWWW)/Library/src/HTHome.o
+	list.o
 
 #
 # dependencies

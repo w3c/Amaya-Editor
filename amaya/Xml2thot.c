@@ -2481,7 +2481,7 @@ void PutInXmlElement (char *data, int length)
     {
       if (RemoveLeadingSpace)
         {
-          while (data[i] == EOL || data[i] == CR ||
+          while (data[i] == EOL || data[i] == __CR__ ||
                  data[i] == TAB || data[i] == SPACE)
             i++;
           if (data[i] != EOS)
@@ -2489,7 +2489,7 @@ void PutInXmlElement (char *data, int length)
         }
       else
         {
-          if (data[0] == EOL || data[0] == CR)
+          if (data[0] == EOL || data[0] == __CR__)
             i = 1;
           ImmediatelyAfterTag = FALSE;
         }
@@ -2529,7 +2529,7 @@ void PutInXmlElement (char *data, int length)
     {
       while (bufferws[i] != EOS)
         {
-          if (bufferws[i] == EOL || bufferws[i] == CR ||
+          if (bufferws[i] == EOL || bufferws[i] == __CR__ ||
               bufferws[i] == TAB)
             bufferws[i]= SPACE;
           i++;

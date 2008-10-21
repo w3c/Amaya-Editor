@@ -1917,9 +1917,9 @@ ThotBool AskShapePoints (Document doc, Element svgAncestor, Element svgCanvas,
     return FALSE;
   svgBox =  pAb->AbBox;
 
-  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if (pAb && pAb -> AbBox)
-    pBox = pAb -> AbBox;
+  pAb = ((PtrElement)svgAncestor)->ElAbstractBox[0];
+  if (pAb && pAb->AbBox)
+    pBox = pAb->AbBox;
   else
     return FALSE;
   pFrame = &ViewFrameTable[frame - 1];
@@ -1981,9 +1981,9 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
   svgBox =  pAb->AbBox;
 
   /* Get the origin of the ancestor */
-  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if(pAb && pAb -> AbBox)
-    pBox = pAb -> AbBox;
+  pAb = ((PtrElement)svgAncestor)->ElAbstractBox[0];
+  if(pAb && pAb->AbBox)
+    pBox = pAb->AbBox;
   else
     return FALSE;
   pFrame = &ViewFrameTable[frame - 1];
@@ -2128,9 +2128,9 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   svgBox =  pAb->AbBox;
 
   /* Get the origin of the ancestor */
-  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if(pAb && pAb -> AbBox)
-    pBox = pAb -> AbBox;
+  pAb = ((PtrElement)svgAncestor)->ElAbstractBox[0];
+  if(pAb && pAb->AbBox)
+    pBox = pAb->AbBox;
   else
     return FALSE;
   pFrame = &ViewFrameTable[frame - 1];
@@ -2201,12 +2201,12 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
   pAb = ((PtrElement)svgCanvas)->ElAbstractBox[0];
   if (pAb == NULL || pAb->AbBox == NULL)
     return FALSE;
-  svgBox =  pAb->AbBox;
+  svgBox = pAb->AbBox;
 
   /* Get the origin of the ancestor */
-  pAb = ((PtrElement)svgAncestor) -> ElAbstractBox[0];
-  if(pAb && pAb -> AbBox)
-    pBox = pAb -> AbBox;
+  pAb = ((PtrElement)svgAncestor)->ElAbstractBox[0];
+  if(pAb && pAb->AbBox)
+    pBox = pAb->AbBox;
   else
     return FALSE;
   pFrame = &ViewFrameTable[frame - 1];
@@ -2218,11 +2218,11 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
                              ancestorX, ancestorY, el, point);
 
   /* Free the transform matrix */
-  if(inverse)
+  if (inverse)
     TtaFreeTransform(inverse);
 
   /* Update the attribute */
-  if(hasBeenEdited)
+  if (hasBeenEdited)
     {
       leaf =  TtaGetLastChild(el);
       if (leaf && 
@@ -2230,12 +2230,10 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
         {
           pAb = ((PtrElement)leaf)->ElAbstractBox[0];
           pBox = pAb->AbBox;
-          shape = pAb->AbShape;
-          
+          shape = pAb->AbShape;          
           if (pBox)
             {
-              
-              if(shape == 1 || shape == 'C')
+              if (shape == 1 || shape == 'C')
                 {
                   rx = pBox->BxRx;
                   ry = pBox->BxRy;

@@ -413,11 +413,13 @@ static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
         {
           ptr1 += ix;
           if (y < GL_h)
+           {
             /* copy R,G,B,A */
             if (w < iw)
               memcpy (ptr2, ptr1, w);
             else
               memcpy (ptr2, ptr1, iw);
+           }
           /* jump over the black transparent zone*/
           ptr1 += w;
           ptr2 += iw;

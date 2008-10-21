@@ -14,7 +14,7 @@ LIBWWW	   = libwww
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib batch annotlib @DAVDIR@ amaya
-EXTRA_SUBDIRS= $(BUILDRAPTOR) $(LIBWWW) $(WX_BUILDDIR) $(GL_BUILDDIR)
+EXTRA_SUBDIRS= $(BUILDRAPTOR) @BUILDLIBWWW@ $(WX_BUILDDIR) $(GL_BUILDDIR)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -23,7 +23,7 @@ bindir = @bindir@
 
 srcdir	= $(THOTDIR)
 
-default : tools gl @BUILDWXWIDGETS@ @BUILDRAPTOR@ thotlib batch amaya_prog print_prog
+default : tools gl @BUILDWXWIDGETS@ @BUILDRAPTOR@ @BUILDLIBWWW@ thotlib batch amaya_prog print_prog
 
 amaya : tools thotlib amaya_prog print_prog
 
@@ -128,127 +128,8 @@ mkid :
 #
 # Rules to rebuild the libWWW package
 #
-
-# MKP: adding libwwwdav
-AMAYA_LIBWWW_STANDARD_LIBS = \
-	libwwwapp \
-	libwwwhttp \
-	libwwwhtml \
-	libwwwmime \
-	libwwwcache \
-	libwwwstream \
-	libwwwfile \
-	libwwwdir \
-	libwwwtrans \
-	libwwwcore \
-	libwwwutils \
-	libwwwftp \
-	@MAKE_LIBWWW_RDF_PARSER@ \
-	libwwwzip \
-        @LIBDAV@
-
-libwww_config :
-	@(if [ ! -d $(THOTDIR)/../$(LIBWWW) ] ; then \
-	      $(ECHO) "Error libwww dir not found at $(THOTDIR)/../$(LIBWWW)" ; \
-	  fi)
-	@(if [ ! -d $(LIBWWW) ] ; then \
-		$(MKDIR) $(LIBWWW) ; \
-          fi)
-#MKP: adding --with-dav
-	@(localdir=`pwd` ; libwwwdir="$$localdir/../../$(LIBWWW)" ; \
-	  cd $(LIBWWW) ; unset LANG; \
-	  if [ ! -f Makefile -o ! -f wwwconf.h ] ; then \
-	  	$$libwwwdir/configure \
-			--build=@build_alias@ --host=@host_alias@ --target=@target_alias@ \
-			--disable-shared \
-			@WITHDAV@ \
-			--with-zlib; \
-		$(ECHO) "libwww is configured" ; \
-		$(ECHO) "patching wwwconf.h because appkit.h do not compile on macos, and it seems that appkit.h is not used in amaya" ; \
-		$(CP) wwwconf.h wwwconf.h.orig ; \
-		$(SED) "s/\(\#define HAVE_APPKIT_APPKIT_H 1\)/\/* \1 *\//" \
-			wwwconf.h.orig > wwwconf.h ; \
-                $(ECHO) "wwwconf.h patched !" ; \
-	  fi)
-
-libwww_make_module_md5 \
-libmd5 : force
-		@(localdir=`pwd`; \
-		 cd $(LIBWWW)/modules/md5 ; \
-		 $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
-		 CPPFLAGS="$(CPPFLAGS) $(THOTINCLUDES) $(EXTRA_INCLUDES)" \
-	        	    libmd5.la)
-
-libwww_install_module_md5 : force
-		@(if [ -e libmd5.a -a ! -L libmd5.a ] ; then \
-			$(RM) libmd5.a ; \
-		  fi ; \
-		  if [ ! -L libmd5.a ] ; then \
-			$(LN_S) $(LIBWWW)/modules/md5/.libs/libmd5.a ./libmd5.a ; \
-		  fi)
-
-libwww_make_module_expat \
-libexpat : force
-		@(localdir=`pwd`; \
-		  cd $(LIBWWW)/modules/expat/ ; \
-		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS) -DXML_AMAYA" \
-		  CPPFLAGS="$(CPPFLAGS)" \
-	        	    )
-
-libwww_install_module_expat : force
-		@(if [ -e libexpat.a -a ! -L libexpat.a ] ; then \
-			$(RM) libexpat.a ; \
-		  fi ; \
-		  if [ ! -L libexpat.a ] ; then \
-			$(LN_S) $(LIBWWW)/modules/expat/.libs/libexpat.a ./libexpat.a ; \
-		  fi)
-
-#libwww_make_module_idn \
-#libidn : force
-#		@(localdir=`pwd`; \
-#		  cd $(LIBWWW)/modules/idn/ ; \
-#		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS) -DLIBWWW_USEIDN" \
-#		  CPPFLAGS="$(CPPFLAGS)" \
-#	        	    )
-
-#libwww_install_module_idn : force
-#		@(if [ -e libidn.a -a ! -L libidn.a ] ; then \
-#			$(RM) libidn.a ; \
-#		  fi ; \
-#		  if [ ! -L libidn.a ] ; then \
-#			$(LN_S) $(LIBWWW)/modules/idn/.libs/libidn.a ./libidn.a ; \
-#		  fi)
-
-libwww_make_standard_libs \
-$(AMAYA_LIBWWW_STANDARD_LIBS) : force
-		@(localdir=`pwd`; \
-		  all_libs="" ; \
-		  for lib in $(AMAYA_LIBWWW_STANDARD_LIBS) ; do \
-		      all_libs="$$all_libs $$lib.la" ; \
-		   done ; \
-		  cd $(LIBWWW)/Library/src ; \
-		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
-		  CPPFLAGS="$(CPPFLAGS) $(THOTINCLUDES) $(EXTRA_INCLUDES)" \
-			     $$all_libs)
-
-libwww_install_standard : force
-		@(for lib in $(AMAYA_LIBWWW_STANDARD_LIBS) ; do \
-		    if [ -e $$lib.a -a ! -L $$lib.a ] ; then \
-			$(RM) $$lib.a ;  \
-		    fi ; \
-		    if [ ! -L $$lib.a ] ; then \
-			$(LN_S) $(LIBWWW)/Library/src/.libs/$$lib.a ./$$lib.a ; \
-		    fi ; \
-		done)
-
-#libwww_make_module_libs : libwww_make_module_md5 libwww_make_module_expat libwww_make_module_idn
-libwww_make_module_libs : libwww_make_module_md5 libwww_make_module_expat
-libwww_make : libwww_make_module_libs libwww_make_standard_libs
-#libwww_install_modules : libwww_install_module_md5 libwww_install_module_expat libwww_install_module_idn
-libwww_install_modules : libwww_install_module_md5 libwww_install_module_expat
-libwww_install : libwww_install_modules libwww_install_standard 
-
-libwww : libwww_config libwww_make
+libwww: force
+	$(MAKE) -C libwww
 		@($(ECHO) "libwww is installed")
 
 #

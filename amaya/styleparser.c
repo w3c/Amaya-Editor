@@ -7409,7 +7409,7 @@ static void ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   /* verify and clean the selector string */
   sel_end = decl_end - 1;
   while (*sel_end == SPACE || *sel_end == BSPACE ||
-         *sel_end == EOL || *sel_end == CR)
+         *sel_end == EOL || *sel_end == __CR__)
     sel_end--;
   sel_end++;
   *sel_end = EOS;
@@ -8004,10 +8004,10 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
         {
           LineNumber++;
           lineComment = FALSE;
-          c = CR;
+          c = __CR__;
         }
 
-      if (!lineComment && c != CR)
+      if (!lineComment && c != __CR__)
         CSSindex++;
 
       if (CSSindex >= MAX_CSS_LENGTH && CSScomment < MAX_CSS_LENGTH)

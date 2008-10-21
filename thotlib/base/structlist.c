@@ -3752,6 +3752,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
                   fprintf (fileDescriptor, " =");
               }
           else if (RP->PrPresMode == PresImmediate)
+           {
             if (RP->PrAttrValue)
               fprintf (fileDescriptor, "??");
             else
@@ -3759,6 +3760,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
                 fprintf (fileDescriptor, "None");
               else if (pPSch->PsConstant[RP->PrIntValue-1].PdString)
                 fprintf (fileDescriptor, pPSch->PsConstant[RP->PrIntValue-1].PdString);
+           }
           break;
         case PtListStylePosition:
           fprintf (fileDescriptor, "ListStylePosition: ");

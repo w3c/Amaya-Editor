@@ -714,6 +714,13 @@ WX_LIBRARIES
 WX_LINKDEPS
 FREETYPE_INCLUDES
 FREETYPE_LIBRARIES
+LIBWWW_CONFIG
+BUILDLIBWWW
+LIBWWW_CFLAGS
+LIBWWW_LDFLAGS
+DAVDIR
+LIBDAV
+WWWDAV
 RAPTOR_CONFIG
 BUILDRAPTOR
 AMAYA_ANNOT_OPTIONS
@@ -736,10 +743,6 @@ THOT_OPTIONS
 AMAYA_OPTIONS
 IMGLIBS
 EXTRA_INCLUDES
-DAVDIR
-LIBDAV
-WITHDAV
-WWWDAV
 MAKE_LIBWWW_RDF_PARSER
 LIBWWW_RDF_PARSER
 SUBDIRS
@@ -1345,6 +1348,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-system-wx      try the wxWidgets system library
   --disable-svg           disable SVG support
+  --enable-system-libwww  try the libWWW system library
   --disable-annot         disable Annotations support
   --enable-system-raptor  try the raptor RDF system library
   --disable-templates     disable experimental templates support
@@ -13798,18 +13802,8 @@ if test "${with_debug+set}" = set; then
   withval=$with_debug;
 fi
 
-if test "$with_debug" = "yes" ; then
-  with_debug="yes"
-  CFLAGS="-g"
-  CXXFLAGS="-g"
-else
-  with_debug="no"
-  CFLAGS="-O2"
-  CXXFLAGS="-O2"
-fi
 
 if test "${CC}" = "gcc" ; then
- CFLAGS="${CFLAGS} -Wall"
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
@@ -13821,13 +13815,8 @@ if test "$ac_cv_c_const" = "no" ; then
   CFLAGS="${CFLAGS} -DCONST= "
 fi
 
-
-# force C mode (-x c)
-CFLAGS="${CFLAGS} -x c"
-
-# C++ options (-x c++)
-CXX_OPTIONS="-D__cplusplus"
-CXXFLAGS="${CXXFLAGS} -Wall -x c++ ${CXX_OPTIONS}"
+CFLAGS="${CFLAGS} -Wall"
+CXXFLAGS="${CXXFLAGS} -Wall"
 
 # setup LDFLAGS
 # on macosx, specific flags must be set to avoid conflicts with allready installed libwww
@@ -14260,6 +14249,221 @@ else
 fi
 
 
+#################### LibWWW and WebDAV Support ################################
+
+# Check whether --enable-system-libwww was given.
+if test "${enable_system_libwww+set}" = set; then
+  enableval=$enable_system_libwww; case "${enableval}" in
+	  yes) with_system_libwww="yes" ;;
+	  no)  with_system_libwww="no" ;;
+	  *) { { echo "$as_me:$LINENO: error: bad value ${enableval} for --enable-system-libwww" >&5
+echo "$as_me: error: bad value ${enableval} for --enable-system-libwww" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	esac
+else
+  with_system_libwww="no"
+fi
+
+
+if test "$with_system_libwww" = "yes" ; then
+    # check to see if we have a libWWW library
+    # Extract the first word of "libwww-config", so it can be a program name with args.
+set dummy libwww-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_LIBWWW_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $LIBWWW_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_LIBWWW_CONFIG="$LIBWWW_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_LIBWWW_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+LIBWWW_CONFIG=$ac_cv_path_LIBWWW_CONFIG
+if test -n "$LIBWWW_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $LIBWWW_CONFIG" >&5
+echo "${ECHO_T}$LIBWWW_CONFIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+
+    if test "$LIBWWW_CONFIG" = "" ; then
+		{ echo "$as_me:$LINENO: WARNING: Not using system-provided libWWW" >&5
+echo "$as_me: WARNING: Not using system-provided libWWW" >&2;}
+		with_system_libwww="no"
+    fi
+fi
+
+
+# Check whether --with-dav was given.
+if test "${with_dav+set}" = set; then
+  withval=$with_dav; case "${withval}" in
+	  yes) with_dav="yes" ;;
+	  no)  with_dav="no" ;;
+	  *) { { echo "$as_me:$LINENO: error: bad value ${withval} for --with-dav" >&5
+echo "$as_me: error: bad value ${withval} for --with-dav" >&2;}
+   { (exit 1); exit 1; }; } ;;
+	esac
+else
+  with_dav="yes"
+fi
+
+
+# If DAV is enabled, check if the source code is present
+if test ! -f $srcdir/davlib/Makefile.in ; then
+	if test "$with_dav" = "yes" ; then
+	    { echo "$as_me:$LINENO: WARNING: WebDAV makefile not found" >&5
+echo "$as_me: WARNING: WebDAV makefile not found" >&2;}
+	    with_dav="no"
+	fi
+fi
+
+if test "$with_dav" = "yes" ; then
+   WITHDAV="--with-dav"
+else
+   WITHDAV="--without-dav"
+fi
+
+if test "$enable_system_libwww" != "yes" ; then
+  # configure libwww
+  CURRENT_PATH="`pwd`"
+  mkdir libwww
+  cd libwww && \
+    $CURRENT_PATH/../../libwww/configure \
+    --build=$build_alias --host=$host_alias --target=$target_alias \
+    --disable-shared \
+    $WITHDAV \
+    --with-zlib && \
+    echo "libwww is configured" ; \
+    echo "patching wwwconf.h because appkit.h do not compile on macos, and it seems that appkit.h is not used in amaya" ; \
+    cp wwwconf.h wwwconf.h.orig ; \
+    sed -e "s/\(\#define HAVE_APPKIT_APPKIT_H 1\)/\/* \1 *\//" \
+			wwwconf.h.orig > wwwconf.h ; \
+    echo "wwwconf.h patched !" ; \
+  cd ..
+  chmod +x libwww/libwww-config
+  BUILDLIBWWW="libwww"
+  LIBWWW_CONFIG="libwww/libwww-config"
+  LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -L$CURRENT_PATH/libwww/modules/md5/.libs -L$CURRENT_PATH/libwww/modules/expat/.libs `$LIBWWW_CONFIG --libs`"
+  LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww"
+else
+  LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
+  LIBWWW_LDFLAGS="`$LIBWWW_CONFIG --libs`"
+
+  if test "$with_dav" = "yes" ; then
+    { echo "$as_me:$LINENO: checking for toto in -lwwwdav" >&5
+echo $ECHO_N "checking for toto in -lwwwdav... $ECHO_C" >&6; }
+if test "${ac_cv_lib_wwwdav_toto+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lwwwdav  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char toto ();
+int
+main ()
+{
+return toto ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+  (eval "$ac_link") 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && {
+	 test -z "$ac_c_werror_flag" ||
+	 test ! -s conftest.err
+       } && test -s conftest$ac_exeext &&
+       $as_test_x conftest$ac_exeext; then
+  ac_cv_lib_wwwdav_toto=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+	ac_cv_lib_wwwdav_toto=no
+fi
+
+rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ echo "$as_me:$LINENO: result: $ac_cv_lib_wwwdav_toto" >&5
+echo "${ECHO_T}$ac_cv_lib_wwwdav_toto" >&6; }
+if test $ac_cv_lib_wwwdav_toto = yes; then
+  LIBWWW_LDFLAGS="$LIBWWW_LDFLAGS -lwwwdav"
+else
+  { echo "$as_me:$LINENO: WARNING: libwwwdav is not available, disabling WebDAV" >&5
+echo "$as_me: WARNING: libwwwdav is not available, disabling WebDAV" >&2;}; with_dav="no"
+fi
+
+  fi
+fi
+
+if test "$with_dav" = "yes" ; then
+   DAV_OPTIONS=-DDAV
+   DAVDIR="davlib"
+   LIBWWW_LDFLAGS="$LIBWWW_LDFLAGS -lwwwdav"
+else
+   with_dav="no"
+   DAV_OPTIONS=""
+   DAVDIR=""
+fi
+
+
+
+
+
+
+
+
+
+
+############# end of LibWWW and WebDAV Support ################################
+
 ##########################Annotations Support####################
 # Check whether --enable-annot was given.
 if test "${enable_annot+set}" = set; then
@@ -14466,39 +14670,7 @@ else
 fi
 
 
-# Check whether --with-dav was given.
-if test "${with_dav+set}" = set; then
-  withval=$with_dav;
-fi
-
-if test "$with_dav" = "" ; then
-  with_dav="yes"
-fi
-if test "$with_dav" = "yes" ; then
-   DAV_OPTIONS=-DDAV
-   DAVDIR="davlib"
-   LIBDAV="libwwwdav"
-   WITHDAV="--with-dav"
-   WWWDAV="-lwwwdav"
-else
-   with_dav="no"
-   DAV_OPTIONS=""
-   DAVDIR=""
-   LIBDAV=""
-   WITHDAV=""
-   WWWDAV=""
-fi
-
-
 if test "$build_amaya" = "yes" ; then
-    if test ! -f $srcdir/../libwww/Makefile.in ; then
-	{ echo "$as_me:$LINENO: WARNING: libwww sources not found !!" >&5
-echo "$as_me: WARNING: libwww sources not found !!" >&2;}
-	{ echo "$as_me:$LINENO: WARNING: Disabling Amaya build !" >&5
-echo "$as_me: WARNING: Disabling Amaya build !" >&2;}
-	build_amaya="no"
-    fi
-
     if test ! -f $srcdir/amaya/MathML.S ; then
 	if test "$with_math" = "yes" ; then
 	    { echo "$as_me:$LINENO: WARNING: MathML sources not found !!" >&5
@@ -14520,21 +14692,6 @@ echo "$as_me: WARNING: Disabling SVG build !" >&2;}
 	    SVG_OPTIONS=
 	fi
     fi
-
-    if test ! -f $srcdir/davlib/Makefile.in ; then
-	if test "$with_dav" = "yes" ; then
-	    { echo "$as_me:$LINENO: WARNING: WebDAV makefile not found !!" >&5
-echo "$as_me: WARNING: WebDAV makefile not found !!" >&2;}
-	    { echo "$as_me:$LINENO: WARNING: Disabling WebDAV build !" >&5
-echo "$as_me: WARNING: Disabling WebDAV build !" >&2;}
-	    with_dav="no"
-            DAVDIR=""
-            LIBDAV=""
-            WITHDAV=""
-            WWWDAV=""
-	fi
-    fi
-
 
 fi
 
@@ -14605,11 +14762,6 @@ if test "${VPATHOPT}" = "" ; then
 fi
 
 AMAYA_INSTALLDIR="Amaya"
-
-
-
-
-
 
 
 
@@ -15509,6 +15661,13 @@ WX_LIBRARIES!$WX_LIBRARIES$ac_delim
 WX_LINKDEPS!$WX_LINKDEPS$ac_delim
 FREETYPE_INCLUDES!$FREETYPE_INCLUDES$ac_delim
 FREETYPE_LIBRARIES!$FREETYPE_LIBRARIES$ac_delim
+LIBWWW_CONFIG!$LIBWWW_CONFIG$ac_delim
+BUILDLIBWWW!$BUILDLIBWWW$ac_delim
+LIBWWW_CFLAGS!$LIBWWW_CFLAGS$ac_delim
+LIBWWW_LDFLAGS!$LIBWWW_LDFLAGS$ac_delim
+DAVDIR!$DAVDIR$ac_delim
+LIBDAV!$LIBDAV$ac_delim
+WWWDAV!$WWWDAV$ac_delim
 RAPTOR_CONFIG!$RAPTOR_CONFIG$ac_delim
 BUILDRAPTOR!$BUILDRAPTOR$ac_delim
 AMAYA_ANNOT_OPTIONS!$AMAYA_ANNOT_OPTIONS$ac_delim
@@ -15531,10 +15690,6 @@ THOT_OPTIONS!$THOT_OPTIONS$ac_delim
 AMAYA_OPTIONS!$AMAYA_OPTIONS$ac_delim
 IMGLIBS!$IMGLIBS$ac_delim
 EXTRA_INCLUDES!$EXTRA_INCLUDES$ac_delim
-DAVDIR!$DAVDIR$ac_delim
-LIBDAV!$LIBDAV$ac_delim
-WITHDAV!$WITHDAV$ac_delim
-WWWDAV!$WWWDAV$ac_delim
 MAKE_LIBWWW_RDF_PARSER!$MAKE_LIBWWW_RDF_PARSER$ac_delim
 LIBWWW_RDF_PARSER!$LIBWWW_RDF_PARSER$ac_delim
 SUBDIRS!$SUBDIRS$ac_delim
@@ -15542,7 +15697,7 @@ EXTRA_MAKEFILE_IN!$EXTRA_MAKEFILE_IN$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 52; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 55; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

@@ -27,7 +27,6 @@
 #define THOT_EXPORT extern
 #include "css_f.h"
 #include "init_f.h"
-#include "query_f.h"
 #include "AHTURLTools_f.h"
 #include "UIcss_f.h"
 #include "styleparser_f.h"

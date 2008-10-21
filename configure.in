@@ -473,18 +473,8 @@ CEXTRACT_FLAGS="+O"
 
 # Check if debug is enable
 AC_ARG_WITH(debug,              [  --with-debug            compiles Amaya with debuging options (-g) ])
-if test "$with_debug" = "yes" ; then
-  with_debug="yes"
-  CFLAGS="-g"
-  CXXFLAGS="-g"
-else
-  with_debug="no"
-  CFLAGS="-O2"
-  CXXFLAGS="-O2"
-fi
 
 if test "${CC}" = "gcc" ; then
- CFLAGS="${CFLAGS} -Wall"
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
@@ -496,13 +486,8 @@ if test "$ac_cv_c_const" = "no" ; then
   CFLAGS="${CFLAGS} -DCONST= "
 fi
 
-
-# force C mode (-x c)
-CFLAGS="${CFLAGS} -x c"
-
-# C++ options (-x c++)
-CXX_OPTIONS="-D__cplusplus"
-CXXFLAGS="${CXXFLAGS} -Wall -x c++ ${CXX_OPTIONS}"
+CFLAGS="${CFLAGS} -Wall"
+CXXFLAGS="${CXXFLAGS} -Wall"
 
 # setup LDFLAGS
 # on macosx, specific flags must be set to avoid conflicts with allready installed libwww
@@ -704,6 +689,108 @@ AC_ARG_ENABLE([svg],
 	esac],
 	[with_svg="yes"])
 
+#################### LibWWW and WebDAV Support ################################
+
+AC_ARG_ENABLE([system-libwww],
+	AC_HELP_STRING([--enable-system-libwww],[try the libWWW system library]),
+	[case "${enableval}" in
+	  yes) with_system_libwww="yes" ;;
+	  no)  with_system_libwww="no" ;;
+	  *) AC_MSG_ERROR([bad value ${enableval} for --enable-system-libwww]) ;;
+	esac],
+	[with_system_libwww="no"])
+
+if test "$with_system_libwww" = "yes" ; then
+    # check to see if we have a libWWW library
+    AC_PATH_PROG([LIBWWW_CONFIG],[libwww-config])
+
+    if test "$LIBWWW_CONFIG" = "" ; then
+		AC_MSG_WARN(Not using system-provided libWWW, falling back to the builtin version.)
+		with_system_libwww="no"
+    fi
+fi
+
+dnl
+dnl WebDAV support enabled by default
+dnl
+AC_ARG_WITH(dav,
+  AC_HELP_STRING([--with-dav],[enable WebDAV support (default)]),
+  [case "${withval}" in
+	  yes) with_dav="yes" ;;
+	  no)  with_dav="no" ;;
+	  *) AC_MSG_ERROR(bad value ${withval} for --with-dav) ;;
+	esac],
+	[with_dav="yes"])
+
+# If DAV is enabled, check if the source code is present
+if test ! -f $srcdir/davlib/Makefile.in ; then
+	if test "$with_dav" = "yes" ; then
+	    AC_MSG_WARN(WebDAV makefile not found, disabling WebDAV build)
+	    with_dav="no"
+	fi
+fi
+
+if test "$with_dav" = "yes" ; then
+   WITHDAV="--with-dav"
+else
+   WITHDAV="--without-dav"
+fi
+
+if test "$enable_system_libwww" != "yes" ; then
+  # configure libwww
+  CURRENT_PATH="`pwd`"
+  mkdir libwww
+  cd libwww && \
+    $CURRENT_PATH/../../libwww/configure \
+    --build=$build_alias --host=$host_alias --target=$target_alias \
+    --disable-shared \
+    $WITHDAV \
+    --with-zlib && \
+    echo "libwww is configured" ; \
+    echo "patching wwwconf.h because appkit.h do not compile on macos, and it seems that appkit.h is not used in amaya" ; \
+    cp wwwconf.h wwwconf.h.orig ; \
+    sed -e "s/\(\#define HAVE_APPKIT_APPKIT_H 1\)/\/* \1 *\//" \
+			wwwconf.h.orig > wwwconf.h ; \
+    echo "wwwconf.h patched !" ; \
+  cd ..
+  chmod +x libwww/libwww-config
+  BUILDLIBWWW="libwww"
+  LIBWWW_CONFIG="libwww/libwww-config"
+  LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -L$CURRENT_PATH/libwww/modules/md5/.libs -L$CURRENT_PATH/libwww/modules/expat/.libs `$LIBWWW_CONFIG --libs`"
+  LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww"
+else
+  LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
+  LIBWWW_LDFLAGS="`$LIBWWW_CONFIG --libs`"
+
+  if test "$with_dav" = "yes" ; then
+    AC_CHECK_LIB([wwwdav],
+				 [toto],
+				 [LIBWWW_LDFLAGS="$LIBWWW_LDFLAGS -lwwwdav"],
+				 [AC_MSG_WARN([libwwwdav is not available, disabling WebDAV]); with_dav="no"])
+  fi
+fi
+
+if test "$with_dav" = "yes" ; then
+   DAV_OPTIONS=-DDAV
+   DAVDIR="davlib"
+   LIBWWW_LDFLAGS="$LIBWWW_LDFLAGS -lwwwdav"
+else
+   with_dav="no"
+   DAV_OPTIONS=""
+   DAVDIR=""
+fi
+
+AC_SUBST(BUILDLIBWWW)
+
+AC_SUBST(LIBWWW_CFLAGS)
+AC_SUBST(LIBWWW_LDFLAGS)
+
+AC_SUBST(DAVDIR)
+AC_SUBST(LIBDAV)
+AC_SUBST(WWWDAV)
+
+############# end of LibWWW and WebDAV Support ################################
+
 ##########################Annotations Support####################
 dnl
 dnl annotations are enabled by default
@@ -854,36 +941,8 @@ else
  GENERIC_XML_OPTIONS=""
 fi
 
-dnl
-dnl WebDAV support enabled by default
-dnl
-AC_ARG_WITH(dav,            [  --with-dav              enable WebDAV support (default) ])
-if test "$with_dav" = "" ; then
-  with_dav="yes"
-fi
-if test "$with_dav" = "yes" ; then
-   DAV_OPTIONS=-DDAV
-   DAVDIR="davlib"
-   LIBDAV="libwwwdav"
-   WITHDAV="--with-dav" 
-   WWWDAV="-lwwwdav" 
-else
-   with_dav="no"
-   DAV_OPTIONS=""
-   DAVDIR=""
-   LIBDAV=""
-   WITHDAV="" 
-   WWWDAV="" 
-fi
-
 
 if test "$build_amaya" = "yes" ; then
-    if test ! -f $srcdir/../libwww/Makefile.in ; then
-	AC_MSG_WARN(libwww sources not found !!)
-	AC_MSG_WARN(Disabling Amaya build !)
-	build_amaya="no"
-    fi
-
     if test ! -f $srcdir/amaya/MathML.S ; then
 	if test "$with_math" = "yes" ; then
 	    AC_MSG_WARN(MathML sources not found !!)
@@ -901,19 +960,6 @@ if test "$build_amaya" = "yes" ; then
 	    SVG_OPTIONS=
 	fi
     fi
-
-    if test ! -f $srcdir/davlib/Makefile.in ; then
-	if test "$with_dav" = "yes" ; then
-	    AC_MSG_WARN(WebDAV makefile not found !!)
-	    AC_MSG_WARN(Disabling WebDAV build !)
-	    with_dav="no"
-            DAVDIR=""
-            LIBDAV=""
-            WITHDAV="" 
-            WWWDAV="" 
-	fi
-    fi
-   
 
 fi
 
@@ -1015,11 +1061,6 @@ AC_SUBST(THOT_OPTIONS)
 AC_SUBST(AMAYA_OPTIONS)
 AC_SUBST(IMGLIBS)
 AC_SUBST(EXTRA_INCLUDES)
-
-AC_SUBST(DAVDIR)
-AC_SUBST(LIBDAV)
-AC_SUBST(WITHDAV)
-AC_SUBST(WWWDAV)
 
 AC_SUBST(MAKE_LIBWWW_RDF_PARSER)
 AC_SUBST(LIBWWW_RDF_PARSER)

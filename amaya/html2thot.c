@@ -3646,7 +3646,7 @@ static void PutInComment (unsigned char c)
   
   if (c != EOS)
     {
-      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == CR))
+      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == __CR__))
         /* new line in a comment */
         {
           /* put the content of the inputBuffer into the current */
@@ -3744,7 +3744,7 @@ static void PutInASP (unsigned char c)
   
   if (c != EOS)
     {
-      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == CR))
+      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == __CR__))
         /* new line in a ASP */
         {
           /* put the content of the inputBuffer into the current */
@@ -3868,7 +3868,7 @@ static void EndOfDoctypeDecl (char c)
           /* as many DOCTYPE_line elements as needed */
           while (inputBuffer[i] != EOS)
             {
-              if (inputBuffer[i] != EOL && inputBuffer[i] != CR)
+              if (inputBuffer[i] != EOL && inputBuffer[i] != __CR__)
                 buffer[j++] = inputBuffer[i];
               else
                 {
@@ -3962,7 +3962,7 @@ static void         PutInPI (unsigned char c)
   
   if (c != EOS)
     {
-      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == CR))
+      if (!HTMLcontext.parsingCSS && ((int) c == EOL || (int) c == __CR__))
         /* new line in a comment */
         {
           /* put the content of the inputBuffer into the current */
@@ -4566,12 +4566,12 @@ char GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
     }
   if (*endOfFile == FALSE)
     {
-      if ((int) charRead == CR)
+      if ((int) charRead == __CR__)
         /* CR has been read */
         {
           /* Read next character */
           charRead = GetNextChar (infile, InputText, index, endOfFile);
-          if ((int) charRead != EOL && (int) charRead != CR)
+          if ((int) charRead != EOL && (int) charRead != __CR__)
             /* next character is not LF. Store next character and return LF */
             {
               PreviousBufChar = charRead;
@@ -4579,9 +4579,9 @@ char GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
             }
         }
       /* update the counters of characters and lines read */
-      if ((int) charRead == EOL || (int) charRead == CR)
+      if ((int) charRead == EOL || (int) charRead == __CR__)
         {
-          if ((int) charRead == CR)
+          if ((int) charRead == __CR__)
             {
               beg_pair = TRUE;
               if (InputText == NULL)
@@ -4642,7 +4642,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
           /* Replace HT by space, except in preformatted text. */
           /* Ignore spaces at the beginning and at the end of input lines */
           /* Ignore non printable characters except HT, LF, FF. */
-          if ((int) charRead == EOL || (int) charRead == CR)
+          if ((int) charRead == EOL || (int) charRead == __CR__)
             /* LF = end of input line */
             {
               /* don't replace end of line by space in a doctype declaration */

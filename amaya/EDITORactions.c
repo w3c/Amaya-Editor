@@ -39,7 +39,6 @@
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
-#include "query_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
@@ -5426,16 +5425,6 @@ void DoDeleteAnchor (Document doc, View view, ThotBool noCallback)
 void DeleteAnchor (Document doc, View view)
 {
   DoDeleteAnchor (doc, view, TRUE);
-}
-
-/*----------------------------------------------------------------------
-  CleanCache
-  A frontend to the CleanCache function, called thru an Amaya menu
-  ----------------------------------------------------------------------*/
-void FlushCache (Document doc, View view)
-{
-  StopAllRequests (doc);
-  libwww_CleanCache ();
 }
 
 /*----------------------------------------------------------------------

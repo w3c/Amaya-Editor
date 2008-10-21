@@ -2027,7 +2027,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
           parent = TtaSearchTypedElement(elType, SearchForward, parent);
           if (parent)
             {
-	      
               child = TtaGetFirstChild(parent);
               next = NULL;
               while (child)
@@ -2046,6 +2045,23 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
                                               1, &x1, &y1, &x2, &y2,
                                               &x3, &y3, &x4, &y4, &lx, &ly);
+                  if (created)
+                    {
+                      /* create a transform=translate attribute */
+                      TtaGiveBoxSize (newEl, doc, 1, UnPixel, &w, &h);
+                      valx = valy = 1;
+                      if (w)
+                        valx = (float)(x2-x1) / (float)w;
+                      if (h)
+                        valy = (float)(y3-y1) / (float)h;
+                      //TtaGiveBoxPosition (newEl, doc, 1, UnPixel, TRUE, &x4, &y4);
+                      attrType.AttrTypeNum = SVG_ATTR_transform;
+                      attr = TtaNewAttribute (attrType);
+                      TtaAttachAttribute (newEl, attr, doc);
+                      sprintf(buffer, "translate(%d,%d) scale(%f,%f)", x1, y1, valx,valy);
+                      TtaSetAttributeText (attr, buffer, newEl, doc);
+                      ParseTransformAttribute (attr, newEl, doc, FALSE);
+                    }
                 }
               else
                 {
@@ -2054,24 +2070,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   lx = 500;
                   ly = 300;
                   created = TRUE;
-                }
-
-              if (created)
-                {
-                  /* create a transform=translate attribute */
-                  TtaGiveBoxSize (newEl, doc, 1, UnPixel, &w, &h);
-                  valx = valy = 1;
-                  if (w)
-                    valx = (float)(x2-x1) / (float)w;
-                  if (h)
-                    valy = (float)(y3-y1) / (float)h;
-                  //TtaGiveBoxPosition (newEl, doc, 1, UnPixel, TRUE, &x4, &y4);
-                  attrType.AttrTypeNum = SVG_ATTR_transform;
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (newEl, attr, doc);
-                  sprintf(buffer, "translate(%d,%d) scale(%f,%f)", x1, y1, valx,valy);
-                  TtaSetAttributeText (attr, buffer, newEl, doc);
-                  ParseTransformAttribute (attr, newEl, doc, FALSE);
                 }
             }
           TtaRemoveDocumentReference (tmpDoc);
@@ -2690,13 +2688,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
 void SelectGraphicElement (Document doc, View view)
 {
 #ifdef _SVG
-  Element          svgAncestor, svgCanvas;
+  Element    svgAncestor, svgCanvas;
   Element	   first, sibling, parent;
-  int		   c1, c2;
-  int x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
-  float xmin, xmax, ymin, ymax;
-  float x,y,width,height;
-  ThotBool IsFirst;
+  int		     c1, c2;
+  int        x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
+  float      xmin, xmax, ymin, ymax;
+  float      x, y, width, height;
+  ThotBool  IsFirst;
 
   /* Check that a document is selected */
   if (doc == 0)return;
@@ -2870,17 +2868,13 @@ void EditGraphicElement (Document doc, View view, int entry)
 void TransformGraphicElement (Document doc, View view, int entry)
 {
 #ifdef _SVG
-  Element          *selected;
-  int              *position;
-
-  Element          tmp_el;
-  int              tmp_pos;
-
-  int              nb_selected;
+  Element          *selected, tmp_el;
   Element          svgAncestor, svgCanvas, group;
   Element	         first, sibling, sibling2, child, parent;
   DisplayMode      dispMode;
-  int		   c1, c2, i, j, k;
+  int              *position = NULL;
+  int              tmp_pos, nb_selected;
+  int		           c1, c2, i, j = 0, k = 0;
   float            x, y, width, height;
   float            xmin, ymin, xmax, ymax, xcenter, ycenter;
   ThotBool         isFormattedView, done = TRUE;
@@ -2892,7 +2886,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
   if (doc == 0)return;
 
   svgSchema = GetSVGSSchema (doc);
-
   /* Check that whether we are in formatted or strutured view. */
   if (view == 1) isFormattedView = TRUE;
   else if (view == 2)isFormattedView = FALSE;
@@ -2927,24 +2920,24 @@ void TransformGraphicElement (Document doc, View view, int entry)
   /* Get the <svg/> ancestor, canvas and check that the first selected 
      element is a child of canvas */
   child = first;
-
   if (!GetAncestorCanvasAndObject(doc, &child,
                                   &svgAncestor, &svgCanvas))
     return;
-
-  if (child != first)return;
+  if (child != first)
+    return;
 
   /* Count how many children of svgCanvas are selected*/
-  for(nb_selected = 0, sibling = first;
+  for (nb_selected = 0, sibling = first;
       sibling;
       TtaGiveNextSelectedElement(doc, &sibling, &c1, &c2)
       )
-    if (TtaGetParent(sibling) == svgCanvas)nb_selected++;
-  ;
+    {
+      if (TtaGetParent(sibling) == svgCanvas)
+        nb_selected++;
+    }
 
   /* Check if there are enough elements selected */
   isDistribution = (46 <= entry && entry <= 53);
-
   if (nb_selected == 0 || (isDistribution && nb_selected < 3))
     return;
 
@@ -2965,9 +2958,9 @@ void TransformGraphicElement (Document doc, View view, int entry)
   sortSelection = (entry == 11 || entry == 26 ||
                    (29 <= entry && entry <= 32));
 
-  for(i = 0, sibling = first;
-      i < nb_selected;
-      TtaGiveNextSelectedElement(doc, &sibling, &c1, &c2)
+  for (i = 0, sibling = first;
+       i < nb_selected;
+       TtaGiveNextSelectedElement(doc, &sibling, &c1, &c2)
       )
     {
       /* Is the element a child the svgCanvas */
@@ -2975,20 +2968,20 @@ void TransformGraphicElement (Document doc, View view, int entry)
         {
           selected[i] = sibling;
 
-          if(sortSelection)
+          if (sortSelection)
             {
               /* Search where the element must be inserted */
-              for(j = 0; j < i; j++)
+              for (j = 0; j < i; j++)
                 {
                   if(TtaIsBefore(selected[i], selected[j]))
                     break;
                 }
 	      
-              if(j < i)
+              if (j < i)
                 {
                   /* selected[i] must be inserted before selected[j] */
                   tmp_el = selected[i];
-                  for(k = i; k > j; k--)
+                  for (k = i; k > j; k--)
                     selected[k] = selected[k-1];
                   selected[j] = tmp_el;
                 }
@@ -3483,11 +3476,11 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
   Attribute     attr;
   AttributeType attrType;
   ElementType   elType;
-  ThotBool      new_, open;
   Element       leaf;
   int           i, v;
   SSchema       svgSchema = GetSVGSSchema (doc);
   ThotBool      isPath = FALSE, isLine = FALSE;
+  ThotBool      new_, open = FALSE;
 
   /* Check whether the element is a Path or a polyline/polygon */
   elType = TtaGetElementType (el);

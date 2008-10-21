@@ -56,7 +56,7 @@ typedef struct _Frame_Ctl {
 } Frame_Ctl;
 
 
-typedef enum
+enum
 {
   ToolBarBrowsing,
   ToolBarEditing,
