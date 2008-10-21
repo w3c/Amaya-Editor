@@ -107,6 +107,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
 {
   char      *s;
   char       buffer[MAX_LENGTH], *suffix;
+  int        i = 1, len, d;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("OpenDocDlgWX"));
   // waiting for a return
@@ -157,12 +158,11 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
         {
           // document title
           Mandatory_title = TRUE;
-          XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->Hide();
-          XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->Hide();
-#ifdef IV
+          //XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->Hide();
+          //XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->Hide();
           XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BM_TITLE)));
           XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
-#endif
+      XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SVG_Information)));
 #ifdef TEMPLATES
           XRCCTRL(*this, "wxID_BUTTON_TEMPLATE", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BROWSE)));
           XRCCTRL(*this, "wxID_USE_TEMPLATE", wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_NEW_TEMPLATE)));
@@ -219,22 +219,30 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
       // generate the default name
       strncpy( buffer, (const char*)urlToOpen.mb_str(wxConvUTF8), MAX_LENGTH - 1);
       buffer[MAX_LENGTH - 1] = EOS;
+      // keep the current suffix
+      len = strlen (buffer);
+      while (buffer[len] != '.')
+        len--;
+      suffix = TtaStrdup (&buffer[len]);
       if (TtaFileExist(buffer))
         {
-          int        i = 1, len;
-          // keep the current suffix
-          len = strlen (buffer);
-          while (buffer[len] != '.')
-            len--;
-          suffix = TtaStrdup (&buffer[len]);
           do
             {
               sprintf (&buffer[len], "%d%s", i, suffix);
               i++;
             }
           while (TtaFileExist(buffer));
-          TtaFreeMemory (suffix);
         }
+      // check also already open documents
+      for (d = 1; d < MAX_DOCUMENTS; d++)
+        {
+          if (DocumentURLs[d] && !strcmp (DocumentURLs[d], buffer))
+          {
+            sprintf (&buffer[len], "%d%s", i, suffix);
+            i++;
+          }
+        }
+      TtaFreeMemory (suffix);
       XRCCTRL(*this, "wxID_COMBOBOX",wxComboBox )->SetValue(TtaConvMessageToWX(buffer));
     }
   else
@@ -456,10 +464,11 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
       strncpy( buffer, (const char*)name.mb_str(wxConvUTF8), MAX_LENGTH - 1);
       buffer[MAX_LENGTH - 1] = EOS;
       ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
-#ifdef IV
+
       // get the document title
       title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
-      if (title.Len() == 0)
+      if (title.Len() != 0)
+#ifdef IV
         {
           // get the document name as default document title
           end_pos = value.Find(DIR_SEP, true);
@@ -472,31 +481,18 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
             name = title.Mid(0, end_pos);
           else
             name = title;
-          if (Waiting == 1)
-            {
-              // request the title
-              XRCCTRL (*this, "wxID_TITLE", wxTextCtrl)->SetValue(name);
-              // select the string
-              XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetSelection(0, -1);
-              XRCCTRL(*this, "wxID_ERROR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_MISSING_TITLE)));
-              Waiting = 2;
-              return;
-            }
-          else
-            {
               // use default title
               strncpy( buffer, (const char*)name.mb_str(wxConvUTF8), MAX_LENGTH - 1);
               buffer[MAX_LENGTH - 1] = EOS;
               ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
-            }
         }
       else
+#endif
         {
           strncpy( buffer, (const char*)title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
           buffer[MAX_LENGTH - 1] = EOS;
           ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer);
         }
-#endif
     }
 
 
