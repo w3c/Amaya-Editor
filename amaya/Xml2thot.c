@@ -914,6 +914,8 @@ static void XmlGetFallbackCharacter (wchar_t wcharRead, char *entityName,
     }
    
   /* Associate an attribute EntityName with the new leaf */
+#ifdef TEST
+  /* Old treatment to generate an 'entityName' attribute, useless now */
   attrType.AttrSSchema = elType.ElSSchema;
   ptr = (unsigned char*)TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp ((char *)ptr, "MathML") == 0)
@@ -924,6 +926,7 @@ static void XmlGetFallbackCharacter (wchar_t wcharRead, char *entityName,
     attrType.AttrTypeNum = HTML_ATTR_EntityName;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (elLeaf, attr, XMLcontext.doc);
+
   if (entityName)
     /* store the given entity name */
     TtaSetAttributeText (attr, (char *)entityName, elLeaf, XMLcontext.doc);
@@ -939,6 +942,32 @@ static void XmlGetFallbackCharacter (wchar_t wcharRead, char *entityName,
       bufName[i++] = ';';
       bufName[i] = EOS;
       TtaSetAttributeText (attr, (char *)bufName, elLeaf, XMLcontext.doc);
+    }
+#endif
+  /* genete the 'entityName' attribute for MathML only */
+  attrType.AttrSSchema = elType.ElSSchema;
+  ptr = (unsigned char*)TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp ((char *)ptr, "MathML") == 0)
+    {
+      attrType.AttrTypeNum = MathML_ATTR_EntityName;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (elLeaf, attr, XMLcontext.doc);
+      if (entityName)
+	/* store the given entity name */
+	TtaSetAttributeText (attr, (char *)entityName, elLeaf, XMLcontext.doc);
+      else
+	{
+	  /* it's a numerical entity */
+	  len = sprintf ((char *)buffer, "%d", (int) wcharRead);
+	  i = 0;
+	  bufName[i++] = START_ENTITY;
+	  bufName[i++] = '#';
+	  for (j = 0; j < len; j++)
+	    bufName[i++] = buffer[j];
+	  bufName[i++] = ';';
+	  bufName[i] = EOS;
+	  TtaSetAttributeText (attr, (char *)bufName, elLeaf, XMLcontext.doc);
+	}
     }
 }
 
