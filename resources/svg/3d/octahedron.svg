@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
-      "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke:black; fill:none;">
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="198" height="202"
+     style="stroke:black; fill:none;">
   <title>octahedron</title>
   <!-- back, bottom, right -->
   <polygon points="100,180 180,100 100,80"/>
   <!-- back, bottom, left -->
   <polygon points="100,180 20,100 100,80"/>
   <!-- front, bottom, left -->
-  <polygon points="100,180 20,100 80,120"/>
+  <polygon points="56.5,0 0,28 113,28"
+           transform="rotate(45,-76.5685,88.2843) "/>
   <!-- front, bottom, right -->
   <polygon points="100,180 180,100 80,120"/>
-
   <!-- back, top, right -->
   <polygon points="100,20 180,100 100,80"/>
   <!-- back, top, left -->
@@ -19,5 +20,6 @@
   <!-- front, top, left -->
   <polygon points="100,20 20,100 80,120"/>
   <!-- front, bottom, right -->
-  <polygon points="100,20 180,100 80,120"/>
+  <polygon points="56.5,0 0,84 113,84"
+           transform="rotate(-135,93.1371,55.1472) "/>
 </svg>

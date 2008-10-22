@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="204" height="104"
+     style="stroke: #000000; fill: none;">
   <title>Striped Arrow</title>
   <!-- Left -->
   <rect x="0" y="25" width="20" height="50"/>
-
   <!-- Center -->
   <rect x="30" y="25" width="30" height="50"/>
-
   <!-- Head -->
-  <polygon
-        points="70,25 100,25 100,0 200,50 100,100 100,75 70,75"/>
+  <polygon points="70,25 100,25 100,0 200,50 100,100 100,75 70,75"/>
 </svg>

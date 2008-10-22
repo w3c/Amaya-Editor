@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="203"
+     style="stroke: #000000; fill: none;">
   <title>Rounded Arrow</title>
   <path
-        d="M 0,0 L 50,0 C 50,100 60,125 100,125 L 100,100 L 200,150 L 100,200 L 100,175 C 0,175 0,60 0,0"
-        />
+        d="M 0,0 L 50,0 C 50,100 60,125 100,125 L 100,100 L 200,150 L 100,200 L 100,175 C 0,175 0,60 0,0"/>
 </svg>

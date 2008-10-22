@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg"
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="210"
    style="fill:none;stroke:#000000">
   <title>Pentagon</title>
   <polygon points="100,0 195.1056516295154,69.09830056250526 158.7785252292474,180.9016994374948 41.2214747707527,180.9016994374948 4.894348370484636,69.09830056250527"/>

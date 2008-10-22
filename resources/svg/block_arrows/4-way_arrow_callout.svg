@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="403" height="351"
+     style="stroke: #000000; fill: none;">
   <title>4-way arrow</title>
   <polygon
            points="175,80 150,80 200,0 250,80 225,80 225,105 225,125 290,125 290,150 310,150 310,125 400,175 310,225 310,200 290,200 290,225 225,225 225,270 250,270 200,350 150,270 175,270 175,225 110,225 110,200 90,200 90,225 0,175 90,125 90,150 110,150 110,125 175,125 "/>

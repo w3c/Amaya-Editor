@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke:#000000; fill:none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="358"
+     style="stroke:#000000; fill:none;">
   <title>Burette</title>
   <!-- burette -->
   <polygon fill="none"
-           points="0,0 10,10 10,290 17,297 17,350 24,350 24,297 32,291 32,10 42,0 "
-           />
+           points="0,0 10,10 10,290 17,297 17,350 24,350 24,297 32,291 32,10 42,0 "/>
   <!-- liquid -->
   <polygon points="10,110 10,290 17,297 17,330 24,330 24,297 32,291 32,110"
            stroke="none"/>
-
   <!-- lines -->
   <g>
     <line x1="5" y1="320" x2="45" y2="320"/>
@@ -22,5 +21,5 @@
     <line x1="19" y1="145" x2="32" y2="145"/>
     <line x1="19" y1="115" x2="32" y2="115"/>
     <line x1="19" y1="85" x2="32" y2="85"/>
-   </g>
+  </g>
 </svg>

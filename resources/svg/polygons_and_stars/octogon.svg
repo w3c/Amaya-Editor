@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg"
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="210"
    style="fill:none;stroke:#000000">
   <title>Octogon</title>
   <polygon points="200.0,100.0 170.7106781186548,170.7106781186548 100.0,200.0 29.28932188134524,170.7106781186548 0.0,100.0 29.28932188134524,29.28932188134524 100.0,0.0 170.7106781186548,29.28932188134524"/>

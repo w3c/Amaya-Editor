@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="292" height="304"
+     style="stroke: #000000; fill: none;">
   <title>3-way arrow callout</title>
-  <polygon points="65,80 40,80 90,0 140,80 115,80 115,100 180,100 180,125 200,125 200,100 290,150 200,200 200,175  180,175 180,200 115,200 115,220 140,220 90,300 40,220 65,220 65,200 0,200 0,100 65,100 "/>
+  <polygon
+           points="65,80 40,80 90,0 140,80 115,80 115,100 180,100 180,125 200,125 200,100 290,150 200,200 200,175  180,175 180,200 115,200 115,220 140,220 90,300 40,220 65,220 65,200 0,200 0,100 65,100 "/>
 </svg>

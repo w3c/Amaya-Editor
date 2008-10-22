@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="373" height="105"
+     style="stroke: #000000; fill: none;">
   <title>Double Arrow callout</title>
   <polygon
            points="100,0 100,25 120,25 120,0 250,0 250,25 270,25 270,0 370,50 270,100 270,75 250,75 250,100 120,100 120,75 100,75 100,100 0,50"/>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="fill:none;stroke:#000000;">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="123"
+     style="fill:none;stroke:#000000;">
   <title>Test tube</title>
   <!-- test tube -->
   <path fill="none" d="M 0,0 L 5,5 5,110 A 5,7 1 1 0 15,110 L 15,5 20,0 "/>

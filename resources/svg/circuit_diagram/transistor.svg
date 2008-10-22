@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="136" height="146"
+     style="stroke: #000000; fill: none;">
   <title>transistor</title>
   <!-- circle -->
   <circle cx="80" cy="75" r="35"/>
-   <!-- lines -->
-  <path d="M 70,80 L 90,100 L 90,135 M 70,70 L 90,50 L 90,15 M 70,75 L 15,75 M 70,55 L 70,95" fill="none"/>
-   <!-- arrow head -->
-  <path d="M 5,0 L 0,10 10,10 z" style="fill:black;" transform="rotate(-135,53,20) "/>
+  <!-- lines -->
+  <path
+        d="M 70,80 L 90,100 L 90,135 M 70,70 L 90,50 L 90,15 M 70,75 L 15,75 M 70,55 L 70,95"
+        fill="none"/>
+  <!-- arrow head -->
+  <path d="M 5,0 L 0,10 10,10 z" style="fill:black;"
+        transform="scale(-1,1) rotate(135,-48,17.9289) "/>
 </svg>

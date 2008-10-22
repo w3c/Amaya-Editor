@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="204" height="354"
+     style="stroke: #000000; fill: none;">
   <title>2-way rounded arrow</title>
   <path
         d="M 0,150 L 50,150 A 75 75 0 0 0 125,80 L 100,80 L 150,0 L 200,80 L 175,80 A 100 100 0 0 1 130,175 A 100 100 0 0 1 175,270 L 200,270 L 150,350 L 100,270 L 125,270 A 75 75 0 0 0 50,200 L 0,200 z"/>

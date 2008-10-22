@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
        "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" style="stroke: #000000; fill: none;">
+<svg xmlns="http://www.w3.org/2000/svg" width="239" height="248"
+     style="stroke: #000000; fill: none;">
   <title>pyramid</title>
-  <!-- base --> 
+  <!-- base -->
   <polygon points="0,174 121,244 239,174 117,104"/>
   <!-- back, right -->
   <polygon points="117,104 133,0 239,174"/>
@@ -12,5 +13,6 @@
   <!-- front, left -->
   <polygon points="121,244 133,0 0,174"/>
   <!-- front, right -->
-  <polygon points="121,244 133,0 239,174"/>
+  <polygon points="0,0 0,203 137,0"
+           transform="translate(239,174) skewY(-30.6773) scale(-0.860055,-1.16264) skewX(31.1703) "/>
 </svg>
