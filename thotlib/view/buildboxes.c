@@ -110,6 +110,7 @@ ThotBool IsSVGComponent (PtrElement pEl)
       pEl->ElStructSchema->SsName &&
       !strcmp (pEl->ElStructSchema->SsName,"SVG") &&
       pEl->ElParent && pEl->ElParent->ElStructSchema &&
+      pEl->ElParent->ElParent != NULL &&
       pEl->ElParent->ElStructSchema->SsName &&
       !strcmp (pEl->ElParent->ElStructSchema->SsName,"SVG"))
      // the element and its parent are SVG elements
