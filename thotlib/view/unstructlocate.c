@@ -179,15 +179,14 @@ int GetBoxDistance (PtrBox pBox, PtrFlow pFlow, int xRef, int yRef,
   x += width;
   height /= 2;
   y += height;
-  if (pCell)
-    {
-      if (xRef >= xcell && xRef <= xcell + wcell &&
-          yRef >= ycell && yRef <= ycell + hcell)
-        *matchCell = pCell->AbElement;
-      value = GetDistance (xRef - x, width) + 10 * GetDistance (yRef - y, height);
-    }
-  else
-    value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
+  if (pCell &&
+      (xRef >= xcell && xRef <= xcell + wcell &&
+       yRef >= ycell && yRef <= ycell + hcell))
+    *matchCell = pCell->AbElement;
+
+  if (*matchCell)
+    ratio = 10;
+  value = GetDistance (xRef - x, width) + ratio * GetDistance (yRef - y, height);
   return (value);
 }
 
