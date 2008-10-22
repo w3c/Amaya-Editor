@@ -105,15 +105,19 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler (AmayaFrame * p_frame,
       /* attach this handler to the canvas */
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
       p_canvas->PushEventHandler(this);
-	  // need to grab the mouse before changing the cursor on Windows
+#ifdef _WINDOWS
+      // need to grab the mouse before changing the cursor on Windows
       p_canvas->CaptureMouse();
+#endif /* _WINDOWS */
       if(shape == 9 || shape == 10)
         /* assign a ibeam mouse cursor */
         p_canvas->SetCursor( wxCursor(wxCURSOR_IBEAM) );
       else
         /* assign a cross mouse cursor */
         p_canvas->SetCursor( wxCursor(wxCURSOR_CROSS) );
-      //p_canvas->CaptureMouse();
+#ifndef _WINDOWS
+      p_canvas->CaptureMouse();
+#endif /* _WINDOWS */
     }
 
   if(shape == 42)
