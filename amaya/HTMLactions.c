@@ -2787,12 +2787,14 @@ void FreeDocumentResource (Document doc)
     ParsedDoc = 0;
   if (DocumentURLs[doc] != NULL)
     {
-      if (DocumentTypes[doc] != docLog)
+      /* remove the temporary copy of the file */
+      tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
+      TtaFileUnlink (tempdocument);
+      TtaFreeMemory (tempdocument);
+      if (DocumentTypes[doc] == docLog)
+        DocumentSource[doc] = 0;
+      else
         {
-          /* remove the temporary copy of the file */
-          tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-          TtaFileUnlink (tempdocument);
-          TtaFreeMemory (tempdocument);
           /* remove the Parsing errors file */
           RemoveParsingErrors (doc);
           ClearMathFrame (doc);
@@ -2816,9 +2818,7 @@ void FreeDocumentResource (Document doc)
       if (HighlightDocument == doc)
         ResetHighlightedElement ();
 
-      if (DocumentTypes[doc] == docLog)
-        DocumentSource[doc] = 0;
-      else
+      if (DocumentTypes[doc] != docLog)
         {
           /* switch off the button Show Log file */
           UpdateLogFile (doc, FALSE);

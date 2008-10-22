@@ -91,6 +91,7 @@ static ThotBool     NewXML = TRUE;
 static ThotBool     BADMimeType = FALSE;
 static ThotBool     CriticConfirm = FALSE;
 static ThotBool     CriticCheckError = FALSE;
+static ThotBool     CriticLogError = FALSE;
 /* the open document is the Amaya default page */
 static ThotBool     WelcomePage = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the
@@ -1151,7 +1152,12 @@ void UpdateEditorMenus (Document doc)
 void ShowLogFile (Document doc, View view)
 {
   char     fileName[500];
-  int      newdoc;
+  int      newdoc, d;
+
+  // prevent multiple open
+  if (CriticLogError)
+    return;
+  CriticLogError = TRUE;
 
   if (DocumentTypes[doc] == docSource)
     doc = GetDocFromSource (doc);
@@ -1159,6 +1165,15 @@ void ShowLogFile (Document doc, View view)
     {
       sprintf (fileName, "%s%c%d%cPARSING.ERR",
                TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      // check if the log file is already open
+      for (d = 1; d < MAX_DOCUMENTS; d++)
+        {
+          if (DocumentURLs[d] && !strcmp (DocumentURLs[d], fileName))
+            {
+              CriticLogError = FALSE;
+              return;
+            }
+        }
       newdoc = GetAmayaDoc (fileName, NULL, 0, doc, CE_LOG, FALSE,
                             NULL, NULL);
       /* store the relation with the original document */
@@ -1168,6 +1183,7 @@ void ShowLogFile (Document doc, View view)
           TtaSetStatus (newdoc, 1, "   ", NULL);
         }
     }
+  CriticLogError = FALSE;
 }
 
 /*----------------------------------------------------------------------
