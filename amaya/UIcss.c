@@ -813,7 +813,7 @@ static void GenerateStyle (const char * data , ThotBool add)
           if (open)
             TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
           // remove style rules
-          len = TtaGetTextAttributeLength (attr);
+          len = TtaGetTextAttributeLength (attr) + 1;
           value = (char *)TtaGetMemory (len);
           TtaGiveTextAttributeValue (attr, value, &len);
           ParseHTMLSpecificStyle (el, value, doc, 1000, TRUE);

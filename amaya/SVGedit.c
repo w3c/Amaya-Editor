@@ -1634,11 +1634,11 @@ void CreateGraphicElement (Document doc, View view, int entry)
   SSchema	          docSchema, svgSchema;
   DisplayMode       dispMode;
   Language          lang;
-  float             valx,valy;
   int		            c1, i, dir, svgDir, profile;
   int               docModified, error, w, h;
   int               x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
   int               tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
+  float             valx, valy;
   _ParserData       context;
   char              buffer[500], buffer2[200];
   ThotBool	        found, newSVG = FALSE, replaceGraph = FALSE;
@@ -2027,6 +2027,41 @@ void CreateGraphicElement (Document doc, View view, int entry)
           parent = TtaSearchTypedElement(elType, SearchForward, parent);
           if (parent)
             {
+              // get the width and height of the template
+              attrType.AttrTypeNum = SVG_ATTR_width_;
+              attr = TtaGetAttribute (parent, attrType);
+              if (attr)
+                {
+                  i = 50;
+                  TtaGiveTextAttributeValue (attr, buffer, &i);
+                 sscanf (buffer, "%d", &w);
+                }
+              else
+                w = 200;
+              attrType.AttrTypeNum = SVG_ATTR_height_;
+              attr = TtaGetAttribute (parent, attrType);
+              if (attr)
+                {
+                  i = 50;
+                  TtaGiveTextAttributeValue (attr, buffer, &i);
+                  sscanf (buffer, "%d", &h);
+                }
+              else
+                h = 200;
+
+              if (isFormattedView)
+                created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
+                                            1, &x1, &y1, &x2, &y2,
+                                            &x3, &y3, &x4, &y4, &lx, &ly);
+              else
+                {
+                  /* TODO: add a dialog box ? */
+                  created = FALSE;
+                  x1 = y1 = 0;
+                  lx = 500;
+                  ly = 300;
+                }
+              
               child = TtaGetFirstChild(parent);
               next = NULL;
               while (child)
@@ -2036,41 +2071,28 @@ void CreateGraphicElement (Document doc, View view, int entry)
                     TtaInsertSibling (elem, next, FALSE, doc);
                   else
                     TtaInsertFirstChild (&elem, newEl, doc);
+                  if (created)
+                    // adapt to the current given surrounding box
+                    // UpdateSVGElement (doc, elem, w, h, x1, y1, lx - w, ly - h);
                   next = elem;
                   TtaNextSibling(&child);
                 }
-
-              if (isFormattedView)
+              if (created)
                 {
-                  created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
-                                              1, &x1, &y1, &x2, &y2,
-                                              &x3, &y3, &x4, &y4, &lx, &ly);
-                  if (created)
-                    {
-                      /* create a transform=translate attribute */
-                      TtaGiveBoxSize (newEl, doc, 1, UnPixel, &w, &h);
-                      valx = valy = 1;
-                      if (w)
-                        valx = (float)(x2-x1) / (float)w;
-                      if (h)
-                        valy = (float)(y3-y1) / (float)h;
-                      //TtaGiveBoxPosition (newEl, doc, 1, UnPixel, TRUE, &x4, &y4);
-                      attrType.AttrTypeNum = SVG_ATTR_transform;
-                      attr = TtaNewAttribute (attrType);
-                      TtaAttachAttribute (newEl, attr, doc);
-                      sprintf(buffer, "translate(%d,%d) scale(%f,%f)", x1, y1, valx,valy);
-                      TtaSetAttributeText (attr, buffer, newEl, doc);
-                      ParseTransformAttribute (attr, newEl, doc, FALSE);
-                    }
+                  valx = valy = 1;
+                  if (w)
+                    valx = (float)lx / (float)w;
+                  if (h)
+                    valy = (float)ly / (float)h;
+                  //TtaGiveBoxPosition (newEl, doc, 1, UnPixel, TRUE, &x4, &y4);
+                  attrType.AttrTypeNum = SVG_ATTR_transform;
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (newEl, attr, doc);
+                  sprintf(buffer, "translate(%d,%d) scale(%f,%f)", x1, y1, valx,valy);
+                  TtaSetAttributeText (attr, buffer, newEl, doc);
+                  ParseTransformAttribute (attr, newEl, doc, FALSE);
                 }
-              else
-                {
-                  /* TODO: add a dialog box ? */
-                  x1 = y1 = 0;
-                  lx = 500;
-                  ly = 300;
-                  created = TRUE;
-                }
+              created = TRUE;
             }
           TtaRemoveDocumentReference (tmpDoc);
 
@@ -2586,7 +2608,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
       if (created)
         {
-
           if (replaceGraph)
             {
               TtaRegisterElementDelete (sibling, doc);
@@ -3467,10 +3488,392 @@ void UpdateTransformMatrix(Document doc, Element el)
 }
 
 /*----------------------------------------------------------------------
+  UpdateSVGElement updates the element after a move of dx,dy and a
+  resize of dw,dh.
+  -----------------------------------------------------------------------*/
+void UpdateSVGElement (Document doc, Element el, int oldw, int oldh,
+                          int dx, int dy, int dw, int dh)
+{
+  char         *value = NULL, *text = NULL, *ptr;
+  char          buff[10], command;
+  Attribute     attr;
+  AttributeType attrType;
+  ElementType   elType;
+  Element       child;
+  float         ratiow, ratioh;
+  int           x, y, x1, y1, x2, y2, len, i = 0;
+  int           rotation, largeArcFlag, sweepFlag;
+  ThotBool      error = FALSE, relative;
+
+  if (el == NULL)
+    return;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    return;
+  else if (elType.ElTypeNum == SVG_EL_g || elType.ElTypeNum == SVG_EL_SVG)
+    {
+      child = TtaGetFirstChild(el);
+      while (child)
+        {
+          UpdateSVGElement (doc, child, oldw, oldh, dx, dy, dw, dh);
+          TtaNextSibling (&child);
+        }
+      return;
+    }
+
+  // ratio
+  if (oldw)
+    ratiow = (float)dw / (float)oldw;
+  else
+    ratiow = 0;
+  if (oldh)
+    ratioh = (float)dh / (float)oldh;
+  else
+    ratioh = 0;
+  if (elType.ElTypeNum == SVG_EL_path)
+    {
+      /* It's a Path */
+      attrType.AttrTypeNum = SVG_ATTR_d;
+      attr = TtaGetAttribute (el, attrType);
+      len = TtaGetTextAttributeLength (attr) + 1;
+      value = (char *)TtaGetMemory (len);
+      TtaGiveTextAttributeValue (attr, value, &len);
+      len *= 2;
+      text = (char *)TtaGetMemory (len);
+      memset (text, 0 ,len);
+      ptr = value;
+      while (*ptr != EOS && !error)
+        {
+          relative = TRUE;
+          command = *ptr;
+          ptr++;
+          x = y = x1 = y1 = x2 = y2 = 0;
+          ptr = (char*)TtaSkipBlanks (ptr);
+          switch (command)
+            {
+            case 'M':
+            case 'L':
+            case 'T':
+              relative = FALSE;
+            case 'm':
+              /* moveto */
+            case 'l':
+              /* lineto */
+            case 't':
+              /* smooth quadratic Bezier curveto */
+              ptr = SVG_GetNumber (ptr, &x, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y, &error);
+              break;
+
+            case 'Z':
+            case 'z':
+              /* close path */
+              break;
+
+            case 'H':
+              relative = FALSE;
+            case 'h':
+              /* horizontal lineto */
+              ptr = SVG_GetNumber (ptr, &x, &error);
+              break;
+
+            case 'V':
+              relative = FALSE;
+            case 'v':
+              /* vertical lineto */
+              ptr = SVG_GetNumber (ptr, &y, &error);
+              break;
+
+            case 'C':
+              relative = FALSE;
+            case 'c':
+              /* curveto */
+              ptr = SVG_GetNumber (ptr, &x, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &x1, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y1, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &x2, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y2, &error);
+              break;
+
+            case 'S':
+            case 'Q':
+              relative = FALSE;
+            case 's':
+              /* smooth curveto */
+            case 'q':
+              /* quadratic Bezier curveto */
+              ptr = SVG_GetNumber (ptr, &x, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &x1, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y1, &error);
+              break;
+
+            case 'A':
+              relative = FALSE;
+            case 'a':
+              /* elliptical arc */
+              ptr = SVG_GetNumber (ptr, &x, &error);    /* must be non-negative */
+              if (x < 0)
+                error = TRUE;
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y, &error);  /* must be non-negative */
+              if (y < 0)
+                error = TRUE;
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &rotation, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &largeArcFlag, &error);   /* must be "0" or "1" */
+              if (largeArcFlag != 0 && largeArcFlag != 1)
+                error = TRUE;
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &sweepFlag, &error); /* must be "0" or "1" */
+              if (sweepFlag != 0 && sweepFlag != 1)
+                error = TRUE;
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &x1, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y1, &error);
+               break;
+
+            default:
+              /* unknown command. error. stop parsing. */
+              ptr = SVG_GetNumber (ptr, &x, &error);
+              if (!error)
+                ptr = SVG_GetNumber (ptr, &y, &error);              
+              x += (int)(ratiow * x);
+              y += (int)(ratioh * y);
+              if (!relative)
+                {
+                  x += dx;
+                  y += dy;
+                }
+                sprintf (&text[i], "%d,%d", x, y);
+              break;
+              }
+
+          if (!error)
+            {
+              x += (int)(ratiow * x);
+              y += (int)(ratioh * y);
+              if (!relative)
+                {
+                  x += dx;
+                  y += dy;
+                }
+              // todo check the length of text
+              if (command == 'Z' || command == 'z')
+                sprintf (&text[i], "%c", command);
+              else if (command == 'H' || command == 'h')
+                sprintf (&text[i], "%c %d", command, x);
+              else if (command == 'V' || command == 'v')
+                sprintf (&text[i], "%c %d", command, y);
+              else
+                sprintf (&text[i], "%c %d,%d", command, x, y);
+              i += strlen (&text[i]);
+              if (command == 'A' || command == 'a')
+                {
+                  sprintf (&text[i], " %d %d %d ", rotation, largeArcFlag, sweepFlag);
+                  i += strlen (&text[i]);
+                }
+              if (command == 'C' || command == 'c' ||
+                  command == 'S' || command == 's' ||
+                  command == 'Q' || command == 'q'||
+                  command == 'A' || command == 'a')
+                {
+                  x1 += (int)(ratiow * x1);
+                  y1 += (int)(ratioh * y1);
+                  if (!relative)
+                    {
+                      x1 += dx; y1 += dy;
+                    }
+                  sprintf (&text[i], " %d,%d", x1, y1);
+                  i += strlen (&text[i]);
+                }
+              if (command == 'C' || command == 'c')
+                {
+                  x2 += (int)(ratiow * x2);
+                  y2 += (int)(ratioh * y2);
+                  if (!relative)
+                    {
+                      x1 += dx; y1 += dy;
+                      x2 += dx; y2 += dy;
+                    }
+                  sprintf (&text[i], " %d,%d", x2, y2);
+                  i += strlen (&text[i]);
+                }
+              if (*ptr  == ',')
+                ptr++;
+              ptr = (char*)TtaSkipBlanks (ptr);
+              if (*ptr != EOS)
+                text[i++] = SPACE;
+            }
+        }
+      
+      if (!error)
+        {
+          TtaSetAttributeText (attr, text, el, doc);
+          TtaRemovePathData (doc, el);
+          ParsePathDataAttribute (attr, el, doc, TRUE);
+        }
+#ifdef AMYA_DEBUG
+printf ("------------->UpdateSVGElement\nold=\"%s\"\nnew=\"%s\"\n",value,text);
+#endif
+      TtaFreeMemory (text);
+      TtaFreeMemory (value);
+    }
+  else if (elType.ElTypeNum == SVG_EL_line_)
+    {
+      attrType.AttrTypeNum = SVG_ATTR_x1;
+      len = 10;
+      attr = TtaGetAttribute (el, attrType);
+      TtaGiveTextAttributeValue (attr, buff, &len);
+      sscanf (buff, "%d", &x);
+      sprintf (buff, "%d", (int)(ratiow * x) + dx);
+      TtaSetAttributeText (attr, buff, el, doc);
+      ParseCoordAttribute (attr, el, doc);
+
+      attrType.AttrTypeNum = SVG_ATTR_y1;
+      len = 10;
+      attr = TtaGetAttribute (el, attrType);
+      TtaGiveTextAttributeValue (attr, buff, &len);
+      sscanf (buff, "%d", &y);
+      sprintf (buff, "%d", (int)(ratioh * y) + dy);
+      TtaSetAttributeText (attr, buff, el, doc);
+      ParseCoordAttribute (attr, el, doc);
+
+      attrType.AttrTypeNum = SVG_ATTR_x2;
+      len = 10;
+      attr = TtaGetAttribute (el, attrType);
+      TtaGiveTextAttributeValue (attr, buff, &len);
+      sscanf (buff, "%d", &x);
+      sprintf (buff, "%d", (int)(ratiow * x) + dx);
+      TtaSetAttributeText (attr, buff, el, doc);
+      ParseCoordAttribute (attr, el, doc);
+
+      attrType.AttrTypeNum = SVG_ATTR_y2;
+      len = 10;
+      attr = TtaGetAttribute (el, attrType);
+      TtaGiveTextAttributeValue (attr, buff, &len);
+      sscanf (buff, "%d", &y);
+      sprintf (buff, "%d", (int)(ratioh * y) + dy);
+      TtaSetAttributeText (attr, buff, el, doc);
+      ParseCoordAttribute (attr, el, doc);
+
+     value = ConvertLineAttributesToPath (el);
+     ParsePointsBuffer (value, GetGraphicsUnit (el), doc);
+     TtaFreeMemory (value);
+    }
+  else if (elType.ElTypeNum == SVG_EL_polyline ||
+          elType.ElTypeNum == SVG_EL_polygon)
+    {
+      attrType.AttrTypeNum = SVG_ATTR_points;
+      attr = TtaGetAttribute (el, attrType);
+      len = TtaGetTextAttributeLength (attr) + 1;
+      value = (char *)TtaGetMemory (len);
+      TtaGiveTextAttributeValue (attr, value, &len);
+      len *= 2;
+      text = (char *)TtaGetMemory (len);
+      memset (text, 0 ,len);
+      ptr = value;
+      while (*ptr != EOS && !error)
+        {
+          x = y = 0;
+          ptr = SVG_GetNumber (ptr, &x, &error);
+          if (*ptr == EOS)
+            error = TRUE;
+          else if (*ptr == ',')
+            {
+              ptr++;
+              ptr = (char*)TtaSkipBlanks (ptr);
+            }
+          if (!error)
+            ptr = SVG_GetNumber (ptr, &y, &error);
+          if (!error)
+            {
+              // now convert values
+              x += (int)(ratiow * x) + dx;
+              y += (int)(ratioh * y) + dy;
+              // todo check the length of text
+              sprintf (&text[i], "%d,%d", x, y);
+              i += strlen (&text[i]);
+              if (*ptr  == ',')
+                ptr++;
+              ptr = (char*)TtaSkipBlanks (ptr);
+              if (*ptr != EOS)
+                text[i++] = SPACE;
+            }
+        }
+      if (!error)
+        {
+          TtaSetAttributeText (attr, text, el, doc);
+          ParsePointsAttribute (attr, el, doc);
+        }
+#ifdef AMYA_DEBUG
+printf ("------------->UpdateSVGElement\nold=\"%s\"\nnew=\"%s\"\n",value,text);
+#endif
+      TtaFreeMemory (text);
+      TtaFreeMemory (value);
+    }
+  else if (elType.ElTypeNum == SVG_EL_rect ||
+           elType.ElTypeNum == SVG_EL_circle_ ||
+           elType.ElTypeNum == SVG_EL_ellipse ||
+           elType.ElTypeNum == SVG_EL_image ||
+           elType.ElTypeNum == SVG_EL_foreignObject)
+    {
+      attrType.AttrTypeNum = SVG_ATTR_x;
+      len = 10;
+      attr = TtaGetAttribute (el, attrType);
+      TtaGiveTextAttributeValue (attr, buff, &len);
+      sscanf (buff, "%d", &x);
+      sprintf (buff, "%d", x + dx);
+      TtaSetAttributeText (attr, buff, el, doc);
+
+      attrType.AttrTypeNum = SVG_ATTR_y;
+      len = 10;
+      attr = TtaGetAttribute (el, attrType);
+      TtaGiveTextAttributeValue (attr, buff, &len);
+      sscanf (buff, "%d", &y);
+      sprintf (buff, "%d", y + dy);
+
+      TtaSetAttributeText (attr, buff, el, doc);
+      if (elType.ElTypeNum != SVG_EL_image &&
+          elType.ElTypeNum != SVG_EL_foreignObject)
+        {
+          attrType.AttrTypeNum = SVG_ATTR_width_;
+          len = 10;
+          attr = TtaGetAttribute (el, attrType);
+          TtaGiveTextAttributeValue (attr, buff, &len);
+          sscanf (buff, "%d", &x);
+          sprintf (buff, "%d", x + dw);
+          TtaSetAttributeText (attr, buff, el, doc);
+          
+          attrType.AttrTypeNum = SVG_ATTR_height_;
+          len = 10;
+          attr = TtaGetAttribute (el, attrType);
+          TtaGiveTextAttributeValue (attr, buff, &len);
+          sscanf (buff, "%d", &y);
+          sprintf (buff, "%d", y + dh);
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
   UpdatePointsOrPathAttribute
   ----------------------------------------------------------------------*/
-void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
-                                 ThotBool withUndo)
+void UpdatePointsOrPathAttribute (Document doc, Element el, int w, int h,
+                                  ThotBool withUndo)
 {
   char         *buffer = NULL, value[20];
   Attribute     attr;
@@ -3511,7 +3914,6 @@ void UpdatePointsOrPathAttribute(Document doc, Element el, int w, int h,
 
   /* Get the attribute value from the GRAPHICS leaf */
   leaf = GetGraphicsUnit(el);
-
   if(isPath)
     buffer = TtaGetPathAttributeValue (leaf, w, h);
   else
@@ -3622,11 +4024,10 @@ void UpdateShapeElement(Document doc, Element el,
     TtaSetDisplayMode (doc, DeferredDisplay);
 
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
   /* Apply the translate */
   UpdateTransformMatrix(doc, el);
 
-  switch(shape)
+  switch (shape)
     {
     case 'g':
       UpdateWidthHeightAttribute (el, doc, width, TRUE);

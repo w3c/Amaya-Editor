@@ -52,6 +52,9 @@ extern void CreateCSSRules ( Element el,
                              Document doc );
 extern void SVGElementCreated ( Element el,
                                 Document doc );
+extern char *SVG_GetNumber ( char *ptr,
+                             int* number,
+                             ThotBool *error );
 extern void ParsePointsBuffer ( char *text,
                                 Element leaf,
                                 Document doc );
@@ -165,6 +168,9 @@ extern void CreateCSSRules ( Element el,
                                Document doc );
 extern void SVGElementCreated ( Element el,
                                   Document doc );
+extern char *SVG_GetNumber ( char *ptr,
+                               int* number,
+                               ThotBool *error );
 extern void ParsePointsBuffer ( char *text,
                                   Element leaf,
                                   Document doc );

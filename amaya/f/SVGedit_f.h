@@ -32,6 +32,14 @@ extern void TransformGraphicElement ( Document doc,
                                       int entry );
 extern void UpdateTransformMatrix ( Document doc,
                                     Element el );
+extern void UpdateSVGElement ( Document doc,
+                               Element el,
+                               int oldw,
+                               int oldh,
+                               int dx,
+                               int dy,
+                               int dw,
+                               int dh );
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                           Element el,
                                           int w,
@@ -220,6 +228,14 @@ extern void TransformGraphicElement ( Document doc,
                                         int entry );
 extern void UpdateTransformMatrix ( Document doc,
                                       Element el );
+extern void UpdateSVGElement ( Document doc,
+                                 Element el,
+                                 int oldw,
+                                 int oldh,
+                                 int dx,
+                                 int dy,
+                                 int dw,
+                                 int dh );
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                             Element el,
                                             int w,

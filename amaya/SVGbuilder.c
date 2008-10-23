@@ -1823,7 +1823,7 @@ static void InstanciateUseElements (Element el, Document doc)
   token to be parsed.
   If the string to be parsed is not a valid number, set error to TRUE.
   ----------------------------------------------------------------------*/
-static char *GetNumber (char *ptr, int* number, ThotBool *error)
+char *SVG_GetNumber (char *ptr, int* number, ThotBool *error)
 {
   int      integer, nbdecimal, exponent, i;
   char     *decimal;
@@ -1978,7 +1978,7 @@ void ParsePointsBuffer (char *text, Element leaf, Document doc)
       while (*ptr != EOS && !error)
         {
           x = y = 0;
-          ptr = GetNumber (ptr, &x, &error);
+          ptr = SVG_GetNumber (ptr, &x, &error);
           if (x > maxX)
             maxX = x;
           if (x < minX)
@@ -1992,7 +1992,7 @@ void ParsePointsBuffer (char *text, Element leaf, Document doc)
             }
           if (!error)
             {
-              ptr = GetNumber (ptr, &y, &error);
+              ptr = SVG_GetNumber (ptr, &y, &error);
               if (y > maxY)
                 maxY = y;
               if (y < minY)
@@ -2357,16 +2357,16 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           CreateCSSRules (el, doc);
           break;
 
-	case SVG_EL_defs:
-	case SVG_EL_mask:
-	case SVG_EL_pattern:
-	case SVG_EL_filter:
-	case SVG_EL_feImage:
-	case SVG_EL_font_:
-	case SVG_EL_glyph:
-	case SVG_EL_missing_glyph:
-	  ProcessMarkers (el, doc);
-	  break;
+        case SVG_EL_defs:
+        case SVG_EL_mask:
+        case SVG_EL_pattern:
+        case SVG_EL_filter:
+        case SVG_EL_feImage:
+        case SVG_EL_font_:
+        case SVG_EL_glyph:
+        case SVG_EL_missing_glyph:
+          ProcessMarkers (el, doc);
+          break;
 
         case SVG_EL_line_:
           /* create (or get) the Graphics leaf according to the element type */
@@ -3537,21 +3537,21 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
       while (command != EOS && !error)
         {
           relative = TRUE;
+          ptr = (char*)TtaSkipBlanks (ptr);
           switch (command)
             {
             case 'M':
               relative = FALSE;
             case 'm':
               /* moveto */
-              ptr = (char*)TtaSkipBlanks (ptr);
               if (relative)
                 {
                   x = xcur;
                   y = ycur;
                 }
-              ptr = GetNumber (ptr, &xcur, &error);
+              ptr = SVG_GetNumber (ptr, &xcur, &error);
               if (!error)
-                ptr = GetNumber (ptr, &ycur, &error);
+                ptr = SVG_GetNumber (ptr, &ycur, &error);
               if (!error)
                 {
                   if (relative)
@@ -3570,29 +3570,28 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
             case 'z':
               /* close path */
               /* draw a line from (xcur, ycur) to (xinit, yinit) */
-	      if(!(xcur == xinit && ycur == yinit))
-		{
-		  seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit,
-					   newSubpath);
-		  if (IsDrawn)
-		    TtaAppendPathSeg (leaf, seg, doc);
-		  else
-		    TtaAppendPathSegToAnim (anim_seg, seg, doc);
-
-		  newSubpath = FALSE;
-		  xcur = xinit;
-		  ycur = yinit;
-		}
+              if(!(xcur == xinit && ycur == yinit))
+                {
+                  seg = TtaNewPathSegLine (xcur, ycur, xinit, yinit,
+                                           newSubpath);
+                  if (IsDrawn)
+                    TtaAppendPathSeg (leaf, seg, doc);
+                  else
+                    TtaAppendPathSegToAnim (anim_seg, seg, doc);
+                  
+                  newSubpath = FALSE;
+                  xcur = xinit;
+                  ycur = yinit;
+                }
               break;
 
             case 'L':
               relative = FALSE;
             case 'l':
               /* lineto */
-              ptr = (char*)TtaSkipBlanks (ptr);
-              ptr = GetNumber (ptr, &x, &error);
+              ptr = SVG_GetNumber (ptr, &x, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y, &error);
+                ptr = SVG_GetNumber (ptr, &y, &error);
               if (!error)
                 {
                   if (relative)
@@ -3616,8 +3615,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'h':
               /* horizontal lineto */
-              ptr = (char*)TtaSkipBlanks (ptr);
-              ptr = GetNumber (ptr, &x, &error);
+              ptr = SVG_GetNumber (ptr, &x, &error);
               if (!error)
                 {
                   if (relative)
@@ -3637,8 +3635,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'v':
               /* vertical lineto */
-              ptr = (char*)TtaSkipBlanks (ptr);
-              ptr = GetNumber (ptr, &y, &error);
+              ptr = SVG_GetNumber (ptr, &y, &error);
               if (!error)
                 {
                   if (relative)
@@ -3658,18 +3655,17 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'c':
               /* curveto */
-              ptr = (char*)TtaSkipBlanks (ptr);
-              ptr = GetNumber (ptr, &x1, &error);
+              ptr = SVG_GetNumber (ptr, &x1, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y1, &error);
+                ptr = SVG_GetNumber (ptr, &y1, &error);
               if (!error)
-                ptr = GetNumber (ptr, &x2, &error);
+                ptr = SVG_GetNumber (ptr, &x2, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y2, &error);
+                ptr = SVG_GetNumber (ptr, &y2, &error);
               if (!error)
-                ptr = GetNumber (ptr, &x, &error);
+                ptr = SVG_GetNumber (ptr, &x, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y, &error);
+                ptr = SVG_GetNumber (ptr, &y, &error);
               if (!error)
                 {
                   if (relative)
@@ -3702,14 +3698,13 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 's':
               /* smooth curveto */
-              ptr = (char*)TtaSkipBlanks (ptr);
-              ptr = GetNumber (ptr, &x2, &error);
+              ptr = SVG_GetNumber (ptr, &x2, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y2, &error);
+                ptr = SVG_GetNumber (ptr, &y2, &error);
               if (!error)
-                ptr = GetNumber (ptr, &x, &error);
+                ptr = SVG_GetNumber (ptr, &x, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y, &error);
+                ptr = SVG_GetNumber (ptr, &y, &error);
               if (!error)
                 {
                   if (relative)
@@ -3752,14 +3747,13 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'q':
               /* quadratic Bezier curveto */
-              ptr = (char*)TtaSkipBlanks (ptr);
-              ptr = GetNumber (ptr, &x1, &error);
+              ptr = SVG_GetNumber (ptr, &x1, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y1, &error);
+                ptr = SVG_GetNumber (ptr, &y1, &error);
               if (!error)
-                ptr = GetNumber (ptr, &x, &error);
+                ptr = SVG_GetNumber (ptr, &x, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y, &error);
+                ptr = SVG_GetNumber (ptr, &y, &error);
               if (!error)
                 {
                   if (relative)
@@ -3789,10 +3783,9 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 't':
               /* smooth quadratic Bezier curveto */
-              ptr = (char*)TtaSkipBlanks (ptr);
-              ptr = GetNumber (ptr, &x, &error);
+              ptr = SVG_GetNumber (ptr, &x, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y, &error);
+                ptr = SVG_GetNumber (ptr, &y, &error);
               if (!error)
                 {
                   if (relative)
@@ -3832,30 +3825,29 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
               relative = FALSE;
             case 'a':
               /* elliptical arc */
-              ptr = (char*)TtaSkipBlanks (ptr);
-              ptr = GetNumber (ptr, &rx, &error);    /* must be non-negative */
+              ptr = SVG_GetNumber (ptr, &rx, &error);    /* must be non-negative */
               if (rx < 0)
                 error = TRUE;
               if (!error)
-                ptr = GetNumber (ptr, &ry, &error);  /* must be non-negative */
+                ptr = SVG_GetNumber (ptr, &ry, &error);  /* must be non-negative */
               if (ry < 0)
                 error = TRUE;
               if (!error)
-                ptr = GetNumber (ptr, &xAxisRotation, &error);
+                ptr = SVG_GetNumber (ptr, &xAxisRotation, &error);
               if (!error)
-                ptr = GetNumber (ptr, &largeArcFlag, &error);  
+                ptr = SVG_GetNumber (ptr, &largeArcFlag, &error);  
               /* must be "0" or "1" */
               if (largeArcFlag != 0 && largeArcFlag != 1)
                 error = TRUE;
               if (!error)
-                ptr = GetNumber (ptr, &sweepFlag, &error);
+                ptr = SVG_GetNumber (ptr, &sweepFlag, &error);
               /* must be "0" or "1" */
               if (sweepFlag != 0 && sweepFlag != 1)
                 error = TRUE;
               if (!error)
-                ptr = GetNumber (ptr, &x, &error);
+                ptr = SVG_GetNumber (ptr, &x, &error);
               if (!error)
-                ptr = GetNumber (ptr, &y, &error);
+                ptr = SVG_GetNumber (ptr, &y, &error);
               if (!error)
                 {
                   if (relative)

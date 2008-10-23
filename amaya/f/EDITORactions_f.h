@@ -236,8 +236,6 @@ extern void DoDeleteAnchor ( Document doc,
                              ThotBool noCallback );
 extern void DeleteAnchor ( Document doc,
                            View view );
-extern void FlushCache ( Document doc,
-                         View view );
 extern void ConfigAmaya ( Document doc,
                           View view );
 extern void SaveOptions ( Document doc,
@@ -517,8 +515,6 @@ extern void DoDeleteAnchor ( Document doc,
                                ThotBool noCallback );
 extern void DeleteAnchor ( Document doc,
                              View view );
-extern void FlushCache ( Document doc,
-                           View view );
 extern void ConfigAmaya ( Document doc,
                             View view );
 extern void SaveOptions ( Document doc,
