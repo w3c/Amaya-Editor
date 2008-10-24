@@ -2062,6 +2062,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   ly = 300;
                 }
               
+              /* mark the new Coordinate System */
+              TtaSetElCoordinateSystem (newEl);
               child = TtaGetFirstChild(parent);
               next = NULL;
               while (child)
@@ -2098,12 +2100,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
           selEl = newEl;
           /* Update the title */
-          SetElementData(doc, newEl, svgSchema, SVG_EL_title,
-                         LastSVGelementTitle);
-          TtaFreeMemory(LastSVGelementTitle);
-
-          /* mark the new Coordinate System */
-          TtaSetElCoordinateSystem (newEl);
+          SetElementData (doc, newEl, svgSchema, SVG_EL_title, LastSVGelementTitle);
+          TtaFreeMemory (LastSVGelementTitle);
         }
 
       if (entry == -1)
@@ -3495,7 +3493,7 @@ void UpdateSVGElement (Document doc, Element el, int oldw, int oldh,
                           int dx, int dy, int dw, int dh)
 {
   char         *value = NULL, *text = NULL, *ptr;
-  char          buff[10], command;
+  char          buff[10], command, shape;
   Attribute     attr;
   AttributeType attrType;
   ElementType   elType;
@@ -3512,15 +3510,16 @@ void UpdateSVGElement (Document doc, Element el, int oldw, int oldh,
   attrType.AttrSSchema = elType.ElSSchema;
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
     return;
-  else if (elType.ElTypeNum == SVG_EL_g || elType.ElTypeNum == SVG_EL_SVG)
+  else
     {
-      child = TtaGetFirstChild(el);
-      while (child)
+      attrType.AttrTypeNum = SVG_ATTR_transform;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
         {
-          UpdateSVGElement (doc, child, oldw, oldh, dx, dy, dw, dh);
-          TtaNextSibling (&child);
+          // update the current transform attribute
+          ParseTransformAttribute (attr, el, doc, FALSE);
+          return;
         }
-      return;
     }
 
   // ratio
@@ -3532,7 +3531,18 @@ void UpdateSVGElement (Document doc, Element el, int oldw, int oldh,
     ratioh = (float)dh / (float)oldh;
   else
     ratioh = 0;
-  if (elType.ElTypeNum == SVG_EL_path)
+
+  if (elType.ElTypeNum == SVG_EL_g || elType.ElTypeNum == SVG_EL_SVG)
+    {
+      child = TtaGetFirstChild(el);
+      while (child)
+        {
+          UpdateSVGElement (doc, child, oldw, oldh, dx, dy, dw, dh);
+          TtaNextSibling (&child);
+        }
+      return;
+    }
+  else if (elType.ElTypeNum == SVG_EL_path)
     {
       /* It's a Path */
       attrType.AttrTypeNum = SVG_ATTR_d;
@@ -3724,6 +3734,7 @@ void UpdateSVGElement (Document doc, Element el, int oldw, int oldh,
       if (!error)
         {
           TtaSetAttributeText (attr, text, el, doc);
+          TtaRegisterAttributeReplace (attr, el, doc);
           TtaRemovePathData (doc, el);
           ParsePathDataAttribute (attr, el, doc, TRUE);
         }
@@ -3817,6 +3828,7 @@ printf ("------------->UpdateSVGElement\nold=\"%s\"\nnew=\"%s\"\n",value,text);
         }
       if (!error)
         {
+          TtaRegisterAttributeReplace (attr, el, doc);
           TtaSetAttributeText (attr, text, el, doc);
           ParsePointsAttribute (attr, el, doc);
         }
@@ -3835,37 +3847,53 @@ printf ("------------->UpdateSVGElement\nold=\"%s\"\nnew=\"%s\"\n",value,text);
       attrType.AttrTypeNum = SVG_ATTR_x;
       len = 10;
       attr = TtaGetAttribute (el, attrType);
-      TtaGiveTextAttributeValue (attr, buff, &len);
-      sscanf (buff, "%d", &x);
-      sprintf (buff, "%d", x + dx);
-      TtaSetAttributeText (attr, buff, el, doc);
-
+      if (attr)
+        {
+          TtaGiveTextAttributeValue (attr, buff, &len);
+          sscanf (buff, "%d", &x);
+        }
       attrType.AttrTypeNum = SVG_ATTR_y;
       len = 10;
       attr = TtaGetAttribute (el, attrType);
-      TtaGiveTextAttributeValue (attr, buff, &len);
-      sscanf (buff, "%d", &y);
-      sprintf (buff, "%d", y + dy);
-
-      TtaSetAttributeText (attr, buff, el, doc);
+      if (attr)
+        {
+          TtaGiveTextAttributeValue (attr, buff, &len);
+          sscanf (buff, "%d", &y);
+        }
       if (elType.ElTypeNum != SVG_EL_image &&
           elType.ElTypeNum != SVG_EL_foreignObject)
+        {
+          dw = 0;
+          dh = 0;
+        }
+      else
         {
           attrType.AttrTypeNum = SVG_ATTR_width_;
           len = 10;
           attr = TtaGetAttribute (el, attrType);
-          TtaGiveTextAttributeValue (attr, buff, &len);
-          sscanf (buff, "%d", &x);
-          sprintf (buff, "%d", x + dw);
-          TtaSetAttributeText (attr, buff, el, doc);
-          
+          if (attr)
+            {
+              TtaGiveTextAttributeValue (attr, buff, &len);
+              sscanf (buff, "%d", &x2);
+            }
+          dw += x2;
           attrType.AttrTypeNum = SVG_ATTR_height_;
           len = 10;
           attr = TtaGetAttribute (el, attrType);
-          TtaGiveTextAttributeValue (attr, buff, &len);
-          sscanf (buff, "%d", &y);
-          sprintf (buff, "%d", y + dh);
+          if (attr)
+            {
+              TtaGiveTextAttributeValue (attr, buff, &len);
+              sscanf (buff, "%d", &y2);
+            }
+          dh += y2;
         }
+        
+      if (elType.ElTypeNum == SVG_EL_circle_ ||
+          elType.ElTypeNum == SVG_EL_ellipse)
+        shape = 'c';
+      else
+        shape = 'g';
+      UpdateShapeElement (doc, el, shape, x + dx, y + dy, dw, dh, -1, -1);
     }
 }
 
@@ -4013,16 +4041,20 @@ void UpdateShapeElement(Document doc, Element el,
                         int x, int y, int width, int height,
                         int rx, int ry)
 {
-  SSchema      svgSchema = GetSVGSSchema (doc);
+  SSchema       svgSchema = GetSVGSSchema (doc);
   AttributeType attrType;
-  attrType.AttrSSchema = svgSchema;
-  DisplayMode     dispMode;
+  DisplayMode   dispMode;
+  ThotBool      open;
 
+  attrType.AttrSSchema = svgSchema;
   dispMode = TtaGetDisplayMode (doc);
   /* ask Thot to stop displaying changes made to the document*/
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
+  /* check if the undo sequence is open */
+  open = !TtaHasUndoSequence (doc);
+  if (open)
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   /* Apply the translate */
   UpdateTransformMatrix(doc, el);
@@ -4038,8 +4070,8 @@ void UpdateShapeElement(Document doc, Element el,
 
     case 'a': /* circle */
     case 'c': /* ellipse */
-      x+=(width/2);
-      y+=(height/2);
+      x += (width/2);
+      y += (height/2);
       UpdateWidthHeightAttribute (el, doc, width, TRUE);
       UpdateWidthHeightAttribute (el, doc, height, FALSE);
       UpdatePositionAttribute (el, doc, x, TRUE);
@@ -4052,13 +4084,13 @@ void UpdateShapeElement(Document doc, Element el,
       UpdateWidthHeightAttribute (el, doc, height, FALSE);
       UpdatePositionAttribute (el, doc, x, TRUE);
       UpdatePositionAttribute (el, doc, y, FALSE);
-      if(rx != -1)
+      if (rx != -1)
         {
           attrType.AttrTypeNum = SVG_ATTR_rx;
           UpdateAttrText (el, doc,  attrType, rx, FALSE, TRUE);
         }
 
-      if(ry != -1)
+      if (ry != -1)
         {
           attrType.AttrTypeNum = SVG_ATTR_ry;
           UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
@@ -4066,11 +4098,13 @@ void UpdateShapeElement(Document doc, Element el,
       break;
 
     default:
-      UpdatePointsOrPathAttribute(doc, el, width, height, TRUE);
+      if (width && height)
+        UpdatePointsOrPathAttribute(doc, el, width, height, TRUE);
       break;
     }
 
-  TtaCloseUndoSequence (doc);
+  if (open)
+    TtaCloseUndoSequence (doc);
   TtaSetDisplayMode (doc, dispMode);
 }
 
