@@ -5002,7 +5002,18 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
         {
           /* a valid character has been read */
           if (!color_source)
-            inputBuffer[LgBuffer++] = charRead;
+            {
+              if (LgBuffer + 1 >= AllmostFullBuffer)
+                {
+                  /* store the current buffer contents and continue */
+                  inputBuffer[LgBuffer] = EOS;
+                  TtaAppendTextContent (el, (unsigned char *)inputBuffer, doc);
+                  LgBuffer = 0;
+                  inputBuffer[LgBuffer++] = charRead;
+                }
+              else
+                inputBuffer[LgBuffer++] = charRead;
+            }
           else if (charRead == '@' && DocumentTypes[doc] == docLog && LgBuffer == 0)
             {
               attrType.AttrTypeNum = TextFile_ATTR_IsLink;
