@@ -121,7 +121,8 @@ static void ExecuteAllScripts();
 static void ExecuteScripts (Element Script);
 //static void ExecuteJSfile (const char *location);
 static ThotBool IsJavascript(Element Script);
-static void printError(JSContext *cx, const char *message, JSErrorReport *report);
+static void printError(JSContext *cx, const char *message,
+		       JSErrorReport *report);
 static JSBool jsBranchCallback(JSContext *cx, JSScript *script);
 
 /* Functions used for conversion between Thot/SpiderMonkey */
@@ -130,16 +131,18 @@ static jsval Attribute_to_jsval(JSContext *cx, Attribute ThotAttr);
 static JSBool jsContinueScript();
 static jsval string_to_jsval(JSContext *cx, const char *string);
 static char *jsval_to_string(JSContext *cx, jsval value);
-static void string_to_ElementType (JSContext *cx, char *name, ElementType *elType);
-static void string_to_AttributeType (JSContext *cx, char *name, AttributeType *attrType);
+static void string_to_ElementType (JSContext *cx, char *name,
+				   ElementType *elType);
+static void string_to_AttributeType (JSContext *cx, char *name,
+				     AttributeType *attrType);
 
 /* Private data used by some kinds of object, and the function that create them.
 
-- id is among NODE_CHILDNODES, GETELEMENTSBYTAGNAME, NODE_ATTRIBUTES,
-DOCUMENTTYPE_ENTITIES, DOCUMENTTYPE_NOTATIONS.
-- string_argument is the string parameter used by GetElementByTagName
+   - id is among NODE_CHILDNODES, GETELEMENTSBYTAGNAME, NODE_ATTRIBUTES,
+   DOCUMENTTYPE_ENTITIES, DOCUMENTTYPE_NOTATIONS.
+   - string_argument is the string parameter used by GetElementByTagName
 
-You can modify the structure if you want to add more information. */
+   You can modify the structure if you want to add more information. */
 
 typedef struct PrivateData
 {
@@ -147,11 +150,13 @@ typedef struct PrivateData
   char *string_argument;
 } PrivateData;
 
-static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass, int name_id, jsval *argv);
+static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass,
+			    int name_id, jsval *argv);
 
 /* Other functions used by the DOM interface */
 static ThotBool IsElementNode(Element element);
-static Element NextTypedNodeElement (ElementType elType, Element Tree, Element Start);
+static Element NextTypedNodeElement (ElementType elType, Element Tree,
+				     Element Start);
 static int GetNodeType(JSContext *cx, JSObject *obj);
 static jsval GetNodeName(JSContext *cx, JSObject *obj);
 static jsval GetNodeValue(JSContext *cx, JSObject *obj);
@@ -204,9 +209,11 @@ void Execute_ACommand(Document document, View view)
       *JavascriptPromptValue = EOS;
 
       CreateTextDlgWX (
-                       BaseDialog + JavascriptPromptForm, BaseDialog + JavascriptPromptText,
+                       BaseDialog + JavascriptPromptForm,
+		       BaseDialog + JavascriptPromptText,
                        TtaGetViewFrame (document,  view), "Javascript/DOM",
-                       TtaGetMessage(AMAYA, AM_JAVASCRIPT_ENTER_A_COMMAND), "main();");
+                       TtaGetMessage(AMAYA, AM_JAVASCRIPT_ENTER_A_COMMAND),
+		       "main();");
 
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + JavascriptPromptForm, FALSE);
@@ -216,10 +223,14 @@ void Execute_ACommand(Document document, View view)
       if(!ContinueScript)return;
 
       /* Execute the command and put its returned value to the status bar */
-      JS_EvaluateScript(gcx, gobj, JavascriptPromptValue, strlen(JavascriptPromptValue) , DocumentURLs[jsdocument], 0, &rval);
+      JS_EvaluateScript(gcx, gobj, JavascriptPromptValue,
+			strlen(JavascriptPromptValue),
+			DocumentURLs[jsdocument], 0, &rval);
 
       if(!ContinueScript || JSVAL_IS_VOID(rval))
-        TtaSetStatus (jsdocument, 1, TtaGetMessage(AMAYA, AM_JAVASCRIPT_NO_RETURNED_VALUE), NULL);
+        TtaSetStatus (jsdocument, 1,
+		      TtaGetMessage(AMAYA, AM_JAVASCRIPT_NO_RETURNED_VALUE),
+		      NULL);
       else
         {
           rchar = jsval_to_string(gcx, rval);
@@ -229,7 +240,9 @@ void Execute_ACommand(Document document, View view)
           for(i = 0; i < j; i++)
             if(rchar[i] == '\n')rchar[i] = '|';
 
-          TtaSetStatus (jsdocument, 1, TtaGetMessage(AMAYA, AM_JAVASCRIPT_RETURNED_VALUE), rchar);
+          TtaSetStatus (jsdocument, 1,
+			TtaGetMessage(AMAYA, AM_JAVASCRIPT_RETURNED_VALUE),
+			rchar);
         }
 #endif /* _WX */
     }
@@ -370,7 +383,8 @@ ThotBool CheckInitJavascript(Document doc, View view)
   if(!InitJavascript (doc, view))
     {
       /* The Javascript/DOM objects could not be built */
-      TtaDisplayMessage(FATAL, TtaGetMessage(AMAYA, AM_JAVASCRIPT_CAN_NOT_BUILD));
+      TtaDisplayMessage(FATAL,
+			TtaGetMessage(AMAYA, AM_JAVASCRIPT_CAN_NOT_BUILD));
       return FALSE;
     }
 
@@ -430,30 +444,35 @@ ThotBool InitJavascript (Document document, View view)
   JS_DefineProperties(gcx, gobj, window_properties);
 
   /* create the object navigator */
-  object = JS_DefineObject(gcx, gobj, "navigator", &navigator_class, NULL, JSPROP_READONLY);
+  object = JS_DefineObject(gcx, gobj, "navigator",
+			   &navigator_class, NULL, JSPROP_READONLY);
   if(!object)return FALSE;
   JS_DefineFunctions(gcx, object, navigator_functions);
   JS_DefineProperties(gcx, object, navigator_properties);
 
   /* create the object screen */
-  object = JS_DefineObject(gcx, gobj, "screen", &screen_class, NULL, JSPROP_READONLY);
+  object = JS_DefineObject(gcx, gobj, "screen", &screen_class, NULL,
+			   JSPROP_READONLY);
   if(!object)return FALSE;
   JS_DefineProperties(gcx, object, screen_properties);
 
   /* create the object history */
-  object = JS_DefineObject(gcx, gobj, "history", &history_class, NULL, JSPROP_READONLY);
+  object = JS_DefineObject(gcx, gobj, "history", &history_class, NULL,
+			   JSPROP_READONLY);
   if(!object)return FALSE;
   JS_DefineFunctions(gcx, object, history_functions);
   JS_DefineProperties(gcx, object, history_properties);
 
   /* create the object location */
-  object = JS_DefineObject(gcx, gobj, "location", &location_class, NULL, JSPROP_READONLY);
+  object = JS_DefineObject(gcx, gobj, "location", &location_class, NULL,
+			   JSPROP_READONLY);
   if(!object)return FALSE;
   JS_DefineFunctions(gcx, object, location_functions);
   JS_DefineProperties(gcx, object, location_properties);
 
   /* create the object document */
-  object = JS_DefineObject(gcx, gobj, "document", &Document_class, NULL, JSPROP_READONLY);
+  object = JS_DefineObject(gcx, gobj, "document", &Document_class, NULL,
+			   JSPROP_READONLY);
   if(!object)return FALSE;
   JS_DefineFunctions(gcx, object, Document_functions);
   JS_DefineFunctions(gcx, object, Node_functions);
@@ -466,7 +485,8 @@ ThotBool InitJavascript (Document document, View view)
     return FALSE;
 
   /* create the document.implementation object */
-  object2 = JS_DefineObject(gcx, object, "implementation", &DOMImplementation_class, NULL, JSPROP_READONLY);
+  object2 = JS_DefineObject(gcx, object, "implementation",
+			    &DOMImplementation_class, NULL, JSPROP_READONLY);
   if(!object2)return FALSE;
   JS_DefineFunctions(gcx, object2, DOMImplementation_functions);
 
@@ -500,7 +520,8 @@ static ThotBool CreateDoctypeObject(JSObject *document_object)
 
   if(withDocType)
     {
-      object = JS_DefineObject(gcx, document_object, "doctype", &DocumentType_class, NULL, JSPROP_READONLY);
+      object = JS_DefineObject(gcx, document_object, "doctype",
+			       &DocumentType_class, NULL, JSPROP_READONLY);
       if(!object)return FALSE;
       JS_DefineProperties(gcx, object, DocumentType_properties);
       JS_SetPrivate(gcx, object, (void *)el_doctype);
@@ -611,7 +632,8 @@ static void ExecuteScripts (Element Script)
     }
 
   /* Execute each script of (SCRIPT_)'s children
-     Normally there should only be one child but it is also possible to have something like :
+     Normally there should only be one child but it is also possible to
+     have something like :
      SCRIPT_
      TEXT_UNIT <-- contained only spaces and '\n'
      CDATA     <-- contained the script that have to be executed
@@ -645,7 +667,9 @@ static void ExecuteScripts (Element Script)
           while(child2)
             {
               child3 = TtaGetFirstChild(child2);
-              if(TtaGetElementType(child3).ElTypeNum == HTML_EL_TEXT_UNIT)len+=TtaGetTextLength(child3);
+              if(TtaGetElementType(child3).ElTypeNum ==
+		 HTML_EL_TEXT_UNIT)
+		len+=TtaGetTextLength(child3);
               len++;
               TtaNextSibling(&child2);
             }
@@ -664,7 +688,9 @@ static void ExecuteScripts (Element Script)
                   if(TtaGetElementType(child3).ElTypeNum == HTML_EL_TEXT_UNIT)
                     {
                       len2 = TtaGetTextLength(child3);
-                      TtaGiveTextContent(child3, (unsigned char *)(&(text[i])), &len2, &lang);
+                      TtaGiveTextContent(child3,
+					 (unsigned char *)(&(text[i])),
+					 &len2, &lang);
                       i+=len2;
                     }
                   text[i] = '\n';i++;
@@ -735,7 +761,8 @@ static ThotBool IsJavascript(Element element)
   printError
   Report javascript error
   -----------------------------------------------------------------------*/
-static void printError(JSContext *cx, const char *message, JSErrorReport *report)
+static void printError(JSContext *cx, const char *message,
+		       JSErrorReport *report)
 {
   StopJavascript (jsdocument);
   TtaDisplayMessage(FATAL, TtaGetMessage(AMAYA, AM_JAVASCRIPT_SCRIPT_ERROR),
@@ -765,7 +792,8 @@ static jsval Element_to_jsval(JSContext *cx, Element ThotNode)
     case HTML_EL_C_Empty:
     case HTML_EL_Basic_Elem:
     case HTML_EL_C_BR:
-      return JSVAL_NULL; /* These elements are not taken into account to build the DOM tree */
+      return JSVAL_NULL; /* These elements are not taken into
+			    account to build the DOM tree */
       break;
 
     case HTML_EL_DOCTYPE:
@@ -868,14 +896,16 @@ static jsval string_to_jsval(JSContext *cx, const char *string)
   -----------------------------------------------------------------------*/
 static char *jsval_to_string(JSContext *cx, jsval value)
 {
-  return (JSVAL_IS_VOID(value) ? NULL : JS_GetStringBytes(JS_ValueToString(cx, value)) );
+  return (JSVAL_IS_VOID(value) ? NULL :
+	  JS_GetStringBytes(JS_ValueToString(cx, value)) );
 }
 
 /*----------------------------------------------------------------------
   string_to_ElementType
   Convert a javascript string coding a tag name into an ElementType
   -----------------------------------------------------------------------*/
-static void string_to_ElementType (JSContext *cx, char *name, ElementType *elType)
+static void string_to_ElementType (JSContext *cx, char *name,
+				   ElementType *elType)
 {
   char*       mappedName;
   char       content;
@@ -898,7 +928,8 @@ static void string_to_ElementType (JSContext *cx, char *name, ElementType *elTyp
   string_to_AttributeType
   Convert a javascript string coding an attribute name into an AttributeType
   -----------------------------------------------------------------------*/
-static void string_to_AttributeType (JSContext *cx, char *name, AttributeType *attrType)
+static void string_to_AttributeType (JSContext *cx, char *name,
+				     AttributeType *attrType)
 {
   attrType->AttrSSchema = NULL;
   TtaGetXmlAttributeType (name, attrType, jsdocument);
@@ -911,26 +942,39 @@ static void string_to_AttributeType (JSContext *cx, char *name, AttributeType *a
 
   This function is used for specific objects such as NodeList or NamedNodeMap.
   -----------------------------------------------------------------------*/
-static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass, int name_id, jsval *argv)
+static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass,
+			    int name_id, jsval *argv)
 {
   JSObject *jsobj;
   PrivateData *info;
   char *s;
 
+/*
+TODO:
+ rewrite this function when SpiderMonkey 1.8 is released, to use JS objects as
+ private data.
+
+ https://developer.mozilla.org/en/SpiderMonkey/JSAPI_Reference#Memory_management
+*/
   return JSVAL_NULL;
 
-  if(name_id == GETELEMENTSBYTAGNAME && JSVAL_IS_VOID(argv[0]))return JSVAL_NULL;
+  if(name_id == GETELEMENTSBYTAGNAME && JSVAL_IS_VOID(argv[0]))
+    return JSVAL_NULL;
 
   /* Create the object and its private data */
   jsobj = JS_NewObject(cx, jsclass, NULL, obj);
   if(!jsobj)return JSVAL_NULL;
 
   /* Create its private data */
-  info = (PrivateData *)malloc(sizeof(PrivateData));
+  info = (PrivateData *)TtaGetMemory(sizeof(PrivateData));
   if(!info)return JSVAL_NULL;
 
-  info -> id = name_id;
-  if(JS_SetPrivate(cx, jsobj, (void *)info) != JS_TRUE)return JSVAL_NULL;
+  info->id = name_id;
+  if(JS_SetPrivate(cx, jsobj, (void *)info) != JS_TRUE)
+    {
+      TtaFreeMemory(info);
+      return JSVAL_NULL;
+    }
 
   /* Define properties, methods and set the private data*/
   switch(name_id)
@@ -946,9 +990,9 @@ static jsval ObjectWithInfo(JSContext *cx, JSObject *obj, JSClass *jsclass, int 
       JS_DefineFunctions(cx, jsobj, NodeList_functions);
 
       s = jsval_to_string(cx, argv[0]);
-      info -> string_argument = (char *)malloc(strlen(s) + 1);
-      if(info -> string_argument)
-        strcpy(info -> string_argument, s);
+      info->string_argument = (char *)TtaGetMemory(strlen(s) + 1);
+      if(info->string_argument)
+        strcpy(info->string_argument, s);
       break;
 
       /* NamedNodeMap */
@@ -1006,7 +1050,8 @@ static ThotBool IsElementNode(Element element)
 /*----------------------------------------------------------------------
   NextTypedNodeElement
   -----------------------------------------------------------------------*/
-static Element NextTypedNodeElement (ElementType elType, Element Tree, Element Start)
+static Element NextTypedNodeElement (ElementType elType, Element Tree,
+				     Element Start)
 {
   Element child = NULL;
 
@@ -1030,14 +1075,19 @@ static int GetNodeType(JSContext *cx, JSObject *obj)
   if(JS_InstanceOf(cx, obj, &Element_class, NULL))return ELEMENT_NODE;
   if(JS_InstanceOf(cx, obj, &Attr_class, NULL))return ATTRIBUTE_NODE;
   if(JS_InstanceOf(cx, obj, &Text_class, NULL))return TEXT_NODE;
-  if(JS_InstanceOf(cx, obj, &CDATASection_class, NULL))return CDATA_SECTION_NODE;
-  if(JS_InstanceOf(cx, obj, &EntityReference_class, NULL))return ENTITY_REFERENCE_NODE; 
+  if(JS_InstanceOf(cx, obj, &CDATASection_class, NULL))
+    return CDATA_SECTION_NODE;
+  if(JS_InstanceOf(cx, obj, &EntityReference_class, NULL))
+    return ENTITY_REFERENCE_NODE; 
   if(JS_InstanceOf(cx, obj, &Entity_class, NULL))return ENTITY_NODE; 
-  if(JS_InstanceOf(cx, obj, &ProcessingInstruction_class, NULL))return PROCESSING_INSTRUCTION_NODE;
+  if(JS_InstanceOf(cx, obj, &ProcessingInstruction_class, NULL))
+    return PROCESSING_INSTRUCTION_NODE;
   if(JS_InstanceOf(cx, obj, &Comment_class, NULL))return COMMENT_NODE;
   if(JS_InstanceOf(cx, obj, &Document_class, NULL))return DOCUMENT_NODE;
-  if(JS_InstanceOf(cx, obj, &DocumentType_class, NULL))return DOCUMENT_TYPE_NODE;
-  if(JS_InstanceOf(cx, obj, &DocumentFragment_class, NULL))return DOCUMENT_FRAGMENT_NODE;
+  if(JS_InstanceOf(cx, obj, &DocumentType_class, NULL))
+    return DOCUMENT_TYPE_NODE;
+  if(JS_InstanceOf(cx, obj, &DocumentFragment_class, NULL))
+    return DOCUMENT_FRAGMENT_NODE;
   if(JS_InstanceOf(cx, obj, &Notation_class, NULL))return NOTATION_NODE;
   
   /* unknown type of node */
@@ -1056,7 +1106,8 @@ static jsval GetNodeName(JSContext *cx, JSObject *obj)
     {
     case ELEMENT_NODE:
       element = (Element)JS_GetPrivate(cx, obj);
-      return string_to_jsval(cx, GetXMLElementName(TtaGetElementType(element), jsdocument) );
+      return string_to_jsval(cx, GetXMLElementName(TtaGetElementType(element),
+						   jsdocument) );
       break;
     case ATTRIBUTE_NODE:
       break;
@@ -1156,13 +1207,13 @@ static void finalizeObjectWithInfo(JSContext *cx, JSObject *obj)
       switch(info -> id)
         {
         case GETELEMENTSBYTAGNAME:
-          free(info -> string_argument);
+          TtaFreeMemory(info -> string_argument);
           break;
 
         default:
           break;
         }
-      free(info);
+      TtaFreeMemory(info);
     }
 }
 
@@ -1182,7 +1233,8 @@ static JSBool setProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
           urlname = jsval_to_string(cx, *vp);
           if(urlname)
             {
-              GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE, TRUE, NULL, NULL);
+              GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE,
+			   TRUE, NULL, NULL);
               return JS_FALSE;
             }
           break;
@@ -1222,7 +1274,8 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
         case WINDOW_LENGTH: *vp = JSVAL_ZERO; break;
 
         case NAVIGATOR_BROWSERLANGUAGE:
-          *vp = string_to_jsval(cx, TtaGetLanguageName(TtaGetDefaultLanguage()));
+          *vp = string_to_jsval(cx,
+				TtaGetLanguageName(TtaGetDefaultLanguage()));
           break;
 
         case NAVIGATOR_APPNAME:
@@ -1339,7 +1392,8 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 
         case NODE_ATTRIBUTES:
           if(GetNodeType(cx, obj) == ELEMENT_NODE)
-            *vp = ObjectWithInfo(cx, obj, &NamedNodeMap_class, NODE_ATTRIBUTES, NULL);
+            *vp = ObjectWithInfo(cx, obj, &NamedNodeMap_class,
+				 NODE_ATTRIBUTES, NULL);
           else *vp = JSVAL_NULL;
           break;
 
@@ -1434,7 +1488,8 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
             case GETELEMENTSBYTAGNAME:
               text = info -> string_argument;
 
-              /* Check whether we have to match all the element or a particular type */
+              /* Check whether we have to match all the element
+		 or a particular type */
               if(!strcmp("*", text))
                 {
                   elType.ElSSchema = NULL;
@@ -1467,7 +1522,8 @@ static JSBool getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
   Object Window
   -----------------------------------------------------------------------*/
 
-static JSBool window_alert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool window_alert(JSContext *cx, JSObject *obj, uintN argc,
+			   jsval *argv, jsval *rval)
 {
   char *msg = NULL;
 
@@ -1481,7 +1537,8 @@ static JSBool window_alert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
       msg = jsval_to_string(cx, *argv);
 
       ConfirmDialog = TRUE;
-      /* Display a non-modal window, to allow javascript engine to be switch OFF */
+      /* Display a non-modal window, to allow javascript engine
+	 to be switch OFF */
       InitAlert(jsdocument, jsview, msg);
       ConfirmDialog = FALSE;
 
@@ -1489,7 +1546,8 @@ static JSBool window_alert(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
     }
 }
 
-static JSBool window_confirm(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool window_confirm(JSContext *cx, JSObject *obj, uintN argc,
+			     jsval *argv, jsval *rval)
 {
   char *msg = jsval_to_string(cx, *argv);
   ConfirmDialog = TRUE;
@@ -1500,14 +1558,17 @@ static JSBool window_confirm(JSContext *cx, JSObject *obj, uintN argc, jsval *ar
   return jsContinueScript();
 }
 
-static JSBool window_prompt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool window_prompt(JSContext *cx, JSObject *obj, uintN argc,
+			    jsval *argv, jsval *rval)
 {
   char *msg = jsval_to_string(cx, argv[0]);
   char *value = jsval_to_string(cx, argv[1]);
 
 #ifdef _WX
   *JavascriptPromptValue = EOS;
-  CreateTextDlgWX (BaseDialog + JavascriptPromptForm, BaseDialog + JavascriptPromptText, TtaGetViewFrame (jsdocument, jsview), "Prompt", msg, value);
+  CreateTextDlgWX (BaseDialog + JavascriptPromptForm,
+		   BaseDialog + JavascriptPromptText,
+		   TtaGetViewFrame (jsdocument, jsview), "Prompt", msg, value);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + JavascriptPromptForm, FALSE);
   TtaWaitShowDialogue ();
@@ -1519,19 +1580,22 @@ static JSBool window_prompt(JSContext *cx, JSObject *obj, uintN argc, jsval *arg
   return jsContinueScript();
 }
 
-static JSBool window_close(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool window_close(JSContext *cx, JSObject *obj, uintN argc,
+			   jsval *argv, jsval *rval)
 {
   AmayaClose(jsdocument, jsview);
   return jsContinueScript();
 }
 
-static JSBool window_blur(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool window_blur(JSContext *cx, JSObject *obj, uintN argc,
+			  jsval *argv, jsval *rval)
 {
   TtaUnselect(jsdocument);
   return jsContinueScript();
 }
 
-static JSBool window_print(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool window_print(JSContext *cx, JSObject *obj, uintN argc,
+			   jsval *argv, jsval *rval)
 {
   SetupAndPrint(jsdocument, jsview);
   return jsContinueScript();
@@ -1541,13 +1605,15 @@ static JSBool window_print(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 /*----------------------------------------------------------------------
   Object Navigator
   -----------------------------------------------------------------------*/
-static JSBool navigator_javaEnabled(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool navigator_javaEnabled(JSContext *cx, JSObject *obj, uintN argc,
+				    jsval *argv, jsval *rval)
 {
   *rval = JSVAL_FALSE;
   return jsContinueScript();
 }
 
-static JSBool navigator_taintEnabled(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool navigator_taintEnabled(JSContext *cx, JSObject *obj, uintN argc,
+				     jsval *argv, jsval *rval)
 {
   *rval = JSVAL_FALSE;
   return jsContinueScript();
@@ -1561,13 +1627,15 @@ static JSBool navigator_taintEnabled(JSContext *cx, JSObject *obj, uintN argc, j
 /*----------------------------------------------------------------------
   Object History
   -----------------------------------------------------------------------*/
-static JSBool history_back(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool history_back(JSContext *cx, JSObject *obj, uintN argc,
+			   jsval *argv, jsval *rval)
 {
   GotoPreviousHTML (jsdocument, jsview);
   return JS_FALSE;
 }
 
-static JSBool history_forward(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool history_forward(JSContext *cx, JSObject *obj, uintN argc,
+			      jsval *argv, jsval *rval)
 {
   GotoNextHTML (jsdocument, jsview);
   return JS_FALSE;
@@ -1576,29 +1644,34 @@ static JSBool history_forward(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 /*----------------------------------------------------------------------
   Object Location
   -----------------------------------------------------------------------*/
-static JSBool location_assign(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool location_assign(JSContext *cx, JSObject *obj, uintN argc,
+			      jsval *argv, jsval *rval)
 {
   char *urlname = jsval_to_string(cx, *argv);
   if(urlname)
     {
-      GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE, TRUE, NULL, NULL);
+      GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE,
+		   TRUE, NULL, NULL);
       return JS_FALSE;
     }
   return jsContinueScript();
 }
 
-static JSBool location_replace(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool location_replace(JSContext *cx, JSObject *obj, uintN argc,
+			       jsval *argv, jsval *rval)
 {
   char *urlname = jsval_to_string(cx, *argv);
   if(urlname)
     {
-      GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE, FALSE, NULL, NULL);
+      GetAmayaDoc (urlname, NULL, jsdocument, jsdocument, CE_ABSOLUTE,
+		   FALSE, NULL, NULL);
       return JS_FALSE;
     }
   return jsContinueScript();
 }
 
-static JSBool location_reload(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool location_reload(JSContext *cx, JSObject *obj, uintN argc,
+			      jsval *argv, jsval *rval)
 {
   Reload(jsdocument, jsview);
   return JS_FALSE;
@@ -1607,7 +1680,8 @@ static JSBool location_reload(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 /*----------------------------------------------------------------------
   Object Document
   -----------------------------------------------------------------------*/
-static JSBool _getElementsByTagName(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool _getElementsByTagName(JSContext *cx, JSObject *obj, uintN argc,
+				    jsval *argv, jsval *rval)
 {
   *rval = ObjectWithInfo(cx, obj, &NodeList_class, GETELEMENTSBYTAGNAME, argv);
   return jsContinueScript();
@@ -1616,21 +1690,28 @@ static JSBool _getElementsByTagName(JSContext *cx, JSObject *obj, uintN argc, js
 /*----------------------------------------------------------------------
   Object DOMImplementation
   -----------------------------------------------------------------------*/
-static JSBool DOMImplementation_hasFeature(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool DOMImplementation_hasFeature(JSContext *cx,
+					   JSObject *obj, uintN argc,
+					   jsval *argv, jsval *rval)
 {
   char *feature	= NULL;
   char *version	= NULL;
 
   if(JSVAL_IS_VOID(*argv))
     {
-      JS_ReportError(gcx, "Missing mandatory argument 1 of function hasFeature");
+      JS_ReportError(gcx,
+		     "Missing mandatory argument 1 of function hasFeature");
       return JS_FALSE;
     }
   else
     {
       feature = jsval_to_string(cx, argv[0]);
       version = jsval_to_string(cx, argv[1]);
-      *rval = BOOLEAN_TO_JSVAL((/*!strcasecmp(feature, "HTML") ||*/ !strcasecmp(feature, "XML")) && (version == NULL || !strcmp(version, "1.0")) );
+      *rval = BOOLEAN_TO_JSVAL(
+			       (/*!strcasecmp(feature, "HTML") ||*/
+				!strcasecmp(feature, "XML"))
+			       && (version == NULL ||
+				   !strcmp(version, "1.0")) );
       return jsContinueScript();
     }
 }
@@ -1639,12 +1720,17 @@ static JSBool DOMImplementation_hasFeature(JSContext *cx, JSObject *obj, uintN a
   Object Node
   -----------------------------------------------------------------------*/
 /*
-  static JSBool Node_createElement(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Node_replaceChild(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Node_removeChild(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Node_appendChild(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);*/
+static JSBool Node_createElement(JSContext *cx, JSObject *obj, uintN argc,
+jsval *argv, jsval *rval);
+static JSBool Node_replaceChild(JSContext *cx, JSObject *obj, uintN argc,
+jsval *argv, jsval *rval);
+static JSBool Node_removeChild(JSContext *cx, JSObject *obj, uintN argc,
+jsval *argv, jsval *rval);
+static JSBool Node_appendChild(JSContext *cx, JSObject *obj, uintN argc,
+jsval *argv, jsval *rval);*/
 
-static JSBool Node_hasChildNodes(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool Node_hasChildNodes(JSContext *cx, JSObject *obj, uintN argc,
+				 jsval *argv, jsval *rval)
 {
   Element element;
   element = (Element)JS_GetPrivate(cx, obj);
@@ -1653,12 +1739,15 @@ static JSBool Node_hasChildNodes(JSContext *cx, JSObject *obj, uintN argc, jsval
   return jsContinueScript();
 }
 
-//static JSBool Node_cloneNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);*/
+/*
+static JSBool Node_cloneNode(JSContext *cx, JSObject *obj, uintN argc,
+jsval *argv, jsval *rval);*/
 
 /*----------------------------------------------------------------------
   Object NodeList
   -----------------------------------------------------------------------*/
-static JSBool NodeList_item(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool NodeList_item(JSContext *cx, JSObject *obj, uintN argc,
+			    jsval *argv, jsval *rval)
 {
   Element element, child;
   ElementType elType;
@@ -1710,7 +1799,8 @@ static JSBool NodeList_item(JSContext *cx, JSObject *obj, uintN argc, jsval *arg
 /*----------------------------------------------------------------------
   Object NamedNodeMap
   -----------------------------------------------------------------------*/
-static JSBool NamedNodeMap_getNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool NamedNodeMap_getNamedItem(JSContext *cx, JSObject *obj,
+					uintN argc, jsval *argv, jsval *rval)
 {
   Element element;
   AttributeType attrType;
@@ -1742,7 +1832,8 @@ static JSBool NamedNodeMap_getNamedItem(JSContext *cx, JSObject *obj, uintN argc
   return jsContinueScript();
 }
 
-static JSBool NamedNodeMap_setNamedItem(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static JSBool NamedNodeMap_setNamedItem(JSContext *cx, JSObject *obj,
+					uintN argc, jsval *argv, jsval *rval)
 {
   Element element;
   AttributeType attrType;
@@ -1762,7 +1853,8 @@ static JSBool NamedNodeMap_setNamedItem(JSContext *cx, JSObject *obj, uintN argc
       string_to_AttributeType(cx, jsval_to_string(cx, argv[0]), &attrType);
       attr = TtaGetAttribute (element, attrType);
       if(jsContinueScript())
-        TtaSetAttributeText (attr, jsval_to_string(cx, argv[1]), element, jsdocument);
+        TtaSetAttributeText (attr, jsval_to_string(cx, argv[1]), element,
+			     jsdocument);
       else return JS_FALSE;
       break;
 
@@ -1781,10 +1873,17 @@ static JSBool NamedNodeMap_setNamedItem(JSContext *cx, JSObject *obj, uintN argc
   Object Element
   -----------------------------------------------------------------------*/
 /*
-  static JSBool Element_getAttribute(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Element_setAttribute(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Element_removeAttribute(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Element_getAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Element_setAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Element_removeAttributeNode(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-  static JSBool Element_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);*/
+static JSBool Element_getAttribute(JSContext *cx, JSObject *obj, uintN argc,
+  jsval *argv, jsval *rval);
+static JSBool Element_setAttribute(JSContext *cx, JSObject *obj, uintN argc,
+  jsval *argv, jsval *rval);
+static JSBool Element_removeAttribute(JSContext *cx, JSObject *obj, uintN argc,
+jsval *argv, jsval *rval);
+static JSBool Element_getAttributeNode(JSContext *cx, JSObject *obj,
+uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_setAttributeNode(JSContext *cx, JSObject *obj,
+uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_removeAttributeNode(JSContext *cx, JSObject *obj,
+uintN argc, jsval *argv, jsval *rval);
+static JSBool Element_normalize(JSContext *cx, JSObject *obj, uintN argc,
+jsval *argv, jsval *rval);*/

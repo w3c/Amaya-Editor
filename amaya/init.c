@@ -1719,9 +1719,13 @@ void InitInfo (const char *label, const char *info)
 void InitAlert(Document document, View view, char *label)
 {
 #ifdef _JAVA
-  ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
+  char title[10];
+  ThotBool created;
+
+  strcpy(title, "Alert");
+  created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
                                              TtaGetViewFrame (document, view),
-                                             "Alert", NULL, NULL,
+                                             title, NULL, NULL,
                                              label, NULL, NULL);
   if (created)
     {
