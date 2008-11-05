@@ -665,7 +665,8 @@ static void SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool d
             }
           /* deplace l'insertion dans le pave de composition vide */
           else if (pSelAb->AbLeafType == LtCompound &&
-                   pSelAb->AbFirstEnclosed == NULL)
+                   pSelAb->AbElement &&
+                   pSelAb->AbElement->ElFirstChild == NULL)
             {
               *pAb = CreateALeaf (pSelAb, frame, natureToCreate, TRUE);
               moveSelection = TRUE;
