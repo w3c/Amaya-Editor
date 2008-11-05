@@ -36,7 +36,9 @@
 #include "styleparser_f.h"
 #include "XHTMLbuilder_f.h"
 #include "Xml2thot_f.h"
-
+#ifdef TEMPLATES
+#include "Template.h"
+#endif /* TEMPLATES */
 /* Elements that cannot contain text as immediate children.
    When some text is present in the HTML file it must be 
    surrounded by a Pseudo_paragraph element */
@@ -198,7 +200,8 @@ static void CheckNamespace (Element el, Document doc)
   ----------------------------------------------------------------------*/
 void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
 {
-  ElementType    elType;
+  ElementType    elType, childType;
+  Element        child;
   Attribute      attr;
   AttributeType  attrType;
   int            lineNum;
@@ -211,11 +214,21 @@ void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
     {
+#ifdef TEMPLATES
+      child = TtaGetFirstChild (el);
+      if (child)
+        {
+          childType = TtaGetElementType (child);
+          if (childType.ElTypeNum == Template_EL_attribute &&
+              !strcmp(TtaGetSSchemaName(childType.ElSSchema) , "Template"))
+            return;
+        }
+#endif /* TEMPLATES */
       name = GetXMLAttributeName (attrType, elType, doc);
       if (name)
         {
           sprintf (msgBuffer, "Missing mandatory attribute %s for element %s",
-                   name, TtaGetElementTypeName(TtaGetElementType(el)));
+                   name, TtaGetElementTypeName(elType));
           lineNum = TtaGetElementLineNumber(el);
           if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
             XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
