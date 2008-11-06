@@ -335,18 +335,16 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                     {
                     if (active->AbBox == NULL)
                       active = NULL;
-                    else if (GetBoxDistance (active->AbBox, *pFlow, x, y, ratio, frame, &matchCell) != 0)
+                    else if (active->AbBox->BxType != BoGhost &&
+                             GetBoxDistance (active->AbBox, *pFlow, x, y, ratio, frame, &matchCell) != 0)
                       active = NULL;
                     }
                   if (active && sel_active == NULL)
                     dist = d + 1;
-                  //else if (active == NULL && sel_active)
-                  //  d = dist + 1;
 
                   if (prevMatch != matchCell && matchCell)
                     // ignore previous boxes out of the current cell
                     dist = MAX_DISTANCE;
-
                   if (d < dist ||
                       (d == dist &&
                        (pSelBox == NULL ||

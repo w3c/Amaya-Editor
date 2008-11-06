@@ -28,8 +28,9 @@
 #include "templateUtils_f.h"
 #include "fetchHTMLname_f.h"
 #include "Template.h"
+#include "fetchXMLname_f.h"
 #include "styleparser_f.h"
-#
+
 #ifdef TEMPLATES
 #define TEMPLATE_SCHEMA_NAME "Template"
 #endif /* TEMPLATES */
@@ -242,14 +243,15 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
   Attribute     att;
   Element       next, child, savedInline, prev, parent;
   Declaration   dec;
-  char         *name;
-  ElementType   elType, parentType;
+  char         *name, *types;
+  ElementType   elType, otherType;
 
   if (!t || !el)
     return parentLine;
 
   savedInline = parentLine;
   elType = TtaGetElementType (el);
+  attType.AttrSSchema = elType.ElSSchema;
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp (name, "Template"))
     {
@@ -262,7 +264,6 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
           return parentLine;
         case Template_EL_component :
           // remove the name attribute
-          attType.AttrSSchema = elType.ElSSchema;
           attType.AttrTypeNum = Template_ATTR_name;
           name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
           TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
@@ -304,6 +305,8 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
           else
             TtaInsertFirstChild (&el, parent, doc);
           TtaFreeMemory(name);
+          Template_FixAccessRight (t, el, doc);
+          TtaUpdateAccessRightInViews (doc, el);
           break;
         case Template_EL_bag :
           //Link to types
@@ -315,22 +318,23 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
              supposed to contain a valid instance. This should be
              checked, though */
             // add the initial indicator
-          name = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
-          if (name)
+          types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
+          if (types)
             {
-              if (!strcmp (name, "string"))
+              child = TtaGetFirstChild (el);
+              if (!strcmp (types, "string") || !strcmp (types, "number"))
                 AddPromptIndicator (el, doc);
               else
                 {
                   // avoid to have a block element within a pseudo paragraph
-                  dec = Template_GetDeclaration (t, name);
+                  dec = Template_GetDeclaration (t, types);
                   if (dec && dec->blockLevel == 2 && parentLine)
                     {
                       // move the use element after the paragraph
                       child = TtaGetParent (el);
-                      parentType = TtaGetElementType (child);
-                      if (parentType.ElSSchema != elType.ElSSchema ||
-                          parentType.ElTypeNum == Template_EL_repeat)
+                      otherType = TtaGetElementType (child);
+                      if (otherType.ElSSchema != elType.ElSSchema ||
+                          otherType.ElTypeNum == Template_EL_repeat)
                         // not need to move the parent element
                           child = el;
                       next = child;
@@ -347,11 +351,34 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
                       // elements are now out of the parent line
                       savedInline = NULL;
                     }
+
+                  // generate the currentType attribute
+                  otherType = TtaGetElementType (child);
+                  attType.AttrTypeNum = Template_ATTR_currentType;
+                  att = TtaGetAttribute (el, attType);
+                  if (att == NULL)
+                    {
+                      att = TtaNewAttribute (attType);
+                      TtaAttachAttribute (el, att, doc);
+                    }
+                  if (otherType.ElTypeNum == 1)
+                    TtaSetAttributeText (att, "string", el, doc);
+                  else
+                    {
+                      name = (char *)GetXMLElementName (otherType, doc);
+                      if (name && !strcmp (name,"???"))
+                        TtaSetAttributeText (att, name, el, doc);
+                    }
                 }
             }
-          TtaFreeMemory (name);
-          if (!TtaGetFirstChild (el))
+          TtaFreeMemory (types);
+          if (child == NULL)
             InstantiateUse (t, el, doc, FALSE);
+          else
+            {
+              Template_FixAccessRight (t, el, doc);
+              TtaUpdateAccessRightInViews (doc, el);
+            }
           break;
         case Template_EL_attribute :
           if (!loading)
