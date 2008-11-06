@@ -5379,14 +5379,11 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
   PtrElement          pE;
   PtrAbstractBox      pP;
   ThotBool            stop;
-  PtrAbstractBox      pPa1;
-  PtrElement          pEl1;
 
-  pPa1 = pAb;
   /* cherche dans cette vue le premier element ascendant qui ait un pave' */
   pP = NULL;
   pE = pEl;
-  while (pE->ElParent != NULL && pP == NULL)
+  while (pE->ElParent && pP == NULL)
     {
       pE = pE->ElParent;
       pP = pE->ElAbstractBox[nv - 1];
@@ -5406,12 +5403,12 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
       while (pP->AbPresentationBox && pP->AbElement == pE && pP->AbNext != NULL)
         pP = pP->AbNext;
       /* le premier pave qui n'est pas de presentation est l'englobant */
-      pPa1->AbEnclosing = pP;
-      UpdateCSSVisibility (pPa1);
-      if (pPa1->AbEnclosing->AbFirstEnclosed == NULL)
+      pAb->AbEnclosing = pP;
+      UpdateCSSVisibility (pAb);
+      if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
         /* c'est le premier pave englobe */
         {
-          pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+          pAb->AbEnclosing->AbFirstEnclosed = pAb;
           if (pEl->ElAbstractBox[nv - 1] == NULL)
             pEl->ElAbstractBox[nv - 1] = pAb;
           /* 1er pave de l'element */
@@ -5423,10 +5420,10 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
           /* c'est une marque de page de debut d'element, on la chaine */
           /* en tete */
           {
-            pPa1->AbNext = pPa1->AbEnclosing->AbFirstEnclosed;
-            if (pPa1->AbNext != NULL)
-              pPa1->AbNext->AbPrevious = pAb;
-            pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+            pAb->AbNext = pAb->AbEnclosing->AbFirstEnclosed;
+            if (pAb->AbNext != NULL)
+              pAb->AbNext->AbPrevious = pAb;
+            pAb->AbEnclosing->AbFirstEnclosed = pAb;
           }
         else
           {
@@ -5445,8 +5442,8 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                     pP = pP->AbNext;
                 while (!(stop));
                 /* insere le nouveau pave apres */
-                pPa1->AbPrevious = pP;
-                pPa1->AbNext = pP->AbNext;
+                pAb->AbPrevious = pP;
+                pAb->AbNext = pP->AbNext;
               }
             else
               /* cet element n'a pas encore de paves dans cette vue */
@@ -5454,7 +5451,7 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                 pEl->ElAbstractBox[nv - 1] = pAb;
                 /* 1er pave de l'element */
                 /* cherche l'element precedent ayant un pave dans la vue */
-                pE = BackSearchVisibleElem (pPa1->AbEnclosing->AbElement, pEl, nv);
+                pE = BackSearchVisibleElem (pAb->AbEnclosing->AbElement, pEl, nv);
                 if (pE)
                   /* verifie si le pave found pour un element precedent */
                   /* est bien inclus dans le meme pave englobant. */
@@ -5466,31 +5463,30 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                     /* pave de l'element precedent */
                     do
                       pP = pP->AbEnclosing;
-                    while (!(pP == pPa1->AbEnclosing || pP == NULL));
+                    while (!(pP == pAb->AbEnclosing || pP == NULL));
                     if (pP == NULL)
                       /* ils n'ont pas le meme pave englobant, on ne */
                       /* chainera pas le pave au pave de l'element precedent */
                       pE = NULL;
                   }
-                if (pE)
-                  if (pE->ElTypeNumber == PageBreak + 1
-                      && pE->ElPageType == PgBegin)
-                    /* le precedent est une marque de page de debut */
-                    /* d'element, on verifie si elle est suivie par des */
-                    /* paves de presentation de l'englobant */
-                    {
-                      pP = pE->ElAbstractBox[nv - 1];
-                      /* pave de l'element precedent */
-                      if (pP->AbNext &&
-                          pP->AbNext->AbElement == pPa1->AbEnclosing->AbElement)
-                        /* la marque de page est suivie par un pave cree */
-                        /* par l'englobant */
-                        pE = NULL;
-                    }
+                if (pE && pE->ElTypeNumber == PageBreak + 1 &&
+                    pE->ElPageType == PgBegin)
+                  /* le precedent est une marque de page de debut */
+                  /* d'element, on verifie si elle est suivie par des */
+                  /* paves de presentation de l'englobant */
+                  {
+                    pP = pE->ElAbstractBox[nv - 1];
+                    /* pave de l'element precedent */
+                    if (pP->AbNext &&
+                        pP->AbNext->AbElement == pAb->AbEnclosing->AbElement)
+                      /* la marque de page est suivie par un pave cree */
+                      /* par l'englobant */
+                      pE = NULL;
+                  }
                 if (pE == NULL)
                   /* pas de pave d'element precedent */
                   {
-                    pP = pPa1->AbEnclosing->AbFirstEnclosed;
+                    pP = pAb->AbEnclosing->AbFirstEnclosed;
                     /* saute les eventuelles marques de page de debut */
                     /* d'element */
                     stop = FALSE;
@@ -5499,9 +5495,8 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                         stop = TRUE;
                       else
                         {
-                          pEl1 = pP->AbElement;
-                          if (pEl1->ElTypeNumber == PageBreak + 1 &&
-                              pEl1->ElPageType == PgBegin)
+                           if (pP->AbElement->ElTypeNumber == PageBreak + 1 &&
+                              pP->AbElement->ElPageType == PgBegin)
                             pP = pP->AbNext;
                           else
                             stop = TRUE;
@@ -5509,14 +5504,14 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                     while (!stop);
                     if (pP)
                       {
-                        if (pP->AbElement == pPa1->AbEnclosing->AbElement)
+                        if (pP->AbElement == pAb->AbEnclosing->AbElement)
                           {
-                            if (TypeCreatedRule (pDoc, pPa1->AbEnclosing, pP) == FnCreateLast)
+                            if (TypeCreatedRule (pDoc, pAb->AbEnclosing, pP) == FnCreateLast)
                               /* le pave existant doit etre le dernier, on insere */
                               /* le nouveau pave devant lui */
                               {
-                                pPa1->AbNext = pP;
-                                pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+                                pAb->AbNext = pP;
+                                pAb->AbEnclosing->AbFirstEnclosed = pAb;
                               }
                             else
                               /* on saute les paves crees par une regle */
@@ -5532,18 +5527,18 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                                     /* list item marker inside */
                                     pP = pP->AbNext;
                                   else if (pP->AbNext->AbElement !=
-                                           pPa1->AbEnclosing->AbElement)
+                                           pAb->AbEnclosing->AbElement)
                                     stop = TRUE;
                                   else if (TypeCreatedRule (pDoc,
-                                                            pPa1->AbEnclosing, pP->AbNext) == FnCreateLast)
+                                                            pAb->AbEnclosing, pP->AbNext) == FnCreateLast)
                                     /* le pave suivant doit etre le dernier */
                                     stop = TRUE;
                                   else
                                     pP = pP->AbNext;
                                 while (!(stop));
                                 /* on insere le nouveau pave apres */
-                                pPa1->AbPrevious = pP;
-                                pPa1->AbNext = pP->AbNext;
+                                pAb->AbPrevious = pP;
+                                pAb->AbNext = pP->AbNext;
                               }
                           }
                         else if (pP->AbPresentationBox &&
@@ -5552,14 +5547,14 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                           /* this is a list item marker inside the item,
                              skip it */
                           {
-                            pPa1->AbPrevious = pP;
-                            pPa1->AbNext = pP->AbNext;
+                            pAb->AbPrevious = pP;
+                            pAb->AbNext = pP->AbNext;
                           }
                         else
                           /* insere le nouveau pave en tete */
                           {
-                            pPa1->AbNext = pP;
-                            pPa1->AbEnclosing->AbFirstEnclosed = pAb;
+                            pAb->AbNext = pP;
+                            pAb->AbEnclosing->AbFirstEnclosed = pAb;
                           }
                       }
                   }
@@ -5588,14 +5583,14 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
                         while (!(stop));
                       }
                     /* insere le nouveau pave apres pP */
-                    pPa1->AbPrevious = pP;
-                    pPa1->AbNext = pP->AbNext;
+                    pAb->AbPrevious = pP;
+                    pAb->AbNext = pP->AbNext;
                   }
               }
-            if (pPa1->AbPrevious != NULL)
-              pPa1->AbPrevious->AbNext = pAb;
-            if (pPa1->AbNext != NULL)
-              pPa1->AbNext->AbPrevious = pAb;
+            if (pAb->AbPrevious != NULL)
+              pAb->AbPrevious->AbNext = pAb;
+            if (pAb->AbNext != NULL)
+              pAb->AbNext->AbPrevious = pAb;
           }
     }
   if (pEl->ElHolophrast || (pEl->ElTerminal && pEl->ElLeafType != LtPageColBreak))
@@ -5604,23 +5599,23 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
     {
       FillContent (pEl, pAb, pDoc);
       /* ajoute le volume du pave a celui de tous ses englobants */
-      if (pPa1->AbVolume > 0)
+      if (pAb->AbVolume > 0)
         {
-          pP = pPa1->AbEnclosing;
+          pP = pAb->AbEnclosing;
           while (pP != NULL)
             {
-              pP->AbVolume += pPa1->AbVolume;
+              pP->AbVolume += pAb->AbVolume;
               pP = pP->AbEnclosing;
             }
         }
     }
   else
     {
-      pPa1->AbLeafType = LtCompound;
-      pPa1->AbVolume = 0;
-      pPa1->AbInLine = FALSE;
-      pPa1->AbTruncatedHead = TRUE;
-      pPa1->AbTruncatedTail = TRUE;
+      pAb->AbLeafType = LtCompound;
+      pAb->AbVolume = 0;
+      pAb->AbInLine = FALSE;
+      pAb->AbTruncatedHead = TRUE;
+      pAb->AbTruncatedTail = TRUE;
     }
 }
 

@@ -126,7 +126,8 @@
 #define KWD_NewRoot 	1205
 #define KWD_GiveTypes 	1206
 #define KWD_IsMarker 	1207
-#define KWD_Root 	1208
+#define KWD_IsGhost 	1208
+#define KWD_Root 	1209
 
 /*  RULES  */
 

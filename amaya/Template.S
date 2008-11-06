@@ -84,12 +84,12 @@ EXCEPT
   PI_line:           Hidden, MarkupPreserve;
   Comment\240:       ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
   Comment_line:      Hidden, MarkupPreserve;
-  useEl:             NoBreakByReturn, ClickableSurface;
+  useEl:             NoBreakByReturn, ClickableSurface, IsGhost;
   component:         NewRoot;
-  useSimple:         NoBreakByReturn;
-  repeat:            NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface, ListItemBreak;
+  useSimple:         NoBreakByReturn, IsGhost;
+  repeat:            NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface, ListItemBreak, IsGhost;
   {option:           NoReplicate, NoBreakByReturn, NoCreate;}
-  bag:               NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak, ClickableSurface;
+  bag:               NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak, ClickableSurface, IsGhost;
   {Hiding unkown and language attributes}
   Highlight:        Invisible;
   Unknown_attribute:Invisible;

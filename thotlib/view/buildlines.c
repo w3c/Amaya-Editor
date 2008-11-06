@@ -168,7 +168,7 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
       else if (pNextAb->AbBox->BxType == BoGhost ||
                pNextAb->AbBox->BxType == BoFloatGhost)
         {
-          /* descend la hierarchie */
+          /* move down hierarchy */
           while (!pNextAb->AbDead && pNextAb->AbBox &&
                  (pNextAb->AbBox->BxType == BoGhost ||
                   pNextAb->AbBox->BxType == BoFloatGhost))
@@ -2399,7 +2399,8 @@ static PtrAbstractBox GetEnclosingBlock (PtrAbstractBox pAb, PtrAbstractBox bloc
 
   pRefBlock = pAb->AbEnclosing;
   while (pRefBlock != block &&
-         pRefBlock->AbBox->BxType == BoGhost && pRefBlock->AbDisplay != 'B')
+         pRefBlock->AbBox->BxType == BoGhost &&
+         pRefBlock->AbDisplay != 'B')
     pRefBlock = pRefBlock->AbEnclosing;
   return pRefBlock;
 }
@@ -3886,6 +3887,12 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                    (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
   /* what is the maximum width allowed */
   pParent = pAb->AbEnclosing;
+#ifdef IV
+  // skip struct ghosts
+  while (pParent && pParent->AbBox &&
+         pParent->AbBox->BxType == BoStructGhost)
+    pParent = pParent->AbEnclosing;
+#endif
   isFloat = pAb->AbFloat != 'N';
   isExtraFlow = ExtraFlow (pBox, frame);
   if (pBox->BxShrink && pBox->BxRuleWidth)
@@ -4734,8 +4741,8 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
   Propagation         propagateStatus;
   CHAR_T              c;
   PtrLine             pLine;
-  PtrBox              pBox;
-  PtrBox              pSelBox;
+  PtrBox              pBox, pSelBox;
+  PtrAbstractBox      pParent;
   ViewFrame          *pFrame;
   ViewSelection      *pSelBegin;
   ViewSelection      *pSelEnd;
@@ -4812,13 +4819,20 @@ ThotBool RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
       else if (pBox->BxMinWidth > pBox->BxW)
         {
           width = pBox->BxMinWidth;
-          if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
-              pBox->BxMinWidth > pAb->AbEnclosing->AbBox->BxMinWidth &&
-              pAb->AbEnclosing->AbWidth.DimAbRef &&
-              (pAb->AbEnclosing->AbBox->BxType == BoBlock ||
-               pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-               pAb->AbEnclosing->AbBox->BxType == BoCellBlock))
-            pAb->AbEnclosing->AbBox->BxMinWidth = pBox->BxMinWidth;
+          pParent = pAb->AbEnclosing;
+#ifdef IV
+          // skip struct ghosts
+          while (pParent && pParent->AbBox &&
+                 pParent->AbBox->BxType == BoStructGhost)
+            pParent = pParent->AbEnclosing;
+#endif
+          if (pParent && pParent->AbBox &&
+              pBox->BxMinWidth > pParent->AbBox->BxMinWidth &&
+              pParent->AbWidth.DimAbRef &&
+              (pParent->AbBox->BxType == BoBlock ||
+               pParent->AbBox->BxType == BoFloatBlock ||
+               pParent->AbBox->BxType == BoCellBlock))
+            pParent->AbBox->BxMinWidth = pBox->BxMinWidth;
         }
       else
         /* no update */

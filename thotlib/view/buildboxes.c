@@ -2782,6 +2782,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
         boxType = BoRow;
       else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
         boxType = BoCell;
+      else if (TypeHasException (ExcIsGhost, pAb->AbElement->ElTypeNumber, pSS) &&
+               pAb->AbElement->ElFirstChild && pAb->AbDocView == 1)
+        boxType = BoStructGhost;
     }
   /* Chargement de la fonte attachee au pave */
   height = pAb->AbSize;

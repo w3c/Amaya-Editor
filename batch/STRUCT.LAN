@@ -134,7 +134,7 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
 		 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
      'IsImg' / 'IsMap' / 'DuplicateAttr' / 'PseudoParag' /
-     'GiveName' / 'NewRoot' / 'GiveTypes' / 'IsMarker' /
+     'GiveName' / 'NewRoot' / 'GiveTypes' / 'IsMarker' / 'IsGhost' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 

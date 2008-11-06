@@ -329,6 +329,9 @@ static void         wrNumExcept (int Num)
 	    case ExcIsMarker:
 	       printf ("IsMarker");
 	       break;
+	    case ExcIsGhost:
+	       printf ("IsGhost");
+	       break;
 	    case ExcIsImg:
 	       printf ("IsImg");
 	       break;

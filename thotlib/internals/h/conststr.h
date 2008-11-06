@@ -115,6 +115,7 @@
 /* Template exceptions */
 #define ExcGiveName  349
 #define ExcGiveTypes 350
+#define ExcIsGhost 351
 
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400

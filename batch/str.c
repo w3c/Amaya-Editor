@@ -1761,6 +1761,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
       case KWD_IsMarker:
         ExceptionNum (ExcIsMarker, True, False, False, wi);
         break;
+      case KWD_IsGhost:
+        ExceptionNum (ExcIsGhost, True, False, False, wi);
+        break;
       case KWD_IsImg:
         ExceptionNum (ExcIsImg, True, False, False, wi);
         break;

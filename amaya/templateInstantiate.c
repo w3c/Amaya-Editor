@@ -240,7 +240,7 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
 #ifdef TEMPLATES
   AttributeType attType;
   Attribute     att;
-  Element       next, child, savedInline, prev;
+  Element       next, child, savedInline, prev, parent;
   Declaration   dec;
   char         *name;
   ElementType   elType, parentType;
@@ -267,10 +267,17 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
           name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
           TtaRemoveAttribute (el, TtaGetAttribute (el, attType), doc);
           // replace the component by a use
-          if (NeedAMenu (el, doc))
-            TtaChangeElementType (el, Template_EL_useEl);
-          else
-            TtaChangeElementType (el, Template_EL_useSimple);
+          prev = el;
+          TtaPreviousSibling (&prev);
+          if (prev == NULL)
+            {
+              next = el;
+              TtaNextSibling (&next);
+              if (next == NULL)
+                parent = TtaGetParent (el);
+            }
+          TtaRemoveTree (el, doc);
+          TtaChangeElementType (el, Template_EL_useSimple);
           // generate the types attribute
           attType.AttrTypeNum = Template_ATTR_types;
           att = TtaNewAttribute (attType);
@@ -289,6 +296,13 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
           TtaAttachAttribute (el, att, doc);
           if (name)
             TtaSetAttributeText (att, name, el, doc);
+          /* now reinsert the element new map */
+          if (prev != NULL)
+            TtaInsertSibling (el, prev, FALSE, doc);
+          else if (next != NULL)
+            TtaInsertSibling (el, next, TRUE, doc);
+          else
+            TtaInsertFirstChild (&el, parent, doc);
           TtaFreeMemory(name);
           break;
         case Template_EL_bag :

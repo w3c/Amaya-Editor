@@ -1323,6 +1323,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
             fprintf (fileDescriptor, " FLOAT_GHOST");
           else if (pBox->BxType == BoBlock)
             fprintf (fileDescriptor, " BLOCK");
+          else if (pBox->BxType == BoStructGhost)
+            fprintf (fileDescriptor, " STRUCT_GHOST");
           else if (pBox->BxType == BoFloatBlock)
             fprintf (fileDescriptor, " FLOAT_BLOCK");
           else if (pBox->BxType == BoCellBlock)
@@ -2010,6 +2012,8 @@ static void ListBoxTree (PtrAbstractBox pAb, int frame, int Indent,
                 fprintf (fileDescriptor, " GHOST");
               else if (pBox->BxType == BoFloatGhost)
                 fprintf (fileDescriptor, " FLOAT_GHOST");
+              else if (pBox->BxType == BoStructGhost)
+                fprintf (fileDescriptor, " STRUCT_GHOST");
               else if (pBox->BxType == BoBlock)
                 fprintf (fileDescriptor, " BLOCK");
               else if (pBox->BxType == BoFloatBlock)
