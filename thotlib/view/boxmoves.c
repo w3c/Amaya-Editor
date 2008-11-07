@@ -2643,6 +2643,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
               TtaFreeMemory ((STRING) pBox->BxPictInfo);
               pBox->BxPictInfo = NULL;
             }
+
           /* Check the validity of dependency rules */
           toMove = TRUE;
           if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
@@ -4080,7 +4081,11 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                   else if (pChildBox->BxYOrg < y)
                     /* don't take into account negative origins */
                     i = y + pChildBox->BxHeight;
-                  else
+                  else if (pBox->BxType == BoStructGhost &&
+                           pAb->AbVertPos.PosAbRef == pChildAb->AbVertPos.PosAbRef)
+                    /* inherit from enclosed box */
+                    i = pChildBox->BxHeight + pBox->BxTPadding + pBox->BxTBorder + pBox->BxBPadding + pBox->BxBBorder;
+                 else
                     i = pChildBox->BxYOrg + pChildBox->BxHeight;
                   if (pChildAb->AbNext == NULL &&
                       pBox->BxBBorder + pBox->BxBPadding == 0)

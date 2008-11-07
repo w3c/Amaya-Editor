@@ -1224,22 +1224,8 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
     }
 
   pParentAb = pAb->AbEnclosing;
-  if (pBox->BxType != BoStructGhost && pAb->AbLeafType == LtCompound)
-    {
-#ifdef IV
-      // skip structure ghosts
-      while (pParentAb && pParentAb->AbBox &&
-             pParentAb->AbBox->BxType == BoStructGhost)
-        {
-          if (horizRef && pAb->AbHorizPos.PosAbRef == pParentAb)
-            pAb->AbHorizPos.PosAbRef = pParentAb->AbEnclosing;
-          else if (!horizRef && pAb->AbVertPos.PosAbRef == pParentAb)
-            pAb->AbVertPos.PosAbRef = pParentAb->AbEnclosing;
-          pParentAb = pParentAb->AbEnclosing;
-        }
-#endif
-    }
-  else if (pBox->BxType == BoStructGhost)
+
+  if (pBox->BxType == BoStructGhost)
     {
       // change the position of structure ghost
       l = pBox->BxLPadding;
@@ -1256,9 +1242,9 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
           while (pChildAb && pChildAb->AbPresentationBox)
             pChildAb = pChildAb->AbNext;
         }
-      if (horizRef)
+      if (pChildAb)
         {
-          if (pChildAb && pChildAb->AbHorizPos.PosAbRef &&
+          if (horizRef && pChildAb->AbHorizPos.PosAbRef &&
               pChildAb->AbHorizPos.PosAbRef != pChildAb->AbEnclosing &&
               pChildAb->AbVertPos.PosAbRef != pChildAb->AbPrevious)
             {
@@ -1270,12 +1256,9 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
               rule->PosDeltaUnit = UnPixel;
               pBox->BxXOutOfStruct = pChildAb->AbBox->BxXOutOfStruct;
             }
-        }
-      else
-        {
-          if (pChildAb && pChildAb->AbVertPos.PosAbRef &&
-              pChildAb->AbVertPos.PosAbRef != pChildAb->AbEnclosing &&
-              pChildAb->AbVertPos.PosAbRef != pChildAb->AbPrevious)
+          else if (!horizRef && pChildAb && pChildAb->AbVertPos.PosAbRef &&
+                   pChildAb->AbVertPos.PosAbRef != pChildAb->AbEnclosing &&
+                   pChildAb->AbVertPos.PosAbRef != pChildAb->AbPrevious)
             {
               // the position depends on another box
               rule->PosAbRef = pChildAb->AbVertPos.PosAbRef;
@@ -1283,7 +1266,7 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
               rule->PosEdge = pChildAb->AbVertPos.PosEdge;
               rule->PosDistDelta = -t;
               rule->PosDeltaUnit = UnPixel;
-              pBox->BxYOutOfStruct = pChildAb->AbBox->BxYOutOfStruct;
+              //pBox->BxYOutOfStruct = pChildAb->AbBox->BxYOutOfStruct;
             }
         }
     }
@@ -2212,22 +2195,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   pBox = pAb->AbBox;
   zoom = ViewFrameTable[frame - 1].FrMagnification;
   pParentAb = pAb->AbEnclosing;
-  if (pBox->BxType != BoStructGhost && pAb->AbLeafType == LtCompound)
-    {
-#ifdef IV
-      // skip structure ghosts
-      while (pParentAb && pParentAb->AbBox &&
-             pParentAb->AbBox->BxType == BoStructGhost)
-        {
-          if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
-            pAb->AbWidth.DimAbRef = pParentAb->AbEnclosing;
-          else if (!horizRef && pAb->AbHeight.DimAbRef == pParentAb)
-            pAb->AbHeight.DimAbRef = pParentAb->AbEnclosing;
-          pParentAb = pParentAb->AbEnclosing;
-        }
-#endif
-    }
-  else if (pBox->BxType == BoStructGhost)
+  if (pBox->BxType == BoStructGhost)
     {
       pChildAb = pAb->AbFirstEnclosed;
       while (pChildAb && pChildAb->AbPresentationBox)
@@ -2244,20 +2212,40 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
           if (horizRef && pChildAb->AbWidth.DimAbRef &&
               pChildAb->AbWidth.DimAbRef != pChildAb->AbEnclosing)
             {
-              /* inherit from contents */
-              pAb->AbWidth.DimAbRef = NULL;
-              pAb->AbWidth.DimValue = -1;
-              pBox->BxContentWidth = TRUE;
-              return TRUE;
+              if (pChildAb->AbWidth.DimAbRef == NULL)
+                {
+                  /* inherit from contents */
+                  pAb->AbWidth.DimAbRef = NULL;
+                  pAb->AbWidth.DimValue = -1;
+                  pBox->BxContentWidth = TRUE;
+                  return TRUE;
+                }
+              else
+                {
+                  pAb->AbWidth.DimAbRef = pChildAb->AbWidth.DimAbRef;
+                  pAb->AbWidth.DimValue = pChildAb->AbWidth.DimValue;
+                  pAb->AbWidth.DimUnit = pChildAb->AbWidth.DimUnit;
+                  pAb->AbWidth.DimSameDimension = TRUE;
+                }
             }
           else if (!horizRef && pChildAb->AbHeight.DimAbRef &&
                    pChildAb->AbHeight.DimAbRef != pChildAb->AbEnclosing)
             {
-              /* inherit from contents */
-              pAb->AbHeight.DimAbRef = NULL;
-              pAb->AbHeight.DimValue = -1;
-              pBox->BxContentHeight = TRUE;
-              return TRUE;
+              if (pChildAb->AbHeight.DimAbRef == NULL)
+                {
+                  /* inherit from contents */
+                  pAb->AbHeight.DimAbRef = NULL;
+                  pAb->AbHeight.DimValue = -1;
+                  pBox->BxContentHeight = TRUE;
+                  return TRUE;
+                }
+              else
+                {
+                  pAb->AbHeight.DimAbRef = pChildAb->AbHeight.DimAbRef;
+                  pAb->AbHeight.DimValue = pChildAb->AbHeight.DimValue;
+                  pAb->AbHeight.DimUnit = pChildAb->AbHeight.DimUnit;
+                  pAb->AbHeight.DimSameDimension = TRUE;
+                }
             }
         }
     }

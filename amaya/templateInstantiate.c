@@ -1344,13 +1344,25 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
   Make it unique.
   Return TRUE if the name is not modified.
   ----------------------------------------------------------------------*/
-ThotBool Template_SetName (Document doc, Element elem, const char* name, ThotBool withUndo)
+ThotBool Template_SetName (Document doc, Element el, const char *name,
+                           ThotBool withUndo)
 {
 #ifdef TEMPLATES 
-  if(doc && elem && name)
+  AttributeType attType;
+  Attribute     attr;
+
+  if (doc && el && name)
     {
-      SetAttributeStringValue(elem, Template_ATTR_name, name);
-      return !MakeUniqueName(elem, doc, TRUE, withUndo);
+      attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+      attType.AttrTypeNum = Template_ATTR_name;
+      attr = TtaGetAttribute(el, attType);
+      if (attr == NULL)
+        {
+          attr = TtaNewAttribute (attType);
+          TtaAttachAttribute (el, attr, doc);
+        }
+      TtaSetAttributeText (attr, name, el, doc);
+      return TtaIsValidID (attr, TRUE);
     }
 #endif /* TEMPLATES */
   return FALSE;

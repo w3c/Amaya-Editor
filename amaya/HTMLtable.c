@@ -176,8 +176,11 @@ Element GetSiblingCell (Element cell, ThotBool before, ThotBool inMath)
                           elType = TtaGetElementType (sibling);
                           if (strcmp (TtaGetSSchemaName (elType.ElSSchema),
                                       "Template"))
+                            {
                             /* not a template element */
                             ancestor = NULL;
+                            return sibling;
+                            }
                           else
                             /* it's a Template element. Look for its first
                                descendant that is not a Template element */
@@ -1476,7 +1479,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   Attribute           attr;
   SSchema             tableSS;
   int                *colVSpan;
-  int                 span, cRef, cNumber, cDelayed, overflow;
+  int                 span, cRef = 0, cNumber = 0, cDelayed, overflow;
   int                 i, rowType, length;
   ThotBool            inMath;
   char*               buffer;
@@ -1735,6 +1738,13 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       row = firstrow;
       /* the rows group could be thead, tbody, tfoot */
       group = TtaGetParent (row);
+      elType1 = TtaGetElementType (group);
+      // skip template elements
+      while (!strcmp (TtaGetSSchemaName (elType1.ElSSchema), "Template"))
+        {
+          group = TtaGetParent (group);
+          elType1 = TtaGetElementType (group);
+        }
       while (row)
         {
           nextRow = NextTableRow (row);
@@ -2067,10 +2077,6 @@ void CheckTable (Element table, Document doc)
   Attribute         attr;
   ThotBool          previousStructureChecking, before, inMath, inTemplate;
 
-  if (IsTemplateDocument(doc))
-    /* do not check the structure of a table when loading a template.
-       Checking will be done when instanciating a template */
-    return;
   firstcolhead = NULL;
   previousStructureChecking = 0;
   if (table)
