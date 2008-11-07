@@ -335,6 +335,8 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                     {
                     if (active->AbBox == NULL)
                       active = NULL;
+		    else if (active->AbBox->BxType == BoGhost && d != 0)
+                      active = NULL;	    
                     else if (active->AbBox->BxType != BoGhost &&
                              GetBoxDistance (active->AbBox, *pFlow, x, y, ratio, frame, &matchCell) != 0)
                       active = NULL;
