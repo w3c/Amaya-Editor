@@ -20,6 +20,7 @@
 #include "templates.h"
 #include "templateDeclarations_f.h"
 #include "templates_f.h"
+#include "Template.h"
 #endif /* TEMPLATES */
 
 
@@ -2184,10 +2185,10 @@ static void MyNextSelectedElement (Document doc, Element * elSelect)
   WARNING This function works as long as there are no cycles in S schema
   whithout any HTML element inside....
   ----------------------------------------------------------------------*/
-static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
+static ThotBool IsValidHtmlChild (ElementType elType, const char *tag,
                                   const char *prevtag, Element el)
 {
-  ElementType         elemTypeChild, tagElType, prevElType;
+  ElementType         elTypeChild, tagElType, prevElType;
   ElementType        *subTypes = NULL;
   ConstructType       constOfType;
   const char         *name;
@@ -2197,14 +2198,19 @@ static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
 
   // check if it is a template element
   result = FALSE;
-  if (!strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "Template"))
+  if (!strcmp ((char *)TtaGetSSchemaName (elType.ElSSchema), "Template"))
     {
 #ifdef TEMPLATES
       XTigerTemplate  t;
 
       // check if the tag is allowed there
       t = GetXTigerDocTemplate (TransDoc);
-      if (t)
+      if (elType.ElTypeNum == Template_EL_bag)
+        {
+          GIType (tag, &tagElType, TransDoc);
+          return Template_CanInsertElementInBagElement (TransDoc, tagElType, el);
+        }
+      else if (t)
         {
           listtypes = Template_GetListTypes (t, el);
           name = listtypes;
@@ -2226,17 +2232,17 @@ static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
       return result;
     }
 
-  elemTypeChild.ElSSchema = elemType.ElSSchema;
-  cardinal = TtaGetCardinalOfType (elemType);
+  elTypeChild.ElSSchema = elType.ElSSchema;
+  cardinal = TtaGetCardinalOfType (elType);
   if (cardinal > 0)
     {
       subTypes = (ElementType *) TtaGetMemory (cardinal * sizeof (ElementType));
-      TtaGiveConstructorsOfType (&subTypes, &cardinal, elemType);
+      TtaGiveConstructorsOfType (&subTypes, &cardinal, elType);
     }
 
-  constOfType = TtaGetConstructOfType (elemType);
+  constOfType = TtaGetConstructOfType (elType);
   GIType (tag, &tagElType, TransDoc);
-  if (TtaSameSSchemas(elemType.ElSSchema, tagElType.ElSSchema) &&
+  if (TtaSameSSchemas(elType.ElSSchema, tagElType.ElSSchema) &&
       tagElType.ElTypeNum != 0)
     {
       switch (constOfType)
@@ -2260,8 +2266,8 @@ static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
                 }
               /* any math element can be inserted under <math> (only row in MathML.S)*/
               if (!result &&
-                  !strcmp ((char *)TtaGetElementTypeName (elemType), "math") && 
-                  !strcmp ((char *)TtaGetSSchemaName (elemType.ElSSchema), "MathML"))
+                  !strcmp ((char *)TtaGetElementTypeName (elType), "math") && 
+                  !strcmp ((char *)TtaGetSSchemaName (elType.ElSSchema), "MathML"))
                 result = IsValidHtmlChild (subTypes[0], tag, "", el);
             }
           break;
@@ -2337,7 +2343,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
                       if (!strcmp ((char *)name, "???") ||
                           !strcmp ((char *)name, "p*") ||
                           !strcmp ((char *)name, "none") ||
-                          TtaIsOptionalInAggregate (i, elemType)) 
+                          TtaIsOptionalInAggregate (i, elType)) 
                         i++;
                       else
                         i = cardinal;
@@ -2355,7 +2361,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
                         {
                           result = IsValidHtmlChild (subTypes[i], tag, "", el);
                           if (!result &&
-                              TtaIsOptionalInAggregate(i, elemType)) 
+                              TtaIsOptionalInAggregate(i, elType)) 
                             i++;
                           else
                             i = cardinal;
@@ -2387,7 +2393,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
               TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
             {
               if (subTypes[0].ElTypeNum == 0)
-                TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
+                TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elType));
               if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
                 result = TRUE;
               else
@@ -2420,7 +2426,7 @@ static ThotBool IsValidHtmlChild (ElementType elemType, const char *tag,
   checks if the higher-level generated elements are possible children of the   
   transformation root element                                          
   ----------------------------------------------------------------------*/
-static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
+static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elTypeRoot,
                                      char *prevTag)
 {
   strMatchChildren   *smc;
@@ -2452,7 +2458,7 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
               if (TtaGetElementVolume (smc->MatchNode->Elem) != 0)
                 { /* if the element is empty, it is ignored in transformation*/
                   if (strcmp ((char *)prevTag, (char *)smc->MatchNode->Tag))
-                    result = IsValidHtmlChild (elemTypeRoot,
+                    result = IsValidHtmlChild (elTypeRoot,
                                                (char *)smc->MatchNode->Tag,
                                                prevTag,
                                                sm->MatchNode->Elem);
@@ -2463,7 +2469,7 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
             {
               /* if they have been, checks the elements generated by these
                  children */
-              result = CheckValidTransRoot (sm2, elemTypeRoot, prevTag);
+              result = CheckValidTransRoot (sm2, elTypeRoot, prevTag);
             }
         }
       else
@@ -2473,7 +2479,7 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
             {		/* if there is at least one place node */
               if (strcmp ((char *)prevTag, (char *)node->Tag))
                 {
-                  result = IsValidHtmlChild (elemTypeRoot,
+                  result = IsValidHtmlChild (elTypeRoot,
                                              (char *)node->Tag,
                                              prevTag,
                                              sm->MatchNode->Elem);
@@ -2489,7 +2495,7 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
                     strcpy ((char *)curTag, (char *)sm->MatchNode->Tag);
                   else
                     strcpy ((char *)curTag, (char *)node->Tag);
-                  result = IsValidHtmlChild (elemTypeRoot,
+                  result = IsValidHtmlChild (elTypeRoot,
                                              curTag,
                                              prevTag,
                                              sm->MatchNode->Elem);

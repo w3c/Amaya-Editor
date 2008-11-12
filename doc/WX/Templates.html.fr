@@ -50,16 +50,111 @@ contraintes.</p>
 être stockée dans le système de fichiers local ou partagé sur un serveur
 web.</p>
 
-<h3 id="Selecting">Sélectionner un modèle</h3>
+<h3>Créer un modèle</h3>
 
 <p>Vous pouvez créer vos propres modèles, en utilisant le langage XTiger.
-Cependant, dans la version courante d'Amaya, aucun support spécifique n'est
-fourni pour la création et la mise à jour des modèles. Vous pouvez aussi
-utiliser les modèles disponibles sur le site web d'Amaya <a
-href="http://www.w3.org/Amaya/Templates/">http://www.w3.org/Amaya/Templates/</a>.</p>
+Cependant, Amaya fournit un support spécifique pour la création et la mise à
+jour des modèles.</p>
 
-<p>Vous êtes libre de stocker les modèles n'importe où, dans votre système de
-fichiers local ou à distance.</p>
+<p>L'approche proposée est de :</p>
+<ul>
+  <li>Créer d'abord un squelette d'instance de document (fichier .html) vous
+    voulez engendrer.</li>
+  <li>Sélectionner l'onglet Modèle (Tpl) de l'outil Eléments et cliquer sur la
+    première entrée pour engendrer un modèle (fichier .xtd) à partir du
+    squelette de document.</li>
+  <li>Quand un document modèle est sélectionné, plusieurs entrées de l'outil
+    Modèle sont disponibles : 
+    <ul>
+      <li>L'entrée <em>Créer et utiliser un composant</em> engendre un
+        <code>component</code> qui sera affiché dans la section
+        <code>head</code> du document modèle. Le contenu courant de la
+        sélection devient le contenu du composant. Un élément <code>use</code>
+        qui référence ce composant est créé à la position courante du document.
+        La sélection doit être valide (seulement des éléments complets ou une
+        chaîne de caractères). La commande demande à l'utilisateur de saisir le
+        nom du <code>component</code>. Ce nom doit être unique.</li>
+      <li>L'entrée <em>Créer et répéter un composant</em> engendre un
+        <code>component</code> qui sera affiché dans la section
+        <code>head</code> du document modèle et un élément <code>use</code>
+        dans un élément <code>repeat</code>. cette commande est un raccourci
+        des commandes <em>Créer et utiliser un composant</em> et <em>Répéter
+        l'utilisation courante</em>.</li>
+      <li>L'entrée <em>Créer une nouvelle union de types</em> engendre une
+        union qui définit un nouveau type comme le choix entre des types de
+        base (<code>number</code>, <code>string</code>), des éléments du
+        langage cible (div, h1, h2, p, ...), ou des noms de
+        <code>component</code>. La sélection courante n'a aucun effet. La
+        commande demande à l'utilisateur de saisir le nom de
+        l'<code>union</code>. Ce nom doit être unique.</li>
+      <li>L'entrée <em>Créer une zone de texte</em> engendre un élément
+        <code>use</code> qui inclut une chaîne de caractères. La sélection doit
+        être une chaîne de caractères et devient la valeur initiale de
+        l'élément use. La commande demande à l'utilisateur un label. Ce label
+        est libre et est utilisé pour le chemin de sélection affiché en bas de
+        la fenêtre.</li>
+      <li>L'entrée <em>Utiliser un composant ou un élément</em> peut être
+        utilisée pour un nouveau <code>use</code> de composant. Dans ce cas la
+        sélection doit être vide. Si un élément du langage cible (div, h1, h2,
+        p, ...) est sélectionné, un élément <code>use</code> est engendré et
+        l'élément sélectionné devient le contenu initial de l'élément use. La
+        commande demande à l'utilisateur un label. Ce label est libre et est
+        utilisé pour le chemin de sélection affiché en bas de la fenêtre.</li>
+      <li>L'entrée <em>Répéter l'utilisation courante</em> est utilisée pour
+        engendrer une répétition (<code>repeat</code>) de l'élément
+        <code>use</code> sélectionné. La commande demande à l'utilisateur un
+        label. Ce label est libre et est utilisé pour le chemin de sélection
+        affiché en bas de la fenêtre.</li>
+      <li>L'entrée <em>Créer une zone d'édition libre</em> engendre un élément
+        <code>bag</code>. La commande demande à l'utilisateur un label. Ce
+        label est libre et est utilisé pour le chemin de sélection affiché en
+        bas de la fenêtre.</li>
+    </ul>
+  </li>
+  <li>Le modèle créé peut être enregistré n'importe où, dans votre système de
+    fichiers local ou à distance.</li>
+</ul>
+
+<h3 id="Visualizin">Visualisation des éléments du modèle</h3>
+
+<p>Quand un document instance est affiché, Amaya montre les éléments XTiger
+sous la forme de cadres colorés qui englobent les éléments XHTML.</p>
+<ul>
+  <li>Un élément <code>use</code> est affiché comme une boîte bleue
+  hachurée</li>
+  <li>Un élément <code>bag</code> est affiché comme une boîte verte
+  hachurée</li>
+  <li>Un élément <code>repeat</code> est affiché comme une boîte avec un <img
+    alt="icône repeat" src="../../resources/icons/16x16/TEMPLATE_repeat.png"
+    width="16" height="16" /> en haut à gauche</li>
+  <li>Un élément <code>attribute</code> n'est pas affiché dans la vue
+    principale; il n'a d'effet que sur l'outil <strong>Attributs</strong>.</li>
+</ul>
+
+<p>Les éléments XTiger peuvent aussi être vus dans la vue structure. Ouvrez
+cette vue avec l'entrée <strong>Montrer la structure</strong> dans le menu
+<strong>Affichage</strong>. Dans la vue structure, les éléments XTiger sont
+affichés en doré, alors que les éléments XHTML sont affichés en bleu. Les
+éléments XTiger sont aussi montrés dans la vue source, mais sans couleur
+spéciale.</p>
+
+<p>Un autre moyen de comprendre la structure imbriquée des éléments XTiger avec
+les éléments XHTML est le <strong>chemin de la sélection</strong> affiché dans
+la barre de statut (en bas de la fenêtre). Là vous pouvez voir tous les
+éléments de la structure du document depuis l'élément racine jusqu'à la
+sélection. Ce chemin est mis à jour chaque fois que la sélection change. Dans
+ce chemin, les éléments XTiger sont affichés en doré et les éléments XHTML sont
+affichés en noir. Pour les éléments XTiger, ce n'est pas le nom de l'élément
+qui est affiché ici (<code>use</code>, <code>bag</code>, <code>repeat</code>)
+mais le label attaché à ces éléments, comme déclaré dans le modèle.</p>
+
+<p></p>
+
+<h3 id="Selecting">Sélectionner un modèle</h3>
+
+<p>Vous pouvez sélectionner vos propres modèles ou utiliser les modèles
+disponibles sur le site web d'Amaya <a
+href="http://www.w3.org/Amaya/Templates/">http://www.w3.org/Amaya/Templates/</a>.</p>
 
 <p>Pour faciliter la sélection parmi vos modèles préférés, il y a une section
 <strong>Modèles</strong> dans le dialogue des Préférences
@@ -89,65 +184,33 @@ sélectionner :</p>
   <li>L'URI ou le nom du fichier du document instance à créer,</li>
   <li>Où ouvrir le nouveau document (Remplacer le document courant, Dans un
     nouvel onglet, Dans une nouvelle fenêtre),</li>
-  <li>Le titre du nouveau document (c'est obligatoire).</li>
+  <li>Le titre du nouveau document qui sera affiché par les navigateurs (un
+    titre par défaut est engendré quand l'utilisateur le ne spécifie pas).</li>
 </ul>
-
-<h3 id="Visualizin">Visualisation des éléments du modèle</h3>
-
-<p>Quand un document instance est affiché, Amaya montre les éléments XTiger
-sous la forme de cadres colorés qui englobent les éléments XHTML.</p>
-<ul>
-  <li>Un élément <code>use</code> est affiché comme une boîte bleue
-  hachurée</li>
-  <li>Un élément <code>bag</code> est affiché comme une boîte verte
-  hachurée</li>
-  <li>Un élément <code>repeat</code> est affiché comme une boîte pourpre
-    hachurée</li>
-  <li>Un élément <code>option</code> est affiché comme une boîte jaune
-  hachurée</li>
-  <li>les éléments attribute ne sont pas affichés dans la vue principale; ils
-    n'ont d'effet que sur l'outil <strong>Attributs</strong>.</li>
-</ul>
-
-<p>Les éléments XTiger peuvent aussi être vus dans la vue structure. Ouvrez
-cette vue avec l'entrée <strong>Montrer la structure</strong> dans le menu
-<strong>Affichage</strong>. Dans la vue structure, les éléments XTiger sont
-affichés en vert, alors que les éléments XHTML sont affichés en bleu. Les
-éléments XTiger sont aussi montrés dans la vue source, mais sans couleur
-spéciale.</p>
-
-<p>Un autre moyen de comprendre la structure imbriquée des éléments XTiger avec
-les éléments XHTML est le chemin de la sélection affiché dans la barre de
-statut (en bas de la fenêtre). Là vous pouvez voir tous les éléments de la
-structure du document depuis l'élément racine jusqu'à la sélection. Ce chemin
-est mis à jour chaque fois que la sélection change. Dans ce chemin, les
-éléments XTiger sont affichés en vert et les éléments XHTML sont affichés en
-noir. Pour les éléments XTiger, ce n'est pas le nom de l'élément qui est
-affiché ici (use, bag, repeat, option) mais le label attaché à ces éléments,
-comme déclaré dans le modèle.</p>
 
 <h3 id="Editing">Editer un document instance</h3>
 
 <p>L'édition n'est autorisée que dans les éléments <code>repeat</code>,
-<code>option</code>, <code>use</code>, et <code>bag</code>, c'est-à-dire dans
-les boîtes colorées hachurées. Le reste du document est la partie figée du
-modèle et ne peut pas être modifié.</p>
+<code>use</code>, et <code>bag</code>, c'est-à-dire dans les boîtes colorées
+hachurées. Le reste du document est la partie figée du modèle et ne peut pas
+être modifié.</p>
 
 <h4 id="Editing1">Edition dans un élément <code>repeat</code></h4>
 
-<p id="Editing11">Dans une boîte <code>repeat</code> (pourpre), vous pouvez
-créer de nouvelles instances de la structure répétée ou en détruire une. Ceci
-est contrôlé par le modèle, qui peut imposer un nombre minimum et/ou maximum
-d'occurrences de la structure répétée. Quand la création de nouvelles
-occurrences de la structure répétée est autorisée, des icônes <span
-style="color:#ed00f3">+</span> sont affichées aux emplacements où cette
-création est possible. Cliquez sur une des ces icones pour créer une nouvelle
-occurrence. Un menu vous donne la liste des éléments qui peuvent être créés à
-cette position. En sélectionnant une entrée de ce menu, vous créez une nouvelle
-occurrence du type correspondant. Dans certains cas, le modèle n'offre qu'un
-seul type. Le menu ne contient alors qu'une seule entrée, pour clairement
-informer l'utilisateur de ce qui va être créé. Si vous cliquez en dehors du
-menu, rien ne sera créé.</p>
+<p id="Editing11">Dans une boîte <code>repeat</code>, vous pouvez créer de
+nouvelles instances de la structure répétée ou en détruire une. Ceci est
+contrôlé par le modèle, qui peut imposer un nombre minimum et/ou maximum
+d'occurrences de la structure répétée.</p>
+
+<p id="Editing111">Quand la création de nouvelles occurrences de la structure
+répétée est autorisée, des icônes <strong style="color:#1e90ff">+</strong> 
+sont affichées aux emplacements où cette création est possible. Cliquez sur une
+des ces icônes pour créer une nouvelle occurrence. Un menu vous donne la liste
+des éléments qui peuvent être créés à cette position. En sélectionnant une
+entrée de ce menu, vous créez une nouvelle occurrence du type correspondant.
+Dans certains cas, le modèle n'offre qu'un seul type. Le menu ne contient alors
+qu'une seule entrée, pour clairement informer l'utilisateur de ce qui va être
+créé. Si vous cliquez en dehors du menu, rien ne sera créé.</p>
 
 <p>Une autre façon de créer des occurrences de la structure répétée est de
 sélectionner une occurrence existante, ou d'ajouter un point d'insertion à la
@@ -161,13 +224,6 @@ sur la touche <kbd>Entrée</kbd>.</p>
 la touche <kbd>Arrière</kbd> ou <kbd>Suppr</kbd> est pressée, l'élément est
 détruit, à condition que le nombre minimum d'occurrences de la structure
 répétée ne soit pas déjà atteint.</p>
-
-<h4 id="Editing2">Edition dans un élément <code>option</code></h4>
-
-<p>Les boîtes <code>option</code> (jaune) affiche une icône 'v' dans le coin
-haut gauche. Si la boîte est vide, un clic sur l'icône crée la structure
-optionnelle. Si la structure optionnelle est présente, un clic sur l'icône la
-supprime.</p>
 
 <h4 id="Editing3">Edition dans un élément <code>use</code></h4>
 
@@ -187,10 +243,7 @@ nombre d'éléments des types spécifiés par le modèle. Quand vous voulez insérer
 un élément XHTML, faite le de la façon habituelle, à condition que le modèle
 autorise ce type d'élément. Il se peut que des éléments ne soient pas
 autorisés. Les éléments autorisés sont proposés dans les sous-menus
-<strong>Insérer</strong> et <strong>Ajouter</strong> du menu contextuel.</p>
-
-<p>Les modèles introduisent de nouvelles structures (appelées
-<em>composants</em>) construites à partir d'éléments XHTML. Les
+<strong>Insérer</strong> et <strong>Ajouter</strong> du menu contextuel. Les
 <em>composants</em> définis par le modèle sont aussi proposés dans les
 sous-menus <strong>Insérer</strong> et <strong>Ajouter</strong> du menu
 contextuel.</p>

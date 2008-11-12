@@ -10,16 +10,15 @@
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
+<body xml:lang="en" lang="en">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="EditChar.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Changing.html" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Changing.html" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
@@ -29,15 +28,15 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <h3 id="What">What is a template?</h3>
 
 <p>Templates are used to produce multiple documents of the same type. A
-template is a skeleton representing a given type of document, expressed in
-the format of the final documents to be produced (XHTML, for instance). The
-format of the final documents is called the target language and must be an
-XML language.</p>
+template is a skeleton representing a given type of document, expressed in the
+format of the final documents to be produced (XHTML, for instance). The format
+of the final documents is called the target language and must be an XML
+language.</p>
 
-<p>In a template, the skeleton document contains some statements, expressed
-in the XTiger language (eXtensible Templates for Interactive Guided Editing
-of Resources), that specify how this minimal document can evolve and grow,
-while keeping in line with the intended type of the final document. Documents
+<p>In a template, the skeleton document contains some statements, expressed in
+the XTiger language (eXtensible Templates for Interactive Guided Editing of
+Resources), that specify how this minimal document can evolve and grow, while
+keeping in line with the intended type of the final document. Documents
 produced from this skeleton following the XTiger statements are called
 <em>instances</em> of the template. Some parts of the template may be frozen,
 if they have to appear in document instances as they are. Some parts may be
@@ -47,114 +46,167 @@ freely or under some constraints.</p>
 <p>The file containing a template must have a <code>.xtd</code> extension.</p>
 
 <p>A template comes often with a set of accompanying resources (images, style
-sheets, scripts). A template is a web resource, that can be stored in the
-local file system or shared on a remote web server.</p>
+sheets, scripts). A template is a web resource, that can be stored in the local
+file system or shared on a remote web server.</p>
 
-<h3 id="Selecting">Selecting templates</h3>
+<h3>Creating a template</h3>
 
-<p>You can create your own templates, using the XTiger language. However, in
-the current version of Amaya, no specific support is provided for creating or
-updating templates. You can also use the templates available on the Amaya web
-site at <a
-href="http://www.w3.org/Amaya/Templates/">http://www.w3.org/Amaya/Templates/</a></p>
+<p>You can create your own templates, using the XTiger language. However, Amaya
+provides a specific support for creating or updating templates.</p>
 
-<p>You are free to store templates anywhere, in your local file system or
-remotely.</p>
-
-<p>To ease selection among your favorite templates, there is a
-<strong>Templates</strong> section in the Preferences dialogue
-(<strong>Edit/Preferences</strong>, or <strong>amaya/Preferences</strong>
-under Mac OS X). Use it to register the templates that Amaya proposes when
-you create a new document. When registering a local template, you can call a
-file browser with the browse button to locate and select the files to be
-added to the list. You can also enter the URI of remote templates in the
-input area below the list. Use the buttons on the right side of the list to
-remove a template or to change the order of templates in the list.</p>
-
-<p>Registering templates in this list is not mandatory. When you create a new
-document instance, you can also choose a template that is not in that
-list.</p>
-
-<h3 id="Creating">Creating an instance document</h3>
-
-<p>To create a new document instance from a template, use entry
-<strong>New/New document</strong> in the <strong>File</strong> menu. It
-displays a <a href="Document.html">dialogue</a>  where you can select:</p>
+<p>The proposed approach is to:</p>
 <ul>
-  <li>The template, either by selecting in the list of registered templates
-    or by typing the URI or file name of a template that is not in the
-  list</li>
-  <li>The URI or file name of the document instance you want to create</li>
-  <li>Where to open the new document (Replace current, In new tab, In new
-    window)</li>
-  <li>The Title of the new document (this is mandatory)</li>
+  <li>Create first a skeleton of the document instance (.html file) you want to
+    generate.</li>
+  <li>Select the Template (Tpl) tab of the <strong>Elements</strong> tool and
+    click on the first entry to generate a template (.xtd file) from that
+    document skeleton.</li>
+  <li>When a template document is selected, several entries of the Template
+    tool are available: 
+    <p></p>
+    <ul>
+      <li>The <em>Create and use a component</em> entry generates a
+        <code>component</code> that will be displayed in the <code>head</code>
+        of the template document. The current content of the selection becomes
+        the content of the component. A <code>use</code> element that refers
+        that component is created at the current position of the document. The
+        selection must be valid (a set of complete elements or a string). The
+        command asks the user for the <code>component</code> name. That name
+        must be unique.</li>
+      <li>The <em>Create and repeat a component</em> entry generates a
+        <code>component</code> that will be displayed in the <code>head</code>
+        of the template document and a <code>use</code> element inside a
+        <code>repeat</code> element. That command is a shortcut of the
+        <em>Create and use a component</em> and <em>Repeat the current use</em>
+        commands.</li>
+      <li>The <em>Create a new types union</em> entry generates a
+        <code>union</code> which defines a new type as a choice between several
+        basic types (<code>number</code>, <code>string</code>), elements from
+        the target language (div, h1, h2, p, ...), or <code>component</code>
+        names. The current selection has no effect. The command asks the user
+        for the <code>union</code> name. That name must be unique.</li>
+      <li>The <em>Create a text area</em> entry generates a <code>use</code>
+        element that includes a string. The command asks the user for a label.
+        That label is free and is used for the selection path displayed in the
+        status bar. The selection must be string and becomes the initial value
+        of the use element.</li>
+      <li>The <em>Use a component or an element</em> entry can be used to
+        generate a new <code>use</code> of a component. In that case the
+        selection must be empty. If an element of the target language (div, h1,
+        h2, p, ...) is selected, a <code>use</code> element is generated and
+        the selected element becomes the initial content of the use element.
+        The command asks the user for a label. That label is free and is used
+        for the selection path displayed in the status bar.</li>
+      <li>The <em>Repeat the current use</em> entry is used to generate a
+        <code>repeat</code> of the current selected <code>use</code> element.
+        The command asks the user for a label. That label is free and is used
+        for the selection path displayed in the status bar.</li>
+      <li>The <em>Create a free editing box</em> entry generates a
+        <code>bag</code> element. The command asks the user for a label. That
+        label is free and is used for the selection path displayed in the
+        status bar.</li>
+    </ul>
+  </li>
+  <li>The created template can stored anywhere, in your local file system or
+    remotely.</li>
 </ul>
 
 <h3 id="Visualizin">Visualizing template elements</h3>
 
-<p>When a document instance is displayed, Amaya shows the XTiger elements
-under the form of colored frames that enclose XHTML elements.</p>
+<p>When a document instance is displayed, Amaya shows the XTiger elements under
+the form of colored frames that enclose XHTML elements.</p>
 <ul>
   <li>A <code>use</code> element is shown as a dashed blue box</li>
   <li>A <code>bag</code> element is shown as a dashed green box</li>
-  <li>A <code>repeat</code> element is shown as a dashed purple box</li>
-  <li>An <code>option</code> element is shown as a dashed yellow box</li>
-  <li>The <code>attribute</code> element is not displayed in the main view,
-    as it only impacts the <strong>Attributes</strong> tool.</li>
+  <li>A <code>repeat</code> element is shown as a box with a <img
+    alt="Repeat icon" src="../../resources/icons/16x16/TEMPLATE_repeat.png"
+    width="16" height="16" /> on the top left</li>
+  <li>The <code>attribute</code> element is not displayed in the main view, as
+    it only impacts the <strong>Attributes</strong> tool.</li>
 </ul>
 
 <p>The XTiger elements can also be seen in the structure view. Open this view
 with the <strong>Show structure</strong> entry of the <strong>Views</strong>
-menu. In the structure view, XTiger elements are displayed in green, while
-the XHTML elements are in blue. XTiger elements are also shown in the Source
-view, but with no special color.</p>
+menu. In the structure view, XTiger elements are displayed in gold, while the
+XHTML elements are in blue. XTiger elements are also shown in the Source view,
+but with no special color.</p>
 
-<p>Another way to understand the nesting of XTiger elements with XHTML
-elements is the selection path displayed in the status bar or the window (at
-the bottom of the window). There, you can see the list of all elements in the
-structure of the document from the root element to the current selection. It
-is updated every time the selection is changed. In this path, XTiger elements
-are displayed in green and XHTML elements in black. For XTiger elements, it
-is not the name of the element that is displayed there (use, bag, repeat,
-option) but the label of these elements, as declared in the template.</p>
+<p>Another way to understand the nesting of XTiger elements with XHTML elements
+is the <strong>selection path</strong> displayed in the status bar of the
+window (at the bottom of the window). There, you can see the list of all
+elements in the structure of the document from the root element to the current
+selection. It is updated every time the selection is changed. In this path,
+XTiger elements are displayed in gold and XHTML elements in black. For XTiger
+elements, it is not the name of the element that is displayed there
+(<code>use</code>, <code>bag</code>, <code>repeat</code>) but the label of
+these elements, as declared in the template.</p>
+
+<h3 id="Selecting">Selecting templates</h3>
+
+<p>You can select your own templates, or use the templates available on the
+Amaya web site at <a
+href="http://www.w3.org/Amaya/Templates/">http://www.w3.org/Amaya/Templates/</a></p>
+
+<p>To ease selection among your favorite templates, there is a
+<strong>Templates</strong> section in the Preferences dialogue
+(<strong>Edit/Preferences</strong>, or <strong>amaya/Preferences</strong> under
+Mac OS X). Use it to register the templates that Amaya proposes when you create
+a new document. When registering a local template, you can call a file browser
+with the browse button to locate and select the files to be added to the list.
+You can also enter the URI of remote templates in the input area below the
+list. Use the buttons on the right side of the list to remove a template or to
+change the order of templates in the list.</p>
+
+<p>Registering templates in this list is not mandatory. When you create a new
+document instance, you can also choose a template that is not in that list.</p>
+
+<h3 id="Creating">Creating an instance document</h3>
+
+<p>To create a new document instance from a template, use entry <strong>New/New
+document</strong> in the <strong>File</strong> menu. It displays a <a
+href="Document.html">dialogue</a>  where you can select:</p>
+<ul>
+  <li>The template, either by selecting in the list of registered templates or
+    by typing the URI or file name of a template that is not in the list.</li>
+  <li>The URI or file name of the document instance you want to create.</li>
+  <li>Where to open the new document (Replace current, In new tab, In new
+    window).</li>
+  <li>The Title of the new document that will be displayed by browsers (a
+    default title is generated when the user doesn't specify it).</li>
+</ul>
 
 <h3 id="Editing">Editing an instance document</h3>
 
-<p>Editing is allowed only inside the <code>repeat</code>,
-<code>option</code>, <code>use</code>, and <code>bag</code> elements, i.e.
-within the colored dashed boxes. The rest of the document is the fixed part
-of the template and can not be modified.</p>
+<p>Editing is allowed only inside the <code>repeat</code>, <code>use</code>,
+and <code>bag</code> elements, i.e. within the colored dashed boxes. The rest
+of the document is the fixed part of the template and can not be modified.</p>
 
 <h4 id="Editing1">Editing in a <code>repeat</code> element</h4>
 
-<p>In a <code>repeat</code> box (purple), you can create new instances of the
-repeated structure or you can delete one. This is controlled by the template,
-which may impose a minimum and/or a maximum number of occurrences of the
-repeated structure. When creating new occurrences of the repeated structure
-is allowed, purple <span style="color:#ed00f3">+</span> icons are displayed
-at locations where you are allowed to create new occurrences. When you click
-on these icons, you get a pop-up menu that tells you what can be inserted at
-that position. By clicking in that pop-up menu, you create a new occurrence
-of the corresponding type. In some cases the template offers only one type of
-occurrence. The pop-up menu then contains a single entry, to clearly state
-what will be created. If you click outside the menu, nothing is created.</p>
+<p>In a <code>repeat</code> box, you can create new instances of the repeated
+structure or you can delete one. This is controlled by the template, which may
+impose a minimum and/or a maximum number of occurrences of the repeated
+structure.</p>
 
-<p>Another way to create new occurrences of the repeated structure is to
-select an existing occurrence, or to put the caret at the end of an
-occurrence, and to press the <kbd>Enter</kbd> key. A new occurrence of the
-repeated structure is then created, provided the maximum number of
-occurrences is not reached yet. The type of the new occurrence is then the
-same as the one that was selected when pressing the <kbd>Enter</kbd> key.</p>
+<p>When creating new occurrences of the repeated structure is allowed, <strong
+style="color:#1e90ff">+</strong> icons are displayed at locations where you are
+allowed to create new occurrences. When you click on these icons, you get a
+pop-up menu that tells you what can be inserted at that position. By clicking
+in that pop-up menu, you create a new occurrence of the corresponding type. In
+some cases the template offers only one type of occurrence. The pop-up menu
+then contains a single entry, to clearly state what will be created. If you
+click outside the menu, nothing is created.</p>
+
+<p>Another way to create new occurrences of the repeated structure is to select
+an existing occurrence, or to put the caret at the end of an occurrence, and to
+press the <kbd>Enter</kbd> key. A new occurrence of the repeated structure is
+then created, provided the maximum number of occurrences is not reached yet.
+The type of the new occurrence is then the same as the one that was selected
+when pressing the <kbd>Enter</kbd> key.</p>
 
 <p>When an existing occurrence is empty or fully selected and the
 <kbd>Backspace</kbd> or <kbd>Delete</kbd> key is pressed, the element is
 deleted, provided the minimum number of occurrences is not reached yet.</p>
-
-<h4 id="Editing2">Editing in an <code>option</code> element</h4>
-
-<p><code>option</code> boxes (yellow) display a yellow 'tick' icon in the top
-left corner. If the box is empty, clicking this icon creates the optional
-structure. If the optional structure is already present, this removes it.</p>
 
 <h4 id="Editing3">Editing in a <code>use</code> element</h4>
 
@@ -168,17 +220,14 @@ structure is generated and you can freely edit its content.</p>
 
 <h4 id="Editing4">Editing in a <code>bag</code> element</h4>
 
-<p>In a <code>bag</code> box (green), you can insert any number of elements
-of the types specified by the template. When you want to insert a XHTML
-element, do it the usual way provided this type is allowed by the template.
-It may happen that some elements are not allowed by the template. The allowed
-elements are listed in the <strong>Insert</strong> and
-<strong>Append</strong> submenus of the contextual menu.</p>
-
-<p>Templates introduce new structures (called <em>components</em>) built from
-XHTML elements. The available template <em>components</em> are also listed in
-the <strong>Insert</strong> and <strong>Append</strong> submenus of the
-contextual menu.</p>
+<p>In a <code>bag</code> box (green), you can insert any number of elements of
+the types specified by the template. When you want to insert a XHTML element,
+do it the usual way provided this type is allowed by the template. It may
+happen that some elements are not allowed by the template. The allowed elements
+are listed in the <strong>Insert</strong> and <strong>Append</strong> submenus
+of the contextual menu. The available template <em>components</em> are also
+listed in the <strong>Insert</strong> and <strong>Append</strong> submenus of
+the contextual menu.</p>
 </div>
 </body>
 </html>

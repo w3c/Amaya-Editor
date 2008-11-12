@@ -2304,7 +2304,6 @@ char* Template_ExpandTypes (XTigerTemplate t, const char* types,
     int             pos = 0;
     char            result[MAX_LENGTH];
 
-    
     /* Fill a string with results.*/
     if (set)
       {
