@@ -92,15 +92,14 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
 #ifdef _WINDOWS
   SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
 #endif /* _WINDOWS */
+
   /* SVG Style Panel */
   wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_SVG_STROKE_COLOR"),
       new AmayaColorButton(this, XRCID("wxID_SVG_STROKE_COLOR"), wxColour(0,0,0), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
-
   wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_SVG_FILL_COLOR"),
       new AmayaColorButton(this, XRCID("wxID_SVG_FILL_COLOR"), wxColour(255,255,255), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
 
   /* HTML Style Panel */
-
   wxXmlResource::Get()->AttachUnknownControl(wxT("wxID_PANEL_CSS_COLOR"),
       new AmayaColorButton(this, XRCID("wxID_PANEL_CSS_COLOR"), wxColour(0,0,0), wxDefaultPosition, wxSize(16,16), wxBORDER_RAISED));
 
@@ -142,9 +141,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
 
   wxTextValidator valid(wxFILTER_NUMERIC);
   XRCCTRL(*this,"wxID_COMBO_SIZE", wxComboBox)->SetValidator(valid);
-  
   RaiseDoctypePanels(WXAMAYA_DOCTYPE_UNKNOWN);
-  
   return true;
 }
 
@@ -189,8 +186,7 @@ void AmayaStyleToolPanel::RaiseDoctypePanels(int doctype)
     default:
       if (Current_StylePanel == -1 || Current_StylePanel == 1)
         {
-          if (Current_StylePanel == 1)
-            GetSizer()->Hide ((size_t)1);
+          GetSizer()->Hide ((size_t)1);
           GetSizer()->Show ((size_t)0);
           Current_StylePanel = 0;
         }

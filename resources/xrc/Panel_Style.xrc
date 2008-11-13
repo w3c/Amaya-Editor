@@ -314,11 +314,7 @@
         </object>
         <flag>wxEXPAND</flag>
       </object>
-      <object class="sizeritem">
-        <object class="wxStaticText">
-          <label>No style !</label>
-        </object>
-      </object>
+    
     </object>
   </object>
 </resource>
