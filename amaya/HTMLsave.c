@@ -58,7 +58,9 @@
 #include "HTMLform_f.h"
 
 #ifdef TEMPLATES
+#include "Template.h"
 #include "templates.h"
+#include "templateDeclarations_f.h"
 #include "templates_f.h"
 #endif /* TEMPLATES */
 
@@ -70,9 +72,6 @@ typedef struct _AttSearch
 
 #include "wxdialogapi_f.h"
 #include "appdialogue_wx.h"
-#ifdef TEMPLATES
-#include "Template.h"
-#endif /* TEMPLATES */
 
 #define StdDefaultName "Overview.html"
 static char         tempSavedObject[MAX_LENGTH];
@@ -2991,12 +2990,10 @@ void SaveAll (Document doc, View view)
 
   if (Saving_All_lock)
     return;
-
   Saving_All_lock = TRUE;
   
   /* In case we SaveAll from the modified source and the formatted doc is already modified */
   Synchronize (doc, view);
-
   for (document = 1; document < DocumentTableLength; document++)
     {
       if (TtaIsDocumentModified (document) &&
@@ -3005,9 +3002,8 @@ void SaveAll (Document doc, View view)
     }
 
   Saving_All_lock = FALSE;
-
 #ifdef _WX
-      TtaSetItemOff (doc, 1, File, BSaveAll);
+  TtaSetItemOff (doc, 1, File, BSaveAll);
 #endif /* _WX */
 }
 
@@ -3030,7 +3026,6 @@ void SaveDocument (Document doc, View view)
 
   if (DocumentURLs[doc] == 0)
     return;
-
   if (Saving_lock)
     // there is a current saving operation
     return;
@@ -3129,16 +3124,16 @@ void SaveDocument (Document doc, View view)
 
       if (!ok || !with_suffix)
         {
-	  // if the content_location is known, don't redirect to the Save As dialog
-	  if (!DocumentMeta[doc] || !DocumentMeta[doc]->full_content_location)
-	    {
-	      // call Save As when there is no suffix
-	      SavingDocument = 0;
-	      Saving_lock = FALSE;
-	      TtaSetDisplayMode (doc, dispMode);
-	      SaveDocumentAs (doc, view);
-	      return;
-	    }
+          // if the content_location is known, don't redirect to the Save As dialog
+          if (!DocumentMeta[doc] || !DocumentMeta[doc]->full_content_location)
+            {
+              // call Save As when there is no suffix
+              SavingDocument = 0;
+              Saving_lock = FALSE;
+              TtaSetDisplayMode (doc, dispMode);
+              SaveDocumentAs (doc, view);
+              return;
+            }
         }
 
       ptr = GetLocalPath (doc, DocumentURLs[doc]);
@@ -3209,11 +3204,18 @@ void SaveDocument (Document doc, View view)
         {
           TtaSetDocumentUnmodified (xmlDoc);
           TtaSetInitialSequence (xmlDoc);
+          // Reinitialize the template description
+          Template_FillFromDocument (xmlDoc);
         }
-      else if (DocumentSource[doc])
+      else
         {
-          TtaSetDocumentUnmodified (DocumentSource[doc]);
-          TtaSetInitialSequence (DocumentSource[doc]);
+          // Reinitialize the template description
+          Template_FillFromDocument (doc);
+          if (DocumentSource[doc])
+            {
+              TtaSetDocumentUnmodified (DocumentSource[doc]);
+              TtaSetInitialSequence (DocumentSource[doc]);
+            }
         }
         
       /* switch Amaya buttons and menus */
@@ -4599,6 +4601,10 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
             }
           else
             xmlDoc = doc;
+
+#ifdef TEMPLATES
+          NewXTigerTemplatePath (xmlDoc, documentFile);
+#endif /* TEMPLATES */
           AddDocHistory (xmlDoc, DocumentURLs[xmlDoc], 
                          DocumentMeta[xmlDoc]->initial_url,
                          DocumentMeta[xmlDoc]->form_data,
@@ -4693,6 +4699,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
             TtaFreeMemory (old_content_location);
           if (old_full_content_location)
             TtaFreeMemory (old_full_content_location);
+
+          // Reinitialize the template description
+          Template_FillFromDocument (xmlDoc);
         }
       else
         {

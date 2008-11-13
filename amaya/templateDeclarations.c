@@ -113,33 +113,29 @@ XTigerTemplate NewXTigerTemplate (const char *templatePath)
   XTigerTemplate t = (XTigerTemplate)TtaGetMemory (sizeof (_XTigerTemplate));
 
   memset (t, 0 ,sizeof (_XTigerTemplate));
-  t->uri         = TtaStrdup(templatePath);
-
-  t->libraries   = StringHashMap_Create(NULL, FALSE, -1);
+  t->uri = TtaStrdup (templatePath);
+  t->libraries = StringHashMap_Create(NULL, FALSE, -1);
 
   t->simpleTypes = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
                                     (Container_CompareFunction)Declaration_Compare,
                                     (Container_CompareFunction)Declaration_CompareToString);
-  t->elements    = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
-                                    (Container_CompareFunction)Declaration_Compare,
-                                    (Container_CompareFunction)Declaration_CompareToString);
-  t->components  = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
-                                    (Container_CompareFunction)Declaration_Compare,
-                                    (Container_CompareFunction)Declaration_CompareToString);
-  t->unions      = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
-                                    (Container_CompareFunction)Declaration_Compare,
-                                    (Container_CompareFunction)Declaration_CompareToString);
-  t->unknowns    = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
-                                    (Container_CompareFunction)Declaration_Compare,
-                                    (Container_CompareFunction)Declaration_CompareToString);
-
-  t->doc   = -1;
-  t->ref   = 0;
+  t->elements = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
+                                 (Container_CompareFunction)Declaration_Compare,
+                                 (Container_CompareFunction)Declaration_CompareToString);
+  t->components = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
+                                   (Container_CompareFunction)Declaration_Compare,
+                                   (Container_CompareFunction)Declaration_CompareToString);
+  t->unions = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
+                               (Container_CompareFunction)Declaration_Compare,
+                               (Container_CompareFunction)Declaration_CompareToString);
+  t->unknowns = SearchSet_Create((Container_DestroyElementFunction)Declaration_Destroy,
+                                 (Container_CompareFunction)Declaration_Compare,
+                                 (Container_CompareFunction)Declaration_CompareToString);
+  t->doc = -1;
+  t->ref = 0;
   t->state = 0;
-  
   t->errorList = SList_Create();
   t->errorList->destroyElement = (Container_DestroyElementFunction)TtaFreeMemory;
-
   HashMap_Set (Templates_Map, TtaStrdup(t->uri), t);
   return t;
 #else
@@ -196,14 +192,13 @@ XTigerTemplate LookForXTigerTemplate (const char *templatePath)
   if (Templates_Map == NULL)
     InitializeTemplateEnvironment ();
   t = (XTigerTemplate) HashMap_Get(Templates_Map, (void*)templatePath);
-  if (!t)
-    t = NewXTigerTemplate(templatePath);
+  if (t == NULL)
+    t = NewXTigerTemplate (templatePath);
   return t;
 #else /* TEMPLATES */
   return NULL;
 #endif /* TEMPLATES */
 }
-
 
 /*----------------------------------------------------------------------
   Look for a registered XTigerTemplate
@@ -241,18 +236,38 @@ XTigerTemplate GetXTigerDocTemplate (Document doc)
   ITERATOR_FOREACH(iter, HashMapNode, node)
     {
       t = (XTigerTemplate)node->elem;
-      if (t)
-        if (t->doc == doc)
-          {
-            res = t;
-            break;
-          }
+      if (t && t->doc == doc)
+        {
+          res = t;
+          break;
+        }
     }
   TtaFreeMemory(iter);
   return res;
 #else
   return NULL;
 #endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  Update the XTigerTemplatePath
+  ----------------------------------------------------------------------*/
+ThotBool NewXTigerTemplatePath (Document doc, const char *templatePath)
+{
+#ifdef TEMPLATES
+  XTigerTemplate  t = NULL;
+ 
+  t = GetXTigerDocTemplate (doc);
+  if (t && templatePath)
+    {
+      HashMap_DestroyElement (Templates_Map, t->uri);
+      TtaFreeMemory (t->uri);
+      t->uri = TtaStrdup (templatePath);
+      HashMap_Set (Templates_Map, TtaStrdup(t->uri), t);
+      return TRUE;
+    }
+#endif /* TEMPLATES */
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -263,7 +278,7 @@ void Template_Close (XTigerTemplate t)
 #ifdef TEMPLATES
   if (t)
     {
-      HashMap_DestroyElement(Templates_Map, t->uri);
+      HashMap_DestroyElement (Templates_Map, t->uri);
       Template_Clear (t);
     }
 #endif /* TEMPLATES */
@@ -1005,8 +1020,6 @@ Declaration Template_DeclareNewComponent (XTigerTemplate t, const char *name,
 
   Declaration dec = Declaration_Create (t, name, ComponentNat);
   dec->componentType.content = el;
-//  dec->componentType.content = TtaCopyTree (el, TtaGetDocument (el),
-//                                            TtaGetDocument (el), el);
   Template_AddDeclaration (t, dec);
   return dec;
 #else /* TEMPLATES */

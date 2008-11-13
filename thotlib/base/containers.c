@@ -1107,13 +1107,11 @@ ThotBool HashMap_IsEmpty(HashMap map)
 static HashMapKeyNode HashMap_GetHashMapKeyNode(HashMap map, HashMapKey key, ThotBool create)
 {
   int keyval;
-  if(map==NULL || key==NULL)
+  if(map == NULL || key == NULL)
     return NULL;
   keyval = (map->hash(key))%map->nbNodes;
-  if (map->nodes[keyval]==NULL){
-    if (create)
-      map->nodes[keyval] = HashMap_CreateHashMapKeyNode(map);
-  }
+  if (map->nodes[keyval] == NULL && create)
+    map->nodes[keyval] = HashMap_CreateHashMapKeyNode(map);
   return map->nodes[keyval];
 }
 
@@ -1168,16 +1166,16 @@ ContainerElement HashMap_Set(HashMap map, HashMapKey key, ContainerElement elem)
 HashMapNode HashMap_Find(HashMap map, const HashMapKey key)
 {
   HashMapKeyNode keynode = HashMap_GetHashMapKeyNode(map, key, FALSE);
-  if (keynode!=NULL)
-  {
-    HashMapNode node = (HashMapNode)keynode->first;
-    while (node!=NULL)
+  if (keynode)
     {
-      if (map->compare(key, node->key)==0)
-        return node;
-      node = node->next;
+      HashMapNode node = (HashMapNode)keynode->first;
+      while (node)
+        {
+          if (map->compare(key, node->key) == 0)
+            return node;
+          node = node->next;
+        }
     }
-  }
   return NULL;
 }
 
@@ -1190,7 +1188,7 @@ HashMapNode HashMap_Find(HashMap map, const HashMapKey key)
 ContainerElement HashMap_Get(HashMap map, const HashMapKey key)
 {
   HashMapNode node = HashMap_Find(map, key);
-  if (node!=NULL)
+  if (node)
     return node->elem;
   return NULL;
 }

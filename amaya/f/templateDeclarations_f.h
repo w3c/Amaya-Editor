@@ -14,6 +14,8 @@ extern XTigerTemplate LookForXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate LookForXTigerTemplate ( const char *templatePath );
 extern XTigerTemplate GetXTigerTemplate ( const char *templatePath );
 extern XTigerTemplate GetXTigerDocTemplate ( Document doc );
+extern ThotBool NewXTigerTemplatePath ( Document doc,
+                                        const char *templatePath );
 extern void Template_Close ( XTigerTemplate t );
 extern void Template_AddStandardDependancies ( XTigerTemplate t );
 extern XTigerTemplate CreatePredefinedTypesLibrary ( void );
@@ -152,6 +154,8 @@ extern XTigerTemplate LookForXTigerLibrary ( const char *templatePath );
 extern XTigerTemplate LookForXTigerTemplate ( const char *templatePath );
 extern XTigerTemplate GetXTigerTemplate ( const char *templatePath );
 extern XTigerTemplate GetXTigerDocTemplate ( Document doc );
+extern ThotBool NewXTigerTemplatePath ( Document doc,
+                                          const char *templatePath );
 extern void Template_Close ( XTigerTemplate t );
 extern void Template_AddStandardDependancies ( XTigerTemplate t );
 extern XTigerTemplate CreatePredefinedTypesLibrary ( void );

@@ -834,10 +834,8 @@ static char* QueryStringFromMenu (Document doc, char* items)
   TtaWaitShowProcDialogue ();
   TtaDestroyDialogue (BaseDialog + OptionMenu);
 
-  if (ReturnOption!=-1)
-    {
-      result = TtaStrdup(itemlist[ReturnOption].label);
-    }
+  if (ReturnOption != -1)
+    result = TtaStrdup(itemlist[ReturnOption].label);
 
   TtaFreeMemory (itemlist);
   return result;
@@ -856,7 +854,10 @@ char *Template_GetListTypes (XTigerTemplate t, Element el)
 
   types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
   if (types)
-    listtypes = Template_ExpandTypes (t, types, el, FALSE);
+    {
+      listtypes = Template_ExpandTypes (t, types, el, FALSE);
+      TtaFreeMemory (types);
+    }
   return listtypes;
 #endif /* TEMPLATES */
 }
@@ -1340,7 +1341,7 @@ void Template_FillFromDocument (Document doc)
 #endif
       SetTemplateDocument (t, doc);
       Template_PrepareTemplate(t, doc);
-      if (IsTemplateInstanceDocument(doc))
+      if (IsTemplateInstanceDocument (doc))
         {
 #ifdef AMAYA_DEBUG
           printf("  > instance\n");
@@ -2327,16 +2328,12 @@ Element Template_CreateRepeatFromSelection (Document doc, int view,
 #ifdef TEMPLATES
   ThotBool    oldStructureChecking;
   DisplayMode dispMode;
-  Element     selElem, selElem2, parent, parent2;
-  ElementType selType, selType2;
+  Element     selElem, selElem2, parent, parent2, rep = NULL, use;
+  ElementType selType, selType2, repType;
   int         firstChar, lastChar, firstChar2, lastChar2;
   SSchema     sstempl = TtaGetSSchema ("Template", doc);
-  const char *title = TtaGetMessage (AMAYA, AM_TEMPLATE_REPEATCOMP);
-  const char *label = TtaGetMessage (AMAYA, AM_TEMPLATE_REPEATLABEL);
-  char        buffer[128];
-
-  ElementType repType;
-  Element     rep, use;
+  const char *title, *label;
+  char        buffer[128], *types;
 
   if (!TtaGetDocumentAccessMode(doc))
     return NULL;
@@ -2345,59 +2342,69 @@ Element Template_CreateRepeatFromSelection (Document doc, int view,
       IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
     {
       TtaGiveFirstSelectedElement(doc, &selElem, &firstChar, &lastChar);
+      selType =  TtaGetElementType(selElem);
       TtaGiveLastSelectedElement(doc, &selElem2, &firstChar2, &lastChar2);
-
-      if (selElem && selElem2)
+      selType2 =  TtaGetElementType(selElem2);
+      repType.ElSSchema = sstempl;
+      repType.ElTypeNum = Template_EL_repeat;
+      parent  = TtaGetParent(selElem);
+      parent2  = TtaGetParent(selElem2);
+      if (selElem && selElem2 && firstChar == 0 && firstChar2 == 0 &&
+          parent == parent2)
         {
-          // request the element label
-          QueryStringFromUser(label, title, buffer, 127);
-          if (buffer[0] == EOS)
-            return NULL;
-
-          selType =  TtaGetElementType(selElem);
-          selType2 =  TtaGetElementType(selElem2);
-          repType.ElSSchema = sstempl;
-          repType.ElTypeNum = Template_EL_repeat;
-          parent  = TtaGetParent(selElem);
-          parent2 = TtaGetParent(selElem2);
-          if (firstChar==0 && firstChar2==0 && parent == parent2 && buffer[0]!=0)
+          oldStructureChecking = TtaGetStructureChecking (doc);
+          if (selElem == selElem2 && selType.ElSSchema == sstempl &&
+              (selType.ElTypeNum == Template_EL_useEl ||
+               selType.ElTypeNum == Template_EL_useSimple))
+            use = selElem;
+          else
+            // create first the use element
+            use = Template_CreateUseFromSelection (doc, view, createComp);
+          if (use)
             {
-              dispMode = TtaGetDisplayMode (doc);
-              if (dispMode == DisplayImmediately)
-                TtaSetDisplayMode (doc, DeferredDisplay);
-              oldStructureChecking = TtaGetStructureChecking (doc);
-              TtaSetStructureChecking (FALSE, doc);
-
-              if (selElem==selElem2 && selType.ElSSchema==sstempl &&
-                  (selType.ElTypeNum==Template_EL_useEl ||
-                   selType.ElTypeNum==Template_EL_useSimple))
-                use = selElem;
-              else
-                use = Template_CreateUseFromSelection (doc, view, createComp);
-              if (use)
+              // avoid to repeat a use string
+              types = GetAttributeStringValueFromNum (use, Template_ATTR_types, NULL);
+              if (types && strcmp (types, "string"))
                 {
-                  TtaExtendUndoSequence(doc);
-
+                  TtaFreeMemory (types);
+                  // request the element label
+                  title = TtaGetMessage (AMAYA, AM_TEMPLATE_REPEATCOMP);
+                  label = TtaGetMessage (AMAYA, AM_TEMPLATE_REPEATLABEL);
+                  QueryStringFromUser(label, title, buffer, 127);
+                  if (buffer[0] == EOS)
+                    return NULL;
+                  if (use == selElem)
+                    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+                  else
+                    TtaExtendUndoSequence(doc);
+                  dispMode = TtaGetDisplayMode (doc);
+                  if (dispMode == DisplayImmediately)
+                    TtaSetDisplayMode (doc, DeferredDisplay);
+                  TtaSetStructureChecking (FALSE, doc);
+                  // create the repeat element
                   rep = TtaNewElement(doc, repType);
-
                   TtaInsertSibling(rep, use, FALSE, doc);
-                  SetAttributeStringValue(rep, Template_ATTR_title, buffer);
-                  TtaRegisterElementCreate(rep, doc);
-
+                  SetAttributeStringValue (rep, Template_ATTR_title, buffer);
+                  TtaRegisterElementCreate (rep, doc);
+                  // move the use element
                   TtaRegisterElementDelete (use, doc);
                   TtaRemoveTree(use, doc);
-
-                  TtaInsertFirstChild(&use, rep, doc);
-                  TtaRegisterElementCreate(use, doc);
-
-                  TtaSelectElement(doc, use);
-                  TtaCloseUndoSequence(doc);
+                  TtaInsertFirstChild (&use, rep, doc);
+                  TtaRegisterElementCreate (use, doc);
+                  TtaSetDisplayMode (doc, dispMode);
+                  TtaSelectElement (doc, use);
+                  TtaCloseUndoSequence (doc);
+                  TtaSetStructureChecking (oldStructureChecking, doc);
+                  // register document modification
+                  TtaSetDocumentModified (doc);
                 }
-
-              TtaSetStructureChecking (oldStructureChecking, doc);
-              TtaSetDisplayMode (doc, dispMode);
-              return rep;
             }
+          return rep;
+        }
+      else
+        {
+          TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_SELECTION);
+          return NULL;
         }
     }
 #endif /* TEMPLATES */
@@ -2706,6 +2713,7 @@ Element Template_CreateUseFromSelection (Document doc, int view,
                   title = TtaGetMessage (AMAYA, AM_TEMPLATE_USELABEL);
                   label = TtaGetMessage (AMAYA, AM_NAME);
                   QueryStringFromUser (label, title, buffer, 127);
+                  if (buffer[0] != EOS)
                     {
                       // Create a xt:use around the selection
                       useType.ElSSchema = sstempl;
@@ -2748,8 +2756,7 @@ Element Template_CreateUseFromSelection (Document doc, int view,
                           SetAttributeStringValue (use, Template_ATTR_types, "string");
                           SetAttributeStringValue (use, Template_ATTR_currentType, "string");
                         }
-                      if (buffer[0] != EOS)
-                        SetAttributeStringValue (use, Template_ATTR_title, buffer);
+                      SetAttributeStringValue (use, Template_ATTR_title, buffer);
                       TtaRegisterElementCreate (use, doc);
                       TtaSelectElement (doc, use);
                       // register document modification
@@ -2820,8 +2827,6 @@ Element Template_CreateComponentFromSelection (Document doc)
           if (head && firstChar == 0 && firstChar2 == 0 && parent == parent2)
             {
               dispMode = TtaGetDisplayMode (doc);
-              if (dispMode == DisplayImmediately)
-                TtaSetDisplayMode (doc, DeferredDisplay);
               oldStructureChecking = TtaGetStructureChecking (doc);
               TtaSetStructureChecking (FALSE, doc);
               child = TtaGetLastChild(head);
@@ -2833,6 +2838,8 @@ Element Template_CreateComponentFromSelection (Document doc)
                   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
                 }
 
+              if (dispMode == DisplayImmediately)
+                TtaSetDisplayMode (doc, DeferredDisplay);
               // Create the component
               comp = TtaNewElement(doc, compType);
               if (child)
@@ -2882,9 +2889,10 @@ ThotBool TemplateComponentWillBeDeleted (NotifyElement *event)
 {
 #ifdef TEMPLATES
   XTigerTemplate t = GetXTigerDocTemplate(event->document);
-  char* elemName = GetAttributeStringValueFromNum(event->element, Template_ATTR_name, NULL);
+  char          *elemName;
 
-  if (Template_IsUsedComponent(t, event->document, elemName))
+  elemName = GetAttributeStringValueFromNum(event->element, Template_ATTR_name, NULL);
+  if (Template_IsUsedComponent (t, event->document, elemName))
     {
       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_TEMPLATE_USEDCOMP_CANTREMOVE);
       return TRUE;
