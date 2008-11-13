@@ -1384,7 +1384,7 @@ ThotBool Template_CheckAndPrepareTemplate(char* docURL)
 #ifdef AMAYA_DEBUG
       printf("Template_CheckAndPrepareTemplate %s templTemplate\n", docURL);
 #endif
-      t = LookForXTigerTemplate(docURL);
+      t = LookForXTigerTemplate (docURL);
       t->state |= templTemplate;
     }
   else if (IsXTigerLibrary(docURL))
@@ -1392,7 +1392,7 @@ ThotBool Template_CheckAndPrepareTemplate(char* docURL)
 #ifdef AMAYA_DEBUG
       printf("Template_CheckAndPrepareTemplate %s templLibrary\n", docURL);
 #endif
-      t = LookForXTigerLibrary(docURL);
+      t = LookForXTigerLibrary (docURL);
       t->state |= templLibrary;
     }
   return t != NULL;
@@ -1465,14 +1465,13 @@ void Template_CheckAndPrepareInstance (char *localFileName, Document doc,
                   *ptr = EOS;
                   //Get now the template URI
                   template_url = TtaStrdup (content);
-
                   t = GetXTigerTemplate (template_url);
                   if (!t)
                     {
                       LoadTemplate (doc, template_url);
-                      t = GetXTigerTemplate(template_url);
+                      t = GetXTigerTemplate (template_url);
                     }
-                  Template_PrepareInstance(docURL, doc, template_version, template_url);
+                  Template_PrepareInstance (docURL, doc, template_version, template_url);
                   Template_AddReference (t);
                   *ptr = '"';
                 }

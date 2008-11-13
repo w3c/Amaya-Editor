@@ -710,7 +710,7 @@ static void GenerateStyle (const char * data , ThotBool add)
   ElementType         elType;
   Attribute           attr = NULL;
   AttributeType       attrType;
-  char                 *value;
+  char                 *value, *name;
   int                 doc, i, j, len;
   ThotBool            open, colcolgroup;
   PresentationContext ctxt;
@@ -732,74 +732,74 @@ static void GenerateStyle (const char * data , ThotBool add)
     /* no selection */
     return;
 
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
   if (data && data[0] != EOS)
     // there are style properties to be associated with the current selection
     {
       // should the style be applied to a COL or COLGROUP element ?
       colcolgroup = FALSE;
-      elType = TtaGetElementType (el);
-      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	{
-	  if (elType.ElTypeNum == HTML_EL_COL ||
-	      elType.ElTypeNum == HTML_EL_COLGROUP)
-	    // a COL or COLGROUP element is selected
-	    colcolgroup = TRUE;
-	  else if (TtaIsColumnSelected (doc))
-	    // a whole column is selected. Is there a COL or COLGROUP element
-	    // for that column ?
-	    {
-	      if (elType.ElTypeNum == HTML_EL_Data_cell ||
-		  elType.ElTypeNum == HTML_EL_Heading_cell)
-		{
-		  // get the relevant COL or COLGROUP element
-		  attrType.AttrSSchema = elType.ElSSchema;
-		  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
-		  attr = TtaGetAttribute (el, attrType);
-		  if (attr)
-		    {
-		      TtaGiveReferenceAttributeValue (attr, &colhead);
-		      if (colhead)
-			{
-			  attrType.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
-			  attr = TtaGetAttribute (colhead, attrType);
-			  if (attr)
-			    // this Column-head is linked to a COL or COLGROUP
-			    {
-			      TtaGiveReferenceAttributeValue (attr, &col);
-			      if (col)
-				{
-				  attrType.AttrTypeNum = HTML_ATTR_span_;
-				  attr = TtaGetAttribute (col, attrType);
-				  if (!attr ||
-				      TtaGetAttributeValue (attr) <= 1)
-				    // no spanning
-				    colcolgroup = TRUE;
-				}
-			    }
-			}
-		    }
-		}
-	    }
-	}
+      if (!strcmp (name, "HTML"))
+        {
+          if (elType.ElTypeNum == HTML_EL_COL ||
+              elType.ElTypeNum == HTML_EL_COLGROUP)
+            // a COL or COLGROUP element is selected
+            colcolgroup = TRUE;
+          else if (TtaIsColumnSelected (doc))
+            // a whole column is selected. Is there a COL or COLGROUP element
+            // for that column ?
+            {
+              if (elType.ElTypeNum == HTML_EL_Data_cell ||
+                  elType.ElTypeNum == HTML_EL_Heading_cell)
+                {
+                  // get the relevant COL or COLGROUP element
+                  attrType.AttrSSchema = elType.ElSSchema;
+                  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr)
+                    {
+                      TtaGiveReferenceAttributeValue (attr, &colhead);
+                      if (colhead)
+                        {
+                          attrType.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
+                          attr = TtaGetAttribute (colhead, attrType);
+                          if (attr)
+                            // this Column-head is linked to a COL or COLGROUP
+                            {
+                              TtaGiveReferenceAttributeValue (attr, &col);
+                              if (col)
+                                {
+                                  attrType.AttrTypeNum = HTML_ATTR_span_;
+                                  attr = TtaGetAttribute (col, attrType);
+                                  if (!attr ||
+                                      TtaGetAttributeValue (attr) <= 1)
+                                    // no spanning
+                                    colcolgroup = TRUE;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
       if (colcolgroup)
-	// a whole column with a COL or COLGROUP element is selected in a HTML
-	// table. Call the table editor
-	{
-	  // create the context of the Specific presentation driver
-	  ctxt = TtaGetSpecificStyleContext (doc);
-	  if (ctxt == NULL)
-	    return;
-	  ctxt->type = elType.ElTypeNum;
-	  ctxt->cssSpecificity = 1;
-	  ctxt->cssLine = TtaGetElementLineNumber (el);
-	  ctxt->destroy = FALSE;
-	  ColApplyCSSRule (NULL, ctxt, (char*)data, NULL);
-	}
-      else
-        GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data,
-                               !add);
+        // a whole column with a COL or COLGROUP element is selected in a HTML
+        // table. Call the table editor
+        {
+          // create the context of the Specific presentation driver
+          ctxt = TtaGetSpecificStyleContext (doc);
+          if (ctxt == NULL)
+            return;
+          ctxt->type = elType.ElTypeNum;
+          ctxt->cssSpecificity = 1;
+          ctxt->cssLine = TtaGetElementLineNumber (el);
+          ctxt->destroy = FALSE;
+          ColApplyCSSRule (NULL, ctxt, (char*)data, NULL);
+        }
+      else if (strcmp (name, "Template"))
+        GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data, !add);
     }
-  else
+  else if (strcmp (name, "Template"))
     // remove existing style attached to the selection
     {
       TtaGiveLastSelectedElement (doc, &lastC, &i, &j);
@@ -827,8 +827,6 @@ static void GenerateStyle (const char * data , ThotBool add)
           if (open)
             TtaCloseUndoSequence (doc);
         }
-      //else
-      //  TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
     }
 }
 
@@ -957,14 +955,14 @@ static Element NewSpanElement (Document doc, ThotBool *open)
 void DoStyleColor (char *color, ThotBool isBg)
 {
   Document            doc;
+  DisplayMode         dispMode;
+  ElementType         elType;
   Element             el = NULL;
-  char               *ptr;
   int                 col, bg_col, new_col, firstChar, lastChar;
   unsigned short      red, green, blue;
-  DisplayMode         dispMode;
+  char               *ptr, *name;
+  char                buffer[50];
   ThotBool            open = FALSE;
-  ElementType       elType;
-  char buffer[50];
 
   doc = TtaGetSelectedDocument();
   if (color == NULL)
@@ -982,6 +980,11 @@ void DoStyleColor (char *color, ThotBool isBg)
 
   // check the current color
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (name, "Template"))
+    return;
+
   TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
 
   if ((isBg && new_col == bg_col) || new_col == col)
@@ -992,20 +995,17 @@ void DoStyleColor (char *color, ThotBool isBg)
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
-
-  elType = TtaGetElementType (el);
-  if(elType.ElSSchema == GetSVGSSchema (doc))
+  if (!strcmp (name, "SVG"))
     {
       /* It's an SVG element */
       if(elType.ElTypeNum == SVG_EL_g ||
-	 elType.ElTypeNum == SVG_EL_rect ||
+         elType.ElTypeNum == SVG_EL_rect ||
          elType.ElTypeNum == SVG_EL_circle_ ||
          elType.ElTypeNum == SVG_EL_ellipse ||
          elType.ElTypeNum == SVG_EL_polyline ||
          elType.ElTypeNum == SVG_EL_polygon ||
-         elType.ElTypeNum == SVG_EL_path
-         || (!isBg && elType.ElTypeNum == SVG_EL_line_)
-         )
+         elType.ElTypeNum == SVG_EL_path ||
+         (!isBg && elType.ElTypeNum == SVG_EL_line_))
         {
           if(isBg)
             sprintf( buffer, "fill:%s", color);
@@ -1020,20 +1020,16 @@ void DoStyleColor (char *color, ThotBool isBg)
     }
   else
     {
-      if(isBg)
+      if (isBg)
         sprintf( buffer, "background-color:%s", color);
       else 
         sprintf( buffer, "color:%s", color);
-
       el = NewSpanElement (doc, &open);
       if (el)
         TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
       if ((isBg && new_col == bg_col) || new_col != col)
-        {
           GenerateStyle (buffer, TRUE);
-        }
     }
-      
 
   if (open)
     TtaCloseUndoSequence (doc);
@@ -1065,9 +1061,10 @@ void UpdateStylePanel (Document doc, View view)
 void DoSelectFontSize (Document doc, View view)
 {
   Element             el = NULL;
+  ElementType         elType;
   DisplayMode         dispMode;
   TypeUnit            unit;
-  char                font_string[100];
+  char                font_string[100], *name;
   int                 firstChar, lastChar;
   int                 size, family;
   ThotBool            open = FALSE;
@@ -1078,6 +1075,11 @@ void DoSelectFontSize (Document doc, View view)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (name, "Template"))
+    return;
+
   TtaGiveBoxFontInfo (el, doc, 1, &size, &unit, &family);
   if (el && size != -1 && (size != Current_FontSize || unit != UnPoint))
     {
@@ -1102,7 +1104,9 @@ void DoSelectFontSize (Document doc, View view)
 void DoSelectFontFamilly (Document doc, View view)
 {
   Element             el = NULL;
+  ElementType         elType;
   DisplayMode         dispMode;
+  char               *name;
   int                 firstChar, lastChar;
   int                 size, family;
   TypeUnit            unit;
@@ -1114,6 +1118,11 @@ void DoSelectFontFamilly (Document doc, View view)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (name, "Template"))
+    return;
+
   TtaGiveBoxFontInfo (el, doc, 1, &size, &unit, &family);
   if (el && size != -1 && family != Current_FontFamily)
     {
@@ -1147,7 +1156,9 @@ void DoSelectFontFamilly (Document doc, View view)
 void DoSelectFont (Document doc, View view)
 {
   Element             el = NULL;
+  ElementType         elType;
   DisplayMode         dispMode;
+  char               *name;
   int                 firstChar, lastChar;
   int                 family, size;
   ThotBool            open = FALSE;
@@ -1157,6 +1168,11 @@ void DoSelectFont (Document doc, View view)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (name, "Template"))
+    return;
+
   if (el)
     {
       family = Current_FontFamily;
@@ -1376,12 +1392,13 @@ void DoSelectStrokeWidth(Document doc, View view)
 void DoStyleSVG (Document doc, View view, int current_value, int type)
 {
   Element             el = NULL;
+  ElementType         elType;
+  PRule               rule;
   DisplayMode         dispMode;
   int                 firstChar, lastChar;
-  PRule               rule;
-  int value;
-  char buffer[100];
-  ThotBool open = FALSE;
+  int                 value;
+  char                buffer[100], *name;
+  ThotBool            open = FALSE;
 
   doc = TtaGetSelectedDocument();
   if (NoCSSEditing (doc))
@@ -1389,53 +1406,55 @@ void DoStyleSVG (Document doc, View view, int current_value, int type)
     return;
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
-  if(el)
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (name, "SVG"))
+    return;
+  if (el)
     {
       rule = TtaGetPRule(el, type);
-      if(rule)
-	value = TtaGetPRuleValue (rule);
+      if (rule)
+        value = TtaGetPRuleValue (rule);
+      if (value != current_value)
+        {
+          /* Need to force a redisplay */
+          dispMode = TtaGetDisplayMode (doc);
+          if (dispMode == DisplayImmediately)
+            TtaSetDisplayMode (doc, DeferredDisplay);
+          
+          //	  NewSpanElement (doc, &open);
+          switch(type)
+            {
+            case PROpacity:
+              sprintf(buffer, "opacity: %g", ((float)current_value) / 100);
+              TtaSetPRuleValue (el, rule, 10*current_value, doc);
+              break;
+              
+            case PRStrokeOpacity:
+              sprintf(buffer, "stroke-opacity: %g", ((float)current_value) / 100);
+              TtaSetPRuleValue (el, rule, 10*current_value, doc);
+              break;
+              
+            case PRFillOpacity:
+              sprintf(buffer, "fill-opacity: %g", ((float)current_value) / 100);
+              TtaSetPRuleValue (el, rule, 10*current_value, doc);
+              break;
+              
+            case PRLineWeight:
+              sprintf(buffer, "stroke-width: %d", current_value);
+              //TtaSetPRuleValue (el, rule, current_value, doc);
+              break;
+            }
 
-      if(value != current_value)
-	{
-	  /* Need to force a redisplay */
-	  dispMode = TtaGetDisplayMode (doc);
-	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (doc, DeferredDisplay);
-
-	  //	  NewSpanElement (doc, &open);
-	  switch(type)
-	    {
-	    case PROpacity:
-	      sprintf(buffer, "opacity: %g", ((float)current_value) / 100);
-	      TtaSetPRuleValue (el, rule, 10*current_value, doc);
-	      break;
-
-	    case PRStrokeOpacity:
-	      sprintf(buffer, "stroke-opacity: %g", ((float)current_value) / 100);
-	      TtaSetPRuleValue (el, rule, 10*current_value, doc);
-	      break;
-
-	    case PRFillOpacity:
-	      sprintf(buffer, "fill-opacity: %g", ((float)current_value) / 100);
-	      TtaSetPRuleValue (el, rule, 10*current_value, doc);
-	      break;
-
-	    case PRLineWeight:
-	      sprintf(buffer, "stroke-width: %d", current_value);
-	      //TtaSetPRuleValue (el, rule, current_value, doc);
-	      break;
-	    }
-
-	  GenerateStyle (buffer, TRUE);
-	  TtaSetDisplayMode (doc, dispMode);
-
-	  if (open)
-	    TtaCloseUndoSequence (doc);
-	  UpdateStylePanel (doc, view);
-	  TtaUpdateAttrMenu(doc);
-	}
+          GenerateStyle (buffer, TRUE);
+          TtaSetDisplayMode (doc, dispMode);
+          
+          if (open)
+            TtaCloseUndoSequence (doc);
+          UpdateStylePanel (doc, view);
+          TtaUpdateAttrMenu(doc);
+        }
     }
-
 }
 
 /*----------------------------------------------------------------------
