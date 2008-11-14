@@ -2297,6 +2297,9 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   AttributeType       attrType;
   Attribute           attr;
   DisplayMode         dispMode;
+#ifdef TEMPLATES
+  SSchema             sstempl;
+#endif /* TEMPLATES */
   char               *s;
   int                 firstChar, lastChar, i;
   ThotBool            noAnchor, ok;
@@ -2325,8 +2328,19 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   parentType.ElTypeNum = HTML_EL_HEAD;
   if (!strcmp (s, "HTML") && TtaGetTypedAncestor (first, parentType))
     {
-      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_ANCHOR1);
-      return;
+#ifdef TEMPLATES
+      sstempl = TtaGetSSchema ("Template", doc);
+	  if (IsTemplateDocument(doc) && sstempl)
+	  {
+        parentType.ElSSchema = sstempl;
+        parentType.ElTypeNum = Template_EL_component;
+        if (!TtaGetTypedAncestor (first, parentType))
+#endif /* TEMPLATES */
+		{
+        TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_ANCHOR1);
+        return;
+		}
+	  }
     }
   if ((elType.ElTypeNum == HTML_EL_Anchor ||
        elType.ElTypeNum == HTML_EL_MAP ||

@@ -351,7 +351,6 @@ static void MovingCommands (int code, Document doc, View view,
   int                 indpos, xpos;
   int                 first, last;
   int                 firstC, lastC;
-  DisplayMode         dispMode;
   ThotBool            done, top = TRUE, isPict;
 
   indpos = 0;
