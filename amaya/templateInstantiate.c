@@ -442,9 +442,9 @@ void CreateTemplate (Document doc, char *templatePath)
   s = TtaGetSSchemaName (elType.ElSSchema);
   
   TtaNewNature (doc, elType.ElSSchema,  NULL, "Template", "TemplateP");
-  TtaSetANamespaceDeclaration(doc, root, "xt", Template_URI);
-  templSchema = TtaGetSSchema("Template", doc);
-  TtaSetUriSSchema(templSchema, Template_URI);
+  TtaSetANamespaceDeclaration (doc, root, "xt", Template_URI);
+  templSchema = TtaGetSSchema ("Template", doc);
+  TtaSetUriSSchema (templSchema, Template_URI);
 
   // Insert xt:head and others
   TtaSetStructureChecking (FALSE, doc);
@@ -472,26 +472,26 @@ void CreateTemplate (Document doc, char *templatePath)
       // Initialize the document title
       elType.ElTypeNum = HTML_EL_TITLE;
       title = TtaSearchTypedElement (elType, SearchInTree, root);
-      if(title)
+      if (title)
         {
           // Create xt:use for title
           xtType.ElTypeNum = Template_EL_useSimple;
-          xt = TtaNewElement(doc, xtType);
+          xt = TtaNewElement (doc, xtType);
           TtaInsertFirstChild(&xt, title, doc);
-          SetAttributeStringValue(xt, Template_ATTR_types, "string");
-          SetAttributeStringValue(xt, Template_ATTR_title, "title");
+          SetAttributeStringValue (xt, Template_ATTR_types, "string");
+          SetAttributeStringValue (xt, Template_ATTR_title, "title");
           
           // Move current title content to xt:use
           last = NULL;
           while(child = TtaGetLastChild(title), child!=NULL)
             {
-              if(child==xt)
+              if (child == xt)
                 break;
-              TtaRemoveTree(child, doc);
-              if(last)
-                TtaInsertSibling(child, last, FALSE, doc);
+              TtaRemoveTree (child, doc);
+              if (last)
+                TtaInsertSibling (child, last, FALSE, doc);
               else
-                TtaInsertFirstChild(&child, xt, doc);
+                TtaInsertFirstChild (&child, xt, doc);
               last = child;
             }
         }
@@ -500,10 +500,10 @@ void CreateTemplate (Document doc, char *templatePath)
     {
       xtType.ElSSchema = templSchema;
       xtType.ElTypeNum = Template_EL_head;
-      xt = TtaNewElement(doc, xtType);
-      TtaInsertFirstChild(&xt, root, doc);
-      SetAttributeStringValue(xt, Template_ATTR_version, Template_Current_Version);
-      SetAttributeStringValue(xt, Template_ATTR_templateVersion, "1.0");      
+      xt = TtaNewElement (doc, xtType);
+      TtaInsertFirstChild (&xt, root, doc);
+      SetAttributeStringValue (xt, Template_ATTR_version, Template_Current_Version);
+      SetAttributeStringValue (xt, Template_ATTR_templateVersion, "1.0");      
     }
   // Save changes
   TtaSetStructureChecking (TRUE, doc);
@@ -1344,12 +1344,12 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
   Make it unique.
   Return TRUE if the name is not modified.
   ----------------------------------------------------------------------*/
-ThotBool Template_SetName (Document doc, Element el, const char *name,
-                           ThotBool withUndo)
+ThotBool Template_SetName (Document doc, Element el, const char *name, ThotBool withUndo)
 {
 #ifdef TEMPLATES 
   AttributeType attType;
   Attribute     attr;
+  ThotBool      res, res2;
 
   if (doc && el && name)
     {
@@ -1360,8 +1360,47 @@ ThotBool Template_SetName (Document doc, Element el, const char *name,
         {
           attr = TtaNewAttribute (attType);
           TtaAttachAttribute (el, attr, doc);
+          if (withUndo)
+            TtaRegisterAttributeCreate (attr, el, doc);
         }
+      if (withUndo)
+         TtaRegisterAttributeReplace(attr, el, doc);
       TtaSetAttributeText (attr, name, el, doc);
+      res = TtaIsValidID (attr, TRUE);
+      res2 = !MakeUniqueName(el, doc, TRUE, FALSE);
+      return (res || res2);
+    }
+#endif /* TEMPLATES */
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  Template_SetName
+  Set the xt:component or xt:union element xt:name attribute.
+  Make it unique.
+  Return TRUE if the name is not modified.
+  ----------------------------------------------------------------------*/
+ThotBool Template_SetLabel (Document doc, Element el, const char *label, ThotBool withUndo)
+{
+#ifdef TEMPLATES 
+  AttributeType attType;
+  Attribute     attr;
+
+  if (doc && el && label)
+    {
+      attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+      attType.AttrTypeNum = Template_ATTR_title;
+      attr = TtaGetAttribute(el, attType);
+      if (attr == NULL)
+        {
+          attr = TtaNewAttribute (attType);
+          TtaAttachAttribute (el, attr, doc);
+          if (withUndo)
+            TtaRegisterAttributeCreate (attr, el, doc);
+        }
+      if (withUndo)
+         TtaRegisterAttributeReplace(attr, el, doc);
+      TtaSetAttributeText (attr, label, el, doc);
       return TtaIsValidID (attr, TRUE);
     }
 #endif /* TEMPLATES */

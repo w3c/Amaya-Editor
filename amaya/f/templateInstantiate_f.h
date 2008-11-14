@@ -54,6 +54,10 @@ extern ThotBool Template_SetName ( Document doc,
                                    Element el,
                                    const char *name,
                                    ThotBool withUndo );
+extern ThotBool Template_SetLabel ( Document doc,
+                                    Element el,
+                                    const char *label,
+                                    ThotBool withUndo );
 
 #else /* __STDC__ */
 
@@ -105,6 +109,10 @@ extern ThotBool Template_SetName ( Document doc,
                                      Element el,
                                      const char *name,
                                      ThotBool withUndo );
+extern ThotBool Template_SetLabel ( Document doc,
+                                      Element el,
+                                      const char *label,
+                                      ThotBool withUndo );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

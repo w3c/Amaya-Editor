@@ -73,6 +73,8 @@ extern void Template_PrepareInstance ( char *fileName,
                                        char* template_url );
 extern void SetDocumentAsXTigerTemplate ( Document doc );
 extern void SetDocumentAsXTigerLibrary ( Document doc );
+extern void Template_CreateTextBox ( Document doc,
+                                     ThotBool createComp );
 extern void TemplateCreateTextBox ( Document doc,
                                     View view );
 extern void TemplateCreateFreeBox ( Document doc,
@@ -173,6 +175,8 @@ extern void Template_PrepareInstance ( char *fileName,
                                          char* template_url );
 extern void SetDocumentAsXTigerTemplate ( Document doc );
 extern void SetDocumentAsXTigerLibrary ( Document doc );
+extern void Template_CreateTextBox ( Document doc,
+                                       ThotBool createComp );
 extern void TemplateCreateTextBox ( Document doc,
                                       View view );
 extern void TemplateCreateFreeBox ( Document doc,

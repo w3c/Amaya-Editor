@@ -45,7 +45,8 @@ extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                    SimpleTypeType xtype );
 extern Declaration Template_DeclareNewComponent ( XTigerTemplate t,
                                                   const char *name,
-                                                  Element el );
+                                                  Element el,
+                                                  int level );
 extern Declaration Template_DeclareNewElement ( const XTigerTemplate t,
                                                 const char *name );
 extern Declaration Template_DeclareNewUnion ( XTigerTemplate t,
@@ -185,7 +186,8 @@ extern Declaration Template_DeclareNewSimpleType ( XTigerTemplate t,
                                                      SimpleTypeType xtype );
 extern Declaration Template_DeclareNewComponent ( XTigerTemplate t,
                                                     const char *name,
-                                                    Element el );
+                                                    Element el,
+                                                    int level );
 extern Declaration Template_DeclareNewElement ( const XTigerTemplate t,
                                                   const char *name );
 extern Declaration Template_DeclareNewUnion ( XTigerTemplate t,

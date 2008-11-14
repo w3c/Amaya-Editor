@@ -174,7 +174,7 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
                   if (old->nature==UnknownNat)
                     {
                       Template_RemoveUnknownDeclaration(t, old);
-                      Template_DeclareNewComponent (t, name, el);                      
+                      Template_DeclareNewComponent (t, name, el, 0);                      
                     }
                   else
                     {
@@ -182,7 +182,7 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
                     }
                 }
               else
-                Template_DeclareNewComponent (t, name, el);
+                Template_DeclareNewComponent (t, name, el, 0);
             }
           TtaFreeMemory (name);
           break;

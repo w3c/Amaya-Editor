@@ -111,17 +111,16 @@ Manuel d'utilisation d'Amaya</div>
   <li><a href="Templates.html.fr#Templates">Éditer avec des modèles</a> 
     <ul>
       <li><a href="Templates.html.fr#What">Qu'est-ce qu'un modèle ?</a></li>
+      <li><a href="Templates.html.fr#L65">Créer un modèle</a></li>
+      <li><a href="Templates.html.fr#Visualizin">Visualisation des éléments du
+        modèle</a></li>
       <li><a href="Templates.html.fr#Selecting">Sélectionner un modèle</a></li>
       <li><a href="Templates.html.fr#Creating">Créer une instance de
         document</a></li>
-      <li><a href="Templates.html.fr#Visualizin">Visualisation des éléments du
-        modèle</a></li>
-      <li><a href="Templates.html.fr#Editing">Editer un document instance</a> 
+      <li><a href="Templates.html.fr#Editing">Editer un document instance</a>
         <ul>
           <li><a href="Templates.html.fr#Editing1">Edition dans un élément
             <code>repeat</code></a></li>
-          <li><a href="Templates.html.fr#Editing2">Edition dans un élément
-            <code>option</code></a></li>
           <li><a href="Templates.html.fr#Editing3">Edition dans un élément
             <code>use</code></a></li>
           <li><a href="Templates.html.fr#Editing4">Edition dans un élément

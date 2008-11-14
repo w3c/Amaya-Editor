@@ -627,13 +627,34 @@ char *SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
 /*----------------------------------------------------------------------
  * Retrieve the xt:head element.
   ----------------------------------------------------------------------*/
-Element TemplateFindHead(Document doc)
+Element TemplateFindHead (Document doc)
 {
 #ifdef TEMPLATES
-  ElementType headType;
+  ElementType headType, elType;
+  Element     head, root;
+
   headType.ElSSchema = TtaGetSSchema ("Template", doc);
+  if (headType.ElSSchema == NULL)
+    return NULL;
+
   headType.ElTypeNum = Template_EL_head;
-  return TtaSearchTypedElement(headType, SearchInTree, TtaGetMainRoot(doc));
+  root = TtaGetMainRoot (doc);
+  head = TtaSearchTypedElement (headType, SearchInTree, root);
+  if (head == NULL)
+    {
+      // create the template head
+      head = TtaNewElement (doc, headType);
+      elType = TtaGetElementType (root);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+        {
+          elType.ElTypeNum = HTML_EL_HEAD;
+          root = TtaSearchTypedElement (elType, SearchInTree, root);
+        }
+      TtaInsertFirstChild (&head, root, doc);
+      SetAttributeStringValue (head, Template_ATTR_version, Template_Current_Version);
+      SetAttributeStringValue (head, Template_ATTR_templateVersion, "1.0");      
+    }
+  return head;
 #else /* TEMPLATES */
   return NULL;
 #endif /* TEMPLATES */

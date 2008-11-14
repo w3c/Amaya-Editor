@@ -49,7 +49,7 @@ freely or under some constraints.</p>
 sheets, scripts). A template is a web resource, that can be stored in the local
 file system or shared on a remote web server.</p>
 
-<h3>Creating a template</h3>
+<h3 id="Creating1">Creating a template</h3>
 
 <p>You can create your own templates, using the XTiger language. However, Amaya
 provides a specific support for creating or updating templates.</p>
@@ -68,39 +68,60 @@ provides a specific support for creating or updating templates.</p>
       <li>The <em>Create and use a component</em> entry generates a
         <code>component</code> that will be displayed in the <code>head</code>
         of the template document. The current content of the selection becomes
-        the content of the component. A <code>use</code> element that refers
-        that component is created at the current position of the document. The
-        selection must be valid (a set of complete elements or a string). The
-        command asks the user for the <code>component</code> name. That name
-        must be unique.</li>
+        the content of the component. 
+        <p>A <code>use</code> element that allows one to insert that component
+        is created at the current position of the document. The selection must
+        be valid (a set of complete elements or a string). The command asks the
+        user for the <code>component</code> name. That name must be unique.</p>
+        <p class="Note"><strong>Note:</strong> The content of the component
+        won't be edited in template instances. The user has to insert
+        <code>use</code> and/or <code>bag</code> elements inside the component
+        to define editing areas. These editing areas can be inserted before or
+        after the creation of the component.</p>
+        <p></p>
+      </li>
       <li>The <em>Create and repeat a component</em> entry generates a
         <code>component</code> that will be displayed in the <code>head</code>
         of the template document and a <code>use</code> element inside a
         <code>repeat</code> element. That command is a shortcut of the
         <em>Create and use a component</em> and <em>Repeat the current use</em>
-        commands.</li>
+        commands. 
+        <p></p>
+      </li>
       <li>The <em>Create a new types union</em> entry generates a
         <code>union</code> which defines a new type as a choice between several
         basic types (<code>number</code>, <code>string</code>), elements from
         the target language (div, h1, h2, p, ...), or <code>component</code>
         names. The current selection has no effect. The command asks the user
-        for the <code>union</code> name. That name must be unique.</li>
+        for the <code>union</code> name. That name must be unique. 
+        <p></p>
+      </li>
       <li>The <em>Create a text area</em> entry generates a <code>use</code>
         element that includes a string. The command asks the user for a label.
         That label is free and is used for the selection path displayed in the
         status bar. The selection must be string and becomes the initial value
-        of the use element.</li>
-      <li>The <em>Use a component or an element</em> entry can be used to
-        generate a new <code>use</code> of a component. In that case the
-        selection must be empty. If an element of the target language (div, h1,
-        h2, p, ...) is selected, a <code>use</code> element is generated and
-        the selected element becomes the initial content of the use element.
-        The command asks the user for a label. That label is free and is used
-        for the selection path displayed in the status bar.</li>
+        of the use element. 
+        <p></p>
+      </li>
+      <li>The <em>Use a component or an element</em> entry is used to generate
+        a new <code>use</code>.
+        <p>If the selection is empty, un dialog proposes the list of elements
+        that can be inserted at that position and asks the user for the use
+        label. A <code>use</code> element is generated with an empty
+        content.</p>
+        <p>If an element of the target language (div, h1, h2, p, ...) is
+        selected, a <code>use</code> element that allows one to insert this
+        element type is generated at that position. The selected element
+        becomes the initial content of the use element. The command only asks
+        the user for a label.</p>
+        <p></p>
+      </li>
       <li>The <em>Repeat the current use</em> entry is used to generate a
         <code>repeat</code> of the current selected <code>use</code> element.
         The command asks the user for a label. That label is free and is used
-        for the selection path displayed in the status bar.</li>
+        for the selection path displayed in the status bar. 
+        <p></p>
+      </li>
       <li>The <em>Create a free editing box</em> entry generates a
         <code>bag</code> element. The command asks the user for a label. That
         label is free and is used for the selection path displayed in the

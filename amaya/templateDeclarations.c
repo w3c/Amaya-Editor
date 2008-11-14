@@ -1010,9 +1010,10 @@ Declaration Template_DeclareNewSimpleType (XTigerTemplate t, const char *name,
 
 /*----------------------------------------------------------------------
   Add a declaration to a template for a new component.
+  The parameter level gives the default level.
   ----------------------------------------------------------------------*/
 Declaration Template_DeclareNewComponent (XTigerTemplate t, const char *name,
-                                                           Element el)
+                                          Element el, int level)
 {
 #ifdef TEMPLATES
   if (!t)
@@ -1020,6 +1021,7 @@ Declaration Template_DeclareNewComponent (XTigerTemplate t, const char *name,
 
   Declaration dec = Declaration_Create (t, name, ComponentNat);
   dec->componentType.content = el;
+  dec->blockLevel = level;
   Template_AddDeclaration (t, dec);
   return dec;
 #else /* TEMPLATES */

@@ -600,7 +600,7 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
               else
                 XMLNotWellFormed = TRUE;
               fprintf (ErrFile, "@  line %d, char %d: %s\n", line,
-                       XML_GetCurrentColumnNumber (Parser), msg);
+                       (int)XML_GetCurrentColumnNumber (Parser), msg);
             }
         }
       else
@@ -615,8 +615,8 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
           if (Parser != NULL)
             {
               fprintf (ErrFile, "@  line %d, char %d: %s\n",
-                       XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
-                       XML_GetCurrentColumnNumber (Parser),
+                       (int)XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
+                       (int)XML_GetCurrentColumnNumber (Parser),
                        msg);
             }
         }
@@ -632,8 +632,8 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
           if (Parser != NULL)
             {
               fprintf (ErrFile, "@  line %d, char %d: %s\n",
-                       XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
-                       XML_GetCurrentColumnNumber (Parser),
+                       (int)XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
+                       (int)XML_GetCurrentColumnNumber (Parser),
                        msg);
             }
         }
@@ -646,8 +646,8 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
           if (Parser != NULL)
             {
               fprintf (ErrFile, "@  line %d, char %d: %s\n",
-                       XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
-                       XML_GetCurrentColumnNumber (Parser),
+                       (int)XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
+                       (int)XML_GetCurrentColumnNumber (Parser),
                        msg);
             }
         }

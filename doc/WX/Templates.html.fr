@@ -50,7 +50,7 @@ contraintes.</p>
 être stockée dans le système de fichiers local ou partagé sur un serveur
 web.</p>
 
-<h3>Créer un modèle</h3>
+<h3 id="L65">Créer un modèle</h3>
 
 <p>Vous pouvez créer vos propres modèles, en utilisant le langage XTiger.
 Cependant, Amaya fournit un support spécifique pour la création et la mise à
@@ -70,41 +70,63 @@ jour des modèles.</p>
         <code>component</code> qui sera affiché dans la section
         <code>head</code> du document modèle. Le contenu courant de la
         sélection devient le contenu du composant. Un élément <code>use</code>
-        qui référence ce composant est créé à la position courante du document.
-        La sélection doit être valide (seulement des éléments complets ou une
-        chaîne de caractères). La commande demande à l'utilisateur de saisir le
-        nom du <code>component</code>. Ce nom doit être unique.</li>
+        qui permet d'insérer ce composant est créé à la position courante du
+        document. La sélection doit être valide (seulement des éléments
+        complets ou une chaîne de caractères). La commande demande à
+        l'utilisateur de saisir le nom du <code>component</code>. Ce nom doit
+        être unique. 
+        <p class="Note"><strong>Note :</strong> Le contenu du composant ne
+        pourra pas être édité dans les instances du modèle. L'utilisateur doit
+        insérer des éléments <code>use</code> et/ou <code>bag</code> dans le
+        composant pour définir des zones éditables. Ces zones peuvent être
+        définies avant ou après la création du composant.</p>
+        <p></p>
+      </li>
       <li>L'entrée <em>Créer et répéter un composant</em> engendre un
         <code>component</code> qui sera affiché dans la section
         <code>head</code> du document modèle et un élément <code>use</code>
-        dans un élément <code>repeat</code>. cette commande est un raccourci
+        dans un élément <code>repeat</code>. Cette commande est un raccourci
         des commandes <em>Créer et utiliser un composant</em> et <em>Répéter
-        l'utilisation courante</em>.</li>
+        l'utilisation courante</em>. 
+        <p></p>
+      </li>
       <li>L'entrée <em>Créer une nouvelle union de types</em> engendre une
         union qui définit un nouveau type comme le choix entre des types de
         base (<code>number</code>, <code>string</code>), des éléments du
         langage cible (div, h1, h2, p, ...), ou des noms de
         <code>component</code>. La sélection courante n'a aucun effet. La
         commande demande à l'utilisateur de saisir le nom de
-        l'<code>union</code>. Ce nom doit être unique.</li>
+        l'<code>union</code>. Ce nom doit être unique. 
+        <p></p>
+      </li>
       <li>L'entrée <em>Créer une zone de texte</em> engendre un élément
         <code>use</code> qui inclut une chaîne de caractères. La sélection doit
         être une chaîne de caractères et devient la valeur initiale de
         l'élément use. La commande demande à l'utilisateur un label. Ce label
         est libre et est utilisé pour le chemin de sélection affiché en bas de
-        la fenêtre.</li>
-      <li>L'entrée <em>Utiliser un composant ou un élément</em> peut être
-        utilisée pour un nouveau <code>use</code> de composant. Dans ce cas la
-        sélection doit être vide. Si un élément du langage cible (div, h1, h2,
-        p, ...) est sélectionné, un élément <code>use</code> est engendré et
-        l'élément sélectionné devient le contenu initial de l'élément use. La
-        commande demande à l'utilisateur un label. Ce label est libre et est
-        utilisé pour le chemin de sélection affiché en bas de la fenêtre.</li>
+        la fenêtre. 
+        <p></p>
+      </li>
+      <li>L'entrée <em>Utiliser un composant ou un élément</em> est utilisée
+        pour engendrer un nouveau <code>use</code>.
+        <p>Si la sélection est vide, un dialogue propose la liste des éléments
+        qui peuvent être insérés à cette position et demande à l'utilisateur le
+        label de l´élement use. Un élément <code>use</code> vide est
+        engendré.</p>
+        <p>Si un élément du langage cible (div, h1, h2, p, ...) est
+        sélectionné, un élément <code>use</code> qui permet d'insérer ce type
+        d'élément est engendré à cette position. L''élément sélectionné devient
+        le contenu initial de l'élément use. La commande demande seulement à
+        l'utilisateur un label.</p>
+        <p> </p>
+      </li>
       <li>L'entrée <em>Répéter l'utilisation courante</em> est utilisée pour
         engendrer une répétition (<code>repeat</code>) de l'élément
         <code>use</code> sélectionné. La commande demande à l'utilisateur un
         label. Ce label est libre et est utilisé pour le chemin de sélection
-        affiché en bas de la fenêtre.</li>
+        affiché en bas de la fenêtre. 
+        <p></p>
+      </li>
       <li>L'entrée <em>Créer une zone d'édition libre</em> engendre un élément
         <code>bag</code>. La commande demande à l'utilisateur un label. Ce
         label est libre et est utilisé pour le chemin de sélection affiché en
@@ -203,12 +225,12 @@ contrôlé par le modèle, qui peut imposer un nombre minimum et/ou maximum
 d'occurrences de la structure répétée.</p>
 
 <p id="Editing111">Quand la création de nouvelles occurrences de la structure
-répétée est autorisée, des icônes <strong style="color:#1e90ff">+</strong> 
-sont affichées aux emplacements où cette création est possible. Cliquez sur une
-des ces icônes pour créer une nouvelle occurrence. Un menu vous donne la liste
-des éléments qui peuvent être créés à cette position. En sélectionnant une
-entrée de ce menu, vous créez une nouvelle occurrence du type correspondant.
-Dans certains cas, le modèle n'offre qu'un seul type. Le menu ne contient alors
+répétée est autorisée, des icônes <strong style="color:#1e90ff">+</strong> sont
+affichées aux emplacements où cette création est possible. Cliquez sur une des
+ces icônes pour créer une nouvelle occurrence. Un menu vous donne la liste des
+éléments qui peuvent être créés à cette position. En sélectionnant une entrée
+de ce menu, vous créez une nouvelle occurrence du type correspondant. Dans
+certains cas, le modèle n'offre qu'un seul type. Le menu ne contient alors
 qu'une seule entrée, pour clairement informer l'utilisateur de ce qui va être
 créé. Si vous cliquez en dehors du menu, rien ne sera créé.</p>
 
