@@ -141,7 +141,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
 
   wxTextValidator valid(wxFILTER_NUMERIC);
   XRCCTRL(*this,"wxID_COMBO_SIZE", wxComboBox)->SetValidator(valid);
-  RaiseDoctypePanels(WXAMAYA_DOCTYPE_UNKNOWN);
+  RaiseDoctypePanels(WXAMAYA_DOCTYPE_XHTML);
   return true;
 }
 
@@ -186,7 +186,8 @@ void AmayaStyleToolPanel::RaiseDoctypePanels(int doctype)
     default:
       if (Current_StylePanel == -1 || Current_StylePanel == 1)
         {
-          GetSizer()->Hide ((size_t)1);
+          if (Current_StylePanel == 1)
+            GetSizer()->Hide ((size_t)1);
           GetSizer()->Show ((size_t)0);
           Current_StylePanel = 0;
         }
