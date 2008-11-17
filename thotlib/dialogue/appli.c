@@ -863,8 +863,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                    handle gui events (keyup) and Selecting variable
                    * will not be unset => cause a infinit selection ! */
                 Selecting = TRUE;
-                if (LocateSelectionInView (frame, ClickX, ClickY, 2,
-					   &Selecting))
+                if (LocateSelectionInView (frame, ClickX, ClickY, 2, &Selecting))
 		  return FALSE;
              }
           }
@@ -1014,9 +1013,8 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
  ----------------------------------------------------------------------*/
 ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
 {
-  if ( Selecting )
-    {
-      
+  if (Selecting)
+    {      
       Document            doc;
       int                 view;
       ViewFrame          *pFrame;
@@ -1046,21 +1044,22 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
               else
                 {
                   /* stop the scrolling */
-                  Selecting = FALSE;
+                  //Selecting = FALSE;
                   Motion_y = FrameTable[frame].FrHeight;
                 }
             }
-          else if (Motion_y < 0)
+          else if (Selecting && Motion_y < 0)
             {
               if (pFrame->FrYOrg > 0)
                 TtcLineUp (doc, view);
               else
                 {
                   /* stop the scrolling */
-                  Selecting = FALSE;
+                  //Selecting = FALSE;
                   Motion_y = 0;
                 }
             }
+
           if (FrameTable[frame].FrScrollWidth > FrameTable[frame].FrWidth)
             {
               if (Motion_x > FrameTable[frame].FrWidth)
@@ -1069,7 +1068,7 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
                     TtcScrollRight (doc, view);
                   else
                     {
-                      Selecting = FALSE;
+                      //Selecting = FALSE;
                       Motion_x = FrameTable[frame].FrWidth;
                     }
                 }
@@ -1079,15 +1078,13 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
                     TtcScrollLeft (doc, view);
                   else
                     {
-                      Selecting = FALSE;
+                      //Selecting = FALSE;
                       Motion_x = 0;
                     }
                 }
             }
           if (Selecting)
-            {
-              LocateSelectionInView (frame,  Motion_x, Motion_y, 0, &Selecting);
-            }
+            LocateSelectionInView (frame,  Motion_x, Motion_y, 0, &Selecting);
         }
     }
   return TRUE;

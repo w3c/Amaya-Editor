@@ -521,31 +521,30 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxGLCanvas)
 #else // #ifdef _GL
   BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 #endif // #ifdef _GL
-  EVT_SIZE( 		AmayaCanvas::OnSize )
-  EVT_PAINT( 		AmayaCanvas::OnPaint )
-  EVT_ERASE_BACKGROUND( AmayaCanvas::OnEraseBackground)
+  EVT_SIZE(AmayaCanvas::OnSize )
+  EVT_PAINT(AmayaCanvas::OnPaint )
+  EVT_ERASE_BACKGROUND(AmayaCanvas::OnEraseBackground)
 
   // what mouse event type is managed ? comment what is not managed
-  EVT_LEFT_DOWN(	AmayaCanvas::OnMouseDown) // Process a wxEVT_LEFT_DOWN event. 
-  EVT_LEFT_UP(		AmayaCanvas::OnMouseUp) // Process a wxEVT_LEFT_UP event. 
-  EVT_LEFT_DCLICK(	AmayaCanvas::OnMouseDbClick) // Process a wxEVT_LEFT_DCLICK event. 
-  EVT_MIDDLE_DOWN(	AmayaCanvas::OnMouseDown) // Process a wxEVT_MIDDLE_DOWN event. 
-  EVT_MIDDLE_UP(	AmayaCanvas::OnMouseUp) // Process a wxEVT_MIDDLE_UP event. 
-  EVT_MIDDLE_DCLICK(	AmayaCanvas::OnMouseDbClick) // Process a wxEVT_MIDDLE_DCLICK event. 
-  EVT_RIGHT_DOWN(	AmayaCanvas::OnMouseDown) // Process a wxEVT_RIGHT_DOWN event. 
-  EVT_RIGHT_UP(		AmayaCanvas::OnMouseUp) // Process a wxEVT_RIGHT_UP event. 
-  EVT_RIGHT_DCLICK(	AmayaCanvas::OnMouseDbClick) // Process a wxEVT_RIGHT_DCLICK event. 
-  EVT_MOTION(		AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
-  EVT_MOUSEWHEEL(	AmayaCanvas::OnMouseWheel) // Process a wxEVT_MOUSEWHEEL event. 
+  EVT_LEFT_DOWN(AmayaCanvas::OnMouseDown) // Process a wxEVT_LEFT_DOWN event. 
+  EVT_LEFT_UP(AmayaCanvas::OnMouseUp) // Process a wxEVT_LEFT_UP event. 
+  EVT_LEFT_DCLICK(AmayaCanvas::OnMouseDbClick) // Process a wxEVT_LEFT_DCLICK event. 
+  EVT_MIDDLE_DOWN(AmayaCanvas::OnMouseDown) // Process a wxEVT_MIDDLE_DOWN event. 
+  EVT_MIDDLE_UP(AmayaCanvas::OnMouseUp) // Process a wxEVT_MIDDLE_UP event. 
+  EVT_MIDDLE_DCLICK(AmayaCanvas::OnMouseDbClick) // Process a wxEVT_MIDDLE_DCLICK event. 
+  EVT_RIGHT_DOWN(AmayaCanvas::OnMouseDown) // Process a wxEVT_RIGHT_DOWN event. 
+  EVT_RIGHT_UP(AmayaCanvas::OnMouseUp) // Process a wxEVT_RIGHT_UP event. 
+  EVT_RIGHT_DCLICK(AmayaCanvas::OnMouseDbClick) // Process a wxEVT_RIGHT_DCLICK event. 
+  EVT_MOTION(AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
+  EVT_ENTER_WINDOW(AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
+  EVT_LEAVE_WINDOW(AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
+  EVT_MOUSEWHEEL(AmayaCanvas::OnMouseWheel) // Process a wxEVT_MOUSEWHEEL event. 
 
-  EVT_IDLE(             AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
-  
-  EVT_TIMER( -1,        AmayaCanvas::OnTimerMouseMove)
-
+  EVT_IDLE(AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
+  EVT_TIMER( -1,AmayaCanvas::OnTimerMouseMove)
   EVT_CONTEXT_MENU(AmayaCanvas::OnContextMenu)
-
   
-  //   EVT_CHAR( AmayaCanvas::OnChar )
+  //   EVT_CHAR(AmayaCanvas::OnChar )
 END_EVENT_TABLE()
 
 #endif // #ifdef _WX

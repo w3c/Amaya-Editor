@@ -141,6 +141,7 @@ bool AmayaStyleToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint&
 
   wxTextValidator valid(wxFILTER_NUMERIC);
   XRCCTRL(*this,"wxID_COMBO_SIZE", wxComboBox)->SetValidator(valid);
+  GetSizer()->Hide ((size_t)1);
   RaiseDoctypePanels(WXAMAYA_DOCTYPE_XHTML);
   return true;
 }
