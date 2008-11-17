@@ -2443,10 +2443,10 @@ void WhereOpenView(Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-View InitView(Document oldDoc, Document doc, 
-        ThotBool replaceOldDoc, ThotBool inNewWindow, ThotBool isOpen,
-        int window_id, int page_id, int page_position,
-        DocumentType docType, int method)
+View InitView (Document oldDoc, Document doc, 
+               ThotBool replaceOldDoc, ThotBool inNewWindow, ThotBool isOpen,
+               int window_id, int page_id, int page_position,
+               DocumentType docType, int method)
 {
   View          mainView;
   int           x, y, w, h;
@@ -2830,6 +2830,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
           /* set attribute dir on the Document element. */
           AddDirAttributeToDocEl (doc);
         }
+
       if (docType == docSVG || docType == docMath)
         /* add a comment proudly claiming that the document was created by
            Amaya */
@@ -2867,10 +2868,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
         return doc;
 
       DocumentTypes[doc] = docType;
-
       mainView = InitView(oldDoc, doc, replaceOldDoc, inNewWindow, isOpen,
                             window_id, page_id, page_position, docType, method);
-      if(mainView==0)
+      if (mainView == 0)
         {
           TtaCloseDocument (doc);
           return (0);
@@ -2879,10 +2879,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
     }
   
   PostInitView(doc, docType, visibility, replaceOldDoc, isOpen);
-
   // show the window if it's not allready done
   TtaShowWindow( window_id, TRUE );
-
   return (doc);
 }
 
@@ -5127,7 +5125,7 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
           /* raise its window */
           int frame_id;
           frame_id = GetWindowNumber (newdoc, 1);
-          if(frame_id!=0)
+          if(frame_id != 0)
               TtaRaiseView (newdoc, 1);
           else
             {
@@ -5335,7 +5333,7 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
   TtaFreeMemory (tempfile);
   TtaFreeMemory (initial_url);
   DontReplaceOldDoc = FALSE;
-  TtaAddDocumentReference(newdoc);
+  //TtaAddDocumentReference(newdoc);
   return (newdoc);
 }
 
