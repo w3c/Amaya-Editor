@@ -253,7 +253,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
               /* we don't see the top of the document */
               pFrame->FrAbstractBox->AbTruncatedTail));
     }
-
+#ifdef IV
   if ( RightExtended && yDelta < 0 &&
        (endBox->BxFirstChar + endBox->BxNChars == LastSelectedChar ||
         (endBox->BxFirstChar + endBox->BxNChars == LastSelectedElement->ElVolume + 1 &&
@@ -262,6 +262,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
     /* stay in the same box */
     pBox = endBox;
   else
+#endif
     {
 #ifdef _GL
       x -= pFrame->FrXOrg;
@@ -1033,8 +1034,8 @@ static void MovingCommands (int code, Document doc, View view,
                 }
               if (!done)
                 {
-                  if (extendSel && pBox && yDelta < pBox->BxH)
-                    yDelta = pBox->BxH; // skip almost at the bottom of the box
+                  if (extendSel && pBox && yDelta < pBox->BxYOrg + pBox->BxH - y)
+                    yDelta = pBox->BxYOrg + pBox->BxH - y; // skip almost at the bottom of the box
                   LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
                 }
             }
