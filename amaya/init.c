@@ -4977,26 +4977,23 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
                       Document doc, Document baseDoc, int method,
                       ThotBool history, TTcbf *cbf, void *ctx_cbf)
 {
-  Document            newdoc = 0, refdoc;
-  CSSInfoPtr          css;
-  PInfoPtr            pInfo;
-  AmayaDoc_context   *ctx = NULL;
-  CHARSET             doc_charset;
-  char               *tempfile;
-  char               *parameters;
-  char               *target;
-  char               *initial_url;
-  char                temp_url[MAX_LENGTH];
-  char               *documentname;
-  const char         *content_type = NULL;
-  char                charsetname[MAX_LENGTH];
-  int                 parsingLevel, extraProfile;
-  int                 toparse;
-  int                 mode;
-  int                 docType;
-  ThotBool            xmlDec, withDoctype, isXML, useMath, isKnown;
-  ThotBool            ok;
-  char                lg_uri[10];
+  Document           newdoc = 0, refdoc;
+  CSSInfoPtr         css;
+  PInfoPtr           pInfo;
+  AmayaDoc_context  *ctx = NULL;
+  CHARSET            doc_charset;
+  char              *tempfile, *parameters;
+  char              *target, *initial_url;
+  char               temp_url[MAX_LENGTH], charsetname[MAX_LENGTH];
+  char              *documentname;
+  char               lg_uri[10];
+  const char        *content_type = NULL;
+  int                parsingLevel, extraProfile;
+  int                toparse, mode, docType;
+  int                frame_id;
+  int                window_id, page_id, page_position, visibility, requested_doc;
+  ThotBool           xmlDec, withDoctype, isXML, useMath, isKnown;
+  ThotBool           ok, isOpen;
 
   if (W3Loading && W3Loading == doc)
     return (0);
@@ -5123,19 +5120,16 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
         /* following the link to another open window */
         {
           /* raise its window */
-          int frame_id;
           frame_id = GetWindowNumber (newdoc, 1);
           if(frame_id != 0)
               TtaRaiseView (newdoc, 1);
           else
             {
-              int window_id, page_id, page_position, visibility, requested_doc;
-              ThotBool isOpen;
               /* Where open the new document ? in which window ? */
               TtaAddDocumentReference(newdoc);
-              WhereOpenView(doc, !DontReplaceOldDoc, InNewWindow, (DocumentType)docType, method, 
+              WhereOpenView(doc, FALSE, InNewWindow, (DocumentType)docType, method, 
                   &window_id, &page_id, &page_position, &visibility, &isOpen, &requested_doc);
-              InitView(doc, newdoc, !DontReplaceOldDoc, InNewWindow, isOpen, 
+              InitView(doc, newdoc, FALSE, InNewWindow, isOpen, 
                       window_id, page_id, page_position, (DocumentType)docType, method);
               PostInitView(newdoc, (DocumentType)docType, visibility,
                   !DontReplaceOldDoc, isOpen);
@@ -5548,9 +5542,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
             {
               if (LastURLName[0] != EOS)
                 {
-                  /*TtaSetStatus (CurrentDocument, 1,
-                                TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-                                DocumentName);*/
                   /* update the list of URLs */
                   if (NewFile)
                     InitializeNewDoc (LastURLName, NewDocType,
