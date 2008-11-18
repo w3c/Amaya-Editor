@@ -21,7 +21,7 @@
   <li><a href="http://palette.ercim.org/">Palette</a></li>
 </ul>
 
-<h1 id="title">Amaya [10.0]</h1>
+<h1 id="title">Amaya [10.1]</h1>
 </div>
 
 <div id="logo">
@@ -105,7 +105,7 @@ interface utilisateur et l'édition guidée par des modèles.</p>
 
 <p>Avec Amaya, vous pouvez manipuler des pages Web contenant des formulaires,
 des tables et exploitant les caractéristiques les plus avancées de XHTML.
-Vous pouvez créer et éditer des <a dir="ltr" xml:lang="fr" 
+Vous pouvez créer et éditer des <a dir="ltr" xml:lang="fr"
 href="../doc/WX/Math.html.fr">expressions mathématiques</a> et des <a
 href="../doc/WX/SVG.html.fr">graphiques</a> dans les pages Web. Vous pouvez
 présenter vos documents à l'aide de <a
@@ -119,13 +119,15 @@ href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
 <div class="section">
 <h2>Principales nouveautés</h2>
 
-<p>Depuis la version 9.55 :</p>
+<p>Depuis la version 10.0 :</p>
 <ul>
-  <li>Nouvelle l'interface utilisateur</li>
-  <li>Accès direct au style</li>
-  <li>Menu contextuel</li>
-  <li>Profils d'édition</li>
-  <li>Édition avancée des tables</li>
+  <li>Possibilité de créer et éditer des modèles de documents à partir de
+    documents squelettes</li>
+  <li>Plus de facilités pour l'édition guidée par des modèles</li>
+  <li>La première version d'un éditeur intégré de schémas graphiques en
+  SVG</li>
+  <li>Le support d'informations sémantiques dans les pages web (RDFa)</li>
+  <li>Dimensionnement direct des images</li>
 </ul>
 </div>
 
@@ -134,9 +136,8 @@ href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
 
 <p>XHTML, MathML et SVG imbriqués :</p>
 
-
 <div id="mathml_svg">
-  <svg:svg height="250" width="250">
+<svg:svg height="250" width="250">
   <svg:g transform="rotate(-47.78,198.421,64.1654) scale(1) ">
     <svg:rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;" width="200"
           height="100"/>
@@ -192,14 +193,14 @@ href="http://www.w3.org/Style/CSS/">feuilles de style CSS</a>.</p>
               </mrow>
             </mrow>
           </mstyle>
-        </math> </svg:foreignObject>
+        </math></svg:foreignObject>
     </svg:switch>
     <svg:ellipse cx="18px" cy="8px" rx="18px" ry="8px"
           style="opacity: 1; stroke: #ff0000; stroke-opacity: 1; stroke-width: 3; fill: #ffaaaa; fill-opacity: 1;"
           transform="translate(83,65) "/>
   </svg:g>
 </svg:svg>
- </div>
+</div>
 </div>
 </div>
 

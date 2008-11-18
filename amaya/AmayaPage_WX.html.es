@@ -21,7 +21,7 @@
   <li><a href="http://palette.ercim.org/">Palette</a></li>
 </ul>
 
-<h1 id="title">Amaya [10.0]</h1>
+<h1 id="title">Amaya [10.1]</h1>
 </div>
 
 <div id="logo">
@@ -113,13 +113,14 @@ asociar estilos a los documentos mediantes Hojas de estilo en Cascada (CSS).</p>
 <div class="section">
 <h2>Main news</h2>
 
-<p>News from version 9.55 :</p>
+<p>News from version 10.0 :</p>
 <ul>
-  <li>Menu reorganization</li>
-  <li>Direct access to style</li>
-  <li>Contextual menu</li>
-  <li>User profiles</li>
-  <li>Advanced table edition</li>
+  <li>Possibility to create and edit document templates from document
+  skeletons</li>
+  <li>More facilities to edit template instances</li>
+  <li>The first version of an integrated editor for SVG graphic schemas</li>
+  <li>The support of semantic information within web pages (RDFa)</li>
+  <li>Direct resizing of images</li>
 </ul>
 </div>
 
@@ -128,9 +129,8 @@ asociar estilos a los documentos mediantes Hojas de estilo en Cascada (CSS).</p>
 
 <p>Embedded MathML and SVG:</p>
 
-
 <div id="mathml_svg">
-  <svg:svg height="250" width="250">
+<svg:svg height="250" width="250">
   <svg:g transform="rotate(-47.78,198.421,64.1654) scale(1) ">
     <svg:rect style="stroke:#50ff50;stroke-width:3px;fill:#aaffaa;" width="200"
           height="100"/>
@@ -186,14 +186,14 @@ asociar estilos a los documentos mediantes Hojas de estilo en Cascada (CSS).</p>
               </mrow>
             </mrow>
           </mstyle>
-        </math> </svg:foreignObject>
+        </math></svg:foreignObject>
     </svg:switch>
     <svg:ellipse cx="18px" cy="8px" rx="18px" ry="8px"
           style="opacity: 1; stroke: #ff0000; stroke-opacity: 1; stroke-width: 3; fill: #ffaaaa; fill-opacity: 1;"
           transform="translate(83,65) "/>
   </svg:g>
 </svg:svg>
- </div>
+</div>
 </div>
 </div>
 
