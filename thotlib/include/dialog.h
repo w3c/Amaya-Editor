@@ -488,11 +488,6 @@ extern ThotBool TtaRaiseDialogue (int ref);
   ----------------------------------------------------------------------*/
 extern void TtaUnmapDialogue (int ref);
 
-/*----------------------------------------------------------------------
-   TtaCatwidget returns the widget that owns the catalog given in ref
-  ----------------------------------------------------------------------*/
-extern ThotWidget TtaCatWidget(int ref);
-
 #endif /* __CEXTRACT__ */
 
 #endif

@@ -1623,11 +1623,12 @@ void TtcCreateElement (Document doc, View view)
 
   // check editing within template instances
   if (firstSel == lastSel &&
-      ((firstChar == 0 && lastChar == 0) || firstChar >= firstSel->ElVolume) &&
+      ((firstChar == 0 && lastChar == 0 && ElementIsReadOnly (firstSel)) ||
+       firstChar >= firstSel->ElVolume) &&
       firstSel->ElParent && firstSel->ElStructSchema &&
-      !strcmp (firstSel->ElStructSchema->SsName, "Template") ||
-      (ElementIsReadOnly (firstSel) &&
-       !strcmp (firstSel->ElParent->ElStructSchema->SsName, "Template")))
+      (!strcmp (firstSel->ElStructSchema->SsName, "Template") ||
+      (ElementIsReadOnly (firstSel->ElParent) &&
+       !strcmp (firstSel->ElParent->ElStructSchema->SsName, "Template"))))
     {
       // move the selection to a level that allows editing
       if (firstSel->ElLeafType == LtText)
@@ -2197,8 +2198,15 @@ void TtcCreateElement (Document doc, View view)
               pElReplicate = NULL;
               do
                 {
-                  if (TypeHasException (ExcNoCreate, pE->ElTypeNumber,
-                                        pE->ElStructSchema))
+                  if (pE->ElStructSchema &&
+                      ElementIsReadOnly (pE) &&
+                      !strcmp (pE->ElStructSchema->SsName, "Template"))
+                    {
+                      pElReplicate = pE;
+                      pE = NULL;
+                    }
+                  else if (TypeHasException (ExcNoCreate, pE->ElTypeNumber,
+                                             pE->ElStructSchema))
                     /* abort */
                     pListEl = NULL;
                   else
@@ -2207,9 +2215,7 @@ void TtcCreateElement (Document doc, View view)
                       pE = pE->ElParent;
                     }
                 }
-              while (pE != pListEl && pListEl && pE /*&&
-                     (pE->ElStructSchema &&
-                       strcmp (pE->ElStructSchema->SsName, "Template"))*/);
+              while (pE != pListEl && pListEl && pE);
 
               /* a priori, on creera le meme type d'element */
               if (pElReplicate)

@@ -440,14 +440,6 @@ ThotWidget CatWidget(int ref)
   return (catalogue->Cat_Widget);
 }
 
-/*----------------------------------------------------------------------
-  TtaCatwidget returns the widget that owns the catalog given in ref
-  ----------------------------------------------------------------------*/
-ThotWidget TtaCatWidget(int ref)
-{
-  return (CatWidget (ref));
-}
-
 #ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_InitScrPopup

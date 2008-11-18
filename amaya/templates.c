@@ -1103,8 +1103,8 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
               if (result)
                 DoReplicateUseElement (t, doc, view, el, repeatEl, result);
             }
-          TtaFreeMemory(result);
-          DumpSubtree(repeatEl, doc, 0);
+          TtaFreeMemory (result);
+          DumpSubtree (repeatEl, doc, 0);
 
         }
       else /* if (Template_CanInsertRepeatChild(repeatEl)) */
@@ -1594,6 +1594,8 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   templateSSchema = TtaGetSSchema ("Template", doc);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
+  if (!IsTemplateInstanceDocument(doc))
+    return FALSE; // let Thot do the job
 
   // Fisrt, test if in a xt:bag or in a base-element xt:use
   if (parentType.ElSSchema == templateSSchema)
@@ -1635,7 +1637,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
             next = el;
           name = GetUsedTypeName (next);
           DoReplicateUseElement (t, doc, 1, el, ancestor, name);
-          TtaFreeMemory(name);
+          TtaFreeMemory (name);
           return TRUE; // don't let Thot do the job
         }
       else if (ancestorType.ElTypeNum == Template_EL_useSimple ||
@@ -1663,8 +1665,17 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
                       (ptr == types || ptr[-1] == SPACE) &&
                       (ptr[len] == EOS || ptr[len] == SPACE))
                     {
-                      parent = TtaGetParent(ancestor);
+                      parent = TtaGetParent (ancestor);
                       parentType = TtaGetElementType(parent);
+                      while (parentType.ElSSchema == templateSSchema &&
+                          parentType.ElTypeNum == Template_EL_useSimple)
+                        {
+                          // move up to the inclosing use
+                          ancestor = parent;
+                           parent = TtaGetParent (ancestor);
+                           parentType = TtaGetElementType(parent);
+                           name = NULL;
+                        }
                       if (parentType.ElSSchema == templateSSchema &&
                           parentType.ElTypeNum == Template_EL_repeat)
                         {
@@ -1673,7 +1684,16 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
                             t = GetXTigerDocTemplate(doc);
                             if (IsBeginningSelected (ancestor, doc))
                               TtaPreviousSibling (&ancestor);
-                             DoReplicateUseElement (t, doc, view, ancestor, parent, name);
+                            if (name == NULL)
+                              {
+                                name = GetUsedTypeName (ancestor);
+                                DoReplicateUseElement (t, doc, view, ancestor,
+                                                     parent, name);
+                                TtaFreeMemory (name);
+                              }
+                            else
+                              DoReplicateUseElement (t, doc, view, ancestor,
+                                                     parent, name);
                         }
                     }
                 }

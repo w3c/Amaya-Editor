@@ -2330,17 +2330,20 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
     {
 #ifdef TEMPLATES
       sstempl = TtaGetSSchema ("Template", doc);
-	  if (IsTemplateDocument(doc) && sstempl)
-	  {
-        parentType.ElSSchema = sstempl;
-        parentType.ElTypeNum = Template_EL_component;
-        if (!TtaGetTypedAncestor (first, parentType))
+      if (IsTemplateDocument(doc) && sstempl)
+        {
+          parentType.ElSSchema = sstempl;
+          parentType.ElTypeNum = Template_EL_component;
+          if (!TtaGetTypedAncestor (first, parentType))
+            {
+              TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_ANCHOR1);
+              return;
+            }
+        }
+#else /* TEMPLATES */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_ANCHOR1);
+      return;
 #endif /* TEMPLATES */
-		{
-        TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_ANCHOR1);
-        return;
-		}
-	  }
     }
   if ((elType.ElTypeNum == HTML_EL_Anchor ||
        elType.ElTypeNum == HTML_EL_MAP ||

@@ -8,7 +8,6 @@
 
 extern struct Cat_Context *CatEntry ( int ref );
 extern ThotWidget CatWidget ( int ref );
-extern ThotWidget TtaCatWidget ( int ref );
 extern void MyWarningHandler ( char *s );
 extern void TtaInitDialogue ( char *server,
                               ThotAppContext *app_context );
@@ -192,7 +191,6 @@ extern void TtaFreeAllCatalogs ( void );
 
 extern struct Cat_Context *CatEntry ( int ref );
 extern ThotWidget CatWidget ( int ref );
-extern ThotWidget TtaCatWidget ( int ref );
 extern void MyWarningHandler ( char *s );
 extern void TtaInitDialogue ( char *server,
                                 ThotAppContext *app_context );

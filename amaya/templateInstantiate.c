@@ -350,6 +350,7 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
                         }
                       // elements are now out of the parent line
                       savedInline = NULL;
+                      parentLine = NULL;
                     }
 
                   // generate the currentType attribute
@@ -366,7 +367,7 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
                   else
                     {
                       name = (char *)GetXMLElementName (otherType, doc);
-                      if (name && !strcmp (name,"???"))
+                      if (name && strcmp (name,"???"))
                         TtaSetAttributeText (att, name, el, doc);
                     }
                 }
@@ -866,15 +867,15 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
 
 
 /*----------------------------------------------------------------------
-  Fix access rights.
+  Template_FixAccessRight fixes access rights of the el element
   ----------------------------------------------------------------------*/
 void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
 {
 #ifdef TEMPLATES
   ElementType elType;
   Element     child;
-  char        currentType[MAX_LENGTH], *ptr;
   Declaration decl;
+  char        currentType[MAX_LENGTH], *ptr;
   
   if (t && el && doc)
     {
@@ -904,9 +905,12 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
                   switch (decl->nature)
                     {
                       case SimpleTypeNat:
-                      case XmlElementNat:
                         TtaSetAccessRight (el, ReadWrite, doc);
                         return;
+                      case XmlElementNat:
+                        child = TtaGetFirstChild (el);
+                        if (child)
+                          TtaSetAccessRight (child, ReadWrite, doc);
                       default:
                         TtaSetAccessRight (el, ReadOnly, doc);
                          break;
