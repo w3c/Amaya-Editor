@@ -325,6 +325,9 @@ void AmayaNormalWindow::SendDataToPanel(int panel_type, AmayaParams& params)
 {
   AmayaToolPanel* panel;
   
+  int kind = GetKind();
+  if (kind != WXAMAYAWINDOW_HELP && kind != WXAMAYAWINDOW_ANNOT)
+    return;
   switch(panel_type)
   {
     case WXAMAYA_PANEL_XHTML:
@@ -352,6 +355,9 @@ void AmayaNormalWindow::RaisePanel(int panel_type)
 {
   AmayaToolPanel* panel;
   
+  int kind = GetKind();
+  if (kind != WXAMAYAWINDOW_HELP && kind != WXAMAYAWINDOW_ANNOT)
+    return;
   switch(panel_type)
   {
     case WXAMAYA_PANEL_XHTML:
@@ -399,6 +405,9 @@ wxPanel* AmayaNormalWindow::GetToolBarEditing()
 {
   ThotBool show;
 
+  int kind = GetKind();
+  if (kind == WXAMAYAWINDOW_HELP || kind == WXAMAYAWINDOW_ANNOT)
+    return NULL;
   if (!m_pToolBarEditing && m_haveTBEditing)
     {
       m_pToolBarEditing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_EDITING"));
@@ -418,6 +427,9 @@ wxPanel* AmayaNormalWindow::GetToolBarBrowsing()
 {
   ThotBool show;
 
+  int kind = GetKind();
+  if (kind == WXAMAYAWINDOW_HELP || kind == WXAMAYAWINDOW_ANNOT)
+    return NULL;
   if (!m_pToolBarBrowsing && m_haveTBBrowsing)
     {
       m_pToolBarBrowsing = wxXmlResource::Get()->LoadPanel(this, wxT("wxID_PANEL_TOOLBAR_BROWSING"));
