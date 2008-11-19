@@ -82,6 +82,8 @@
 
 
 0;#Unicode (.or ... JAPANESe)
-1;1=$OSDIR\fonts\msmincho.ttc;2=$OSDIR\fonts\msmincho.ttc;3=$OSDIR\fonts\msmincho.ttc;
-2;1=$OSDIR\fonts\msmincho.ttc;2=$OSDIR\fonts\msmincho.ttc;3=$OSDIR\fonts\msmincho.ttc;
-3;1=$OSDIR\fonts\msmincho.ttc;2=$OSDIR\fonts\msmincho.ttc;3=$OSDIR\fonts\msmincho.ttc;
+1;1=$THOTDIR\fonts\Cyberbit.ttf;2=$THOTDIR\fonts\Cyberbit.ttf;3=$THOTDIR\fonts\Cyberbit.ttf;4=$THOTDIR\fonts\Cyberbit.ttf;5=$THOTDIR\fonts\Cyberbit.ttf;
+2;1=$THOTDIR\fonts\Cyberbit.ttf;2=$THOTDIR\fonts\Cyberbit.ttf;3=$THOTDIR\fonts\Cyberbit.ttf;4=$THOTDIR\fonts\Cyberbit.ttf;5=$THOTDIR\fonts\Cyberbit.ttf;
+3;1=$THOTDIR\fonts\Cyberbit.ttf;2=$THOTDIR\fonts\Cyberbit.ttf;3=$THOTDIR\fonts\Cyberbit.ttf;4=$THOTDIR\fonts\Cyberbit.ttf;5=$THOTDIR\fonts\Cyberbit.ttf;
+4;1=$THOTDIR\fonts\Cyberbit.ttf;2=$THOTDIR\fonts\Cyberbit.ttf;3=$THOTDIR\fonts\Cyberbit.ttf;4=$THOTDIR\fonts\Cyberbit.ttf;5=$THOTDIR\fonts\Cyberbit.ttf;
+
