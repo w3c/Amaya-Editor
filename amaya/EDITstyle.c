@@ -1540,6 +1540,7 @@ static void UpdateClass (Document doc)
   /* create a string containing the new CSS definition. */
   stylestring = (char *)TtaGetMemory (len);
   stylestring[0] = EOS;
+#ifdef IV
   if (selType.ElTypeNum == 0)
     {
       /* it's not an element type */
@@ -1550,6 +1551,7 @@ static void UpdateClass (Document doc)
           base++;
         }
     }
+#endif
   strcat (stylestring, CurrentClass);
   strcat (stylestring, " {");
   if (attr)

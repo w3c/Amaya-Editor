@@ -326,7 +326,7 @@ void AmayaNormalWindow::SendDataToPanel(int panel_type, AmayaParams& params)
   AmayaToolPanel* panel;
   
   int kind = GetKind();
-  if (kind != WXAMAYAWINDOW_HELP && kind != WXAMAYAWINDOW_ANNOT)
+  if (kind == WXAMAYAWINDOW_HELP || kind == WXAMAYAWINDOW_ANNOT)
     return;
   switch(panel_type)
   {
@@ -356,7 +356,7 @@ void AmayaNormalWindow::RaisePanel(int panel_type)
   AmayaToolPanel* panel;
   
   int kind = GetKind();
-  if (kind != WXAMAYAWINDOW_HELP && kind != WXAMAYAWINDOW_ANNOT)
+  if (kind == WXAMAYAWINDOW_HELP || kind == WXAMAYAWINDOW_ANNOT)
     return;
   switch(panel_type)
   {

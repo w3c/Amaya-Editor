@@ -7,7 +7,8 @@
   <title>Manuel d'utilisation d'Amaya</title>
   <style type="text/css">
  .name { background-color: #FFF6C1}
-body {background-color: #FFFFFF}</style>
+body {background-color: #FFFFFF}
+ol > li > a:link {color:#964c4c}</style>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -20,7 +21,7 @@ Manuel d'utilisation d'Amaya</div>
 <hr />
 
 <div>
-<ul>
+<ol>
   <li><a href="Browsing.html.fr#Naviguer">Naviguer</a> 
     <ul>
       <li><a href="Browsing.html.fr#Activer">Activer un lien, parcourir les
@@ -117,7 +118,7 @@ Manuel d'utilisation d'Amaya</div>
       <li><a href="Templates.html.fr#Selecting">Sélectionner un modèle</a></li>
       <li><a href="Templates.html.fr#Creating">Créer une instance de
         document</a></li>
-      <li><a href="Templates.html.fr#Editing">Editer un document instance</a>
+      <li><a href="Templates.html.fr#Editing">Editer un document instance</a> 
         <ul>
           <li><a href="Templates.html.fr#Editing1">Edition dans un élément
             <code>repeat</code></a></li>
@@ -471,7 +472,7 @@ Manuel d'utilisation d'Amaya</div>
       <li><a href="HTML-elements/HTML.html.fr#HTML">Les éléments HTML</a></li>
     </ul>
   </li>
-</ul>
+</ol>
 
 <p> </p>
 </div>
