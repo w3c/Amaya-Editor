@@ -842,9 +842,9 @@ static char* QueryStringFromMenu (Document doc, char* items)
 }
 #endif /* TEMPLATES */
 
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
 void FillInsertableElemList (Document doc, Element elem, DLList list);
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 char *Template_GetListTypes (XTigerTemplate t, Element el)
@@ -915,7 +915,7 @@ ThotBool BagButtonClicked (NotifyElement *event)
       listtypes = Template_GetListTypes (t, bagEl);
       if (listtypes)
         {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
           printf("BagButtonClicked : \n  > %s\n", listtypes);
           //      {
           //        DLList list = DLList_Create();
@@ -929,7 +929,7 @@ ThotBool BagButtonClicked (NotifyElement *event)
           //        }
           //        DLList_Destroy(list);
           //      }
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
           result = QueryStringFromMenu (doc, listtypes);
           TtaFreeMemory (listtypes);
           if (result)
@@ -1094,9 +1094,9 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
           listtypes = Template_GetListTypes (t, firstEl);
           if (listtypes)
             {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
               printf("RepeatButtonClicked : \n  > %s\n", listtypes);
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
 
               result = QueryStringFromMenu (doc, listtypes);
               TtaFreeMemory (listtypes);
@@ -1166,9 +1166,9 @@ ThotBool UseButtonClicked (NotifyElement *event)
       if (types)
         {
           listtypes = Template_ExpandTypes(t, types, NULL, FALSE);
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
           printf("UseButtonClicked : \n  > %s\n", listtypes);
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
 
           result = QueryStringFromMenu(doc, listtypes);
           if (result)
@@ -1336,14 +1336,14 @@ void Template_FillFromDocument (Document doc)
 
   if (t)
     {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
       printf("Template_FillFromDocument state: %d\n", t->state);
 #endif
       SetTemplateDocument (t, doc);
       Template_PrepareTemplate(t, doc);
       if (IsTemplateInstanceDocument (doc))
         {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
           printf("  > instance\n");
 #endif
           // fix all access rights in the instance
@@ -1352,7 +1352,7 @@ void Template_FillFromDocument (Document doc)
           Template_FixAccessRight (t, root, doc);
           TtaUpdateAccessRightInViews (doc, root);
         }
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
       else if (t->state&templLibraryFlag)
         printf("  > library\n");
       else if (t->state&templTemplate)
@@ -1363,9 +1363,9 @@ void Template_FillFromDocument (Document doc)
       TtaSetDocumentUnmodified (doc);
       UpdateTemplateMenus (doc);
 
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
       DumpAllDeclarations();
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
     }
 #endif /* TEMPLATES */
 }
@@ -1382,7 +1382,7 @@ ThotBool Template_CheckAndPrepareTemplate(char* docURL)
 
   if (IsXTiger(docURL))
     {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
       printf("Template_CheckAndPrepareTemplate %s templTemplate\n", docURL);
 #endif
       t = LookForXTigerTemplate (docURL);
@@ -1390,7 +1390,7 @@ ThotBool Template_CheckAndPrepareTemplate(char* docURL)
     }
   else if (IsXTigerLibrary(docURL))
     {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
       printf("Template_CheckAndPrepareTemplate %s templLibrary\n", docURL);
 #endif
       t = LookForXTigerLibrary (docURL);
@@ -1585,7 +1585,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   if (event->info == 1)
     return FALSE;
 
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
   printf("TemplateElementWillBeCreated\n");
 #endif
   if (!TtaGetDocumentAccessMode(doc))

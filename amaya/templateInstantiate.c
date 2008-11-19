@@ -537,9 +537,9 @@ void CreateTemplate (Document doc, char *templatePath)
   //  DocumentTypes[doc] = docTemplate;
   t->state |= templloaded|templTemplate;
 
-#ifdef AMAYA_DEBUG  
+#ifdef TEMPLATE_DEBUG  
     DumpAllDeclarations();
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
     
   /* Update the URL combo box */
   AddURLInCombobox (DocumentURLs[doc], NULL, FALSE);
@@ -836,9 +836,9 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
         ProcessAttr (dec->usedIn, newEl, doc);
 
         /* Copy elements from new use to existing use. */
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
         DumpSubtree(newEl, doc, 0);
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
         child = TtaGetFirstChild(newEl);
         while (child)
           {
@@ -1325,13 +1325,13 @@ void Template_PreInstantiateComponents (XTigerTemplate t)
 
   if (Template_IsInstance (t))
     {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
       DumpAllDeclarations();
-#endif /* AMAYA_DEBUG */  
+#endif /* TEMPLATE_DEBUG */  
       iter = SearchSet_GetForwardIterator(GetComponents(t));
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
       printf("Template_PreInstantiateComponents %s\n", t->uri);
-#endif /* AMAYA_DEBUG */  
+#endif /* TEMPLATE_DEBUG */  
       ITERATOR_FOREACH(iter, SearchSetNode, node)
         {
           dec = (Declaration) node->elem;

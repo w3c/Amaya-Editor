@@ -353,6 +353,9 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
       p_dlg->SetFilterIndex(*m_pLastUsedFilter);
     }
 
+ wxPoint pos = wxGetMousePosition();
+ p_dlg->Move(pos);
+
  // set an initial path
  if (url.StartsWith(_T("http")) ||
      url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))

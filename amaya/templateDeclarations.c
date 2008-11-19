@@ -1688,7 +1688,7 @@ void PrintElement(Element elem, int dec)
   ----------------------------------------------------------------------*/
 void PrintDeclarations (XTigerTemplate t, FILE *file)
 {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
 #ifdef TEMPLATES
   ForwardIterator iter;
   SearchSetNode     node;
@@ -1794,14 +1794,14 @@ void PrintDeclarations (XTigerTemplate t, FILE *file)
       TtaFreeMemory(iter);  
     }
 #endif /* TEMPLATES */
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void DumpAllDeclarations()
 {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
 #ifdef TEMPLATES
   char localname[MAX_LENGTH];
   FILE *file;
@@ -1833,14 +1833,14 @@ void DumpAllDeclarations()
   
   TtaWriteClose (file);
 #endif /* TEMPLATES */
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void DumpDeclarations (XTigerTemplate t)
 {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
 #ifdef TEMPLATES
   char localname[MAX_LENGTH];
   FILE *file;
@@ -1857,14 +1857,14 @@ void DumpDeclarations (XTigerTemplate t)
 
   TtaWriteClose (file);
 #endif /* TEMPLATES */
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void DumpTemplateReferences ()
 {
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
 #ifdef TEMPLATES
   XTigerTemplate  t;
   ForwardIterator iter;
@@ -1881,7 +1881,7 @@ void DumpTemplateReferences ()
     }
   TtaFreeMemory(iter);
 #endif /* TEMPLATES */
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -2654,9 +2654,9 @@ ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc,
   ThotBool     res;
   Element      child;
   
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
   if(t && doc && elem && name && name[0]!=EOS)
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
     {
       elType = TtaGetElementType(elem);
       if(elType.ElTypeNum==Template_EL_union)

@@ -340,9 +340,9 @@ void Template_PrepareTemplate (XTigerTemplate t, Document doc)
              if (asc)
                {
                  // chech if the parent is a repeat
-#ifdef AMAYA_DEBUG
+#ifdef TEMPLATE_DEBUG
 printf ("Move %s out of the pseudo paragraph\n",name);
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
                  parent = TtaGetParent (el);
                  parentType = TtaGetElementType (parent);
                  if (parentType.ElSSchema == templateSSchema &&
@@ -420,9 +420,9 @@ DocumentType LoadTemplate (Document doc, char* templatename)
       t = GetXTigerDocTemplate(newdoc);
       if (t)
         {
-#ifdef AMAYA_DEBUG  
+#ifdef TEMPLATE_DEBUG  
     printf("XTiger template %s loaded.\n", t->uri);
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
           if (Template_HasErrors(t))
             Template_ShowErrors(t);
           else
@@ -466,12 +466,12 @@ ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 
     t = GetXTigerDocTemplate(newdoc);
     
-#ifdef AMAYA_DEBUG  
+#ifdef TEMPLATE_DEBUG  
     if (Template_HasErrors(t))
       printf("XTiger library %s has error(s)\n", t->uri);
     else
       printf("XTiger library %s loaded successfully.\n", t->uri);
-#endif /* AMAYA_DEBUG */
+#endif /* TEMPLATE_DEBUG */
 
     W3Loading = docLoading;
 

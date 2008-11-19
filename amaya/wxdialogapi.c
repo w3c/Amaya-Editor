@@ -847,7 +847,7 @@ void ShowNonSelListDlgWX (ThotWindow parent, char *title, char* label,
   ITERATOR_FOREACH(iter, DLListNode, node)
     {
       str = (const char*)node->elem;
-      if(str)
+      if (str)
         wx_items.Add(TtaConvMessageToWX(str));
     }
   TtaFreeMemory(iter);
@@ -1057,7 +1057,7 @@ ThotBool CreateTextDlgWX (int ref, int subref, ThotWindow parent,
 
 
   wxTextEntryDialog dlg(parent, wx_label, wx_title, wx_value);
-  if(dlg.ShowModal()==wxID_OK)
+  if (dlg.ShowModal()==wxID_OK)
     {
       wx_value = dlg.GetValue();
       wxASSERT( wx_value.Len() < 512 );
@@ -1279,10 +1279,10 @@ ThotBool CreateEnumListDlgWX (int ref, int subref, ThotWindow parent,
 
   wxSingleChoiceDialog dlg(parent, wx_label, wx_title, wx_items);
   dlg.SetSelection(selection);
-  if(dlg.ShowModal()==wxID_OK)
+  if (dlg.ShowModal()==wxID_OK)
     {
       int id = dlg.GetSelection();
-      if(id!=wxNOT_FOUND)
+      if (id!=wxNOT_FOUND)
         {
           ThotCallback (subref, INTEGER_DATA, (char*)id);
           ThotCallback (ref, INTEGER_DATA, (char*)1);
@@ -1304,7 +1304,7 @@ ThotBool CreateNumDlgWX (int ref, int subref, ThotWindow parent,
 
   value = wxGetNumberFromUser(wx_label, wxT(""), wx_title, value, 0, 100, parent);
 
-  if(value==wxNOT_FOUND)
+  if (value==wxNOT_FOUND)
     {
       if (ref == MathsDialogue + FormMaths)
         ThotCallback (ref, INTEGER_DATA, (char*)0);
@@ -1338,7 +1338,7 @@ ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family,
       // manage the return of the modal dialog
       if (*family > 0)
         dlg.SetFontFamily(*family-1);
-      if(*size > 0)
+      if (*size > 0)
         dlg.SetFontSize(*size);
       if (dlg.ShowModal()==wxID_OK)
         {
@@ -1433,7 +1433,13 @@ void QueryStringFromUser(const char *label, const char *title, char* res, int sz
   wxString  str;
 
   str = wxGetTextFromUser(TtaConvMessageToWX(label), TtaConvMessageToWX(title));
-  strncpy (res, (const char*)str.mb_str(wxConvUTF8), sz);
+  if (str.Len() != 0)
+    {
+      strncpy (res, (const char*)str.mb_str(wxConvUTF8), sz-1);
+      res[sz-1] = EOS;
+    }
+  else
+    res[0] = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -1449,7 +1455,7 @@ ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc,
   wxStaticText *titleLabel, *descLabel;
   wxButton *cancel, *confirm;
 
-  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("GraphicsInfoDlgWX")))
+  if (wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("GraphicsInfoDlgWX")))
     {
       titleLabel = XRCCTRL(dialog, "wxID_LABEL_TITLE", wxStaticText);
       titleWidget = XRCCTRL(dialog, "wxID_TITLE", wxTextCtrl);
@@ -1458,7 +1464,7 @@ ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc,
       cancel = XRCCTRL(dialog, "wxID_CANCEL", wxButton);
       confirm = XRCCTRL(dialog, "wxID_OK", wxButton);
 
-      if(titleLabel && titleWidget && descWidget && descLabel
+      if (titleLabel && titleWidget && descWidget && descLabel
 	 && cancel && confirm)
         {
 	  titleLabel->SetLabel(TtaConvMessageToWX(TtaGetMessage
@@ -1479,10 +1485,12 @@ ThotBool QueryTitleAndDescFromUser(char* title, int titleSz, char* desc,
 					       (LIB, TMSG_LIB_CONFIRM) ));
 
 
-          if(dialog.ShowModal()==wxID_OK)
+          if (dialog.ShowModal() == wxID_OK)
             {
-              strncpy(title, (const char*)titleWidget->GetValue().mb_str(wxConvUTF8), titleSz-1);
-              strncpy(desc, (const char*)descWidget->GetValue().mb_str(wxConvUTF8), descSz-1);
+              strncpy (title, (const char*)titleWidget->GetValue().mb_str(wxConvUTF8), titleSz-1);
+              title[titleSz-1] = EOS;
+              strncpy (desc, (const char*)descWidget->GetValue().mb_str(wxConvUTF8), descSz-1);
+              desc[descSz-1] = EOS;
               return TRUE;
             }
         }
@@ -1532,13 +1540,13 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
       dialog.SetSize (250, 320);
       dialog.Layout();
 
-      if(dialog.ShowModal()==wxID_OK)
+      if (dialog.ShowModal()==wxID_OK)
         {
           strs.Clear();
           n = box->GetCount();
           for (i=0; i<n; i++)
             {
-              if(box->IsChecked(i))
+              if (box->IsChecked(i))
                 {
                   strs += box->GetString(i);
                   strs += wxT(" ");
@@ -1567,7 +1575,8 @@ ThotBool QueryNewUseFromUser(const char* proposed, char** label, char**types, Th
   to a user.
   Return FALSE if user cancel the query or an error occurs.
   ----------------------------------------------------------------------*/
-ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** label, char**types, ThotBool newUnion)
+ThotBool QueryUnionFromUser (const char* proposed, const char* checked,
+                             char** label, char**types, ThotBool newUnion)
 {
 #ifdef TEMPLATES
   int i;
@@ -1578,7 +1587,7 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
 
   wxCheckListBox* box;
 
-  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
+  if (wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
     {
 
       dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, newUnion?AM_TEMPLATE_NEWUNION:AM_TEMPLATE_UNION)));
@@ -1592,13 +1601,13 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
             SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
 
       XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->Hide();
-      if(!newUnion)
+      if (!newUnion)
         {
-          if(label!=0 && *label!=0)
+          if (label!=0 && *label!=0)
             {
               XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetValue(TtaConvMessageToWX(*label));
               i = arr.Index(TtaConvMessageToWX(*label));
-              if(i!=wxNOT_FOUND)
+              if (i!=wxNOT_FOUND)
                 arr.RemoveAt(i);
             }
           XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->Disable();
@@ -1610,13 +1619,13 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
       sz->Layout();
 
       box->Append(arr);
-      if(checked && checked[0]!=EOS)
+      if (checked && checked[0]!=EOS)
         {
           arrchecked = wxStringTokenize(TtaConvMessageToWX(checked));
           count =  box->GetCount();
-          for(i=0; i<(int)count; i++)
+          for (i=0; i<(int)count; i++)
             {
-              if(arrchecked.Index(box->GetString(i))!=wxNOT_FOUND)
+              if (arrchecked.Index(box->GetString(i))!=wxNOT_FOUND)
                 box->Check(i);
             }
         }
@@ -1624,13 +1633,13 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
       dialog.SetSize(200, 320);
       dialog.Layout();
 
-      if(dialog.ShowModal()==wxID_OK)
+      if (dialog.ShowModal()==wxID_OK)
         {
           strs.Clear();
           n = box->GetCount();
-          for(i=0; i<(int)n; i++)
+          for (i=0; i<(int)n; i++)
             {
-              if(box->IsChecked(i))
+              if (box->IsChecked(i))
                 {
                   strs += box->GetString(i);
                   strs += wxT(" ");
@@ -1638,9 +1647,9 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
             }
           strs.Trim();
 
-          if(label && newUnion)
+          if (label && newUnion)
             *label = TtaStrdup((const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8));
-          if(types)
+          if (types)
             *types = TtaStrdup((const char*)strs.mb_str(wxConvUTF8));
           return TRUE;
         }
@@ -1655,7 +1664,8 @@ ThotBool QueryUnionFromUser(const char* proposed, const char* checked, char** la
   to a user.
   Return FALSE if user cancel the query or an error occurs.
   ----------------------------------------------------------------------*/
-ThotBool QueryUseFromUser(const char* proposed, const char* checked, char* label, int labelsz, char**types, ThotBool* option)
+ThotBool QueryUseFromUser (const char* proposed, const char* checked, char* label,
+                           int labelsz, char**types, ThotBool* option)
 {
 #ifdef TEMPLATES
   int i;
@@ -1666,7 +1676,7 @@ ThotBool QueryUseFromUser(const char* proposed, const char* checked, char* label
 
   wxCheckListBox* box;
 
-  if(wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
+  if (wxXmlResource::Get()->LoadDialog(&dialog, NULL, wxT("TemplateNewUseDlgWX")))
     {
 
       dialog.SetTitle(TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_TEMPLATE_USE)));
@@ -1679,35 +1689,34 @@ ThotBool QueryUseFromUser(const char* proposed, const char* checked, char* label
       XRCCTRL(dialog, "wxID_OK", wxButton)->
             SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
 
-      if(option==NULL)
+      if (option==NULL)
         XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->Hide();
       else
         XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->SetValue(*option);
 
-      if(label!=0 && *label!=0)
+      if (label!=0 && *label!=0)
         {
           XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetValue(TtaConvMessageToWX(label));
           i = arr.Index(TtaConvMessageToWX(label));
-          if(i!=wxNOT_FOUND)
+          if (i!=wxNOT_FOUND)
             arr.RemoveAt(i);
         }
-      if(labelsz==0)
+      if (labelsz == 0)
         XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->Disable();
-
 
       wxSizer* sz = dialog.GetSizer();
       box = new wxCheckListBox(&dialog, XRCID("wxID_LIST_TYPES"));
-      sz->Insert(2, box, 1, wxEXPAND);
+      sz->Insert (2, box, 1, wxEXPAND);
       sz->Layout();
 
       box->Append(arr);
-      if(checked && checked[0]!=EOS)
+      if (checked && checked[0] != EOS)
         {
           arrchecked = wxStringTokenize(TtaConvMessageToWX(checked));
           count =  box->GetCount();
-          for(i=0; i<(int)count; i++)
+          for (i=0; i<(int)count; i++)
             {
-              if(arrchecked.Index(box->GetString(i))!=wxNOT_FOUND)
+              if (arrchecked.Index(box->GetString(i))!=wxNOT_FOUND)
                 box->Check(i);
             }
         }
@@ -1715,13 +1724,13 @@ ThotBool QueryUseFromUser(const char* proposed, const char* checked, char* label
       dialog.SetSize(200, 320);
       dialog.Layout();
 
-      if(dialog.ShowModal()==wxID_OK)
+      if (dialog.ShowModal()==wxID_OK)
         {
           strs.Clear();
           n = box->GetCount();
-          for(i=0; i<(int)n; i++)
+          for (i=0; i<(int)n; i++)
             {
-              if(box->IsChecked(i))
+              if (box->IsChecked(i))
                 {
                   strs += box->GetString(i);
                   strs += wxT(" ");
@@ -1729,13 +1738,15 @@ ThotBool QueryUseFromUser(const char* proposed, const char* checked, char* label
             }
           strs.Trim();
 
-          if(label && labelsz)
-            strncpy(label, (const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8), labelsz);
-
-          if(option)
+          if (label && labelsz)
+            {
+              strncpy (label, (const char*)XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->GetValue().mb_str(wxConvUTF8), labelsz-1);
+              label[labelsz-1] = EOS;
+            }
+          if (option)
             *option = XRCCTRL(dialog, "wxID_CHECK_OPTIONAL", wxCheckBox)->IsChecked();
 
-          if(types)
+          if (types)
             *types = TtaStrdup((const char*)strs.mb_str(wxConvUTF8));
           return TRUE;
         }
