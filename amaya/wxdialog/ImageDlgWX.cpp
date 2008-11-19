@@ -110,10 +110,8 @@ ImageDlgWX::ImageDlgWX( int ref, wxWindow* parent, const wxString & title,
   // select the string
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
 #else /* _WINDOWS */
-#ifndef _MACOS
   // set te cursor to the end
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
-#endif /* _MACOS */
 #endif /* _WINDOWS */
 }
 

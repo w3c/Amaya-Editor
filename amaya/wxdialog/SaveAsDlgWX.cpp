@@ -328,10 +328,8 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
 
   // set te cursor to the end
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetInsertionPointEnd();
-#ifndef _MACOS
   // give focus to ...
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetFocus();
-#endif /* _MACOS */
 }
 
 /*---------------------------------------------------------------------------

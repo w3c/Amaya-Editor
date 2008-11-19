@@ -203,18 +203,11 @@ END_EVENT_TABLE()
   SetupDialog_Passwords( GetProp_Passwords() );
   SetupDialog_RDFa( GetProp_RDFa() );
 
-  // give focus to ...
-  //  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
-  
-
   // on windows, the color selector dialog must be complete.
   colour_data.SetChooseFull(true);
-
   SetSize(720, 420);
-  
 
   CentreOnScreen();
-  
   // this flag is used to know when events can be proceed
   // for example : when resources are loaded it produces "Page changed" events
   m_IsInitialized = true;
@@ -264,10 +257,8 @@ void PreferenceDlgWX::OnPageChanged( wxListbookEvent& event )
       event.Skip();
       return;
     }
-
-  int page_id_geom = wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY"));
-
-  if ( p_new_page->GetId() == page_id_geom )
+  int page_id = p_new_page->GetId();
+  if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY")))
     {
       // the new page is Geometry => hide the bottom buttons (ok, default)
       XRCCTRL(*this, "wxID_OK",      wxButton)->Hide();
@@ -277,8 +268,29 @@ void PreferenceDlgWX::OnPageChanged( wxListbookEvent& event )
     {
       XRCCTRL(*this, "wxID_OK",      wxButton)->Show();
       XRCCTRL(*this, "wxID_DEFAULT", wxButton)->Show();
+      if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_GENERAL")))
+	XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_BROWSE")))
+	XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG", wxTextCtrl)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_PUBLISH")))
+	XRCCTRL(*this, "wxID_VALUE_DEFAULTNAME", wxTextCtrl)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_CACHE")))
+	XRCCTRL(*this, "wxID_VALUE_CACHEDIR", wxTextCtrl)->SetFocus();
+       else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_PROXY")))
+	XRCCTRL(*this, "wxID_VALUE_PROXYHTTP", wxTextCtrl)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_COLOR")))
+	XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_ANNOT")))
+	XRCCTRL(*this, "wxID_ANNOT_USER", wxTextCtrl)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_DAV")))
+	XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_TEMPLATES")))
+	XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_EMAILS")))
+	XRCCTRL(*this, "wxID_VALUE_EMAIL_SERVER_ADDRESS", wxTextCtrl)->SetFocus();
+      else if (page_id == wxXmlResource::GetXRCID(_T("wxID_PAGE_RDFa")))
+	XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetFocus();
     }
-
   event.Skip();
 }
 
@@ -329,13 +341,13 @@ void PreferenceDlgWX::SetupLabelDialog_General()
 
   // fill the combobox with url list
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->Append(m_UrlList);
-#if defined(_WINDOWS) || defined(_MACOS)
+#if defined(_WINDOWS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetSelection(0, -1);
-#else /* _WINDOWS || _MACOS */
+#else /* _WINDOWS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetInsertionPointEnd();
-#endif /* _WINDOWS || _MACOS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -404,13 +416,13 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
     XRCCTRL(*this, "wxID_CHOICE_PROFILE", wxChoice)->SetStringSelection(TtaConvMessageToWX("Advanced"));
 
   XRCCTRL(*this, "wxID_CHOICE_LG", wxChoice)->SetStringSelection( value );
-#if defined(_WINDOWS) || defined(_MACOS)
+#if defined(_WINDOWS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetSelection(0, -1);
-#else /* _WINDOWS || _MACOS */
+#else /* _WINDOWS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetInsertionPointEnd();
-#endif /* _WINDOWS || _MACOS */
+#endif /* _WINDOWS */
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
   
   XRCCTRL(*this, "wxID_CHOICE_TOOLPANEL_ALIGN", wxChoice)->Append(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_FORMATLEFT)) );
@@ -1599,13 +1611,13 @@ void PreferenceDlgWX::SetupLabelDialog_RDFa()
 
   // fill the combobox with ns list
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->Append(m_RDFaNSList);
-#if defined(_WINDOWS) || defined(_MACOS)
+#if defined(_WINDOWS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetSelection(0, -1);
-#else /* _WINDOWS || _MACOS */
+#else /* _WINDOWS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetInsertionPointEnd();
-#endif /* _WINDOWS || _MACOS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1624,15 +1636,14 @@ void PreferenceDlgWX::SetupDialog_RDFa( const Prop_RDFa & prop)
       box->Append(TtaConvMessageToWX(path->Path));
       path = path->NextPath;
     }
-#if defined(_WINDOWS) || defined(_MACOS)
+#if defined(_WINDOWS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetSelection(0, -1);
-#else /* _WINDOWS || _MACOS */
+#else /* _WINDOWS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetInsertionPointEnd();
-#endif /* _WINDOWS || _MACOS */
-  XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetFocus();
-
+#endif /* _WINDOWS */
+  //XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetFocus();
 }
 
 /*----------------------------------------------------------------------

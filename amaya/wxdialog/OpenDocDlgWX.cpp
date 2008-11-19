@@ -253,13 +253,13 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   SetAutoLayout( TRUE );
 
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetFocus();
-#if defined(_WINDOWS) || defined(_MACOS)
+#if defined(_WINDOWS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection(0, -1);
-#else /* _WINDOWS || _MACOS */
+#else /* _WINDOWS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetInsertionPointEnd();
-#endif /* _WINDOWS || _MACOS */
+#endif /* _WINDOWS */
 
 }
 
@@ -328,12 +328,12 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
 void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
 {
   wxFileDialog  *p_dlg;
-  wxString url, file_value;
-  int      id = event.GetId();
-  int      temp_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEMPLATE"));
+  wxString       url, file_value;
+  int            id = event.GetId();
+  int            temp_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEMPLATE"));
 
   // Create a generic filedialog
- if (id == temp_id)
+  if (id == temp_id)
     {
       p_dlg = new wxFileDialog(this,
                                TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
@@ -353,9 +353,6 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
       p_dlg->SetFilterIndex(*m_pLastUsedFilter);
     }
 
- wxPoint pos = wxGetMousePosition();
- p_dlg->Move(pos);
-
  // set an initial path
  if (url.StartsWith(_T("http")) ||
      url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
@@ -370,6 +367,15 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
       p_dlg->SetDirectory(address);
     }
 
+   // Get the rigth position
+  int display_width_px, display_height_px;
+  wxPoint pos = wxGetMousePosition();
+  wxDisplaySize(&display_width_px, &display_height_px);
+  if (pos.x + 200 > display_width_px)
+    pos.x = display_width_px - 200;
+  if (pos.y + 100 > display_height_px)
+    pos.x = display_height_px - 100;
+  p_dlg->Move(pos);
   if (p_dlg->ShowModal() == wxID_OK)
     {
       if (id == temp_id)

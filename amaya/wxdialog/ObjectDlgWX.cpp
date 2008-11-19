@@ -120,13 +120,13 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
   SetAutoLayout( TRUE );
 
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetFocus();
-#if defined(_WINDOWS) || defined(_MACOS)
+#if defined(_WINDOWS)
   // select the string
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetSelection(0, -1);
-#else /* _WINDOWS || _MACOS */
+#else /* _WINDOWS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_URL", wxTextCtrl)->SetInsertionPointEnd();
-#endif /* _WINDOWS || _MACOS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

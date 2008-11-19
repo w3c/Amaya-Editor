@@ -52,13 +52,13 @@ ListNSDlgWX::ListNSDlgWX( int ref, wxWindow* parent, const wxArrayString& items,
 
   // fillup  the combobox with default ns list
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_ELEM_NS", wxComboBox)->Append(rdfa_items);
-#if defined(_WINDOWS) || defined(_MACOS)
+#if defined(_WINDOWS)
   // select the string
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_ELEM_NS", wxComboBox)->SetSelection(0, -1);
-#else /* _WINDOWS || _MACOS */
+#else /* _WINDOWS */
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_ELEM_NS", wxComboBox)->SetInsertionPointEnd();
-#endif /* _WINDOWS || _MACOS */
+#endif /* _WINDOWS */
 
   SetSize(720, 420);
   Fit();

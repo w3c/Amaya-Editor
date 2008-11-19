@@ -53,10 +53,8 @@ END_EVENT_TABLE()
 
   // set te cursor to the end
   XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetInsertionPointEnd();
-#ifndef _MACOS
   // give focus to ...
   XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetFocus();
-#endif /* _MACOS */
   SetAutoLayout( TRUE );
 }
 

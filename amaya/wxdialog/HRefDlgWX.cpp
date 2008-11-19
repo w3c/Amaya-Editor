@@ -77,15 +77,12 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(wx_init_value);
 
   SetAutoLayout( TRUE );
-
   XRCCTRL(*this, "wxID_DELETE", wxButton)->Show(!LinkAsCSS);
   
   // set te cursor to the end
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection (0, -1);
-#ifndef _MACOS
   // give focus to ...
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetFocus();
-#endif /* _MACOS */
 }
 
 /*----------------------------------------------------------------------
