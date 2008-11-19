@@ -923,8 +923,8 @@ void DisplayStringSelection (int frame, int leftX, int rightX, int t,
   if (pBox->BxAbstractBox != NULL)
     {
       topY = pBox->BxYOrg + t - pFrame->FrYOrg;
-      topY += pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
-      h = pBox->BxH;
+      //topY += pBox->BxTMargin + pBox->BxTBorder;
+      h = pBox->BxHeight;
 
       /* limit to the scrolling zone */
       width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth
