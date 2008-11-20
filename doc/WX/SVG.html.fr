@@ -22,88 +22,119 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <div class="PageBody" id="Graphics">
 <h2 id="Editer">Éditer des graphiques SVG</h2>
 
-<p>Amaya vous permet d'inclure des graphiques vectoriels dans des pages Web,
+<p>Amaya vous permet d'inclure des graphiques vectoriels dans des pages web,
 suivant la spécification Scalable Vector Graphics (<a
-href="http://www.w3.org/TR/svg/">SVG</a>).</p>
+href="http://www.w3.org/TR/svg/">SVG</a>). le but n'est pas de créer tous les
+éléments et attributs de SVG, mais d'implémenter un sous-ensemble du langage
+qui soit suffisant pour les dessins que les auteurs scientifiques incluent dans
+leurs documents.</p>
+
+<p>Amaya gère les éléments SVG comme des composants structurés, de la même
+façon que les éléments HTML.</p>
 
 <p>Les éléments SVG sont gérés comme des composants structurés, de la même
 façon que les éléments HTML. Donc vous pouvez manipuler les graphiques SVG
-comme n'importe quelle autre partie des documents HTML.</p>
+comme n'importe quelle autre partie de documents HTML.</p>
 
 <p>Toutes les fonctions d'édition fournies par Amaya pour éditer le texte sont
 aussi disponibles pour éditer le graphique (par exemple il est possible de
 créer un lien sur un élément SVG).</p>
 
 <p><strong>Attention: L'édition SVG est en phase de développement. Vous
-trouverez certainement des bugs non encore corrigés et l'interface utilisateur
-risque de changer dans le futur.</strong></p>
+trouverez certainement des bugs et l'interface utilisateur risque de changer
+dans le futur.</strong></p>
 
-<h3><a name="L288" id="L288">Création de graphiques</a></h3>
+<h3 id="L53"><a name="L288" id="L288">Créer des graphiques</a></h3>
 
-<p>Pour dessiner des graphiques, il faut un canevas SVG. Celui-ci peut soit
-être le document en entier, créé à l'aide de la commande "File-&gt;New-&gt;New
-Drawing" ou un élément <code>&lt;svg/&gt;</code> à l'intérieur d'un document
-XML. Le dernier cas se produit dès que vous dessiner des graphiques: Amaya
-cherche un endroit où un tel <code>&lt;svg/&gt;</code> peut être inséré.
-L'élément se voit attribué une largeur et hauteur par défaut, mais il est
-possible de le redimensionner.</p>
+<p>Pour dessiner des graphiques, il faut un canevas SVG. Celui-ci peut être le
+document lui-même, ou un élément <code>&lt;svg&gt;</code> dans un document XML.
+Un document SVG est créé par la commande
+<strong>Fichier-&gt;Nouveau-&gt;Nouveau Dessin</strong>. Un onglet de l'outil
+Eléments vous permet de créer un canevas SVG et des composants graphiques dans
+un document XML. </p>
 
-<p>Une fois le point d'insertion à l'intérieur du cavenas SVG dans lequel vous
-voulez dessiner, vous pouvez lancer une commande pour créer des graphiques :</p>
+<p>Quand l'utilisateur demande la création d'un canevas SVG dans un document
+XML, Amaya cherche un endroit autour du point d'insertion où un tel élément
+<code>&lt;svg&gt;</code> peut être inséré. L'élément est créé avec une largeur
+et hauteur par défaut. Par la suite, quand le canevas SVG est sélectionné, il
+peut être redimensionné.</p>
+
+<p>Si l'utilisateur essaie de créer un graphique hors d'un canevas SVG, un
+élément &lt;svg&gt; est automatiquement engendré pour inclure le nouveau
+composant graphique.</p>
+
+<p>Quand l'utilisateur clique dans un cavenas SVG, l'outil SVG est présenté et
+l'utilisateur peut créer des composants graphiques :</p>
 <ul>
-  <li>Une ligne, une simple ou double flèche, un "zigzag".</li>
-  <li>texte, fragment de HTML embarqué (<code>foreignObject</code>) et
-  image.</li>
-  <li>figures élémentaires : carré, rectangle, losange, parallélogramme,
-    trapèze, triangles, cercle et ellipse.</li>
-  <li>polygone et segments de droite, courbes ouverte et fermée.</li>
-  <li>Objets 3D: cube, parallelepipède, cylindre.</li>
+  <li>des connecteurs : ligne, flèche simple ou double, "zigzag".</li>
+  <li>texte, fragment de HTML embarqué (<code>foreignObject</code>), formule
+    mathématique, image.</li>
+  <li>des figures élémentaires : carré, rectangle (optionnellement avec des
+    coins arrondis), losange, parallélogramme, trapèze, triangles, cercle et
+    ellipse.</li>
+  <li>polygone et segments de droite, courbes ouvertes et fermées.</li>
+  <li>des polygones reguliers : pentagone, hexagone, heptagone, octagone,
+    différentes étoiles</li>
+  <li>des objets 3D : cube, parallelepipède, cylindre, octahedre, pyramide.</li>
+  <li>des symboles spéciaux pour l'électronique, la chimie, etc.</li>
 </ul>
 
-<p>En vue formattée, la création d'une forme nécessite quelques interactions
-directes avec l'utilisateur:</p>
+<p>Dans la vue formatée, la position et la taille de tous les composants créés
+sont données par une interaction directe :</p>
 <ul>
-  <li>pour les connecteurs, figures élémentaires et objets 3D: vous devez tout
-    d'abord sélectionner la position du coin gauche en cliquant avec le bouton
-    gauche de la souris. Laissez le bouton appuyé et déplacez la souris jusqu'à
-    la position du coin opposé, puis lâchez le bouton.</li>
-  <li>pour le texte et les foreignObject : cliquez à la position où vous
-    souhaitez inserer l'élément.</li>
-  <li>pour les polygones et segments de droite: entrez chaque point en cliquant
-    la position correspondante avec le bouton gauche de la souris. Pour
-    indiquer le dernier point, faites un double clic.</li>
-  <li>coubes de Bézier: idem que pour les polygones, sauf que vous devez
-    indiquer la direction des tangentes.</li>
+  <li>Pour les connecteurs (excepté pour les lignes), les figures élémentaires
+    et les objets 3D, vous devez tout d'abord sélectionner la position du coin
+    gauche en cliquant avec le bouton gauche de la souris. <em>Laissez le
+    bouton appuyé</em> (drag) et déplacez la souris jusqu'à la position du coin
+    opposé, puis lâchez le bouton.</li>
+  <li>Pour le texte et les <code>foreignObject</code>, <em>cliquez</em> à la
+    position où vous souhaitez insérer l'élément.</li>
+  <li>Pour les polygones et segments de droite, vous <em>cliquez</em> pour
+    engendrer un point à la position correspondante avec le bouton gauche de la
+    souris. Pour indiquer le dernier point, faites un <em>double clic</em>. Un
+    clic droit ou la touche <kbd>Echappement</kbd> arrête l'interaction sans
+    ajouter de point.</li>
+  <li>Pour les courbes de Bézier, vous procédez comme pour les polygones, sauf
+    que vous devez indiquer aussi la direction des tangentes.</li>
 </ul>
 
-<p>Si vous dessinez une ligne, une flèche, un polygone ou des segments de
-droites, l'utilisation de la touche <kbd>shift</kbd> permet une approximation
-de 15°.</p>
+<p>Quand une ligne, une flèche, un polygone ou un segment de droite est créé,
+la touche <kbd>shift</kbd> peut être pressée pour forcer une approximation de
+15°.</p>
 
-<h3>Selectionner des graphiques</h3>
+<p>Quand ls sélection est dans la vue structure, les composants sont créés avec
+une position et une taille par défaut.</p>
 
-<p>En vue formattée, les règles de sélection des graphiques sont les suivantes
-:</p>
+<h3 id="L105">Sélectionner des graphiques</h3>
+
+<p>Dans la vue formatée, les règles de sélection des graphiques sont les
+suivantes :</p>
 <ul>
-  <li>Si l'élément est vide, alors il faut cliquer sur ses cotés. Dans le cas
+  <li>Si l'élément est creux, alors il faut cliquer sur ses bords. Dans le cas
     contraire, vous pouvez cliquer à l'intérieur.</li>
   <li>Si une polyline ou un chemin est selectionné, alors leurs points de
     controles apparaissent et peuvent être sélectionnés individuellement. Si le
-    point de controle sélectionné fait partie d'un fragment de courbe de
+    point de contrôle sélectionné fait partie d'un fragment de courbe de
     Bézier, la poignée de Bézier correspondante est affichée.</li>
-  <li>Si la touche <kbd>shift</kbd> est appuyée alors chaque nouveau élément
+  <li>Si la touche <kbd>shift</kbd> est pressée alors chaque nouveau élément
     sur lequel on clique est ajouté à la sélection.</li>
-  <li>Plusieurs objets peuvent être sélectionnée en même temps, à l'aide de
-    l'outil de sélection rectangulaire du panneau SVG.</li>
+  <li>Plusieurs composants peuvent être sélectionnés en même temps, à l'aide de
+    l'outil de <em>sélection rectangulaire</em> du panneau SVG.</li>
+  <li>Quand des composants sont groupés, ces composants ne peuvent pas être
+    sélectionnés individuellement dans le vue formatée. Seul le groupe peut
+    être sélectionné. Mais vous pouvez les sélectionner dans la vue
+  structure.</li>
 </ul>
 
-<h3>Appliquer des transformations aux graphiques</h3>
+<h3 id="Appliquer">Appliquer des transformations aux graphiques</h3>
 
-<p>Pour appliquer des transformations à un objet, il faut d'abord le
-sélectionner. La sélection rectangulaire est utile pour sélectionner plusieurs
-objets. Les transformations disponibles sont:</p>
+<p>Pour appliquer des transformations à un composant, il faut d'abord le
+sélectionner. Les transformations disponibles sont proposées dans l'outil SVG,
+mais aussi dans le menu contextuel affiché avec le bouton droit.</p>
+
+<p>Les transformations possibles sont :</p>
 <ul>
-  <li>grouper/dégrouper des objets</li>
+  <li>grouper/dégrouper des composants</li>
   <li>changer le niveau des objets: envoyer à arrière-plan, descendre d'un
     niveau, monter d'une niveau, monter au premier-plan.</li>
   <li>tourner, pivoter de 90°.</li>
@@ -112,7 +143,7 @@ objets. Les transformations disponibles sont:</p>
     est sélectionné, l'alignement se fait par rapport au cadre SVG.</li>
 </ul>
 
-<h3>Appliquer du style aux graphiques</h3>
+<h3 id="Appliquer1">Appliquer du style aux graphiques</h3>
 
 <p>Vous pouvez changer la couleur des graphiques en utilisant le panneau de
 Style :</p>

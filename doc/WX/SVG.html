@@ -26,96 +26,126 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <div id="page_body" class="PageBody">
 <h2 id="Editing">Editing SVG graphics</h2>
 
-<p>Amaya enables you to include vector graphics in Web pages, following the
-Scalable Vector Graphics (SVG) specification.</p>
+<p>Amaya enables you to include vector graphics in web pages, following the
+Scalable Vector Graphics (<a href="http://www.w3.org/TR/svg/">SVG</a>)
+specification. The goal is not create all SVG elements and attributes, but to
+implement a subset of the language that is sufficient for the drawings that
+scientific authors include in their documents.</p>
 
 <p>Amaya handles SVG elements as structured components, in the same way as HTML
-elements. Therefore, you can manipulate SVG graphics in the same way you
-manipulate other parts of HTML documents.</p>
+elements. Therefore, you can manipulate SVG graphics in the structure view as
+you manipulate other parts of HTML documents.</p>
 
 <p>All editing commands provided by Amaya for handling text are also available
 for handling graphics (for example it's possible to create a link on a SVG
 element).</p>
 
-<p><strong>Warning: SVG authoring is under development. You may find bugs not
-fixed yet and the user interface is likely to change in the future.</strong></p>
+<p><strong>Warning: SVG authoring is under development. You may find bugs and
+the user interface may change in the future.</strong></p>
 
-<h3>Creating Graphics</h3>
+<h3 id="Creating">Creating graphics</h3>
 
-<p>To draw graphics, you need an SVG canvas. This one can either be the whole
-document created using the command "File-&gt;New-&gt;New Drawing" or an
-<code>&lt;svg/&gt;</code> element inside an XML document. The latter case
-happens as soon as you draw graphics: Amaya try and find a place where such an
-<code>&lt;svg/&gt;</code> element can be inserted. The element is given default
-width and height, but it is possible to resize it.</p>
+<p>To draw graphics, you need a SVG canvas. The canvas can be either the
+document itself or a <code>&lt;svg&gt;</code> element inside a XML document. A
+SVG document is created by the <strong>File-&gt;New-&gt;New Drawing</strong>
+command. A tab of the <em>Elements</em> tool allows you to create a SVG canvas
+and graphic components inside a XML document.</p>
 
-<p>Once the insert point is inside the SVG canvas you want to draw in, you can
-launch a command to create graphics:</p>
+<p> When the user asks the creation of a SVG canvas into a XML document, Amaya
+looks for a place around the insert point where such a <code>&lt;svg&gt;</code>
+element can be inserted. The element is created with a default width and
+height. Later, when the SVG canvas is selected, the user can resize it.</p>
+
+<p>If the user tries to create a graphics outside a SVG canvas, a
+<code>&lt;svg&gt;</code> element is automatically generated to include the new
+graphic component.</p>
+
+<p>When the user clicks within a SVG canvas, the SVG tool is presented and the
+user can create graphic components:</p>
 <ul>
   <li>connectors: line, simple or double arrow, zigzag.</li>
-  <li>text or embedded HTML fragment (<code>foreignObject</code>) and
-  image.</li>
-  <li>basic shapes: square, rectangle, diamond, parallelogram, trapezium,
-    triangles, circle, ellipse.</li>
+  <li>text, embedded HTML fragment (<code>foreignObject</code>), mathematic
+    formula, image.</li>
+  <li>basic shapes: square, rectangle (optionally with rounded corners),
+    diamond, parallelogram, trapezium, triangles, circle, ellipse.</li>
   <li>polygon, polyline, open and close Bézier curves.</li>
-  <li>3D objects: cube, parallelepided, cylinder.</li>
+  <li>regular polygons: pentagon, hexagon, heptagon, octagon, various stars</li>
+  <li>3D objects: cube, parallelepiped, cylinder, octahedron, pyramid.</li>
+  <li>special symbols for electronics, chemistry, etc.</li>
 </ul>
 
-<p>In formatted view, the creation of graphics requires direct interaction:</p>
+<p>In formatted view, the position and size of all these created components are
+indicated by direct interaction:</p>
 <ul>
-  <li>for connectors, basic shapes or 3D objects: you first select the position
-    of the left corner by pressing the left mouse button. While holding down
-    the button, move the mouse to the position of the opposite corner, then
-    release the button.</li>
-  <li>for text and foreignObject: click on the position where you want to
-    insert the element.</li>
-  <li>for polygon and polyline: enter each point by clicking the corresponding
-    position with the left mouse button. To add the last point, use a
-    double-click. A right click stops the interaction without an additional
-    point.</li>
-  <li>Bézier curves: same as polygons except that you need to indicate the
-    direction of the tangents.</li>
+  <li>For connectors (except for lines), basic shapes and 3D objects, you first
+    select the position of the left corner by pressing the left mouse button.
+    While <em>holding down the button</em> (drag), move the mouse to the
+    position of the opposite corner, then release the button.</li>
+  <li>For text and <code>foreignObject</code>, <em>click</em> on the position
+    where you want to insert the element.</li>
+  <li>For polygon and polyline, you <em>click</em> to generate a point at the
+    corresponding position with the left mouse button. To indicate the last
+    point, use a <em>double-click</em>. A right click or a <kbd>Esc</kbd> stops
+    the interaction without an additional point.</li>
+  <li>Fo Bézier curves, you process the same way as polygons except that you
+    need to indicate the direction of the tangents too.</li>
 </ul>
 
-<p>If you are drawing a line, an arrow, a polygon or a polyline then using the
-<kbd>shift</kbd> key allow an approximation of 15°.</p>
+<p>When a line, an arrow, a polygon or a polyline is created the
+<kbd>shift</kbd> key may be hit to force an approximation of 15°.</p>
 
-<h3>Selecting graphics</h3>
+<p>When the selection is in structure view, components are created with default
+position and size.</p>
+
+<h3 id="Selecting">Selecting graphics</h3>
 
 <p>In formatted view, the rules to select graphics are the following:</p>
 <ul>
-  <li>If the element is empty then you need to click on its edges. Otherwise
+  <li>If the component is hollow then you need to click on its edges. Otherwise
     you can click inside it.</li>
-  <li>If a polyline or a path is selected, then its control points appear and
-    can be selected individually. If the selected control point is part of a
-    segment of a Bézier curve, then the corresponding Bézier handle is
+  <li>If a polyline or a path is selected, then its control points are shown
+    and can be selected individually. If the selected control point is part of
+    a segment of a Bézier curve, then the corresponding Bézier handle is
     displayed.</li>
   <li>If the <kbd>shift</kbd> key is pressed, then each new element you click
     on is added to the selection.</li>
-  <li>Several objects can be selected at the same time, using the the
-    rectangular selection tool of the SVG panel.</li>
+  <li>Several components can be selected at the same time, using the tangular
+    selection<em>rectangular selection</em> tool of the SVG panel.</li>
+  <li>When components are grouped, these components cannot be selected
+    individually in the formatted view. Only the group can be selected. But you
+    may select them in the structure view.</li>
 </ul>
 
-<h3>Applying transformations to graphics</h3>
+<h3 id="Applying">Applying transformations to graphics</h3>
 
-<p>To apply transformations on one object, you must first select it. The
-available transformations are:</p>
+<p>To apply transformations on one component, you must first select it.
+Available transformations aree proposed in the SVG tool but also in the
+contextual menu displayed with the right click.</p>
+
+<p>Possible transformations are:</p>
 <ul>
-  <li>group/ungroup objects</li>
-  <li>changing the level of objects: send to back, one level down, one level
-    up, bring to front</li>
-  <li>rotate, rotate 90°.</li>
+  <li>group/ungroup components</li>
+  <li>changing the level of components, to control overlay: send to back, one
+    level down, one level up, bring to front</li>
+  <li>rotating</li>
   <li>vertical and horizontal symmetry</li>
-  <li>alignments: left, center, right, top, middle, bottom. If only one object
-    is selected, the alignment is made according to the SVG canvas.</li>
+  <li>scaling, skewing</li>
+  <li>aligning components: left, center, right, top, middle, bottom. If only
+    one component is selected, the alignment is made according to the SVG
+    canvas.</li>
+  <li>distributing and spacing components</li>
 </ul>
 
-<h3>Styling graphics</h3>
+<h3 id="Styling">Styling graphics</h3>
 
-<p>You can change the color of the graphics using the Style panel:</p>
+<p>You can change the style of the graphic components at any time with the
+<em>Style</em> panel:</p>
+
+<p></p>
 <ul>
-  <li>background color is used to fill the graphics.</li>
-  <li>text color is used for the stroke color.</li>
+  <li>color: stroke and fill</li>
+  <li>stroke width</li>
+  <li>stroke and fill opacity/transparency</li>
 </ul>
 </div>
 </body>

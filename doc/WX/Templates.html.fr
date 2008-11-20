@@ -108,17 +108,17 @@ jour des modèles.</p>
         <p></p>
       </li>
       <li>L'entrée <em>Utiliser un composant ou un élément</em> est utilisée
-        pour engendrer un nouveau <code>use</code>.
+        pour engendrer un nouveau <code>use</code>. 
         <p>Si la sélection est vide, un dialogue propose la liste des éléments
         qui peuvent être insérés à cette position et demande à l'utilisateur le
-        label de l´élement use. Un élément <code>use</code> vide est
+        label associé à l´élement use. Un élément <code>use</code> vide est
         engendré.</p>
         <p>Si un élément du langage cible (div, h1, h2, p, ...) est
         sélectionné, un élément <code>use</code> qui permet d'insérer ce type
         d'élément est engendré à cette position. L''élément sélectionné devient
         le contenu initial de l'élément use. La commande demande seulement à
         l'utilisateur un label.</p>
-        <p> </p>
+        <p></p>
       </li>
       <li>L'entrée <em>Répéter l'utilisation courante</em> est utilisée pour
         engendrer une répétition (<code>repeat</code>) de l'élément

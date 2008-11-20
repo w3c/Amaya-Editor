@@ -217,7 +217,16 @@ Manuel d'utilisation d'Amaya</div>
       </li>
     </ul>
   </li>
-  <li><a href="SVG.html.fr#Editer">Éditer des graphiques SVG</a></li>
+  <li><a href="SVG.html.fr#Editer">Éditer des graphiques SVG</a>
+    <ul>
+      <li><a href="SVG.html.fr#L53">Créer des graphiques</a></li>
+      <li><a href="SVG.html.fr#L105">Sélectionner des graphiques</a></li>
+      <li><a href="SVG.html.fr#Appliquer">Appliquer des transformations aux
+        graphiques</a></li>
+      <li><a href="SVG.html.fr#Appliquer1">Appliquer du style aux
+      graphiques</a></li>
+    </ul>
+  </li>
   <li><a href="Xml.html.fr#Support">Édter des documents XML</a> 
     <ul>
       <li><a href="Xml.html.fr#Chargement">Chargement de document XML</a></li>
