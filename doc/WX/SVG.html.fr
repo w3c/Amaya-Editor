@@ -37,8 +37,7 @@ façon que les éléments HTML. Donc vous pouvez manipuler les graphiques SVG
 comme n'importe quelle autre partie de documents HTML.</p>
 
 <p>Toutes les fonctions d'édition fournies par Amaya pour éditer le texte sont
-aussi disponibles pour éditer le graphique (par exemple il est possible de
-créer un lien sur un élément SVG).</p>
+aussi disponibles pour éditer le graphique.</p>
 
 <p><strong>Attention: L'édition SVG est en phase de développement. Vous
 trouverez certainement des bugs et l'interface utilisateur risque de changer
@@ -50,8 +49,8 @@ dans le futur.</strong></p>
 document lui-même, ou un élément <code>&lt;svg&gt;</code> dans un document XML.
 Un document SVG est créé par la commande
 <strong>Fichier-&gt;Nouveau-&gt;Nouveau Dessin</strong>. Un onglet de l'outil
-Eléments vous permet de créer un canevas SVG et des composants graphiques dans
-un document XML. </p>
+<em>Eléments</em> vous permet de créer un canevas SVG et des composants
+graphiques dans un document XML. </p>
 
 <p>Quand l'utilisateur demande la création d'un canevas SVG dans un document
 XML, Amaya cherche un endroit autour du point d'insertion où un tel élément
@@ -63,7 +62,7 @@ peut être redimensionné.</p>
 élément &lt;svg&gt; est automatiquement engendré pour inclure le nouveau
 composant graphique.</p>
 
-<p>Quand l'utilisateur clique dans un cavenas SVG, l'outil SVG est présenté et
+<p>Quand l'utilisateur clique dans un canevas SVG, l'outil SVG est présenté et
 l'utilisateur peut créer des composants graphiques :</p>
 <ul>
   <li>des connecteurs : ligne, flèche simple ou double, "zigzag".</li>
@@ -73,9 +72,9 @@ l'utilisateur peut créer des composants graphiques :</p>
     coins arrondis), losange, parallélogramme, trapèze, triangles, cercle et
     ellipse.</li>
   <li>polygone et segments de droite, courbes ouvertes et fermées.</li>
-  <li>des polygones reguliers : pentagone, hexagone, heptagone, octagone,
+  <li>des polygones réguliers : pentagone, hexagone, heptagone, octogone,
     différentes étoiles</li>
-  <li>des objets 3D : cube, parallelepipède, cylindre, octahedre, pyramide.</li>
+  <li>des objets 3D : cube, parallélépipède, cylindre, octaèdre, pyramide.</li>
   <li>des symboles spéciaux pour l'électronique, la chimie, etc.</li>
 </ul>
 
@@ -102,7 +101,7 @@ sont données par une interaction directe :</p>
 la touche <kbd>shift</kbd> peut être pressée pour forcer une approximation de
 15°.</p>
 
-<p>Quand ls sélection est dans la vue structure, les composants sont créés avec
+<p>Quand la sélection est dans la vue structure, les composants sont créés avec
 une position et une taille par défaut.</p>
 
 <h3 id="L105">Sélectionner des graphiques</h3>
@@ -110,10 +109,10 @@ une position et une taille par défaut.</p>
 <p>Dans la vue formatée, les règles de sélection des graphiques sont les
 suivantes :</p>
 <ul>
-  <li>Si l'élément est creux, alors il faut cliquer sur ses bords. Dans le cas
-    contraire, vous pouvez cliquer à l'intérieur.</li>
-  <li>Si une polyline ou un chemin est selectionné, alors leurs points de
-    controles apparaissent et peuvent être sélectionnés individuellement. Si le
+  <li>Si l'élément est creux, alors il faut cliquer sur ses contours. Dans le
+    cas contraire, vous pouvez cliquer à l'intérieur.</li>
+  <li>Si une polyline ou un chemin est sélectionné, alors leurs points de
+    contrôles apparaissent et peuvent être sélectionnés individuellement. Si le
     point de contrôle sélectionné fait partie d'un fragment de courbe de
     Bézier, la poignée de Bézier correspondante est affichée.</li>
   <li>Si la touche <kbd>shift</kbd> est pressée alors chaque nouveau élément
@@ -145,11 +144,29 @@ mais aussi dans le menu contextuel affiché avec le bouton droit.</p>
 
 <h3 id="Appliquer1">Appliquer du style aux graphiques</h3>
 
-<p>Vous pouvez changer la couleur des graphiques en utilisant le panneau de
-Style :</p>
+<p>Vous pouvez changer quelques attributs de style des graphiques en utilisant
+le panneau <em>Style</em>. Quand un composant SVG est sélectionné, le panneau
+<em>Style</em> change pour présenter les attributs de style spécifiques :</p>
 <ul>
-  <li>La couleur de fond est utilisée pour remplir les graphiques.</li>
-  <li>La couleur de texte est utilisée pour la couleur de contour.</li>
+  <li><code>Opacity</code> : contrôle l'opacité globale du composant
+    graphique (couleur du fond et couleur du contour)</li>
+  <li><code>Fill</code> : contrôle la couleur de fond est utilisée pour remplir
+    le graphique et son opacité
+    <ul>
+      <li>Si l'entrée n'est pas cochée, le graphique est creux</li>
+      <li>Le bouton coloré donne la couleur courante</li>
+      <li>Le bouton palette permet de choisir une autre couleur</li>
+    </ul>
+  </li>
+  <li><code>Stroke</code> : contrôle la couleur du contour du graphique et son
+    opacité
+    <ul>
+      <li>Si l'entrée n'est pas cochée, le graphique n'a pas de contour</li>
+      <li>Le bouton coloré donne la couleur courante</li>
+      <li>Le bouton palette permet de choisir une autre couleur</li>
+    </ul>
+  </li>
+  <li><code>Stroke-width</code> : contrôle l'épaisseur des contours</li>
 </ul>
 </div>
 </body>
