@@ -100,17 +100,16 @@ static void RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_style_;
     }
-  else
 #ifdef _SVG
+  else if (!strcmp (name, "SVG"))
     /* if it's a SVG element, remove the style attribute defined in the
        SVG DTD */
-    if (!strcmp (name, "SVG"))
       {
         attrType.AttrSSchema = elType.ElSSchema;
         attrType.AttrTypeNum = SVG_ATTR_style_;
       }
-    else
 #endif
+    else
       /* remove the style attribute defined in the HTML DTD */
       {
         attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);

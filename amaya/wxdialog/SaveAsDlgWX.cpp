@@ -154,7 +154,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
       XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetValue(CopyImages);
       CopyCss = FALSE;
       XRCCTRL(*this, "wxID_CPY_CSS_CHK", wxCheckBox)->SetValue(CopyCss);
-      UpdateURLs = FALSE;
+      UpdateURLs = TRUE;
       XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetValue(UpdateURLs);
       RemoveTemplate = FALSE;
       // Image directory
