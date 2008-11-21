@@ -231,8 +231,8 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
 
 /*----------------------------------------------------------------------
   ParseTemplate
-  loading is TRUE when the document is not already loaded
   parentLine points to the enclosing pseudo paragraph or paragraph
+  Parameter loading is TRUE when the document is not already loaded.
   Return the parentline to be considered for next elements
   ----------------------------------------------------------------------*/
 static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
@@ -554,8 +554,8 @@ void CreateTemplate (Document doc, char *templatePath)
   CreateInstance
   basedoc is the displayed doc that launchs the creation of instance
   ----------------------------------------------------------------------*/
-void CreateInstance(char *templatePath, char *instancePath,
-                    char *docname,  DocumentType docType, int basedoc)
+void CreateInstance (char *templatePath, char *instancePath,
+                     char *docname,  DocumentType docType, int basedoc)
 {
 #ifdef TEMPLATES
   Document          doc = 0, newdoc = 0;
@@ -810,14 +810,14 @@ Element InsertWithNotify (Element el, Element child, Element parent, Document do
   @param dec Template declaration of the element to insert
   @return The inserted element (the xt:use element if insertion is multiple as component)
   ----------------------------------------------------------------------*/
-Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
+Element Template_InsertUseChildren (Document doc, Element el, Declaration dec)
 {
-  Element     newEl = NULL;
+  Element         newEl = NULL;
 #ifdef TEMPLATES
-  Element     current = NULL;
-  Element     child = NULL;
-  //char       *attrCurrentTypeValue;
-  //ElementType elType;
+  Element         current = NULL;
+  Element         child = NULL;
+  ElementType     elType;
+  XTigerTemplate  t;
   
   if (TtaGetDocumentAccessMode(doc))
   {
@@ -839,18 +839,16 @@ Element Template_InsertUseChildren(Document doc, Element el, Declaration dec)
 #ifdef TEMPLATE_DEBUG
         DumpSubtree(newEl, doc, 0);
 #endif /* TEMPLATE_DEBUG */
-        child = TtaGetFirstChild(newEl);
+        t = GetXTigerDocTemplate(doc);
+        child = TtaGetFirstChild (newEl);
         while (child)
           {
             // move the new subtree to the document
             TtaRemoveTree (child, doc);
             current = InsertWithNotify (child, current, el, doc);
-            child = TtaGetFirstChild(newEl);
+            child = TtaGetFirstChild (newEl);
           }
-        
-        /* Copy currentType attribute. */
-        //attrCurrentTypeValue = GetAttributeStringValue (el, Template_ATTR_currentType, NULL);
-        //SetAttributeStringValue (el, Template_ATTR_currentType, attrCurrentTypeValue);
+
         TtaDeleteTree(newEl, doc);
         newEl = el;
         break;

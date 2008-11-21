@@ -1025,9 +1025,9 @@ void DoReplicateUseElement (XTigerTemplate t, Document doc, int view,
       
       /* Finish insertion.*/
       TtaCloseUndoSequence(doc);
+      
       TtaSetDocumentModified (doc);
       TtaSetStructureChecking (oldStructureChecking, doc);
-      
       // restore the display
       TtaSetDisplayMode (doc, dispMode);
       firstEl = GetFirstEditableElement (newEl);

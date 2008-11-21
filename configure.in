@@ -441,8 +441,8 @@ dnl  ***************************************************************
 # Do not care with libpng or libjpeg with wx version because we use the wxwidgets one.
 
 # the wx version
-AMAYAWX_MAJVER=10
-AMAYAWX_MINVER=1
+AMAYAWX_MAJVER=11
+AMAYAWX_MINVER=0
 AMAYAWX_SUBVER=0
 APP_MAJVER=$AMAYAWX_MAJVER
 APP_MINVER=$AMAYAWX_MINVER

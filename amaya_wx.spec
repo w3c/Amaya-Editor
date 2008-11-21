@@ -38,10 +38,12 @@ well know the HTML, MathML or CSS languages.
 
 Authors:
 --------
-    Irene.Vatton@inria.fr, Stephane.Gully@inria.fr,
+    Irene.Vatton@inria.fr,
     Vincent.Quint@inria.fr, Laurent.Carcone@w3.org
 
 %changelog
+* Wed Nov 20 2008 Irene Vatton <Irene.Vatton@inrialpes.fr>
+  Possiblity to use system libraries and force flags
 * Mon Feb 26 2007 Irene Vatton <Irene.Vatton@inrialpes.fr>
   Introduction of a script to launch amaya
 * Fri Sep 2 2005  Irene Vatton <Irene.Vatton@w3.org>
@@ -80,9 +82,11 @@ Authors:
 %setup -n Amaya
 # %patch
 %build
-export CFLAGS=
+export CFLAGS="-O2"
+export CXXFLAGS="-O2"
 mkdir -p $RPM_BUILD_ROOT/usr/share/
 autoconf
+cp ../Mesa/configs/linux-x86-64-static ../Mesa/configs/current
 mkdir linux
 cd linux
 export HOME=`pwd`
