@@ -467,9 +467,26 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   *ly = abs(*y4 - *y1);
 
   /* Some shapes have specific contrainsts.  */
-  if (shape == 9 || shape == 10 || shape == 42 || shape == -1)
+  if (shape == 9 || shape == 10)
     {
-      /* text, foreign object or selection */
+      /* text, foreign object (one point is expected) */
+      created = TRUE;
+    }
+  else if(shape == 42 || shape == -1 || shape == -2)
+    {
+      /* selection, svg, template (a bounding box is expected) */
+      if(*x4 < *x1)
+	{
+	  *x1 = *x4;
+	  *x4 = *x1 + *lx;
+	}
+
+      if(*y4 < *y1)
+	{
+	  *y1 = *y4;
+	  *y4 = *y1 + *ly;
+	}
+
       created = TRUE;
     }
   else if (!(shape == 0 || (shape >= 12 && shape <= 14)))
@@ -478,10 +495,10 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
       if (shape == 20)
         /* equilateral triangle
 	        
-        /\       ^
-        /  \      |  ly        (ly)^2 + (lx/2)^2 = (lx)^2
+          /\       ^
+         /  \      |  ly        (ly)^2 + (lx/2)^2 = (lx)^2
         /    \     |         => ly = srqt(3)*lx/2
-        .------.    v
+       .------.    v
 
         <------>
         lx      */

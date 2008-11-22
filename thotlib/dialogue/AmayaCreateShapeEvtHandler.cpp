@@ -391,6 +391,9 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
       glEnd (); 
       break;
 
+      /* template */
+    case -2:
+
       /* svg */
     case -1:
 

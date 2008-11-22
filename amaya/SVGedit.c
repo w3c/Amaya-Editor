@@ -2051,7 +2051,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
               if (isFormattedView)
                 created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
-                                            1, &x1, &y1, &x2, &y2,
+                                            entry, &x1, &y1, &x2, &y2,
                                             &x3, &y3, &x4, &y4, &lx, &ly);
               else
                 {
