@@ -475,6 +475,7 @@ CEXTRACT_FLAGS="+O"
 AC_ARG_WITH(debug,              [  --with-debug            compiles Amaya with debuging options (-g) ])
 
 if test "${CC}" = "gcc" ; then
+  CFLAGS="${CFLAGS} -Wall"
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
@@ -486,8 +487,14 @@ if test "$ac_cv_c_const" = "no" ; then
   CFLAGS="${CFLAGS} -DCONST= "
 fi
 
-CFLAGS="${CFLAGS} -Wall"
-CXXFLAGS="${CXXFLAGS} -Wall"
+# force C mode (-x c)
+#CFLAGS="${CFLAGS} -Wall"
+CFLAGS="${CFLAGS} -x c"
+
+# C++ options (-x c++)
+#CXXFLAGS="${CXXFLAGS} -Wall"
+CXX_OPTIONS="-D__cplusplus"
+CXXFLAGS="${CXXFLAGS} -Wall -x c++ ${CXX_OPTIONS}"
 
 # setup LDFLAGS
 # on macosx, specific flags must be set to avoid conflicts with allready installed libwww
