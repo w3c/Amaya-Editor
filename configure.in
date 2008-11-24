@@ -473,6 +473,15 @@ CEXTRACT_FLAGS="+O"
 
 # Check if debug is enable
 AC_ARG_WITH(debug,              [  --with-debug            compiles Amaya with debuging options (-g) ])
+if test "$with_debug" = "yes" ; then
+  with_debug="yes"
+  CFLAGS="-g"
+  CXXFLAGS="-g"
+else
+  with_debug="no"
+  CFLAGS="-O2"
+  CXXFLAGS="-O2"
+fi
 
 if test "${CC}" = "gcc" ; then
   CFLAGS="${CFLAGS} -Wall"

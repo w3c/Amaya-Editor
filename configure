@@ -13802,6 +13802,15 @@ if test "${with_debug+set}" = set; then
   withval=$with_debug;
 fi
 
+if test "$with_debug" = "yes" ; then
+  with_debug="yes"
+  CFLAGS="-g"
+  CXXFLAGS="-g"
+else
+  with_debug="no"
+  CFLAGS="-O2"
+  CXXFLAGS="-O2"
+fi
 
 if test "${CC}" = "gcc" ; then
   CFLAGS="${CFLAGS} -Wall"
