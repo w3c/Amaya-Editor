@@ -282,6 +282,7 @@ void TtaInitialize (char *applicationName)
   UserErrorCode = 0;
   InitEditorMemory ();	      /* Initializes the memory managment of the editor */
   InitNatures ();	      /* Initializes the table of Natures */
+  Dragging = FALSE;
 
   /* test if the system uses dot or comma in the float syntax */
   sscanf (".5", "%f", &val);

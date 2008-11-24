@@ -766,18 +766,6 @@ void TtaSetStatusSelectedElement(Document document, View view, Element elem)
 
 
 /*----------------------------------------------------------------------
-  GtkLiningSelection 
-
-  When user hold clicked a mouse button in order to extend a selection
-  and scroll in the meantime,
-  those functions are called by a timer each 100 ms
-  in order to repeat user action until he released the button
-  or move away from the widget.
-  ----------------------------------------------------------------------*/
-static ThotBool     Selecting = FALSE;
-
-
-/*----------------------------------------------------------------------
  * FrameButtonDownCallback (generic callback)
  * is called when a mouse button is pressed
  * params:
@@ -828,7 +816,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
               {
                 /* a selection extension */
                 TtaAbortShowDialogue ();
-                LocateSelectionInView (frame, x, y, 1, &Selecting);
+                LocateSelectionInView (frame, x, y, 1, &Dragging);
 #if !defined (_WINDOWS) && !defined (_MACOS)
                 FrameToView (frame, &document, &view);
                 DoCopyToClipboard (document, view, FALSE, TRUE);
@@ -845,7 +833,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
 		ClickFrame = frame;
 		ClickX = x;
 		ClickY = y;
-		if (LocateSelectionInView (frame, ClickX, ClickY, 8, &Selecting))
+		if (LocateSelectionInView (frame, ClickX, ClickY, 8, &Dragging))
 		  return FALSE;
 		/* open in a new tab */
 		FrameToView (frame, &document, &view);
@@ -858,12 +846,12 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                 ClickFrame = frame;
                 ClickX = x;
                 ClickY = y;
-                /* it's important to setup Selecting before the call of
+                /* it's important to setup Dragging before the call of
                    LocateSelectionInView because LocateSelectionInView will
-                   handle gui events (keyup) and Selecting variable
+                   handle gui events (keyup) and Dragging variable
                    * will not be unset => cause a infinit selection ! */
-                Selecting = TRUE;
-                if (LocateSelectionInView (frame, ClickX, ClickY, 2, &Selecting))
+                Dragging = TRUE;
+                if (LocateSelectionInView (frame, ClickX, ClickY, 2, &Dragging))
 		  return FALSE;
              }
           }
@@ -875,7 +863,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        if (LocateSelectionInView (frame, ClickX, ClickY, 5, &Selecting))
+        if (LocateSelectionInView (frame, ClickX, ClickY, 5, &Dragging))
           return FALSE;
       }
       break;
@@ -885,7 +873,7 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-	if (LocateSelectionInView (frame, ClickX, ClickY, 6, &Selecting))
+	if (LocateSelectionInView (frame, ClickX, ClickY, 6, &Dragging))
 	  return FALSE;
       }
       break;
@@ -914,9 +902,9 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
   Document   document;
   View       view;
 #endif /* !_WINDOWS && !_MACOS*/
-  if (Selecting)
+  if (Dragging)
     {
-      Selecting = FALSE;
+      Dragging = FALSE;
 #if !defined(_WINDOWS) && !defined(_MACOS)
       FrameToView (frame, &document, &view);
       DoCopyToClipboard (document, view, FALSE, TRUE);
@@ -927,7 +915,7 @@ ThotBool FrameButtonUpCallback( int frame, int thot_button_id,
       ClickFrame = frame;
       ClickX = x;
       ClickY = y;
-      if (LocateSelectionInView (frame, ClickX, ClickY, 4, &Selecting))
+      if (LocateSelectionInView (frame, ClickX, ClickY, 4, &Dragging))
         return FALSE;
       // SG: j'ai commente la ligne suivante car si le document est modifie 
       // et qu'on desire suivre un lien, un evenement keyup est generer
@@ -966,7 +954,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        LocateSelectionInView (frame, ClickX, ClickY, 3, &Selecting);
+        LocateSelectionInView (frame, ClickX, ClickY, 3, &Dragging);
 #if !defined (_WINDOWS) && !defined (_MACOS)
         /* a word is probably selected, copy it into clipboard */
         FrameToView (frame, &document, &view);
@@ -982,7 +970,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        LocateSelectionInView (frame, ClickX, ClickY, 5, &Selecting);
+        LocateSelectionInView (frame, ClickX, ClickY, 5, &Dragging);
       }
       break;
     
@@ -992,7 +980,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        LocateSelectionInView (frame, ClickX, ClickY, 6, &Selecting);
+        LocateSelectionInView (frame, ClickX, ClickY, 6, &Dragging);
       }
       break;
     }
@@ -1013,7 +1001,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
  ----------------------------------------------------------------------*/
 ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
 {
-  if (Selecting)
+  if (Dragging)
     {      
       Document            doc;
       int                 view;
@@ -1044,18 +1032,18 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
               else
                 {
                   /* stop the scrolling */
-                  //Selecting = FALSE;
+                  //Dragging = FALSE;
                   Motion_y = FrameTable[frame].FrHeight;
                 }
             }
-          else if (Selecting && Motion_y < 0)
+          else if (Dragging && Motion_y < 0)
             {
               if (pFrame->FrYOrg > 0)
                 TtcLineUp (doc, view);
               else
                 {
                   /* stop the scrolling */
-                  //Selecting = FALSE;
+                  //Dragging = FALSE;
                   Motion_y = 0;
                 }
             }
@@ -1068,7 +1056,7 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
                     TtcScrollRight (doc, view);
                   else
                     {
-                      //Selecting = FALSE;
+                      //Dragging = FALSE;
                       Motion_x = FrameTable[frame].FrWidth;
                     }
                 }
@@ -1078,13 +1066,13 @@ ThotBool FrameMotionCallback (int frame, int thot_mod_mask, int x, int y )
                     TtcScrollLeft (doc, view);
                   else
                     {
-                      //Selecting = FALSE;
+                      //Dragging = FALSE;
                       Motion_x = 0;
                     }
                 }
             }
-          if (Selecting)
-            LocateSelectionInView (frame,  Motion_x, Motion_y, 0, &Selecting);
+          if (Dragging)
+            LocateSelectionInView (frame,  Motion_x, Motion_y, 0, &Dragging);
         }
     }
   return TRUE;
