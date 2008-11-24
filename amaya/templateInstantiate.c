@@ -241,7 +241,7 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
 #ifdef TEMPLATES
   AttributeType attType;
   Attribute     att;
-  Element       next, child, savedInline, prev, parent;
+  Element       next, child = NULL, savedInline, prev, parent = NULL;
   Declaration   dec;
   char         *name, *types;
   ElementType   elType, otherType;
@@ -453,13 +453,12 @@ void CreateTemplate (Document doc, char *templatePath)
     {
       // Initialize the xt:head
       elType.ElTypeNum = HTML_EL_HEAD;
+      xtType.ElSSchema = templSchema;
       head = TtaSearchTypedElement (elType, SearchInTree, root);
       if(head)
         {
-          xtType.ElSSchema = templSchema;
           xtType.ElTypeNum = Template_EL_head;
           xt = TtaNewElement(doc, xtType);
-          
           elem = TtaGetLastChild(head);
           if(elem)
               TtaInsertSibling(xt, elem, FALSE, doc);
