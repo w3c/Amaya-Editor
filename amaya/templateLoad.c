@@ -31,17 +31,7 @@
 
 #ifdef TEMPLATES
 #include "Template.h"
-/* Information needed for the callback after loading a template.
-   Just the path of the template, which identifies it. */
-typedef struct _TemplateCtxt
-{
-  char           *templatePath;
-  Document        newdoc;     // the template document entry
-  XTigerTemplate  t;          // the template descriptor
-  int             docLoading; // get in memory the loading document
-  ThotBool        isloaded;   // true when the template is loaded
-} TemplateCtxt;
-#endif
+#endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
   Creates an Element type and stores all needed information. 
@@ -375,6 +365,18 @@ printf ("Move %s out of the pseudo paragraph\n",name);
 #endif /* TEMPLATES */
 }
 
+#ifdef TEMPLATES
+static ThotBool TemplateIsLoaded = FALSE;
+/*----------------------------------------------------------------------
+  LoadTemplate_callback: Called after loading a template.
+  ----------------------------------------------------------------------*/
+static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
+                            char *outputfile, char* proxyName,
+                            AHTHeaders *http_headers, void * context)
+{
+  TemplateIsLoaded = TRUE;
+}
+#endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
   LoadTemplate loads the template document and returns its type.
@@ -411,15 +413,21 @@ DocumentType LoadTemplate (Document doc, char* templatename)
       // the current loading document changes and should be restored
       docLoading = W3Loading;
       W3Loading = 0;
-
+      TemplateIsLoaded = FALSE;
       //Load the document
       newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
-                            (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) NULL,
+                            (void (*)(int, int, char*, char*, char*,
+                                      const AHTHeaders*, void*)) LoadTemplate_callback,
                             (void *) /*ctx*/ NULL);
       
+      while (!TemplateIsLoaded)
+        TtaHandlePendingEvents ();
+
       t = GetXTigerDocTemplate(newdoc);
       if (t)
         {
+          if (t->uri == NULL)
+            t->uri = TtaStrdup (templatename);
 #ifdef TEMPLATE_DEBUG  
     printf("XTiger template %s loaded.\n", t->uri);
 #endif /* TEMPLATE_DEBUG */
@@ -428,9 +436,8 @@ DocumentType LoadTemplate (Document doc, char* templatename)
           else
             docType = DocumentTypes[newdoc];
         }
-      
       W3Loading = docLoading;
-    }
+     }
   else
     // The template is already loaded, use it.
     docType = DocumentTypes[t->doc];
@@ -441,6 +448,19 @@ DocumentType LoadTemplate (Document doc, char* templatename)
 #endif /* TEMPLATES */
 }
 
+
+#ifdef TEMPLATES
+static ThotBool LibraryIsLoaded = FALSE;
+/*----------------------------------------------------------------------
+  LoadTemplate_callback: Called after loading a template.
+  ----------------------------------------------------------------------*/
+static void LoadLibrary_callback (int newdoc, int status,  char *urlName,
+                            char *outputfile, char* proxyName,
+                            AHTHeaders *http_headers, void * context)
+{
+  LibraryIsLoaded = TRUE;
+}
+#endif /* TEMPLATES */
 
 /*----------------------------------------------------------------------
   Template_LoadXTigerTemplateLibrary
@@ -454,28 +474,29 @@ ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
   Document         newdoc = 0;
   
   if (t && !Template_IsLoaded(t))
-  {
-    docLoading = W3Loading;
-    W3Loading = 0;
-    
-    // Load the document (look at LoadTemplate)
-    newdoc = GetAmayaDoc (t->uri, NULL, 0, 0, CE_TEMPLATE, FALSE, 
-                          (void (*)(int, int, char*, char*, char*,
-                                    const AHTHeaders*, void*)) NULL,
-                          (void *) NULL);
-
-    t = GetXTigerDocTemplate(newdoc);
-    
+    {
+      docLoading = W3Loading;
+      W3Loading = 0;
+      LibraryIsLoaded = FALSE;
+      // Load the document (look at LoadTemplate)
+      newdoc = GetAmayaDoc (t->uri, NULL, 0, 0, CE_TEMPLATE, FALSE, 
+                            (void (*)(int, int, char*, char*, char*,
+                                      const AHTHeaders*, void*)) LoadLibrary_callback,
+                            (void *) NULL);
+      
+      while (!LibraryIsLoaded)
+        TtaHandlePendingEvents ();
+      t = GetXTigerDocTemplate(newdoc);
+      
 #ifdef TEMPLATE_DEBUG  
-    if (Template_HasErrors(t))
-      printf("XTiger library %s has error(s)\n", t->uri);
-    else
-      printf("XTiger library %s loaded successfully.\n", t->uri);
+      if (Template_HasErrors(t))
+        printf("XTiger library %s has error(s)\n", t->uri);
+      else
+        printf("XTiger library %s loaded successfully.\n", t->uri);
 #endif /* TEMPLATE_DEBUG */
-
-    W3Loading = docLoading;
-
-    return !Template_HasErrors(t);
+      
+      W3Loading = docLoading;      
+      return !Template_HasErrors(t);
   }
 #endif /* TEMPLATES */
   return FALSE;

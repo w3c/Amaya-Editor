@@ -816,7 +816,6 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec)
 #ifdef TEMPLATES
   Element         current = NULL;
   Element         child = NULL;
-  ElementType     elType;
   XTigerTemplate  t;
   
   if (TtaGetDocumentAccessMode(doc))
@@ -1260,7 +1259,10 @@ void Template_InsertXTigerPI(Document doc, XTigerTemplate t)
   line = TtaGetFirstChild (elNew);
   text = TtaGetFirstChild (line);
   strcpy (buffer, "xtiger template=\"");
-  strcat (buffer, DocumentURLs[doc]);
+  if (t->uri)
+    strcat (buffer, t->uri);
+  else if (t->base_uri)
+    strcat (buffer, t->uri);
   strcat (buffer, "\" version=\"");
   if (t->version)
     strcat (buffer, t->version);
