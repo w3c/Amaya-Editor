@@ -109,9 +109,22 @@ AmayaAttributeToolPanel::~AmayaAttributeToolPanel()
 bool AmayaAttributeToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos, 
           const wxSize& size, long style, const wxString& name, wxObject* extra)
 {
+  int sz = 0;
+
   if(!wxXmlResource::Get()->LoadPanel((wxPanel*)this, parent, wxT("wxID_TOOLPANEL_ATTRIBUTE")))
     return false;
-  
+  // initialize the col width
+  TtaGetEnvInt ("ATTR_COL_0", &sz);
+  if (sz)
+    m_sz0 = sz;
+  else
+    m_sz0 = 50;
+  TtaGetEnvInt ("ATTR_COL_1", &sz);
+  if (sz)
+    m_sz1 = sz;
+  else
+    m_sz1 = 150;
+
 #ifdef _WINDOWS
   SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
 #endif /* _WINDOWS */
@@ -154,7 +167,8 @@ bool AmayaAttributeToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPo
           m_pSubpanelSizer->Layout();
         }
     }
-  
+  m_pAttrList->SetColumnWidth(0, m_sz0);
+  m_pAttrList->SetColumnWidth(1, m_sz1);
   SetupListValue(NULL);
   return true;
 }
@@ -194,22 +208,22 @@ void AmayaAttributeToolPanel::RedirectFocusToEditableControl()
 void AmayaAttributeToolPanel::UpdateListColumnWidth()
 {
   // Resize columns.
-  long sz1;
+  int sz0, sz1;
 
   m_pAttrList->Freeze();
-
   // m_pAttrList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
-  // sz0 = m_pAttrList->GetColumnWidth(0);
-  // m_pAttrList->SetColumnWidth(0, wxLIST_AUTOSIZE);
-  // if(sz0 > m_pAttrList->GetColumnWidth(0))
-  //   m_pAttrList->SetColumnWidth(0, sz0);
-
-  m_pAttrList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
+  sz0 = m_pAttrList->GetColumnWidth(0);
+  if (sz0 != m_sz0)
+    {
+      m_sz0 = sz0;
+      TtaSetEnvInt ("ATTR_COL_0", m_sz0, TRUE);
+    }
   sz1 = m_pAttrList->GetColumnWidth(1);
-  m_pAttrList->SetColumnWidth(1, wxLIST_AUTOSIZE);
-  if(sz1 > m_pAttrList->GetColumnWidth(1))
-    m_pAttrList->SetColumnWidth(1, sz1);
-
+  if (sz1 != m_sz1)
+    {
+      m_sz1 = sz1;
+      TtaSetEnvInt ("ATTR_COL_1", m_sz1, TRUE);
+    }
   m_pAttrList->Thaw();
 }
 

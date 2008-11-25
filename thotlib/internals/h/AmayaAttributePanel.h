@@ -144,14 +144,12 @@ protected:
   PtrAttrListElem     m_currentAttElem;
   PtrElement          m_firstSel, m_lastSel;
   int                 m_firstChar, m_lastChar;
-
-  int m_NbAttr;
-  int m_NbAttr_evt;
-
-  wxATTR_PANEID  m_currentPane;
-  wxWindow*   m_pCurrentlyEditedControl;
+  int                 m_NbAttr, m_NbAttr_evt;
+  int                 m_sz0, m_sz1;
+  wxATTR_PANEID       m_currentPane;
+  wxWindow           *m_pCurrentlyEditedControl;
   
-  wxSizer *               m_pSubpanelSizer;
+  wxSizer            *m_pSubpanelSizer;
   AmayaAttributeSubpanel* m_subpanels[wxATTR_PANEID_MAX];
   
   static wxString      s_subpanelClassNames[wxATTR_PANEID_MAX];
