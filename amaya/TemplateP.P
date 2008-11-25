@@ -714,54 +714,49 @@ RULES
       CreateAfter(RepeatUse);
     if immediately within bag
       CreateAfter(BagUse);
-    if empty
-	     CreateFirst(UseButton);
-#else
-	  CreateFirst(UseButton);
 #endif
-  	CreateWith(VerticalLine);
+    CreateFirst(UseButton);
+    CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
     VertPos: Top = Previous AnyElem . Bottom;
     HorizPos: Left = Enclosing . Left; 
-		BorderTopWidth: 	 	1 px;
-		BorderLeftWidth: 		1 px;
-		BorderBottomWidth: 	1 px;
-		BorderRightWidth: 	1 px;
-		BorderTopStyle: 		Dotted;
-		BorderLeftStyle: 		Dotted;
-		BorderBottomStyle: 	Dotted;
-		BorderRightStyle: 	Dotted;
-		BorderTopColor: 		Blue;
-		BorderLeftColor: 		Blue;
-		BorderBottomColor: 	Blue;
-		BorderRightColor: 	Blue;
-		PaddingRight: 			2 px;
-		PaddingLeft: 				3 px;
-		PaddingTop: 				2 px;
-		PaddingBottom: 			2 px;
-  	IN Structure_view BEGIN
-			BorderTopWidth: 0;
-			BorderLeftWidth: 0;
-			BorderBottomWidth: 0;
-		  BorderRightWidth: 0;
-		  PaddingRight: 0;
-		  PaddingLeft: 0;
-		  PaddingTop: 0;
-		  PaddingBottom: 0;
-      FillPattern: nopattern;
-		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	    Width: Enclosing . Width - STRUCT_INDENT;
-		  VertPos: Top = Previous . Bottom;
-		  END;
+    BorderTopWidth: 1 px;
+    BorderLeftWidth: 1 px;
+    BorderBottomWidth: 1 px;
+    BorderRightWidth: 1 px;
+    BorderTopStyle: Dotted;
+    BorderLeftStyle: Dotted;
+    BorderBottomStyle: Dotted;
+    BorderRightStyle: Dotted;
+    BorderTopColor: Blue;
+    BorderLeftColor: Blue;
+    BorderBottomColor: Blue;
+    BorderRightColor: Blue;
+    PaddingRight: 2 px;
+    PaddingLeft: 3 px;
+    PaddingTop: 2 px;
+    PaddingBottom: 2 px;
+    IN Structure_view BEGIN
+		BorderTopWidth: 0;
+		BorderLeftWidth: 0;
+		BorderBottomWidth: 0;
+		BorderRightWidth: 0;
+		PaddingRight: 0;
+		PaddingLeft: 0;
+		PaddingTop: 0;
+		PaddingBottom: 0;
+     		FillPattern: nopattern;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
 	 END;
 
   useSimple:	
-		BEGIN
+    BEGIN
     if option
-      BEGIN
       CreateFirst(OptionButton);
-      END;
 #ifdef INSTANCE
     if immediately within repeat
       CreateAfter(RepeatUse);
@@ -773,13 +768,13 @@ RULES
     ShowBox;
 #endif
     CreateBefore(ElementName);
-  	CreateWith(VerticalLine);
+    CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
     {LineBreak: No;}
     {Display: Inline;}
-    VertPos: Top = 			Previous AnyElem. Bottom;
-    HorizPos: Left =		Enclosing . Left;
+    VertPos: Top = Previous AnyElem. Bottom;
+    HorizPos: Left = Enclosing . Left;
 		BorderTopWidth: 	 	1 px;
 		BorderLeftWidth: 		1 px;
 		BorderBottomWidth: 	1 px;
