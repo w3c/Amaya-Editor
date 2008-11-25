@@ -21,7 +21,7 @@
   <li><a href="http://palette.ercim.org/">Palette</a></li>
 </ul>
 
-<h1 id="title">Amaya [10.1]</h1>
+<h1 id="title">Amaya [11]</h1>
 </div>
 
 <div id="logo">
@@ -120,7 +120,7 @@ href="../doc/WX/Math.html">математические выражения</a>
 <div class="section">
 <h2>Main news</h2>
 
-<p>News from version 10.0:</p>
+<p>News from version 10:</p>
 <ul>
   <li>Possibility to create and edit document templates from document
   skeletons</li>

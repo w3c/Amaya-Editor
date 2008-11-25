@@ -8,12 +8,12 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 10.1
+%define version 11
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_wx
-Release:      1
+Release:      0
 License:    W3C http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
 Group:        Applications/Networking
 URL:          http://www.w3.org/Amaya/
@@ -82,8 +82,8 @@ Authors:
 %setup -n Amaya
 # %patch
 %build
-export CFLAGS="-O2"
-export CXXFLAGS="-O2"
+export CFLAGS=
+export CXXFLAGS=
 mkdir -p $RPM_BUILD_ROOT/usr/share/
 autoconf
 cp ../Mesa/configs/linux-x86-64-static ../Mesa/configs/current

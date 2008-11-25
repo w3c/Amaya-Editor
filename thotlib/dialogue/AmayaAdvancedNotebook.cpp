@@ -8,7 +8,7 @@
 #ifdef _WX
 #include "wx/wx.h"
 #include "wx/string.h"
-
+#include "wx/aui/auibook.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
