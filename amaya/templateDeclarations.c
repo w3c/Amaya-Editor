@@ -2028,7 +2028,8 @@ ThotBool Template_IsInternal(XTigerTemplate t)
  * Template_GetDeclarationSetFromNames
  * Create a set of Declarations from a string containing declaration names.
   ----------------------------------------------------------------------*/
-SearchSet Template_GetDeclarationSetFromNames(XTigerTemplate t, const char* names, ThotBool expand)
+SearchSet Template_GetDeclarationSetFromNames(XTigerTemplate t,
+                                              const char* names, ThotBool expand)
 {
   SearchSet       set = NULL, expandset = NULL;
   StringSet       nameset = NULL;
@@ -2039,8 +2040,8 @@ SearchSet Template_GetDeclarationSetFromNames(XTigerTemplate t, const char* name
 #ifdef TEMPLATES
   if (t && names)
     {
-      set     = SearchSet_Create(NULL, (Container_CompareFunction)Declaration_Compare,
-                                       (Container_CompareFunction)Declaration_CompareToString);
+      set = SearchSet_Create(NULL, (Container_CompareFunction)Declaration_Compare,
+                             (Container_CompareFunction)Declaration_CompareToString);
       nameset = StringSet_CreateFromString(names, " ");
       iter    = StringSet_GetForwardIterator(nameset);
       ITERATOR_FOREACH(iter, StringSetNode, node)
@@ -2050,7 +2051,7 @@ SearchSet Template_GetDeclarationSetFromNames(XTigerTemplate t, const char* name
             {
               dec = Template_GetDeclaration(t, name);
               if (dec)
-                SearchSet_Insert(set, dec);
+                  SearchSet_Insert(set, dec);
             }
         }
       TtaFreeMemory(iter);
@@ -2061,7 +2062,7 @@ SearchSet Template_GetDeclarationSetFromNames(XTigerTemplate t, const char* name
         {
           expandset = Template_ExpandTypeSet (t, set);
           SearchSet_Destroy(set);
-          set = expandset;
+          return expandset;
         }
     }
 #endif /* TEMPLATES */
@@ -2176,17 +2177,19 @@ SearchSet Template_ExpandUnion(XTigerTemplate t, Declaration decl)
 SearchSet Template_ExpandTypeSet (XTigerTemplate t, SearchSet types)
 {
 #ifdef TEMPLATES
+  SearchSet       set = NULL;
+  ForwardIterator iter;
+  SearchSetNode   node;
+  ForwardIterator iterbase;
+  SearchSetNode   nodebase;
+  Declaration     decl;
+
   if (t)
   {
     /* Set to store expanded types. */
-    SearchSet       set = SearchSet_Create(NULL, 
+    set = SearchSet_Create(NULL, 
                         (Container_CompareFunction)Declaration_Compare,
                         (Container_CompareFunction)Declaration_CompareToString);
-    ForwardIterator iter;
-    SearchSetNode   node;
-    ForwardIterator iterbase;
-    SearchSetNode   nodebase;
-    Declaration     decl;
 
     /* Fill map with expanded result from basemap.*/
     iterbase = SearchSet_GetForwardIterator (types);
@@ -2255,13 +2258,19 @@ void Template_FilterInsertableElement (XTigerTemplate t, SearchSet set,
           if (node->elem)
             {
               dec = (Declaration) node->elem;
-              if (Declaration_GetElementType(dec, &type))
+              if (dec)
                 {
-                  if (insertafter)
-                    res = TtaCanInsertSibling(type, refelem, FALSE, t->doc);
+                  if (dec->nature == XmlElementNat &&
+                      Declaration_GetElementType(dec, &type))
+                    {
+                      if (insertafter)
+                        res = TtaCanInsertSibling(type, refelem, FALSE, t->doc);
+                      else
+                        res = TtaCanInsertFirstChild(type, refelem, t->doc);
+                      if (res)
+                        SearchSet_Insert(newset, node->elem);
+                    }
                   else
-                    res = TtaCanInsertFirstChild(type, refelem, t->doc);
-                  if (res)
                     SearchSet_Insert(newset, node->elem);
                 }
             }

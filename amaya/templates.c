@@ -1955,6 +1955,7 @@ void Template_PrepareInstance(char *fileName, Document doc, char* template_versi
     t = NewXTigerTemplate(fileName);
   t->state           = templInstance;
   t->templateVersion = TtaStrdup (template_version);
+  t->uri             = TtaStrdup (fileName);
   t->base_uri        = TtaStrdup (template_url);
   t->doc             = doc;
   t->ref             = 1;
