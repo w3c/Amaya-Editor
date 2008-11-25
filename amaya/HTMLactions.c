@@ -28,13 +28,12 @@
 
 #ifdef TEMPLATES
 #include "templates.h"
-
 #include "containers.h"
 #include "Elemlist.h"
 #include "insertelem_f.h"
-
 #include "Template.h"
 #include "templates_f.h"
+#include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
 #include "XML.h"
@@ -2773,6 +2772,9 @@ void FocusChanged (Document doc)
 void FreeDocumentResource (Document doc)
 {
   Document	     sourceDoc;
+#ifdef TEMPLATES
+  XTigerTemplate  t;
+#endif /* TEMPLATES */
   char              *tempdocument;
   int                i;
 
@@ -2825,6 +2827,12 @@ void FreeDocumentResource (Document doc)
           RemoveDocCSSs (doc, TRUE);
           /* free access keys table */
           TtaRemoveDocAccessKeys (doc);
+#ifdef TEMPLATES
+          // remove the template structure
+          t = GetXTigerDocTemplate(doc);
+          if (t)
+            Template_Close (t);
+#endif /* TEMPLATES */
           if (!Synchronizing && DocumentSource[doc])
             {
               sourceDoc = DocumentSource[doc];

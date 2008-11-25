@@ -386,10 +386,13 @@ void TtaQuit ()
         notifyDoc.view = 0;
         CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
         pDoc = LoadedDocument[d];
-        /* free document schemas */
-        FreeDocumentSchemas (pDoc);
-        FreeDocument (pDoc);
-        LoadedDocument[d] = NULL;
+        if (pDoc)
+          {
+            /* free document schemas */
+            FreeDocumentSchemas (pDoc);
+            FreeDocument (pDoc);
+            LoadedDocument[d] = NULL;
+          }
       }
 #ifndef NODISPLAY
   /* remove the contents of the cut buffer related to the document */

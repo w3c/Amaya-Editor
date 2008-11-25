@@ -74,9 +74,6 @@ HashMap Templates_Map = NULL;
 #endif /* TEMPLATES */
 
 
-/* Forward declaration : */
-static void Template_Destroy (XTigerTemplate t);
-
 /*----------------------------------------------------------------------
   Initializing the template environment
   ----------------------------------------------------------------------*/
@@ -102,7 +99,6 @@ void FreeTemplateEnvironment ()
   Templates_Map = NULL;
 #endif
 }
-
 
 /*----------------------------------------------------------------------
   Creates a new template with its dictionaries
@@ -279,6 +275,7 @@ void Template_Close (XTigerTemplate t)
   if (t)
     {
       HashMap_DestroyElement (Templates_Map, t->uri);
+      t->uri = NULL; // the uri was freed
       Template_Clear (t);
     }
 #endif /* TEMPLATES */
@@ -1281,19 +1278,19 @@ void Template_Clear (XTigerTemplate t)
 /*----------------------------------------------------------------------
   Free all the space used by a template
   ----------------------------------------------------------------------*/
-static void Template_Destroy (XTigerTemplate t)
+void Template_Destroy (XTigerTemplate t)
 {	
 #ifdef TEMPLATES
   ForwardIterator iter;
   HashMapNode     node;
   if (t)
     {
-      if(t->base_uri)
+      if (t->base_uri)
         {
-          Template_RemoveReference(GetXTigerTemplate(t->base_uri));
-          TtaFreeMemory(t->base_uri);
+          Template_RemoveReference (GetXTigerTemplate(t->base_uri));
+          TtaFreeMemory (t->base_uri);
+          t->base_uri = NULL;
         }
-    
       /* Cleanning library dependancies. */
       iter = HashMap_GetForwardIterator(t->libraries);
       ITERATOR_FOREACH(iter, HashMapNode, node)
@@ -1336,8 +1333,11 @@ static void Template_Destroy (XTigerTemplate t)
     
       //Freeing the template
       TtaFreeMemory(t->uri);
+      t->uri = NULL;
       TtaFreeMemory(t->version);
+      t->version = NULL;
       TtaFreeMemory(t->templateVersion);
+      t->templateVersion = NULL;
       TtaFreeMemory (t);
     }
 #endif /* TEMPLATES */
@@ -1382,30 +1382,6 @@ static void Template_FillDeclarationContent(XTigerTemplate t, Declaration decl)
               SearchSet_Insert(decl->unionType.include, Template_GetDeclaration(decl->usedIn, (char*)((Declaration)node)->name));
             }
           TtaFreeMemory(iter);
-          
-          /**
-           *
-           * TODO REALLY FILL DECLARATIONS FROM UNION STRINGS
-           *  
-           **/
-/*          iter = SearchSet_GetForwardIterator(decl->unionType.include);
-          ITERATOR_FOREACH(iter, SearchSetNode, node)
-            {
-              node->elem = Template_GetDeclaration(decl->usedIn, (char*)((Declaration)node)->name);
-            }
-          TtaFreeMemory(iter);
-          iter = SearchSet_GetForwardIterator(decl->unionType.exclude);
-          ITERATOR_FOREACH(iter, HashMapNode, node)
-            {
-              node->elem = Template_GetDeclaration(decl->usedIn, (char*)((Declaration)node)->name);
-            }
-          TtaFreeMemory(iter);
-          iter = SearchSet_GetForwardIterator(decl->unionType.exclude);
-          ITERATOR_FOREACH(iter, HashMapNode, node)
-            {
-              node->elem = Template_GetDeclaration(decl->usedIn, (char*)((Declaration)node)->name);
-            }
-          TtaFreeMemory(iter);*/
           break;
         default:
           break;

@@ -1180,6 +1180,8 @@ void FreeDocument (PtrDocument pDoc)
 {
   int                 i;
 
+  if (pDoc == NULL)
+    return;
   pDoc->DocSSchema = NULL;
   pDoc->DocDocElement = NULL;
   for (i = 0; i < MAX_VIEW_DOC; i++)

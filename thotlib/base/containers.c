@@ -1059,14 +1059,18 @@ HashMap HashMap_Create(Container_DestroyElementFunction destroy,
 void HashMap_Empty(HashMap map)
 {
   int i;
-  for (i=0; i<map->nbNodes; i++)
-  {
-    if (map->nodes[i] !=NULL)
+
+  if (map->nodes)
     {
-      DLList_Destroy ((DLList)map->nodes[i]);
-      map->nodes[i] = NULL;
+      for (i=0; i < map->nbNodes; i++)
+        {
+          if (map->nodes[i] !=NULL)
+            {
+              DLList_Destroy ((DLList)map->nodes[i]);
+              map->nodes[i] = NULL;
+            }
+        }  
     }
-  }  
 }
 
 /*----------------------------------------------------------------------
@@ -1080,6 +1084,7 @@ void HashMap_Destroy(HashMap map)
   {
     HashMap_Empty (map);
     TtaFreeMemory (map->nodes);
+    map->nodes = NULL;
     TtaFreeMemory (map);
   }
 }
@@ -1090,13 +1095,14 @@ void HashMap_Destroy(HashMap map)
 ThotBool HashMap_IsEmpty(HashMap map)
 {
   int i;
-  for (i = 0; i<map->nbNodes; i++)
-  {
-    if (map->nodes[i] != NULL)
+
+  if (map->nodes == NULL)
+    return TRUE;
+  for (i = 0; i < map->nbNodes; i++)
     {
-      return FALSE;
+      if (map->nodes[i] != NULL)
+        return FALSE;
     }
-  }
   return TRUE;
 }
 

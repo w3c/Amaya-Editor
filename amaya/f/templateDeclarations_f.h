@@ -69,6 +69,7 @@ extern Declaration Template_GetElementDeclaration ( const XTigerTemplate t,
 extern Declaration Template_GetUnionDeclaration ( const XTigerTemplate t,
                                                   const char *name );
 extern void Template_Clear ( XTigerTemplate t );
+extern void Template_Destroy ( XTigerTemplate t );
 extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
                                               XTigerTemplate lib );
@@ -210,6 +211,7 @@ extern Declaration Template_GetElementDeclaration ( const XTigerTemplate t,
 extern Declaration Template_GetUnionDeclaration ( const XTigerTemplate t,
                                                     const char *name );
 extern void Template_Clear ( XTigerTemplate t );
+extern void Template_Destroy ( XTigerTemplate t );
 extern void Template_FillDeclarations ( XTigerTemplate t );
 extern void Template_AddLibraryDeclarations ( XTigerTemplate t,
                                                 XTigerTemplate lib );

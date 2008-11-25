@@ -1462,6 +1462,8 @@ void FreeDocumentSchemas (PtrDocument pDoc)
   PtrSSchema          pSS;
   PtrDocSchemasDescr  pPfS;
 
+  if (pDoc == NULL)
+    return;
   while (pDoc->DocFirstSchDescr)
     {
       pPfS = pDoc->DocFirstSchDescr;
