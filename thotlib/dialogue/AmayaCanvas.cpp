@@ -57,6 +57,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaCanvas, wxGLCanvas)
   IMPLEMENT_DYNAMIC_CLASS(AmayaCanvas, wxPanel)
 #endif /* _GL */
 
+
 /*----------------------------------------------------------------------
   Class:  AmayaCanvas
   Method:  AmayaCanvas
@@ -79,7 +80,8 @@ AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
 #endif // #ifdef _GL
     m_pAmayaFrame( p_parent_frame ),
     m_Init( false ),
-    m_IsMouseSelecting( false )
+    m_IsMouseSelecting( false ),
+    m_MouseGrab (false)
 {
 #ifdef FORUMLARY_WIDGET_DEMO
   // demo de comment afficher des widgets dans une fenetre opengl
@@ -106,6 +108,11 @@ AmayaCanvas::~AmayaCanvas( )
   //  SetEventHandler( new wxEvtHandler() );
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::~AmayaCanvas(): frame=%d"), m_pAmayaFrame->GetFrameId() );
   m_pAmayaFrame = NULL;
+  if (m_MouseGrab)
+    {
+      ReleaseMouse();
+      m_MouseGrab = false;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -227,6 +234,11 @@ void AmayaCanvas::OnMouseMove( wxMouseEvent& event )
 {
   if ( m_IsMouseSelecting && !m_MouseMoveTimer.IsRunning() )
     {
+      if (!m_MouseGrab)
+        {
+          m_MouseGrab = true;
+          CaptureMouse();
+        }
       m_LastMouseMoveModMask = THOT_NO_MOD;
       if (event.ControlDown())
         m_LastMouseMoveModMask |= THOT_MOD_CTRL;
@@ -286,6 +298,11 @@ void AmayaCanvas::OnMouseWheel( wxMouseEvent& event )
                  direction > 0 ? _T("up") : _T("down"),
                  delta );
   
+  if (m_MouseGrab)
+    {
+      m_MouseGrab = false;
+      ReleaseMouse();
+    }
   FrameMouseWheelCallback( frame,
                            thot_mod_mask,
                            direction,
@@ -312,6 +329,11 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
     thot_mod_mask |= THOT_MOD_SHIFT;
 
   TTALOGDEBUG_0( TTA_LOG_DRAW, _T("AmayaCanvas - wxEVT_LEFT_UP || wxEVT_MIDDLE_UP || wxEVT_RIGHT_UP") );
+  if (m_MouseGrab)
+    {
+      m_MouseGrab = false;
+      ReleaseMouse();
+    }
   if (m_IsMouseSelecting)
     {
       m_IsMouseSelecting = false;
@@ -536,8 +558,8 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxGLCanvas)
   EVT_RIGHT_UP(AmayaCanvas::OnMouseUp) // Process a wxEVT_RIGHT_UP event. 
   EVT_RIGHT_DCLICK(AmayaCanvas::OnMouseDbClick) // Process a wxEVT_RIGHT_DCLICK event. 
   EVT_MOTION(AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
-  EVT_ENTER_WINDOW(AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
-  EVT_LEAVE_WINDOW(AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
+  //EVT_ENTER_WINDOW(AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
+  //EVT_LEAVE_WINDOW(AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
   EVT_MOUSEWHEEL(AmayaCanvas::OnMouseWheel) // Process a wxEVT_MOUSEWHEEL event. 
 
   EVT_IDLE(AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
