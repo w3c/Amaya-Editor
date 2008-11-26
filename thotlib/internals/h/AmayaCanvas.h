@@ -107,8 +107,7 @@ protected:
   int     m_LastMouseMoveX;
   int     m_LastMouseMoveY;
   bool    m_IsMouseSelecting;
-
-//  bool m_init; 
+  bool    m_MouseGrab;
   
 };
 
