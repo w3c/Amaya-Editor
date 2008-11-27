@@ -291,7 +291,7 @@ PtrBox IsSelectingControlPoint(int frame, int x, int y, int* ctrlpt)
   // return TRUE if the event is already managed
   ----------------------------------------------------------------------*/
 ThotBool LocateSelectionInView (int frame, int x, int y, int button,
-                                ThotBool *Selecting)
+                                ThotBool *drag)
 {
   PtrBox              pBox;
   PtrElement          pEl = NULL, firstEl;
@@ -460,7 +460,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
               ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 
               if(FrameTable[frame].FrView == 1 &&
-                 nChars > 0 && Selecting != NULL && el &&
+                 nChars > 0 && drag != NULL && el &&
                  el->ElParent /*&& IsSVGComponent(el->ElParent)*/)
                 {
                   if (el->ElLeafType == LtGraphics &&
@@ -479,7 +479,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                        ))
                     {
                       /* Click on a handle */
-                      *Selecting = FALSE;
+                      *drag = FALSE;
                       if(AskShapeEdit(doc, (Element)(el->ElParent), nChars))
                         {
                           /* The user has edited an SVG element */
@@ -498,7 +498,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                     {
                       /* Click on a point of a polyline or Path */
                       SelectedPointInPolyline = nChars;
-                      *Selecting = FALSE;
+                      *drag = FALSE;
                       if (AskPathEdit(doc, 0, (Element)(el->ElParent), nChars))
                         {
                           /* The user has edited an SVG element */
@@ -523,7 +523,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                   el = pBox->BxAbstractBox->AbElement;
 
                   if(FrameTable[frame].FrView == 1 &&
-                     Selecting != NULL && el &&
+                     drag != NULL && el &&
                      el->ElLeafType != LtText &&
                      el->ElParent && IsSVGComponent(el->ElParent))
                     {
@@ -534,7 +534,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                           // it's a possible synchrosize
                           (selecteddoc == NULL || selecteddoc == SelectedDocument))
                         {
-                          *Selecting = FALSE;
+                          *drag = FALSE;
                           if(AskTransform(doc, NULL, NULL,
                                           0, (Element)(el->ElParent)))
                             {

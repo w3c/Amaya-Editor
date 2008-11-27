@@ -213,6 +213,11 @@ void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
   if (event.ShiftDown())
     thot_mod_mask |= THOT_MOD_SHIFT;
 
+  if (m_MouseGrab)
+    {
+      m_MouseGrab = false;
+      ReleaseMouse();
+    }
   TTALOGDEBUG_0( TTA_LOG_DRAW, _T("AmayaCanvas - wxEVT_LEFT_DCLICK || wxEVT_MIDDLE_DCLICK || wxEVT_RIGHT_DCLICK") );
   FrameButtonDClickCallback( frame,
                              event.GetButton(),
@@ -232,7 +237,8 @@ void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
   -----------------------------------------------------------------------*/
 void AmayaCanvas::OnMouseMove( wxMouseEvent& event )
 {
-  if ( m_IsMouseSelecting && !m_MouseMoveTimer.IsRunning() )
+  if (m_IsMouseSelecting && event.m_leftDown &&
+      !m_MouseMoveTimer.IsRunning() )
     {
       if (!m_MouseGrab)
         {
@@ -363,11 +369,7 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 
   m_IsMouseSelecting = true;
   m_MouseMoveTimer.Stop();
-  if (m_MouseGrab)
-    {
-      m_MouseGrab = false;
-      ReleaseMouse();
-    }
+  // force the mouse release
 
   int frame = m_pAmayaFrame->GetFrameId();
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::OnMouseDown : frame=%d"), frame );

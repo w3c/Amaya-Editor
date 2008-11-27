@@ -852,7 +852,9 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
                    * will not be unset => cause a infinit selection ! */
                 Dragging = TRUE;
                 if (LocateSelectionInView (frame, ClickX, ClickY, 2, &Dragging))
-		  return FALSE;
+                  {
+                  return FALSE;
+                  }
              }
           }
       }
@@ -864,7 +866,9 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         ClickX = x;
         ClickY = y;
         if (LocateSelectionInView (frame, ClickX, ClickY, 5, &Dragging))
+          {
           return FALSE;
+          }
       }
       break;
       
@@ -873,8 +877,10 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-	if (LocateSelectionInView (frame, ClickX, ClickY, 6, &Dragging))
-	  return FALSE;
+        if (LocateSelectionInView (frame, ClickX, ClickY, 6, &Dragging))
+          {
+            return FALSE;
+          }
       }
       break;
     }

@@ -101,11 +101,10 @@ AmayaMovingBoxEvtHandler::AmayaMovingBoxEvtHandler( AmayaFrame * p_frame,
       // attach this handler to the canvas
       AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
       p_canvas->PushEventHandler(this);
-      
+printf("Move capture\n");
+      p_canvas->CaptureMouse();
       // assign a cross mouse cursor
-      m_pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-      
-      m_pFrame->GetCanvas()->CaptureMouse();
+      p_canvas->SetCursor( wxCursor(wxCURSOR_CROSS) );
     }
 }
 
@@ -119,12 +118,11 @@ AmayaMovingBoxEvtHandler::~AmayaMovingBoxEvtHandler()
     {
       // detach this handler from the canvas (restore default behaviour)
       AmayaCanvas * p_canvas = m_pFrame->GetCanvas();
+      p_canvas->ReleaseMouse();
       p_canvas->PopEventHandler(false /* do not delete myself */);
       
       // restore the default cursor
-      m_pFrame->GetCanvas()->SetCursor( wxNullCursor );
-      
-      m_pFrame->GetCanvas()->ReleaseMouse();
+      p_canvas->SetCursor( wxNullCursor );
     }
 }
 
@@ -151,6 +149,7 @@ void AmayaMovingBoxEvtHandler::OnMouseDown( wxMouseEvent& event )
 {
   //  TTALOGDEBUG_0( TTA_LOG_SVGEDIT, _T("AmayaMovingBoxEvtHandler::OnMouseDown") );
   //  event.Skip();
+  m_IsFinish = true;
 }
 
 /*----------------------------------------------------------------------
@@ -171,6 +170,7 @@ void AmayaMovingBoxEvtHandler::OnMouseUp( wxMouseEvent& event )
 void AmayaMovingBoxEvtHandler::OnMouseDbClick( wxMouseEvent& event )
 {
   //  m_IsFinish = true;
+  m_IsFinish = true;
 }
 
 /*----------------------------------------------------------------------

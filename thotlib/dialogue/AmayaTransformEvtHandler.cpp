@@ -181,9 +181,9 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
               break;
             }
           /* assign a cross mouse cursor */
-          pFrame->GetCanvas()->SetCursor( cursor );
+          p_canvas->SetCursor( cursor );
         }
-      pFrame->GetCanvas()->CaptureMouse();
+      p_canvas->CaptureMouse();
     }
   AmayaTransformEvtHandler::UpdatePositions();
 }
@@ -200,15 +200,15 @@ AmayaTransformEvtHandler::~AmayaTransformEvtHandler()
     {
       /* detach this handler from the canvas (restore default behaviour) */
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
+      p_canvas->ReleaseMouse();
       p_canvas->PopEventHandler(false /* do not delete myself */);
       
       /* restore the default cursor */
       if (type > 0)
         {
           TtaSetStatus (document, 1, "", NULL);
-          pFrame->GetCanvas()->SetCursor( wxNullCursor );
+          p_canvas->SetCursor( wxNullCursor );
         }
-      pFrame->GetCanvas()->ReleaseMouse();
     }
 }
 

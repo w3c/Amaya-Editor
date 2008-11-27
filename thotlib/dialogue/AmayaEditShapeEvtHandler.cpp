@@ -231,11 +231,11 @@ AmayaEditShapeEvtHandler::~AmayaEditShapeEvtHandler()
     {
       /* detach this handler from the canvas (restore default behaviour) */
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
+      p_canvas->ReleaseMouse();
       p_canvas->PopEventHandler(false /* do not delete myself */);
       
       /* restore the default cursor */
-      pFrame->GetCanvas()->SetCursor( wxNullCursor );
-      pFrame->GetCanvas()->ReleaseMouse();
+      p_canvas->SetCursor( wxNullCursor );
     }
 }
 
