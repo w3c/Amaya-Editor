@@ -922,7 +922,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, int t,
     }
   if (pBox->BxAbstractBox != NULL)
     {
-      topY = pBox->BxYOrg + t - pFrame->FrYOrg;
+      topY = pBox->BxYOrg - pFrame->FrYOrg /*+t*/;
       //topY += pBox->BxTMargin + pBox->BxTBorder;
       h = pBox->BxHeight;
 
