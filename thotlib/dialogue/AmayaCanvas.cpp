@@ -363,9 +363,13 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
 
   m_IsMouseSelecting = true;
   m_MouseMoveTimer.Stop();
+  if (m_MouseGrab)
+    {
+      m_MouseGrab = false;
+      ReleaseMouse();
+    }
 
   int frame = m_pAmayaFrame->GetFrameId();
-
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::OnMouseDown : frame=%d"), frame );
 #ifdef _MACOS
   if (!event.CmdDown())
