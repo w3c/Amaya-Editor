@@ -1113,7 +1113,7 @@ ThotBool HashMap_IsEmpty(HashMap map)
 static HashMapKeyNode HashMap_GetHashMapKeyNode(HashMap map, HashMapKey key, ThotBool create)
 {
   int keyval;
-  if(map == NULL || key == NULL)
+  if(map == NULL || key == NULL || map->nodes == NULL)
     return NULL;
   keyval = (map->hash(key))%map->nbNodes;
   if (map->nodes[keyval] == NULL && create)

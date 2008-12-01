@@ -19,7 +19,7 @@ extern ThotBool LocateSelectionInView ( int frame,
                                         int x,
                                         int y,
                                         int button,
-                                        ThotBool *Selecting );
+                                        ThotBool *drag );
 extern ThotPoint *BuildPolygonForPath ( PtrPathSeg pPa,
                                         int frame,
                                         int* npoints,
@@ -84,7 +84,7 @@ extern ThotBool LocateSelectionInView ( int frame,
                                           int x,
                                           int y,
                                           int button,
-                                          ThotBool *Selecting );
+                                          ThotBool *drag );
 extern ThotPoint *BuildPolygonForPath ( PtrPathSeg pPa,
                                           int frame,
                                           int* npoints,

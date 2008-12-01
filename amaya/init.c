@@ -174,7 +174,7 @@ static int AmayaPopupDocContextMenu (int doc, int view, int window,
     {
 #ifdef TEMPLATES
       ElementType     elType, parentType;
-      DLList          list;
+      DLList          list = NULL;
       ForwardIterator iter;
       Element         el, last, prev, parent;
       DLListNode      node;
@@ -350,7 +350,8 @@ static int AmayaPopupDocContextMenu (int doc, int view, int window,
               if(node && node->elem)
                   InsertableElement_QueryInsertElement((ElemListElement)node->elem, id<100);
             }
-          DLList_Destroy(list);
+	  if (list)
+	    DLList_Destroy(list);
           // destroy submenus or remove entries
           if (itemTemplateAppend)
               p_menu->Destroy(itemTemplateAppend);
@@ -2317,13 +2318,18 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
 }
 
 /*----------------------------------------------------------------------
+  WhereOpenView finds out where to open the view according to parameters
+  oldDoc is the current active document
+  doc is the new document (often doc = oldDoc except for a undisplayed
+  alredy loaded document)
+  replaceOldDoc, inNewWindow, etc. give containts
+  The function returns windowId, pageId and pagePosition
   ----------------------------------------------------------------------*/
-void WhereOpenView(Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow,
-                    DocumentType docType, int method,  
+void WhereOpenView (Document oldDoc, Document doc, ThotBool replaceOldDoc,
+		    ThotBool inNewWindow, DocumentType docType, int method,  
                     int* windowId, int* pageId, int* pagePosition,
                     int* _visibility, ThotBool* isOpen, int* requestedDoc)
 {
-  Document  doc; /* the new doc */
   int       window_id     = -1,
             page_id       = -1,
             page_position = 0,
@@ -2334,12 +2340,11 @@ void WhereOpenView(Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow
 
   /* if the old doc doesn't exist it's not possible to create a new tab,
    * just open it in a new window */
-  if (oldDoc == 0 && inNewWindow == 0)
+  if (oldDoc == 0)
     inNewWindow = TRUE;
 
   /* previous document */
-  doc = oldDoc;
-  if (DocumentURLs[doc] && !strcmp (DocumentURLs[doc], "empty"))
+  if (DocumentURLs[oldDoc] && !strcmp (DocumentURLs[oldDoc], "empty"))
     // load by default in the current empty page
     replaceOldDoc = TRUE;
 
@@ -2347,11 +2352,13 @@ void WhereOpenView(Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow
     /* the new document will replace another document in the same window */
     {
       // transmit the visibility to the new document
-      visibility = TtaGetSensibility (doc, 1);
+      visibility = TtaGetSensibility (oldDoc, 1);
       /* get the old document window */
-      window_id = TtaGetDocumentWindowId( doc, -1 );
-      /* get the old document page id */
-      TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
+      window_id = TtaGetDocumentWindowId (oldDoc, -1 );
+      // if the document is loaded but not displayed
+      // doc and oldDoc are different
+      /* get the document page id */
+      TtaGetDocumentPageId (doc, -1, &page_id, &page_position);
       /* force the document's page position because sometime oldDoc is
          a source document placed on the bottom part of the page */
       page_position = 1;
@@ -2419,15 +2426,16 @@ void WhereOpenView(Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow
       if (docType == docSource)
         {
           /* source view is open it into the same page as formatted view */
-          window_id = TtaGetDocumentWindowId( doc, -1 );
+          window_id = TtaGetDocumentWindowId(oldDoc, -1 );
           TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
           page_position = 2;
         }
       else
         {
           // the document is displayed in a window
-          window_id = TtaGetDocumentWindowId( doc, -1 );
-          wxASSERT(window_id > 0);
+          window_id = TtaGetDocumentWindowId(oldDoc, -1 );
+          if (window_id < 0)
+	    window_id = TtaGetDocumentWindowId(doc, -1 );
           page_id   = TtaGetFreePageId( window_id );
           page_position = 1;
         }
@@ -2757,7 +2765,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
     oldDoc = GetDocFromSource (oldDoc);
 
   /* Where open the new document ? in which window ? */
-  WhereOpenView(oldDoc, replaceOldDoc, inNewWindow, docType, method,
+  WhereOpenView(oldDoc, oldDoc, replaceOldDoc, inNewWindow, docType, method,
                 &window_id, &page_id, &page_position, &visibility, &isOpen, &requested_doc);
   
   
@@ -3905,6 +3913,7 @@ Document LoadDocument (Document doc, char *pathname,
   TtaRefreshElementMenu (newdoc, 1);
   TtaFreeMemory (content_type);
   TtaFreeMemory (localdoc);
+  TtaClearUndoHistory (newdoc);
   return (newdoc);
 }
 
@@ -3964,6 +3973,7 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
       initial_url = DocumentMeta[doc]->initial_url;
       DocumentMeta[doc]->initial_url = NULL;
 
+      TtaClearUndoHistory (newdoc);
       RemoveParsingErrors (newdoc);
       /* add the URI in the combobox string */
       if (method != CE_MAKEBOOK && method != CE_TEMPLATE && method != CE_ANNOT &&
@@ -4710,6 +4720,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   Element             elFound = NULL, root;
   Document            doc;
   Document            res;
+  DisplayMode         dispMode;
   AmayaDoc_context   *ctx;
   TTcbf              *cbf;
   int                 method;
@@ -4843,7 +4854,11 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
             CheckParsingErrors (newdoc);
 #ifdef TEMPLATES
           // Fill template internal structures and prepare the instance if any
-          Template_FillFromDocument (newdoc);
+          dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode != NoComputedDisplay)
+	    TtaSetDisplayMode (doc, NoComputedDisplay);
+	  Template_FillFromDocument (newdoc);
+	  TtaSetDisplayMode (doc, dispMode);
           if (method == CE_TEMPLATE)
             // avoid positionned boxes to overlap the xt:head
             SetBodyAbsolutePosition (newdoc);
@@ -5010,6 +5025,10 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
   if (doc && DocumentTypes[doc] == docSource)
     doc = GetDocFromSource (doc);
   ok = TRUE;
+  if (IsXTiger (DocumentURLs[doc]))
+    // cannot replace a template by a document
+    DontReplaceOldDoc = TRUE;
+
   target       = (char *)TtaGetMemory (MAX_LENGTH);
   documentname = (char *)TtaGetMemory (MAX_LENGTH);
   parameters   = (char *)TtaGetMemory (MAX_LENGTH);
@@ -5045,6 +5064,9 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
       docType = docTemplate;
   else if (IsXTiger (documentname) || IsXMLName (documentname))
     {
+      if (IsXTiger (documentname))
+	// a template cannot replace another document
+	DontReplaceOldDoc = TRUE;
       docType = docXml;
       //TODO Check that urlname is a valid URL
       if (!IsW3Path (temp_url) && TtaFileExist (temp_url))
@@ -5126,8 +5148,7 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
           else
             {
               /* Where open the new document ? in which window ? */
-              TtaAddDocumentReference(newdoc);
-              WhereOpenView(doc, FALSE, InNewWindow, (DocumentType)docType, method, 
+              WhereOpenView(doc, newdoc, FALSE, InNewWindow, (DocumentType)docType, method, 
                   &window_id, &page_id, &page_position, &visibility, &isOpen, &requested_doc);
               InitView(doc, newdoc, FALSE, InNewWindow, isOpen, 
                       window_id, page_id, page_position, (DocumentType)docType, method);
@@ -5327,7 +5348,6 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
   TtaFreeMemory (tempfile);
   TtaFreeMemory (initial_url);
   DontReplaceOldDoc = FALSE;
-  //TtaAddDocumentReference(newdoc);
   return (newdoc);
 }
 

@@ -101,6 +101,7 @@ extern void GoToHome ( Document doc,
 extern void UpdateDoctypeMenu ( Document doc );
 extern void AddDirAttributeToDocEl ( Document doc );
 extern void WhereOpenView ( Document oldDoc,
+                            Document doc,
                             ThotBool replaceOldDoc,
                             ThotBool inNewWindow,
                             DocumentType docType,
@@ -366,6 +367,7 @@ extern void GoToHome ( Document doc,
 extern void UpdateDoctypeMenu ( Document doc );
 extern void AddDirAttributeToDocEl ( Document doc );
 extern void WhereOpenView ( Document oldDoc,
+                              Document doc,
                               ThotBool replaceOldDoc,
                               ThotBool inNewWindow,
                               DocumentType docType,

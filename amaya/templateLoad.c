@@ -386,7 +386,6 @@ static void LoadTemplate_callback (int newdoc, int status,  char *urlName,
 DocumentType LoadTemplate (Document doc, char* templatename)
 {
 #ifdef TEMPLATES
-  int              docLoading;
   Document         newdoc = 0;
   DocumentType     docType = docFree;
   char            *s, *directory;
@@ -406,13 +405,13 @@ DocumentType LoadTemplate (Document doc, char* templatename)
 
   //If types are not loaded we load the template and we parse it
   t = GetXTigerTemplate (templatename);
-  if (t == NULL)
+  if (t == NULL || t->doc == 0 ||
+      DocumentURLs[t->doc] == NULL ||
+      strcmp (templatename, DocumentURLs[t->doc]))
     {
       // The template is not loaded, load it !
 
       // the current loading document changes and should be restored
-      docLoading = W3Loading;
-      W3Loading = 0;
       TemplateIsLoaded = FALSE;
       //Load the document
       newdoc = GetAmayaDoc (templatename, NULL, 0, 0, CE_TEMPLATE, FALSE, 
@@ -436,12 +435,13 @@ DocumentType LoadTemplate (Document doc, char* templatename)
           else
             docType = DocumentTypes[newdoc];
         }
-      W3Loading = docLoading;
      }
   else
     // The template is already loaded, use it.
     docType = DocumentTypes[t->doc];
-  
+
+  // register the reference to the template document
+  TtaAddDocumentReference(t->doc);
   return docType;
 #else /* TEMPLATES */
   return docFree;

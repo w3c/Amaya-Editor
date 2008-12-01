@@ -330,7 +330,7 @@ void CloseDocumentAndViews(PtrDocument pDoc, ThotBool notify)
        * recursive document closing process.
        */
       pDoc->DocNbRef--;
-      if(pDoc->DocNbRef <= 0)
+      if(pDoc->DocNbRef < 0)
         {
 #ifndef NODISPLAY
           UnloadTree (doc);
@@ -1954,7 +1954,7 @@ void TtaRemoveDocumentReference (Document document)
       /* parameter document is correct */
       pDoc = LoadedDocument[document - 1];
       pDoc->DocNbRef--;
-      if(pDoc->DocNbRef <= 0)
+      if(pDoc->DocNbRef < 0)
         {
 #ifndef NODISPLAY          
           TCloseDocument(pDoc);
