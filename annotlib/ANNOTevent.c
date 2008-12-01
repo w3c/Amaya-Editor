@@ -812,10 +812,12 @@ void ANNOT_Reload (Document doc, View view)
   -----------------------------------------------------------------------*/
 void ANNOT_Create (Document doc, View view, AnnotMode mode)
 {
-  Document           doc_annot;
+  Document           doc_annot, doc_thread;
+  Element            el = NULL;
   AnnotMeta         *annot;
   XPointerContextPtr ctx;
   char              *xptr = NULL, *tfid = NULL;
+  int                firstC, lastC;
   ThotBool           useDocRoot = (mode & ANNOT_useDocRoot) != 0;
   ThotBool           isReplyTo = (mode & ANNOT_isReplyTo) != 0;
 
@@ -877,11 +879,9 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
       /* @@ RRS unfinished; this is temporary while the code is raw
          todo: read the schema asynchronously and delay the loading
          of annotations until after the schema has been processed @@ */
-
       SCHEMA_InitSchemas (doc);
       schema_init = TRUE;
     }
-
   annot = LINK_CreateMeta (doc, doc_annot, mode);
   /* if not docText */
   if (DocumentTypes[doc] != docText)
@@ -890,7 +890,6 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   else
     /* update the plain text identifier*/
     annot->xptr = tfid;
-
   /* initialize everything */
   mode = (AnnotMode)(mode | ANNOT_initATitle | ANNOT_initBody);
   ANNOT_InitDocumentStructure (doc, doc_annot, annot, mode);
@@ -898,19 +897,14 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   // set the default icon
   TtaSetPageIcon (doc_annot, 1, NULL);
 #endif /* _WX */
-
   /* turn on/off entries in the menu bar */
-  UpdateContextSensitiveMenus (doc, 1);
-
+  //UpdateContextSensitiveMenus (doc, 1);
   /* show the thread in the source document */
 #ifdef ANNOT_ON_ANNOT
   if (isReplyTo)
     {
-      Document doc_thread;
-
       /* we should add here the current document where the thread is viewed */
       doc_thread =  AnnotThread_searchThreadDoc (DocumentURLs[doc_annot]);
-
       if (doc_thread > 0)
         {
           DocumentMeta[doc_annot]->source_doc = doc_thread;
@@ -920,9 +914,9 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
 #endif /* ANNOT_ON_ANNOT */
 
   /* add the annotation icon to the source document */
+  TtaGiveFirstSelectedElement (doc_annot, &el, &firstC, &lastC);
   TtaUnselect (doc);
   LINK_AddLinkToSource (doc, annot);
-
   /* reselect the annotated text starting from the xpointer */
   if (!useDocRoot)
     {
@@ -930,6 +924,8 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
       XPointer_select (ctx);
       XPointer_free (ctx);
     }
+  if (el)
+    TtaSelectElement (doc_annot, el);
 }
 
 /*-----------------------------------------------------------------------

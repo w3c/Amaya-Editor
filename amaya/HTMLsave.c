@@ -1288,7 +1288,10 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
   /* check if the document has a DOCTYPE declaration */
 #ifdef ANNOTATIONS
   if (DocumentTypes[doc]  == docAnnot)
-    elType = TtaGetElementType (root);
+    {
+      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+      pi_type = HTML_EL_XMLPI;
+    }
   else
 #endif /* ANNOTATIONS */
     elType = TtaGetElementType (docEl);
@@ -1329,7 +1332,7 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
   doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
 
   /* check if the compound document requests a DOCTYPE declaration */
-  if (DocumentMeta[doc]->xmlformat)
+  if (DocumentMeta[doc]->xmlformat && DocumentTypes[doc]  != docAnnot)
     {
       profile = TtaGetDocumentProfile(doc);
       extraProfile = TtaGetDocumentExtraProfile(doc);
@@ -1368,104 +1371,107 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
 
   /* check if XML declaration or the math PI are already defined */
   xmlDecl = DocumentMeta[doc]->xmlformat;
-  el = TtaGetFirstChild (docEl);
-  while (el)
+  if (DocumentTypes[doc]  != docAnnot)
     {
-      elType = TtaGetElementType (el);
-      if (elType.ElTypeNum != pi_type)
-        TtaNextSibling (&el);
-      else
-        {
-          /* get PI lines */
-          next = el;
-          TtaNextSibling (&next);
-          elFound = TtaGetFirstChild (el);
-          while (elFound)
-            {
-              /* get PI text */
-              text = TtaGetFirstChild (elFound);
-              if (text == NULL)
-                text = elFound;
-              length = 300;
-              TtaGiveTextContent (text, (unsigned char *)buffer, &length,
-                                  &lang);
-              if (strstr (buffer, "xml version="))
-                {
-                  if (strstr (buffer, charsetname))
-                    {
-                      /* not necessary to generate the XML declaration */
-                      xmlDecl = FALSE;
-                      elDecl = el;
-                    }
-                  else
-                    {
-                      // the charset changed -> regenerate the declaration
-                      xmlDecl = TRUE;
-                      elDecl = NULL;
-                      TtaDeleteTree (el, doc);
-                      el = next;
-                    }
-                  elFound = NULL;
-                }
-              else if (strstr (buffer, "mathml.xsl"))
-                {
-                  if (!mathPI)
-                    {
-                      if (el)
-                        // this PI must be removed
-                        TtaDeleteTree (el, doc);
-                    }
-                  /* it's not necessary to generate the math PI */
-                  mathPI = FALSE;
-                  elFound = NULL;
-                }
-              else if (RemoveTemplate && strstr (buffer, "xtiger template"))
-                TtaDeleteTree (el, doc);
-              if (elFound)
-                TtaNextSibling (&elFound);
-            }
-          el = next;
-        }
-    }
+      el = TtaGetFirstChild (docEl);
+      while (el)
+	{
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum != pi_type)
+	    TtaNextSibling (&el);
+	  else
+	    {
+	      /* get PI lines */
+	      next = el;
+	      TtaNextSibling (&next);
+	      elFound = TtaGetFirstChild (el);
+	      while (elFound)
+		{
+		  /* get PI text */
+		  text = TtaGetFirstChild (elFound);
+		  if (text == NULL)
+		    text = elFound;
+		  length = 300;
+		  TtaGiveTextContent (text, (unsigned char *)buffer, &length,
+				      &lang);
+		  if (strstr (buffer, "xml version="))
+		    {
+		      if (strstr (buffer, charsetname))
+			{
+			  /* not necessary to generate the XML declaration */
+			  xmlDecl = FALSE;
+			  elDecl = el;
+			}
+		      else
+			{
+			  // the charset changed -> regenerate the declaration
+			  xmlDecl = TRUE;
+			  elDecl = NULL;
+			  TtaDeleteTree (el, doc);
+			  el = next;
+			}
+		      elFound = NULL;
+		    }
+		  else if (strstr (buffer, "mathml.xsl"))
+		    {
+		      if (!mathPI)
+			{
+			  if (el)
+			    // this PI must be removed
+			    TtaDeleteTree (el, doc);
+			}
+		      /* it's not necessary to generate the math PI */
+		      mathPI = FALSE;
+		      elFound = NULL;
+		    }
+		  else if (RemoveTemplate && strstr (buffer, "xtiger template"))
+		    TtaDeleteTree (el, doc);
+		  if (elFound)
+		    TtaNextSibling (&elFound);
+		}
+	      el = next;
+	    }
+	}
 
-  if (xmlDecl)
-    // check if the user wants to generate xml declaration
-    TtaGetEnvBoolean ("USE_XML_DECLARATION", &xmlDecl);
-  if (xmlDecl && charsetname[0] != EOS)
-    {
-      /* generate the XML declaration */
-      /* Check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (FALSE, doc);
-      elType.ElTypeNum = pi_type;
-      el = TtaNewTree (doc, elType, "");
-      elDecl = el;
-      TtaInsertFirstChild (&el, docEl, doc);
-      elFound = TtaGetFirstChild (el);
-      text = TtaGetFirstChild (elFound);
-      strcpy (buffer, "xml version=\"1.0\" encoding=\"");
-      strcat (buffer, charsetname);
-      strcat (buffer, "\"");
-      TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
-      TtaSetStructureChecking (TRUE, doc);
-    }
-  if (mathPI)
-    {
-      /* generate the David Carliste's xsl stylesheet for MathML */
-      /* Check the Thot abstract tree against the structure schema. */
-      TtaSetStructureChecking (FALSE, doc);
-      elType.ElTypeNum = pi_type;
-      el = TtaNewTree (doc, elType, "");
-      if (elDecl)
-        TtaInsertSibling(el,elDecl, FALSE, doc );
-      else
-        TtaInsertFirstChild (&el, docEl, doc);
-      elFound = TtaGetFirstChild (el);
-      text = TtaGetFirstChild (elFound);
-      strcpy (buffer, MATHML_XSLT_URI);
-      strcat (buffer, MATHML_XSLT_NAME);
-      strcat (buffer, "\"");
-      TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
-      TtaSetStructureChecking (TRUE, doc);
+      if (xmlDecl)
+	// check if the user wants to generate xml declaration
+	TtaGetEnvBoolean ("USE_XML_DECLARATION", &xmlDecl);
+      if (xmlDecl && charsetname[0] != EOS)
+	{
+	  /* generate the XML declaration */
+	  /* Check the Thot abstract tree against the structure schema. */
+	  TtaSetStructureChecking (FALSE, doc);
+	  elType.ElTypeNum = pi_type;
+	  el = TtaNewTree (doc, elType, "");
+	  elDecl = el;
+	  TtaInsertFirstChild (&el, docEl, doc);
+	  elFound = TtaGetFirstChild (el);
+	  text = TtaGetFirstChild (elFound);
+	  strcpy (buffer, "xml version=\"1.0\" encoding=\"");
+	  strcat (buffer, charsetname);
+	  strcat (buffer, "\"");
+	  TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
+	  TtaSetStructureChecking (TRUE, doc);
+	}
+      if (mathPI)
+	{
+	  /* generate the David Carliste's xsl stylesheet for MathML */
+	  /* Check the Thot abstract tree against the structure schema. */
+	  TtaSetStructureChecking (FALSE, doc);
+	  elType.ElTypeNum = pi_type;
+	  el = TtaNewTree (doc, elType, "");
+	  if (elDecl)
+	    TtaInsertSibling(el,elDecl, FALSE, doc );
+	  else
+	    TtaInsertFirstChild (&el, docEl, doc);
+	  elFound = TtaGetFirstChild (el);
+	  text = TtaGetFirstChild (elFound);
+	  strcpy (buffer, MATHML_XSLT_URI);
+	  strcat (buffer, MATHML_XSLT_NAME);
+	  strcat (buffer, "\"");
+	  TtaSetTextContent (text, (unsigned char*)buffer,  Latin_Script, doc);
+	  TtaSetStructureChecking (TRUE, doc);
+	}
     }
 
   /* Create or update a META element to specify Content-type and Charset */
