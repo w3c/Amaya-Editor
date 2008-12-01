@@ -556,6 +556,10 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
   /* cherche les attributs globaux definis dans le schema de structure */
   /* du premier element selectionne' et dans les extrensions de ce schema*/
   pSS = firstSel->ElStructSchema;/* schema de struct de l'element courant*/
+/*   if (WholeColumnSelected) */
+/*     { */
+/*       firstSel = FirstSelectedColumn; */
+/*     } */
   while(pSS)
     {
       for (num=1; num<=pSS->SsNAttributes; num++)

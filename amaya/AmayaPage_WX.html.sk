@@ -113,23 +113,22 @@ pomocou jazyka kaskádových štýlov (CSS). </p>
 <div class="column">
 
 <div class="section">
-<h2>Main news</h2>
+<h2>Hlavné novinky</h2>
 
-<p>News from version 10:</p>
+<p>Novinky od verzie 10:</p>
 <ul>
-  <li>Possibility to create and edit document templates from document
-  skeletons</li>
-  <li>More facilities to edit template instances</li>
-  <li>The first version of an integrated editor for SVG graphic schemas</li>
-  <li>The support of semantic information within web pages (RDFa)</li>
-  <li>Direct resizing of images</li>
+  <li>Možnosť tvorby a editácie dokumentových šablón (templates) z kostry dokumentov</li>
+  <li>Viac prostriedkov pre editáciu inštancií šablón</li>
+  <li>Prvá verzia s integrovaným editorom grafických schém SVG</li>
+  <li>Podpora sémantických informácií vo web stránkach (RDFa)</li>
+  <li>Priama zmena veľkosti obrázkov</li>
 </ul>
 </div>
 
 <div class="section">
-<h2>Advanced features</h2>
+<h2>Podrobné rysy</h2>
 
-<p>Embedded MathML and SVG:</p>
+<p>Embedded MathML a SVG:</p>
 
 <div id="mathml_svg">
 <svg:svg height="250" width="250">
@@ -205,7 +204,7 @@ pomocou jazyka kaskádových štýlov (CSS). </p>
 <h2>Vedeli ste, že... ?</h2>
 <dl>
   <dt>Amaya je editor podporujúci štruktúru</dt>
-    <dd>Pomocou kláves F2 alebo Esc môete vybrať rodičovský prvok v
+    <dd>Pomocou kláves F2 alebo Esc môžete vybrať rodičovský prvok v
       štruktúre a upravovať ho (napr.: kopírovať, prilepiť, meniť
       atribúty, atď.).</dd>
   <dt>Dokument môžete upravovať prostredníctvom rôznych synchronizovaných
@@ -231,7 +230,7 @@ pomocou jazyka kaskádových štýlov (CSS). </p>
 </div>
 
 <p class="bottom section">Práva používať, kopírovať, modifikovať a
-distribuovať tento softvér s jeho dokumentáciou na akékoľvek účelyany
+distribuovať tento softvér s jeho dokumentáciou na akékoľvek účely a
 bez polatkov alebo autorských príspevkov sú týmo garantované pod
 podmienkou, že plné znenie textu <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html">ustanovenia

@@ -6,8 +6,8 @@
       <object class="sizeritem">
         <object class="wxListCtrl" name="wxID_CLIST_ATTR">
           <size>120,150</size>
-          <style>wxLC_REPORT|wxLC_ALIGN_LEFT|wxLC_SINGLE_SEL|wxRAISED_BORDER</style>
           <focused>1</focused>
+          <style>wxRAISED_BORDER|wxLC_REPORT|wxLC_ALIGN_LEFT|wxLC_SINGLE_SEL|wxLC_NO_SORT_HEADER</style>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>

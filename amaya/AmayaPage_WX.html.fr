@@ -92,9 +92,6 @@
 </div>
 
 <div id="intro" class="section">
-<p>Avec la version 10, Amaya offre une interface utilisateur complètement
-repensée et de nombreuses possibilités nouvelles.</p>
-
 <p>Amaya est un client Web qui sert à la fois de navigateur et d'outil
 d'édition. Il a été conçu par le <a href="http://www.w3.org/">W3C</a> et
 l'<a href="http://www.inria.fr/">INRIA</a> essentiellement pour démontrer les
