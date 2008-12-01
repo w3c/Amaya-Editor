@@ -2043,6 +2043,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   PtrBox              box;
   int                 bottomL = 0, bottomR = 0, y;
   int                 orgX, orgY, width, by = 0, bh = 0;
+  int                 ft, fb, fl, fr;
   ThotBool            clearL, clearR;
   ThotBool            clearl, clearr;
   ThotBool            variable, newFloat, still;
@@ -2166,13 +2167,15 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       /* compute the line position and width */
       if (floatL)
         {
+          // get extra margins of floated box (XTiger boxes)
+          GetExtraMargins (floatL, frame, FALSE, &ft, &fb, &fl, &fr);
           by = floatL->BxYOrg;
           bh = 0;
           if (floatL->BxTMargin < 0)
             by += floatL->BxTMargin;
           else
             bh += floatL->BxTMargin;
-          bh += floatL->BxTBorder + floatL->BxTPadding + floatL->BxH + floatL->BxBBorder + floatL->BxBPadding;
+          bh += floatL->BxTBorder + floatL->BxTPadding + floatL->BxH + floatL->BxBBorder + floatL->BxBPadding + ft + fb;
           if (pLine->LiYOrg < floatL->BxYOrg - orgY)
             // the line cannot start above the floated box
             pLine->LiYOrg = floatL->BxYOrg - orgY;
@@ -2233,13 +2236,15 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 
       if (floatR)
         {
+          // get extra margins of floated box (XTiger boxes)
+          GetExtraMargins (floatR, frame, FALSE, &ft, &fb, &fl, &fr);
           by = floatR->BxYOrg;
           bh = 0;
           if (floatR->BxTMargin < 0)
             by += floatR->BxTMargin;
           else
             bh += floatR->BxTMargin;
-          bh += floatR->BxTBorder + floatR->BxTPadding + floatR->BxH + floatR->BxBBorder + floatR->BxBPadding;
+          bh += floatR->BxTBorder + floatR->BxTPadding + floatR->BxH + floatR->BxBBorder + floatR->BxBPadding + ft + fb;
           if (pLine->LiYOrg < floatR->BxYOrg - orgY)
             // the line cannot start above the floated box
             pLine->LiYOrg = floatR->BxYOrg - orgY;
