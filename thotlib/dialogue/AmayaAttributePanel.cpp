@@ -115,12 +115,12 @@ bool AmayaAttributeToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPo
     return false;
   // initialize the col width
   TtaGetEnvInt ("ATTR_COL_0", &sz);
-  if (sz)
+  if (sz && sz > 20)
     m_sz0 = sz;
   else
     m_sz0 = 50;
   TtaGetEnvInt ("ATTR_COL_1", &sz);
-  if (sz)
+  if (sz && sz > 20)
     m_sz1 = sz;
   else
     m_sz1 = 150;
@@ -213,12 +213,16 @@ void AmayaAttributeToolPanel::UpdateListColumnWidth()
   m_pAttrList->Freeze();
   // m_pAttrList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
   sz0 = m_pAttrList->GetColumnWidth(0);
+  if (sz0 < 20)
+    sz0 = 20;
   if (sz0 != m_sz0)
     {
       m_sz0 = sz0;
       TtaSetEnvInt ("ATTR_COL_0", m_sz0, TRUE);
     }
   sz1 = m_pAttrList->GetColumnWidth(1);
+  if (sz1 < 20)
+    sz1 = 20;
   if (sz1 != m_sz1)
     {
       m_sz1 = sz1;

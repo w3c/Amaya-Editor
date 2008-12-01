@@ -6,6 +6,10 @@
       <object class="sizeritem">
         <object class="wxListCtrl" name="wxID_CLIST_ATTR">
           <size>120,150</size>
+<<<<<<< Panel_Attribute.xrc
+          <style>wxLC_REPORT|wxLC_ALIGN_LEFT|wxLC_SINGLE_SEL|wxLC_NO_SORT_HEADER|wxRAISED_BORDER</style>
+=======
+>>>>>>> 1.29
           <focused>1</focused>
           <style>wxRAISED_BORDER|wxLC_REPORT|wxLC_ALIGN_LEFT|wxLC_SINGLE_SEL|wxLC_NO_SORT_HEADER</style>
         </object>
@@ -69,7 +73,7 @@
                       <object class="sizeritem">
                         <object class="wxChoice" name="wxID_CHOOSE_NEW_ATTRIBUTE">
                           <content/>
-                          <style/>
+                          <style></style>
                         </object>
                         <option>1</option>
                         <flag>wxEXPAND</flag>
@@ -115,14 +119,16 @@
         <flag>wxEXPAND</flag>
       </object>
       <object class="sizeritem">
-        <object class="wxComboBox" name="wxID_ATTR_COMBO_VALUE"/>
+        <object class="wxComboBox" name="wxID_ATTR_COMBO_VALUE">
+          <content/>
+        </object>
         <option>1</option>
         <flag>wxEXPAND</flag>
       </object>
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_OK">
           <bitmap>../icons/16x16/ok.png</bitmap>
-          <default/>
+          <default></default>
         </object>
         <option>0</option>
         <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
@@ -136,7 +142,7 @@
       <orient>wxHORIZONTAL</orient>
       <object class="sizeritem">
         <object class="wxSpinCtrl" name="wxID_ATTR_NUM_VALUE">
-          <value/>
+          <value></value>
         </object>
         <option>1</option>
         <flag>wxEXPAND</flag>
@@ -144,7 +150,7 @@
       <object class="sizeritem">
         <object class="wxBitmapButton" name="wxID_OK">
           <bitmap>../icons/16x16/ok.png</bitmap>
-          <default/>
+          <default></default>
         </object>
         <option>0</option>
         <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
