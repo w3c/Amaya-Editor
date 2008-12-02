@@ -54,6 +54,7 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   Element     useFirst; /* First xt:use of the repeat.*/
   Element     use;      /* xt:use to insert.*/
   ElementType useType;  /* type of xt:use.*/
+  char       *types = NULL;
 
   if (!TtaGetDocumentAccessMode (doc))
     return NULL;
@@ -62,16 +63,23 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   useFirst = TtaGetFirstChild (el);
   useType = TtaGetElementType (useFirst);
   use = TtaCopyElement (useFirst, doc, doc, el);
-
+  types = GetAttributeStringValueFromNum (useFirst, Template_ATTR_types, NULL);
   TtaChangeElementType(use, Template_EL_useSimple);
-
+  if (types)
+    {
+      SetAttributeStringValueWithUndo (use, Template_ATTR_types, types);
+      TtaFreeMemory (types);
+    }
+  else
+    SetAttributeStringValueWithUndo (use, Template_ATTR_types, decl->name);
   /* insert it */
   if (elPrev)
     TtaInsertSibling(use, elPrev, FALSE, doc);
   else
     TtaInsertSibling(use, useFirst, TRUE, doc);
   Template_InsertUseChildren(doc, use, decl);
-
+  SetAttributeStringValueWithUndo (use, Template_ATTR_title, decl->name);
+  SetAttributeStringValueWithUndo (use, Template_ATTR_currentType, decl->name);
   TtaRegisterElementCreate (use, doc);
   return use;
 #else /* TEMPLATES */
@@ -84,71 +92,106 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   Template_InsertBagChild
   Insert a child to a xt:bag at the current insertion point.
   The decl parameter must be valid and will not be verified.
-  @param el element (xt:bag) in which insert a new element
+  @param sel the refered element. If NULL use the selection
+  @param bag element (xt:bag) in which insert a new element
   @param decl Template declaration of the element to insert
   @return The inserted element
   ----------------------------------------------------------------------*/
-Element Template_InsertBagChild (Document doc, Element el, Declaration decl, ThotBool before)
+Element Template_InsertBagChild (Document doc, Element sel, Element bag,
+                                 Declaration decl, ThotBool before)
 {
 #ifdef TEMPLATES
-  Element     sel;
   ElementType newElType, selType;
-  int start, end;
-  SSchema sstempl = TtaGetSSchema ("Template", doc);
+  Element     use = NULL, el, dummy = NULL;
+  SSchema     sstempl;
+  int         start, end;
+  ThotBool    open;
 
   if (!TtaGetDocumentAccessMode (doc) || !decl)
     return NULL;
 
-  TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
-  if (TtaIsAncestor (sel, el))
-  {
-    
-    switch(decl->nature)
+  TtaGiveFirstSelectedElement (doc, &el, &start, &end);
+  if (sel == NULL)
+    sel = el;
+  if (sel == bag || TtaIsAncestor (sel, bag))
     {
-      case UnionNat:
-        newElType.ElTypeNum = Template_EL_useEl;
-        newElType.ElSSchema = sstempl;
-        break;
-      case ComponentNat:
-        newElType.ElTypeNum = Template_EL_useSimple;
-        newElType.ElSSchema = sstempl;
-        break;
-      case XmlElementNat:
-        GIType (decl->name, &newElType, doc);
-        break;
-      default:
-        break;
-    }
+      // opent the undo sequence if needed
+      open = TtaHasUndoSequence (doc);
+      if (!open)
+        TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+      sstempl = TtaGetSSchema ("Template", doc);
+      selType = TtaGetElementType (sel);
+      if (decl->blockLevel == 2 && 
+          (TtaIsLeaf (selType) || !IsTemplateElement (sel)))
+        {
+          // force the insertion of a block level element at the right position
+          while (sel && IsCharacterLevelElement (sel))
+            sel = TtaGetParent (sel);
+          if (sel)
+            TtaSelectElement (doc, sel);
+        }
 
-    selType = TtaGetElementType (sel);
-    if (decl->blockLevel == 2 && 
-        (TtaIsLeaf (selType) || !IsTemplateElement (sel)))
-      {
-        // force the insertion of a block level element at the right position
-        while (sel && IsCharacterLevelElement (sel))
-          sel = TtaGetParent (sel);
-        if (sel)
-          TtaSelectElement (doc, sel);
-        TtaInsertAnyElement (doc, before);
-        TtaExtendUndoSequence (doc);
-      }
-    TtaInsertElement (newElType, doc);
-    TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
-    if (sel && newElType.ElSSchema == sstempl)
-      {
-        selType = TtaGetElementType (sel);
-        TtaUnselect (doc);
-        
-        if (selType.ElSSchema == newElType.ElSSchema &&
-            selType.ElTypeNum == Template_EL_useSimple)
-          {
-            SetAttributeStringValueWithUndo (sel, Template_ATTR_types, decl->name);
-            SetAttributeStringValueWithUndo (sel, Template_ATTR_title, decl->name);
-            Template_InsertUseChildren (doc, sel, decl);
-          }
-      }   
-    return sel;
-  }
+      if (decl->nature == XmlElementNat)
+        {
+          if (el == NULL && sel != bag)
+            // force a selection
+            TtaSelectElement (doc, sel);
+          if (sel == bag)
+            {
+              // insert first an empty element
+              if (DocumentTypes[doc] == docHTML)
+                newElType.ElTypeNum = HTML_EL_Element;
+              else if (DocumentTypes[doc] == docMath)
+                newElType.ElTypeNum = MathML_EL_Construct;
+              else
+                newElType.ElTypeNum = XML_EL_XML_Element;
+              newElType.ElSSchema = TtaGetDocumentSSchema (doc);
+              dummy = TtaNewElement(doc, newElType);
+              TtaInsertFirstChild (&dummy, bag, doc);
+              TtaRegisterElementCreate (dummy, doc);
+              TtaSelectElement (doc, dummy);
+            }
+          GIType (decl->name, &newElType, doc);
+          TtaInsertAnyElement (doc, before);
+          TtaExtendUndoSequence (doc);
+          TtaInsertElement (newElType, doc);
+          TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
+          if (dummy)
+            {
+              TtaRegisterElementDelete (dummy, doc);
+              TtaDeleteTree (dummy, doc);
+            }
+        }
+      else if (decl->nature == ComponentNat)
+        {
+          // create a use element
+          newElType.ElTypeNum = Template_EL_useSimple;
+          newElType.ElSSchema = sstempl;
+          use = TtaNewElement(doc, newElType);
+          if (use)
+            {
+              Template_InsertUseChildren (doc, use, decl);
+              SetAttributeStringValueWithUndo (use, Template_ATTR_types, decl->name);
+              SetAttributeStringValueWithUndo (use, Template_ATTR_title, decl->name);
+              SetAttributeStringValueWithUndo (use, Template_ATTR_currentType, decl->name);
+              if (sel != bag)
+                TtaInsertSibling (use, sel, before, doc);
+              else
+                 TtaInsertFirstChild (&use, bag, doc);
+              TtaRegisterElementCreate (use, doc);
+              sel = use;
+            }
+        }
+      else if (decl->nature == UnionNat)
+        {
+          newElType.ElTypeNum = Template_EL_useEl;
+          newElType.ElSSchema = sstempl;
+        }
+      // close the undo sequence
+      if (!open)
+        TtaCloseUndoSequence (doc);
+      return sel;
+    }
 #endif /* TEMPLATES */
   return NULL;
 }
@@ -837,8 +880,8 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec)
 #ifdef TEMPLATE_DEBUG
         DumpSubtree(newEl, doc, 0);
 #endif /* TEMPLATE_DEBUG */
-        t = GetXTigerDocTemplate(doc);
-        child = TtaGetFirstChild (newEl);
+        t = GetXTigerDocTemplate( doc);
+        child = TtaGetFirstChild  (newEl);
         while (child)
           {
             // move the new subtree to the document
@@ -847,7 +890,7 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec)
             child = TtaGetFirstChild (newEl);
           }
 
-        TtaDeleteTree(newEl, doc);
+        TtaDeleteTree (newEl, doc);
         newEl = el;
         break;
       default :
@@ -855,7 +898,7 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec)
         break;   
     }
     Template_FixAccessRight (dec->usedIn, el, doc);
-    TtaUpdateAccessRightInViews (doc, el);    
+    TtaUpdateAccessRightInViews (doc, el);
   }  
 #endif /* TEMPLATES */
   return newEl;

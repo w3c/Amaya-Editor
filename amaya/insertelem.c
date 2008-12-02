@@ -396,7 +396,7 @@ void InsertableElement_DoInsertElement (void* el)
                                               TtaGetLastChild(ref));
         break;
       case Template_EL_bag:
-        newEl = Template_InsertBagChild (doc, ref,
+        newEl = Template_InsertBagChild (doc, NULL, ref,
                                          (Declaration)elem->elem.component.declaration,
                                          FALSE);
         break;
@@ -458,9 +458,9 @@ Element InsertableElement_InsertElement (ElemListElement elem, ThotBool before)
     switch(refType.ElTypeNum)
     {
       case Template_EL_repeat:
-        if(elem->typeClass==DefinedComponent)
+        if (elem->typeClass == DefinedComponent)
           dec = (Declaration)elem->elem.component.declaration;
-        else if (elem->typeClass==LanguageElement)
+        else if (elem->typeClass == LanguageElement)
           {
             t = GetXTigerDocTemplate(TtaGetDocument(elem->refElem));
             if (t)
@@ -468,28 +468,27 @@ Element InsertableElement_InsertElement (ElemListElement elem, ThotBool before)
           }
         if (dec)
           {
-            
-            TtaGiveFirstSelectedElement(doc, &sel, &car1, &car2);
-            sibling = GetFirstChildElementTo(ref, sel);
-            if(sibling)
+            TtaGiveFirstSelectedElement (doc, &sel, &car1, &car2);
+            sibling = GetFirstChildElementTo (ref, sel);
+            if (sibling)
               {
-                if(before)
+                if (before)
                   TtaPreviousSibling(&sibling);
                 newEl = Template_InsertRepeatChildAfter (doc, ref, dec, sibling);
               }
           }
         break;
       case Template_EL_bag:
-        if(elem->typeClass==DefinedComponent)
+        if (elem->typeClass == DefinedComponent)
           dec = (Declaration)elem->elem.component.declaration;
-        else if (elem->typeClass==LanguageElement)
+        else if (elem->typeClass == LanguageElement)
           {
-            t = GetXTigerDocTemplate(TtaGetDocument(elem->refElem));
+            t = GetXTigerDocTemplate (TtaGetDocument (elem->refElem));
             if (t)
-                dec = Template_GetElementDeclaration(t, ElemListElement_GetName(elem));
+              dec = Template_GetElementDeclaration (t, ElemListElement_GetName(elem));
           }
         if (dec)
-            newEl = Template_InsertBagChild (doc, ref, dec, before);           
+            newEl = Template_InsertBagChild (doc, NULL, ref, dec, before);           
         break;
       default:
         break;

@@ -915,21 +915,6 @@ ThotBool BagButtonClicked (NotifyElement *event)
       listtypes = Template_GetListTypes (t, bagEl);
       if (listtypes)
         {
-#ifdef TEMPLATE_DEBUG
-          printf("BagButtonClicked : \n  > %s\n", listtypes);
-          //      {
-          //        DLList list = DLList_Create();
-          //        FillInsertableElemList (doc, TtaGetFirstChild(bagEl), list);
-          //        DLListNode node;
-          //        ForwardIterator iter = DLList_GetForwardIterator(list);
-          //        ITERATOR_FOREACH(iter, DLListNode, node)
-          //        {
-          //          ElemListElement elem = (ElemListElement)node->elem;
-          //          printf("  + %s\n", ElemListElement_GetName(elem));
-          //        }
-          //        DLList_Destroy(list);
-          //      }
-#endif /* TEMPLATE_DEBUG */
           result = QueryStringFromMenu (doc, listtypes);
           TtaFreeMemory (listtypes);
           if (result)
@@ -946,24 +931,11 @@ ThotBool BagButtonClicked (NotifyElement *event)
                   /* Prepare insertion.*/
                   oldStructureChecking = TtaGetStructureChecking (doc);
                   TtaSetStructureChecking (FALSE, doc);
-                  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
                   /* Insert */
-                  if (el == bagEl)
-                    {
-                      el = TtaGetFirstChild (el);
-                      TtaSelectElement (doc, el);
-                      TtaInsertAnyElement (doc, TRUE);
-                    }
-                  else
-                    {
-                      TtaSelectElement (doc, el);
-                      TtaInsertAnyElement (doc, FALSE);
-                    }
-                  newEl = Template_InsertBagChild (doc, bagEl, decl, FALSE);
+                  newEl = Template_InsertBagChild (doc, el, bagEl, decl, FALSE);
 
                   /* Finish insertion.*/
-                  TtaCloseUndoSequence (doc);
                   TtaSetDocumentModified (doc);
                   TtaSetStructureChecking (oldStructureChecking, doc);
                   // restore the display
@@ -1108,9 +1080,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 
         }
       else /* if (Template_CanInsertRepeatChild(repeatEl)) */
-        {
-          TtaSetStatus(doc, view, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR_HAVE_MAX), NULL);
-        }
+        TtaSetStatus(doc, view, TtaGetMessage (AMAYA, AM_NUMBER_OCCUR_HAVE_MAX), NULL);
     }
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
@@ -1128,15 +1098,12 @@ ThotBool UseButtonClicked (NotifyElement *event)
   Element         el = event->element;
   Element         child;
   ElementType     elType, childType;
+  View            view;
   XTigerTemplate  t;
   Declaration     decl;
-  Element         firstEl;
-  Element         newEl = NULL;
-  char*           types;
+  Element         firstEl, newEl = NULL;
+  char           *types, *listtypes = NULL, *result = NULL;
   ThotBool        oldStructureChecking;
-  View            view;
-  char*           listtypes = NULL;
-  char*           result = NULL;
 
   if (!TtaGetDocumentAccessMode (doc))
     return TRUE;
@@ -1213,9 +1180,9 @@ ThotBool UseButtonClicked (NotifyElement *event)
                 }
             }
         }
-      TtaFreeMemory(types);
-      TtaFreeMemory(listtypes);
-      TtaFreeMemory(result);
+      TtaFreeMemory (types);
+      TtaFreeMemory (listtypes);
+      TtaFreeMemory (result);
     }
 
   return TRUE;

@@ -49,6 +49,8 @@ extern Declaration Template_DeclareNewComponent ( XTigerTemplate t,
                                                   int level );
 extern Declaration Template_DeclareNewElement ( const XTigerTemplate t,
                                                 const char *name );
+extern Declaration Template_DeclareNewUnknown ( const XTigerTemplate t,
+                                                const char *name );
 extern Declaration Template_DeclareNewUnion ( XTigerTemplate t,
                                               const char *name,
                                               const char* include,
@@ -190,6 +192,8 @@ extern Declaration Template_DeclareNewComponent ( XTigerTemplate t,
                                                     Element el,
                                                     int level );
 extern Declaration Template_DeclareNewElement ( const XTigerTemplate t,
+                                                  const char *name );
+extern Declaration Template_DeclareNewUnknown ( const XTigerTemplate t,
                                                   const char *name );
 extern Declaration Template_DeclareNewUnion ( XTigerTemplate t,
                                                 const char *name,

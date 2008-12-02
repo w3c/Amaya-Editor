@@ -11,7 +11,8 @@ extern Element Template_InsertRepeatChildAfter ( Document doc,
                                                  Declaration decl,
                                                  Element elPrev );
 extern Element Template_InsertBagChild ( Document doc,
-                                         Element el,
+                                         Element sel,
+                                         Element bag,
                                          Declaration decl,
                                          ThotBool before );
 extern void CreateTemplate ( Document doc,
@@ -66,7 +67,8 @@ extern Element Template_InsertRepeatChildAfter ( Document doc,
                                                    Declaration decl,
                                                    Element elPrev );
 extern Element Template_InsertBagChild ( Document doc,
-                                           Element el,
+                                           Element sel,
+                                           Element bag,
                                            Declaration decl,
                                            ThotBool before );
 extern void CreateTemplate ( Document doc,

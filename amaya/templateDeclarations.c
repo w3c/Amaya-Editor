@@ -291,15 +291,13 @@ void Template_AddStandardDependancies(XTigerTemplate t)
 #ifdef TEMPLATES
   if (t)
   {
-	Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
-													  (void*)PREDEFINED_LIB));  
-	if(!Template_IsLibrary(t))
+	Template_AddLibraryDeclarations (t, (XTigerTemplate)HashMap_Get(Templates_Map,
+                                   (void*)PREDEFINED_LIB));
+	if (!Template_IsLibrary(t))
 	  {
-		if (DocumentTypes[t->doc]==docHTML)
-		  {
-			Template_AddLibraryDeclarations (t,(XTigerTemplate)HashMap_Get(Templates_Map,
+		if (DocumentTypes[t->doc] == docHTML)
+			Template_AddLibraryDeclarations (t, (XTigerTemplate)HashMap_Get(Templates_Map,
 															  (void*)HTML_LIBRARY));  
-		  }
 	  }
   }      
 
@@ -1035,7 +1033,7 @@ Declaration Template_DeclareNewElement (const XTigerTemplate t, const char *name
   if (!t)
     return NULL;
 
-  Declaration dec = Declaration_Create (t, name, UnknownNat);
+  Declaration dec = Declaration_Create (t, name, XmlElementNat);
   dec->elementType.name = TtaStrdup(name);
   Template_AddDeclaration (t, dec);
   return dec;
@@ -1044,7 +1042,23 @@ Declaration Template_DeclareNewElement (const XTigerTemplate t, const char *name
 #endif /* TEMPLATES */
 }
 
+/*----------------------------------------------------------------------
+  Add a declaration to a template for a new XML element.
+  ----------------------------------------------------------------------*/
+Declaration Template_DeclareNewUnknown (const XTigerTemplate t, const char *name)
+{
+#ifdef TEMPLATES
+  if (!t)
+    return NULL;
 
+  Declaration dec = Declaration_Create (t, name, UnknownNat);
+  dec->elementType.name = TtaStrdup(name);
+  Template_AddDeclaration (t, dec);
+  return dec;
+#else /* TEMPLATES */
+  return NULL;
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   Add a declaration to a template for a new union.
@@ -1121,7 +1135,7 @@ void Template_AddDeclaration (XTigerTemplate t, Declaration dec)
 void Template_RemoveUnknownDeclaration (XTigerTemplate t, Declaration dec)
 {
 #ifdef TEMPLATES
-  if (!t || !dec || dec->nature!=UnknownNat)
+  if (!t || !dec || dec->nature != UnknownNat)
     return;
   SearchSet_DestroyElement (t->unknowns, SearchSet_Find(t->unknowns, dec));
 #endif /* TEMPLATES */
@@ -1257,7 +1271,7 @@ Declaration Template_GetUnionDeclaration (const XTigerTemplate t, const char *na
 void Template_Clear (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if(t)
+  if (t)
     {
       SearchSet_Empty(t->unions);
       SearchSet_Empty(t->components);
@@ -1939,18 +1953,18 @@ ThotBool Template_IsPredefined(XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    return (t->state&templPredefined)!=0;
+    return (t->state & templPredefined) != 0;
 #endif /* TEMPLATES */
   return FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool Template_IsLibrary(XTigerTemplate t)
+ThotBool Template_IsLibrary (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    return (t->state&templLibrary)!=0;
+    return (t->state & templLibraryFlag) != 0;
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -1961,7 +1975,7 @@ ThotBool Template_IsTemplate(XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    return (t->state&templTemplate)!=0;
+    return (t->state & templTemplate) != 0;
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -1973,29 +1987,29 @@ ThotBool Template_IsInstance(XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    return (t->state&templInstance)!=0;
+    return (t->state & templInstance) != 0;
 #endif /* TEMPLATES */
   return FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool Template_IsLoaded(XTigerTemplate t)
+ThotBool Template_IsLoaded (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    return (t->state&templloaded)!=0;
+    return (t->state & templloaded) != 0;
 #endif /* TEMPLATES */
   return FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool Template_IsInternal(XTigerTemplate t)
+ThotBool Template_IsInternal (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    return (t->state&templInternal)!=0;
+    return (t->state & templInternal) != 0;
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -2236,7 +2250,7 @@ void Template_FilterInsertableElement (XTigerTemplate t, SearchSet set,
               dec = (Declaration) node->elem;
               if (dec)
                 {
-                  if (dec->nature == XmlElementNat &&
+                  if (dec->nature != ComponentNat &&
                       Declaration_GetElementType(dec, &type))
                     {
                       if (insertafter)
@@ -2295,9 +2309,9 @@ char* Template_ExpandTypes (XTigerTemplate t, const char* types,
   if (t)
   {
     /* Set of type names to expand. */
-    SearchSet       set   = Template_GetDeclarationSetFromNames(t, types, true);
+    SearchSet       set;
     Declaration     dec;
-    DLList          list    = NULL;
+    DLList          list = NULL;
     ForwardIterator iter;
     SearchSetNode   node;
     DLListNode      listnode;
@@ -2305,6 +2319,7 @@ char* Template_ExpandTypes (XTigerTemplate t, const char* types,
     char            result[MAX_LENGTH];
 
     /* Fill a string with results.*/
+    set = Template_GetDeclarationSetFromNames(t, types, true);
     if (set)
       {
         if (refelem)
@@ -2571,14 +2586,19 @@ ThotBool Template_CanInsertTypeInBagElement (Document doc, const char* type, Ele
   ThotBool res = FALSE;
 #ifdef TEMPLATES
   XTigerTemplate  t;
-  char *bagTypes;
+  char           *bagTypes,  *listtypes = NULL;
   
   t = GetXTigerDocTemplate(doc);
   if (t && bag)
   {
-    bagTypes = GetAttributeStringValueFromNum(bag, Template_ATTR_types, NULL);
-    res = Template_CanInsertTypeInBag(doc, type, bagTypes);
-    TtaFreeMemory(bagTypes);
+    bagTypes = GetAttributeStringValueFromNum (bag, Template_ATTR_types, NULL);
+    if (bagTypes)
+      {
+        listtypes = Template_ExpandTypes (t, bagTypes, NULL, FALSE);
+        res = Template_CanInsertTypeInBag (doc, type, listtypes);
+        TtaFreeMemory (listtypes);
+        TtaFreeMemory (bagTypes);
+      }
   }
 #endif /* TEMPLATES */
   return res;

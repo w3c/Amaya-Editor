@@ -151,20 +151,23 @@ ThotBool NeedAMenu (Element el, Document doc)
             }
         }
     }
+
   // When only one type is possible add the currentType attribute
-  if (!res &&
-      (elType.ElTypeNum == Template_EL_useEl ||
-       elType.ElTypeNum == Template_EL_useSimple))
+  if (elType.ElTypeNum == Template_EL_useEl ||
+       elType.ElTypeNum == Template_EL_useSimple)
     {
       attributeType.AttrTypeNum = Template_ATTR_currentType;
       att = TtaGetAttribute (el, attributeType);
-      if (!att)
+      if (att == NULL && !res)
         {
-          // create this attribute
+          // there is only one type create this attribute
           att = TtaNewAttribute (attributeType);
           TtaAttachAttribute (el, att, doc);
+          TtaSetAttributeText(att, types, el, doc);
         }
-      TtaSetAttributeText(att, types, el, doc);
+      else if (att)
+        // the use is already instantiated
+        res = FALSE;
     }
   TtaFreeMemory (types);
   return res;

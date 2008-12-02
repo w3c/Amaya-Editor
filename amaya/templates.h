@@ -11,20 +11,14 @@
 #define Template_Current_Version "0.9"
 
 
-typedef enum _TemplateFlag
-{
-  templNone = 0,
-  templTemplate    = 1 << 0,  // Template
-  templLibraryFlag = 1 << 1,   // Library (implies template).
-  templLibrary     = templLibraryFlag+templTemplate,
-  templInstance    = 1 << 2,  // Instance of template
-  
-  templloaded      = 1 << 4,  // Template is really loaded.
-  
-  templInternal    = 1 << 8,  // Internal only, no edited document.
-  templPredefined  = 1 << 9   // predefined library (base or html).
-}TemplateFlag;
-
+ #define templNone        0
+ #define templTemplate    1  //#define template
+ #define templLibraryFlag 2   // Library (implies#define template).
+ #define templLibrary     3
+ #define templInstance    4  // Instance of#define template 
+ #define templloaded      8  //#define template is really loaded.
+ #define templInternal    16  // Internal only, no edited document.
+ #define templPredefined  32   // predefined library (base or html).
 
 struct _XTigerTemplate;
 typedef struct _XTigerTemplate *XTigerTemplate;

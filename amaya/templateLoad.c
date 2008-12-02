@@ -105,7 +105,7 @@ void Template_CheckTypesAttribute (XTigerTemplate t, Element el)
       {
         if ( Template_GetDeclaration (t, (const char*)node->elem) == NULL)
           //TODO_XTIGER We must add the current namespace
-          Template_DeclareNewElement (t, (const char*)node->elem);
+          Template_DeclareNewUnknown (t, (const char*)node->elem);
       }
     TtaFreeMemory(iter);
     TtaFreeMemory (types);
@@ -161,15 +161,13 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
               old = Template_GetDeclaration(t, name);
               if (old)
                 {
-                  if (old->nature==UnknownNat)
+                  if (old->nature == UnknownNat || old->nature == ComponentNat)
                     {
                       Template_RemoveUnknownDeclaration(t, old);
                       Template_DeclareNewComponent (t, name, el, 0);                      
                     }
                   else
-                    {
-                      Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_MULTICOMP), name);
-                    }
+                    Template_AddError(t, TtaGetMessage(AMAYA, AM_TEMPLATE_ERR_MULTICOMP), name);
                 }
               else
                 Template_DeclareNewComponent (t, name, el, 0);
@@ -440,12 +438,14 @@ DocumentType LoadTemplate (Document doc, char* templatename)
     // The template is already loaded, use it.
     docType = DocumentTypes[t->doc];
 
-  // register the reference to the template document
-  TtaAddDocumentReference(t->doc);
-  return docType;
-#else /* TEMPLATES */
-  return docFree;
+  if (t)
+    {
+      // register the reference to the template document
+      TtaAddDocumentReference(t->doc);
+      return docType;
+    }
 #endif /* TEMPLATES */
+  return docFree;
 }
 
 
