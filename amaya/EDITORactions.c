@@ -106,6 +106,7 @@ void InsertScript (Document document, View view)
   RemoveDeprecatedElements
   Remove <font>, <basefont>, <center>, <dir>, <menu>,
   <applet>, <isindex>, <s>, <u>, <strike>
+  Remove lang and style attributes except on <span> elements
   -----------------------------------------------------------------------*/
 void RemoveDeprecatedElements (Document doc, View view)
 {
@@ -115,7 +116,8 @@ void RemoveDeprecatedElements (Document doc, View view)
   AttributeType       attrType, attrType1, attrType2;
   Attribute           attr;
   DisplayMode         dispMode;
-  char               *s;
+  char               *s, message[500];
+  int                 count = 0;
   ThotBool            modified = FALSE, closeUndo;
   
   /* get the insert point */
@@ -188,6 +190,7 @@ void RemoveDeprecatedElements (Document doc, View view)
                       TtaRegisterElementCreate (child, doc);
                       TtaNextSibling (&child);
                     }
+                  count++;
                   TtaRegisterElementDelete (old, doc);
                   TtaDeleteTree (old, doc);
                   modified = TRUE;
@@ -206,6 +209,7 @@ void RemoveDeprecatedElements (Document doc, View view)
                       TtaSetAttributeValue (attr, HTML_ATTR_TextAlign_VAL_center_, el, doc);
                       TtaRegisterAttributeCreate (attr, el, doc);
                     }
+                  count++;
                   modified = TRUE;
                 }
               else
@@ -214,6 +218,7 @@ void RemoveDeprecatedElements (Document doc, View view)
                   TtaChangeTypeOfElement (el, doc, HTML_EL_Unnumbered_List);
                   /* register the change in the undo sequence */
                   TtaRegisterElementTypeChange (el, HTML_EL_Unnumbered_List, doc);
+                  count++;
                   modified = TRUE;
                 }
             }
@@ -253,6 +258,7 @@ void RemoveDeprecatedElements (Document doc, View view)
                 }
               TtaRegisterElementDelete (old, doc);
               TtaDeleteTree (old, doc);
+              count++;
               modified = TRUE;
             }
         }
@@ -269,12 +275,14 @@ void RemoveDeprecatedElements (Document doc, View view)
             {
               elType = TtaGetElementType (el);
               if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-                  (elType.ElTypeNum != HTML_EL_Division && elType.ElTypeNum != HTML_EL_Span))
+                  (/*elType.ElTypeNum != HTML_EL_Division && */
+                   elType.ElTypeNum != HTML_EL_Span))
                 {
                   parent = TtaGetParent (el);
                   TtaRegisterAttributeDelete (attr, el, doc);
                   TtaRemoveAttribute (el, attr, doc);
                   el = parent;
+                  count++;
                   modified = TRUE;
                 }
             }
@@ -284,15 +292,12 @@ void RemoveDeprecatedElements (Document doc, View view)
       if (closeUndo)
         TtaCloseUndoSequence (doc);
       if (modified)
-        {
         TtaSetDocumentModified (doc);
-        // work done
-        TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_DOCUMENT_LOADED);
-        }
-      else
-        TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_NOTHING_TO_REPLACE);
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, dispMode);
+      // display the result
+      sprintf (message, TtaGetMessage (AMAYA, AM_CHANGE_NUMBER), count);
+      InitConfirm (doc, 1, message);
     }
 }
 
