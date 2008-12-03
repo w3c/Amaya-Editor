@@ -347,7 +347,7 @@
 341 Please select an element
 342 All CSS
 343 CSS style rules applied to the <%s> element\n
-344 Blue lines are links activated by a double (or a single) click\n
+344 Colored lines are links activated by a double (or a single) click\n
 345 Load objects (object, embed, iframe)
 346 No style rule for this element
 347 No insert position defined. Please select first

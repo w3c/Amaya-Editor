@@ -5716,18 +5716,19 @@
 	<message xml:lang="ja">CSS スタイルルールが &lt;%s> 要素に適用されました\n</message>
 </label>
 <label define="AM_LINK_LINE">
-	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
-	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click\n</message>
-	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n</message>
-	<message xml:lang="es">Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n</message>
-	<message xml:lang="de">Blaue Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n</message>
-	<message xml:lang="ru">Голубые линии являются ссылками и активируются при двойном (или одинарном) щелчке по ним\n</message>
+	<message xml:lang="en">Colored lines are links activated by a double (or a single) click\n</message>
+	<message xml:lang="fr">Les lignes colorées sont des liens activés par un double (ou simple) click\n</message>
+	<message xml:lang="it">Le righe colorate sono collegamenti attivati con un doppio (o semplice) clic\n</message>
+	<message xml:lang="es">Cada línea de código es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n</message>
+	<message xml:lang="de">Fabige Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n</message>
+	<message xml:lang="ru">Покрашенные линии являются ссылками и активируются при двойном (или одинарном) щелчке по ним\n</message>
 	<message xml:lang="hu">A kék sorok dupla (vagy egyszeres) kattintással aktiválható kapcsok\n</message>
 	<message xml:lang="ka">ლურჯი ხაზები ბმას წარმოადგენს და აქტივირდება ორმაგი (ან ერთმაგი) დაწკაპვით\n</message>
-	<message xml:lang="cn">Blue lines are links activated by a double (or a single) click\n</message>
-	<message xml:lang="tw">Blue lines are links activated by a double (or a single) click\n</message>
+	<message xml:lang="cn">种族分界线双重(或单身)点击激活的链接\n</message>
+	<message xml:lang="tw">种族分界线雙重(或单身)點擊激活的鏈接\n</message>
 	<message xml:lang="sk">Modré riadky sú prepojenia aktivovateľné dvojitým (alebo jednoduchým) kliknutím\n</message>
-	<message xml:lang="ja">青いラインは、シングルクリックもしくはダブルクリックでアクティブになっています\n</message>
+	<message xml:lang="ja">人種の壁は二重(または単一)かちりと言う音によって活動化させるリンクである\n</message>
+	<message xml:lang="pt">As linhas coloridas são ligações ativadas (ou um único) por um clique dobro\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
 	<message xml:lang="en">Load objects (object, embed, iframe)</message>

@@ -343,7 +343,7 @@
 341 Sélectionnez un élément
 342 Toutes les CSS
 343 Règles de style CSS appliqué l'élément <%s> \n
-344 Les lignes bleues sont des liens activés par un double (ou simple) click\n
+344 Les lignes colorées sont des liens activés par un double (ou simple) click\n
 345 Charger les objets (object, embed, iframe)
 346 Pas de règle de style pour cet élément
 347 Pas de position d'insertion définie. Sélectionnez d'abord

@@ -343,7 +343,7 @@
 341 Por favor, seleccione un elemento
 342 Todos las hojas de estilo
 343 Reglas de estilo aplicadas al elemento <%s>\n
-344 Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
+344 Cada línea de código es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
 345 Cargar objetos (object, embed, iframe)
 346 No hay regla de estilo para este elemento
 347 El punto de inserción no está definido. Por favor, seleccionelo antes.
