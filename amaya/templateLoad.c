@@ -22,6 +22,7 @@
 #include "templateDeclarations_f.h"
 #include "templateUtils_f.h"
 #include "templateInstantiate_f.h"
+#include "Templatebuilder_f.h"
 #include "templateLoad_f.h"
 
 #include "AHTURLTools_f.h"
@@ -138,7 +139,7 @@ void Template_AddHeadParameters(XTigerTemplate t, Element el)
 void Template_ParseDeclarations (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
-  ElementType  type;
+  ElementType  elType;
   Element      child;
   char        *name = NULL, *include = NULL, *exclude = NULL;
   Declaration old = NULL;
@@ -149,10 +150,10 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
   if (el == NULL)
     el = TtaGetMainRoot (t->doc);
 
-  type = TtaGetElementType (el);	
-  if (!strcmp (TtaGetSSchemaName (type.ElSSchema),"Template"))
+  elType = TtaGetElementType (el);	
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"Template"))
     {
-      switch (type.ElTypeNum)
+      switch (elType.ElTypeNum)
         {
         case Template_EL_component:
           name = GetAttributeStringValueFromNum (el, Template_ATTR_name, NULL);
@@ -190,6 +191,12 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
         case Template_EL_useEl:
         case Template_EL_useSimple:
           Template_CheckTypesAttribute (t, el);
+         /*  elType = TtaGetElementType (el); */
+/*           if (elType.ElTypeNum == Template_EL_useEl) */
+/*             { */
+/*               if (!NeedAMenu (el, t->doc)) */
+/*                 TtaChangeTypeOfElement (el, t->doc, Template_EL_useSimple); */
+/*             } */
           break;
         default:
           break;
@@ -214,7 +221,7 @@ void Template_ParseDeclarations (XTigerTemplate t, Element el)
 void Template_PreParseDeclarations (XTigerTemplate t, Element el)
 {
 #ifdef TEMPLATES
-  ElementType type;
+  ElementType elType;
   
   if (!t)
     return;
@@ -222,10 +229,10 @@ void Template_PreParseDeclarations (XTigerTemplate t, Element el)
   if (el == NULL)
     el = TtaGetMainRoot(t->doc);
 
-  type = TtaGetElementType (el);  
-  if (!strcmp (TtaGetSSchemaName (type.ElSSchema),"Template"))
+  elType = TtaGetElementType (el);  
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"Template"))
     {
-      switch (type.ElTypeNum)
+      switch (elType.ElTypeNum)
         {
         case Template_EL_head:
           Template_AddHeadParameters(t,el);

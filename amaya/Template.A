@@ -56,11 +56,6 @@ ELEMENTS
       END;
 
 ATTRIBUTES
-   currentType :
-      BEGIN
-         AttrExport.Pre -> CurrentTypeWillBeExported;
-      END;
-
    name :
       BEGIN
         AttrMenu.Pre ->    TemplateNameAttrInMenu;

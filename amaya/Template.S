@@ -64,7 +64,7 @@ STRUCT
   useEl ( ATTR option = option_set, option_unset; title; types = TEXT; currentType = TEXT;  prompt = Yes_ )
      = ANY - ( head, union, import, component );
 
-  useSimple ( ATTR option; title; types; prompt)
+  useSimple ( ATTR option; title; types; currentType; prompt)
      = ANY - ( head, union, import, component );
 
   bag ( ATTR title; types ) 

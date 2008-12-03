@@ -1789,23 +1789,6 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  CurrentTypeWillBeExported
-  Check if the xt:currentType attribute can be exported
-  ----------------------------------------------------------------------*/
-ThotBool CurrentTypeWillBeExported (NotifyAttribute *event)
-{
-#ifdef TEMPLATES
-
-  if (!TtaGetDocumentAccessMode(event->document))
-    return TRUE;
-
-  if (IsTemplateDocument(event->document))
-    return TRUE;
-#endif /* TEMPLATES */
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
   TemplateAttrInMenu
   Called by Thot when building the Attributes menu for template elements.
   ----------------------------------------------------------------------*/
