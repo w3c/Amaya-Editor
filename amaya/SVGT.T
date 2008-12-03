@@ -331,11 +331,10 @@ RULES
            Ignore;
 	create SOT;
 	create 'text';
-	indent +6;
+	indent Suspend;
 	create attributes;
 	create '>';
-	indent -4;
-	indent -2 after;
+	indent Resume after;
 	create SCT after;
 	create 'text>\12' after;
 	END;
