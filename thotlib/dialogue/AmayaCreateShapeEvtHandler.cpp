@@ -74,32 +74,34 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaCreateShapeEvtHandler, wxEvtHandler)
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler (AmayaFrame * p_frame,
-                                                        Document doc, void *transform,
+                                                        Document doc, void *transform_f,
                                                         int ancestorX,
                                                         int ancestorY,
                                                         int canvasWidth,
                                                         int canvasHeight,
                                                         int shape_number,
+                                                        float ratio_wh,
                                                         int *x1, int *y1, int *x2, int *y2,
                                                         ThotBool *created)
   : wxEvtHandler()
-  ,finished(false)
   ,pFrame(p_frame)
   ,frameId(p_frame->GetFrameId())
-  ,document(doc)
-  ,transform(transform)
-  ,x0(ancestorX)
-  ,y0(ancestorY)
-  ,width(canvasWidth)
-  ,height(canvasHeight)
   ,shape(shape_number)
-  ,px1(x1)
-  ,py1(y1)
-  ,px2(x2)
-  ,py2(y2)
   ,created(created)
-  ,nb_points(0)
 {
+  document = doc;
+  ratio = ratio_wh;
+  x0 = ancestorX;
+  y0 = ancestorY;
+  px1 = x1;
+  py1 = y1;
+  px2 = x2;
+  py2 = y2;
+  finished = false;
+  nb_points = 0;
+  width = canvasWidth;
+  height = canvasHeight;
+  transform = transform_f;
   if (pFrame)
     {
       /* attach this handler to the canvas */
@@ -231,7 +233,7 @@ void AmayaCreateShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-  int x,y;
+  int x, y, d;
 
   /* Clear the shape */
   DrawShape ();
@@ -240,11 +242,24 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
   x = event.GetX();
   y = event.GetY();
 
-  if (event.ShiftDown())
+  if (event.ShiftDown() && nb_points > 0)
     {
-      if (nb_points > 0 && (shape == 0 || shape == 12 || shape == 13))
+      if (shape == 0 || shape == 12 || shape == 13)
         /* It's a line or an arrow and the shift button is pressed */
         ApproximateAngleOfLine(15, *px1, *py1, &x, &y);
+      else
+        {
+          if (x - *px2 >= y - *py2)
+            {
+              d =  x - *px2;
+              y = (int)(*py2 + (d * ratio));
+            }
+          else
+            {
+              d =  y - *py2;
+              x = (int)(*px2 + (d / ratio));
+            }
+        }
     }
   
   MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,

@@ -1710,6 +1710,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   selEl = first;
   newEl = NULL;
   child = NULL;
+  lx = ly = 1; // default width height
   docModified = TtaIsDocumentModified (doc);
   /* Are we in a drawing? */
   docSchema = TtaGetDocumentSSchema (doc);
@@ -2048,7 +2049,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
                 }
               else
                 h = 200;
-
+              // default width height
+              lx = w;
+              ly = h;
               if (isFormattedView)
                 created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
                                             entry, &x1, &y1, &x2, &y2,
@@ -2058,8 +2061,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   /* TODO: add a dialog box ? */
                   created = FALSE;
                   x1 = y1 = 0;
-                  lx = 500;
-                  ly = 300;
                 }
               
               /* mark the new Coordinate System */
@@ -2107,6 +2108,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
       if (entry == -1)
         {
           /* <svg/> */
+          lx = 500;
+          ly = 300;
           if (isFormattedView)
             {
               created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
@@ -2117,8 +2120,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
             {
               /* TODO: add a dialog box ? */
               x1 = y1 = 0;
-              lx = 500;
-              ly = 300;
               created = TRUE;
             }
 
@@ -2143,6 +2144,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
             |             |
             3-------------4
           */
+          lx = ly = 100;
           if (isFormattedView)
             {
               created = AskSurroundingBox(doc, svgAncestor, svgCanvas,
@@ -2156,7 +2158,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
               x2 = x4 = 100;
               y1 = y2 = 0;
               y3 = y4 = 100;
-              lx = ly = 100;
               created = TRUE;
             }
 

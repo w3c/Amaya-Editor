@@ -398,6 +398,8 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
   ancestorX and ancestorY are the absolute position of the SVG ancestor,
   transform is a the matrix that allows to get coordinates of a point in
   the Canvas from its coordinates in the Ancestor.
+  Parameters lx and ly give the initial expected width height and are used
+  to calculate the width/height ratio.
 
   --------------------
   |  |------|        |
@@ -421,6 +423,7 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
 {
   AmayaFrame                 *p_frame;
   AmayaCreateShapeEvtHandler *p_CreateShapeEvtHandler;
+  float                       ratio;
   int                         canvasWidth, canvasHeight;
   ThotEvent                   ev;
   ThotBool                    created = FALSE;
@@ -438,6 +441,11 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
       ancestorY +=  svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
     }
   p_frame = FrameTable[frame].WdFrame;
+  // 
+  if (*lx > 0 && *ly > 0)
+    ratio = (float)(*ly) / (float)(*lx);
+  else
+    ratio = 1.;
   p_CreateShapeEvtHandler = new AmayaCreateShapeEvtHandler( p_frame,
                                                             doc,
                                                             inverseCTM,
@@ -446,6 +454,7 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
                                                             canvasWidth,
                                                             canvasHeight,
                                                             shape,
+                                                            ratio,
                                                             x1, y1,
                                                             x4, y4,
                                                             &created
