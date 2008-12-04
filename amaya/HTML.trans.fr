@@ -81,11 +81,10 @@ Paragraphe:(address{*+});
 !between lists
 !!!!!!!!!!!!!!
 
-Liste de définition:*{(li{(list:*{(li2:li)+}|other:*)+})+};
+Liste de définition:*{(li{(list:*{(li{li2:(*)+})+}|other:*)+})+};
 	{
-	other > dl:dt;
-	list > dl:dd;
-	li2 > dl.dd:;
+  li2 > dl:dd.*;
+  other > dl:dt;
 	}
 
 Liste à puces:(dl{(dt|dd{(*)+})+})+;

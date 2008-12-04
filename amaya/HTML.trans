@@ -80,11 +80,10 @@ Paragraph:(address{*+});
 
 !between lists
 !!!!!!!!!!!!!!
-Definition list:*{(li{(list:*{(li2:li)+}|other:*)+})+};
+Definition list:*{(li{(list:*{(li{li2:(*)+})+}|other:*)+})+};
 	{
-	other > dl:dt;
-	list > dl:dd;
-	li2 > dl.dd:;
+  li2 > dl:dd.*;
+  other > dl:dt;
 	}
 
 Bulleted list:(dl{(dt|dd{(*)+})+})+;

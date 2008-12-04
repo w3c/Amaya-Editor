@@ -83,11 +83,10 @@ Párrafo:(address{*+});
 ! Entre listas
 !!!!!!!!!!!!!!
 
-Lista de definición:*{(li{(list:*{(li2:li)+}|other:*)+})+};
+Lista de definición:*{(li{(list:*{(li{li2:(*)+})+}|other:*)+})+};
 	{
-	other > dl:dt;
-	list > dl:dd;
-	li2 > dl.dd:;
+  li2 > dl:dd.*;
+  other > dl:dt;
 	}
 
 Lista no ordenada:(dl{(dt|dd{(*)+})+})+;
