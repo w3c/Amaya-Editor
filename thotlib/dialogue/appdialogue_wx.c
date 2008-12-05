@@ -73,6 +73,7 @@
 #include "AmayaActionEvent.h"
 #include "AmayaHelpWindow.h"
 #include "AmayaWindowIterator.h"
+#include "selectionapi_f.h"
 
 
 static int g_logerror_action_id = -1;
@@ -1882,6 +1883,11 @@ void TtaRegisterOpenURLCallback( void (*callback) (void *) )
 #ifdef _WX
 void TtaSendDataToPanel( int panel_type, AmayaParams& params )
 {
+  if (!TtaIsSelectionUnique () &&
+      (panel_type == WXAMAYA_PANEL_STYLE ||
+       panel_type == WXAMAYA_PANEL_ATTRIBUTE ||
+       panel_type == WXAMAYA_PANEL_XML))
+    return;
   AmayaWindow * activeWindow = TtaGetActiveWindow();
   if(activeWindow)
     activeWindow->SendDataToPanel(panel_type, params);
@@ -2466,6 +2472,8 @@ void TtaRaisePanel(int panel_type)
   ----------------------------------------------------------------------*/
 void TtaRaiseDoctypePanels(int doctype)
 {
+  if (!TtaIsSelectionUnique ())
+    return;
   AmayaWindow * activeWindow = TtaGetActiveWindow();
   if(activeWindow)
     activeWindow->RaiseDoctypePanels(doctype);

@@ -203,11 +203,10 @@ asociar estilos a los documentos mediantes Hojas de estilo en Cascada (CSS).</p>
 <h2>¿Sabía que...?</h2>
 <dl>
   <dt>Elija su perfil</dt>
-    <dd><p>Amaya pone a su disposición 5 perfiles distintos que adaptan los
+    <dd>Amaya pone a su disposición 5 perfiles distintos que adaptan los
       menús y barras de herramientas a sus necesidades. En cualquier perfil,
       los paneles de herramientas se pueden personalizar y mostrar a derecha o
-      izquierda (véase Preferencias).</p>
-    </dd>
+      izquierda (véase Preferencias).</dd>
   <dt>Amaya es un editor estructurado</dt>
     <dd>Al pulsar la tecla F2 (o Escape), se selecciona la estructura de nivel
       superior, de manera que las funciones de edición (copiar, pegar,
