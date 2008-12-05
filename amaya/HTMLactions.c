@@ -2463,7 +2463,9 @@ ThotBool DoubleClick (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool SimpleClick (NotifyElement *event)
 {
-#ifdef LC
+  ThotBool  usedouble;
+
+#ifdef RDFa
 #define MAX_NS 20
   char     *declarations[MAX_NS];
   char     *prefixes[MAX_NS];
@@ -2491,8 +2493,7 @@ ThotBool SimpleClick (NotifyElement *event)
 	i = MAX_NS;
     }
   printf ("\n");
-#endif /* LC */
-  ThotBool  usedouble;
+#endif /* RDFa */
 
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);
   if (usedouble &&
@@ -3991,8 +3992,10 @@ void SelectionChanged (NotifyElement *event)
   TtaSelectView (SelectionDoc, 1);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
+#ifdef RDFA
   /* update the list of NS declaration */
   SynchronizeNSDeclaration (event);
+#endif
 
   UnFrameMath ();
 

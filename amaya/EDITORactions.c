@@ -1574,15 +1574,22 @@ static int GiveNSDeclaration (Document document, Element el, char *buf)
   ----------------------------------------------------------------------*/
 void UpdateNSDeclaration (Document document, View view)
 {
+  Element   root = NULL;
   char      buf[MAX_TXT_LEN];
   int       nb = 0;
   Element   el;
   int       f, l;
   void     *p_dlg;
 
+  /*
   TtaGiveFirstSelectedElement (document, &el, &f, &l);
   if (el != NULL)
     nb = GiveNSDeclaration (document, el, buf);
+  */
+
+  root = TtaGetRootElement (document);
+  if (root)
+    nb = GiveNSDeclaration (document, root, buf);
 
       // Create the dialog
       p_dlg = CreateListNSDlgWX (BaseDialog + ListNSForm,
@@ -1632,13 +1639,16 @@ void SynchronizeNSDeclaration (NotifyElement *event)
 void AddaNSDeclaration (char *decl)
 {
   Document  doc;
-  Element   el;
+  Element   el = NULL;
   int       f, l;
   char     *prefix = NULL, *url = NULL;
 
   doc = CurrentDocument;
+  /*
   TtaGiveFirstSelectedElement (doc, &el, &f, &l);
-  if (el != NULL)
+  */
+  el = TtaGetRootElement (doc);
+  if (el)
     {
       url = strstr (decl, "=");
       if (url)
@@ -1665,13 +1675,16 @@ void AddaNSDeclaration (char *decl)
 void RemoveaNSDeclaration (char *decl)
 {
   Document  doc;
-  Element   el;
+  Element   el = NULL;
   int       f, l;
   char     *prefix = NULL, *url = NULL;
 
   doc = CurrentDocument;
+  /*
   TtaGiveFirstSelectedElement (doc, &el, &f, &l);
-  if (el != NULL)
+  */
+  el = TtaGetRootElement (doc);
+  if (el)
     {
       url = strstr (decl, "=");
       if (url)
