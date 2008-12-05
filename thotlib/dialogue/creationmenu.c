@@ -137,11 +137,8 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
   PtrSSchema     pSS;
   char           menuBuf[MAX_MENU_LENGTH];
   int            nbItem, height, firstChar, lastChar;
-
   AmayaParams    p;
   int            typeNum;
-
-  ThotBool       withTextInput = FALSE;
 
   UserErrorCode = 0;
   height = 4;
@@ -159,7 +156,10 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
           pSelDoc == pDoc && firstSel)
         {
           if (firstSel->ElTerminal && firstSel->ElParent)
-            firstSel = firstSel->ElParent;
+            {
+              firstSel = firstSel->ElParent;
+              lastSel = firstSel;
+            }
           pSS = firstSel->ElStructSchema;
         }
       else
@@ -168,28 +168,26 @@ static ThotBool UpdateXMLMenu (Document doc, View view)
           pSS = pDoc->DocSSchema;
           firstSel = NULL;
         }
-
-      menuBuf[0] = EOS;
-      withTextInput =  (strcmp (pSS->SsName, "HTML") &&
-                        strcmp (pSS->SsName, "SVG") &&
-                        strcmp (pSS->SsName, "MathML"));
-      if (strcmp (pSS->SsName, "TextFile") && withTextInput)
-        /* build the menu only for generic XML schemas */
-        nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
-
-      /* generate the form with two buttons Insert and Done */
-      p.param1 = nbItem;
-      p.param2 = (void*)menuBuf;
-      if (firstSel && nbItem)
+      if (firstSel == lastSel && pSS->SsIsXml)
         {
-          typeNum = firstSel->ElTypeNumber;
-          p.param3 = (void*)(pSS->SsRule->SrElem[typeNum - 1]->SrName);
+          menuBuf[0] = EOS;
+          /* build the menu only for generic XML schemas */
+          nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
+          
+          /* generate the form with two buttons Insert and Done */
+          p.param1 = nbItem;
+          p.param2 = (void*)menuBuf;
+          if (firstSel && nbItem)
+            {
+              typeNum = firstSel->ElTypeNumber;
+              p.param3 = (void*)(pSS->SsRule->SrElem[typeNum - 1]->SrName);
+            }
+          else
+            p.param3 = (void*)"";
+          /* the dialog reference used to call the right callback in thotlib */
+          p.param4 = (void*)(NumFormElemToBeCreated);
+          TtaSendDataToPanel( WXAMAYA_PANEL_XML, p );
         }
-      else
-        p.param3 = (void*)"";
-      /* the dialog reference used to call the right callback in thotlib */
-      p.param4 = (void*)(NumFormElemToBeCreated);
-      TtaSendDataToPanel( WXAMAYA_PANEL_XML, p );
       return (nbItem == 0);
     }
   return FALSE;
