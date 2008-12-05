@@ -345,11 +345,8 @@ RULES
            Ignore;
 	create SOT;
 	create 'tspan';
-	indent +7;
 	create attributes;
 	create '>';
-	indent -5;
-	indent -2 after;
 	create SCT after;
 	create 'tspan>\12' after;
 	END;
@@ -1639,8 +1636,8 @@ RULES
 	if within tref and
            not within desc and not within metadata and not within title
             Ignore;
-        if immediately within text_
-	    create '\12' after;
+ { if immediately within text_
+	    create '\12' after;}
 	END;
 
    GRAPHICS_UNIT:
