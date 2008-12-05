@@ -2514,6 +2514,113 @@ void CreateDefinitionList (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateDefinitionTerm (Document doc, View view)
 {
+  ElementType   elType;
+  Element       dd, el, set, parent, sibling, list, child;
+  int           firstChar, lastChar;
+
+  if (TtaIsSelectionUnique ())
+    {
+      // check if a <dd> is selected
+      TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_Definition &&
+          !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+      {
+        // get the enclosing Term_List
+        parent = TtaGetParent(el);
+        // check if a Definitions element follows the Term_List
+        list = parent;
+        TtaPreviousSibling (&list);
+        if (list)
+          {
+            elType = TtaGetElementType (list);
+            if (elType.ElTypeNum != HTML_EL_Term_List ||
+                strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+              list = NULL;
+          }
+
+        // check if there is a previous definition
+        sibling = el;
+        TtaPreviousSibling (&sibling);
+        TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+        if (sibling)
+          {
+            // create a new Definition_Item set
+            sibling = el;
+            TtaNextSibling (&sibling);
+            parent = TtaGetParent (parent);
+            elType.ElTypeNum = HTML_EL_Definition_Item;
+            set = TtaNewElement (doc, elType);
+            TtaInsertSibling (set, parent, FALSE, doc);
+            // create a new Term list
+            elType.ElTypeNum = HTML_EL_Term_List;
+            list = TtaNewElement (doc, elType);
+            TtaInsertFirstChild  (&list, set, doc);
+            if (sibling)
+              {
+                // create a new Definition list after
+                elType.ElTypeNum = HTML_EL_Definitions;
+                parent = TtaNewElement (doc, elType);
+                TtaInsertSibling (parent, list, FALSE, doc);
+                // move all next terms
+                child = NULL;
+                while (sibling)
+                  {
+                    dd = sibling;
+                    TtaNextSibling (&sibling);
+                    TtaRegisterElementDelete (dd, doc);
+                    TtaRemoveTree (dd, doc);
+                    if (child)
+                      TtaInsertSibling (dd, child, TRUE, doc);
+                    else
+                      TtaInsertFirstChild  (&dd, parent, doc);
+                    child = dd;
+                  }
+              }
+            TtaRegisterElementCreate (set, doc);
+          }
+
+        // transform a <dd> into a <dt>
+        parent = TtaGetParent(el);
+        set = TtaGetParent(parent);
+        TtaRegisterElementDelete (el, doc);
+        TtaRemoveTree (el, doc);
+        TtaChangeTypeOfElement (el, doc, HTML_EL_Term);
+        if (TtaGetFirstChild (parent) == NULL)
+          {
+            // remove empty term list
+            TtaRegisterElementDelete (parent, doc);
+            TtaDeleteTree (parent, doc);
+            parent = NULL;
+          }
+        if (list == NULL)
+          {
+            // create a new Definitions list
+            elType.ElTypeNum = HTML_EL_Term_List;
+            list = TtaNewElement (doc, elType);
+            if (parent)
+              TtaInsertSibling (list, parent, TRUE, doc);
+            else
+              TtaInsertFirstChild  (&list, set, doc);
+            // insert the term there
+            TtaInsertFirstChild  (&el, list, doc);
+            TtaRegisterElementCreate (list, doc);
+          }
+        else
+          {
+            child = TtaGetLastChild (list);
+            if (child)
+              TtaInsertSibling (el, child, FALSE, doc);
+            else
+              TtaInsertFirstChild  (&el, list, doc);
+            TtaRegisterElementCreate (el, doc);
+          }
+
+        TtaSelectElement (doc, el);
+        TtaCloseUndoSequence (doc);
+        return;
+      }      
+    }
   CreateHTMLelement (HTML_EL_Term, doc);
 }
 
@@ -2522,6 +2629,112 @@ void CreateDefinitionTerm (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateDefinitionDef (Document doc, View view)
 {
+  ElementType   elType;
+  Element       dt, el, set, parent, sibling, list, child;
+  int           firstChar, lastChar;
+
+  if (TtaIsSelectionUnique ())
+    {
+      // check if a <dt> is selected
+      TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_Term &&
+          !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+      {
+        // get the enclosing Term_List
+        parent = TtaGetParent(el);
+        // check if a Definitions element follows the Term_List
+        list = parent;
+        TtaNextSibling (&list);
+        if (list)
+          {
+            elType = TtaGetElementType (list);
+            if (elType.ElTypeNum != HTML_EL_Definitions ||
+                strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+              list = NULL;
+          }
+        // check if there is a next term
+        sibling = el;
+        TtaNextSibling (&sibling);
+        TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+        if (sibling)
+          {
+            // create a new Definition_Item set
+            parent = TtaGetParent (parent);
+            elType.ElTypeNum = HTML_EL_Definition_Item;
+            set = TtaNewElement (doc, elType);
+            TtaInsertSibling (set, parent, FALSE, doc);
+            // create a new Term list
+            elType.ElTypeNum = HTML_EL_Term_List;
+            parent = TtaNewElement (doc, elType);
+            TtaInsertFirstChild  (&parent, set, doc);
+            if (list)
+              {
+                // move the following Definitions list
+                TtaRegisterElementDelete (list, doc);
+                TtaRemoveTree (list, doc);
+                TtaInsertSibling (list, parent, FALSE, doc);
+                TtaRegisterElementCreate (list, doc);
+                list = NULL;
+              }
+            // move all next terms
+            child = NULL;
+            while (sibling)
+              {
+                dt = sibling;
+                TtaNextSibling (&sibling);
+                TtaRegisterElementDelete (dt, doc);
+                TtaRemoveTree (dt, doc);
+                if (child)
+                  TtaInsertSibling (dt, child, TRUE, doc);
+                else
+                  TtaInsertFirstChild  (&dt, parent, doc);
+                child = dt;
+              }
+            TtaRegisterElementCreate (set, doc);
+          }
+
+        // transform a <dd> into a <dt>
+        parent = TtaGetParent(el);
+        set = TtaGetParent(parent);
+        TtaRegisterElementDelete (el, doc);
+        TtaRemoveTree (el, doc);
+        TtaChangeTypeOfElement (el, doc, HTML_EL_Definition);
+        if (TtaGetFirstChild (parent) == NULL)
+          {
+            // remove empty term list
+            TtaRegisterElementDelete (parent, doc);
+            TtaDeleteTree (parent, doc);
+            parent = NULL;
+          }
+        if (list == NULL)
+          {
+            // create a new Definitions list
+            elType.ElTypeNum = HTML_EL_Definitions;
+            list = TtaNewElement (doc, elType);
+            if (parent)
+              TtaInsertSibling (list, parent, FALSE, doc);
+            else
+              TtaInsertFirstChild  (&list, set, doc);
+            // insert the definition there
+            TtaInsertFirstChild  (&el, list, doc);
+            TtaRegisterElementCreate (list, doc);
+          }
+        else
+          {
+            child = TtaGetFirstChild (list);
+            if (child)
+              TtaInsertSibling (el, child, TRUE, doc);
+            else
+              TtaInsertFirstChild  (&el, list, doc);
+            TtaRegisterElementCreate (el, doc);
+          }
+
+        TtaSelectElement (doc, el);
+        TtaCloseUndoSequence (doc);
+        return;
+      }      
+    }
   CreateHTMLelement (HTML_EL_Definition, doc);
 }
 
