@@ -623,6 +623,10 @@ int Prof_BelongDoctype (const char *name, int docProfile, ThotBool RO)
     return 1; /* always active */
   if (!strcmp (name, "TtcCutSelection") ||
       !strcmp (name, "TtcDeleteSelection") ||
+      !strcmp (name, "ZoomIn") ||
+      !strcmp (name, "ZoomOut") ||
+      !strcmp (name, "ZoomNormal") ||
+      !strcmp (name, "SpellCheck") ||
       !strcmp (name, "PasteBuffer"))
     {
       if (RO)

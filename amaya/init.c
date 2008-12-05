@@ -2669,8 +2669,8 @@ void PostInitView(Document doc, DocumentType docType, int visibility,
             TtaSetMenuOn (doc, 1, Views);
           else
             {
-              if (DocumentTypes[doc] != docSource)
-                TtaSetMenuOff (doc, 1, Views);
+              //if (DocumentTypes[doc] != docSource)
+              //  TtaSetMenuOff (doc, 1, Views);
               TtaSetItemOff (doc, 1, Tools, BTransform);
 #ifdef ANNOTATIONS
               TtaSetMenuOff (doc, 1, Annotations_);
