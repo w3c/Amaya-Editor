@@ -12,34 +12,56 @@
 <body xml:lang="fr" lang="fr">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Templates.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Links.html.fr" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Links.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="PageBody" id="Changing">
+<h2 id="Nettoyage">Nettoyage du code</h2>
+
+<p>La plupart des traitements de texte sont capables d'exporter des documents
+en HTM, mais ils produisent souvent du mauvais code HTML. Amaya fournit une
+commande <strong>Nettoyage du code</strong> qui permet d'améliorer ces
+documents. Cette commande retire les éléments dépréciés comme 
+<code>&lt;font&gt;</code>, <code>&lt;basefont&gt;</code>,
+<code>&lt;center&gt;</code>, <code>&lt;dir&gt;</code>,
+<code>&lt;menu&gt;</code>, <code>&lt;applet&gt;</code>,
+<code>&lt;isindex&gt;</code>, <code>&lt;s&gt;</code>, <code>&lt;u&gt;</code>,
+et <code>&lt;strike&gt;</code> sans perdre le contenu de ces éléments.</p>
+
+<p>Ces outils ont aussi tendance à engendrer un grand nombre d'attributs
+<code>lang</code> et <code>style</code>. Une meilleure solution est de mettre
+cette information à plus haut niveau (un attribut <code>lang</code> sur
+<code>&lt;body&gt;</code> ou <code>&lt;div&gt;</code>, une règle de style
+générique au lieu d'un grand nombre d'attributs <code>style</code>).</p>
+
+<p>Le retrait de tous ces attributs  <code>lang</code> et <code>style</code>
+peut être une tâche fastidieuse qui est heureusement réalisée par la commande
+<strong>Nettoyage du code</strong>. Elle retire ces attributs sauf s'ils
+s'appliquent à un élément <code>&lt;span&gt;</code>.</p>
+
 <h2 id="Editer">Changer la structure d'un document</h2>
 
 <h3 id="Changer"><a name="L653">Changer le type de l'élément</a></h3>
 
 <p>Pour changer le type d'un élément existant, <a
-href="Selecting.html.fr">sélectionnez-le</a> et choisissez le nouveau type
-soit dans le menu <strong>Insérer</strong>, soit dans l'outil
+href="Selecting.html.fr">sélectionnez-le</a> et choisissez le nouveau type soit
+dans le menu <strong>Insérer</strong>, soit dans l'outil
 <strong>Eléments</strong>. Vous pouvez ainsi par exemple changer une liste
-numérotée (<code>ol</code>) en une liste non numérotée (<code>ul</code>), ou
-un paragraphe en un titre ou une liste.</p>
+numérotée (<code>ol</code>) en une liste non numérotée (<code>ul</code>), ou un
+paragraphe en un titre ou une liste.</p>
 
 <p>Les types d'élément offerts par les sous-menus <strong>Types
 d'information</strong> et <strong>Éléments caractères</strong> du menu
-<strong>Insérer</strong> fonctionnent comme des bascules. Si on sélectionne
-une simple chaîne de caractères et qu'on active une entrée de ces sous-menus,
-la chaîne sélectionnée prend le type choisi. Si au contraire on sélectionne
-un élément ayant un de ces types et qu'on active l'entrée correspondante,
+<strong>Insérer</strong> fonctionnent comme des bascules. Si on sélectionne une
+simple chaîne de caractères et qu'on active une entrée de ces sous-menus, la
+chaîne sélectionnée prend le type choisi. Si au contraire on sélectionne un
+élément ayant un de ces types et qu'on active l'entrée correspondante,
 l'élément est retiré, mais son contenu subsiste.</p>
 
 <p>Pour sélectionner un élément entier, placez le point d'insertion n'importe
@@ -48,11 +70,10 @@ où à l'intérieur et appuyez sur la touche <kbd>F2</kbd>.</p>
 <h3 id="commande"><a name="L141">La commande transformer</a></h3>
 
 <p>La commande <strong>Transformer</strong> du menu <strong>Outils</strong>
-accomplit des transformations de structure complexes. Cette commande est
-basée sur un langage de transformation de structure qui spécifie comment un
-modèle structural donné doit être transformé en différentes structures.
-Ainsi, il est possible de transformer des listes emboîtées en table et
-inversement.</p>
+accomplit des transformations de structure complexes. Cette commande est basée
+sur un langage de transformation de structure qui spécifie comment un modèle
+structural donné doit être transformé en différentes structures. Ainsi, il est
+possible de transformer des listes emboîtées en table et inversement.</p>
 
 <h4 id="Transforma">Transformations disponibles</h4>
 
@@ -62,39 +83,36 @@ href="Transform.html">Utilisation du fichier HTML.trans</a> pour une
 description du langage dans lequel les règles de transformation sont
 écrites.</p>
 
-<p>Des transformations supplémentaires peuvent être spécifiées dans le
-fichier <code>HTML.trans</code>. Certaines sont fournies en tant
-qu'exemples.</p>
+<p>Des transformations supplémentaires peuvent être spécifiées dans le fichier
+<code>HTML.trans</code>. Certaines sont fournies en tant qu'exemples.</p>
 
 <h4 id="Utilisatio">Utilisation de la commande Transformer</h4>
 
-<p>La commande <strong>Transformer</strong> affiche un menu qui donne la
-liste de toutes les transformations qui peuvent être appliquées à la
-sélection courante. Il suffit de choisir la transformation désirée dans ce
-menu.</p>
+<p>La commande <strong>Transformer</strong> affiche un menu qui donne la liste
+de toutes les transformations qui peuvent être appliquées à la sélection
+courante. Il suffit de choisir la transformation désirée dans ce menu.</p>
 
 <h3 id="division"><a name="Inserting">Insérer une division</a></h3>
 
-<p>Il est possible de grouper une série de paragraphes, titres, listes,
-tables, etc. à l'intérieur d'une division. Pour cela, il faut sélectionner
-les éléments à grouper puis activer l'entrée <strong>Division</strong> du
-menu <strong>Insérer</strong>, ou utiliser le bouton <img
-alt="Division button" src="../../resources/icons/16x16/XHTML_Div.png" /> de
-l'outil <strong>Éléments</strong>.</p>
+<p>Il est possible de grouper une série de paragraphes, titres, listes, tables,
+etc. à l'intérieur d'une division. Pour cela, il faut sélectionner les éléments
+à grouper puis activer l'entrée <strong>Division</strong> du menu
+<strong>Insérer</strong>, ou utiliser le bouton <img alt="Division button"
+src="../../resources/icons/16x16/XHTML_Div.png" /> de l'outil
+<strong>Éléments</strong>.</p>
 
 <h3 id="Fusionner"><a name="Back">Fusionner des éléments</a></h3>
 
 <p>Des éléments consécutifs peuvent être fusionnés, même s'ils ne sont pas au
 même niveau dans la structure du document. La fusion s'effectue à l'aide des
-touches <kbd>Arrière</kbd> et <kbd>Suppr</kbd>. Quand le point d'insertion
-est à la fin d'un élément, utilisez la touche <kbd>Suppr</kbd>. Quand il est
-au début, utilisez la touche <code><kbd>Arrière</kbd></code>. Dans les deux
-cas, ces touches n'effacent aucun caractère. Elles fusionnent simplement les
+touches <kbd>Arrière</kbd> et <kbd>Suppr</kbd>. Quand le point d'insertion est
+à la fin d'un élément, utilisez la touche <kbd>Suppr</kbd>. Quand il est au
+début, utilisez la touche <code><kbd>Arrière</kbd></code>. Dans les deux cas,
+ces touches n'effacent aucun caractère. Elles fusionnent simplement les
 éléments séparés par une frontière de structure.</p>
 
-<p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux
-touches effacent comme d'habitude le caractère suivant ou le caractère
-précédent.</p>
+<p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux touches
+effacent comme d'habitude le caractère suivant ou le caractère précédent.</p>
 </div>
 </body>
 </html>

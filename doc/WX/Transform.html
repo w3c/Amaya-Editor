@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/" />
   <title>Using the HTML.trans File</title>
   <style type="text/css">
   </style>
@@ -17,37 +16,34 @@
 <div class="PageHead">
 Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" /> 
 
-<p class="nav"><a href="editing_documents/about_merging_elements.html"
-accesskey="p"><img alt="previous" src="../../resources/icons/misc/left.png"
-/></a> <a href="Changing.html" accesskey="t"><img alt="top"
+<p class="nav"> <a href="Changing.html" accesskey="t"><img alt="top"
 src="../../resources/icons/misc/up.png" /></a></p>
 </div>
 
 <div id="page_body">
-<h1>Using the HTML.trans File</h1>
+<h2>Using the HTML.trans File</h2>
 
 <p>This document is an introduction to the structure transformation mechanism
 provided by <strong>Amaya</strong>. It describes the syntax of the
 transformation language and the way transformations are performed in the
 editor.</p>
 
-<p>The file <code>amaya/HTML.trans</code> contains the description of
-available transformations. This file can be edited during an
-<strong>Amaya</strong> session. It is dynamically parsed when the
-transformation procedure is called by the editor, so new transformations can
-be added during an editing session.</p>
+<p>The file <code>amaya/HTML.trans</code> contains the description of available
+transformations. This file can be edited during an <strong>Amaya</strong>
+session. It is dynamically parsed when the transformation procedure is called
+by the editor, so new transformations can be added during an editing
+session.</p>
 <hr />
 
-<h2>Syntax of the Amaya transformation language</h2>
+<h3>Syntax of the Amaya transformation language</h3>
 
-<p>Comments begin with<code><strong>!</strong></code>and continue until the
-end of the line.</p>
+<p>Comments begin with<code><strong>!</strong></code>and continue until the end
+of the line.</p>
 
 <p>The file consists of a list of transformation descriptions. Each
 transformation is described by three parts :</p>
 <ul>
-  <li>a <em>name</em>terminated by a colon
-  <strong><code>:</code></strong></li>
+  <li>a <em>name</em>terminated by a colon <strong><code>:</code></strong></li>
   <li>a <em>source pattern</em> terminated by a semi-colon
     <strong><code>;</code></strong></li>
   <li>and a list of <em>rules</em> between braces <strong><code>{
@@ -61,11 +57,11 @@ transformation for the end-user.</p>
 <h3>The pattern</h3>
 
 <p>The pattern describes a specific organization of the elements to be
-transformed. It acts as a filter over the HTML dtd. The purpose of the
-pattern is to identify a particular combination of elements to which the
-transformation can be applied. In a pattern it is possible to express
-conditions on sequence of tags, on the content of a tag and on the existence
-and value of attributes.</p>
+transformed. It acts as a filter over the HTML dtd. The purpose of the pattern
+is to identify a particular combination of elements to which the transformation
+can be applied. In a pattern it is possible to express conditions on sequence
+of tags, on the content of a tag and on the existence and value of
+attributes.</p>
 
 <p>Formally, a pattern contains HTML tags (possibly with attributes) and some
 composition operators:</p>
@@ -90,8 +86,8 @@ element type.</p>
 colon (<strong><code>:</code></strong>).</p>
 
 <p>The tag may have attributes. If no value is given for an attribute, an
-element is matched if the attribute is present. If a value is specified for
-the attribute, an element is matched if the attribute is present and have the
+element is matched if the attribute is present. If a value is specified for the
+attribute, an element is matched if the attribute is present and have the
 specified value.</p>
 
 <p><a href="#L235">Examples</a> of patterns are given at the end of the
@@ -111,8 +107,8 @@ transformed. A rule has two parts separated by the symbol
 <p>The target tag list is itself divided into two parts separated by a colon
 (<strong><code>:</code></strong>):</p>
 <ul>
-  <li>the generation location path (identifies the place where new tags have
-    to be inserted)</li>
+  <li>the generation location path (identifies the place where new tags have to
+    be inserted)</li>
   <li>the list of tags to be generated</li>
 </ul>
 
@@ -120,11 +116,11 @@ transformed. A rule has two parts separated by the symbol
 document tree, starting from the parent of the element matching the highest
 symbol of the pattern.</p>
 
-<p>In the target tag list, the dot symbol (<code><strong>.</strong></code>)
-is used for descending in the tree structure.</p>
+<p>In the target tag list, the dot symbol (<code><strong>.</strong></code>) is
+used for descending in the tree structure.</p>
 
-<p>If the special token star (<code><strong>*</strong></code>) ends the list
-of tags to be generated, the source element tag is not changed, but it can be
+<p>If the special token star (<code><strong>*</strong></code>) ends the list of
+tags to be generated, the source element tag is not changed, but it can be
 moved to a different place in the destination.</p>
 
 <p>If the source tag or the name in the left part of a rules is present more
@@ -132,7 +128,7 @@ than once in the pattern, the rule transforms all the elements matching an
 occurrence of the tag in the pattern.</p>
 <hr />
 
-<h2>Transformation process</h2>
+<h3>Transformation process</h3>
 
 <p>When the user chooses the <strong>Transform</strong> command from the
 <strong>Edit</strong> menu, Amaya parses the <code>HTML.trans</code> (or the
@@ -147,9 +143,8 @@ transformations match at the same level, the first one declared in the
 to specify the transformations with specific patterns before the more general
 ones.</p>
 
-<p>Once a transformation has been chosen by the user, the destination
-structure is built according to the rules while selected elements are
-traversed.</p>
+<p>Once a transformation has been chosen by the user, the destination structure
+is built according to the rules while selected elements are traversed.</p>
 
 <p>Finally, the contents of the source elements (text and pictures, but also
 structured elements) are moved into the produced elements.</p>
@@ -157,11 +152,11 @@ structured elements) are moved into the produced elements.</p>
 <p>This transformation process for HTML documents is fully described in <a
 href="http://opera.inrialpes.fr/opera/papers9696.html"><em>Interactively
 Restructuring HTML Documents</em></a>, a paper presented at the <a
-href="http://www5conf.inria.fr/">5th international WWW conference</a> in
-Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
+href="http://www5conf.inria.fr/">5th international WWW conference</a> in Paris,
+May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
 <hr />
 
-<h2><a name="L235" id="L235">Examples</a></h2>
+<h3><a name="L235" id="L235">Examples</a></h3>
 <ul>
   <li>The first example merges several consecutive unnumbered lists (UL) into
     an unique list. 
@@ -169,13 +164,13 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
     { 
     li &gt; ul:li; 
     }</pre>
-    <p>The pattern matches a sequence of unnumbered lists (UL), that contain
-    a sequence of items (LI).</p>
-    <p>The rule expresses that each time an item is encountered when
-    traversing the matched elements, a new LI tag is created within an UL.
-    When the rule is first applied, the resulting structure is empty, so
-    there is no UL element in which the LI can be created. Therefore an UL is
-    first created, then the rule can be applied.</p>
+    <p>The pattern matches a sequence of unnumbered lists (UL), that contain a
+    sequence of items (LI).</p>
+    <p>The rule expresses that each time an item is encountered when traversing
+    the matched elements, a new LI tag is created within an UL. When the rule
+    is first applied, the resulting structure is empty, so there is no UL
+    element in which the LI can be created. Therefore an UL is first created,
+    then the rule can be applied.</p>
   </li>
   <li>The second example transforms a definition list into a table. 
     <pre>Table: dl{(dt|dd)+}; 
@@ -189,14 +184,14 @@ Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
     <ul>
       <li>Each dt involves the creation of a new row (tr) in the table
       body.</li>
-      <li>Each dd involves the creation of a new cell (td) in the last
-        existing row of the table. 
+      <li>Each dd involves the creation of a new cell (td) in the last existing
+        row of the table. 
         <p></p>
       </li>
     </ul>
   </li>
-  <li>The third example removes a table element, keeping its content
-    unchanged but extracted from the table. 
+  <li>The third example removes a table element, keeping its content unchanged
+    but extracted from the table. 
     <pre>Remove Table:
 table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
                              th{(?cell_content:*)+}
@@ -205,13 +200,13 @@ table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
      caption&gt;h3; 
      cell_content&gt;:*;
      }</pre>
-    <p>The pattern matches any table and identifies the content of each cell
-    of the table (cell_content).</p>
+    <p>The pattern matches any table and identifies the content of each cell of
+    the table (cell_content).</p>
     <p>The second rule expresses that the contents of each cell have to be
     moved to the place of the original table.</p>
   </li>
   <li>See the file <kbd>amaya/HTML.trans</kbd> for more transformation
-    examples.</li>
+  examples.</li>
 </ul>
 </div>
 <hr />

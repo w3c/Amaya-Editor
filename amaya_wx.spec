@@ -86,7 +86,7 @@ export CFLAGS=
 export CXXFLAGS=
 mkdir -p $RPM_BUILD_ROOT/usr/share/
 autoconf
-cp ../Mesa/configs/linux-x86-64-static ../Mesa/configs/current
+#cp ../Mesa/configs/linux-x86-64-static ../Mesa/configs/current
 mkdir linux
 cd linux
 export HOME=`pwd`

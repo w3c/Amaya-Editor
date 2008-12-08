@@ -130,6 +130,7 @@ Manuel d'utilisation d'Amaya</div>
       </li>
     </ul>
   </li>
+  <li><a href="Changing.html.fr#Nettoyage">Nettoyage du code</a></li>
   <li><a href="Changing.html.fr#Editer">Changer la structure d'un document</a> 
     <ul>
       <li><a href="Changing.html.fr#Changer">Changer le type de
@@ -217,7 +218,7 @@ Manuel d'utilisation d'Amaya</div>
       </li>
     </ul>
   </li>
-  <li><a href="SVG.html.fr#Editer">Éditer des graphiques SVG</a>
+  <li><a href="SVG.html.fr#Editer">Éditer des graphiques SVG</a> 
     <ul>
       <li><a href="SVG.html.fr#L53">Créer des graphiques</a></li>
       <li><a href="SVG.html.fr#L105">Sélectionner des graphiques</a></li>
