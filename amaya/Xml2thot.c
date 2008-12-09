@@ -2529,20 +2529,21 @@ void PutInXmlElement (char *data, int length)
       length == 1 && data[0] == EOL)
     {
       if (XMLcontext.lastElement)
+        // don't generate a XML_Element just after a text unit
+        elType = TtaGetElementType (XMLcontext.lastElement);
+      else
+        elType.ElTypeNum = 0;
+      if (elType.ElTypeNum != XML_EL_TEXT_UNIT)
         {
-          // don't generate a XML_Element just after a text unit
-          elType = TtaGetElementType (XMLcontext.lastElement);
-          if (elType.ElTypeNum == XML_EL_TEXT_UNIT)
-            return;
+          // create an empty element
+          elType.ElSSchema = CurrentParserCtxt->XMLSSchema;
+          elType.ElTypeNum = XML_EL_xmlbr;
+          elText = TtaNewElement (XMLcontext.doc, elType);
+          XmlSetElemLineNumber (elText);
+          InsertXmlElement (&elText);
+          XMLcontext.lastElementClosed = TRUE;
+          return;
         }
-      // create an empty element
-      elType.ElSSchema = CurrentParserCtxt->XMLSSchema;
-      elType.ElTypeNum = XML_EL_xmlbr;
-      elText = TtaNewElement (XMLcontext.doc, elType);
-      XmlSetElemLineNumber (elText);
-      InsertXmlElement (&elText);
-      XMLcontext.lastElementClosed = TRUE;
-      return;
     }
   else if (length == i || data[i] == EOS)
     return;
