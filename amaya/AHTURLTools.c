@@ -1235,6 +1235,7 @@ char  *GetBaseURL (Document doc)
   AttributeType       attrType;
   Attribute           attr;
   char               *ptr, *basename, *utf8path;
+  char                documentname[MAX_LENGTH];
   int                 length;
   ThotBool            hasDocBase;
 
@@ -1280,7 +1281,10 @@ char  *GetBaseURL (Document doc)
               TtaGiveTextAttributeValue (attr, basename, &length);
               utf8path = (char *)TtaConvertMbsToByte ((unsigned char *)basename,
                                                        TtaGetDefaultCharset ());
-              strncpy (basename, utf8path, MAX_LENGTH-1);
+              if (IsW3Path (DocumentURLs[doc]) && utf8path[0] == '/')
+                NormalizeURL (utf8path, 0, basename, documentname, DocumentURLs[doc]);
+              else
+                strncpy (basename, utf8path, MAX_LENGTH-1);
               TtaFreeMemory (utf8path);
             }
         }
@@ -1618,7 +1622,7 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
     basename = TtaStrdup (SavedDocumentURL);
   else if (doc > 0)
     basename = GetBaseURL (doc);
-  else if (otherPath != NULL)
+  else if (otherPath)
     basename = TtaStrdup (otherPath);
   else
     basename = NULL;

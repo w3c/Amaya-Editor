@@ -1577,8 +1577,8 @@ void UpdateNSDeclaration (Document document, View view)
   Element   root = NULL;
   char      buf[MAX_TXT_LEN];
   int       nb = 0;
-  Element   el;
-  int       f, l;
+  //Element   el;
+  //int       f, l;
   void     *p_dlg;
 
   /*
@@ -1640,7 +1640,7 @@ void AddaNSDeclaration (char *decl)
 {
   Document  doc;
   Element   el = NULL;
-  int       f, l;
+  //int       f, l;
   char     *prefix = NULL, *url = NULL;
 
   doc = CurrentDocument;
@@ -1676,7 +1676,7 @@ void RemoveaNSDeclaration (char *decl)
 {
   Document  doc;
   Element   el = NULL;
-  int       f, l;
+  //int       f, l;
   char     *prefix = NULL, *url = NULL;
 
   doc = CurrentDocument;
@@ -1917,6 +1917,7 @@ Element InsertWithinHead (Document doc, View view, int elementT)
           TtaRegisterElementCreate (new_, doc);
           TtaCloseUndoSequence (doc);
         }
+      TtaSetDocumentModified (doc);
       return (new_);
     }
 }
