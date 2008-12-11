@@ -640,13 +640,10 @@ void InitializeOtherThings ()
 void TtaRaiseView (Document document, View view)
 {
   int                 frame_id;
-  ThotWidget          w;
-
   UserErrorCode = 0;
   frame_id = GetWindowNumber (document, view);
   if (frame_id != 0)
     {
-      w = FrameTable[frame_id].WdFrame;
       /* don't remember the last configuration */
       /* we have document and view so it's possibe to know the configuration */
       PtrDocument pDoc    = LoadedDocument[document - 1];
@@ -960,12 +957,16 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
         ClickFrame = frame;
         ClickX = x;
         ClickY = y;
-        LocateSelectionInView (frame, ClickX, ClickY, 3, &Dragging);
+        if (LocateSelectionInView (frame, ClickX, ClickY, 3, &Dragging))
+	  return FALSE;
 #if !defined (_WINDOWS) && !defined (_MACOS)
-        /* a word is probably selected, copy it into clipboard */
-        FrameToView (frame, &document, &view);
-        if (document && view)
-          DoCopyToClipboard (document, view, FALSE, TRUE);
+	if (drag)
+	  {
+	    /* a word is probably selected, copy it into clipboard */
+	    FrameToView (frame, &document, &view);
+	    if (document && view)
+	      DoCopyToClipboard (document, view, FALSE, TRUE);
+	  }
 #endif /* _WINDOWS */
       }
       break;
@@ -1309,6 +1310,7 @@ void ChangeSelFrame (int frame)
   PtrDocument         docsel;
   PtrElement          first, last;
   View                view;
+  //AmayaFrame         *p_frame;
   int                 oldframe, firstChar, lastChar;
 
   if (ActiveFrame != frame)
@@ -1338,7 +1340,9 @@ void ChangeSelFrame (int frame)
       else
         TtaSetStatusSelectedElement (doc, 1, (Element)first);
       /* the active frame changed so update the application focus */
-      TtaRedirectFocus();
+      /*p_frame = TtaGetFrameFromId(frame);
+      if (p_frame)
+      p_frame->GetCanvas()->SetFocus();*/
     }
 }
 

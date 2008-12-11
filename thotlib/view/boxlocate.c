@@ -552,6 +552,12 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                   pAb->AbLeafType == LtText &&
                   (!pAb->AbPresentationBox || pAb->AbCanBeModified))
                 SelectCurrentWord (frame, pBox, nChars, index, pBuffer, TRUE);
+	      else
+		{
+		  *drag = FALSE;
+		  /* the application asks Thot to do nothing */
+		  return TRUE;
+		}
               break;
             case 4:
               if (SkipClickEvent)
