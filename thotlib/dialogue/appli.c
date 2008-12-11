@@ -960,7 +960,7 @@ ThotBool FrameButtonDClickCallback( int frame, int thot_button_id,
         if (LocateSelectionInView (frame, ClickX, ClickY, 3, &Dragging))
 	  return FALSE;
 #if !defined (_WINDOWS) && !defined (_MACOS)
-	if (drag)
+	if (Dragging)
 	  {
 	    /* a word is probably selected, copy it into clipboard */
 	    FrameToView (frame, &document, &view);
