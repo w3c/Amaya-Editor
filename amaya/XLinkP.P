@@ -10,7 +10,7 @@ VIEWS
    Structure_view merge with Structure_view,
    Links_view merge with Links_view;
 
-#define TAG_FONTSIZE 12 pt
+#define TAG_FONTSIZE 11 pt
 #define ATTR_Font Helvetica
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
@@ -24,8 +24,8 @@ VIEWS
 #define ATTRVALUE_Color Black
 #define INVALID_Color Black
 #else
-#define ATTR_Color DarkIndigo1
-#define ATTRVALUE_Color DarkMagenta3
+#define ATTR_Color DarkMagenta3
+#define ATTRVALUE_Color DarkBlue2
 #define INVALID_Color Red
 #endif
 
