@@ -2615,10 +2615,12 @@ char      *MakeRelativeURL (const char *aName, const char *relatedName)
   else
     {
       /* Some path in common */
+#ifdef IV
       if (slashes == 3 && strncmp (aName, "http:", 5) == 0)
         /* just the same server */
         strcpy (result, last_slash);
       else
+#endif
         {
           levels= 0; 
           for (; *q && *q != '#' && *q != ';' && *q != '?'; q++)
