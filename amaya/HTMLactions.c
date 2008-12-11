@@ -1947,9 +1947,11 @@ static ThotBool ActivateElement (Element element, Document doc)
   if (anchor && HrefAttr)
     {
       if ((DocumentMeta[doc] &&
-          DocumentMeta[doc]->method == CE_HELP) ||
+	   DocumentMeta[doc]->method == CE_HELP) ||
           !TtaIsActionAvailable ("GotoPreviousHTML"))
         {
+	  if (!TtaIsSelectionEmpty ())
+	    return FALSE;
           if (DocumentURLs[doc] &&
               strstr (DocumentURLs[doc], "Manual.html"))
               // open in new tab
@@ -3746,7 +3748,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
           child = TtaGetFirstChild (el);
           if (child)
             {
-              if (index > 0)
+	      if (index > 0)
                 {
                   i = index;
                   len = TtaGetElementVolume (child);
@@ -3771,13 +3773,13 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
                 }
               else
                 TtaSelectElement (doc, el);
+              //#ifndef _MACOS
+              TtaHandlePendingEvents ();
+              //#endif /* _MACOS */
+	      TtaRaiseView (doc, 1);
               // display the char index
               sprintf (message, "Character: %d", index);
               TtaSetStatus (doc, 1, message, NULL);
-              //#ifndef _MACOS
-              TtaHandlePendingEvents ();
-              TtaRaiseView (doc, 1);
-              //#endif /* _MACOS */
             }
         }
       else
