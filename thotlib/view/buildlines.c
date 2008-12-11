@@ -909,7 +909,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
   int                 i, j, l;
   int                 nChars;
   int                 wWidth, variant;
-  ThotBool            found;
+  ThotBool            found, checkEOL;
 
   found = FALSE;
   *boxWidth = 0;
@@ -935,10 +935,15 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
       i = 0;
     }
 
+  // ignore NEW_LINE within generic XML document
+  checkEOL = pBox && pBox->BxAbstractBox && pBox->BxAbstractBox->AbElement &&
+    pBox->BxAbstractBox->AbElement->ElStructSchema &&
+    !pBox->BxAbstractBox->AbElement->ElStructSchema->SsIsXml;
+
   while (j < nChars && !found && pBuffer)
     {
       character = pBuffer->BuContent[i];
-      if (character == BREAK_LINE || character ==  NEW_LINE)
+      if (character == BREAK_LINE || (checkEOL && character ==  NEW_LINE))
         {
           /* It's a break element */
           found = TRUE;

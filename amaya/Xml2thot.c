@@ -2500,7 +2500,7 @@ void PutInXmlElement (char *data, int length)
   int          i = 0;
   int          i1, i2 = 0, i3 = 0;
   ThotBool     uselessSpace = FALSE;
-  ThotBool     insSibling, ok;
+  ThotBool     insSibling, ok, removeEOL = RemoveLineBreak;
 
   i = 0;
   /* Immediately after a start tag, treatment of the leading spaces */
@@ -2544,6 +2544,8 @@ void PutInXmlElement (char *data, int length)
           XMLcontext.lastElementClosed = TRUE;
           return;
         }
+      else
+        removeEOL = TRUE;
     }
   else if (length == i || data[i] == EOS)
     return;
@@ -2555,7 +2557,7 @@ void PutInXmlElement (char *data, int length)
 
   /* Convert line-break or tabs into space character */
   i = 0;
-  if (RemoveLineBreak)
+  if (removeEOL)
     {
       while (bufferws[i] != EOS)
         {
