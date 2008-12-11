@@ -7256,7 +7256,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                     }
                   attrType.AttrSSchema = ctxt->schema;
                   attrType.AttrTypeNum = att;
-                  if (i == 0 && att == 0)
+                  if ((i == 0 || xmlType == XML_TYPE) && att == 0)
                     {
 #ifdef XML_GENERIC
                       if (xmlType == XML_TYPE)
