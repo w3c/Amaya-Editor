@@ -57,6 +57,7 @@
 #include "displaybox_f.h"
 #include "displayview_f.h"
 #include "editcommands_f.h"
+#include "selectionapi_f.h"
 #include "textcommands_f.h"
 #include "font_f.h"
 #include "inites_f.h"
@@ -1040,6 +1041,11 @@ void DestroyFrame (int frame)
       /* don't destroy frame menu on WX because menus are specific to the document */
       /* with WX, never really delete the widgets */
       /* keep it alive in order to reuse it for the next frame */
+	  if (TtaIsDocumentSelected (FrameTable[frame].FrDoc) &&
+		  FrameTable[frame].FrView == 1)
+		TtaUnselect (FrameTable[frame].FrDoc);
+	  if (ActiveFrame == frame)
+		ActiveFrame = 0;
 
       /* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
       ClearConcreteImage (frame);
