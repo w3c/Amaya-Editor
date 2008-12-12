@@ -97,26 +97,32 @@ AmayaCreatePathEvtHandler::AmayaCreatePathEvtHandler(AmayaFrame * p_frame,
   ,created(created)
   ,nb_points(1)
 {
-  if (pFrame)
-    {
-      /* attach this handler to the canvas */
-      AmayaCanvas * p_canvas = pFrame->GetCanvas();
-      p_canvas->PushEventHandler(this);
-
-      /* assign a cross mouse cursor */
-      pFrame->GetCanvas()->SetCursor( wxCursor(wxCURSOR_CROSS) );
-      pFrame->GetCanvas()->CaptureMouse();
-    }
   state = 0;
   clear = false;
   *created = FALSE;
-
   /* Get the GRAPHICS leaf */
   leaf = GetGraphicsUnit (el);
   if (!leaf)
     {
       finished = true;
       return;
+    }
+
+  if (pFrame)
+    {
+      /* attach this handler to the canvas */
+      AmayaCanvas * p_canvas = pFrame->GetCanvas();
+      p_canvas->PushEventHandler(this);
+
+#ifdef _WINDOWS
+      // need to grab the mouse before changing the cursor on Windows
+      p_canvas->CaptureMouse();
+#endif /* _WINDOWS */
+      /* assign a cross mouse cursor */
+      p_canvas->SetCursor( wxCursor(wxCURSOR_CROSS) );
+#ifndef _WINDOWS
+      p_canvas->CaptureMouse();
+#endif /* _WINDOWS */
     }
 }
 
@@ -188,8 +194,8 @@ AmayaCreatePathEvtHandler::~AmayaCreatePathEvtHandler()
       AmayaCanvas * p_canvas = pFrame->GetCanvas();
       p_canvas->PopEventHandler(false /* do not delete myself */);
       /* restore the default cursor */
-      pFrame->GetCanvas()->SetCursor( wxNullCursor );
-      pFrame->GetCanvas()->ReleaseMouse();
+      p_canvas->SetCursor( wxNullCursor );
+      p_canvas->ReleaseMouse();
     }
 }
 
