@@ -2104,6 +2104,9 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
        transforming it is forbidden. */
     return FALSE;
 
+  if (ElementIsReadOnly ((PtrElement) el))
+    return FALSE;
+
   /* Get the current transform matrix */
   CTM = (PtrTransform)TtaGetCurrentTransformMatrix(el, svgAncestor);
   if (CTM == NULL)
@@ -2178,6 +2181,9 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
   if (el2 != el)
     /* el has changed: it was not a direct child of svgCanvas. Hence
        transforming it is forbidden. */
+    return FALSE;
+
+  if (ElementIsReadOnly ((PtrElement) el))
     return FALSE;
 
   /* Get the current transform matrix */
