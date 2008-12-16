@@ -61,7 +61,6 @@ extern ThotBool IsBeginningSelected ( Element el,
                                       Document doc );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
-extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
 extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
 extern void CreateTemplateFromDocument ( Document doc,
                                          View view );
@@ -163,7 +162,6 @@ extern ThotBool IsBeginningSelected ( Element el,
                                         Document doc );
 extern ThotBool TemplateElementWillBeCreated ( NotifyElement *event );
 extern ThotBool TemplateElementWillBeDeleted ( NotifyElement *event );
-extern ThotBool CurrentTypeWillBeExported ( NotifyAttribute *event );
 extern ThotBool TemplateAttrInMenu ( NotifyAttribute * event );
 extern void CreateTemplateFromDocument ( Document doc,
                                            View view );

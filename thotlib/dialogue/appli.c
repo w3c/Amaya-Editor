@@ -121,6 +121,7 @@ extern void ZoomOut (Document document, View view);
 static ThotBool g_NeedRedisplayAllTheFrame[MAX_FRAME];
 #endif /* _GL */
 
+
 /*----------------------------------------------------------------------
   GetFrameNumber returns the Thot window number associated.
   ----------------------------------------------------------------------*/
@@ -494,7 +495,7 @@ void TtcLineUp (Document document, View view)
 {
   int          delta;
   int          frame;
-  
+ 
   if (document != 0)
     frame = GetWindowNumber (document, view);
   else

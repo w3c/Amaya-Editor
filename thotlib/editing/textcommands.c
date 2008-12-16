@@ -219,16 +219,15 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
           org = endBox->BxYOrg;
           TtcLineUp (doc, view);
           /* update the new position */
-          if (org != endBox->BxYOrg)
+          //if (org != endBox->BxYOrg)
             y = y - org + endBox->BxYOrg;
         }
       while (y + yDelta < pFrame->FrYOrg &&
              /* we don't see the top of the box */
-             (y < 0 ||
               /* the frame is not on the top of the concrete image */
-              pFrame->FrYOrg > 0 ||
-              /* we don't see the top of the document */
-              pFrame->FrAbstractBox->AbTruncatedHead));
+             (y < 0 || pFrame->FrYOrg > 0) &&
+             /* we don't see the top of the document */
+             pFrame->FrAbstractBox->AbTruncatedHead);
     }
   else if (yDelta > 0 && pFrame->FrAbstractBox->AbBox->BxPrevious &&
            (y + yDelta > pFrame->FrYOrg + h ||
@@ -243,15 +242,15 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
           org = endBox->BxYOrg;
           TtcLineDown (doc, view);
           /* update the new position */
-          if (org != endBox->BxYOrg)
+          //if (org != endBox->BxYOrg)
             y = y - org + endBox->BxYOrg;
         }
       while (y + yDelta > pFrame->FrYOrg + h &&
              /* we don't see the bottom of the box */
-             (/* the frame is not on the top of the concrete image */
-              pFrame->FrYOrg + h < pFrame->FrAbstractBox->AbBox->BxHeight ||
-              /* we don't see the top of the document */
-              pFrame->FrAbstractBox->AbTruncatedTail));
+             /* the frame is not on the top of the concrete image */
+             pFrame->FrYOrg + h < pFrame->FrAbstractBox->AbBox->BxHeight &&
+             /* we don't see the top of the document */
+             pFrame->FrAbstractBox->AbTruncatedTail);
     }
 #ifdef IV
   if ( RightExtended && yDelta < 0 &&
