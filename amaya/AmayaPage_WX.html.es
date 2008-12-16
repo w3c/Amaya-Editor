@@ -94,16 +94,15 @@
 <div id="intro" class="section">
 <p>Amaya es un cliente Web que actúa como navegador y como editor. Ha sido
 diseñado por el <a href="http://www.w3.org/">W3C</a> y el <a
-href="http://www.inria.fr/">INRIA</a> con el principal objetivo de demostrar
-nuevas tecnologías Web y ayudar a los usuarios a producir páginas Web
-válidas.</p>
+href="http://www.inria.fr/">INRIA</a> con el objetivo de mostrar nuevas
+tecnologías Web y ayudar a los usuarios a producir páginas Web válidas.</p>
 
 <p>Con Amaya se pueden manipular páginas Web complejas, con formularios,
 tablas y las características más avanzadas del <acronym
 title="Hypertext Markup Language">XHTML</acronym>. Se pueden crear y editar <a
 href="../doc/WX/Math.html">expresiones matemáticas</a> y <a
 href="../doc/WX/SVG.html">gráficos</a> dentro de las páginas Web. Se pueden
-asociar estilos a los documentos mediantes Hojas de estilo en Cascada (CSS).</p>
+asociar estilos a los documentos mediantes hojas de estilo en cascada (CSS).</p>
 </div>
 
 <div class="body">
@@ -111,23 +110,23 @@ asociar estilos a los documentos mediantes Hojas de estilo en Cascada (CSS).</p>
 <div class="column">
 
 <div class="section">
-<h2>Main news</h2>
+<h2>Principales novedades</h2>
 
-<p>News from version 10 :</p>
+<p>Novedades desde la versión 10:</p>
 <ul>
-  <li>Possibility to create and edit document templates from document
-  skeletons</li>
-  <li>More facilities to edit template instances</li>
-  <li>The first version of an integrated editor for SVG graphic schemas</li>
-  <li>The support of semantic information within web pages (RDFa)</li>
-  <li>Direct resizing of images</li>
+  <li>Posibilidad de crear y editar plantillas a partir de documentos</li>
+  <li>Mayores facilidades para editar documentos a partir de plantillas</li>
+  <li>Primera versión de un editor integrado para esquemas de gráficos
+  SVG</li>
+  <li>Inclusión de información semántica en páginas web (RDFa)</li>
+  <li>Escalado de imágenes</li>
 </ul>
 </div>
 
 <div class="section">
-<h2>Advanced features</h2>
+<h2>Caraterísticas avanzadas</h2>
 
-<p>Embedded MathML and SVG:</p>
+<p>MathML y SVG incrustados:</p>
 
 <div id="mathml_svg">
 <svg:svg height="250" width="250">
@@ -213,8 +212,8 @@ asociar estilos a los documentos mediantes Hojas de estilo en Cascada (CSS).</p>
       atributos, etc.) se aplican a esos elementos estructurados.</dd>
   <dt>Los documentos pueden editarse utilizando vistas sincronizadas</dt>
     <dd>El menú Ver permite abrir la vista de Estructura, la vista de Código
-      fuente, etc. Al hacer clic en la línea roja inferior, abre o cierra esa
-      segunda vista.</dd>
+      fuente, etc. Al hacer clic en la línea roja inferior, se abre o cierra
+      esa segunda vista.</dd>
   <dt>Los documentos pueden publicarse directamente en un servidor</dt>
     <dd>Mediante el método http PUT se puede escribir en un servidor, siempre
       que se cuente con el permiso para hacerlo.</dd>
