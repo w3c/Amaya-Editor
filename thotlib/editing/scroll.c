@@ -753,7 +753,7 @@ void ShowSelectedBox (int frame, ThotBool active)
 {
   ViewFrame          *pFrame;
   PtrBox              pBox;
-  PtrAbstractBox      pAb, pDraw;
+  PtrAbstractBox      pAb = NULL, pDraw;
   int                 xmin, xmax;
   int                 ymin, ymax;
   int                 x, y, dx, dy, w, h;
@@ -780,8 +780,8 @@ void ShowSelectedBox (int frame, ThotBool active)
             /* no box found */
             return;
         }
-
-      pAb = pBox->BxAbstractBox;
+      if (pBox)
+        pAb = pBox->BxAbstractBox;
       if (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoGhost))
         {
           // get the position of the fist visible box
