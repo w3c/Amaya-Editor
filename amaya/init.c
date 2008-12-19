@@ -7486,6 +7486,19 @@ void CheckAmayaClosed ()
 }
 
 /*----------------------------------------------------------------------
+  CloseDocumentDialogs
+  ----------------------------------------------------------------------*/
+void CloseDocumentDialogs (Document doc, View view)
+{
+  if (SavingDocument == doc)
+    {
+      // the dialog widget will be destroyed
+      TtaDestroyDialogue (BaseDialog + SaveForm);
+      SavingDocument = 0;
+    }
+}
+
+/*----------------------------------------------------------------------
   CloseTab close the current active page
   Shortcut : CTRL x + CTRL p
   ----------------------------------------------------------------------*/
@@ -7497,12 +7510,13 @@ void AmayaCloseTab (Document doc, View view)
   
   if (CanReplaceCurrentDocument (doc, view))
     {
+      CloseDocumentDialogs (doc, view);
       window_id = TtaGetDocumentWindowId( doc, view );
       /* Get the window id and page id of current document and
          close the corresponding page */
       TtaGetDocumentPageId( doc, view, &page_id, &page_position );
       if (TtaClosePage( window_id, page_id ))
-		TtaCleanUpWindow( window_id );
+        TtaCleanUpWindow( window_id );
     }
 }
 
@@ -7587,6 +7601,8 @@ void AmayaCloseWindow (Document doc, View view)
 {
   /* Save the current windows geometry */
   SaveGeometryOnExit( doc, NULL);
+  // close all dialogs
+  TtaFreeAllCatalogs ();
   /* get the document's parent window and try to close it */
   int window_id = TtaGetDocumentWindowId( doc, view );
   TtaCloseWindow( window_id );
@@ -7596,6 +7612,8 @@ void AmayaCloseWindow (Document doc, View view)
   ----------------------------------------------------------------------*/
 void AmayaClose (Document document, View view)
 {
+  // close all dialogs
+  TtaFreeAllCatalogs ();
   AmayaWindowIterator it;
   for( it.first(); !it.isDone(); it.next() )
     {

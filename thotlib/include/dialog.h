@@ -488,6 +488,11 @@ extern ThotBool TtaRaiseDialogue (int ref);
   ----------------------------------------------------------------------*/
 extern void TtaUnmapDialogue (int ref);
 
+/*----------------------------------------------------------------------
+  TtaFreeAllCatalogs frees the memory associated with catalogs.                      
+  ----------------------------------------------------------------------*/
+extern void TtaFreeAllCatalogs (void);
+
 #endif /* __CEXTRACT__ */
 
 #endif

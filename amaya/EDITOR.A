@@ -25,8 +25,8 @@ USES
 
 DEFAULT
    BEGIN
-   	  Init.Post -> InitAmaya;
-          DocClose.Pre -> ClosingTemplateDocument;
+   	Init.Post -> InitAmaya;
+    DocClose.Pre -> ClosingTemplateDocument;
 	  DocClose.Post -> DocumentClosed;
 	  DocSave.Pre -> DocumentToSave;
 	  ViewOpen.Pre -> RequestView;
@@ -424,6 +424,7 @@ FUNCTIONS
   UpdateStyleList,
   ShowLogFile,
   CloseHelpWindow,
+  CloseDocumentDialogs,
   CreateMIntegral,
   CreateMSum,
   CreateMOVERARROW,

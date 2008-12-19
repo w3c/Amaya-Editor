@@ -375,6 +375,9 @@ void TtaQuit ()
   NotifyDialog      notifyDoc;
   int               d;
 
+#ifndef NODISPLAY
+  TtaFreeAllCatalogs ();
+#endif /* NODISPLAY */
   /* close all opened document */
   for (d = 0; d < MAX_DOCUMENTS - 1; d++)
     if (LoadedDocument[d])
@@ -406,7 +409,6 @@ void TtaQuit ()
   FreeMenus ();
   ThotFreeAllFonts ();
   TteFreeAllEventsList ();
-  TtaFreeAllCatalogs ();
   ConfigFree ();
   FreeAllPicCache ();
 #endif /* NODISPLAY */

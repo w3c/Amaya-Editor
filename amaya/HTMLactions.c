@@ -2785,8 +2785,6 @@ void FreeDocumentResource (Document doc)
     return;
 
   UpdateLogFile (doc, FALSE);
-  /* unmap the Save as form */
-  TtaDestroyDialogue (BaseDialog + SaveForm);
   if (doc == ParsedDoc)
     /* The document to which CSS are to be applied */
     ParsedDoc = 0;
