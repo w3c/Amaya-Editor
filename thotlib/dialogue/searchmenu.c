@@ -528,7 +528,7 @@ void TtcSearchText (Document document, View view)
     created = CreateSearchDlgWX( NumFormSearchText,
                                  TtaGetViewFrame (document, view),
                                  Caption, SearchedString, ReplacingString,
-                                 WithReplace, SearchAfter);
+                                 WithReplace, UpperLower, SearchAfter);
     if (created)
       TtaShowDialogue ( NumFormSearchText, TRUE );
   }

@@ -40,11 +40,12 @@ END_EVENT_TABLE()
     + searched: the initial searched string
     + replace: the initial replacing string
     + do_replace: true if the replace should be done
+    + checkcase: true if case sensitive
     + searchAfter: true is the search goes forward
   ----------------------------------------------------------------------*/
   SearchDlgWX::SearchDlgWX( int ref, wxWindow* parent, const wxString & caption,
                             const wxString & searched, const wxString & replace,
-                            bool do_replace, bool searchAfter) : 
+                            bool do_replace, bool checkcase, bool searchAfter) : 
     AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SearchDlgWX"));
@@ -77,7 +78,7 @@ END_EVENT_TABLE()
   // Default values
   XRCCTRL(*this, "wxID_SEARCH_FOR_TXT", wxTextCtrl)->SetValue(searched);
   XRCCTRL(*this, "wxID_REPLACE_BY_TXT", wxTextCtrl)->SetValue(replace);
-  XRCCTRL(*this, "wxID_CHECK_CASE", wxCheckBox)->SetValue(TRUE);
+  XRCCTRL(*this, "wxID_CHECK_CASE", wxCheckBox)->SetValue(checkcase);
   m_case = XRCCTRL(*this, "wxID_CHECK_CASE", wxCheckBox)->GetValue( );
   if (do_replace)
     XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(1);

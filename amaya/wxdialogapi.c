@@ -552,8 +552,8 @@ ThotBool CreateMakeIdDlgWX (int ref, ThotWindow parent)
   returns:
   ----------------------------------------------------------------------*/
 ThotBool CreateSearchDlgWX (int ref, ThotWindow parent,  char* caption,
-                            char* searched,  char* replace,
-                            ThotBool withReplace, ThotBool searchAfter)
+                            char* searched,  char* replace, ThotBool withReplace,
+                            ThotBool checkcase, ThotBool searchAfter)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
@@ -564,13 +564,10 @@ ThotBool CreateSearchDlgWX (int ref, ThotWindow parent,  char* caption,
   wxString wx_searched = TtaConvMessageToWX( searched );
   wxString wx_replace = TtaConvMessageToWX( replace );
 
-  SearchDlgWX * p_dlg = new SearchDlgWX( ref,
-					 NULL,
-					 wx_caption,
-					 wx_searched,
-					 wx_replace,
-					 withReplace,
-					 searchAfter );
+  SearchDlgWX * p_dlg = new SearchDlgWX( ref, NULL,
+                                         wx_caption, wx_searched,
+                                         wx_replace, withReplace,
+                                         checkcase, searchAfter );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     /* the dialog has been sucesfully registred */
