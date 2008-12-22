@@ -876,38 +876,36 @@ void AmayaNormalWindow::GotoSelectedURL(ThotBool noreplace)
 {
   Document doc;
   View     view;
-
+  char     buffer[MAX_LENGTH];
+      
   FrameToView (TtaGiveActiveFrame(), &doc, &view);
   CloseTextInsertion ();
-
   /* call the callback  with the url selected text */
   PtrDocument pDoc = LoadedDocument[doc-1];
   wxASSERT(pDoc);
   if (pDoc && pDoc->Call_Text)
     {
-      char buffer[2048];
-      
       if(m_pComboBox)
-        strcpy(buffer, (m_pComboBox->GetValue()).Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8));
+        strncpy(buffer, (m_pComboBox->GetValue()).Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8), MAX_LENGTH-1);
       else
-        strcpy(buffer, m_enteredURL.Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8));
-      
-// patch to go-round a bug on Windows (TEXT_ENTER event called twice)
+        strncpy(buffer, m_enteredURL.Trim(TRUE).Trim(FALSE).mb_str(wxConvUTF8), MAX_LENGTH-1);
+      buffer[MAX_LENGTH-1] = EOS;
+      // patch to go-round a bug on Windows (TEXT_ENTER event called twice)
 #ifdef _WINDOWS
-        if (isBufUrl == FALSE)
+      if (isBufUrl == FALSE)
         {
           isBufUrl = TRUE;
-            (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
-           strcpy (BufUrl, buffer);
+          (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
+          strcpy (BufUrl, buffer);
           isBufUrl = FALSE;
         }
-        else if (strcmp (buffer, BufUrl) != 0)
+      else if (strcmp (buffer, BufUrl) != 0)
         {
-            (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
-           strcpy (BufUrl, buffer);
+          (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
+          strcpy (BufUrl, buffer);
         }
 #else /* _WINDOWS */
-        (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
+      (*(Proc4)pDoc->Call_Text) ((void *)doc, (void *)view, (void *)buffer,  (void *)noreplace);
 #endif /* _WINDOWS */
     }
 }

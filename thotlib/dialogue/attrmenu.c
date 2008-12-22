@@ -115,7 +115,7 @@ static ThotBool GetValidatedCurrentSelection (PtrDocument *pDoc,
 void TtaSetAttributeChangeFunction (Proc2 procedure)
 {
   AttributeChangeFunction = (Proc2)procedure;
-} 
+}
  
 /*----------------------------------------------------------------------
   InitFormLangue
@@ -556,11 +556,7 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
   /* cherche les attributs globaux definis dans le schema de structure */
   /* du premier element selectionne' et dans les extrensions de ce schema*/
   pSS = firstSel->ElStructSchema;/* schema de struct de l'element courant*/
-/*   if (WholeColumnSelected) */
-/*     { */
-/*       firstSel = FirstSelectedColumn; */
-/*     } */
-  while(pSS)
+  while (pSS)
     {
       for (num=1; num<=pSS->SsNAttributes; num++)
         {
@@ -707,15 +703,6 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
   DLList              list;
   AmayaParams         params;
 
-  /* do nothing if the attribute dialog is not updatable (auto refresh
-     checkbox activate) */
-// TODO
-//  if (!AmayaSubPanelManager::GetInstance()->IsActive(WXAMAYA_PANEL_ATTRIBUTE))
-//    {
-//      AmayaSubPanelManager::GetInstance()->ShouldBeUpdated(WXAMAYA_PANEL_ATTRIBUTE);
-//      return;
-//    }
-
   /* Compose le menu des attributs */
   if (!pDoc)
     return;
@@ -744,6 +731,10 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
                     firstSel->ElLeafType == LtPath ||
                     firstSel->ElLeafType == LtGraphics))
             firstSel = parent;
+          else
+            // check if columns are selected
+            MoveSelectionToCol (&firstSel, &lastSel);
+
           if (force || pDoc != PrevDoc ||
               firstSel->ElStructSchema != PrevStructSchema ||
               firstSel->ElTypeNumber != PrevElTypeNumber ||
@@ -994,6 +985,9 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
       return;
     }
 
+  // check if columns are selected
+  MoveSelectionToCol (&firstSel, &lastSel);
+
   /* when the PICTURE element of an IMG is selected display
      attributes of the parent element */
   parent = firstSel->ElParent;
@@ -1153,7 +1147,7 @@ void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
   Document            doc = 0;
   char               *tmp;
   int                 firstChar, lastChar;
-  ThotBool            lock = TRUE;
+  ThotBool            lock = TRUE, isColumn;
   ThotBool            isID = FALSE, isACCESS = FALSE;
   ThotBool            isCLASS = FALSE, isSpan = FALSE;
 
@@ -1168,6 +1162,9 @@ void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_NO_SELECT);
       return;
     }
+
+  // check if columns are selected
+  isColumn = MoveSelectionToCol (&firstSel, &lastSel);
 
   tmp = AttrListElem_GetName(elem);
   isACCESS = (!strcmp (tmp, "accesskey") &&
@@ -1231,8 +1228,7 @@ void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
             if (isID)
               TtaIsValidID ((Attribute)pAttrNew, TRUE);
 
-          if (isSpan && firstSel != lastSel &&
-              AttributeChangeFunction)
+          if (isSpan && firstSel != lastSel && AttributeChangeFunction)
             {
               // should generate a span
               (*(Proc2)AttributeChangeFunction) ((void *)pAttrNew->AeAttrNum,
@@ -1259,6 +1255,7 @@ void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
           if (dispMode == DisplayImmediately)
             TtaSetDisplayMode (doc, DisplayImmediately);
         }
+
       UpdateAttrMenu (pDoc, FALSE);
       DeleteAttribute (NULL, pAttrNew);
     }

@@ -308,7 +308,8 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
   if (p_dlg->ShowModal() == wxID_OK)
     {
       dir_value =  p_dlg->GetPath();
-      strcpy (buffer, (const char*)dir_value.mb_str(wxConvUTF8));
+      strncpy (buffer, (const char*)dir_value.mb_str(wxConvUTF8),MAX_LENGTH-3);
+      buffer[MAX_LENGTH-2] = EOS;
       len = strlen (buffer);
       if (buffer[len-1] == DIR_SEP)
         buffer[len-1] = EOS;
@@ -447,7 +448,8 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
     {
       // get the selected charset
       value = XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->GetStringSelection();
-      strcpy (buffer, (const char*)value.mb_str(wxConvUTF8));
+      strncpy (buffer, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH-1);
+      buffer[MAX_LENGTH - 1] = EOS;
       TtaSetEnvString ("DOCUMENT_CHARSET", buffer, TRUE);
     }
   // get the combobox current url

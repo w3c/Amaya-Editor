@@ -1080,6 +1080,7 @@ EXCEPT
         ColExt:         Invisible;
         RowExt:         Invisible;
         Ref_column:     ColRef, Invisible;
+        Ref_ColColgroup:ColColRef;
         colspan_:       ColSpan;
         rowspan_:       RowSpan;
         Ghost_restruct: Invisible;

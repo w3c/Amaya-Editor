@@ -446,8 +446,8 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
 
   memset( &prop, 0, sizeof(Prop_General) );
   value = XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->GetValue();
-  strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
-
+  strncpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  prop.HomePage[MAX_LENGTH - 1] = EOS;
   prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSpinCtrl)->GetValue();
   prop.XMLEdit = XRCCTRL(*this, "wxID_XML_EDIT", wxCheckBox)->GetValue();
   prop.PasteLineByLine = XRCCTRL(*this, "wxID_CHECK_CCLINE", wxCheckBox)->GetValue();

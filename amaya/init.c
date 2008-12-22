@@ -1927,7 +1927,7 @@ static void BrowserForm (Document doc, View view, char *urlname)
 static void InitOpenDocForm (Document doc, View view, const char *name, const char *title,
                              DocumentType docType)
 {
-  char              s [MAX_LENGTH];
+  char              s[MAX_LENGTH];
   char             *thotdir;
   ThotBool          remote;
   wxString          homedir;
@@ -1939,7 +1939,8 @@ static void InitOpenDocForm (Document doc, View view, const char *name, const ch
   if (DocumentURLs[doc] && !strcmp (DocumentURLs[doc], "empty"))
     {
       strcpy (DocumentName, DocumentURLs[doc]);
-      strcpy (s, thotdir);
+      strncpy (s, thotdir,MAX_LENGTH-1);
+      s[MAX_LENGTH-1] = EOS;
     }
   else
     TtaExtractName (DocumentURLs[doc], s, DocumentName);
@@ -6895,7 +6896,8 @@ void InitAmaya (NotifyEvent * event)
     }
   
   /* add the temporary directory in document path */
-  strcpy (TempFileDirectory, s);
+  strncpy (TempFileDirectory, s, MAX_LENGTH - 10);
+  TempFileDirectory[MAX_LENGTH - 10] = EOS;
   TtaAppendDocumentPath (TempFileDirectory);
 
   /*
@@ -6986,7 +6988,8 @@ void InitAmaya (NotifyEvent * event)
   SavedDocumentURL = NULL;
   /* set path on current directory */
   wxString homedir = TtaGetHomeDir ();
-  strcpy (DirectoryName, (const char *)homedir.mb_str(wxConvUTF8));
+  strncpy (DirectoryName, (const char *)homedir.mb_str(wxConvUTF8),MAX_LENGTH-10);
+  DirectoryName[MAX_LENGTH-10] = EOS;
   if (DirectoryName[0] == EOS || !TtaDirExists (DirectoryName))
     getcwd (DirectoryName, MAX_LENGTH);
   DocumentName = (char *)TtaGetMemory (MAX_LENGTH);
@@ -7171,7 +7174,8 @@ void OpenNewDocFromArgv( char * url )
   else if (IsW3Path (s))
     {
       /* it's a remote document */
-      strcpy (LastURLName, s);
+      strncpy (LastURLName, s, MAX_LENGTH-1);
+      LastURLName[MAX_LENGTH-1] = EOS;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
   else
@@ -8178,33 +8182,33 @@ void ClearURLList()
  * Returns NULL if any problem occurs.
  * Dont use mktemp because doesnt exist on windows
   ----------------------------------------------------------------------*/
-char* CreateTempDirectory(const char* name)
+char* CreateTempDirectory (const char* name)
 {
   static int i = 0, len;
   char                 buff[MAX_LENGTH];
   char                 temppath[MAX_LENGTH];
   
-  strcpy(temppath, TtaGetEnvString ("APP_TMPDIR"));
+  strncpy(temppath, TtaGetEnvString ("APP_TMPDIR"), MAX_LENGTH-10);
+  temppath[MAX_LENGTH-10] = EOS;
   len = strlen(temppath);
-  if(len==0)
+  if (len==0)
     return NULL;
-  if(temppath[len]!=DIR_SEP)
-  {
-    temppath[len] = DIR_SEP;
-    temppath[len+1] = 0;
-    
-  }
-  
-  while(i<10000)
-  {
-    sprintf(buff, "%s%s%04d", temppath, name, i);
-    if(!TtaCheckDirectory(buff))
+  if (temppath[len]!=DIR_SEP)
     {
-      if(TtaCheckMakeDirectory(buff, TRUE))
-        return TtaStrdup(buff);
+      temppath[len] = DIR_SEP;
+      temppath[len+1] = 0;
     }
-    i++;
-  }
+  
+  while (i<10000)
+    {
+      sprintf(buff, "%s%s%04d", temppath, name, i);
+      if(!TtaCheckDirectory(buff))
+        {
+          if(TtaCheckMakeDirectory(buff, TRUE))
+            return TtaStrdup(buff);
+        }
+      i++;
+    }
   return NULL;
 }
 

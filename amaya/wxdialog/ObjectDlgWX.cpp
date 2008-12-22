@@ -145,9 +145,8 @@ ObjectDlgWX::~ObjectDlgWX()
 void ObjectDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
 {
   wxString wx_mimetype = XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->GetValue ();
-
-  wxASSERT( wx_mimetype.Len() < MAX_LENGTH );
-  strcpy( UserMimeType, (const char*)wx_mimetype.mb_str(wxConvUTF8) );
+  strncpy( UserMimeType, (const char*)wx_mimetype.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  UserMimeType[MAX_LENGTH - 1] = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -219,7 +218,8 @@ void ObjectDlgWX::OnOpenButton( wxCommandEvent& event )
       return;
     }
 
-  strcpy( buffer, (const char*)url.mb_str(wxConvUTF8) );
+  strncpy( buffer, (const char*)url.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  buffer[MAX_LENGTH - 1] = EOS;
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)buffer );
 

@@ -3052,7 +3052,7 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
   attrType.AttrTypeNum = 0;
 
 #ifdef OLD
-  if (strlen ((char *)attrName) > NAME_LENGTH)
+  if (strlen ((char *)attrName) >= NAME_LENGTH)
     {
       strcpy ((char *)schemaName, (char *)CurrentParserCtxt->SSchemaName);
       sprintf ((char *)msgBuffer, "Attribute name too long for Amaya %s", attrName);
@@ -3095,7 +3095,8 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
   if (attrType.AttrTypeNum <= 0)
     {
       /* This attribute is not in the corresponding mapping table */
-      strcpy ((char *)schemaName, (char *)CurrentParserCtxt->SSchemaName);
+      strncpy ((char *)schemaName, (char *)CurrentParserCtxt->SSchemaName,NAME_LENGTH-1);
+      schemaName[NAME_LENGTH-1] = EOS;
       // skip possible old template attributes
       if (strcmp (schemaName, "Template"))
         {

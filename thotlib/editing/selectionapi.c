@@ -460,7 +460,8 @@ ThotBool TtaIsSelectionUnique ()
   if (SelectedDocument == NULL && DocSelectedAttr == NULL)
     return FALSE;
   else if (FirstSelectedElement &&
-           FirstSelectedElement == LastSelectedElement)
+           (FirstSelectedElement == LastSelectedElement ||
+            WholeColumnSelected))
     return TRUE;
   else
     return FALSE;

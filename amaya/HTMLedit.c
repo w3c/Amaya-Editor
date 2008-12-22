@@ -529,7 +529,8 @@ static Element GenerateInlinechildren (Element el, ElementType newType, Document
 }
 
 /*----------------------------------------------------------------------
-  Generate an attribute on a set of elements (from the attribute menu)
+  AttributeChange generates an aType attribute with data value on the
+  current selection from the attribute menu.
   -----------------------------------------------------------------------*/
 void AttributeChange (int aType, char * data)
 {
@@ -537,6 +538,7 @@ void AttributeChange (int aType, char * data)
 }
 
 /*----------------------------------------------------------------------
+  UpdateAttribute 
   -----------------------------------------------------------------------*/
 static void UpdateAttribute (Attribute attr, char * data, Element el, Document doc)
 {

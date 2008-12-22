@@ -422,6 +422,9 @@ static void         wrNumExcept (int Num)
 	    case ExcColRef:
 	       printf ("ColRef");
 	       break;
+	    case ExcColColRef:
+	       printf ("ColColRef");
+	       break;
 	    case ExcColSpan:
 	       printf ("ColSpan");
 	       break;

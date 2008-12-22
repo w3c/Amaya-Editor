@@ -100,6 +100,7 @@
 #define ExcEventAttr 329
 #define ExcIsCaption 330
 #define ExcPseudoParag 331
+#define ExcColColRef 332
 
 /* CSS exceptions */
 #define ExcCssBackground 340

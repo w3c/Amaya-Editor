@@ -71,12 +71,11 @@ TitleDlgWX::~TitleDlgWX()
 void TitleDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
   wxString new_title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
+  char     buffer[MAX_LENGTH];
 
   // allocate a temporary buffer to copy the 'const char *' new_title buffer 
-  char buffer[512];
-  wxASSERT( new_title.Len() < 512 );
-  strcpy( buffer, (const char*)new_title.mb_str(wxConvUTF8) );
-
+  strncpy( buffer, (const char*)new_title.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  buffer[MAX_LENGTH - 1] = EOS;
   // give the new title to Amaya
   ThotCallback (BaseDialog + TitleText,  STRING_DATA, (char *)buffer );
   // set the new title

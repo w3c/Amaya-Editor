@@ -421,7 +421,8 @@ void SaveAsDlgWX::OnDirImgButton( wxCommandEvent& event )
       if (p_dlg->ShowModal() == wxID_OK)
         {
           path = p_dlg->GetPath ();
-          strcpy (buffer, (const char*)path.mb_str(wxConvUTF8));
+          strncpy (buffer, (const char*)path.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+          buffer[MAX_LENGTH - 1] = EOS;
           len = strlen (buffer);
           if (buffer[len-1] != DIR_SEP)
             strcat (buffer, DIR_STR);
@@ -454,7 +455,8 @@ void SaveAsDlgWX::OnDirCssButton( wxCommandEvent& event )
       if (p_dlg->ShowModal() == wxID_OK)
         {
           path = p_dlg->GetPath ();
-          strcpy (buffer, (const char*)path.mb_str(wxConvUTF8));
+          strncpy (buffer, (const char*)path.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+          buffer[MAX_LENGTH - 1] = EOS;
           len = strlen (buffer);
           if (buffer[len-1] != DIR_SEP)
             strcat (buffer, DIR_STR);

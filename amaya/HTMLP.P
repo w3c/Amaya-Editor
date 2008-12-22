@@ -4492,6 +4492,10 @@ FIELDSET: BEGIN
         PageBreak: Yes;
 #endif
         VertPos: Top = Previous Table_head . Top;
+        BorderTopColor: Enclosing =;
+        BorderLeftColor: Enclosing = ;
+        BorderBottomColor: Enclosing =;
+        BorderRightColor: Enclosing =;
         BorderTopWidth: Enclosing =;
         BorderRightWidth: Enclosing =;
         BorderBottomWidth: Enclosing =;
@@ -4520,14 +4524,15 @@ FIELDSET: BEGIN
         BEGIN
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
-        BorderTopColor: Grey;
-        BorderLeftColor: Grey;
-        BorderBottomColor: DarkGrey1;
-        BorderRightColor: DarkGrey1;
+        BorderTopColor: Enclosing =;
+        BorderLeftColor: Enclosing = ;
+        BorderBottomColor: Enclosing =;
+        BorderRightColor: Enclosing =;
         BorderTopStyle: Solid;
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;
         BorderBottomStyle: Solid;
+        BorderTopWidth: 1 px;
 #ifdef PAGE
         PageBreak: No;
 #endif
@@ -4536,11 +4541,19 @@ FIELDSET: BEGIN
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width - STRUCT_INDENT;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         IN Alternate_view BEGIN
                 HorizPos: Left = Enclosing . Left;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         END;
 
@@ -4552,23 +4565,32 @@ FIELDSET: BEGIN
         PageBreak: No;
 #endif
         VertPos: Top = Previous . Bottom;
-        BorderTopColor: Grey;
-        BorderLeftColor: Grey;
-        BorderBottomColor: DarkGrey1;
-        BorderRightColor: DarkGrey1;
+        BorderTopColor: Enclosing =;
+        BorderLeftColor: Enclosing = ;
+        BorderBottomColor: Enclosing =;
+        BorderRightColor: Enclosing =;
         BorderTopStyle: Solid;
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;
         BorderBottomStyle: Solid;
+        BorderTopWidth: 1 px;
         IN Structure_view BEGIN
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width - STRUCT_INDENT;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         IN Alternate_view BEGIN
                 HorizPos: Left = Enclosing . Left;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         END;
 
@@ -4578,6 +4600,10 @@ FIELDSET: BEGIN
         PageBreak: Yes;
 #endif
         VertPos: Top = Previous . Bottom;
+        BorderTopColor: Enclosing =;
+        BorderLeftColor: Enclosing = ;
+        BorderBottomColor: Enclosing =;
+        BorderRightColor: Enclosing =;
         BorderTopStyle: Solid;
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;
@@ -4602,19 +4628,32 @@ FIELDSET: BEGIN
         PageBreak: Yes;
 #endif
         VertPos: Top = Previous . Bottom;
+        BorderTopColor: Enclosing =;
+        BorderLeftColor: Enclosing = ;
+        BorderBottomColor: Enclosing =;
+        BorderRightColor: Enclosing =;
         BorderTopStyle: Solid;
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;
         BorderBottomStyle: Solid;
-        IN Structure_view BEGIN
+        BorderTopWidth: 1 px;
+       IN Structure_view BEGIN
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width - STRUCT_INDENT;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         IN Alternate_view BEGIN
                 HorizPos: Left = Enclosing . Left;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                BorderTopWidth: 0;
+                BorderRightWidth: 0;
+                BorderBottomWidth: 0;
+                BorderLeftWidth: 0;
                 END;
         END;
 

@@ -182,7 +182,7 @@ void ImageDlgWX::OnPosition( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
 {
-  char     Buffer[MAX_LENGTH];
+  char     buffer[MAX_LENGTH];
 
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
@@ -194,9 +194,10 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
       return;
     }
 
-  strcpy( Buffer, (const char*)url.mb_str(wxConvUTF8) );
+  strncpy( buffer, (const char*)url.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+  buffer[MAX_LENGTH - 1] = EOS;
   // give the new url to amaya (to do url completion)
-  ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)Buffer );
+  ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)buffer );
 
   // get the current alt
   wxString alt = XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->GetValue( );

@@ -402,71 +402,72 @@ static void AddRDFaNS (Document doc)
       sprintf (tempPath, "%s%crdfa-tmp.dat", homePath, DIR_SEP);
       file = TtaReadOpen ((char *)path);
       if (!file)
-	{
-	  // open the default file      
-	  ptr = TtaGetEnvString ("THOTDIR");
-	  strcpy (configPath, ptr);
-	  strcat (configPath, DIR_STR);
-	  strcat (configPath, "config");
-	  strcat (configPath, DIR_STR);
-	  strcat (configPath, "rdfa.dat");
-	  file = TtaReadOpen ((char *)configPath);
-	  if (!file)
-	    {
-	      /* The config file doesn't exist, load a static configuration */
-	      file = TtaWriteOpen ((char *)tempPath);
-	      fprintf (file, "rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n");
-	      fprintf (file, "rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n");
-	      fprintf (file, "owl=\"http://www.w3.org/2002/07/owl#\"\n");
-	      fprintf (file, "xsd=\"http://www.w3.org/2001/XMLSchema#\"\n");
-	      fprintf (file, "foaf=\"http://xmlns.com/foaf/0.1/\"\n");
-	      fprintf (file, "dc=\"http://purl.org/dc/elements/1.1/\"\n");
-	      TtaWriteClose (file);
-	      /* Retry to open it */
-	      file = TtaReadOpen ((char *)tempPath);
-	    }
-	}
+        {
+          // open the default file      
+          ptr = TtaGetEnvString ("THOTDIR");
+          strncpy (configPath, ptr, MAX_LENGTH - 20);
+          configPath[MAX_LENGTH - 20] = EOS;
+          strcat (configPath, DIR_STR);
+          strcat (configPath, "config");
+          strcat (configPath, DIR_STR);
+          strcat (configPath, "rdfa.dat");
+          file = TtaReadOpen ((char *)configPath);
+          if (!file)
+            {
+              /* The config file doesn't exist, load a static configuration */
+              file = TtaWriteOpen ((char *)tempPath);
+              fprintf (file, "rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n");
+              fprintf (file, "rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n");
+              fprintf (file, "owl=\"http://www.w3.org/2002/07/owl#\"\n");
+              fprintf (file, "xsd=\"http://www.w3.org/2001/XMLSchema#\"\n");
+              fprintf (file, "foaf=\"http://xmlns.com/foaf/0.1/\"\n");
+              fprintf (file, "dc=\"http://purl.org/dc/elements/1.1/\"\n");
+              TtaWriteClose (file);
+              /* Retry to open it */
+              file = TtaReadOpen ((char *)tempPath);
+            }
+        }
       
       if (file)
-	{
-	  prefix[0] = EOS;
-	  uri[0] = EOS;
-	  line[0] = EOS;
-	  len = 0;
-	  pref = FALSE;
+        {
+          prefix[0] = EOS;
+          uri[0] = EOS;
+          line[0] = EOS;
+          len = 0;
+          pref = FALSE;
 
-	  while (TtaReadByte (file, &c))
-	    {
-	      if (c == 13 || c == EOL)
-		{
-		  line[len] = EOS;
-		  strcpy (uri, line);
-		  line[0] = EOS;
-		  len = 0;
-		  if (prefix[0] != EOS && uri[0] != EOS)
-		    {
-		      TtaSetANamespaceDeclaration (doc, root, prefix, uri);
-		      prefix[0] = EOS;
-		      uri[0] = EOS;
-		      pref = FALSE;
-		    }
-		}
-	      else if (c == '=')
-		{
-		  line[len] = EOS;
-		  strcpy (prefix, line);
-		  pref = TRUE;
-		  line[0] = EOS;
-		  len = 0;
-		}
-	      else
-		{
-		  if (c != '"')
-		    line[len++] = (char)c;
-		}
-	    }
-	  TtaReadClose (file);
-	}
+          while (len < MAX_LENGTH && TtaReadByte (file, &c))
+            {
+              if (c == 13 || c == EOL)
+                {
+                  line[len] = EOS;
+                  strcpy (uri, line);
+                  line[0] = EOS;
+                  len = 0;
+                  if (prefix[0] != EOS && uri[0] != EOS)
+                    {
+                      TtaSetANamespaceDeclaration (doc, root, prefix, uri);
+                      prefix[0] = EOS;
+                      uri[0] = EOS;
+                      pref = FALSE;
+                    }
+                }
+              else if (c == '=')
+                {
+                  line[len] = EOS;
+                  strcpy (prefix, line);
+                  pref = TRUE;
+                  line[0] = EOS;
+                  len = 0;
+                }
+              else
+                {
+                  if (c != '"')
+                    line[len++] = (char)c;
+                }
+            }
+          TtaReadClose (file);
+        }
     }  
 
   TtaFreeMemory(path);

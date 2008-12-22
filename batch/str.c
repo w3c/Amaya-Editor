@@ -1731,6 +1731,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
       case KWD_ColRef: /* on attribute */
         ExceptionNum (ExcColRef, False, True, False, wi);
         break;
+      case KWD_ColColRef: /* on attribute */
+        ExceptionNum (ExcColColRef, False, True, False, wi);
+        break;
       case KWD_ColSpan: /* on attribute */
         ExceptionNum (ExcColSpan, False, True, True, wi);
         break;

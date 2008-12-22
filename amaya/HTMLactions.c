@@ -1588,7 +1588,8 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
           s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
                                            TtaGetDefaultCharset ());
           pathname = (char *)TtaGetMemory (length);
-          strcpy (pathname, s);
+          strncpy (pathname, s, MAX_LENGTH - 1);
+          pathname[MAX_LENGTH - 1] = EOS;
           TtaFreeMemory (s);
           if (info)
             {
@@ -2044,7 +2045,7 @@ static void DisplayUrlAnchor (Element element, Document doc)
           url = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
                                              TtaGetDefaultCharset ());
           TtaFreeMemory (utf8value);
-          pathname = (char *)TtaGetMemory (MAX_LENGTH);
+          pathname = (char *)TtaGetMemory (MAX_LENGTH + strlen (url));
           documentname = (char *)TtaGetMemory (MAX_LENGTH);
           if (url[0] == '#')
             {

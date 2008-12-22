@@ -4113,6 +4113,36 @@ ThotBool SelectPairInterval ()
 
 
 /*----------------------------------------------------------------------
+  MoveSelectionToCol returns pointer to <col> elements if the selection
+  concerns intenal <colhead>
+  Return TRUE if the change is done
+  ----------------------------------------------------------------------*/
+ThotBool MoveSelectionToCol (PtrElement *firstSel, PtrElement *lastSel)
+{
+  PtrAttribute        pAttr;
+
+  if (FirstSelectedColumn)
+    {
+      // point to <col> elements instead of cells
+      pAttr = GetAttrElementWithException (ExcColColRef, FirstSelectedColumn);
+      if (pAttr && pAttr->AeAttrReference &&
+          pAttr->AeAttrReference->RdReferred)
+        *firstSel = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+      if (LastSelectedColumn != FirstSelectedColumn)
+        {
+          pAttr = GetAttrElementWithException (ExcColColRef, LastSelectedColumn);
+          if (pAttr && pAttr->AeAttrReference &&
+              pAttr->AeAttrReference->RdReferred)
+            *lastSel = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+        }
+      else
+        *lastSel = *firstSel;
+      return TRUE;
+    }
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
   SelColumns
   Select the whole columns between col1 and col2.
   ----------------------------------------------------------------------*/
@@ -4171,13 +4201,13 @@ static void SelColumns (PtrElement col1, PtrElement col2)
   while (pRow && !pCell);
   pLast = pCell;
   
+  doc = IdentDocument (SelectedDocument);
   if (pFirst && pFirst == pLast)
     SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
   else
     {
       SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
       /* send event TteElemExtendSelect.Pre to the application*/
-      doc = IdentDocument (SelectedDocument);
       notifyEl.event = TteElemExtendSelect;
       notifyEl.document = doc;
       notifyEl.element = (Element) pLast;
@@ -4210,6 +4240,8 @@ static void SelColumns (PtrElement col1, PtrElement col2)
   WholeColumnSelected = TRUE;
   FirstSelectedColumn = col1;
   LastSelectedColumn = col2;
+  // force the update of the attributes
+  TtaUpdateAttrMenu (doc);
   TtaSetStatusSelectedElement (doc, 1, (Element) FirstSelectedElement);  
 }
 
