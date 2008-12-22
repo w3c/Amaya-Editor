@@ -7642,6 +7642,8 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
 
   if (pathname == NULL || pathname[0] == EOS)
     return;
+  if (strlen(pathname) > 100)
+    return;
   if (form_data && form_data[0] != EOS)
     {
       url = (char *)TtaGetMemory (strlen (pathname) + strlen (form_data) + 2);

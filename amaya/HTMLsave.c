@@ -3467,7 +3467,7 @@ static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
   ----------------------------------------------------------------------*/
 void RemoveAutoSavedDoc (Document doc)
 {
-  char     pathname[MAX_LENGTH];
+  char     pathname[MAX_LENGTH * 2];
   char     docname[MAX_LENGTH];
   char    *url, c;
   int      l;
