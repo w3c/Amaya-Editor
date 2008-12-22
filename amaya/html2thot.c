@@ -4398,7 +4398,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 {
   wchar_t        wcharRead = EOS;
   unsigned char  charRead;
-  unsigned char  fallback[5];
+  unsigned char  fallback[8];
   unsigned char *ptr;
   char          *buff;
   int            res = 0;

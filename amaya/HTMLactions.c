@@ -1326,7 +1326,7 @@ void Do_follow_link_callback (int targetDocument, int status, char *urlName,
   View                view;
   Do_follow_link_context  *ctx = (Do_follow_link_context *) context;
   char               *sourceDocUrl, *utf8path;
-  char                newurl[MAX_LENGTH], newname[MAX_LENGTH];
+  char                newurl[MAX_LENGTH * 2], newname[MAX_LENGTH];
 
   /* retrieve the context */
   if (ctx == NULL)
@@ -1379,7 +1379,6 @@ void Do_follow_link_callback (int targetDocument, int status, char *urlName,
     }
 
   NormalizeURL (utf8path, doc, newurl, newname, NULL);
-
   if ((utf8path[0] == '#' || (DocumentURLs[doc] && !strcmp(newurl, DocumentURLs[doc])))
           && targetDocument != 0)
     {
@@ -1494,11 +1493,10 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
   char                  *pathname, *utf8value;
   char                   documentname[MAX_LENGTH];
   char                  *utf8path, *info, *s;
-  int                    length;
-  int                    method;
+  int                    length, method, l;
   Do_follow_link_context *ctx;
   ThotBool		           isHTML, history, readonly = FALSE;
-  char                   newurl[MAX_LENGTH], newname[MAX_LENGTH];
+  char                   newurl[MAX_LENGTH * 2], newname[MAX_LENGTH];
 
   if (Follow_exclusive || Synchronizing)
     // there is already a current follow the link or a synchronizing
@@ -1517,6 +1515,8 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
   PseudoAttr = NULL;
   /* get a buffer for the target URL */
   length = TtaGetTextAttributeLength (HrefAttr) + 1;
+  if (length > MAX_LENGTH - 1)
+    length = MAX_LENGTH - 1;
   utf8path = (char *)TtaGetMemory (length);
   if (utf8path)
     {
@@ -1535,8 +1535,10 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
             }
           TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
         }
-      /* get the URL itself */
+      /* get the URL itself (limited to MAX_LENGTH) */
       TtaGiveTextAttributeValue (HrefAttr, utf8path, &length);
+      if (length == MAX_LENGTH - 1)
+        utf8path[length] = EOS;
       /* suppress white spaces at the end */
       length--;
       while (utf8path[length] == ' ')
@@ -1553,8 +1555,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
       TtaSetSelectionMode (TRUE);
 
       NormalizeURL (utf8path, doc, newurl, newname, NULL);
-
-      if (utf8path[0] == '#' || !strcmp(newurl, DocumentURLs[doc]))
+      if (utf8path[0] == '#' || !strcmp (newurl, DocumentURLs[doc]))
         {
           /* the target element is part of the same document */
           targetDocument = doc;
