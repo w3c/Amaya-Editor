@@ -4444,10 +4444,10 @@ FIELDSET: BEGIN
         Background: Enclosing =;
         ShowBox;
         FillPattern: Enclosing =;
-        MarginTop: Enclosing =;
+        {MarginTop: Enclosing =;
         MarginRight: Enclosing =;
         MarginBottom: Enclosing =;
-        MarginLeft: Enclosing =;
+        MarginLeft: Enclosing =;}
         BorderTopWidth: Enclosing =;
         BorderRightWidth: Enclosing =;
         BorderBottomWidth: Enclosing =;
@@ -4492,6 +4492,10 @@ FIELDSET: BEGIN
         PageBreak: Yes;
 #endif
         VertPos: Top = Previous Table_head . Top;
+        MarginTop: Enclosing =;
+        MarginRight: Enclosing =;
+        MarginBottom: Enclosing =;
+        MarginLeft: Enclosing =;
         BorderTopColor: Enclosing =;
         BorderLeftColor: Enclosing = ;
         BorderBottomColor: Enclosing =;
@@ -4532,7 +4536,6 @@ FIELDSET: BEGIN
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;
         BorderBottomStyle: Solid;
-        BorderTopWidth: 1 px;
 #ifdef PAGE
         PageBreak: No;
 #endif
@@ -4573,7 +4576,6 @@ FIELDSET: BEGIN
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;
         BorderBottomStyle: Solid;
-        BorderTopWidth: 1 px;
         IN Structure_view BEGIN
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 VertPos: Top = Previous . Bottom;
@@ -4636,7 +4638,6 @@ FIELDSET: BEGIN
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;
         BorderBottomStyle: Solid;
-        BorderTopWidth: 1 px;
        IN Structure_view BEGIN
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
                 VertPos: Top = Previous . Bottom;
@@ -4662,6 +4663,10 @@ FIELDSET: BEGIN
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         VertPos: Top = Previous . Bottom;
+        BorderTopColor: Enclosing =;
+        BorderLeftColor: Enclosing = ;
+        BorderBottomColor: Enclosing =;
+        BorderRightColor: Enclosing =;
 #ifdef PAGE
         {**** the next rule should be deleted, but deleting it causes
               the print program to crash when formatting a very high
@@ -4693,10 +4698,10 @@ FIELDSET: BEGIN
         PaddingRight: 2 px;
         PaddingBottom: 1 px;
         PaddingLeft: 2 px;
-        BorderTopColor: Grey;
-        BorderLeftColor: Grey;
-        BorderBottomColor: DarkGrey1;
-        BorderRightColor: DarkGrey1;
+        BorderTopColor: Enclosing =;
+        BorderLeftColor: Enclosing = ;
+        BorderBottomColor: Enclosing =;
+        BorderRightColor: Enclosing =;
         BorderTopStyle: Solid;
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;
@@ -4748,10 +4753,10 @@ FIELDSET: BEGIN
         PaddingLeft: 1 px;
         PaddingBottom: 1 px;
         PaddingRight: 1 px;
-        BorderTopColor: Grey;
-        BorderLeftColor: Grey;
-        BorderBottomColor: DarkGrey1;
-        BorderRightColor: DarkGrey1;
+        BorderTopColor: Enclosing =;
+        BorderLeftColor: Enclosing = ;
+        BorderBottomColor: Enclosing =;
+        BorderRightColor: Enclosing =;
         BorderTopStyle: Solid;
         BorderLeftStyle: Solid;
         BorderRightStyle: Solid;

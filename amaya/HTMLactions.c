@@ -1583,13 +1583,11 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
                 }
             }
 
-           s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+          s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
                                            TtaGetDefaultCharset ());
-	   length = strlen (s);
-          if (length >= MAX_LENGTH / 4)
-            length = MAX_LENGTH / 4;
-	  if (info)
-	    length += strlen (info);
+          length = MAX_LENGTH;
+          if (info)
+            length += strlen (info);
           pathname = (char *)TtaGetMemory (length + 1);
           strncpy (pathname, s, MAX_LENGTH / 4);
           pathname[MAX_LENGTH / 4] = EOS;

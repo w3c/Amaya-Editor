@@ -24,7 +24,7 @@ public:
                const wxString & searched,
                const wxString & replace,
                bool do_replace,
-               bool checkcase,
+               bool anycase,
                bool searchAfter);
   // Destructor.                  
   virtual ~SearchDlgWX();

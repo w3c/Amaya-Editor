@@ -59,11 +59,13 @@ ${LIBWWWDIR}/LICENSE.html \
 ${LIBWWWDIR}/Makefile.am \
 ${LIBWWWDIR}/Makefile.in \
 ${LIBWWWDIR}/aclocal.m4 \
+${LIBWWWDIR}/aclocal.m4.64 \
 ${LIBWWWDIR}/libwww-config.in \
 ${LIBWWWDIR}/wwwconf.h.in \
 ${LIBWWWDIR}/w3c-libwww.spec.in \
 ${LIBWWWDIR}/configure \
 ${LIBWWWDIR}/configure.ac \
+${LIBWWWDIR}/configure.ac.64 \
 ${LIBWWWDIR}/wwwconf.h.in \
 ${LIBWWWDIR}/Library/Makefile.am \
 ${LIBWWWDIR}/Library/Makefile.in \
@@ -83,6 +85,7 @@ ${LIBWWWDIR}/Library/src/windows/*.h \
 ${LIBWWWDIR}/Library/src/windows/*.def \
 ${LIBWWWDIR}/Library/src/windows/*.files \
 ${LIBWWWDIR}/modules/Makefile.am \
+${LIBWWWDIR}/modules/Makefile.am.64 \
 ${LIBWWWDIR}/modules/Makefile.in \
 ${LIBWWWDIR}/modules/md5/Makefile.am \
 ${LIBWWWDIR}/modules/md5/Makefile.in \
