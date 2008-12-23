@@ -1435,8 +1435,9 @@ ThotBool IsCSSLink (Element el, Document doc)
   if (attr)
     {
       /* get a buffer for the attribute value */
-      length = MAX_LENGTH;
+      length = MAX_LENGTH / 4;
       TtaGiveTextAttributeValue (attr, buffer, &length);
+      buffer[MAX_LENGTH / 4] = EOS;
       /* remove trailing spaces */
       while (buffer[length-1] == SPACE || buffer[length-1] == TAB)
         {
@@ -1466,8 +1467,9 @@ ThotBool IsCSSLink (Element el, Document doc)
           else
             {
               /* get a buffer for the attribute value */
-              length = MAX_LENGTH;
+              length = MAX_LENGTH / 4;
               TtaGiveTextAttributeValue (attr, buffer, &length);
+	      buffer[MAX_LENGTH / 4] = EOS;
               if (!strcasecmp (buffer, "text/css"))
                 return TRUE;
             }
@@ -1493,10 +1495,10 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
   char                  *pathname, *utf8value;
   char                   documentname[MAX_LENGTH];
   char                  *utf8path, *info, *s;
+  char                   newurl[MAX_LENGTH * 2], newname[MAX_LENGTH];
   int                    length, method, l;
   Do_follow_link_context *ctx;
-  ThotBool		           isHTML, history, readonly = FALSE;
-  char                   newurl[MAX_LENGTH * 2], newname[MAX_LENGTH];
+  ThotBool		 isHTML, history, readonly = FALSE;
 
   if (Follow_exclusive || Synchronizing)
     // there is already a current follow the link or a synchronizing
@@ -1515,9 +1517,9 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
   PseudoAttr = NULL;
   /* get a buffer for the target URL */
   length = TtaGetTextAttributeLength (HrefAttr) + 1;
-  if (length > MAX_LENGTH - 1)
-    length = MAX_LENGTH - 1;
-  utf8path = (char *)TtaGetMemory (length);
+  if (length > MAX_LENGTH / 4)
+    length = MAX_LENGTH / 4;
+  utf8path = (char *)TtaGetMemory (MAX_LENGTH);
   if (utf8path)
     {
       elType = TtaGetElementType (anchor);
@@ -1537,8 +1539,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
         }
       /* get the URL itself (limited to MAX_LENGTH) */
       TtaGiveTextAttributeValue (HrefAttr, utf8path, &length);
-      if (length == MAX_LENGTH - 1)
-        utf8path[length] = EOS;
+      utf8path[length] = EOS;
       /* suppress white spaces at the end */
       length--;
       while (utf8path[length] == ' ')
@@ -1582,15 +1583,16 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
                 }
             }
 
-          if (info)
-            length += strlen (info);
-          if (length < MAX_LENGTH)
-            length = MAX_LENGTH;
-          s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+           s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
                                            TtaGetDefaultCharset ());
-          pathname = (char *)TtaGetMemory (length);
-          strncpy (pathname, s, MAX_LENGTH - 1);
-          pathname[MAX_LENGTH - 1] = EOS;
+	   length = strlen (s);
+          if (length >= MAX_LENGTH / 4)
+            length = MAX_LENGTH / 4;
+	  if (info)
+	    length += strlen (info);
+          pathname = (char *)TtaGetMemory (length + 1);
+          strncpy (pathname, s, MAX_LENGTH / 4);
+          pathname[MAX_LENGTH / 4] = EOS;
           TtaFreeMemory (s);
           if (info)
             {
@@ -1636,7 +1638,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
                   method = CE_CSS;
                   history = FALSE;
                   /* normalize the URL */
-                  s = (char *)TtaGetMemory (length);
+                  s = (char *)TtaGetMemory (length + 1);
                   strcpy (s, pathname);
                   NormalizeURL (s, doc, pathname, documentname, NULL);
                   TtaFreeMemory (s);
@@ -1721,16 +1723,18 @@ void CheckRefresh (Document doc)
               if (attr)
                 {
                   value[0] = EOS;
-                  length = MAX_LENGTH;
+                  length = MAX_LENGTH / 4;
                   TtaGiveTextAttributeValue (attr, value, &length);
+		  value[MAX_LENGTH / 4] = EOS;
                   if (!strcasecmp (value, "refresh"))
                     {
                       attr = TtaGetAttribute (el, attrType1);
                       if (attr)
                         {
                           value[0] = EOS;
-                          length = MAX_LENGTH;
+                          length = MAX_LENGTH / 4;
                           TtaGiveTextAttributeValue (attr, value, &length);
+			  value[MAX_LENGTH / 4] = EOS;
                           ptr = strstr (value, "URL=");
                           if (ptr == NULL)
                             ptr = strstr (value, "url=");
@@ -2035,14 +2039,13 @@ static void DisplayUrlAnchor (Element element, Document doc)
   if (anchor && HrefAttr)
     {
       /* Get a buffer for the target URL */
-      length = TtaGetTextAttributeLength (HrefAttr);
-      length++;
-
-      utf8value = (char *)TtaGetMemory (length);
+      length = MAX_LENGTH / 4;
+      utf8value = (char *)TtaGetMemory (MAX_LENGTH);
       if (utf8value != NULL)
         {
           /* Get the URL */
           TtaGiveTextAttributeValue (HrefAttr, utf8value, &length);
+	  utf8value[MAX_LENGTH / 4] = EOS;
           url = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
                                              TtaGetDefaultCharset ());
           TtaFreeMemory (utf8value);

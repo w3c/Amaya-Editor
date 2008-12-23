@@ -4762,10 +4762,10 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   inNewWindow = ctx->inNewWindow;
 
   ok = TRUE;
-  pathname = (char *)TtaGetMemory (MAX_LENGTH + 1);
-  strncpy (pathname, urlName, MAX_LENGTH);
-  pathname[MAX_LENGTH] = EOS;
-  tempfile = (char *)TtaGetMemory (MAX_LENGTH + 1);
+  pathname = (char *)TtaGetMemory (MAX_LENGTH);
+  strncpy (pathname, urlName, MAX_LENGTH / 4);
+  pathname[MAX_LENGTH / 4] = EOS;
+  tempfile = (char *)TtaGetMemory (MAX_LENGTH);
   if (method != CE_MAKEBOOK && method != CE_TEMPLATE && method != CE_ANNOT &&
       method != CE_LOG && method != CE_HELP &&
       DocumentTypes[newdoc] != docLibrary &&
@@ -4780,8 +4780,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
     }
   if (outputfile != NULL)
     {
-      strncpy (tempfile, outputfile, MAX_LENGTH);
-      tempfile[MAX_LENGTH] = EOS;
+      strncpy (tempfile, outputfile, MAX_LENGTH / 4);
+      tempfile[MAX_LENGTH / 4] = EOS;
     }
   else
     tempfile[0] = EOS;
@@ -5016,7 +5016,7 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
   /* Extract parameters if necessary */
   if (urlname == 0)
     return (0);
-  if (strlen (urlname) > MAX_LENGTH - 1) 
+  if (strlen (urlname) > MAX_LENGTH / 4) 
     {
       sprintf (lg_uri, "%d", MAX_LENGTH);
       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), lg_uri);
@@ -5037,7 +5037,8 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
   tempfile[0]  = EOS;
   initial_url     = (char *)TtaGetMemory (MAX_LENGTH);
   
-  strcpy(temp_url,  urlname);
+  strncpy(temp_url,  urlname, MAX_LENGTH / 4);
+  temp_url[MAX_LENGTH / 4] = EOS;
   /* Extract parameters if any */
   ExtractParameters (temp_url, parameters);
   /* Extract the target if necessary */
@@ -6575,7 +6576,7 @@ static ThotBool RestoreAmayaDocs ()
   FILE       *f;
   char        tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
   char        docname[MAX_LENGTH];  
-  char        line[MAX_LENGTH * 2];
+  char        line[MAX_LENGTH];
   int         docType, i, j;
   ThotBool    aDoc, iscrash, restore;
 
@@ -6896,8 +6897,8 @@ void InitAmaya (NotifyEvent * event)
     }
   
   /* add the temporary directory in document path */
-  strncpy (TempFileDirectory, s, MAX_LENGTH - 10);
-  TempFileDirectory[MAX_LENGTH - 10] = EOS;
+  strncpy (TempFileDirectory, s, MAX_LENGTH / 4 - 10);
+  TempFileDirectory[MAX_LENGTH / 4 - 10] = EOS;
   TtaAppendDocumentPath (TempFileDirectory);
 
   /*
@@ -6988,8 +6989,8 @@ void InitAmaya (NotifyEvent * event)
   SavedDocumentURL = NULL;
   /* set path on current directory */
   wxString homedir = TtaGetHomeDir ();
-  strncpy (DirectoryName, (const char *)homedir.mb_str(wxConvUTF8),MAX_LENGTH-10);
-  DirectoryName[MAX_LENGTH-10] = EOS;
+  strncpy (DirectoryName, (const char *)homedir.mb_str(wxConvUTF8),MAX_LENGTH / 4 - 10);
+  DirectoryName[MAX_LENGTH / 4 - 10] = EOS;
   if (DirectoryName[0] == EOS || !TtaDirExists (DirectoryName))
     getcwd (DirectoryName, MAX_LENGTH);
   DocumentName = (char *)TtaGetMemory (MAX_LENGTH);
@@ -7174,8 +7175,8 @@ void OpenNewDocFromArgv( char * url )
   else if (IsW3Path (s))
     {
       /* it's a remote document */
-      strncpy (LastURLName, s, MAX_LENGTH-1);
-      LastURLName[MAX_LENGTH-1] = EOS;
+      strncpy (LastURLName, s, MAX_LENGTH / 4);
+      LastURLName[MAX_LENGTH / 4] = EOS;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
   else
@@ -7643,6 +7644,7 @@ void AddURLInCombobox (char *pathname, char *form_data, ThotBool keep)
   if (pathname == NULL || pathname[0] == EOS)
     return;
   if (strlen(pathname) > 100)
+    // don't register too long paths
     return;
   if (form_data && form_data[0] != EOS)
     {
@@ -8190,10 +8192,10 @@ char* CreateTempDirectory (const char* name)
   char                 buff[MAX_LENGTH];
   char                 temppath[MAX_LENGTH];
   
-  strncpy(temppath, TtaGetEnvString ("APP_TMPDIR"), MAX_LENGTH-10);
-  temppath[MAX_LENGTH-10] = EOS;
+  strncpy(temppath, TtaGetEnvString ("APP_TMPDIR"), MAX_LENGTH / 4);
+  temppath[MAX_LENGTH / 4] = EOS;
   len = strlen(temppath);
-  if (len==0)
+  if (len == 0)
     return NULL;
   if (temppath[len]!=DIR_SEP)
     {
@@ -8201,7 +8203,7 @@ char* CreateTempDirectory (const char* name)
       temppath[len+1] = 0;
     }
   
-  while (i<10000)
+  while (i < 10000)
     {
       sprintf(buff, "%s%s%04d", temppath, name, i);
       if(!TtaCheckDirectory(buff))
