@@ -1275,9 +1275,10 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
         {
           if (!TtaIsValidID (attr, FALSE))
             {
-              length = TtaGetTextAttributeLength (attr) + 1;
-              name = (char *)TtaGetMemory (length);
+              length = MAX_LENGTH - 1;
+              name = (char *)TtaGetMemory (MAX_LENGTH);
               TtaGiveTextAttributeValue (attr, name, &length);
+	      name[MAX_LENGTH] = EOS;
               sprintf (msgBuffer, "Invalid ID value \"%s\"", name);
               lineNum = TtaGetElementLineNumber(el);
               if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
@@ -1291,9 +1292,10 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
              // this function is optional because it increases the loading time
               if (Check_read_ids && MakeUniqueName (el, doc, FALSE, FALSE))
                 {
-                  length = TtaGetTextAttributeLength (attr) + 1;
-                  name = (char *)TtaGetMemory (length);
+                  length = MAX_LENGTH - 1;
+                  name = (char *)TtaGetMemory (MAX_LENGTH);
                   TtaGiveTextAttributeValue (attr, name, &length);
+	          name[MAX_LENGTH] = EOS;
                   sprintf (msgBuffer, "Duplicate ID value \"%s\"", name);
                   lineNum = TtaGetElementLineNumber(el);
                   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)

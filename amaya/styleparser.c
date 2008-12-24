@@ -2327,6 +2327,8 @@ static char *SetCSSImage (Element element, PSchema tsch,
   url = NULL;
   image.typed_data.real = FALSE;
   cssRule = ParseCSSUrl (cssRule, &url);
+  if (strlen (url) > MAX_LENGTH / 4)
+    url[MAX_LENGTH / 4] = EOS;
   ptr = cssRule;
   if (ctxt->destroy)
     {
@@ -7537,7 +7539,7 @@ void HTMLSetBackgroundColor (Document doc, Element el, int specificity,
 {
   char             css_command[1000];
 
-  sprintf (css_command, "background-color: %s", color);
+  sprintf (css_command, "background-color: %50s", color);
   ParseHTMLSpecificStyle (el, css_command, doc, specificity, FALSE);
 }
 
@@ -7549,7 +7551,7 @@ void HTMLSetForegroundColor (Document doc, Element el, int specificity,
 {
   char           css_command[1000];
 
-  sprintf (css_command, "color: %s", color);
+  sprintf (css_command, "color: %50s", color);
   ParseHTMLSpecificStyle (el, css_command, doc, specificity, FALSE);
 }
 
@@ -7594,7 +7596,7 @@ void HTMLSetAlinkColor (Document doc, Element el, char *color)
 {
   char           css_command[1000];
 
-  sprintf (css_command, ":link { color: %s }", color);
+  sprintf (css_command, ":link { color: %50s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 
@@ -7605,7 +7607,7 @@ void HTMLSetAactiveColor (Document doc, Element el, char *color)
 {
   char           css_command[1000];
 
-  sprintf (css_command, ":active { color: %s }", color);
+  sprintf (css_command, ":active { color: %50s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 
@@ -7616,7 +7618,7 @@ void HTMLSetAvisitedColor (Document doc, Element el, char *color)
 {
   char           css_command[1000];
 
-  sprintf (css_command, ":visited { color: %s }", color);
+  sprintf (css_command, ":visited { color: %50s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 

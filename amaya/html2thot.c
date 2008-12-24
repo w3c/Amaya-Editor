@@ -2774,18 +2774,18 @@ static void EndOfEndTag (char c)
               if (DocumentMeta[HTMLcontext.doc] &&
                   DocumentMeta[HTMLcontext.doc]->xmlformat)
                 {
-                  sprintf (msgBuffer, "Invalid tag <%s> (removed when saving)", inputBuffer);
+                  sprintf (msgBuffer, "Invalid tag <%50s> (removed when saving)", inputBuffer);
                   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
                   removed = TRUE;
                 }
               else
                 {
-                  sprintf (msgBuffer, "Warning - unknown tag </%s>", inputBuffer);
+                  sprintf (msgBuffer, "Warning - unknown tag </%50s>", inputBuffer);
                   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
                   removed = FALSE;
                 }
               /* create an Invalid_element */
-              sprintf (msgBuffer, "</%s", inputBuffer);
+              sprintf (msgBuffer, "</%50s", inputBuffer);
               InsertInvalidEl (msgBuffer, removed);
             }
           else if (entry >= 0 &&
@@ -2796,7 +2796,7 @@ static void EndOfEndTag (char c)
               if (strlen ((char *)inputBuffer) > MaxMsgLength - 20)
                 inputBuffer[MaxMsgLength - 20] = EOS;
               sprintf (msgBuffer,
-                       "Invalid end element <%s> for the document profile",
+                       "Invalid end element <%50s> for the document profile",
                        inputBuffer);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
               XMLErrorsFoundInProfile = TRUE;
@@ -2807,7 +2807,7 @@ static void EndOfEndTag (char c)
               if (DocumentMeta[HTMLcontext.doc] &&
                   DocumentMeta[HTMLcontext.doc]->xmlformat)
                 {
-                  sprintf (msgBuffer, "Invalid end tag <%s>", inputBuffer);
+                  sprintf (msgBuffer, "Invalid end tag <%50s>", inputBuffer);
                   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
                 }
               else

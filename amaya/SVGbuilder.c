@@ -104,8 +104,7 @@ void SVGEntityCreated (unsigned char *entityValue, Language lang,
 void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
                              Document doc, ThotBool delete_)
 {
-#define buflen 200
-  char               css_command[buflen+20];
+  char               css_command[MAX_LENGTH + 20];
   int                length, val = 0;
   float              value;
   char              *text;
@@ -120,10 +119,10 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
   else
     /* the attribute value is a character string */
     {
-      length = TtaGetTextAttributeLength (attr) + 2;
+      length = MAX_LENGTH - 1;
       text = (char *)TtaGetMemory (length);
-      if (text != NULL)
-        TtaGiveTextAttributeValue (attr, text, &length);
+      TtaGiveTextAttributeValue (attr, text, &length);
+      text[MAX_LENGTH - 1] = EOS;
     }
 
   /* builds the equivalent CSS rule */

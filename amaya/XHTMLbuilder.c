@@ -153,7 +153,6 @@ void ParseCharsetAndContentType (Element el, Document doc)
   Return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
 ThotBool XhtmlCannotContainText (ElementType elType)
-
 {
   int        i;
   ThotBool   ret;

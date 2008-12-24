@@ -3298,7 +3298,7 @@ static void EndOfXmlAttributeValue (char *attrValue)
       if (val <= 0)
         {
           sprintf ((char *)msgBuffer,
-                   "Unknown attribute value \"%s\"", (char *)attrValue);
+                   "Unknown attribute value \"%50s\"", (char *)attrValue);
           XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);	
         }
       else
@@ -3344,7 +3344,7 @@ static void EndOfXmlAttributeValue (char *attrValue)
               if (lang < 0)
                 {
                   sprintf ((char *)msgBuffer,
-                           "warning - unsupported language: %s", (char *)attrValue);
+                           "warning - unsupported language: %50s", (char *)attrValue);
                   XmlParseError (warningMessage, (unsigned char *)msgBuffer, 0);
                 }
               else

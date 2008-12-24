@@ -633,7 +633,7 @@ CSSInfoPtr SearchCSS (Document doc, char *url, Element link, PInfoPtr *info)
             (css->localName && !strcmp (url, css->localName)))) ||
           (url == NULL && doc && css->doc == doc))
         {
-          if (doc == 0)
+          if (doc == 0 || url == NULL)
             /* no specific document is requested */
             return css;
           else
