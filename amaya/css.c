@@ -633,7 +633,7 @@ CSSInfoPtr SearchCSS (Document doc, char *url, Element link, PInfoPtr *info)
             (css->localName && !strcmp (url, css->localName)))) ||
           (url == NULL && doc && css->doc == doc))
         {
-          if (doc == 0 || url == NULL)
+          if (doc == 0)
             /* no specific document is requested */
             return css;
           else
@@ -718,7 +718,12 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
             {
               /* disapply the CSS */
               if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
-                removed = TRUE;
+                {
+                  if (clearCSS)
+                    removed = TRUE;
+                  if (removed)
+                    css->doc = 0;
+                }
 #ifdef CSS_DEBUG
               if (pInfo->PiCategory == CSS_USER_STYLE)
                 printf ("UnlinkCSS CSS_USER_STYLE\n");
