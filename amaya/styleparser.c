@@ -1025,6 +1025,12 @@ static char *ParseCSSBorderWidth (Element element, PSchema tsch,
     {
       /* First parse Border-Top */
       ptrR = ParseCSSBorderTopWidth (element, tsch, context, ptrT, css, isHTML);
+      if (ptrR == ptrT)
+	{
+	  // invalid value
+          cssRule = SkipValue ("Invalid border-width value", ptrT);
+	  return (cssRule);
+	}
       ptrR = SkipBlanksAndComments (ptrR);
       if (*ptrR == ';' || *ptrR == '}' || *ptrR == EOS || *ptrR == ',')
         {
