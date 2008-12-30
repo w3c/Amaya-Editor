@@ -1021,18 +1021,26 @@ int AmayaSplittablePage::GetFramePosition( const AmayaFrame * p_frame ) const
   -----------------------------------------------------------------------*/
 void AmayaSplittablePage::SetActiveFrame( const AmayaFrame * p_frame )
 {
+  AmayaFrame *n_frame;
+  Document    document;
+  int         frame_id;
+
   if ( p_frame == GetFrame(1) )
     m_ActiveFrame = 1;
   else if ( p_frame == GetFrame(2) )
     m_ActiveFrame = 2;
   else
     m_ActiveFrame = 1;
-
+ 
   // update css list
-  AmayaFrame *n_frame = GetFrame(1);
+  n_frame = GetFrame(1);
   if (n_frame)
     {
-      Document    document = FrameTable[n_frame->GetFrameId()].FrDoc;
+      frame_id = n_frame->GetFrameId();
+      if (frame_id && ActiveFrame == 0)
+	// after a unsplit the active frame is lost
+	n_frame->SetActive(true);
+      document = FrameTable[frame_id].FrDoc;
       TtaExecuteMenuAction ("UpdateStyleList", document, 1, TRUE);
     }
 }
