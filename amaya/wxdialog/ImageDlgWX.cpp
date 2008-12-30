@@ -21,6 +21,7 @@
 static int      MyRef;
 static int      Waiting = 0;
 static bool     Wait_alt;
+static wxFileDialog *p_dlg = NULL;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -184,6 +185,12 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
 {
   char     buffer[MAX_LENGTH];
 
+  if (p_dlg)
+    {
+      p_dlg->Hide();
+      p_dlg->Destroy();
+      p_dlg = NULL;
+    }
   // get the current url
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
   if (url.Len() == 0)
@@ -234,7 +241,12 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
 void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
 {
   // Create a generic filedialog
-  wxFileDialog * p_dlg = new wxFileDialog
+  if (p_dlg)
+    {
+      p_dlg->Raise();
+      return;
+    }
+  p_dlg = new wxFileDialog
     (this,
      TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
      _T(""),
@@ -253,12 +265,14 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
       // destroy the dlg before calling thotcallback because it's a child of this
       // dialog and thotcallback will delete the dialog...
       // so if I do not delete it manualy here it will be deleted twice
-      p_dlg->Destroy();
+      if (p_dlg)
+	p_dlg->Destroy();
       // simulate the open command
       //OnOpenButton( event );
     }
-  else
+  else if (p_dlg)
     p_dlg->Destroy();
+  p_dlg = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -268,6 +282,12 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void ImageDlgWX::OnCancelButton( wxCommandEvent& event )
 {
+  if (p_dlg)
+    {
+      p_dlg->Hide();
+      p_dlg->Destroy();
+      p_dlg = NULL;
+    }
   // return done
   Waiting = 0;
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
