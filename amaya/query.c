@@ -2709,44 +2709,9 @@ static AHTReqContext *LoopRequest= NULL;
 static int LoopForStop (AHTReqContext *me)
 {
   int  status_req = HT_OK;
-#ifdef IV
   int  count = 0;
-#endif
   
-#ifdef _WINGUI
-  MSG msg;
-  unsigned long libwww_msg;
-  HWND old_active_window, libwww_window;
-
-
-  // register the current request
-  LoopRequest = me;
-  old_active_window = GetActiveWindow ();
-  libwww_window = HTEventList_getWinHandle (&libwww_msg);
- 
-  while (me->reqStatus != HT_END &&
-         me->reqStatus != HT_ERR
-         && me->reqStatus != HT_ABORT &&
-         AmayaIsAlive () &&
-         GetMessage (&msg, NULL, 0, 0))
-    {
-      if (msg.message != WM_QUIT)
-        TtaHandleOneEvent (&msg);
-      else
-        break;
-#ifdef IV
-      if (count < 300)
-        count ++; // no more than 300 retries
-      else
-        me->reqStatus = HT_ABORT;
-#endif
-    }
-  if (!AmayaIsAlive ())
-    /* Amaya was killed by one of the callback handlers */
-    exit (0);
-#endif /* _WINGUI */
-  
-#if defined(_GTK) || defined(_WX)  
+#ifdef _WX
   ThotEvent                ev;
 
   // register the current request
@@ -2762,21 +2727,20 @@ static int LoopForStop (AHTReqContext *me)
         exit (0);
       if (TtaFetchOneAvailableEvent (&ev))
         TtaHandleOneEvent (&ev);
-#ifdef IV
-      if (count < 300)
-        count ++; // no more than 300 retries
-      else
-        me->reqStatus = HT_ABORT;
-#endif
-#ifdef _WX
+      if (me->method == METHOD_GET)
+	{
+	  if (count < 1300)
+	    count ++; // no more retries
+	  else
+	    me->reqStatus = HT_ABORT;
+	}
       /* this is necessary for synchronous request*/
       /* check the socket stats */
       if (me->reqStatus != HT_ABORT)
         // the request is not aborted
         wxAmayaSocketEvent::CheckSocketStatus( 500 );
-#endif /* _WX */
     }
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WX */
 
   switch (me->reqStatus)
     {
