@@ -534,7 +534,10 @@ void TtaExecuteMenuActionFromActionId (int action_id, Document doc,
     {
       frame_id = GetWindowNumber (doc, view);
       if (frame_id == 0)
-	return;
+	{
+	  g_DoingAction = FALSE;
+	  return;
+	}
      if (action_id > 0 && action_id < MaxMenuAction &&
          (MenuActionList[action_id].ActionActive[doc] || force) &&
          MenuActionList[action_id].Call_Action)
