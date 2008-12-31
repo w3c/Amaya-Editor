@@ -3095,7 +3095,7 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
   ThotPoint points[4];
   int size2;
 
-  size2 = (int)(size/sqrt(2));
+  size2 = (int)(size/sqrt((double)2));
       
   switch(direction)
     {

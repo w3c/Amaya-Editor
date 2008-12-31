@@ -298,7 +298,7 @@ void AmayaEditShapeEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-#define RATIO_EQUILATERAL sqrt(3)/2
+#define RATIO_EQUILATERAL sqrt((float)3)/2.
 
   ThotBool same_size;
   int rx,ry,lx,ly, x, y;

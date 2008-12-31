@@ -319,7 +319,7 @@ void AmayaCreateShapeEvtHandler::DrawShape ()
 
       if (shape == 20)
         /* equilateral triangle */
-        lx = (int) (floor(2 *  ly / sqrt(3)));
+        lx = (int) (floor(2 *  ly / sqrt((float)3)));
       else if (shape == 3 || shape == 15 || shape == 16 || shape == 23)
         {
           /* lx and ly must be equal (square, circle...) */

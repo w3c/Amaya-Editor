@@ -511,7 +511,7 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
 
         <------>
         lx      */
-        *lx = (int) (floor(2 *  *ly / sqrt(3)));
+        *lx = (int) (floor(2 *  *ly / sqrt((float)3)));
 	
       else if (shape == 3 || shape == 15 || shape == 16 || shape == 23)
         {
@@ -870,7 +870,7 @@ void ApproximateAngleOfLine (int T, int x1, int y1, int *x2, int *y2)
 
   local_x = *x2 - x1;
   local_y = *y2 - y1;
-  r = sqrt(local_x*local_x + local_y*local_y);
+  r = sqrt((float)(local_x*local_x + local_y*local_y));
   if (r == 0)return;
 
   /*
