@@ -752,15 +752,16 @@ void AddDocHistory (Document doc, char *url, char *initial_url,
   ----------------------------------------------------------------------*/
 void HelpAmaya (Document document, View view)
 {
-  char  localname[MAX_LENGTH];
-#ifndef _MACOS
-  char *s = TtaGetEnvString ("THOTDIR");
-#endif /* _MACOS */
   wxString str;
+  wxAboutDialogInfo info;
+  char  localname[MAX_LENGTH];
+#if !defined(_WINDOWS) && !defined(_MACOS)
+  char *s = TtaGetEnvString ("THOTDIR");
+#endif /* _WINDOWS && _MACOS */
   
 #ifdef AMAYA_CRASH
   /* force amaya to crash : activate AMAYA_CRASH flag only for debug */
-  memset(0,0,10);
+  memset(0, 0, 10);
 #endif /* AMAYA_CRASH */
 #ifdef AMAYA_DEBUG
   Element             el;
@@ -880,10 +881,7 @@ void HelpAmaya (Document document, View view)
   TtaWriteClose (list);
 #endif /* AMAYA_DEBUG */
 
-
   wxIcon icon(TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "logo.png"), wxBITMAP_TYPE_PNG);
-  
-  wxAboutDialogInfo info;
   info.SetName(TtaConvMessageToWX(TtaGetAppName()));
   info.SetVersion(TtaConvMessageToWX(TtaGetAppVersion()) + wxT(" (") + TtaConvMessageToWX(TtaGetAppDate()) + wxT(")"));
   info.SetDescription(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT1)));
@@ -894,24 +892,21 @@ void HelpAmaya (Document document, View view)
 //  info.SetWebSite(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ABOUT_WEBSITE)));
   info.SetIcon(icon);
   
-#ifndef _MACOS
+#if !defined(_WINDOWS) && !defined(_MACOS)
   if (s != NULL)
     {
       /* get the welcome in the current language */
-      sprintf (localname, "%s%camaya%cCOPYRIGHT", s, DIR_SEP, DIR_SEP);
-      
+      sprintf (localname, "%s%camaya%cCOPYRIGHT", s, DIR_SEP, DIR_SEP);      
       wxFFile file(TtaConvMessageToWX(localname));
       wxString str;
-      if(file.ReadAll(&str, wxConvISO8859_1))
+      if (file.ReadAll(&str, wxConvISO8859_1))
         {
           info.SetLicence(str);
         }
     }
-#endif
-  
+#endif /* _WINDOWS && MACOS */
   wxAboutBox(info);
 
-  
 #ifdef AMAYA_DEBUG
   TtaDumpDocumentReference();
   DumpTemplateReferences();
