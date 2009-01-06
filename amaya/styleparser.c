@@ -7545,7 +7545,7 @@ void HTMLSetBackgroundColor (Document doc, Element el, int specificity,
 {
   char             css_command[1000];
 
-  sprintf (css_command, "background-color: %50s", color);
+  snprintf (css_command, 1000, "background-color: %50s", color);
   ParseHTMLSpecificStyle (el, css_command, doc, specificity, FALSE);
 }
 
@@ -7557,7 +7557,7 @@ void HTMLSetForegroundColor (Document doc, Element el, int specificity,
 {
   char           css_command[1000];
 
-  sprintf (css_command, "color: %50s", color);
+  snprintf (css_command, 1000, "color: %50s", color);
   ParseHTMLSpecificStyle (el, css_command, doc, specificity, FALSE);
 }
 
@@ -7579,7 +7579,7 @@ void HTMLResetBackgroundImage (Document doc, Element el)
 {
   char           css_command[1000];
 
-  sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
+  snprintf (css_command, 1000, "background-image: url(xx); background-repeat: repeat");
   ParseHTMLSpecificStyle (el, css_command, doc, 0, TRUE);
 }
 
@@ -7602,7 +7602,7 @@ void HTMLSetAlinkColor (Document doc, Element el, char *color)
 {
   char           css_command[1000];
 
-  sprintf (css_command, ":link { color: %50s }", color);
+  snprintf (css_command, 1000, ":link { color: %50s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 
@@ -7613,7 +7613,7 @@ void HTMLSetAactiveColor (Document doc, Element el, char *color)
 {
   char           css_command[1000];
 
-  sprintf (css_command, ":active { color: %50s }", color);
+  snprintf (css_command, 1000, ":active { color: %50s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 
@@ -7624,7 +7624,7 @@ void HTMLSetAvisitedColor (Document doc, Element el, char *color)
 {
   char           css_command[1000];
 
-  sprintf (css_command, ":visited { color: %50s }", color);
+  snprintf (css_command, 1000, ":visited { color: %50s }", color);
   ApplyCSSRules (el, css_command, doc, FALSE);
 }
 
