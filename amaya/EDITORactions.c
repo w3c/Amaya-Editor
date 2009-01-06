@@ -297,7 +297,7 @@ void RemoveDeprecatedElements (Document doc, View view)
         TtaSetDisplayMode (doc, dispMode);
       // display the result
       sprintf (message, TtaGetMessage (AMAYA, AM_CHANGE_NUMBER), count);
-      InitConfirm (doc, 1, message);
+      ShowMessage (message, TtaGetMessage (AMAYA, AM_CHANGE));
     }
 }
 
