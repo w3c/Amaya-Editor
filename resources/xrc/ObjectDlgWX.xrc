@@ -3,7 +3,7 @@
   <object class="wxDialog" name="ObjectDlgWX">
     <title></title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">

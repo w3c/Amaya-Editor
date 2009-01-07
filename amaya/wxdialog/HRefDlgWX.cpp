@@ -96,6 +96,7 @@ HRefDlgWX::~HRefDlgWX()
     {
       Waiting = 0;
       ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+      TtaDestroyDialogue( MyRef );
       m_doc = 0;
     }
 }

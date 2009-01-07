@@ -2014,7 +2014,7 @@ static void StartOfXmlStartElement (const char *name)
       if ((profile == L_Basic || profile == L_Strict) &&
           strcmp (nsURI, XHTML_URI))
         {
-          sprintf ((char *)msgBuffer, 
+          snprintf ((char *)msgBuffer, MaxMsgLength,
                    "The element <%s> is not allowed by the current profile", ptr);
           XmlParseError (errorParsingProfile, (unsigned char *)msgBuffer, 0);
           TtaFreeMemory (nsURI);
@@ -2041,7 +2041,7 @@ static void StartOfXmlStartElement (const char *name)
       if ((ptr = strrchr (buffer, NS_COLON)) != NULL)
         {
           /* there is an undefined prefix */
-          sprintf ((char *)msgBuffer, 
+          snprintf ((char *)msgBuffer, MaxMsgLength,
                    "Undefined prefix for the element <%s>", ptr+1);
           XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
           CurrentParserCtxt = NULL;
@@ -2960,12 +2960,13 @@ static void EndOfXhtmlAttributeName (char *attrName, Element el,
         lastMappedAttr = NULL;
       else if (highEnoughLevel)
         {
-          sprintf ((char *)msgBuffer, "Invalid XHTML attribute \"%s\"", attrName);
+          snprintf ((char *)msgBuffer, MaxMsgLength,
+                    "Invalid XHTML attribute \"%s\"", attrName);
           XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
         }
       else
         {
-          sprintf ((char *)msgBuffer,
+          snprintf ((char *)msgBuffer, MaxMsgLength,
                    "Invalid XHTML attribute \"%s\" for the document profile",
                    attrName);
           XmlParseError (errorParsingProfile, (unsigned char *)msgBuffer, 0);

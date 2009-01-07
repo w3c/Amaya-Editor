@@ -135,8 +135,12 @@ ObjectDlgWX::ObjectDlgWX( int ref, wxWindow* parent, const wxString & title,
 ObjectDlgWX::~ObjectDlgWX()
 {
   if (Waiting)
-  // no return done
-    ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+    {
+      // no return done
+      Waiting = 0;
+      ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
+      TtaDestroyDialogue( MyRef );
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -3334,7 +3334,7 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                            son pere */
                         ChangeFirstLast (pEl, pSelDoc, TRUE, TRUE);
                     }
-                  if (pNew != NULL)
+                  if (pNew && pNew->ElStructSchema)
                     {
                       /* traite les exclusions des elements crees */
                       RemoveExcludedElem (&pNew, pSelDoc);
