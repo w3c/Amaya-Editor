@@ -7498,7 +7498,7 @@ void CloseDocumentDialogs (Document doc, View view)
   if (SavingDocument == doc)
     {
       // the dialog widget will be destroyed
-      TtaDestroyDialogue (BaseDialog + SaveForm);
+      // TtaDestroyDialogue (BaseDialog + SaveForm);
       SavingDocument = 0;
     }
 }
