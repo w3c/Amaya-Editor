@@ -120,7 +120,7 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
     /* the attribute value is a character string */
     {
       length = MAX_LENGTH - 1;
-      text = (char *)TtaGetMemory (length);
+      text = (char *)TtaGetMemory (length + 1);
       TtaGiveTextAttributeValue (attr, text, &length);
       text[MAX_LENGTH - 1] = EOS;
     }

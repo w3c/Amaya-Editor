@@ -1498,7 +1498,7 @@ static ThotBool Do_follow_link (Element anchor, Element elSource,
   char                   documentname[MAX_LENGTH];
   char                  *utf8path, *info, *s;
   char                   newurl[MAX_LENGTH * 2], newname[MAX_LENGTH];
-  int                    length, method, l;
+  int                    length, method;
   Do_follow_link_context *ctx;
   ThotBool		 isHTML, history, readonly = FALSE;
 
