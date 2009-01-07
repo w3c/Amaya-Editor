@@ -6099,7 +6099,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
               LinkAsJavascript = FALSE;
             }
           TtaDestroyDialogue (BaseDialog + AttrHREFForm);
-          TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+          //TtaDestroyDialogue (BaseDialog + FileBrowserForm);
         }
       else if (val == 2)
         /* Browse button */
