@@ -57,6 +57,7 @@ ${LIBWWWDIR}/COPYRIGH \
 ${LIBWWWDIR}/README.html \
 ${LIBWWWDIR}/LICENSE.html \
 ${LIBWWWDIR}/Makefile.am \
+${LIBWWWDIR}/Makefile.am.64 \
 ${LIBWWWDIR}/Makefile.in \
 ${LIBWWWDIR}/aclocal.m4 \
 ${LIBWWWDIR}/aclocal.m4.64 \
@@ -85,7 +86,6 @@ ${LIBWWWDIR}/Library/src/windows/*.h \
 ${LIBWWWDIR}/Library/src/windows/*.def \
 ${LIBWWWDIR}/Library/src/windows/*.files \
 ${LIBWWWDIR}/modules/Makefile.am \
-${LIBWWWDIR}/modules/Makefile.am.64 \
 ${LIBWWWDIR}/modules/Makefile.in \
 ${LIBWWWDIR}/modules/md5/Makefile.am \
 ${LIBWWWDIR}/modules/md5/Makefile.in \
@@ -109,9 +109,12 @@ ${LIBWWWDIR}/modules/idn/*.h \
 ${LIBWWWDIR}/modules/idn/*.c \
 ${LIBWWWDIR}/modules/idn/*.txt \
 ${LIBWWWDIR}/config/Makefile.am \
+${LIBWWWDIR}/config/Makefile.am.64 \
 ${LIBWWWDIR}/config/Makefile.in \
 ${LIBWWWDIR}/config/config.guess \
+${LIBWWWDIR}/config/config.guess.64 \
 ${LIBWWWDIR}/config/config.sub \
+${LIBWWWDIR}/config/config.sub.64 \
 ${LIBWWWDIR}/config/install-sh \
 ${LIBWWWDIR}/config/ltmain.sh \
 ${LIBWWWDIR}/config/ltconfig \

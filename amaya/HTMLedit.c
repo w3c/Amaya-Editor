@@ -1676,8 +1676,12 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
           /* get a buffer for the attribute value */
           length = TtaGetTextAttributeLength (attr);
           if (length == 0)
-            /* no given value */
-            TtaSetAttributeText (attr, "XX", element, doc);
+            {
+              /* no given value */
+              // link to the document itself
+              TtaExtractName (targetURL, buffer, tempURL);
+              TtaSetAttributeText (attr, tempURL, element, doc);
+            }
         }
       else
         {
@@ -1757,6 +1761,8 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
     }
   TtaSetDocumentModified (doc);
   TtaSetStatus (doc, 1, " ", NULL);
+  // update the attributes panel
+  TtaUpdateAttrMenu (doc);
 }
 
 
