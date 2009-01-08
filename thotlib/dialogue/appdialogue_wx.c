@@ -1103,9 +1103,18 @@ void TtaCleanUpWindow( int window_id )
   ----------------------------------------------------------------------*/
 ThotBool TtaClosePage( int window_id, int page_id )
 {
-  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  AmayaWindow *p_window = TtaGetWindowFromId( window_id );
+
   if (p_window && page_id >= 0)
-    return p_window->ClosePage( page_id );
+    {
+/*       if (p_window->GetPageCount() == 1) */
+/* 	{ */
+/* 	  TtaCloseWindow (window_id); */
+/* 	  return TRUE; */
+/* 	} */
+/*       else */
+	return p_window->ClosePage( page_id );
+    }
   else
     return FALSE;
 }
@@ -1416,12 +1425,7 @@ void TtaCloseWindow( int window_id )
   TtaHandlePendingEvents ();
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   if (p_window)
-  {
-	// Windows : prevent sending size event when closing window
-	//p_window->Hide();
-
     p_window->Close();
-  }
 }
 
 /*----------------------------------------------------------------------

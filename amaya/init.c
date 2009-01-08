@@ -2345,7 +2345,8 @@ void WhereOpenView (Document oldDoc, Document doc, ThotBool replaceOldDoc,
     inNewWindow = TRUE;
 
   /* previous document */
-  if (DocumentURLs[oldDoc] && !strcmp (DocumentURLs[oldDoc], "empty"))
+  if (method != CE_HELP &&
+      DocumentURLs[oldDoc] && !strcmp (DocumentURLs[oldDoc], "empty"))
     // load by default in the current empty page
     replaceOldDoc = TRUE;
 

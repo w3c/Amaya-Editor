@@ -125,7 +125,7 @@ bool AmayaAdvancedNotebook::ClosePage(int page_id)
 
   if (GetPageCount()==1)
     {
-      if (GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow))  &&
+      if (!GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow))  &&
 	  AmayaNormalWindow::GetNormalWindowCount()==1)
 	{
 	  TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
