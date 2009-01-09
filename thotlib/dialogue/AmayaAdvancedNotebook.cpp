@@ -114,30 +114,39 @@ bool AmayaAdvancedNotebook::SetPageImage(size_t page, int image)
   Class:  AmayaAdvancedNotebook
   Method:  ClosePage
   Description: Close a page.
-  Return: false if cant close it.
+  Return: false if cannot close it.
  -----------------------------------------------------------------------*/
 bool AmayaAdvancedNotebook::ClosePage(int page_id)
 {
-  AmayaPage *page = (AmayaPage*)GetPage( page_id );
-  bool result = true;
+  PtrDocument         pDoc;
+  AmayaPage          *page = (AmayaPage*)GetPage( page_id );
+  AmayaFrame         *frame;
+  int                 view;
+  bool                result = true;
+
   if (page == NULL)
     return result;
 
-  if (GetPageCount()==1)
+  if (GetPageCount() == 1)
     {
+      frame = page->GetActiveFrame();
+      GetDocAndView (frame->GetFrameId(), &pDoc, &view);
+      if (pDoc && pDoc->DocDName && !strcmp (pDoc->DocDName, "empty"))
+        // don't close a unique empty page
+        return false;
       if (!GetAmayaWindow()->IsKindOf(CLASSINFO(AmayaHelpWindow))  &&
-	  AmayaNormalWindow::GetNormalWindowCount()==1)
-	{
-	  TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
-	  result = false;
-	}
+          AmayaNormalWindow::GetNormalWindowCount() == 1)
+        {
+          TtaExecuteMenuAction("NewTab", 1, 1, FALSE);
+          result = false;
+        }
       else
-	{
+        {
 #ifdef _MACOS
-	  // Prevent an Amaya crash
-	  return false;
+          // Prevent an Amaya crash
+          return false;
 #endif
-	}
+        }
     }
 
   page->Hide();
@@ -254,19 +263,22 @@ void AmayaAdvancedNotebook::OnClose(wxCloseEvent& event)
   -----------------------------------------------------------------------*/
 void AmayaAdvancedNotebook::OnClosePage(wxAuiNotebookEvent& event)
 {
-  int page_id   = wxID_ANY;
+  PtrDocument         pDoc;
+  int                 view;
+  int                 page_id   = wxID_ANY;
+  AmayaFrame         *frame;
+
   if (event.GetSelection() != wxID_ANY)
     page_id = event.GetSelection();
   else if (GetSelection() != wxID_ANY)
     page_id = GetSelection();
+
   if (page_id != wxID_ANY)
     {
       AmayaPage* page = wxDynamicCast(GetPage(page_id), AmayaPage);
-      if(page)
+      if (page)
         {
-          PtrDocument         pDoc;
-          int                 view;
-          AmayaFrame*         frame = page->GetActiveFrame();
+          frame = page->GetActiveFrame();
           GetDocAndView (frame->GetFrameId(), &pDoc, &view);
           TtaExecuteMenuAction("AmayaCloseTab", (Document)IdentDocument(pDoc), view, FALSE);
         }
