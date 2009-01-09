@@ -7516,6 +7516,13 @@ void AmayaCloseTab (Document doc, View view)
   
   if (CanReplaceCurrentDocument (doc, view))
     {
+      if (DocumentTypes[doc] == docSource)
+	{
+	  // check possible changes in the formatted view
+	  doc = GetDocFromSource (doc);
+	  if (!CanReplaceCurrentDocument (doc, view))
+	    return;
+	}
       CloseDocumentDialogs (doc, view);
       window_id = TtaGetDocumentWindowId( doc, view );
       /* Get the window id and page id of current document and
