@@ -1367,7 +1367,7 @@ static void XhtmlTypeAttrValue (char *val,
   if (value <= 0)
     /* invalid value for the type attribute of an input element */
     {
-      sprintf (msgBuffer, "Unknown attribute value \"type=%s\"", val);
+      snprintf (msgBuffer, MaxMsgLength,  "Unknown attribute value \"type=%50s\"", val);
       if (isXML)
         XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
       else
@@ -1908,8 +1908,8 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
                       TtaGiveAttributeType (currentAttribute,
                                             &attrType, &attrKind);
                       attrName = TtaGetAttributeName (attrType);
-                      sprintf (msgBuffer,
-                               "Invalid attribute value \"%s = %s\"",
+                      snprintf (msgBuffer, MaxMsgLength,
+                               "Invalid attribute value \"%s = %50s\"",
                                attrName, attrValue);
                       if (isXML)
                         XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
@@ -1984,8 +1984,8 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
                           lang = TtaGetLanguageIdFromName (attrValue);
                           if (lang < 0)
                             {
-                              sprintf (msgBuffer,
-                                       "warning - unsupported language: %s",
+                              snprintf (msgBuffer, MaxMsgLength,
+                                       "warning - unsupported language: %50s",
                                        attrValue);
                               if (isXML)
                                 XmlParseError (warningMessage, (unsigned char *)msgBuffer, 0);

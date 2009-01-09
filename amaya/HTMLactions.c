@@ -3484,9 +3484,9 @@ void SynchronizeSourceView (NotifyElement *event)
   AttributeType       attrType;
   Attribute	      attr;
   Document	      doc, otherDoc;
-  char                message[50];
-  int                 firstChar, lastChar, line, i, view;
-  int		      val, x, y, width, height;
+  char            message[50];
+  int             firstChar, lastChar, line, view;
+  int		          val, x, y, width, height;
   ThotBool	      otherDocIsStruct, done;
 
   if (!event)
@@ -3506,14 +3506,7 @@ void SynchronizeSourceView (NotifyElement *event)
        corresponding structured document */
     {
       otherDocIsStruct = TRUE;
-      for (i = 1; i < DocumentTableLength; i++)
-        if (DocumentURLs[i] &&
-            IsXMLDocType (i) &&
-            DocumentSource[i] == doc)
-          {
-            otherDoc = i;
-            i = DocumentTableLength;
-          }
+      otherDoc = GetDocFromSource (doc);
     }
 
   TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
