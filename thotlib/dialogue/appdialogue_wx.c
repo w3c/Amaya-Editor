@@ -2191,7 +2191,15 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
   if (!event.AltDown() &&
 	  TtaIsSpecialKey(event.GetKeyCode()))
     {
-      thot_keysym = event.GetKeyCode();  
+      thot_keysym = event.GetKeyCode(); 
+#ifdef _MACOS
+      if ((thot_keysym == WXK_WINDOWS_MENU || thot_keysym == WXK_F2)
+	  && event.ControlDown())
+        {
+          //event.Skip();
+          return false;      
+	}
+#endif /* _MACOS */
       proceed_key = ( thot_keysym == WXK_INSERT   ||
                       thot_keysym == WXK_DELETE   ||
                       thot_keysym == WXK_HOME     ||
