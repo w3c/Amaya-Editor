@@ -386,7 +386,7 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
   ThotBool            toSave = FALSE, isCSS = FALSE;
 
   newString = NULL;
-  if (!saveResources &&
+  if (!saveResources && !isLink &&
       (strstr (sString, ".htm") != NULL ||
        strstr (sString, ".xhtm") != NULL || strstr (sString, ".xml") != NULL))
     // don't consider a html document as a resource
@@ -454,10 +454,16 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
       else
         {
           // recompute the relative URL
-          tempdocument = MakeRelativeURL (old_url, newpath);
-          strcpy (newname, tempdocument);
-          TtaFreeMemory (tempdocument);
-          tempdocument = NULL;
+          if (!strcmp (old_url, oldpath))
+            // the link points to the document itself
+            TtaExtractName (newpath, old_url, newname);
+          else
+            {
+              tempdocument = MakeRelativeURL (old_url, newpath);
+              strcpy (newname, tempdocument);
+              TtaFreeMemory (tempdocument);
+              tempdocument = NULL;
+            }
         }
       newlen = strlen (newname);
       if (newlen != len || strcmp (oldname, newname))
@@ -684,12 +690,12 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
                 newString = UpdateCSSURLs (doc, oldpath, newpath, NULL, orgString,
                                         FALSE, FALSE);
               else
-		{
+                {
                 // Update the XML PI content
                 newString = UpdateDocResource (doc, oldpath, newpath,
 					       cssbase, orgString,
                                                el, savedResources, FALSE, fullCopy);
-		}
+                }
               if (newString)
                 {
                   /* register the modification to be able to undo it */

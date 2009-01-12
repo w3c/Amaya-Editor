@@ -1347,7 +1347,7 @@ char  *GetBaseURL (Document doc)
    */
   length = strlen (basename) - 1;
   /* search for the last DIR_SEP char */
-  while (length >= 0  && basename[length] != URL_SEP)
+  while (length >= 0  && basename[length] != URL_SEP  && basename[length] != DIR_SEP)
     length--;
   if (length > 1 && basename[length-1] == DIR_SEP && basename[length-2] == ':')
     return (basename);
