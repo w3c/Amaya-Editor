@@ -28,11 +28,6 @@
 #include "interface.h"
 #include "appdialogue.h"
 
-#ifdef _WINGUI
-#include "resource.h"
-#include "wininclude.h"
-#endif /* _WINGUI */
-
 #ifdef _WX
 #include "wxinclude.h"
 #include "wx/msgdlg.h" // wxMessageDialog
@@ -72,14 +67,14 @@ static PtrReference  CurrRef;
 /* indicating whether there's a character Upper/lower case distinction */
 static ThotBool      UpperLower = TRUE;
 /* find and replace strings */
-static ThotBool      WithReplace;
+static ThotBool      WithReplace = FALSE;
 /* pointer to the external document containing the current reference */
-static ThotBool      AutoReplace;
-static ThotBool      StartSearch;
+static ThotBool      AutoReplace = FALSE;
+static ThotBool      StartSearch = TRUE;
 static ThotBool      ReplaceDone;
 static ThotBool      DoReplace;
 static ThotBool      TextOK = FALSE;
-static ThotBool      SearchAfter;
+static ThotBool      SearchAfter = TRUE;
 static int           FirstCharTextOK;
 static int           LastCharTextOK;
 
@@ -108,249 +103,6 @@ static int           LastCharTextOK;
 #include "views_f.h"
 #include "word_f.h"
 
-#ifdef _WINGUI
-static int          iLocation;
-static int          iMode;
-static ThotWindow   SearchW = NULL;
-static char         textToSearch[255];
-static char         newText[255];
-static ThotBool     SearchEnd;
-
-/*-----------------------------------------------------------------------
-  SearchDlgProc
-  ------------------------------------------------------------------------*/
-LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-                                LPARAM lParam)
-{
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-      SearchW = hwnDlg;
-      SetWindowText (hwnDlg, Caption);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SEARCHFOR),
-                     TtaGetMessage (LIB, TMSG_SEARCH_FOR));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_UPPERLOWER),
-                     TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEGROUP),
-                     TtaGetMessage (LIB, TMSG_REPLACE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_REPLACEDBY),
-                     TtaGetMessage (LIB, TMSG_REPLACE_BY));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NOREPLACE),
-                     TtaGetMessage (LIB, TMSG_NO_REPLACE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_ONREQUEST),
-                     TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_AUTOMATIC),
-                     TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_WHEREGROUP),
-                     TtaGetMessage (LIB, TMSG_SEARCH_WHERE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE),
-                     TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN),
-                     TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER),
-                     TtaGetMessage (LIB, TMSG_AFTER_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC),
-                     TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-                     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      SetWindowText (GetDlgItem (hwnDlg, ID_NOREPLACE),
-                     TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
-      SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
-                     TtaGetMessage (LIB, TMSG_DONE));
-      SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, SearchedString);
-      SetDlgItemText (hwnDlg, IDC_REPLACEDIT, ReplacingString);	
-      if (SearchAfter)
-        {
-          CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-          iLocation = 2;
-        }
-      else
-        {
-          CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
-          iLocation = 3;
-        }
-      if (AutoReplace)
-        {
-          iMode = 2;
-          CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_AUTOMATIC);
-        }
-      else if (WithReplace)
-        {
-          iMode = 1;
-          CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
-        }
-      else
-        {
-          iMode = 0;
-          CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_NOREPLACE);
-        }
-
-      /* initialize the ignore case button */
-      CheckDlgButton (hwnDlg, IDC_UPPERLOWER, (UpperLower)
-                      ? BST_CHECKED : BST_UNCHECKED);
-
-      /* put the focus on the first item */
-      SetFocus (GetDlgItem (hwnDlg, IDC_SEARCHEDIT));
-      /* if we don't return false, Windows will override our SetFocus */
-      return FALSE;
-      break;
-	    
-    case WM_CLOSE:
-    case WM_DESTROY:
-      SearchW = NULL;
-      EndDialog (hwnDlg, ID_DONE);
-      break;
-      
-    case WM_COMMAND:
-      if (HIWORD (wParam) == EN_UPDATE)
-        {
-          switch (LOWORD (wParam))
-            {
-            case IDC_REPLACEDIT:
-              /* if the user types in this box, we'll turn on the
-                 replace mode if it wasn't the case at this time */
-              if (iMode == 0)
-                {
-                  iMode = 1;
-                  CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
-                }
-              break;
-            }
-        }
-      switch (LOWORD (wParam))
-        {
-        case ID_CONFIRM:
-          SearchEnd = FALSE;
-          GetDlgItemText (hwnDlg, IDC_SEARCHEDIT, textToSearch, sizeof (textToSearch) - 1);
-          GetDlgItemText (hwnDlg, IDC_REPLACEDIT, newText, sizeof (newText) - 1);
-          if (newText && newText[0] != '\0' && iMode == 0)
-            {
-              iMode = 1;
-              CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
-            }
-	  
-          if (iMode == 1 || iMode == 2) 
-            ThotCallback (NumZoneTextReplace, STRING_DATA, newText);
-	  
-          ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
-          ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) iMode);
-          ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) iLocation);
-          ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
-          if (!SearchEnd && iLocation == 3)
-            {
-              CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-              iLocation = 2;
-            }
-          break;
-	  
-        case ID_NOREPLACE:
-          ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
-          ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) 0);
-          ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) iLocation);
-          ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
-          if (iLocation == 3)
-            {
-              CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-              iLocation = 2;
-            }
-          break;
-	  
-        case IDCANCEL:
-          SearchW = NULL;
-          EndDialog (hwnDlg, ID_DONE);
-          break;
-
-        case ID_DONE:
-          SearchW = NULL;
-          ThotCallback (120, 1, NULL);
-          EndDialog (hwnDlg, ID_DONE);
-          break;
-	  
-        case IDC_NOREPLACE:
-          iMode = 0;
-          CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
-          break;
-	  
-        case IDC_ONREQUEST:
-          iMode = 1;
-          CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
-          break;
-	  
-        case IDC_AUTOMATIC:
-          iMode = 2;
-          CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
-          break;
-	  
-        case IDC_BEFORE:
-          iLocation = 0;
-          CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
-          break;
-	  
-        case IDC_WITHIN:
-          iLocation = 1;
-          CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
-          break;
-	  
-        case IDC_AFTER:
-          iLocation = 2;
-          CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
-          break;
-	  
-        case IDC_WHOLEDOC:
-          iLocation = 3;
-          CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
-          break;
-	  
-        case	IDC_UPPERLOWER:
-          ThotCallback (NumToggleUpperEqualLower, INTEGER_DATA, (char *) 0);
-          break;
-        }
-      break;
-    default:
-      return FALSE;
-    }
-  return TRUE;
-}
-
-/*-----------------------------------------------------------------------
-  CreateSearchDlgWindow
-  ------------------------------------------------------------------------*/
-void CreateSearchDlgWindow (ThotWindow parent)
-{  
-  if (SearchW)
-    SetFocus (SearchW);
-  else
-    DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL,
-               (DLGPROC) SearchDlgProc);
-}
-#endif /* _WINGUI */
-
-#ifdef _GTK
-/*----------------------------------------------------------------------
-  InitMenuWhereToSearch 
-  inits the "Where to search" submenu.
-  ----------------------------------------------------------------------*/
-static void InitMenuWhereToSearch (int ref)
-{
-  int                 i;
-  char                string[200];
-  
-  i = 0;
-  sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-  i += strlen (&string[i]) + 1;
-  sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-  i += strlen (&string[i]) + 1;
-  sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_AFTER_SEL));
-  i += strlen (&string[i]) + 1;
-  sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-  /* sous-menu Ou` rechercher element vide */
-  TtaNewSubmenu (NumMenuOrSearchText, ref, 0,
-                 TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string,
-                 NULL, 0, FALSE);
-  TtaSetMenuForm (NumMenuOrSearchText, 2);
-}
-#endif /* _GTK */
-
 
 /*----------------------------------------------------------------------
   ResetSearchInDocument
@@ -359,16 +111,7 @@ static void InitMenuWhereToSearch (int ref)
 void ResetSearchInDocument (PtrDocument pDoc)
 {
   if (SearchingD && pDoc == SearchingD->SDocument)
-    {
-      SearchingD->SDocument = NULL;
-#ifdef _WINGUI
-      EndDialog (SearchW, ID_DONE);
-      SearchW = NULL;
-#endif /* _WINGUI */
-#ifdef _GTK
-      TtaDestroyDialogue (NumFormSearchText);
-#endif /* _GTK */
-    }
+    SearchingD->SDocument = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -404,6 +147,31 @@ void CallbackWhereToSearch (int ref, int val)
 
 
 /*----------------------------------------------------------------------
+  SearchLoadResources
+  inits the variables of the search commands.
+  ----------------------------------------------------------------------*/
+void SearchLoadResources (void)
+{
+  if (ThotLocalActions[T_searchtext] == NULL)
+    {
+      /* Connecte les actions liees au traitement du search */
+      TteConnectAction (T_searchtext, (Proc) CallbackTextReplace);
+      TteConnectAction (T_locatesearch, (Proc) CallbackWhereToSearch);
+      CurrRef = NULL;
+      CurrRefDoc = NULL;
+      CurrRefElem = NULL;
+      GetSearchContext (&SearchingD);
+      SearchedString[0] = EOS;
+      SStringLen = 0;
+      UpperLower = TRUE;
+      WithReplace = FALSE;
+      AutoReplace = FALSE;
+      ReplacingString[0] = EOS;
+      RStringLen = 0;
+    }
+}
+
+/*----------------------------------------------------------------------
   TtcSearchText
   launches the command for searching and/or replacing a text,
   an element type and an attribute for the pDoc document.
@@ -419,11 +187,10 @@ void TtcSearchText (Document document, View view)
   int                 lastChar, i;
   ThotBool            ok;
 
+  SearchLoadResources ();
   pDoc = LoadedDocument[document - 1];
   ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-  if (ok)
-    SearchAfter = (pDoc == pDocSel);
-  else
+  if (!ok)
     {
       pDocSel = pDoc;
       pFirstSel = pLastSel = pDoc->DocDocElement;
@@ -441,87 +208,14 @@ void TtcSearchText (Document document, View view)
   strcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
   i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
   strcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
-
-#ifdef _GTK
-  TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
-               Caption, 2, string, FALSE, 6, 'L', D_DONE);
-  
-  /* zone de saisie du texte a` rechercher */
-  TtaNewTextForm (NumZoneTextSearch, NumFormSearchText,
-                  TtaGetMessage (LIB, TMSG_SEARCH_FOR), 30, 1, FALSE);
-  TtaSetTextForm (NumZoneTextSearch, SearchedString);
-  
-  /* Toggle button "UPPERCASE = lowercase" */
-  i = 0;
-  sprintf (&string[i], "%s%s", "B",
-           TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
-  TtaNewToggleMenu (NumToggleUpperEqualLower, NumFormSearchText,
-                    NULL, 1, string, NULL, FALSE);
-  TtaSetToggleMenu (NumToggleUpperEqualLower, 0, UpperLower);
-  
-  /* zone de saisie du texte de remplacement */
-  TtaNewTextForm (NumZoneTextReplace, NumFormSearchText,
-                  TtaGetMessage (LIB, TMSG_REPLACE_BY), 30, 1, FALSE);
-  TtaSetTextForm (NumZoneTextReplace, ReplacingString);
-  
-  /* sous-menu mode de remplacement */
-  if (!pDoc->DocReadOnly)
-    {
-      /* on autorise les remplacement */
-      /* attache le sous-menu remplacement */
-      i = 0;
-      sprintf (&string[i], "%s%s", "B",
-               TtaGetMessage (LIB, TMSG_NO_REPLACE));
-      i += strlen (&string[i]) + 1;
-      sprintf (&string[i], "%s%s", "B",
-               TtaGetMessage (LIB, TMSG_REPLACE_ON_REQU));
-      i += strlen (&string[i]) + 1;
-      sprintf (&string[i], "%s%s", "B",
-               TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
-      TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0,
-                     TtaGetMessage (LIB, TMSG_REPLACE), 3, string,
-                     NULL, 0, FALSE);
-      if (WithReplace)
-        {
-          if (AutoReplace)
-            TtaSetMenuForm (NumMenuReplaceMode, 2);
-          else
-            TtaSetMenuForm (NumMenuReplaceMode, 1);
-        }
-      else
-        TtaSetMenuForm (NumMenuReplaceMode, 0);
-    }
-  else
-    TtaNewLabel (NumMenuReplaceMode, NumFormSearchText, " ");
-  
-  /* sous-menu Ou` rechercher */
-  InitMenuWhereToSearch (NumFormSearchText);
-#endif /* _GTK */
-  
-  WithReplace = FALSE;
   ReplaceDone = FALSE;
-  AutoReplace = FALSE;
-  strcpy ((char *)pPrecedentString, "");
-  
-  SearchLoadResources ();
+  strcpy ((char *)pPrecedentString, ""); 
   /* active le formulaire */
-  if (!ok)
+  if (!SearchAfter)
     /* new activation */
     InitSearchDomain (3, SearchingD);
   SearchingD->SDocument = pDoc;
   TextOK = FALSE;
-
-#ifdef _GTK
-  TtaShowDialogue (NumFormSearchText, TRUE);
-  if (!ok)
-    TtaSetMenuForm (NumMenuOrSearchText, 3);
-#endif /* _GTK */
-
-#ifdef _WINGUI
-  SearchEnd = FALSE;
-  CreateSearchDlgWindow (TtaGetViewFrame (document, view));
-#endif /* _WINGUI */
-
 #ifdef _WX
   {
     ThotBool created;
@@ -588,9 +282,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
             {
               WithReplace = TRUE;
               DoReplace = TRUE;
-#ifdef _GTK
-              TtaSetMenuForm (NumMenuReplaceMode, 1);
-#endif /* _GTK */
             }
         }
       strncpy (ReplacingString, txt, MAX_LENGTH);
@@ -635,25 +326,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
       break;
     case NumFormSearchText:
       /* Boutons de la feuille de dialogue */
-      if (SearchingD->SDocument == NULL ||
-          SearchingD->SDocument->DocSSchema == NULL)
-        {
-#ifdef _WX
-#else /* _WX */
-#ifdef _WINGUI
-          EndDialog (SearchW, ID_DONE);
-          SearchW = NULL;
-#endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
-          TtaDestroyDialogue (NumFormSearchText);
-#endif /* _GTK || _WX */
-          TtaFreeMemory (SString);
-          SString = NULL;
-          TtaFreeMemory (RString);
-          RString = NULL;
-          return;
-#endif /* _WX */
-        }
       if (val == 2 && WithReplace && !StartSearch)
         DoReplace = FALSE;
       else if (val == 0)
@@ -853,52 +525,11 @@ void CallbackTextReplace (int ref, int val, char *txt)
                 CloseHistorySequence (SearchingD->SDocument);
             }
           if (found)
-            {
-              /* on a trouve' et selectionne'. */
-#ifdef _GTK
-              if (!AutoReplace)
-                {
-                  /* On prepare la recherche suivante */
-                  if (SearchingD->SStartToEnd) /* After selection */
-                    TtaSetMenuForm (NumMenuOrSearchText, 2);
-                  else /* Before selection */
-                    TtaSetMenuForm (NumMenuOrSearchText, 0);
-                }
-#endif /* _GTK */
-              StartSearch = FALSE;
-            }
+            /* on a trouve' et selectionne'. */
+            StartSearch = FALSE;
           else
             {
               /* not found */
-#ifdef _WINGUI
-              if (!SearchEnd)
-                {
-                  SearchEnd = TRUE;
-                  if (WithReplace && ReplaceDone)
-                    {
-                      if (!AutoReplace)
-                        MessageBox (NULL,
-                                    TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE),
-                                    Caption, MB_OK | MB_ICONEXCLAMATION);
-                    }
-                  else
-                    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND),
-                                Caption, MB_OK | MB_ICONEXCLAMATION);
-                }
-#endif /* _WINGUI */
-#ifdef _GTK      
-              if (WithReplace && ReplaceDone)
-                {
-                  if (!AutoReplace)
-                    TtaDisplayMessage (CONFIRM,
-                                       TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE),
-                                       NULL);
-                }
-              else
-                TtaDisplayMessage (CONFIRM,
-                                   TtaGetMessage (LIB, TMSG_NOT_FOUND),
-                                   NULL);
-#endif /* _GTK */
 #ifdef _WX
               WX_SearchResult = 0;
               if (WithReplace && ReplaceDone)
@@ -918,27 +549,3 @@ void CallbackTextReplace (int ref, int val, char *txt)
     }
 }
 
-
-/*----------------------------------------------------------------------
-  SearchLoadResources
-  inits the variables of the search commands.
-  ----------------------------------------------------------------------*/
-void SearchLoadResources (void)
-{
-  if (ThotLocalActions[T_searchtext] == NULL)
-    {
-      /* Connecte les actions liees au traitement du search */
-      TteConnectAction (T_searchtext, (Proc) CallbackTextReplace);
-      TteConnectAction (T_locatesearch, (Proc) CallbackWhereToSearch);
-      CurrRef = NULL;
-      CurrRefDoc = NULL;
-      CurrRefElem = NULL;
-      GetSearchContext (&SearchingD);
-      SearchedString[0] = EOS;
-      SStringLen = 0;
-      UpperLower = TRUE;
-      WithReplace = FALSE;
-      ReplacingString[0] = EOS;
-      RStringLen = 0;
-    }
-}
