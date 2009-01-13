@@ -340,7 +340,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
         {
           if (pBox != pViewSel->VsBox &&
               IsParentBox (pBox, pViewSel->VsBox))
-            pBox = GetClickedLeafBox (frame, x, y, &pFlow);
+            pBox = GetClickedLeafBox (frame, x, y, &pFlow, FALSE);
         }
       else if (pBox && pBox->BxAbstractBox && FrameTable[frame].FrView == 1)
         {
@@ -2228,6 +2228,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 /*----------------------------------------------------------------------
   GetLeafBox returns the leaf box located at the position x+xDelta
   y+yDelta from pSourceBox box.
+  pFlow is not NULL when the box is within a separated flow
   ----------------------------------------------------------------------*/
 PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
                    int xDelta, int yDelta, PtrFlow *pFlow)
@@ -2239,7 +2240,7 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
   ViewFrame          *pFrame;
   int                 max;
   int                 h, lastY;
-  ThotBool            found;
+  ThotBool            found, moving = TRUE; // move command
 
   found = FALSE;
   lastBox = NULL;
@@ -2253,13 +2254,13 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
       /* locate the last box in the line */
       if (xDelta > 0)
         {
-          pLimitBox = GetClickedLeafBox (frame, max, *y, pFlow);
+          pLimitBox = GetClickedLeafBox (frame, max, *y, pFlow, moving);
           if (pLimitBox == NULL)
             pLimitBox = pSourceBox;
         }
       else if (xDelta < 0)
         {
-          pLimitBox = GetClickedLeafBox (frame, 0, *y, pFlow);
+          pLimitBox = GetClickedLeafBox (frame, 0, *y, pFlow, moving);
           if (pLimitBox == NULL)
             pLimitBox = pSourceBox;
         }
@@ -2274,7 +2275,7 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
           *x += xDelta;
           *y += yDelta;
           /* Take the leaf box here */
-          pBox = GetClickedLeafBox (frame, *x, *y, pFlow);
+          pBox = GetClickedLeafBox (frame, *x, *y, pFlow, moving);
           if (pBox == NULL)
             pBox = pSourceBox;
           else if (pBox->BxAbstractBox->AbElement)
@@ -2579,8 +2580,11 @@ int GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value, int frame)
 /*----------------------------------------------------------------------
   GetClickedLeafBox looks for a leaf box located at a reference point
   xRef, yRef.
+  pFlow is not NULL when the box is within a separated flow
+  moving is TRUE when the click is simulated by a move command
   ----------------------------------------------------------------------*/
-PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
+PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow,
+                          ThotBool moving)
 {
   PtrAbstractBox      pAb;
   PtrBox              pSelBox, pBox;
@@ -2639,7 +2643,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef, PtrFlow *pFlow)
                 d = max + 1;
 
               /* get the closest element */
-              if (prevMatch != matchCell && matchCell)
+              if (!moving && prevMatch != matchCell && matchCell)
                 // ignore previous boxes out of the current cell
                 max = THOT_MAXINT;
               if (d < max)

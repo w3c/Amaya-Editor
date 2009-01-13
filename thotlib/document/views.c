@@ -547,10 +547,6 @@ void OpenCreatedView (PtrDocument pDoc, int view,
   int                 h;
   int                 schView;
 
-#ifdef _WX
-  wxASSERT( pDoc && pDoc->DocTypeName );
-#endif /* _WX */
-
   frame = 0;
   if (view > 0)
     {

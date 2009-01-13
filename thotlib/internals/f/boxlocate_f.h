@@ -50,7 +50,8 @@ extern int GetShapeDistance ( int xRef,
 extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef,
-                                  PtrFlow *pFlow );
+                                  PtrFlow *pFlow,
+                                  ThotBool moving );
 extern void ApplyDirectResize ( PtrBox pBox,
                                 int frame,
                                 int pointselect,
@@ -115,7 +116,8 @@ extern int GetShapeDistance ( int xRef,
 extern PtrBox GetClickedLeafBox ( int frame,
                                     int xRef,
                                     int yRef,
-                                    PtrFlow *pFlow );
+                                    PtrFlow *pFlow,
+                                    ThotBool moving );
 extern void ApplyDirectResize ( PtrBox pBox,
                                   int frame,
                                   int pointselect,
