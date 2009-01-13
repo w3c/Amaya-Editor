@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -39,7 +39,6 @@
 #include "actions_f.h"
 #include "exceptions_f.h"
 #include "input_f.h"
-#include "keyboards_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
 #include "structschema_f.h"

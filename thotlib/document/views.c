@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -376,8 +376,6 @@ void OpenDefaultViews (PtrDocument pDoc)
 
      pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
      /* met a jour les menus variables de la fenetre */
-     if (ThotLocalActions[T_chselect] != NULL)
-	(*(Proc1)ThotLocalActions[T_chselect]) ((void*)pDoc);
      if (ThotLocalActions[T_chattr] != NULL)
 	(*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
      if (pDoc->DocDocElement != NULL)
@@ -651,10 +649,8 @@ void OpenCreatedView (PtrDocument pDoc, int view,
         SwitchRedo (pDoc, TRUE);
       
       /* met a jour les menus de la fenetre */
-      if (ThotLocalActions[T_chselect] != NULL)
-        (*(Proc1)ThotLocalActions[T_chselect]) ((void*)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
-        (*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
+      (*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
 
 #ifdef _WX
       TtaDoPostFrameCreation( frame );

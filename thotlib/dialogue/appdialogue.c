@@ -1,5 +1,5 @@
 /*
- * Copyright (c) INRIA 1996-2008
+ * Copyright (c) INRIA 1996-2009
  */
 
 /*
@@ -1800,15 +1800,6 @@ void ThotCallback (int ref, int typedata, char *data)
                                                    (void *)ref,
                                                    (void *)((long int) data),
                                                    (void *)frame);
-              return;
-            }
-          menuThot = FindMenu (frame, WindowTable[window_id].MenuSelect, &ptrmenu) - 1;
-          if (menu == menuThot)
-            {
-              /* traitement du menu selection */
-              (*(Proc3)ThotLocalActions[T_rselect]) ((void *)ref,
-                                                     (void *)((long int) data + 1),
-                                                     (void *)frame);
               return;
             }
         }

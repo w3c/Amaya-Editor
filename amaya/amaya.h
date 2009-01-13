@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -296,10 +296,7 @@ typedef enum _ClickEvent {
 #define MathIntegralNumber 7
 #define MathIntegralContour 8
 #define MathIntegralType 9
-
-#define MenuMaths 10
-#define MenuMaths1 11
-#define MAX_MATHS 12
+#define MAX_MATHS 10
 
 #define FormGraph 0
 #define MenuGraph 1

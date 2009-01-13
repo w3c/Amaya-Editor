@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -91,12 +91,10 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "frame_f.h"
 #include "inites_f.h"
 #include "interface_f.h"
-#include "keyboards_f.h"
 #include "memory_f.h"
 #include "message_f.h"
 #include "picture_f.h"
 #include "scroll_f.h"
-#include "selectmenu_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"

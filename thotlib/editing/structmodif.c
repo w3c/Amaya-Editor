@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -63,7 +63,6 @@
 #include "memory_f.h"
 #include "presrules_f.h"
 #include "references_f.h"
-#include "selectmenu_f.h"
 #include "structselect_f.h"
 #include "structschema_f.h"
 #include "search_f.h"
@@ -511,8 +510,6 @@ void TtcHolophrast (Document document, View view)
       /* met a jour les menus qui dependent de la selection dans toutes */
       /* les vues ouvertes */
       PrepareSelectionMenu ();
-      if (ThotLocalActions[T_chselect] != NULL)
-        (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
         (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
     }

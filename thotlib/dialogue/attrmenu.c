@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -93,7 +93,6 @@ static AttributeFilterProc AttributeFilterProcedure = NULL;
 #include "language_f.h"
 #include "memory_f.h"
 #include "schemas_f.h"
-#include "selectmenu_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
@@ -710,7 +709,10 @@ void UpdateAttrMenu (PtrDocument pDoc, ThotBool force)
       !strcmp (pDoc->DocTypeName, "css") ||
       !strcmp (pDoc->DocTypeName, "text"))
     return;
-  if (pDoc == SelectedDocument && !pDoc->DocReadOnly)
+  if (pDoc == SelectedDocument && !pDoc->DocReadOnly &&
+      strcmp (pDoc->DocTypeName, "source") &&
+      strcmp (pDoc->DocTypeName, "css") &&
+      strcmp (pDoc->DocTypeName, "text"))
     {
       selectionOK = GetCurrentSelection (&pDoc, &firstSel, &lastSel,
                                          &firstChar, &lastChar);

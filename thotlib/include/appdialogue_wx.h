@@ -87,8 +87,6 @@ typedef int(*DocumentPageTypeFunction)(Document doc);
 void TtaRegisterDocumentPageTypeFunction(DocumentPageTypeFunction fct);
 int TtaGetDocumentPageType(Document doc);
 
-
-void TtaRaisePanel(int panel_type);
 void TtaRaiseDoctypePanels(int doctype);
 
 #endif /* #define __APPDIALOGUE_WX_H__ */

@@ -256,14 +256,12 @@ EDITOR_OBJ = \
 	dialogue/geom.o \
 	dialogue/input.o \
 	dialogue/interface.o \
-	dialogue/keyboards.o \
 	dialogue/md5.o \
 	dialogue/modiftype.o \
 	dialogue/profiles.o \
 	dialogue/presentmenu.o \
 	dialogue/printmenu.o \
 	dialogue/searchmenu.o \
-	dialogue/selectmenu.o \
 	dialogue/SMTP.o \
 	document/docs.o \
 	document/views.o \

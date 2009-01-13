@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -34,43 +34,10 @@
 #endif /* _SVG */
 #include "document.h"
 
-#ifdef _WINGUI
-#define iconMath   21 
-#define iconMathNo 21 
-#endif /* _WINGUI */
 
-#if defined(_GTK)
-static ThotIcon   iconMath;
-static ThotIcon   iconMathNo;
-#include "Math.xpm"
-#include "MathNo.xpm"
-#include "Bmath.xpm"
-#include "root.xpm"
-#include "sqrt.xpm"
-#include "frac.xpm"
-#include "subsup.xpm"
-#include "sup.xpm"
-#include "sub.xpm"
-#include "overunder.xpm"
-#include "over.xpm"
-#include "under.xpm"
-#include "fence.xpm"
-#include "mscript.xpm"
-#include "matrix.xpm"
-#include "greek.xpm"
-#endif /* defined(_GTK) */
-
-#ifndef _WX
-static int      MathButton;
-static ThotIcon mIcons[14];
-static ThotBool	InitMaths;
-
-#else /* _WX */
 /* Global variables for dialogues */
 static int Math_occurences = 0;
 static int Math_OperatorType = 0;
-#endif /* _WX */
-
 static int Math_open, Math_close, Math_sep;
 static int Math_integral_number, Math_integral_contour, Math_integral_type;
 static ThotBool	IsLastDeletedElement = FALSE;
@@ -95,19 +62,11 @@ static Document DocMathElementSelected = 0;
 #include "appdialogue_wx.h"
 #include "paneltypes_wx.h"
 #endif /* _WX */
-#ifdef _WINGUI
-#include "wininclude.h"
-#endif /* _WINGUI */
 #ifdef _WINDOWS
 #include <commctrl.h>
 #endif /* _WINDOWS */
 #include "XLinkedit_f.h"
 #include "templateUtils_f.h"
-
-#ifdef _GTK
-/* used for the close palette callback*/
-ThotWidget CatWidget(int ref);
-#endif/*  _GTK */
 
 /* Function name table */
 typedef char     functName[10];
@@ -3414,36 +3373,19 @@ void MathElementCreated (NotifyElement *event)
   ----------------------------------------------------------------------*/
 static void CallbackMaths (int ref, int typedata, char *data)
 {
-  Document           doc;
   long int           val = (long int) data;
 
   ref -= MathsDialogue;
-  if (ref == MenuMaths1)
-    {
-      ref = MenuMaths;
-      val += 7;
-    }
   switch (ref)
     {
     case FormMaths:
-#ifdef _WX
       Math_occurences = val;
-#else /* _WX */
-      /* the user has clicked the DONE button in the Math dialog box */
-      InitMaths = FALSE;
-#endif /* _WX */
       break;
 
     case FormMathOperator:
-#ifdef _WX
       Math_OperatorType = val;
-#else /* _WX */
-      /* the user has clicked the DONE button in the Math dialog box */
-      InitMaths = FALSE;
-#endif /* _WX */
       break;
 
-#ifdef _WX
     case MathAttributeOpen:
       Math_open = val;
       break;
@@ -3474,84 +3416,12 @@ static void CallbackMaths (int ref, int typedata, char *data)
 
     case FormMathFenceAttributes:
       if(val == 0)Math_open = 0;
-#endif /* _WX */
-
-    case MenuMaths:
-      /* the user has selected an entry in the math menu */
-      doc = TtaGetSelectedDocument ();
-
-      if (val == 13)
-        /* the user asks for the Symbol palette */
-        {
-          TtcDisplayGreekKeyboard (doc, 1);
-          return;
-        }
-      //else if (doc > 0)
-        /* there is a selection */
-      //if (TtaGetDocumentAccessMode (doc))
-      /* the document is in not in ReadOnly mode */
-      //CreateMathConstruct (doc, view, val + 1);
-      break;
 
     default:
       break;
     }
 }
 
-#ifdef _GTK
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-gboolean CloseMathMenu (GtkWidget *widget,
-                        GdkEvent  *event,
-                        gpointer   data )
-{
-  InitMaths = FALSE;
-  TtaDestroyDialogue ((long int) data);
-  return TRUE;
-}
-#endif /* _GTK */
-
-#ifndef _WX
-/*----------------------------------------------------------------------
-  CreateMathMenu creates the maths menus.           
-  ----------------------------------------------------------------------*/
-static void CreateMathMenu (Document doc, View view)
-{
-  if (!TtaGetDocumentAccessMode (doc))
-    /* the document is in ReadOnly mode */
-    return;
-
-#ifdef _WINGUI
-  CreateMathDlgWindow (TtaGetViewFrame (doc, view));
-#endif /* _WINGUI */
-}
-#endif /* _WX */
-
-/*----------------------------------------------------------------------
-  AddMathButton        
-  ----------------------------------------------------------------------*/
-void AddMathButton (Document doc, View view)
-{
-#ifndef _WX
-  MathButton = TtaAddButton (doc, 1, iconMath, (Proc)CreateMathMenu,
-                             "CreateMathMenu",
-                             TtaGetMessage (AMAYA, AM_BUTTON_MATH),
-                             TBSTYLE_BUTTON, TRUE);
-#endif /* _WX */
-}
-
-/*----------------------------------------------------------------------
-  SwitchIconMath
-  ----------------------------------------------------------------------*/
-void SwitchIconMath (Document doc, View view, ThotBool state)
-{
-#ifndef _WX
-  if (state)
-    TtaChangeButton (doc, view, MathButton, iconMath, state);
-  else
-    TtaChangeButton (doc, view, MathButton, iconMathNo, state);
-#endif /* _WX */
-}
 
 /*----------------------------------------------------------------------
   CreateMath
@@ -5857,27 +5727,7 @@ void FreeMathML ()
   ----------------------------------------------------------------------*/
 void InitMathML ()
 {
-#if defined(_GTK)
-  iconMath = TtaCreatePixmapLogo (Math_xpm);
-  iconMathNo = TtaCreatePixmapLogo (MathNo_xpm);
-  mIcons[0] = TtaCreatePixmapLogo (Bmath_xpm);
-  mIcons[1] = TtaCreatePixmapLogo (root_xpm);
-  mIcons[2] = TtaCreatePixmapLogo (sqrt_xpm);
-  mIcons[3] = TtaCreatePixmapLogo (frac_xpm);
-  mIcons[4] = TtaCreatePixmapLogo (subsup_xpm);
-  mIcons[5] = TtaCreatePixmapLogo (sub_xpm);
-  mIcons[6] = TtaCreatePixmapLogo (sup_xpm);
-  mIcons[7] = TtaCreatePixmapLogo (overunder_xpm);
-  mIcons[8] = TtaCreatePixmapLogo (under_xpm);
-  mIcons[9] = TtaCreatePixmapLogo (over_xpm);
-  mIcons[10] = TtaCreatePixmapLogo (fence_xpm);
-  mIcons[11] = TtaCreatePixmapLogo (mscript_xpm);
-  mIcons[12] = TtaCreatePixmapLogo (matrix_xpm);
-  mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
-#endif /* #if defined(_GTK) */
-
   MathsDialogue = TtaSetCallback ((Proc)CallbackMaths, MAX_MATHS);
-  KeyboardsLoadResources ();
   TtaSetMoveForwardCallback ((Func) MathMoveForward);
   TtaSetMoveBackwardCallback ((Func) MathMoveBackward);
 }

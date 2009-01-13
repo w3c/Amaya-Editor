@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2007
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -48,11 +48,9 @@ extern void         AttributeMenuLoadResources ();
 extern void         BackupOnFatalErrorLoadResources ();
 extern void         EditingLoadResources ();
 extern void         GraphicssLoadResources ();
-extern void         KeyboardsLoadResources ();
 extern void         LookupLoadResources ();
 extern void         NoStructSelectLoadResources ();
 extern void         PivotLoadResources ();
-extern void         SelectionMenuLoadResources ();
 extern void         SpellCheckLoadResources ();
 extern void         StructEditingLoadResources ();
 extern void         StructSelectLoadResources ();
@@ -92,10 +90,6 @@ extern void         TtcCreateElement (Document doc, View view);
 extern void         TtcCutSelection (Document document, View view);
 extern void         TtcDeletePreviousChar (Document document, View view);
 extern void         TtcDeleteSelection (Document document, View view);
-extern void         TtcDisplayGraphicsKeyboard (Document document, View view);
-extern void         TtcDisplayGreekKeyboard (Document document, View view);
-extern void         TtcDisplayLatinKeyboard (Document document, View view);
-extern void         TtcDisplayMathKeyboard (Document document, View view);
 extern void         TtcEndOfLine (Document document, View view);
 extern void         TtcGotoPage (Document document, View view);
 extern void         TtcHolophrast (Document document, View view);

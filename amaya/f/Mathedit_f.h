@@ -44,11 +44,6 @@ extern void UnFrameMath ( void );
 extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
 extern void MathElementCreated ( NotifyElement *event );
-extern void AddMathButton ( Document doc,
-                            View view );
-extern void SwitchIconMath ( Document doc,
-                             View view,
-                             ThotBool state );
 extern void CreateMath ( Document document,
                          View view );
 extern void CreateMROOT ( Document document,
@@ -625,11 +620,6 @@ extern void UnFrameMath ( void );
 extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
 extern void MathElementCreated ( NotifyElement *event );
-extern void AddMathButton ( Document doc,
-                              View view );
-extern void SwitchIconMath ( Document doc,
-                               View view,
-                               ThotBool state );
 extern void CreateMath ( Document document,
                            View view );
 extern void CreateMROOT ( Document document,

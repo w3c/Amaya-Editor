@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -70,39 +70,36 @@ typedef struct _Menu_Ctl
   before calling it.
   */
 #define T_backuponfatal	0
-#define T_keyboard      1
-#define T_chsplit	2
-#define T_chselect	3
-#define T_chattr	4
-#define T_confirmclose	5
-#define T_rconfirmclose	6
-#define T_insertpaste	7
-#define T_rcinsertpaste	8
-#define T_searchtext	9
-#define T_locatesearch	10
-#define T_rchoice	11
-#define T_present	12
-#define T_presentstd	13
-#define T_attrreq	14
-#define T_rattrreq	15
-#define T_rattrval	16
-#define T_rattr		17
-#define T_rattrlang	18
-#define T_rselect	19
-#define T_docmodified   20
-#define T_checkHiddenElement		21
-#define T_checkReadOnlyElement		22
-#define T_checkInsertNearElement	23
-#define T_initevents			24
-#define T_autosave                      25
-#define T_writedocument                 26
-#define T_clearhistory                  27
-#define T_openhistory                   28
-#define T_addhistory                    29
-#define T_attraddhistory                30
-#define T_cancelhistory                 31
-#define T_closehistory                  32
-#define MAX_LOCAL_ACTIONS       33
+#define T_chsplit	      1
+#define T_chattr        2
+#define T_confirmclose	3
+#define T_rconfirmclose	4
+#define T_insertpaste	  5
+#define T_rcinsertpaste	6
+#define T_searchtext	  7
+#define T_locatesearch	8
+#define T_rchoice	      9
+#define T_present	     10
+#define T_presentstd	 11
+#define T_attrreq	     12
+#define T_rattrreq	   13
+#define T_rattrval	   14
+#define T_rattr		     15
+#define T_rattrlang	   16
+#define T_docmodified  17
+#define T_checkHiddenElement		        18
+#define T_checkReadOnlyElement		      19
+#define T_checkInsertNearElement	      20
+#define T_initevents			              21
+#define T_autosave                      22
+#define T_writedocument                 23
+#define T_clearhistory                  24
+#define T_openhistory                   25
+#define T_addhistory                    26
+#define T_attraddhistory                27
+#define T_cancelhistory                 28
+#define T_closehistory                  29
+#define MAX_LOCAL_ACTIONS  30
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

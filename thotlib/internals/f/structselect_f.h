@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaSetCurrentKeyboard ( int keyboard );
 extern void InitSelection ( void );
 extern void CheckSelectedElement ( PtrElement pEl,
                                    Document document );
@@ -107,7 +106,6 @@ extern void TtcChildElement ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtaSetCurrentKeyboard ( int keyboard );
 extern void InitSelection ( void );
 extern void CheckSelectedElement ( PtrElement pEl,
                                      Document document );

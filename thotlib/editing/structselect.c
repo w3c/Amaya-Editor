@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -52,13 +52,11 @@
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
-#include "keyboards_f.h"
 #include "scroll_f.h"
 #include "search_f.h"
 #include "searchmenu_f.h"
 #include "searchref_f.h"
 #include "selectionapi_f.h"
-#include "selectmenu_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
 #include "tree_f.h"
@@ -83,21 +81,6 @@ static int          OldSelectedView;	/* old active view */
 static PtrDocument  OldDocSelectedView;	/* the document to which the old active
                                            view belongs */
 #define MAX_TRANSMIT 10
-
-/*----------------------------------------------------------------------
-  TtaSetCurrentKeyboard
-
-  Sets a new current keyboard and displays it.
-  Parameter:
-  keyboard: the keyboard to be displayed.
-  ----------------------------------------------------------------------*/
-void TtaSetCurrentKeyboard (int keyboard)
-{
-  if (ThotLocalActions[T_keyboard] != NULL)
-    ((Proc1)*ThotLocalActions[T_keyboard]) ((void *)keyboard);
-  /* remember current mode */
-  KeyboardMode = keyboard;
-}
 
 
 /*----------------------------------------------------------------------
@@ -418,8 +401,6 @@ void CancelSelection ()
   if (SelectionUpdatesMenus && pDoc != NULL)
     {
       PrepareSelectionMenu ();
-      if (ThotLocalActions[T_chselect] != NULL)
-        (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
         (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
     }
@@ -1920,8 +1901,6 @@ void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
             }
         }
       PrepareSelectionMenu ();
-      if (ThotLocalActions[T_chselect] != NULL)
-        (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
         (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
 #ifdef _WX
@@ -2041,8 +2020,6 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
           if (SelectionUpdatesMenus && oldFirstSelEl != FirstSelectedElement)
             {
               PrepareSelectionMenu ();
-              if (ThotLocalActions[T_chselect] != NULL)
-                (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
               if (ThotLocalActions[T_chattr] != NULL)
                 (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
             }
@@ -2255,24 +2232,10 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin,
             }
         }
       
-      if (FirstSelectedElement && FirstSelectedElement->ElTerminal)
-        {
-          /* if a symbol is selected, display the symbol palette */
-          /****** if (FirstSelectedElement->ElLeafType == LtSymbol)
-                  TtaSetCurrentKeyboard (0);
-          ******/
-          /* if a graphic shape is selected, display the graphic palette */
-          if (FirstSelectedElement->ElLeafType == LtGraphics ||
-              FirstSelectedElement->ElLeafType == LtPolyLine ||
-              FirstSelectedElement->ElLeafType == LtPath)
-            TtaSetCurrentKeyboard (1);
-        }
       /* update all the menus that depend on the current selection */
       if (SelectionUpdatesMenus)
         {
           PrepareSelectionMenu ();
-          if (ThotLocalActions[T_chselect] != NULL)
-            (*(Proc1)ThotLocalActions[T_chselect]) ((void *)pDoc);
           if (ThotLocalActions[T_chattr] != NULL)
             (*(Proc1)ThotLocalActions[T_chattr]) ((void *)pDoc);
         }
@@ -3103,9 +3066,6 @@ static void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed,
                oldLastEl != LastSelectedElement))
             {
               PrepareSelectionMenu ();
-              if (ThotLocalActions[T_chselect] != NULL)
-                (*(Proc1)ThotLocalActions[T_chselect]) (
-                                                        (void *)SelectedDocument);
               if (ThotLocalActions[T_chattr] != NULL)
                 (*(Proc1)ThotLocalActions[T_chattr]) (
                                                       (void *)SelectedDocument);
@@ -3250,9 +3210,6 @@ void AddInSelection (PtrElement pEl, ThotBool last)
             {
               /* update all the menus that depend on the current */
               /* selection */
-              if (ThotLocalActions[T_chselect] != NULL)
-                (*(Proc1)ThotLocalActions[T_chselect]) (
-                                                        (void *)SelectedDocument);
               if (ThotLocalActions[T_chattr] != NULL)
                 (*(Proc1)ThotLocalActions[T_chattr]) (
                                                       (void *)SelectedDocument);

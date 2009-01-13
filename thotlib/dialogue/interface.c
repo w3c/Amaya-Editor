@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -67,7 +67,6 @@
 #include "font_f.h"
 #include "inites_f.h"
 #include "input_f.h"
-#include "keyboards_f.h"
 #include "message_f.h"
 #include "thotmsg_f.h"
 #include "viewapi_f.h"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) INRIA 1996-2008
+ * Copyright (c) INRIA 1996-2009
  */
 
 /*
@@ -2466,17 +2466,6 @@ void TtaCloseAllHelpWindows ()
             win->Close();
         }
     }
-}
-
-/*----------------------------------------------------------------------
-  TtaRaiserPanel
-  ----------------------------------------------------------------------*/
-void TtaRaisePanel(int panel_type)
-{
-  AmayaWindow * activeWindow = TtaGetActiveWindow();
-  if(activeWindow)
-    activeWindow->RaisePanel(panel_type);
-  TtaRedirectFocus ();
 }
 
 /*----------------------------------------------------------------------

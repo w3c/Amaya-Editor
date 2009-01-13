@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -56,7 +56,6 @@
 #include "schemas_f.h"
 #include "search_f.h"
 #include "searchmenu_f.h"
-#include "selectmenu_f.h"
 #include "structcreation_f.h"
 #include "structmodif_f.h"
 #include "structselect_f.h"
