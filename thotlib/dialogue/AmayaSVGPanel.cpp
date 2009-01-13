@@ -138,12 +138,21 @@ static svg_constructs list_of_constructs[] =
      }
     },
 
-    {"", 4,
+    {"", 3,
      {
        {"SVG_line", TMSG_SVG_Line, "CreateSVG_Line", FALSE},
        {"SVG_simple_arrow", TMSG_SVG_SimpleArrow, "CreateSVG_SimpleArrow", FALSE},
        {"SVG_double_arrow", TMSG_SVG_DoubleArrow, "CreateSVG_DoubleArrow", FALSE},
-       {"SVG_zigzag", TMSG_SVG_Zigzag, "CreateSVG_Zigzag", FALSE}
+       //{"SVG_zigzag", TMSG_SVG_Zigzag, "CreateSVG_Zigzag", FALSE}
+     }
+    },
+
+    {"", 4,
+     {
+       {"SVG_polyline", TMSG_SVG_Polyline, "CreateSVG_Polyline", FALSE},
+       {"SVG_polygon", TMSG_SVG_Polygon, "CreateSVG_Polygon", TRUE},
+       {"SVG_bezier", TMSG_SVG_Bezier, "CreateSVG_Spline", FALSE},
+       {"SVG_closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed", TRUE}
      }
     },
 
@@ -166,15 +175,6 @@ static svg_constructs list_of_constructs[] =
 	TMSG_SVG_RightTriangle, "CreateSVG_RectangleTriangle", TRUE},
        {"SVG_circle", TMSG_SVG_Circle, "CreateSVG_Circle", TRUE},
        {"SVG_ellipse", TMSG_SVG_Ellipse, "CreateSVG_Ellipse", TRUE}
-     }
-    },
-
-    {"", 4,
-     {
-       {"SVG_polyline", TMSG_SVG_Polyline, "CreateSVG_Polyline", FALSE},
-       {"SVG_polygon", TMSG_SVG_Polygon, "CreateSVG_Polygon", TRUE},
-       {"SVG_bezier", TMSG_SVG_Bezier, "CreateSVG_Spline", FALSE},
-       {"SVG_closed_bezier", TMSG_SVG_ClosedBezier, "CreateSVG_Closed", TRUE}
      }
     },
 
@@ -375,8 +375,8 @@ static svg_constructs list_of_constructs[] =
 BEGIN_EVENT_TABLE(AmayaSVGPanel, wxPanel)
 EVT_TOOL(XRCID("wxID_MENU_SVG_SPECIAL_OBJECTS"), AmayaSVGPanel::OnMenu0)
 EVT_TOOL(XRCID("wxID_MENU_SVG_CONNECTORS"), AmayaSVGPanel::OnMenu1)
-EVT_TOOL(XRCID("wxID_MENU_SVG_BASIC_SHAPES"), AmayaSVGPanel::OnMenu2)
-EVT_TOOL(XRCID("wxID_MENU_SVG_CURVES"), AmayaSVGPanel::OnMenu3)
+EVT_TOOL(XRCID("wxID_MENU_SVG_CURVES"), AmayaSVGPanel::OnMenu2)
+EVT_TOOL(XRCID("wxID_MENU_SVG_BASIC_SHAPES"), AmayaSVGPanel::OnMenu3)
 EVT_TOOL(XRCID("wxID_MENU_SVG_LAYERS"), AmayaSVGPanel::OnMenu4)
 EVT_TOOL(XRCID("wxID_MENU_SVG_TRANSFORM"), AmayaSVGPanel::OnMenu5)
 EVT_TOOL(XRCID("wxID_MENU_SVG_ALIGN"), AmayaSVGPanel::OnMenu6)

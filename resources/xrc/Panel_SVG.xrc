@@ -14,11 +14,11 @@
           <object class="tool" name="wxID_MENU_SVG_CONNECTORS">
             <bitmap>../icons/16x16/SVG_line.png</bitmap>
           </object>
-          <object class="tool" name="wxID_MENU_SVG_BASIC_SHAPES">
-            <bitmap>../icons/16x16/SVG_square.png</bitmap>
-          </object>
           <object class="tool" name="wxID_MENU_SVG_CURVES">
             <bitmap>../icons/16x16/SVG_bezier.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_MENU_SVG_BASIC_SHAPES">
+            <bitmap>../icons/16x16/SVG_square.png</bitmap>
           </object>
           <object class="tool" name="wxID_MENU_SVG_POLYGONS_AND_STARS">
             <bitmap>../svg/polygons_and_stars/star5.png</bitmap>
