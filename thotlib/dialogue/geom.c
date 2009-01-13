@@ -474,6 +474,15 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   /* Size of the construct */
   *lx = abs(*x4 - *x1);
   *ly = abs(*y4 - *y1);
+  if (*lx == 0 && *ly == 0)
+    {
+      *lx = 20;
+      *ly = (int)(20 * ratio);
+    }
+  else if (*lx == 0)
+    *lx = (int)(*ly / ratio);
+  else if (*ly == 0)
+    *ly = (int)(20 * ratio);
 
   /* Some shapes have specific contrainsts.  */
   if (shape == 9 || shape == 10)
