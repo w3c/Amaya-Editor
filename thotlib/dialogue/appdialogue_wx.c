@@ -2018,6 +2018,15 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   wxChar thot_keysym = event.GetKeyCode();  
   int    thotMask = 0;
 
+#ifdef _MACOS
+  if ((thot_keysym == WXK_WINDOWS_MENU || thot_keysym == WXK_F2)
+       && event.ControlDown())
+     {
+       //event.Skip();
+       return false;      
+     }
+#endif /* _MACOS */
+
   if (event.CmdDown() || event.ControlDown())
     thotMask |= THOT_MOD_CTRL;
   if (event.AltDown())

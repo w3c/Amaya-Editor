@@ -513,10 +513,22 @@ void AmayaWindow::ToggleFullScreen()
 void AmayaWindow::OnChar(wxKeyEvent& event)
 {
   TTALOGDEBUG_0( TTA_LOG_KEYINPUT, _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
+
   if (!TtaHandleUnicodeKey(event))
     if (!TtaHandleSpecialKey(event))
       if (!TtaHandleShortcutKey(event))
-        event.Skip();
+         {
+#ifdef _MACOS
+           int thot_keysym = event.GetKeyCode(); 
+           if (!(thot_keysym == WXK_WINDOWS_MENU || thot_keysym == WXK_F2)
+	        && event.ControlDown())
+           {
+             event.Skip();
+	   }
+#else /* _MACOS */
+           event.Skip();
+#endif /* _MACOS */
+         }
 }
 
 /*----------------------------------------------------------------------
