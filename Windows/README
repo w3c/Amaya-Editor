@@ -1,4 +1,0 @@
-WARNING:
-Dont forget to add in "Project Settings > C/C++ > Category=Preprocessor"
-the preprocessor definiton _WIN9X to complile on Windows 98 platforms.
-
