@@ -102,7 +102,7 @@ BEGIN_EVENT_TABLE(AmayaStatusBar, wxStatusBar)
   EVT_SIZE( AmayaStatusBar::OnSize )
 END_EVENT_TABLE()
 
-
+static int widths[4] = {-1, -1, -1, -1};
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -121,12 +121,12 @@ AmayaStatusBar::AmayaStatusBar( wxWindow * p_parent )
                                           wxDefaultPosition, wxDefaultSize,
                                           wxBU_EXACTFIT | wxNO_BORDER);
   wxASSERT(m_pLogErrorButton);
-  
   m_pathCtrl = new AmayaPathControl(this, wxID_ANY);
   m_insertMode = new AmayaStatusText(this, wxID_ANY, wxT(""));
 
   // setup statusbar attributes
-  static const int widths[Field_Max] = { -1, -1, 48, m_pLogErrorButton->GetSize().GetWidth()+LOG_SHIFT};
+  widths[Field_InsertMode] = 70;//m_insertMode->GetSize().GetWidth()
+  widths[Field_LogError] = m_pLogErrorButton->GetSize().GetWidth() + LOG_SHIFT;
   SetFieldsCount(Field_Max);
   SetStatusWidths(Field_Max, widths);
   SetMinHeight(m_pLogErrorButton->GetSize().GetHeight()+4);
@@ -161,11 +161,12 @@ void AmayaStatusBar::OnSize(wxSizeEvent& event)
   wxRect rect;
   GetFieldRect(Field_LogError, rect);
   
-  wxASSERT(m_pLogErrorButton);
-  wxSize size = m_pLogErrorButton->GetSize();
-  m_pLogErrorButton->Move(rect.x + (rect.width - size.x - LOG_SHIFT + 4) / 2,
-                          rect.y + (rect.height - size.y) / 2);
-
+  if (m_pLogErrorButton)
+  {
+    wxSize size = m_pLogErrorButton->GetSize();
+    m_pLogErrorButton->Move(rect.x + (rect.width - size.x - LOG_SHIFT + 4) / 2,
+                            rect.y + (rect.height - size.y) / 2);
+  }
   GetFieldRect(Field_Path, rect);
   m_pathCtrl->SetSize(rect.x+1, rect.y+1, rect.width-1, rect.height-1);
 
