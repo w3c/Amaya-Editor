@@ -575,10 +575,6 @@ SOURCE=..\..\thotlib\image\jpeghandler.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\keyboards.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\tree\labelalloc.c
 # End Source File
 # Begin Source File
