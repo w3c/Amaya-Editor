@@ -2015,7 +2015,7 @@ ThotBool TtaHandleUnicodeKey (wxKeyEvent& event)
 #ifdef _WX
 ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 {
-  wxChar thot_keysym = event.GetKeyCode();  
+  int    thot_keysym = event.GetKeyCode();  
   int    thotMask = 0;
 
 #ifdef _MACOS
@@ -2107,7 +2107,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
         {
           // shift key was not pressed
           // force the lowercase
-          wxString s(thot_keysym);
+          wxString s((wxChar)thot_keysym);
           if (s.IsAscii())
             {
               TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
