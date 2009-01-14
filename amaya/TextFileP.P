@@ -179,7 +179,11 @@ RULES
         Width: Enclosing . Width;
 #else
         Size: 11 pt;
+#ifdef LOG
         Width: Enclosed . Width;
+#else
+        Width: Enclosing . Width;
+#endif
         PaddingBottom: 3 cm;
 #endif
         Vertpos: Top = Enclosing . Top;
@@ -192,8 +196,12 @@ RULES
         Page(ThePage);
         Width: Enclosing . Width;
 #else
+#ifdef LOG
         Width: Enclosed . Width;
-        HorizPos: Left = Enclosing . Left + 0.7;
+#else
+        Width: Enclosing . Width;
+#endif
+        HorizPos: Left = Enclosing . Left;
 #endif
         VertPos: Top = Enclosing . Top;
         END;
@@ -209,8 +217,13 @@ RULES
 #else
         MarginRight: 1 em;
         MarginBottom: 1 em;
+        MarginLeft: 2 px;
         HorizPos: Left = Enclosing . Left;
+#ifdef LOG
         Width: Enclosed . Width;
+#else
+        Width: Enclosing . Width;
+#endif
 #endif
         END;
 
@@ -221,7 +234,11 @@ RULES
 #ifdef PAGE
         Width: Enclosing . Width;
 #else
+#ifdef LOG
         Width: Enclosed . Width;
+#else
+        Width: Enclosing . Width;
+#endif
 #endif
         END;
 
@@ -245,7 +262,7 @@ ATTRIBUTES
         BEGIN
         CreateBefore (LineNum);
         VertPos: HRef = Previous LineNum . HRef;
-        HorizPos: Left = Enclosing . Left + 3;
+        HorizPos: Left = Enclosing . Left + 4;
         END;
 
   Highlight:

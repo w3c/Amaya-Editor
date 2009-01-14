@@ -2803,8 +2803,10 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
   else if (doc > 0)
     {
       /* assign a presentation model to the document */
-      if (docType == docText || docType == docCSS ||
-          docType == docSource || docType == docLog)
+      if (docType == docLog)
+        TtaSetPSchema (doc, "TextFilePLOG");
+      else if (docType == docText || docType == docCSS ||
+          docType == docSource)
         TtaSetPSchema (doc, "TextFileP");
       else if (docType == docAnnot)
         {

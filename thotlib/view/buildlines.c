@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1627,6 +1627,7 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
    * - if we want to remove extra spaces at the end of the box.
    */
   if (pNewBuff && length < pBox->BxNChars &&
+      (length > 0 || pLine == NULL || pBox != pLine->LiFirstBox) &&
       (lostPixels != 0 || force) &&
       (pBox->BxWidth != max || lostPixels != pBox->BxNSpaces))
     {

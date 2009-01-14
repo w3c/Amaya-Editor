@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1619,6 +1619,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   PtrBox              nbox;
   PtrAbstractBox      pAb;
   SpecFont            font;
+  PtrLine             pLine;
   ThotFont            prevfont = NULL;
   ThotFont            nextfont = NULL;
   CHAR_T              c, transc;
@@ -2262,6 +2263,24 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
             }
         } 
 #ifdef _GL
+
+      // generate the break-line character
+      if (showSpecial && mbox && mbox->BxType == BoBlock)
+        {
+          pLine = mbox->BxFirstLine;
+          while (pLine && pLine != mbox->BxLastLine)
+            {
+              if (pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece)
+                {
+                  y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
+                  nextfont = (ThotFont)LoadStixFont (1, 12);
+                  DrawChar (0x40, frame, x, y, nextfont, 1);
+                  pLine = NULL;
+                }
+              else
+                pLine = pLine->LiNext;
+            }
+        }
       if (showtab_id)
         StopTextureScale (showtab_id);
       if (underline_id)

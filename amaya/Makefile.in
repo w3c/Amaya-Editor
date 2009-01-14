@@ -321,6 +321,7 @@ $(AMAYA)/TextFile.STR : $(AMAYA)/TextFile.S ../bin/str
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$STR $(ALL_AMAYA_OPTIONS) TextFile ;\
 	$$PRS $(ALL_AMAYA_OPTIONS) TextFileP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DLOG TextFileP TextFilePLOG ;\
 	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE TextFileP TextFilePP ;\
 	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE -DLANDSCAPE TextFileP TextFilePL ;\
 	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER TextFileP TextFilePPUS ;\

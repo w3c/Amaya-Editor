@@ -5142,15 +5142,15 @@ FIELDSET: BEGIN
         HorizPos: Left = Previous . Left;
         VertPos: Top = Previous . Bottom;
         HorizRef: * . Bottom;
-        Width: 10 cm;
+        Width: Enclosing . Width;
         Height: Enclosed . Height;
         LineBreak: No;
-        MarginLeft: 3 px;
+        {MarginLeft: 3 px;
         MarginRight: 3 px;
         PaddingTop: 0.2;
         PaddingLeft: 0.3;
         PaddingBottom: 0.2;
-        PaddingRight: 0.3;
+        PaddingRight: 0.3;}
         BorderTopWidth: 1 px;
         BorderLeftWidth: 1 px;
         BorderBottomWidth: 1 px;
@@ -6664,7 +6664,7 @@ ATTRIBUTES
         CreateBefore(AttrName);
         CreateBefore(AttrValue);
         if Text_Area
-           Width: Columns ex;
+           Width: Columns;
         IN Structure_view
           BEGIN
           if Text_Area
