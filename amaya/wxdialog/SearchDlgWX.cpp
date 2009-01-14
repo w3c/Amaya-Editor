@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -28,7 +28,8 @@ BEGIN_EVENT_TABLE(SearchDlgWX, AmayaDialog)
   EVT_RADIOBOX( XRCID("wxID_REPLACE_BOX"),     SearchDlgWX::OnReplaceBox )
   EVT_RADIOBOX( XRCID("wxID_SEARCH_AREA_BOX"), SearchDlgWX::OnSearchAreaBox )
   EVT_CHECKBOX( XRCID("wxID_CHECK_CASE"),      SearchDlgWX::OnCheckCaseBox )
-  EVT_TEXT( XRCID("wxID_REPLACE_BY_TXT"),      SearchDlgWX::OnTextChanged )
+  EVT_TEXT( XRCID("wxID_SEARCH_FOR_TXT"),      SearchDlgWX::OnTextChanged )
+  EVT_TEXT( XRCID("wxID_REPLACE_BY_TXT"),      SearchDlgWX::OnReplaceChanged )
   EVT_TEXT_ENTER( XRCID("wxID_SEARCH_FOR_TXT"),SearchDlgWX::OnConfirmButton )
 END_EVENT_TABLE()
 
@@ -116,27 +117,7 @@ SearchDlgWX::~SearchDlgWX()
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  wxString textToSearch = XRCCTRL(*this, "wxID_SEARCH_FOR_TXT",
-				  wxTextCtrl)->GetValue( );
-  wxString newText = XRCCTRL(*this, "wxID_REPLACE_BY_TXT",
-			     wxTextCtrl)->GetValue( );
-  
   WX_SearchResult = 0; /* By default the search is OK */
-  // allocate temporary buffers to copy the *text* buffers
-  // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
-  char buf_old_text[MAX_LENGTH];
-  wxASSERT( textToSearch.Len() < MAX_LENGTH );
-  strcpy( buf_old_text, (const char*)textToSearch.mb_str(wxConvUTF8) );
-  char buf_new_text[MAX_LENGTH];
-  wxASSERT( newText.Len() < MAX_LENGTH );
-  strcpy( buf_new_text, (const char*)newText.mb_str(wxConvUTF8) );
-
-  if (m_ireplace == 1 || m_ireplace == 2) 
-    ThotCallback (NumZoneTextReplace, STRING_DATA, buf_new_text);
-
-  ThotCallback (NumZoneTextSearch, STRING_DATA, buf_old_text);
-  ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
-  ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) m_iarea);
   ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
   if (m_iarea == 3)
     {
@@ -156,15 +137,6 @@ void SearchDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnNoReplaceButton( wxCommandEvent& event )
 {
-  wxString textToSearch = XRCCTRL(*this, "wxID_SEARCH_FOR_TXT",
-				  wxTextCtrl)->GetValue( );
-
-  // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
-  char buf_old_text[MAX_LENGTH];
-  wxASSERT( textToSearch.Len() < MAX_LENGTH );
-  strcpy( buf_old_text, (const char*)textToSearch.mb_str(wxConvUTF8) );
-
-  ThotCallback (NumZoneTextSearch, STRING_DATA, buf_old_text);
   ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) 0);
   ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) m_iarea);
   ThotCallback (NumFormSearchText, INTEGER_DATA, (char *) 1);
@@ -173,7 +145,9 @@ void SearchDlgWX::OnNoReplaceButton( wxCommandEvent& event )
       XRCCTRL(*this, "wxID_SEARCH_AREA_BOX", wxRadioBox)->SetSelection(2);
       m_iarea = 2;
     }
-
+  if (m_ireplace != 0)
+    // retore the value
+    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
 }
 
 /*----------------------------------------------------------------------
@@ -191,6 +165,7 @@ void SearchDlgWX::OnCancelButton( wxCommandEvent& event )
 void SearchDlgWX::OnReplaceBox ( wxCommandEvent& event )
 {
   m_ireplace = XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->GetSelection( );
+  ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
 }
 
 /*----------------------------------------------------------------------
@@ -198,8 +173,48 @@ void SearchDlgWX::OnReplaceBox ( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnTextChanged ( wxCommandEvent& event )
 {
-  m_ireplace = 1;
-  XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(1);
+  char buf[MAX_LENGTH];
+
+  buf[0] = EOS;
+  wxString textToSearch = XRCCTRL(*this, "wxID_SEARCH_FOR_TXT",
+                                  wxTextCtrl)->GetValue( );
+  if (textToSearch.Len() > 0)
+    {
+      strncpy (buf, (const char*)textToSearch.mb_str(wxConvUTF8), MAX_LENGTH);
+      buf[MAX_LENGTH-1] = EOS;
+    }
+  ThotCallback (NumZoneTextSearch, STRING_DATA, buf);
+}
+
+/*----------------------------------------------------------------------
+  OnTextChanged called when changing the replace text
+  ----------------------------------------------------------------------*/
+void SearchDlgWX::OnReplaceChanged ( wxCommandEvent& event )
+{
+  char buf[MAX_LENGTH];
+
+  buf[0] = EOS;
+  wxString newText = XRCCTRL(*this, "wxID_REPLACE_BY_TXT",
+                             wxTextCtrl)->GetValue( );
+  
+  if (newText.Len() > 0)
+    {
+      strncpy (buf, (const char*)newText.mb_str(wxConvUTF8), MAX_LENGTH);
+      buf[MAX_LENGTH-1] = EOS;
+    }
+  else
+    {
+      m_ireplace = 0;
+      XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(0);
+      ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
+    }
+  if (m_ireplace != 2)
+    {
+      m_ireplace = 1;
+      XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(1);
+      ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
+    }
+  ThotCallback (NumZoneTextReplace, STRING_DATA, buf);
 }
 
 /*----------------------------------------------------------------------
@@ -208,7 +223,8 @@ void SearchDlgWX::OnTextChanged ( wxCommandEvent& event )
 void SearchDlgWX::OnSearchAreaBox ( wxCommandEvent& event )
 {
   m_iarea = XRCCTRL(*this, "wxID_SEARCH_AREA_BOX",
-		    wxRadioBox)->GetSelection( );
+                    wxRadioBox)->GetSelection( );
+  ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char *) m_iarea);
 }
 
 /*----------------------------------------------------------------------

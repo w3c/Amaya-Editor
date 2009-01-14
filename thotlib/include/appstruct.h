@@ -142,6 +142,7 @@ extern void         TtcSwitchButtonBar (Document document, View view);
 extern void         TtcSwitchCommands (Document document, View view);
 extern void         TtcUndo  (Document document, View view);
 extern void         TtcRedo  (Document document, View view);
+extern void         TtcNextSearchReplace (Document document, View view);
 
 #endif /* __CEXTRACT__ */
 

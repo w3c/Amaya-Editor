@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -239,6 +239,14 @@ void CleanSearchContext ()
   SString = NULL;
   TtaFreeMemory (RString);
   RString = NULL;
+}
+
+/*----------------------------------------------------------------------
+  CleanSearchContext free all context related to search commands.
+  ----------------------------------------------------------------------*/
+void TtcNextSearchReplace (Document document, View view)
+{
+  CallbackTextReplace (NumFormSearchText, 1, NULL);
 }
 
 /*----------------------------------------------------------------------

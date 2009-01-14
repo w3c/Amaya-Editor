@@ -697,5 +697,6 @@ FUNCTIONS
   DoSelectFillOpacity,
   DoSelectStrokeWidth,
   DoUpdateStrokeStatus,
-  DoUpdateFillStatus;
+  DoUpdateFillStatus,
+  TtcNextSearchReplace;
 END
