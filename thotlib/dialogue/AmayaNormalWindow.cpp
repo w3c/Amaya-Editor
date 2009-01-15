@@ -1017,7 +1017,7 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
       (MenuActionList[action_id].ActionName &&
       (!strcmp (MenuActionList[action_id].ActionName, "TtcPreviousElement") ||
        !strcmp (MenuActionList[action_id].ActionName, "TtcNextElement"))))
-  event.Skip();
+  event.Skip(false);
 }
 
 /*----------------------------------------------------------------------
