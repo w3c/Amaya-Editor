@@ -5418,8 +5418,10 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
               CheckBlocksInCharElem (externalDoc);
               /* For (X)HTML documents, we paste the BODY element */
               elType.ElSSchema = TtaGetSSchema ("HTML", externalDoc);
-              elType.ElTypeNum = HTML_EL_BODY;
+              elType.ElTypeNum = HTML_EL_HEAD;
               idEl = TtaSearchTypedElement (elType, SearchForward, RootElement);
+              TtaDeleteTree (idEl, externalDoc);
+              idEl = TtaGetRootElement (externalDoc);
             }
           else
             idEl = TtaGetRootElement (externalDoc);

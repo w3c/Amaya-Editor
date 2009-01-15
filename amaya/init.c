@@ -4726,6 +4726,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   Document            res;
   DisplayMode         dispMode;
   AmayaDoc_context   *ctx;
+  XTigerTemplate      t;
   TTcbf              *cbf;
   int                 method;
   void               *ctx_cbf;
@@ -4858,14 +4859,18 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
             CheckParsingErrors (newdoc);
 #ifdef TEMPLATES
           // Fill template internal structures and prepare the instance if any
-          dispMode = TtaGetDisplayMode (doc);
-	  if (dispMode != NoComputedDisplay)
-	    TtaSetDisplayMode (doc, NoComputedDisplay);
-	  Template_FillFromDocument (newdoc);
-	  TtaSetDisplayMode (doc, dispMode);
-          if (method == CE_TEMPLATE)
-            // avoid positionned boxes to overlap the xt:head
-            SetBodyAbsolutePosition (newdoc);
+          t = GetXTigerTemplate (DocumentURLs[doc]);
+          if (t)
+            {
+              dispMode = TtaGetDisplayMode (doc);
+              if (dispMode != NoComputedDisplay)
+                TtaSetDisplayMode (doc, NoComputedDisplay);
+              Template_FillFromDocument (newdoc);
+              TtaSetDisplayMode (doc, dispMode);
+              if (method == CE_TEMPLATE)
+                // avoid positionned boxes to overlap the xt:head
+                SetBodyAbsolutePosition (newdoc);
+            }
 #endif /* TEMPLATES */
         }
       else
