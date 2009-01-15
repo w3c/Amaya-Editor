@@ -30,7 +30,7 @@ public:
   virtual ~SearchDlgWX();
 
 private:
-    // Override base class functions of a wxDialog.
+  // Override base class functions of a wxDialog.
   void OnConfirmButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
   void OnNoReplaceButton( wxCommandEvent& event );

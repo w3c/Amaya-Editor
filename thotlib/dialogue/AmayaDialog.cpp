@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -58,9 +58,6 @@ AmayaDialog::AmayaDialog( wxWindow * p_parent, int ref ) :
   m_Ref(ref)
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaDialog::AmayaDialog - ref=%d"), ref);
- 
-  // SetIcon provoque un warning, on ne l'utilise pas pr le moment.
-  //SetIcon( AmayaApp::GetAppIcon() );
 }
 
 /*----------------------------------------------------------------------
@@ -69,11 +66,6 @@ AmayaDialog::AmayaDialog( wxWindow * p_parent, int ref ) :
 AmayaDialog::~AmayaDialog()
 {
   TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaDialog::~AmayaDialog"));
-
-  //  TtaDestroyDialogue( m_Ref );
-
-  /* then give focus to canvas */
-  //  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -82,16 +74,6 @@ AmayaDialog::~AmayaDialog()
 void AmayaDialog::OnClose( wxCloseEvent& event )
 {
   TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaDialog::OnClose - ref=%d"), m_Ref);
-
-  // maybe it's better to use :
-  // this callback is usefull for :
-  // - Add CSS / Create link
-  // because it cancel the link creation process.
-  // TODO : verifier que l'appel generique de cette callback ne gene pas pour certains dialogues.
-  // ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
-
-  //TtaDestroyDialogue( m_Ref );
-
   //  forward the event to parents
   event.Skip();
 }

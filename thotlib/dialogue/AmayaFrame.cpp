@@ -632,6 +632,7 @@ void AmayaFrame::OnClose(wxCloseEvent& event)
     {
       GetDocAndView (m_FrameId, &pDoc, &view);
       doc_id = FrameTable[m_FrameId].FrDoc;
+      TtcCloseSearchReplace (doc_id, 1);
       TtaExecuteMenuAction ("CloseDocumentDialogs", doc_id, 1, TRUE);
       CloseView (pDoc, view);
     }

@@ -13,6 +13,8 @@ extern void SearchLoadResources ( void );
 extern void TtcSearchText ( Document document,
                             View view );
 extern void CleanSearchContext ( void );
+extern void TtcCloseSearchReplace ( Document document,
+                                    View view );
 extern void TtcNextSearchReplace ( Document document,
                                    View view );
 extern void CallbackTextReplace ( int ref,
@@ -28,6 +30,8 @@ extern void SearchLoadResources ( void );
 extern void TtcSearchText ( Document document,
                               View view );
 extern void CleanSearchContext ( void );
+extern void TtcCloseSearchReplace ( Document document,
+                                      View view );
 extern void TtcNextSearchReplace ( Document document,
                                      View view );
 extern void CallbackTextReplace ( int ref,

@@ -72,7 +72,7 @@ static ThotBool      WithReplace = FALSE;
 static ThotBool      AutoReplace = FALSE;
 static ThotBool      StartSearch = TRUE;
 static ThotBool      ReplaceDone;
-static ThotBool      DoReplace;
+static ThotBool      DoReplace = FALSE;
 static ThotBool      TextOK = FALSE;
 static ThotBool      SearchAfter = TRUE;
 static int           FirstCharTextOK;
@@ -165,6 +165,7 @@ void SearchLoadResources (void)
       SStringLen = 0;
       UpperLower = TRUE;
       WithReplace = FALSE;
+      DoReplace = FALSE;
       AutoReplace = FALSE;
       ReplacingString[0] = EOS;
       RStringLen = 0;
@@ -185,10 +186,16 @@ void TtcSearchText (Document document, View view)
   char                string[200];
   int                 firstChar;
   int                 lastChar, i;
-  ThotBool            ok;
+  ThotBool            ok, created;
+
+  pDoc = LoadedDocument[document - 1];
+  if (SearchingD && SearchingD->SDocument == pDoc)
+    {
+      TtcNextSearchReplace (document, view);
+      return;
+    }
 
   SearchLoadResources ();
-  pDoc = LoadedDocument[document - 1];
   ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
   if (!ok)
     {
@@ -197,7 +204,7 @@ void TtcSearchText (Document document, View view)
       firstChar = lastChar = 0;
       SearchAfter = FALSE;
     }
-
+  
   StartSearch = TRUE;
   /* compose le titre du formulaire "Recherche dans le document..." */
   strcpy (Caption, TtaGetMessage (LIB, TMSG_SEARCH_IN));
@@ -216,17 +223,12 @@ void TtcSearchText (Document document, View view)
     InitSearchDomain (3, SearchingD);
   SearchingD->SDocument = pDoc;
   TextOK = FALSE;
-#ifdef _WX
-  {
-    ThotBool created;
-    created = CreateSearchDlgWX( NumFormSearchText,
-                                 TtaGetViewFrame (document, view),
-                                 Caption, SearchedString, ReplacingString,
-                                 WithReplace, UpperLower, SearchAfter);
-    if (created)
-      TtaShowDialogue ( NumFormSearchText, TRUE );
-  }
-#endif /* _WX */
+  created = CreateSearchDlgWX( NumFormSearchText,
+                               TtaGetViewFrame (document, view),
+                               Caption, SearchedString, ReplacingString,
+                               WithReplace, UpperLower, SearchAfter);
+  if (created)
+    TtaShowDialogue ( NumFormSearchText, TRUE );
 }
 
 /*----------------------------------------------------------------------
@@ -242,11 +244,33 @@ void CleanSearchContext ()
 }
 
 /*----------------------------------------------------------------------
-  CleanSearchContext free all context related to search commands.
+  TtcCloseSearchReplace simulate the confirm button
+  ----------------------------------------------------------------------*/
+void TtcCloseSearchReplace (Document document, View view)
+{
+  PtrDocument         pDoc;
+
+  pDoc = LoadedDocument[document - 1];
+  if (SearchingD && SearchingD->SDocument == pDoc)
+    {
+      CallbackTextReplace (NumFormSearchText, 0, NULL);
+      StartSearch = FALSE;
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtcNextSearchReplace simulate the confirm button
   ----------------------------------------------------------------------*/
 void TtcNextSearchReplace (Document document, View view)
 {
-  CallbackTextReplace (NumFormSearchText, 1, NULL);
+  PtrDocument         pDoc;
+
+  pDoc = LoadedDocument[document - 1];
+  if (SearchingD && SearchingD->SDocument == pDoc)
+    {
+      CallbackTextReplace (NumFormSearchText, 1, NULL);
+      StartSearch = FALSE;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -284,14 +308,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
       break;
     case NumZoneTextReplace:
       /* Chaine a remplacer */
-      if (ReplacingString[0] == EOS && txt[0] != EOS)
-        {
-          if (!WithReplace && !SearchingD->SDocument->DocReadOnly)
-            {
-              WithReplace = TRUE;
-              DoReplace = TRUE;
-            }
-        }
       strncpy (ReplacingString, txt, MAX_LENGTH);
       ReplacingString[MAX_LENGTH-1] = EOS;
       /* convert the string if necessary */
@@ -338,10 +354,9 @@ void CallbackTextReplace (int ref, int val, char *txt)
         DoReplace = FALSE;
       else if (val == 0)
         {
-#ifdef _WX
           /* the user has clicked on cancel button */
           TtaDestroyDialogue( ref );
-#endif /* _WX */
+          SearchingD->SDocument = NULL;
           return;
         }
 

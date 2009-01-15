@@ -201,17 +201,17 @@ void SearchDlgWX::OnReplaceChanged ( wxCommandEvent& event )
     {
       strncpy (buf, (const char*)newText.mb_str(wxConvUTF8), MAX_LENGTH);
       buf[MAX_LENGTH-1] = EOS;
+      if (m_ireplace != 2)
+        {
+          m_ireplace = 1;
+          XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(1);
+          ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
+        }
     }
   else
     {
       m_ireplace = 0;
       XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(0);
-      ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
-    }
-  if (m_ireplace != 2)
-    {
-      m_ireplace = 1;
-      XRCCTRL(*this, "wxID_REPLACE_BOX", wxRadioBox)->SetSelection(1);
       ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char *) m_ireplace);
     }
   ThotCallback (NumZoneTextReplace, STRING_DATA, buf);
