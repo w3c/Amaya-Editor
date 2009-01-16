@@ -987,7 +987,7 @@ void DoStyleColor (char *color, ThotBool isBg)
 
   TtaGiveBoxColors (el, doc, 1, &col, &bg_col);
 
-  if ((isBg && new_col == bg_col) || new_col == col)
+  if ((isBg && new_col == bg_col) || (!isBg && new_col == col))
     // do nothing
     return;
 
@@ -998,14 +998,17 @@ void DoStyleColor (char *color, ThotBool isBg)
   if (!strcmp (name, "SVG"))
     {
       /* It's an SVG element */
-      if(elType.ElTypeNum == SVG_EL_g ||
-         elType.ElTypeNum == SVG_EL_rect ||
-         elType.ElTypeNum == SVG_EL_circle_ ||
-         elType.ElTypeNum == SVG_EL_ellipse ||
-         elType.ElTypeNum == SVG_EL_polyline ||
-         elType.ElTypeNum == SVG_EL_polygon ||
-         elType.ElTypeNum == SVG_EL_path ||
-         (!isBg && elType.ElTypeNum == SVG_EL_line_))
+      if (elType.ElTypeNum == SVG_EL_g ||
+	  elType.ElTypeNum == SVG_EL_rect ||
+	  elType.ElTypeNum == SVG_EL_circle_ ||
+	  elType.ElTypeNum == SVG_EL_ellipse ||
+	  elType.ElTypeNum == SVG_EL_polyline ||
+	  elType.ElTypeNum == SVG_EL_polygon ||
+	  elType.ElTypeNum == SVG_EL_path ||
+	  (!isBg && elType.ElTypeNum == SVG_EL_line_) ||
+	  elType.ElTypeNum == SVG_EL_text_ ||
+	  elType.ElTypeNum == SVG_EL_tspan ||
+	  elType.ElTypeNum == SVG_EL_foreignObject)
         {
           if(isBg)
             sprintf( buffer, "fill:%s", color);
