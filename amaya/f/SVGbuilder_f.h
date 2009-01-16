@@ -42,6 +42,8 @@ extern void CopyTRefContent ( Element source,
 extern ThotBool CopyUseContent ( Element el,
                                  Document doc,
                                  char *href );
+extern void ProcessMarkers ( Element el,
+                             Document doc );
 extern void EvaluateTestAttrs ( Element el,
                                 Document doc );
 extern void SetTextAnchor ( Attribute attr,
@@ -158,6 +160,8 @@ extern void CopyTRefContent ( Element source,
 extern ThotBool CopyUseContent ( Element el,
                                    Document doc,
                                    char *href );
+extern void ProcessMarkers ( Element el,
+                               Document doc );
 extern void EvaluateTestAttrs ( Element el,
                                   Document doc );
 extern void SetTextAnchor ( Attribute attr,

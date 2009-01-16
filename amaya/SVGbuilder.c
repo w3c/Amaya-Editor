@@ -602,7 +602,7 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   ThotBool             oldStructureChecking, strokeWidth;
 
   /* @@@@ disable the marker feature for the moment @@@@ */
-  /* return; */
+  return;
 
   elType = TtaGetElementType (el);
   oldStructureChecking = TtaGetStructureChecking (doc);
@@ -886,7 +886,7 @@ static void SetAttributeOnRoot (Element el, int att, Document doc)
   attributes, get the referred marker elements and insert them as
   transclusions in the element.
   ----------------------------------------------------------------------*/
-static void ProcessMarkers (Element el, Document doc)
+void ProcessMarkers (Element el, Document doc)
 {
   ElementType      elType;
   AttributeType    attrType;

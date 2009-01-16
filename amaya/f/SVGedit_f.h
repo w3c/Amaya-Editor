@@ -40,6 +40,8 @@ extern void UpdateSVGElement ( Document doc,
                                int dy,
                                int dw,
                                int dh );
+extern void UpdateMarkers ( Element el,
+                            Document doc );
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                           Element el,
                                           int w,

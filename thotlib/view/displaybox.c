@@ -23,7 +23,6 @@
 #include "typemedia.h"
 #include "picture.h"
 #include "appdialogue.h"
-#include "svgedit.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"

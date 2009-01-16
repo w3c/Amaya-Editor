@@ -3898,6 +3898,49 @@ printf ("------------->UpdateSVGElement\nold=\"%s\"\nnew=\"%s\"\n",value,text);
     }
 }
 
+
+/*----------------------------------------------------------------------
+  UpdateMarkers
+  Remove all the markers attached to an element and rebuild them.
+  ----------------------------------------------------------------------*/
+void UpdateMarkers (Element el, Document doc)
+{
+  Element child, next;
+  ElementType      elType;
+  SSchema      svgSchema = GetSVGSSchema (doc);
+
+  ThotBool oldStructureChecking = TtaGetStructureChecking (doc);
+  DisplayMode  dispMode = TtaGetDisplayMode (doc); 
+
+  if (oldStructureChecking)
+    TtaSetStructureChecking (FALSE, doc);
+
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  /* Clear all the markers */
+  child = TtaGetFirstChild(el);
+
+  while(child)
+    {
+      next = child;
+      TtaNextSibling(&next);
+
+      elType = TtaGetElementType(child);
+      
+      if(elType.ElSSchema == svgSchema && elType.ElTypeNum == SVG_EL_marker)
+	TtaDeleteTree(child, doc);
+
+      child = next;
+    }
+
+  /* Rebuild the markers */
+  ProcessMarkers (el, doc);
+
+  TtaSetStructureChecking (oldStructureChecking, doc);
+  TtaSetDisplayMode (doc, dispMode);
+}
+
 /*----------------------------------------------------------------------
   UpdatePointsOrPathAttribute
   ----------------------------------------------------------------------*/
@@ -4025,6 +4068,7 @@ void UpdatePointsOrPathAttribute (Document doc, Element el, int w, int h,
     }
  
   TtaFreeMemory(buffer);
+
   /* Update the attribute menu */
   TtaUpdateAttrMenu(doc);
   if (withUndo && open)

@@ -2150,7 +2150,11 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
 
   /* Update the attribute */
   if(transformApplied)
-    UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
+    {
+      UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
+      UpdateMarkers(el, doc);
+    }
+
   return transformApplied;
 }
 
@@ -2419,8 +2423,9 @@ ThotBool ContentEditing (int editType)
 			  /* Update the attribute */
 			  if(pointDeleted)
 			    {
-			      UpdatePointsOrPathAttribute(doc,
-							  TtaGetParent((Element)FirstSelectedElement), 0, 0, TRUE);
+			      Element el = TtaGetParent((Element)FirstSelectedElement);
+			      UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
+			      UpdateMarkers(el, doc);
 			      TtaSetDocumentModified(doc);
 			    }
 		    }
