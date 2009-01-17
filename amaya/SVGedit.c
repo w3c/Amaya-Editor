@@ -1645,6 +1645,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
   ThotBool          isFilled = LastSVGelementIsFilled, isFormattedView, closed;   
+  //const char *Arrow1Mend_id = "Arrow1Mend";
 
   /* Check that a document is selected */
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
@@ -1925,6 +1926,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       break;
 
     case 12: /* Simple arrow */
+      // newType.ElTypeNum = SVG_EL_line_;
       newType.ElTypeNum = SVG_EL_path;
       break;
 
@@ -1959,18 +1961,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
     case 22: /* rectangle triangle */
       newType.ElTypeNum = SVG_EL_polygon;
       break;
-
-      /*     case 23: /\* cube *\/ */
-      /*       newType.ElTypeNum = SVG_EL_path; */
-      /*       break; */
-
-      /*     case 24: /\* parallelepiped *\/ */
-      /*       newType.ElTypeNum = SVG_EL_path; */
-      /*       break; */
-
-      /*     case 25: /\* cylinder *\/ */
-      /*       newType.ElTypeNum = SVG_EL_path; */
-      /*       break; */
 
     default:
       break;
@@ -2166,6 +2156,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               switch(entry)
                 {
                 case 0: /* Line */
+		  //case 12: /* Simple Arrow */
                   attrType.AttrTypeNum = SVG_ATTR_x1;
                   UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
 
@@ -2178,10 +2169,23 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   attrType.AttrTypeNum = SVG_ATTR_y2;
                   UpdateAttrText (newEl, doc, attrType, y4, FALSE, TRUE);
 
+		  /*
+		  if(entry == 12)
+		    {
+		      LoadSVG_Markers(doc, Arrow1Mend_id);
+		      attrType.AttrTypeNum = SVG_ATTR_marker_end;
+		      attrType.AttrSSchema = svgSchema;
+		      attr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (newEl, attr, doc);
+		      sprintf(buffer, "url(#%s)", Arrow1Mend_id);
+		      TtaSetAttributeText (attr, buffer, newEl, doc);
+		      TtaRegisterAttributeCreate (attr, newEl, doc);
+		      }*/
+
                   SVGElementComplete (&context, newEl, &error);
                   break;
 
-                case 12: /* Simple Arrow */
+		case 12: /* Simple Arrow */
                   attrType.AttrTypeNum = SVG_ATTR_d;
                   attr = TtaNewAttribute (attrType);
                   TtaAttachAttribute (newEl, attr, doc);
@@ -5017,7 +5021,7 @@ ThotBool GenerateDesc (Document doc, View view, Element el)
 /*----------------------------------------------------------------------
   searchMarkers
   ----------------------------------------------------------------------*/
-static ThotBool searchMarkers(Document doc, Element svg, const char *marker_id)
+static Element searchMarkers(Document doc, Element svg, const char *marker_id)
 {
   SSchema           svgSchema;
   ElementType       defsType, markerType;
@@ -5027,7 +5031,7 @@ static ThotBool searchMarkers(Document doc, Element svg, const char *marker_id)
   Attribute      attr;
 
   char buffer[MAX_LENGTH];
-  int len_id, len;
+  int len;
 
   svgSchema = TtaGetDocumentSSchema (doc);
   defsType.ElTypeNum = SVG_EL_defs;
@@ -5035,13 +5039,12 @@ static ThotBool searchMarkers(Document doc, Element svg, const char *marker_id)
   markerType.ElTypeNum = SVG_EL_marker;
   markerType.ElSSchema = svgSchema;
 
-  attrType.AttrTypeNum = SVG_ATTR_Namespace;
   attrType.AttrSSchema = svgSchema;
-  attrType.AttrTypeNum = SVG_ATTR_xmlid;
+  attrType.AttrTypeNum = SVG_ATTR_id;
 
-  len_id = strlen(marker_id);
-  if(len_id >= MAX_LENGTH)
-    return FALSE;
+  len = strlen(marker_id);
+  if(len >= MAX_LENGTH)
+    return NULL;
 
   for(defs = TtaSearchTypedElement (defsType, SearchInTree, svg); defs;
       defs = TtaSearchTypedElementInTree (defsType, SearchForward, svg, defs))
@@ -5055,15 +5058,15 @@ static ThotBool searchMarkers(Document doc, Element svg, const char *marker_id)
 	  attr = TtaGetAttribute (marker, attrType);
 	  if (attr)
 	    {
-	      len = len_id;
+	      len = MAX_LENGTH - 1;
 	      TtaGiveTextAttributeValue (attr, buffer, &len);
 	      if(!strcmp(buffer, marker_id))
-		return TRUE;
+		return marker;
 	    }
 	}
     }
 
-  return FALSE;
+  return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -5077,14 +5080,25 @@ static ThotBool searchMarkers(Document doc, Element svg, const char *marker_id)
 ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
 {
   SSchema           docSchema, svgSchema;
-  Element           tree, el;
+  Element           tree, el, svg, defs, marker;
   ElementType       elType;
   ThotBool          isHTML;
   Document markersDoc;
   
-  const char *name = "resources/markers.svg";
+  const char *name = "markers.svg";
   wxString path; char *path2;
     
+  ThotBool oldStructureChecking = TtaGetStructureChecking (doc);
+  DisplayMode  dispMode = TtaGetDisplayMode (doc); 
+
+  if (oldStructureChecking)
+    TtaSetStructureChecking (FALSE, doc);
+
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  svgSchema = TtaGetDocumentSSchema (doc);
+
   /* 1) Is it a HTML or SVG document? */
   docSchema = TtaGetDocumentSSchema (doc);
 
@@ -5109,7 +5123,7 @@ ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
   tree = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot(doc));
 
   if(tree == NULL)
-    return FALSE;
+      return FALSE;
 
   /* 3) Now look into all defs elements  */
   if(isHTML)
@@ -5121,34 +5135,92 @@ ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
       for(el = TtaSearchTypedElement (elType, SearchInTree, tree); el;
 	  el = TtaSearchTypedElementInTree (elType, SearchForward, tree, el))
 	/* el is a <svg/>: search markers */
-	if(searchMarkers(doc, el, marker_id))
+	if(searchMarkers(doc, el, marker_id) != NULL)
 	  return TRUE;
     }
   else
     {
       /* Search markers in the <svg/> root */
-      if(searchMarkers(doc, tree, marker_id))
+      if(searchMarkers(doc, tree, marker_id) != NULL)
 	return TRUE;
     }
 
+  printf("4)\n");
+
   /* 4) marker_id has not been found: open markers.svg */
+  /* @@@ loading markers.svg takes a lot of time... - F. Wang */
+
   path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
   path2 = TtaStrdup(path.mb_str(wxConvUTF8));
   markersDoc = GetAmayaDoc (path2, NULL,
 			    0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
   TtaFreeMemory(path2);
 
-  if(!markersDoc)
-    return FALSE;
+  printf("5)\n");
 
   /* 5) Search marker_id in markersDoc */
-  /* @@@ TODO */
+  elType.ElTypeNum = SVG_EL_SVG;
+  elType.ElSSchema = svgSchema;
+  el = TtaGetMainRoot(markersDoc);
+  //el = TtaSearchTypedElement (elType, SearchInTree, el);
+  marker = searchMarkers(markersDoc, el, marker_id);
+
+  if(marker == NULL)
+    {
+      // The marker_id does not match any marker in markers.svg
+      TtaRemoveDocumentReference (markersDoc);
+      return FALSE;
+    }
+
+  printf("6)\n");
+
+  /* 6) Create or get an <svg/> element */
+  if(isHTML)
+    {
+      /* Get the first embedded <svg/> element in the HTML document */
+      elType.ElTypeNum = SVG_EL_SVG;
+      elType.ElSSchema = svgSchema;
+      svg = TtaSearchTypedElement (elType, SearchInTree, tree);
+
+      if(svg == NULL)
+	{
+	  /* No <svg/> element: create one as the first child of the <body/> */
+	  svg = TtaNewElement(doc, elType);
+	  TtaInsertFirstChild(&svg, tree, doc);
+	  TtaRegisterElementCreate (svg, doc);
+	}
+    }
+  else
+    /* Get the root element of the svg document */
+    svg = tree;
+
+  printf("7)\n");
+
+  /* 7) Create or get a <defs> element */
+  elType.ElTypeNum = SVG_EL_defs;
+  elType.ElSSchema = svgSchema;
+  defs = TtaSearchTypedElement (elType, SearchInTree, svg);
+  if(defs == NULL)
+    {
+      /* No <defs/> element: create one as the first child of the <svg/> */
+	  defs = TtaNewElement(doc, elType);
+	  TtaInsertFirstChild(&defs, svg, doc);
+	  TtaRegisterElementCreate (defs, doc);
+    }
+  
+  printf("8)\n");
+
+  /* 8) Insert the new marker */
+  el = TtaCopyElement(marker, markersDoc, doc, defs);
+  TtaInsertFirstChild(&el, defs, doc);
+  TtaRegisterElementCreate (el, doc);
+
   TtaRemoveDocumentReference (markersDoc);
 
-  /* 6) Insert the marker in the element tree */
-  /* @@@ TODO */
+  TtaSetStructureChecking (oldStructureChecking, doc);
+  TtaSetDisplayMode (doc, dispMode);
 
-  return FALSE;
+  return TRUE;
 }
 
 
