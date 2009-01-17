@@ -5015,6 +5015,144 @@ ThotBool GenerateDesc (Document doc, View view, Element el)
 }
 
 /*----------------------------------------------------------------------
+  searchMarkers
+  ----------------------------------------------------------------------*/
+static ThotBool searchMarkers(Document doc, Element svg, const char *marker_id)
+{
+  SSchema           svgSchema;
+  ElementType       defsType, markerType;
+  Element defs, marker;
+
+  AttributeType  attrType;
+  Attribute      attr;
+
+  char buffer[MAX_LENGTH];
+  int len_id, len;
+
+  svgSchema = TtaGetDocumentSSchema (doc);
+  defsType.ElTypeNum = SVG_EL_defs;
+  defsType.ElSSchema = svgSchema;
+  markerType.ElTypeNum = SVG_EL_marker;
+  markerType.ElSSchema = svgSchema;
+
+  attrType.AttrTypeNum = SVG_ATTR_Namespace;
+  attrType.AttrSSchema = svgSchema;
+  attrType.AttrTypeNum = SVG_ATTR_xmlid;
+
+  len_id = strlen(marker_id);
+  if(len_id >= MAX_LENGTH)
+    return FALSE;
+
+  for(defs = TtaSearchTypedElement (defsType, SearchInTree, svg); defs;
+      defs = TtaSearchTypedElementInTree (defsType, SearchForward, svg, defs))
+    {
+      for(marker = TtaSearchTypedElement (markerType, SearchInTree, defs);
+	  marker;
+	  marker = TtaSearchTypedElementInTree (markerType, SearchForward,
+						defs, marker))
+	{
+	  /* Get the id attribute */
+	  attr = TtaGetAttribute (marker, attrType);
+	  if (attr)
+	    {
+	      len = len_id;
+	      TtaGiveTextAttributeValue (attr, buffer, &len);
+	      if(!strcmp(buffer, marker_id))
+		return TRUE;
+	    }
+	}
+    }
+
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  LoadSVG_Markers
+  
+  Check if an SVG marker of id marker_id exists in the document
+  If no marker is found, load one from the file resources/svg/markers.svg
+
+  return TRUE = success
+  ----------------------------------------------------------------------*/
+ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
+{
+  SSchema           docSchema, svgSchema;
+  Element           tree, el;
+  ElementType       elType;
+  ThotBool          isHTML;
+  Document markersDoc;
+  
+  const char *name = "resources/markers.svg";
+  wxString path; char *path2;
+    
+  /* 1) Is it a HTML or SVG document? */
+  docSchema = TtaGetDocumentSSchema (doc);
+
+  if (!strcmp (TtaGetSSchemaName (docSchema), "HTML"))
+    isHTML = TRUE;
+  else if(!strcmp (TtaGetSSchemaName (docSchema), "SVG"))
+    isHTML = FALSE;
+  else
+    /* Markers can not be inserted in the document */
+    return FALSE;
+
+  /* 2) Get the tree where the markers can be found/inserted */
+  elType.ElSSchema = docSchema;
+
+  if(isHTML)
+    /* The <body/> element */
+    elType.ElTypeNum = HTML_EL_BODY;
+  else
+    /* The <svg/> root */
+    elType.ElTypeNum = SVG_EL_SVG;
+  
+  tree = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot(doc));
+
+  if(tree == NULL)
+    return FALSE;
+
+  /* 3) Now look into all defs elements  */
+  if(isHTML)
+    {
+      /* Search all embedded <svg/> element in the HTML document */
+      elType.ElTypeNum = SVG_EL_SVG;
+      elType.ElSSchema = svgSchema;
+
+      for(el = TtaSearchTypedElement (elType, SearchInTree, tree); el;
+	  el = TtaSearchTypedElementInTree (elType, SearchForward, tree, el))
+	/* el is a <svg/>: search markers */
+	if(searchMarkers(doc, el, marker_id))
+	  return TRUE;
+    }
+  else
+    {
+      /* Search markers in the <svg/> root */
+      if(searchMarkers(doc, tree, marker_id))
+	return TRUE;
+    }
+
+  /* 4) marker_id has not been found: open markers.svg */
+  path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
+  path2 = TtaStrdup(path.mb_str(wxConvUTF8));
+  markersDoc = GetAmayaDoc (path2, NULL,
+			    0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
+  TtaFreeMemory(path2);
+
+  if(!markersDoc)
+    return FALSE;
+
+  /* 5) Search marker_id in markersDoc */
+  /* @@@ TODO */
+  TtaRemoveDocumentReference (markersDoc);
+
+  /* 6) Insert the marker in the element tree */
+  /* @@@ TODO */
+
+  return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
   CreateSVG_Template
   ----------------------------------------------------------------------*/
 void CreateSVG_Template (Document document, View view)
