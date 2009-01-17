@@ -1637,7 +1637,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   int		            c1, i, dir, svgDir, profile;
   int               docModified, error, w, h;
   int               x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
-  int               tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
+  //int               tmpx1, tmpy1, tmpx2, tmpy2, tmpx3, tmpy3, tmpx4, tmpy4;
   float             valx, valy;
   _ParserData       context;
   char              buffer[500], buffer2[200];
@@ -1645,7 +1645,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
   ThotBool          isFilled = LastSVGelementIsFilled, isFormattedView, closed;   
-  //const char *Arrow1Mend_id = "Arrow1Mend";
+  /* Move this elsewhere when markers are used more */
+  const char *Arrow1Mend_id = "Arrow1Mend";
+  const char *Arrow1Mstart_id = "Arrow1Mstart";
 
   /* Check that a document is selected */
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
@@ -1926,12 +1928,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
       break;
 
     case 12: /* Simple arrow */
-      // newType.ElTypeNum = SVG_EL_line_;
-      newType.ElTypeNum = SVG_EL_path;
+      newType.ElTypeNum = SVG_EL_line_;
+      //newType.ElTypeNum = SVG_EL_path;
       break;
 
     case 13: /* Double arrow */
-      newType.ElTypeNum = SVG_EL_path;
+      newType.ElTypeNum = SVG_EL_line_;
+      //newType.ElTypeNum = SVG_EL_path;
       break;
 
     case 14: /* Zigzag */
@@ -2156,7 +2159,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
               switch(entry)
                 {
                 case 0: /* Line */
-		  //case 12: /* Simple Arrow */
+		case 12: /* Simple Arrow */
+		case 13: /* Double Arrow */
                   attrType.AttrTypeNum = SVG_ATTR_x1;
                   UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
 
@@ -2169,8 +2173,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   attrType.AttrTypeNum = SVG_ATTR_y2;
                   UpdateAttrText (newEl, doc, attrType, y4, FALSE, TRUE);
 
-		  /*
-		  if(entry == 12)
+		  /* TODO: use a function to attach markers */
+		  if(entry == 12 || entry == 13)
 		    {
 		      LoadSVG_Markers(doc, Arrow1Mend_id);
 		      attrType.AttrTypeNum = SVG_ATTR_marker_end;
@@ -2180,52 +2184,64 @@ void CreateGraphicElement (Document doc, View view, int entry)
 		      sprintf(buffer, "url(#%s)", Arrow1Mend_id);
 		      TtaSetAttributeText (attr, buffer, newEl, doc);
 		      TtaRegisterAttributeCreate (attr, newEl, doc);
-		      }*/
+		      }
+
+		  if(entry == 13)
+		    {
+		      LoadSVG_Markers(doc, Arrow1Mstart_id);
+		      attrType.AttrTypeNum = SVG_ATTR_marker_start;
+		      attrType.AttrSSchema = svgSchema;
+		      attr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (newEl, attr, doc);
+		      sprintf(buffer, "url(#%s)", Arrow1Mstart_id);
+		      TtaSetAttributeText (attr, buffer, newEl, doc);
+		      TtaRegisterAttributeCreate (attr, newEl, doc);
+		    }
 
                   SVGElementComplete (&context, newEl, &error);
                   break;
 
-		case 12: /* Simple Arrow */
-                  attrType.AttrTypeNum = SVG_ATTR_d;
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (newEl, attr, doc);
+/* 		case 12: /\* Simple Arrow *\/ */
+/*                   attrType.AttrTypeNum = SVG_ATTR_d; */
+/*                   attr = TtaNewAttribute (attrType); */
+/*                   TtaAttachAttribute (newEl, attr, doc); */
 
-                  tmpx1 = x1; tmpy1 = y1;
-                  tmpx2 = x4; tmpy2 = y4;
-                  GetArrowCoord(&tmpx1, &tmpy1, &tmpx2, &tmpy2);
+/*                   tmpx1 = x1; tmpy1 = y1; */
+/*                   tmpx2 = x4; tmpy2 = y4; */
+/*                   GetArrowCoord(&tmpx1, &tmpy1, &tmpx2, &tmpy2); */
 
-                  sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d",
-                          x1, y1, x4, y4,
-                          tmpx1, tmpy1, x4, y4, tmpx2, tmpy2
-                          );
-                  TtaSetAttributeText (attr, buffer, newEl, doc);
-                  ParsePathDataAttribute (attr, newEl, doc, TRUE);
-                  SVGElementComplete (&context, newEl, &error);
-                  break;
+/*                   sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d", */
+/*                           x1, y1, x4, y4, */
+/*                           tmpx1, tmpy1, x4, y4, tmpx2, tmpy2 */
+/*                           ); */
+/*                   TtaSetAttributeText (attr, buffer, newEl, doc); */
+/*                   ParsePathDataAttribute (attr, newEl, doc, TRUE); */
+/*                   SVGElementComplete (&context, newEl, &error); */
+/*                   break; */
 
-                case 13: /* Double Arrow */
-                  attrType.AttrTypeNum = SVG_ATTR_d;
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (newEl, attr, doc);
+/*                 case 13: /\* Double Arrow *\/ */
+/*                   attrType.AttrTypeNum = SVG_ATTR_d; */
+/*                   attr = TtaNewAttribute (attrType); */
+/*                   TtaAttachAttribute (newEl, attr, doc); */
 
-                  tmpx1 = x1; tmpy1 = y1;
-                  tmpx2 = x4; tmpy2 = y4;
-                  GetArrowCoord(&tmpx1, &tmpy1, &tmpx2, &tmpy2);
+/*                   tmpx1 = x1; tmpy1 = y1; */
+/*                   tmpx2 = x4; tmpy2 = y4; */
+/*                   GetArrowCoord(&tmpx1, &tmpy1, &tmpx2, &tmpy2); */
 
-                  tmpx3 = x4; tmpy3 = y4;
-                  tmpx4 = x1; tmpy4 = y1;
-                  GetArrowCoord(&tmpx3, &tmpy3, &tmpx4, &tmpy4);
+/*                   tmpx3 = x4; tmpy3 = y4; */
+/*                   tmpx4 = x1; tmpy4 = y1; */
+/*                   GetArrowCoord(&tmpx3, &tmpy3, &tmpx4, &tmpy4); */
 
-                  sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d M %d %d L %d %d %d %d",
-                          x1, y1, x4, y4,
-                          tmpx1, tmpy1, x4, y4, tmpx2, tmpy2,
-                          tmpx3, tmpy3, x1, y1, tmpx4, tmpy4
-                          );
+/*                   sprintf(buffer, "M %d %d L %d %d M %d %d L %d %d %d %d M %d %d L %d %d %d %d", */
+/*                           x1, y1, x4, y4, */
+/*                           tmpx1, tmpy1, x4, y4, tmpx2, tmpy2, */
+/*                           tmpx3, tmpy3, x1, y1, tmpx4, tmpy4 */
+/*                           ); */
 
-                  TtaSetAttributeText (attr, buffer, newEl, doc);
-                  ParsePathDataAttribute (attr, newEl, doc, TRUE);
-                  SVGElementComplete (&context, newEl, &error);
-                  break;
+/*                   TtaSetAttributeText (attr, buffer, newEl, doc); */
+/*                   ParsePathDataAttribute (attr, newEl, doc, TRUE); */
+/*                   SVGElementComplete (&context, newEl, &error); */
+/*                   break; */
 
                 case 14: /* Zigzag */
                   attrType.AttrTypeNum = SVG_ATTR_points;
@@ -5033,7 +5049,7 @@ static Element searchMarkers(Document doc, Element svg, const char *marker_id)
   char buffer[MAX_LENGTH];
   int len;
 
-  svgSchema = TtaGetDocumentSSchema (doc);
+  svgSchema = GetSVGSSchema (doc);
   defsType.ElTypeNum = SVG_EL_defs;
   defsType.ElSSchema = svgSchema;
   markerType.ElTypeNum = SVG_EL_marker;
@@ -5060,6 +5076,7 @@ static Element searchMarkers(Document doc, Element svg, const char *marker_id)
 	    {
 	      len = MAX_LENGTH - 1;
 	      TtaGiveTextAttributeValue (attr, buffer, &len);
+
 	      if(!strcmp(buffer, marker_id))
 		return marker;
 	    }
@@ -5097,7 +5114,7 @@ ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
-  svgSchema = TtaGetDocumentSSchema (doc);
+  svgSchema = GetSVGSSchema (doc);
 
   /* 1) Is it a HTML or SVG document? */
   docSchema = TtaGetDocumentSSchema (doc);
@@ -5111,14 +5128,18 @@ ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
     return FALSE;
 
   /* 2) Get the tree where the markers can be found/inserted */
-  elType.ElSSchema = docSchema;
-
   if(isHTML)
-    /* The <body/> element */
-    elType.ElTypeNum = HTML_EL_BODY;
+    {
+      /* The <body/> element */
+      elType.ElTypeNum = HTML_EL_BODY;
+      elType.ElSSchema = GetXHTMLSSchema (doc);
+    }
   else
-    /* The <svg/> root */
-    elType.ElTypeNum = SVG_EL_SVG;
+    {
+      /* The <svg/> root */
+      elType.ElTypeNum = SVG_EL_SVG;
+      elType.ElSSchema = svgSchema;
+    }
   
   tree = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot(doc));
 
@@ -5145,24 +5166,18 @@ ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
 	return TRUE;
     }
 
-  printf("4)\n");
-
   /* 4) marker_id has not been found: open markers.svg */
-  /* @@@ loading markers.svg takes a lot of time... - F. Wang */
-
   path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
   path2 = TtaStrdup(path.mb_str(wxConvUTF8));
   markersDoc = GetAmayaDoc (path2, NULL,
 			    0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
   TtaFreeMemory(path2);
 
-  printf("5)\n");
-
   /* 5) Search marker_id in markersDoc */
   elType.ElTypeNum = SVG_EL_SVG;
-  elType.ElSSchema = svgSchema;
+  elType.ElSSchema = GetSVGSSchema (markersDoc);
   el = TtaGetMainRoot(markersDoc);
-  //el = TtaSearchTypedElement (elType, SearchInTree, el);
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
   marker = searchMarkers(markersDoc, el, marker_id);
 
   if(marker == NULL)
@@ -5171,8 +5186,6 @@ ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
       TtaRemoveDocumentReference (markersDoc);
       return FALSE;
     }
-
-  printf("6)\n");
 
   /* 6) Create or get an <svg/> element */
   if(isHTML)
@@ -5194,8 +5207,6 @@ ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
     /* Get the root element of the svg document */
     svg = tree;
 
-  printf("7)\n");
-
   /* 7) Create or get a <defs> element */
   elType.ElTypeNum = SVG_EL_defs;
   elType.ElSSchema = svgSchema;
@@ -5208,10 +5219,8 @@ ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
 	  TtaRegisterElementCreate (defs, doc);
     }
   
-  printf("8)\n");
-
-  /* 8) Insert the new marker */
-  el = TtaCopyElement(marker, markersDoc, doc, defs);
+  /* 8) Copy the marker into the document */
+  el = TtaCopyTree(marker, markersDoc, doc, defs);
   TtaInsertFirstChild(&el, defs, doc);
   TtaRegisterElementCreate (el, doc);
 

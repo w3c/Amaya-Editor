@@ -89,6 +89,8 @@ extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
 extern ThotBool GenerateDesc ( Document doc,
                                View view,
                                Element el );
+extern ThotBool LoadSVG_Markers ( Document doc,
+                                  const char *marker_id );
 extern void CreateSVG_Template ( Document document,
                                  View view );
 extern void CreateSVG_Svg ( Document document,
@@ -238,6 +240,8 @@ extern void UpdateSVGElement ( Document doc,
                                  int dy,
                                  int dw,
                                  int dh );
+extern void UpdateMarkers ( Element el,
+                              Document doc );
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                             Element el,
                                             int w,
@@ -285,6 +289,8 @@ extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
 extern ThotBool GenerateDesc ( Document doc,
                                  View view,
                                  Element el );
+extern ThotBool LoadSVG_Markers ( Document doc,
+                                    const char *marker_id );
 extern void CreateSVG_Template ( Document document,
                                    View view );
 extern void CreateSVG_Svg ( Document document,

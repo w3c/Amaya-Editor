@@ -601,9 +601,6 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   PresentationValue    presValue;
   ThotBool             oldStructureChecking, strokeWidth;
 
-  /* @@@@ disable the marker feature for the moment @@@@ */
-  return;
-
   elType = TtaGetElementType (el);
   oldStructureChecking = TtaGetStructureChecking (doc);
   if (oldStructureChecking)
@@ -702,7 +699,6 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   attr = TtaGetAttribute (marker, attrType);
 
   /* @@@@ to be written @@@@ */
-
 
 
   /* add a transform to scale the coordinate system based on the viewBox and
