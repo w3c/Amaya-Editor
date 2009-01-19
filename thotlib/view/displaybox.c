@@ -2321,7 +2321,7 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
 {
   PtrBox              from;
   int                 color;
-  int                 t, b, l, r;
+  int                 t, b, l, r, d;
   int                 xFrame, yFrame, height, width;
 
   if (pFrom == NULL || pFrom->AbBox == NULL ||
@@ -2405,9 +2405,13 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbForeground;
       else
         color = pFrom->AbTopBColor;
+      if (from->BxTBorder)
+        d = 0;
+      else
+        d = t/from->BxTBorder;
       DrawHorizontalLine (frame, t, pFrom->AbTopStyle, x, y,
                           w, t, 0, color, box,
-                          l, r);
+                          l*d, r*d);
     }
   if (from->BxLBorder && pFrom->AbLeftStyle > 2 &&
       pFrom->AbLeftBColor != -2 && l > 0 && bl)
@@ -2417,9 +2421,13 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbForeground;
       else
         color = pFrom->AbLeftBColor;
+      if (from->BxLBorder)
+        d = 0;
+      else
+        d = l/from->BxLBorder;
       DrawVerticalLine (frame, l, pFrom->AbLeftStyle, x, y,
                         l, h, 0, color, box,
-                        t , b);
+                        t*d, b*d);
     }
   if (from->BxBBorder && pFrom->AbBottomStyle > 2 &&
       pFrom->AbBottomBColor != -2 && b > 0 && bb)
@@ -2429,10 +2437,14 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbForeground;
       else
         color = pFrom->AbBottomBColor;
+      if (from->BxBBorder)
+        d = 0;
+      else
+        d = b/from->BxBBorder;
       DrawHorizontalLine (frame, b, pFrom->AbBottomStyle,
                           x, yFrame + height - eb - from->BxBBorder,
                           w, b, 2, color, box,
-                          l, r);
+                          l*d, r*d);
     }
   if (from->BxRBorder && pFrom->AbRightStyle > 2 &&
       pFrom->AbRightBColor != -2 && r > 0 && br)
@@ -2442,10 +2454,14 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
         color = pFrom->AbForeground;
       else
         color = pFrom->AbRightBColor;
+      if (from->BxRBorder)
+        d = 0;
+      else
+        d = t/from->BxRBorder;
       DrawVerticalLine (frame, r, pFrom->AbRightStyle,
                         xFrame + width - er - from->BxRBorder, y,
                         r, h, 2, color, box,
-                        t, b);
+                        t*d, b*d);
     }
 }
 
