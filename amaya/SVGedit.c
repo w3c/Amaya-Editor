@@ -2420,7 +2420,14 @@ void CreateGraphicElement (Document doc, View view, int entry)
                           attrType.AttrTypeNum = SVG_ATTR_rx;
                           attr = TtaNewAttribute (attrType);
                           TtaAttachAttribute (newEl, attr, doc);
-                          TtaSetAttributeText (attr, "5px", newEl, doc);
+                          sprintf(buffer, "%d", lx/4);
+                          TtaSetAttributeText (attr, buffer, newEl, doc);
+                          ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
+                          attrType.AttrTypeNum = SVG_ATTR_ry;
+                          attr = TtaNewAttribute (attrType);
+                          TtaAttachAttribute (newEl, attr, doc);
+                          sprintf(buffer, "%d", ly/4);
+                          TtaSetAttributeText (attr, buffer, newEl, doc);
                           ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
                           SVGElementComplete (&context, newEl, &error);
                         }
