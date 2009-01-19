@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1869,7 +1869,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   DisplayMode       dispMode;
   Language          lang;
   int		            c1, i, dir, svgDir, profile;
-  int               docModified, error, w, h;
+  int               docModified, error, w, h, shape;
   int               x1, y1, x2, y2, x3, y3, x4, y4, lx, ly;
   float             valx, valy;
   _ParserData       context;
@@ -2160,16 +2160,16 @@ void CreateGraphicElement (Document doc, View view, int entry)
       newType.ElTypeNum = SVG_EL_text_;
       break;
 
-    case 12: /* Simple arrow */
+    case 12: /* Simple start arrow */
       newType.ElTypeNum = SVG_EL_line_;
       break;
 
-    case 13: /* Double arrow */
+    case 13: /* Simple end arrow */
       newType.ElTypeNum = SVG_EL_line_;
       break;
 
-    case 14: /* Zigzag */
-      newType.ElTypeNum = SVG_EL_polyline;
+    case 14: /* Double arrow */
+      newType.ElTypeNum = SVG_EL_line_;
       break;
 
     case 17: /* diamond */
@@ -2200,8 +2200,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
       break;
     }
 
-  if (newType.ElTypeNum > 0 &&
-      (entry != -1 || !newSVG))
+  if (newType.ElTypeNum > 0 && (entry != -1 || !newSVG))
     {
       dispMode = TtaGetDisplayMode (doc);
       /* ask Thot to stop displaying changes made in the document */
@@ -2357,7 +2356,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
           UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
           selEl = newEl;
         }
-      else if ((0 < entry && entry <= 4) || (entry >= 12 && entry <= 25))
+      else if ((0 < entry && entry <= 4) || (entry > 14 && entry <= 25))
         {
           /* Basic Shapes and lines */
           selEl = newEl;
@@ -2389,47 +2388,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
             {
               switch(entry)
                 {
-                case 0: /* Line */
-		case 12: /* Simple Arrow */
-		case 13: /* Double Arrow */
-                  attrType.AttrTypeNum = SVG_ATTR_x1;
-                  UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
-
-                  attrType.AttrTypeNum = SVG_ATTR_y1;
-                  UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
-
-                  attrType.AttrTypeNum = SVG_ATTR_x2;
-                  UpdateAttrText (newEl, doc, attrType, x4, FALSE, TRUE);
-
-                  attrType.AttrTypeNum = SVG_ATTR_y2;
-                  UpdateAttrText (newEl, doc, attrType, y4, FALSE, TRUE);
-
-		  if(entry == 12 || entry == 13)
-		    AttachMarker(doc, newEl, SVG_ATTR_marker_end,
-				 Arrow1Mend_id);
-
-		  if(entry == 13)
-		    AttachMarker(doc, newEl, SVG_ATTR_marker_start,
-				 Arrow1Mstart_id);
-
-                  SVGElementComplete (&context, newEl, &error);
-                  break;
-
-                case 14: /* Zigzag */
-                  attrType.AttrTypeNum = SVG_ATTR_points;
-                  attr = TtaNewAttribute (attrType);
-                  TtaAttachAttribute (newEl, attr, doc);
-                  sprintf(buffer, "%d %d %d %d %d %d %d %d",
-                          x1,y1,
-                          x1,(y1+y4)/2,
-                          x4,(y1+y4)/2,
-                          x4,y4
-                          );
-                  TtaSetAttributeText (attr, buffer, newEl, doc);
-                  ParsePointsAttribute (attr, newEl, doc);
-                  SVGElementComplete (&context, newEl, &error);
-                  break;
-
                   /* Square */
                 case 15:
                   /* Rectangle */
@@ -2609,7 +2567,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
                 }
             }
         }
-      else if (entry == 0 || (entry >= 5 && entry <= 8))
+      else if (entry == 0 || (entry >= 12 && entry <= 14) ||
+               (entry >= 5 && entry <= 8))
         {
           /* Polyline and curves */
           selEl = newEl;
@@ -2664,7 +2623,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
           attr = TtaNewAttribute (attrType);
           TtaAttachAttribute (foreignObj, attr, doc);
 
-          if(entry == 9)
+          if (entry == 9)
             TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
           else 
             TtaSetAttributeText (attr, MathML_URI, foreignObj, doc);
@@ -2843,16 +2802,29 @@ void CreateGraphicElement (Document doc, View view, int entry)
     {
 
       *buffer = EOS;
-      if (entry == 0 || (entry >= 5 && entry <= 8))
+      if (entry == 0 || (entry >= 12 && entry <= 14) || (entry >= 5 && entry <= 8))
         {
           /* Add a temporary style */
-          strcpy(buffer2, "stroke:black; fill:none;");
+          strcpy (buffer2, "stroke:black; fill:none;");
           ParseHTMLSpecificStyle (newEl, buffer2, doc, 0, FALSE);
           /* Ask the points of the polyline/curve */
+          if (entry >= 12 && entry <= 14)
+            shape = 0;
+          else
+            shape = entry;
           created = AskShapePoints (doc, svgAncestor, svgCanvas,
-                                    entry, newEl);
-          if(created)
-            UpdatePointsOrPathAttribute(doc, newEl, 0, 0, TRUE);
+                                    shape, newEl);
+          if (created)
+            {
+              if (entry == 12 || entry == 14)
+                AttachMarker(doc, newEl, SVG_ATTR_marker_start,
+                             Arrow1Mstart_id);
+              if (entry == 13 || entry == 14)
+                AttachMarker(doc, newEl, SVG_ATTR_marker_end,
+                             Arrow1Mend_id);
+              UpdatePointsOrPathAttribute(doc, newEl, 0, 0, TRUE);
+              UpdateMarkers(newEl, doc);
+            }
           else
             {
               /* Actually, the user don't create the shape */
@@ -4111,26 +4083,25 @@ void UpdateMarkers (Element el, Document doc)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
   /* Clear all the markers */
-  child = TtaGetFirstChild(el);
-
-  while(child)
+  child = TtaGetFirstChild (el);
+  while (child)
     {
       next = child;
       TtaNextSibling(&next);
-
       elType = TtaGetElementType(child);
-      
-      if(elType.ElSSchema == svgSchema && elType.ElTypeNum == SVG_EL_marker)
-	TtaDeleteTree(child, doc);
-
+      if (elType.ElSSchema == svgSchema && elType.ElTypeNum == SVG_EL_marker)
+        {
+          TtaRegisterElementDelete (child, doc);
+          TtaDeleteTree(child, doc);
+        }
       child = next;
     }
 
   /* Rebuild the markers */
   ProcessMarkers (el, doc);
-
   TtaSetStructureChecking (oldStructureChecking, doc);
-  TtaSetDisplayMode (doc, dispMode);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -5319,25 +5290,25 @@ void CreateSVG_Group (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  CreateSVG_SimpleArrow
+  CreateSVG_StartArrow
   ----------------------------------------------------------------------*/
-void CreateSVG_SimpleArrow (Document document, View view)
+void CreateSVG_StartArrow (Document document, View view)
 {
   CreateGraphicElement (document, view, 12);
+}
+
+/*----------------------------------------------------------------------
+  CreateSVG_EndArrow
+  ----------------------------------------------------------------------*/
+void CreateSVG_EndArrow (Document document, View view)
+{
+  CreateGraphicElement (document, view, 13);
 }
 
 /*----------------------------------------------------------------------
   CreateSVG_DoubleArrow
   ----------------------------------------------------------------------*/
 void CreateSVG_DoubleArrow (Document document, View view)
-{
-  CreateGraphicElement (document, view, 13);
-}
-
-/*----------------------------------------------------------------------
-  CreateSVG_Zigzag
-  ----------------------------------------------------------------------*/
-void CreateSVG_Zigzag (Document document, View view)
 {
   CreateGraphicElement (document, view, 14);
 }

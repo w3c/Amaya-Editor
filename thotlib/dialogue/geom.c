@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -351,7 +351,8 @@ void GetArrowCoord(int *x1, int *y1, int *x2, int *y2)
   x0 = *x2;
   y0 = *y2;
 
-  if (dx == 0 && dy == 0)return;
+  if (dx == 0 && dy == 0)
+    return;
 
   if (abs(lambda*dy) < abs(dx))
     {
@@ -507,7 +508,7 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
 
       created = TRUE;
     }
-  else if (!(shape == 0 || (shape >= 12 && shape <= 14)))
+  else if (shape != 0 && shape < 12 && shape > 14)
     {
       /* Shape */
       if (shape == 20)
@@ -880,7 +881,8 @@ void ApproximateAngleOfLine (int T, int x1, int y1, int *x2, int *y2)
   local_x = *x2 - x1;
   local_y = *y2 - y1;
   r = sqrt((float)(local_x*local_x + local_y*local_y));
-  if (r == 0)return;
+  if (r == 0)
+    return;
 
   /*
     We work in the system of coordinates of origin (x1,y1)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1998-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1998-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */

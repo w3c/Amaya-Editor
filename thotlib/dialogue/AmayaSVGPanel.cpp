@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -138,12 +138,12 @@ static svg_constructs list_of_constructs[] =
      }
     },
 
-    {"", 3,
+    {"", 4,
      {
        {"SVG_line", TMSG_SVG_Line, "CreateSVG_Line", FALSE},
-       {"SVG_simple_arrow", TMSG_SVG_SimpleArrow, "CreateSVG_SimpleArrow", FALSE},
+       {"SVG_simple_arrow", TMSG_SVG_SimpleArrow, "CreateSVG_StartArrow", FALSE},
+       {"SVG_simple_earrow", TMSG_SVG_SimpleArrow, "CreateSVG_EndArrow", FALSE},
        {"SVG_double_arrow", TMSG_SVG_DoubleArrow, "CreateSVG_DoubleArrow", FALSE},
-       //{"SVG_zigzag", TMSG_SVG_Zigzag, "CreateSVG_Zigzag", FALSE}
      }
     },
 

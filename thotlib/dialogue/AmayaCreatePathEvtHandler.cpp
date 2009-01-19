@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -609,7 +609,6 @@ void AmayaCreatePathEvtHandler::AddNewPoint()
   else if (shape == 7 || shape == 8)
     {
       /* Bezier Curve */
-      
       if (state == 2)
         {
           /* Add a quadratic Bezier curve */

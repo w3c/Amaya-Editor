@@ -89,8 +89,6 @@ extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
 extern ThotBool GenerateDesc ( Document doc,
                                View view,
                                Element el );
-extern ThotBool LoadSVG_Markers ( Document doc,
-                                  const char *marker_id );
 extern void CreateSVG_Template ( Document document,
                                  View view );
 extern void CreateSVG_Svg ( Document document,
@@ -119,12 +117,12 @@ extern void CreateSVG_Text ( Document document,
                              View view );
 extern void CreateSVG_Group ( Document document,
                               View view );
-extern void CreateSVG_SimpleArrow ( Document document,
-                                    View view );
+extern void CreateSVG_StartArrow ( Document document,
+                                   View view );
+extern void CreateSVG_EndArrow ( Document document,
+                                 View view );
 extern void CreateSVG_DoubleArrow ( Document document,
                                     View view );
-extern void CreateSVG_Zigzag ( Document document,
-                               View view );
 extern void CreateSVG_Square ( Document document,
                                View view );
 extern void CreateSVG_RoundedSquare ( Document document,
@@ -289,8 +287,6 @@ extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
 extern ThotBool GenerateDesc ( Document doc,
                                  View view,
                                  Element el );
-extern ThotBool LoadSVG_Markers ( Document doc,
-                                    const char *marker_id );
 extern void CreateSVG_Template ( Document document,
                                    View view );
 extern void CreateSVG_Svg ( Document document,
@@ -319,12 +315,12 @@ extern void CreateSVG_Text ( Document document,
                                View view );
 extern void CreateSVG_Group ( Document document,
                                 View view );
-extern void CreateSVG_SimpleArrow ( Document document,
-                                      View view );
+extern void CreateSVG_StartArrow ( Document document,
+                                     View view );
+extern void CreateSVG_EndArrow ( Document document,
+                                   View view );
 extern void CreateSVG_DoubleArrow ( Document document,
                                       View view );
-extern void CreateSVG_Zigzag ( Document document,
-                                 View view );
 extern void CreateSVG_Square ( Document document,
                                  View view );
 extern void CreateSVG_RoundedSquare ( Document document,

@@ -227,7 +227,7 @@ MENUS
 	Types.MathConstruct button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
 
 	Types.SvgConstruct  button:BSVG_Line -> CreateSVG_Line icon:SVG_line.png;
-	Types.SvgConstruct  button:BSVG_SimpleArrow -> CreateSVG_SimpleArrow icon:SVG_simple_arrow.png;
+	Types.SvgConstruct  button:BSVG_SimpleArrow -> CreateSVG_EndArrow icon:SVG_simple_earrow.png;
 	Types.SvgConstruct  button:BSVG_Text -> CreateSVG_Text icon:SVG_text.png;
 	Types.SvgConstruct  button:BSVG_ForeignObject -> CreateSVG_ForeignObject icon:SVG_foreign_object.png;
 	Types.SvgConstruct  button:BSVG_Group -> CreateSVG_Group icon:SVG_group.png;
@@ -650,9 +650,9 @@ FUNCTIONS
   CreateSVG_ForeignObject,
   CreateSVG_Text,
   CreateSVG_Group,
-  CreateSVG_SimpleArrow,
+  CreateSVG_StartArrow,
   CreateSVG_DoubleArrow,
-  CreateSVG_Zigzag,
+  CreateSVG_EndArrow,
   CreateSVG_Square,
   CreateSVG_RoundedSquare,
   CreateSVG_Diamond,
