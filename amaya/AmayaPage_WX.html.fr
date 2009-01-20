@@ -97,7 +97,7 @@ d'édition. Il a été conçu par le <a href="http://www.w3.org/">W3C</a> et
 l'<a href="http://www.inria.fr/">INRIA</a> essentiellement pour démontrer les
 nouvelles technologies Web et aider les utilisateurs à créer des pages Web
 valides. Grâce au support du projet européen (FP6) <a
-href="http://palette.ercim.org/">Palette</a>, Amaya 10 offre une nouvelle
+href="http://palette.ercim.org/">Palette</a>, Amaya 11 offre une nouvelle
 interface utilisateur et l'édition guidée par des modèles.</p>
 
 <p>Avec Amaya, vous pouvez manipuler des pages Web contenant des formulaires,
