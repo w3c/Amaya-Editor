@@ -45,8 +45,8 @@
 43 關閉
 44 目錄
 45 %s 文檔已存在，確認要覆蓋嗎?
-46 **Set the text color
-47 **Set the background color
+46 設置文本顏色
+47 设置背景颜色
 48 字體
 49 常規
 50 加粗
@@ -58,15 +58,15 @@
 56 下劃線
 57 刪除線
 58 大小 
-59 **Unindent
-60 **Single line spacing
-61 **Middle line spacing
-62 **Double line spacing
+59 沒有縮進 
+60 單行距 
+61 1.5行距 
+62 雙行距 
 63 保存文檔
 64 不保存直接關閉
 65 字符樣式
 66 顏色
-67 **Elements
+67 元素 
 68 刪除
 69 輸出
 70 PostScript 文件
@@ -114,8 +114,8 @@
 112 標準字符
 113 標準圖形
 114 標準格式
-115 Standard geometry
-116 pt
+115 標准几何
+116 排版位置
 117 樣式
 118 粗度
 119 填充樣式
@@ -125,7 +125,7 @@
 123 任意
 124 搜索屬性
 125 搜索類型
-126 Natures
+126 种類
 127 Name
 128 值
 129 屬性值
@@ -134,7 +134,7 @@
 132 轉換為 PostScript 時發生錯誤
 133 命令被拒絕 "%s"
 134 無法創建 "%s"
-135 Overline
+135 跨線
 136 文檔格式
 137 移除屬性
 138 背景色
@@ -221,7 +221,7 @@
 219 上標 On/Off
 220 條目
 221 說明
-222 Object
+222 對象
 223 樣式
 224 文件
 225 水平排列視圖
@@ -233,145 +233,145 @@
 231 復制
 232 粘貼
 233 拼寫檢查
-234 **Various constructs
-235 **Relations, orders and logic
-236 **Sets and functions
-237 **Arithmetic, operations, complexes and constants
+234 多樣构造
+235 關系，次序与邏辑
+236 設置和功能
+237 計算，運算，复合數和常量
 238 **Analysis, linear algebra and statistic
 239 **Trigonometry and logarithms
 240 放大
 241 縮小
-242 **Theme
+242 主題
 243 XML
 244 Text
-245 **No recent document
-246 **Click an element to select it
-247 **Click to change the editing mode
-248 **Merge cells
+245 没有最近的文件
+246 點擊選擇一個元素
+247 點擊以改變編輯模式
+248 合併單元格
 249 收縮水平范圍
 250 收縮垂直范圍
 251 插入新行
 252 附加一行
 253 插入新列
 254 附加一列
-255 **Tip of the day
-256 **Show tip at startup
-257 **Previous tip
-258 **Next tip
-259 **Did you know...
-260 **Close
-261 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
-262 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
-263 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
-264 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
-265 **In customizable mode, you can drag panels to change their order or to make them floating.
-266 **With the customizable mode, you can move panels on both sides of the window just by dragging.
-267 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
-268 **When there is red button in the bottom right corner, you can display errors by clicking on it.
-269 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
-270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
-272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
-274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
-275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
-277 **Classic
-278 **Modern
-279 **No theme
-280 **Title/Description
-281 **Generate a description
-282 **Square
-283 **Rounded Square
-284 **Rectangle
-285 **Rounded rectangle
-286 **Diamond
-287 **Parallelogram
-288 **Trapezium
-289 **Equilateral triangle
-290 **Isosceles triangle
-291 **Right triangle
-292 **Circle
-293 **Ellipse
-294 **Line
-295 **Arrow
-296 **Double Arrow
-297 **Zigzag
-298 **Group
-299 **Ungroup
-300 **Bring to front
-301 **Send to back
-302 **One level up
-303 **One level down
-304 **90� left
-305 **90� right
-306 **Rotate
-307 **Vertical symmetry
-308 **Horizontal symmetry
-309 **Scale
-310 **Skew
-311 **Move
-312 **Align bottom
-313 **Align center
-314 **Align left
-315 **Align middle
-316 **Align right
-317 **Align top
-318 **Distribute bottom
-319 **Distribute center
-320 **Distribute left
-321 **Distribute middle
-322 **Distribute right
-323 **Distribute top
-324 **Distribute vertical spacing
-325 **Distribute horizontal spacing
-326 **Closed Bezier curve
-327 **Bezier curve
-328 **Polyline
-329 **Polygon
-330 **Foreign Object
-331 **Image
-332 **SVG Canvas
-333 **Text
-334 **Cone
-335 **Cube
-336 **Cylinder
-337 **Octahedron
-338 **Parallelepiped
-339 **Pyramid
-340 **Beaker
-341 **Funnel
-342 **Bunsen burner
-343 **Buchner flask
-344 **Boiling flask
-345 **Burette
-346 **Erlenmeyer flask
-347 **Test tube
-348 **Pipette
-349 **Rectangular
-350 **Rounded rectangular
-351 **Round
-352 **Scream
-353 **Thought
-354 **Capacitor
-355 **Power source
-356 **Diode
-357 **Ground Point
-358 **Inductor
-359 **LED
-360 **Op-amp
-361 **Resistor
-362 **Switch
-363 **Transistor
-364 **Voltage source
-365 **Zener diode
-366 **Pentagon
-367 **Hexagon
-368 **Heptagon
-369 **Octogon
-370 **Star (4 branches)
-371 **Star (5 branches)
-372 **Star (6 branches)
+255 今日技巧
+256 在啟動時顯示今日技巧
+257 上一個技巧
+258 下一個技巧
+259 你知道嗎……
+260 關閉
+261 Amaya可以被調整成你需要的樣子：在［使用偏好／一般］提供了5個關於菜單和麵板不同設置的profile供選擇。
+262 在［使用偏好］，面板可以顯示在窗口的左邊或右邊，甚至自定義面板。
+263 在文檔結構中使用F2或Escape鍵可以選擇父元素編輯。
+264 你可以左右拖動文檔標籤來使文檔同時顯示在左右區域中。
+265 在可自定義模式中，你可以拖動面板以改變他們的次序或讓他們懸浮。
+266 在可自定義模式中，你可以用拖動的方式把麵板移動到左右兩邊。
+267 你可以在窗口底部右角處點擊相應的按鈕切換編輯模式（Text／XML）
+268 當在窗口底部右角處顯示紅色的按鈕時，點擊可以顯示錯誤。
+269 點擊窗口底部的路徑控制可以顯示當前元素的各級父元素。
+270 點擊標籤欄右邊一個小箭頭選擇，可以打開另一個標籤頁。
+271 在［視圖］菜單中選中［顯示目標］,目標被標識出來，可以直接選上，便於創建鏈接。
+272 當旋轉SVG對象時，可以移動其中間的十字形改變旋轉中心。
+273 基於SVG的圖形擁有手柄方便編輯，藍色的三角形或綠色的方形可以改變大小，而     <rect/>元素，紅色的圓形可以控制圓角的半徑。
+274 繪製SVG時，按住shift鍵可以繪製一個精確的15度傾斜的線段，這在繪製直線時非常有用。
+275 當改變圖像或SVG對象的大小時，按住shift鍵可以保持長寬比例。
+276 利用［編輯］［使用偏好］［程序語言］選擇程序用戶接口的語言。
+277 Classic
+278 Modern
+279 無主題
+280 標題／描述
+281 生成描述
+282 正方形
+283 圓角正方形
+284 長方形
+285 圓角長方形
+286 菱形
+287 平行四邊形
+288 不規則四邊形
+289 等邊三角形
+290 等腰三角形
+291 直角三角形
+292 圓形
+293 橢圓形
+294 直線
+295 箭頭
+296 雙箭頭
+297 鋸齒形
+298 群組
+299 取消群組
+300 移到最前
+301 移到最後
+302 向前一層
+303 向後一層
+304 左轉90°
+305 右轉90º
+306 旋轉
+307 垂直翻轉
+308 水平翻轉
+309 縮放
+310 傾斜
+311 移動
+312 底對齊
+313 垂直居中
+314 左對齊
+315 水平居中
+316 右對齊
+317 頂對齊
+318 底散佈
+319 水平居中散佈
+320 左散佈
+321 垂直居中散佈
+322 右散佈
+323 頂散佈
+324 垂直間距散佈
+325 水平間距散佈
+326 閉合貝賽爾曲線
+327 貝賽爾曲線
+328 多叉線
+329 多邊形
+330 外來對象
+331 圖像
+332 SVG 畫布
+333 文本
+334 錐體
+335 立方體
+336 圓柱體
+337 八面體
+338 平行六面體
+339 角錐體
+340 燒杯
+341 漏斗
+342 噴燈
+343 布氏玻璃瓶
+344 長頸玻璃瓶
+345 滴定管
+346 錐形燒瓶
+347 試管
+348 滴管
+349 矩形
+350 圓角矩形
+351 圓形
+352 尖叫
+353 思考
+354 電容
+355 電源
+356 二極管
+357 接地
+358 電感線圈
+359 LED
+360 運算放大器
+361 電阻
+362 開關
+363 三極管
+364 電壓源
+365 穩壓二極管
+366 五邊形
+367 六邊形
+368 七邊形
+369 八边形
+370 四角星
+371 五角星
+372 六角星
 373 AND
 374 NAND
 375 OR
@@ -379,45 +379,45 @@
 377 XOR
 378 XNOR
 379 NOT
-380 **Cross
-381 **Frame
-382 **Ring
-383 **Cloud
-384 **Scroll
-385 **Sun
-386 **Lightning_Bolt
-387 **Moon
-388 **Smiley
-389 **Heart
-390 **Flower
-391 **Prohibited
-392 **2-Way Rounded Arrow
-393 **3-Way Arrow Callout
-394 **3-Way Arrow
-395 **4-Way_Arrow_Callout
-396 **4-Way Arrow
-397 **Chevron
-398 **Circular Arrow
-399 **Corner Arrow
-400 **Corner Double Arrow Callout
-401 **Corner Double Arrow
-402 **Double Arrow Callout
-403 **Double Arrow
-404 **Notched Arrow
-405 **Rounded Arrow
-406 **Simple Arrow Callout
-407 **Simple Arrow
-408 **Split Arrow
-409 **S-Shape Arrow
-410 **Striped Arrow
-411 **Create template from current document
-412 **Create a text area
-413 **Use a component or an element
-414 **Create and use a component
-415 **Repeat the current use
-416 **Create and repeat a component
-417 **Create a free editing box
-418 **Create a new types union
-419 **Button up to close
-420 **Double click to close
-421 **Click to close
+380 十字形
+381 框架
+382 環形
+383 雲
+384 捲軸
+385 太阳
+386 閃電
+387 月亮
+388 微笑
+389 心形
+390 花
+391 禁止
+392 兩路圓角箭頭
+393 三向箭頭框
+394 三路箭頭
+395 四向箭頭框
+396 四路箭頭
+397 人字形條樣
+398 迴繞箭頭
+399 直角箭頭
+400 直角雙箭頭方框
+401 直角雙箭頭
+402 雙箭頭方框
+403 雙箭頭
+404 切口箭頭
+405 圓角箭頭
+406 單箭頭方框
+407 單箭頭
+408 分裂箭頭
+409 S形箭頭
+410 條紋箭頭
+411 從當前文檔創建模板
+412 創建文本區
+413 使用組件或元素
+414 創建並使用組件
+415 重複當前應用
+416 創建並重複組件
+417 創建一個自由編輯框
+418 創建一個新類型集合
+419 釋放按鈕以關閉
+420 雙擊以關閉
+421 點擊以關閉

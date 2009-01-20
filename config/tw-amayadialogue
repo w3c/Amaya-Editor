@@ -185,22 +185,22 @@
 183 括號 (mrow)
 184 多重標記 (mmultiscripts)
 185 新建矩陣 (mtable)
-186 Graphics
-187 **Line
-188 **Arrow
-189 **Text
-190 **ForeignObject
-191 **Group
-192 **Square
-193 **Rectangle
-194 **Diamond
-195 **Triangle
-196 **Circle
-197 **Ellipse
-198 **Polyline
-199 **Polygon
-200 **Open curve
-201 **Closed curve
+186 圖形
+187 直線
+188 箭頭
+189 文本
+190 外來對象
+191 組
+192 正方形
+193 長方形
+194 菱形
+195 三角形
+196 圓形
+197 橢圓形
+198 多叉線
+199 多邊形
+200 開弧線
+201 閉弧線
 202 FORM 表單
 203 插入 FORM 表單
 204 Button (input)
@@ -228,7 +228,7 @@
 226 矩形區域
 227 框架
 228 style
-229 Comment
+229 註釋
 230 base
 231 meta
 232 link
@@ -239,38 +239,38 @@
 237 區域引用 (blockquote)
 238 內嵌 frame (iframe)
 239 ruby
-240 **Theme
-241 **Classic
-242 **Modern
-243 **No theme
+240 主題
+241 Classic
+242 Modern
+243 無主題
 244 前景色
 245 前景色...
-246 **No color
-247 **Background color
+246 無顏色
+247 背景色
 248 背景色...
-249 **No color
-250 **Alignment
-251 **Left
-252 **Center
-253 **Right
-254 **Justify
-255 **Default
-256 **Line spacing
-257 **Single
-258 **Half
-259 **Double
-260 **Default
-261 **Indent
-262 **Increase
-263 **Decrease
-264 **Default
+249 無背景色
+250 對齊
+251 左
+252 中
+253 右
+254 兩端對齊
+255 默認
+256 行距
+257 單行距
+258 1.5行距
+259 雙行距
+260 默認行距
+261 縮進
+262 增加
+263 減少
+264 默認
 265 特殊字符
-266 **Select a font...
-267 **Default
+266 選擇字體...
+267 特殊字符
 268 CSS樣式(&S)...
 269 創建規則(&R)...
 270 顯示已應用的樣式...
-271 Style sheets
+271 樣式表
 272 鏈接(..
 273 打開(..
 274 禁用(..
@@ -285,11 +285,11 @@
 283 添加/刪除 ID(&A)...
 284 拼寫檢查(&K)...
 285 轉換(&M)...
-286 **Code clean up
-287 **Edit table
+286 整理代碼
+287 編輯table
 288 改為數據單元格
 289 改為表頭單元格
-290 **Merge cells
+290 合併單元格
 291 與右側單元格合并
 292 與下方單元格合并
 293 收縮水平范圍
@@ -310,7 +310,7 @@
 308 改為 XHTML 1.0 Transitional
 309 改為 XHTML 1.0 Strict
 310 改為 XHTML 1.0 Basic
-311 **Change to XHTML+RDFa
+311 改為 XHTML 1.0+RDFa
 312 改為 HTML 4.01 Transitional
 313 改為 HTML 4.01 Strict
 314 區域統計(&S)
@@ -336,22 +336,22 @@
 334 查看資源屬性...
 335 復制鎖定信息...
 336 鎖定了嗎?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
-345 **Create a new types union
+337 模板
+338 從當前文檔創建模板
+339 創建文本區
+340 使用組件或元素
+341 創建並使用組件
+342 重複當前應用
+343 創建並重複組件
+344 創建一個自由編輯框
+345 創建一個新類型集合
 346 &Javascript/DOM
-347 **Enable/Disable
-348 **Execute a command
-349 **Execute an external script
-350 **Add an external script
-351 **Insert a script
-352 關于 Amaya at W3C
-353 幫助 Amaya...
-354 **Tip of the day...
+347 有效／無效
+348 執行命令
+349 執行外部腳本
+350 添加外部腳本
+351 從現有文件創建模板
+352 檢查升級
+353 Amaya幫助 ...
+354 今日技巧……
 355 關于 Amaya
