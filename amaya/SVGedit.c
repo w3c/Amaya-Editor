@@ -1829,7 +1829,7 @@ static ThotBool AttachMarker(Document doc, Element el, int attrnum,
   Attribute     attr;
   AttributeType attrType;
 
-  char *buffer = (char *)TtaGetMemory(strlen(marker_id) + 6);
+  char *buffer = (char *)TtaGetMemory(strlen(marker_id) + 10);
   if(buffer == NULL)
     return FALSE;
     
