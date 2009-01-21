@@ -2537,6 +2537,8 @@ static void AddFloatingBox (PtrAbstractBox pAb, int frame, ThotBool left)
       else if (box)
         {
           pParent = pAb->AbEnclosing;
+          if (pParent->AbBox->BxType == BoCell)
+            pParent->AbBox->BxType = BoCellBlock;
           while (pParent && pParent->AbBox &&
                  (pParent->AbBox->BxType == BoGhost ||
                   pParent->AbBox->BxType == BoFloatGhost))
@@ -2547,8 +2549,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, int frame, ThotBool left)
                   pParent->AbBox->BxType != BoBlock &&
                   pParent->AbBox->BxType != BoFloatGhost))
             {
-              if (pParent->AbBox->BxType == BoCell ||
-                  pParent->AbBox->BxType == BoCellBlock)
+              if (pParent->AbBox->BxType == BoCell)
                 {
                   /* cannot be a floated box */
                   pAb->AbFloat = 'N';
