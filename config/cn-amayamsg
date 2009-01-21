@@ -85,7 +85,7 @@
 83 移除 CSS 样式表
 84 W3C的网页编辑器/浏览器
 85 (mail issues to www-amaya@w3.org)
-86 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
+86 Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 87 w3.org/Amaya/
 88 无法提交超过 %s 个字符的 URL
 89 只允许默认类型
@@ -307,7 +307,7 @@
 305 Copy selection
 306 Refer to selection
 307 向 library 添加新的模型
-308 URL of the new SVG  ...
+308 URL of the new SVG ...
 309 Library 标题
 310 Library URL
 311 创建 library

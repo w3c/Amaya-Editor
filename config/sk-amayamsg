@@ -66,7 +66,7 @@
 64 Editor/Prehliadač
 65 Časový limit požiadavky uplynul - server neodpovedá
 66 %s už existuje. Chcete ho prepísať?
-67 %s sa zmenil.  Chcete ho prepísať?
+67 %s sa zmenil. Chcete ho prepísať?
 68 Obrázok pozadia
 69 Obrázok pozadia nie je tu dovolený
 70 CSS
@@ -85,7 +85,7 @@
 83 Odstrániť CSS pravidlá
 84 Editor/prehliadač webu od W3C
 85 (problémy posielať na www-amaya@w3.org)
-86 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
+86 Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 87 w3.org/Amaya/
 88 Nedá sa spracovať URL odkaz, ktorý má viac ako %s znakov
 89 Sú dovolená iba prevolené typy

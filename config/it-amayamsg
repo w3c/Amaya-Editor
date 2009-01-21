@@ -85,7 +85,7 @@
 83 Rimuovi CSS
 84 Il editor/browser del W3C
 85 (scrivere a www-amaya@w3.org per informazioni)
-86 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
+86 Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 87 w3.org/Amaya/
 88 Impossibile gestire URL composti da piú di %s caratteri
 89 consentito il solo tipo di default
@@ -307,7 +307,7 @@
 305 Copia la selezione
 306 Riferisciti alla selezione
 307 Aggiungi un nuovo modello alla libreria
-308 URL del nuovo  SVG ...
+308 URL del nuovo SVG ...
 309 Titolo della libreria
 310 URL per la libreria
 311 Crea libreria
@@ -405,7 +405,7 @@
 402 Numero di elementi
 403 Numbeo di variabili
 404 Grado della variabile
-405 Grado della  variable numero %d
+405 Grado della variable numero %d
 406 Documento composto
 407 Copia le risorse (stili e script)
 408 Dove salvare le risorse
@@ -472,7 +472,7 @@
 469 Profilo Amaya:
 470 Visualizza "Il suggerimento del giorno"
 471 Scegli il tipo di font e la grandezza:
-472 Lo schema contiene errori e non sarà  usato:
+472 Lo schema contiene errori e non sarà usato:
 473 Chiudi
 474 Il componente '%s' ha definizioni multiple.
 475 La libreria '%s' non puo' essere caricata.

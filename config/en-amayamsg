@@ -85,9 +85,9 @@
 83 Remove CSS
 84 W3C's editor/browser for the web
 85 (mail issues to www-amaya@w3.org)
-86 Copyright  ©  1994-%s INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.
-86 Copyright  Â©  1994-%s INRIA et W3CÂ® (MIT, ERCIM, Keio)
-86 Copyright  ©  1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
+86 Copyright © 1994-%s INRIA and W3C® (MIT, ERCIM, Keio), All Rights Reserved.
+86 Copyright Â© 1994-%s INRIA et W3CÂ® (MIT, ERCIM, Keio)
+86 Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM, Keio)
 87 w3.org/Amaya/
 87 w3.org/Amaya/
 87 w3.org/Amaya/
@@ -311,7 +311,7 @@
 305 Copy selection
 306 Refer to selection
 307 Add new model into library
-308 URL of the new SVG  ...
+308 URL of the new SVG ...
 309 Library title
 310 Library URL
 311 Create library
