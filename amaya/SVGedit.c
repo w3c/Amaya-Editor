@@ -438,6 +438,9 @@ void AttrPathDataChanged (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 ThotBool AttrPathDataDelete (NotifyAttribute * event)
 {
+  if (event->info == 1)
+    // undo operation: let thotlib manage the attribute
+    return FALSE;
   TtaRemovePathData (event->document, event->element);
   return TRUE; /* don't let Thot perform normal operation */
 }
@@ -2644,7 +2647,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               UpdateAttrText (foreignObj, doc, attrType, 50, FALSE, TRUE);
             }
 
-          if(entry == 9)
+          if (entry == 9)
             {
               /* the document is supposed to be HTML */
               childType.ElSSchema = TtaNewNature (doc, docSchema, NULL, "HTML",
@@ -2830,7 +2833,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
                 AttachMarker(doc, newEl, SVG_ATTR_marker_end,
                              Arrow1Mend_id);
               UpdatePointsOrPathAttribute(doc, newEl, 0, 0, TRUE);
-              UpdateMarkers(newEl, doc);
+              SVGElementComplete (&context, newEl, &error);
+              //UpdateMarkers(newEl, doc);
             }
           else
             {
