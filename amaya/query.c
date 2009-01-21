@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -16,11 +16,6 @@
 
 /* defines to include elsewhere
 *********************************/
-
-#ifdef _WINGUI
-#include <string.h>
-#endif /* !_WINGUI */
-
 #ifdef _WX
 #include "wx/utils.h"
 #include "wx/dir.h"
@@ -30,13 +25,11 @@
 
 #define AMAYA_WWW_CACHE
 #define AMAYA_LOST_UPDATE
-
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "init_f.h"
 #include <sys/types.h>
-
 #ifndef _WINDOWS
 #include <unistd.h>
 #endif /* #ifndef _WINDOWS */
@@ -46,6 +39,7 @@
 #include "HTAABrow.h"
 #include "string.h"
 #include "interface.h"
+#include "message_wx.h"
 
 #if defined(__svr4__) || defined (_AIX)
 #define CATCH_SIG
@@ -54,7 +48,6 @@
 /* local structures coming from libwww and which are
    not found in any .h file
 */
-
 struct _HTStream
 {
   const HTStreamClass *isa;
@@ -276,7 +269,6 @@ AHTDocId_Status    *GetDocIdStatus (int docid, HTList * documents)
         }
     }
   return (AHTDocId_Status *) NULL;
-
 }
 
 /*----------------------------------------------------------------------
@@ -1927,153 +1919,38 @@ static void         AHTAlertInit (void)
   ----------------------------------------------------------------------*/
 static void RecCleanCache (char *dirname)
 {
-#ifdef _WINGUI
-  HANDLE          hFindFile;
-  ThotBool        status;
-  WIN32_FIND_DATA ffd;
-  char            t_dir [MAX_LENGTH];
-  char           *ptr;
-
-  /* create a t_dir name to start searching for files */
-  if ((strlen (dirname) + 10) > MAX_LENGTH)
-    /* ERROR: directory name is too big */
-    return;
-
-  strcpy (t_dir, dirname);
-  /* save the end of the dirname. We'll use it to make
-     a complete pathname when erasing files */
-  ptr = &t_dir[strlen (t_dir)];
-  strcat (t_dir, "*");
-
-  hFindFile = FindFirstFile (t_dir, &ffd);
-    
-  if (hFindFile == INVALID_HANDLE_VALUE)
-    /* nothing to erase? */
-    return;
-
-  status = TRUE;
-  while (status) 
-    {
-      if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-        {
-          /* it's a directory, erase it recursively */
-          if (strcmp (ffd.cFileName, "..") && strcmp (ffd.cFileName, "."))
-            {
-              strcpy (ptr, ffd.cFileName);
-              strcat (ptr, DIR_STR);
-              RecCleanCache (t_dir);
-              rmdir (t_dir);
-            }
-        }
-      else
-        {
-          /* it's a file, erase it */
-          strcpy (ptr, ffd.cFileName);
-          TtaFileUnlink (t_dir);
-        }
-      status = FindNextFile (hFindFile, &ffd);
-    }
-  FindClose (hFindFile);
-#endif /* _WINGUI */
-
-#if defined(_WX)
-  char buftmp[256];
-
-#ifdef _WINDOWS
-  wxString separator = _T("\\");
-#else /* _WINDOWS */
-  wxString separator = _T("/");
-#endif /* _WINDOWS */
-
+  char     buf[MAX_LENGTH];
+  wxString name, path;
   wxString wx_dir_name = wxString(dirname, *wxConvCurrent);
-  
+  bool     cont;
+
   /* try to delete the current directory */
-  wxRmdir(wx_dir_name);
-  
-  if (!wxDirExists(wx_dir_name))
+  if (wxRmdir(wx_dir_name))
     return;
-  
+
   /* try to delete the files & directorys inside */
-  {
-    wxDir wx_dir(wx_dir_name);	
-    wxString name;
-    ThotBool cont = wx_dir.GetFirst(&name);
-    while (cont)
-      {
-        name = wx_dir.GetName()+separator+name;
-        if (wxDirExists(name))
-          {
-            name = name+separator;
-            /* it's a sub-directory */
-            sprintf(buftmp, "%s", (const char *)name.mb_str(*wxConvCurrent) );
-            /* delete it recursively */
-            RecCleanCache(buftmp);
-          }
-        else
-          {
-            /* it's a file */
-            wxRemoveFile(name);
-          }
-	
-        cont = wx_dir.GetNext(&name);
-      }
-  }
+  wxDir wx_dir(wx_dir_name);
+  cont = wx_dir.GetFirst (&name);
+  while (cont)
+    {
+      path = wx_dir_name+name;
+      //printf ("%s\n", (const char *)path.mb_str(*wxConvCurrent));
+      // get the next name
+      cont = wx_dir.GetNext (&name);
+      if (wxDirExists (path))
+	{
+	  /* it's a sub-directory */
+	  strcpy (buf, (const char *)path.mb_str(*wxConvCurrent));
+	  strcat (buf, DIR_STR);
+	  /* delete it recursively */
+	  RecCleanCache(buf);
+	}
+      else
+	/* it's a file */
+	wxRemoveFile(path);
+    }
   /* try to delete the current directory */
   wxRmdir(wx_dir_name);
-#endif /* _WX */
-
-#ifdef _GTK
-  DIR *dp;
-  struct stat st;
-#ifdef HAVE_DIRENT_H
-  struct dirent *d;
-#else /* HAVE_DIRENT_H */
-  struct direct *d;
-#endif /* HAVE_DIRENT_H */
-  char filename[BUFSIZ+1];
-
-  if ((dp = opendir (dirname)) == NULL) 
-    {
-      /* @@@ we couldn't open the directory ... we need some msg */
-      perror (dirname);
-      return;
-    }
-  
-  while ((d = readdir (dp)) != NULL)
-    {
-      /* skip the UNIX . and .. links */
-      if (!strcmp (d->d_name, "..")
-          || !strcmp (d->d_name, "."))
-        continue;
-
-      sprintf (filename, "%s%c%s", dirname, DIR_SEP, d->d_name);
-      if  (lstat (filename, &st) < 0 ) 
-        {
-          /* @@2 need some error message */
-          perror (filename);
-          continue;
-        }
-      
-      switch (st.st_mode & S_IFMT)
-        {
-        case S_IFDIR:
-          /* if we find a directory, we erase it, recursively */
-          strcat (filename, DIR_STR);
-          RecCleanCache (filename);
-          rmdir (filename);
-          break;
-        case S_IFLNK:
-          /* skip any links we find */
-          continue;
-          break;
-        default:
-          /* erase the filename */
-          TtaFileUnlink (filename);
-          break;
-        }
-    }
-  closedir (dp);
-#endif /* _GTK */
 }
 #endif /* AMAYA_WWW_CACHE */
 
@@ -2084,14 +1961,10 @@ static void RecCleanCache (char *dirname)
 void libwww_CleanCache (void)
 {
 #ifdef AMAYA_WWW_CACHE
-  char * real_dir;
-  char*    cache_dir;
-  char*    tmp;
+  char    *real_dir, *cache_dir, *tmp, *ptr;
   int      cache_size;
   int      cache_expire;
   int      cache_disconnect;
-  ThotBool error;
-  char * ptr;
 
   if (!HTCacheMode_enabled ())
     /* don't do anything if we're not using a cache */
@@ -2102,7 +1975,7 @@ void libwww_CleanCache (void)
   if (!tmp || *tmp == EOS)
 	  return;
   cache_dir = TtaStrdup (tmp);
-  HT_FREE (tmp);
+  TtaFreeMemory (tmp);
   cache_size = HTCacheMode_maxSize ();
   cache_expire = HTCacheMode_expires ();
   cache_disconnect = HTCacheMode_disconnected ();
@@ -2111,16 +1984,13 @@ void libwww_CleanCache (void)
   tmp = HTWWWToLocal (cache_dir, "file:", NULL);
   real_dir = (char *)TtaGetMemory (strlen (tmp) + 20);
   strcpy (real_dir, tmp);
-  HT_FREE (tmp);
+  TtaFreeMemory (tmp);
 
   /* safeguard... abort the operation if cache_dir doesn't end with
      CACHE_DIR_NAME */
-  error = TRUE;
   ptr = strstr (real_dir, CACHE_DIR_NAME);  
-  if (ptr && *ptr && !strcasecmp (ptr, CACHE_DIR_NAME))
-    error = FALSE;
-  if (error)
-    return;  
+  if (ptr == NULL || *ptr == EOS || strcasecmp (ptr, CACHE_DIR_NAME))
+    return;
   
   /* remove the concurrent cache lock */
 #ifdef DEBUG_LIBWWW
@@ -2131,7 +2001,6 @@ void libwww_CleanCache (void)
   HTCacheMode_setEnabled (FALSE);
   
   RecCleanCache (real_dir);
-
   HTCacheMode_setExpires ((HTExpiresMode)cache_expire);
   HTCacheMode_setDisconnected ((HTDisconnectedMode)cache_disconnect);
   HTCacheInit (cache_dir, cache_size);
@@ -2163,65 +2032,57 @@ static void CacheInit (void)
 {
 #ifndef AMAYA_WWW_CACHE
   HTCacheMode_setEnabled (NO);
-
 #else /* AMAYA_WWW_CACHE */
-  char     *strptr;
+  char     *ptr = NULL;
   char     *real_dir = NULL;
   char     *cache_lockfile;
   char     *cache_dir = NULL;
-  int       cache_size;
+  int       cache_size, i;
   int       cache_entry_size;
   ThotBool  cache_enabled;
   ThotBool  cache_locked;
   ThotBool  tmp_bool;
 
-  int i;
-
   /* activate cache? */
-  strptr = TtaGetEnvString ("ENABLE_CACHE");
-  if (strptr && *strptr && strcasecmp (strptr, "yes"))
+  ptr = TtaGetEnvString ("ENABLE_CACHE");
+  if (ptr && *ptr && strcasecmp (ptr, "yes"))
     cache_enabled = NO;
   else
     cache_enabled = YES;
 
   /* cache protected documents? */
-  strptr = TtaGetEnvString ("CACHE_PROTECTED_DOCS");
-  if (strptr && *strptr && !strcasecmp (strptr, "yes"))
+  ptr = TtaGetEnvString ("CACHE_PROTECTED_DOCS");
+  if (ptr && *ptr && !strcasecmp (ptr, "yes"))
     HTCacheMode_setProtected (YES);
   else
     HTCacheMode_setProtected (NO);
 
   /* get the cache dir (or use a default one) */
-#ifdef _WX
-  strptr = TtaGetRealFileName(TtaGetEnvString ("CACHE_DIR"));
-#else /* _WX */
-  strptr = TtaGetEnvString ("CACHE_DIR");
-#endif /* _WX */
-  if (strptr && *strptr) 
+  ptr = TtaGetRealFileName(TtaGetEnvString ("CACHE_DIR"));
+  if (ptr && *ptr) 
     {
-      real_dir = (char *)TtaGetMemory (strlen (strptr) + strlen (CACHE_DIR_NAME) + 20);
-      strcpy (real_dir, strptr);
+      real_dir = (char *)TtaGetMemory (strlen (ptr) + strlen (CACHE_DIR_NAME) + 20);
+      strcpy (real_dir, ptr);
       if (*(real_dir + strlen (real_dir) - 1) != DIR_SEP)
         strcat (real_dir, DIR_STR);
+      TtaFreeMemory(ptr);
+      ptr = NULL;
     }
   else
     {
       real_dir = (char *)TtaGetMemory (strlen (TempFileDirectory) + strlen (CACHE_DIR_NAME) + 20);
       sprintf (real_dir, "%s%s", TempFileDirectory, CACHE_DIR_NAME);
     }
-#ifdef _WX
-  TtaFreeMemory(strptr);
-#endif /* _WX */
 
   /* compatiblity with previous versions of Amaya: does real_dir
      include CACHE_DIR_NAME? If not, add it */
-  strptr = strstr (real_dir, CACHE_DIR_NAME);
-  if (!strptr)
+  ptr = strstr (real_dir, CACHE_DIR_NAME);
+  if (!ptr)
     strcat (real_dir, CACHE_DIR_NAME);
   else
     {
       i = strlen (CACHE_DIR_NAME);
-      if (strptr[i] != EOS)
+      if (ptr[i] != EOS)
         strcat (real_dir, CACHE_DIR_NAME);
     }
 
@@ -2229,9 +2090,9 @@ static void CacheInit (void)
      libwww */
   cache_dir = HTLocalToWWW (real_dir, "file:");
   /* get the cache size (or use a default one) */
-  strptr = TtaGetEnvString ("CACHE_SIZE");
-  if (strptr && *strptr) 
-    cache_size = atoi (strptr);
+  ptr = TtaGetEnvString ("CACHE_SIZE");
+  if (ptr && *ptr) 
+    cache_size = atoi (ptr);
   else
     cache_size = DEFAULT_CACHE_SIZE;
   /* get the max cached file size (or use a default one) */
@@ -2254,10 +2115,10 @@ static void CacheInit (void)
           /* remove the lock and clean the cache (the clean cache 
              will remove all, making the following call unnecessary */
           /* little trick to win some memory */
-          strptr = strrchr (cache_lockfile, '.');
-          *strptr = EOS;
+          ptr = strrchr (cache_lockfile, '.');
+          *ptr = EOS;
           RecCleanCache (cache_lockfile);
-          *strptr = '.';
+          *ptr = '.';
         }
 
       if (!cache_locked) 
@@ -2312,10 +2173,9 @@ static void CacheInit (void)
     {
       HTCacheMode_setEnabled (FALSE);
     }
-  if (cache_dir)
-    HT_FREE (cache_dir);
-  if (real_dir)
-    TtaFreeMemory (real_dir);
+
+  TtaFreeMemory (cache_dir);
+  TtaFreeMemory (real_dir);
   /* warn the user if the cache isn't active */
   if (cache_enabled && !HTCacheMode_enabled ())
     {
@@ -2335,40 +2195,40 @@ static void CacheInit (void)
   ----------------------------------------------------------------------*/
 static void ProxyInit (void)
 {
-  char     *strptr;
+  char     *ptr;
   char     *name;
   char     *tmp = NULL;
-  char     *strptrA;
+  char     *ptrA;
   ThotBool  proxy_is_onlyproxy;
 
   /* get the proxy settings from the thot.ini file */
-  strptr = TtaGetEnvString ("HTTP_PROXY");
-  if (strptr && *strptr)
+  ptr = TtaGetEnvString ("HTTP_PROXY");
+  if (ptr && *ptr)
     {
-      tmp = (char *) TtaGetMemory (strlen (strptr) + 1);
-      strcpy (tmp, strptr);
+      tmp = (char *) TtaGetMemory (strlen (ptr) + 1);
+      strcpy (tmp, ptr);
 
       /* does the proxy env string has an "http://" prefix? */
-      if (!strncasecmp (strptr, "http://", 7)) 
+      if (!strncasecmp (ptr, "http://", 7)) 
         HTProxy_add ("http", tmp);
       else 
         {
-          strptrA = (char *) TtaGetMemory (strlen (strptr) + 9);
-          strcpy (strptrA, "http://");
-          strcat (strptrA, tmp);
-          HTProxy_add ("http", strptrA);
-          TtaFreeMemory (strptrA);
+          ptrA = (char *) TtaGetMemory (strlen (ptr) + 9);
+          strcpy (ptrA, "http://");
+          strcat (ptrA, tmp);
+          HTProxy_add ("http", ptrA);
+          TtaFreeMemory (ptrA);
         }
       TtaFreeMemory (tmp);
     }
 
   /* get the no_proxy settings from the thot.ini file */
-  strptr = TtaGetEnvString ("PROXYDOMAIN");
-  if (strptr && *strptr) 
+  ptr = TtaGetEnvString ("PROXYDOMAIN");
+  if (ptr && *ptr) 
     {
-      strptrA = (char *) TtaGetMemory (strlen (strptr) + 1);
-      tmp = strptrA;
-      strcpy (tmp, strptr);
+      ptrA = (char *) TtaGetMemory (strlen (ptr) + 1);
+      tmp = ptrA;
+      strcpy (tmp, ptr);
       /* as HTNextField changes the ptr we pass as an argument, we'll
          work with another variable, so that we can free the tmp
          block later on */
@@ -2385,7 +2245,7 @@ static void ProxyInit (void)
           /* Register it for all access methods */
           HTNoProxy_add (name, NULL, port);
         }
-      TtaFreeMemory (strptrA);
+      TtaFreeMemory (ptrA);
     }
   
   /* how should we interpret the proxy domain list? */
@@ -2403,7 +2263,7 @@ static void ProxyInit (void)
   ----------------------------------------------------------------------*/
 static void AHTProfile_newAmaya (const char *AppName, const char *AppVersion)
 {
-  char *strptr;
+  char *ptr;
 
   /* If the Library is not already initialized then do it */
   if (!HTLib_isInitialized ()) 
@@ -2446,8 +2306,8 @@ static void AHTProfile_newAmaya (const char *AppName, const char *AppVersion)
   /* Set up the default set of Authentication schemes */
   HTAA_newModule ("basic", HTBasic_generate, HTBasic_parse, NULL, HTBasic_delete);
   /* activate MDA by defaul */
-  strptr = TtaGetEnvString ("ENABLE_MDA");
-  if (!strptr || (strptr && *strptr && strcasecmp (strptr, "no")))
+  ptr = TtaGetEnvString ("ENABLE_MDA");
+  if (!ptr || (ptr && *ptr && strcasecmp (ptr, "no")))
     HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, HTDigest_updateInfo, HTDigest_delete);
    
   /* Get any proxy settings */
@@ -2506,11 +2366,6 @@ static void         AHTProfile_delete (void)
   HTList_delete (Amaya->reqlist);
   TtaFreeMemory (Amaya);
 
-#ifdef _WINGUI
-  if (HTLib_isInitialized ())      
-    HTEventTerminate ();
-#endif /* _WINGUI; */		
-
   /* Clean up the persistent cache (if any) */
 #ifdef AMAYA_WWW_CACHE
   clear_cachelock ();
@@ -2556,7 +2411,7 @@ static void    AmayaContextInit ()
   ----------------------------------------------------------------------*/
 void         QueryInit ()
 {
-  char   *strptr;
+  char   *ptr;
   int     tmp_i;
   long    tmp_l;
 
@@ -2564,22 +2419,13 @@ void         QueryInit ()
   AHTProfile_newAmaya (TtaGetAppName(), TtaGetAppVersion());
   CanDoStop_set (TRUE);
   UserAborted_flag = FALSE;
-
-#ifdef _WINGUI
-  HTEventInit ();
-#endif /* _WINGUI */
-
 #ifdef _WX
   wxAmayaSocketEventLoop::InitSocketLib();
-#endif /* _WX */
-
-#if defined(_GTK) || defined(_WX)
   HTEvent_setRegisterCallback ( AHTEvent_register);
   HTEvent_setUnregisterCallback (AHTEvent_unregister);
   HTTimer_registerSetTimerCallback ((BOOL (*)(HTTimer*)) AMAYA_SetTimer);
   HTTimer_registerDeleteTimerCallback ((BOOL (*)(HTTimer*))AMAYA_DeleteTimer);
-#endif /* defined(_GTK) || defined(_WX) */
-
+#endif /* _WX */
 #ifdef HTDEBUG
   /* an undocumented option for being able to generate an HTTP protocol
      trace.  The flag can take values from 1-10, which are interpreted as
@@ -2662,34 +2508,34 @@ void         QueryInit ()
   /* Setting up different network parameters */
 
   /* Maximum number of simultaneous open sockets */
-  strptr = TtaGetEnvString ("MAX_SOCKET");
-  if (strptr && *strptr) 
-    tmp_i = atoi (strptr);
+  ptr = TtaGetEnvString ("MAX_SOCKET");
+  if (ptr && *ptr) 
+    tmp_i = atoi (ptr);
   else
     tmp_i = DEFAULT_MAX_SOCKET;
   HTNet_setMaxSocket (tmp_i);
 
   /* different network services timeouts */
   /* dns timeout */
-  strptr = TtaGetEnvString ("DNS_TIMEOUT");
-  if (strptr && *strptr) 
-    tmp_i = atoi (strptr);
+  ptr = TtaGetEnvString ("DNS_TIMEOUT");
+  if (ptr && *ptr) 
+    tmp_i = atoi (ptr);
   else
     tmp_i = DEFAULT_DNS_TIMEOUT;
   HTDNS_setTimeout (tmp_i);
 
   /* persistent connections timeout */
-  strptr = TtaGetEnvString ("PERSIST_CX_TIMEOUT");
-  if (strptr && *strptr) 
-    tmp_l = atol (strptr); 
+  ptr = TtaGetEnvString ("PERSIST_CX_TIMEOUT");
+  if (ptr && *ptr) 
+    tmp_l = atol (ptr); 
   else
     tmp_l = DEFAULT_PERSIST_TIMEOUT;
   HTHost_setPersistTimeout (tmp_l);
 
   /* default timeout in ms */
-  strptr = TtaGetEnvString ("NET_EVENT_TIMEOUT");
-  if (strptr && *strptr) 
-    tmp_i = atoi (strptr);
+  ptr = TtaGetEnvString ("NET_EVENT_TIMEOUT");
+  if (ptr && *ptr) 
+    tmp_i = atoi (ptr);
   else
     tmp_i = DEFAULT_NET_EVENT_TIMEOUT;
   HTHost_setEventTimeout (tmp_i);
@@ -3864,107 +3710,12 @@ ThotBool AHTFTPURL_flag (void)
   return (FTPURL_flag);
 }
 
-
-/*----------------------------------------------------------------------
-  CheckSingleInstance
-  Returns TRUE if this is the single instance of Amaya in the system,
-  FALSE otherwise. 
-  N.B. : This implementation is naif.
-  ----------------------------------------------------------------------*/
-ThotBool CheckSingleInstance (char *pid_dir)
-{
-#ifdef _WINGUI
-  HWND hwnd;
-
-  hwnd = FindWindow ("Amaya", NULL);
-
-  if (!hwnd)
-    return TRUE;
-  else
-    return FALSE;
-
-#endif /* _WINGUI */
-
-#ifdef _WX
-  /* TODO */
-  return TRUE;
-#endif /* _WX */
-
-#ifdef _GTK
-  int instances;
-  char *ptr;
-  pid_t pid;
-
-  DIR *dp;
-  struct stat st;
-#ifdef HAVE_DIRENT_H
-  struct dirent *d;
-#else
-  struct direct *d;
-#endif /* HAVE_DIRENT_H */
-  char filename[BUFSIZ+1];
-
-  if ((dp = opendir (pid_dir)) == NULL) 
-    {
-      /* @@@ we couldn't open the directory ... we need some msg */
-      perror (pid_dir);
-      return FALSE;
-    }
-
-  instances = 0;
-
-  while ((d = readdir (dp)) != NULL)
-    {
-      /* skip the UNIX . and .. links */
-      if (!strcmp (d->d_name, "..")
-          || !strcmp (d->d_name, "."))
-        continue;
-
-      sprintf (filename, "%s%c%s", pid_dir, DIR_SEP, d->d_name);
-      if  (lstat (filename, &st) < 0 ) 
-        {
-          /* @@2 need some error message */
-          perror (filename);
-          continue;
-        }
-      
-      switch (st.st_mode & S_IFMT)
-        {
-        case S_IFDIR:
-        case S_IFLNK:
-          /* skip any links and directories that we find */
-          continue;
-          break;
-        default:
-          /* check if this pid exists. If not, erase it */
-          ptr = strrchr (filename, DIR_SEP);
-          if (!ptr) 
-            continue;
-          sscanf (ptr, DIR_STR"%d", &pid);
-          if (kill (pid, 0) == -1)
-            {
-              /* erase the stale pid file */
-              TtaFileUnlink (filename);
-            }
-          else /* we found one live instance */
-            {
-              instances++;
-            }
-          break;
-        }
-    }
-  closedir (dp);
-  return (instances == 0);
-#endif /* _GTK */
-
-}
-
 /*----------------------------------------------------------------------
   FreeAmayaCache 
   ----------------------------------------------------------------------*/
 void FreeAmayaCache (void)
 {
-#if defined(_UNIX)
+#ifdef _UNIX
   char str[MAX_LENGTH];
   pid_t pid;
 
@@ -3973,7 +3724,7 @@ void FreeAmayaCache (void)
   sprintf (str, "%s/pid/%d", TempFileDirectory, pid);
   if (TtaFileExist (str))
     TtaFileUnlink (str);
-#endif /* #if defined(_UNIX) */
+#endif /* _UNIX */
 }
 
 /*----------------------------------------------------------------------
@@ -4022,7 +3773,7 @@ void InitAmayaCache (void)
 #endif /* _UNIX */
 
   /* Detect if it's a unique instance */
-  AmayaUniqueInstance = CheckSingleInstance (str);
+  AmayaUniqueInstance = TRUE;
   if (can_erase && AmayaUniqueInstance)
     {
       /* Erase the previous directories */
