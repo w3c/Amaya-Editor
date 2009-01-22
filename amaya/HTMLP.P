@@ -1,4 +1,4 @@
-	{ I. Vatton 	 1994-2007  }
+	{ I. Vatton 	 1994-2009  }
 
 { Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, LINK_NUMBER, LANDSDSCAPE}
 
@@ -4445,9 +4445,9 @@ FIELDSET: BEGIN
         ShowBox;
         FillPattern: Enclosing =;
         {MarginTop: Enclosing =;
+        MarginBottom: Enclosing =;}
         MarginRight: Enclosing =;
-        MarginBottom: Enclosing =;
-        MarginLeft: Enclosing =;}
+        MarginLeft: Enclosing =;
         BorderTopWidth: Enclosing =;
         BorderRightWidth: Enclosing =;
         BorderBottomWidth: Enclosing =;
@@ -4460,6 +4460,10 @@ FIELDSET: BEGIN
         BorderRightStyle: Enclosing =;
         BorderBottomStyle: Enclosing =;
         BorderLeftStyle: Enclosing =;
+        PaddingTop: Enclosing =;
+        PaddingBottom: Enclosing =;
+        PaddingLeft: Enclosing =;
+        PaddingRight: Enclosing =;
         IN Structure_view BEGIN
                 Visibility: 0;
                 END;
@@ -4492,10 +4496,6 @@ FIELDSET: BEGIN
         PageBreak: Yes;
 #endif
         VertPos: Top = Previous Table_head . Top;
-        MarginTop: Enclosing =;
-        MarginRight: Enclosing =;
-        MarginBottom: Enclosing =;
-        MarginLeft: Enclosing =;
         BorderTopColor: Enclosing =;
         BorderLeftColor: Enclosing = ;
         BorderBottomColor: Enclosing =;
@@ -4504,23 +4504,41 @@ FIELDSET: BEGIN
         BorderRightWidth: Enclosing =;
         BorderBottomWidth: Enclosing =;
         BorderLeftWidth: Enclosing =;
+        PaddingTop: Enclosing =;
+        PaddingBottom: Enclosing =;
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                MarginTop: 0;
+                MarginRight: 0;
+                MarginBottom: 0;
+                MarginLeft: 0;
                 BorderTopWidth: 0;
                 BorderRightWidth: 0;
                 BorderBottomWidth: 0;
                 BorderLeftWidth: 0;
+                PaddingTop: 0;
+                PaddingRight: 0;
+                PaddingBottom: 0;
+                PaddingLeft: 0;
                 END;
         IN Alternate_view BEGIN
                 Visibility: Enclosing =;
                 VertPos: Top = Previous . Bottom;
                 Width: Enclosing . Width;
+                MarginTop: 0;
+                MarginRight: 0;
+                MarginBottom: 0;
+                MarginLeft: 0;
                 BorderTopWidth: 0;
                 BorderRightWidth: 0;
                 BorderBottomWidth: 0;
                 BorderLeftWidth: 0;
+                PaddingTop: 0;
+                PaddingRight: 0;
+                PaddingBottom: 0;
+                PaddingLeft: 0;
                 END;
         END;
 

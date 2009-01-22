@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -697,6 +697,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
   PtrAbstractBox      pRefAb;
   PtrBox              pBox;
   PtrBox              pParent, pBlock;
+  PtrElement          pEl = pAb->AbElement;
   int                 dim, x1, x2, y1, y2;
 
   x1 = x2 = y1 = y2 = -1;
@@ -898,17 +899,26 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       else
         {
           /* top margin */
-          if (pBox->BxType == BoCell || pBox->BxType == BoRow)
+          if (pBox->BxType == BoCell || pBox->BxType == BoCellBlock || pBox->BxType == BoRow)
             pBox->BxTMargin = 0;
           else if (pAb->AbTopMarginUnit != UnAuto)
             pBox->BxTMargin = GetPixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit, dim,
                                              pAb, ViewFrameTable[frame - 1].FrMagnification);
-          /* top padding */
-          pBox->BxTPadding = GetPixelValue (pAb->AbTopPadding, pAb->AbTopPaddingUnit, dim,
-                                            pAb, ViewFrameTable[frame - 1].FrMagnification);
-          /* top border */
-          pBox->BxTBorder = GetPixelValue (pAb->AbTopBorder, pAb->AbTopBorderUnit, dim,
-                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
+          if (pBox->BxType == BoTable && pEl && pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+              !strcmp (pEl->ElStructSchema->SsName, "HTML"))
+            {
+              pBox->BxTPadding = 0;
+              pBox->BxTBorder = 0;
+            }
+          else
+            {
+              /* top padding */
+              pBox->BxTPadding = GetPixelValue (pAb->AbTopPadding, pAb->AbTopPaddingUnit, dim,
+                                                pAb, ViewFrameTable[frame - 1].FrMagnification);
+              /* top border */
+              pBox->BxTBorder = GetPixelValue (pAb->AbTopBorder, pAb->AbTopBorderUnit, dim,
+                                               pAb, ViewFrameTable[frame - 1].FrMagnification);
+            }
         }
 
       if (pAb->AbLeafType == LtCompound && pAb->AbTruncatedTail)
@@ -925,12 +935,21 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
           else if (pAb->AbBottomMarginUnit != UnAuto)
             pBox->BxBMargin = GetPixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit, dim,
                                              pAb, ViewFrameTable[frame - 1].FrMagnification);
-          /* bottom padding */
-          pBox->BxBPadding = GetPixelValue (pAb->AbBottomPadding, pAb->AbBottomPaddingUnit, dim,
-                                            pAb, ViewFrameTable[frame - 1].FrMagnification);
-          /* bottom border */
-          pBox->BxBBorder = GetPixelValue (pAb->AbBottomBorder, pAb->AbBottomBorderUnit, dim,
-                                           pAb, ViewFrameTable[frame - 1].FrMagnification);
+          if (pBox->BxType == BoTable && pEl && pEl->ElStructSchema && pEl->ElStructSchema->SsName &&
+              !strcmp (pEl->ElStructSchema->SsName, "HTML"))
+            {
+              pBox->BxBPadding = 0;
+              pBox->BxBBorder = 0;
+            }
+          else
+            {
+              /* bottom padding */
+              pBox->BxBPadding = GetPixelValue (pAb->AbBottomPadding, pAb->AbBottomPaddingUnit, dim,
+                                                pAb, ViewFrameTable[frame - 1].FrMagnification);
+              /* bottom border */
+              pBox->BxBBorder = GetPixelValue (pAb->AbBottomBorder, pAb->AbBottomBorderUnit, dim,
+                                               pAb, ViewFrameTable[frame - 1].FrMagnification);
+            }
         }
     }
 }
@@ -3147,8 +3166,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				
                                   val += GetPixelValue (pDimAb->DimValue, pDimAb->DimUnit,
                                                         val, pAb, zoom);
-                                  /* the rule gives the outside value */
-                                  val = val - dy;
+                                  if (pParentAb == NULL || pParentAb->AbBox == NULL ||
+                                      pParentAb->AbBox->BxType != BoTable)
+                                    /* the rule gives the outside value */
+                                    val = val - dy;
                                   ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
                                   /* Marks out of structure relations */
                                   if (pDimAb->DimAbRef != pParentAb
