@@ -55,11 +55,33 @@
                       begin="3s" dur="0.1s" fill="freeze"/>
   </svg:g>
   <svg:g transform="translate(118,110)">
-    <svg:polygon points="3,0 5,16 0,16" transform="translate(25,-20)"
-             style="stroke: #E50000; fill: #E50000"/>
-    <svg:polygon
-             points="0,13 10,0 20,1 23,10 29,2 40,1 42,9 45,17 32,17 33,11 30,11 23,15 18,15 12,7 8,7 8,13"
-             stroke="#E50000" fill="#FF9595"/>
+    <svg:g>
+      <svg:polygon points="3,0 5,16 0,16" transform="translate(25,-20)"
+               style="stroke: #E50000; fill: #E50000"/>
+      <svg:polygon
+               points="0,13 10,0 20,1 23,10 29,2 40,1 42,9 45,17 32,17 33,11 30,11 23,15 18,15 12,7 8,7 8,13"
+               stroke="#E50000" fill="#FF9595"/>
+      <!-- M oscillations -->
+      <!-- Maybe rotation center is not correct... (30,-22)  -->
+      <svg:animateTransform attributeName="transform" attributeType="XML"
+                        type="rotate" from="0,30,-22" to="-30,30,-22"
+                        begin="3s" dur="0.2s" fill="freeze"/>
+      <svg:animateTransform attributeName="transform" attributeType="XML"
+                        type="rotate" from="-30,30,-22" to="25,30,-22"
+                        begin="3.2s" dur="0.4s" fill="freeze"/>
+      <svg:animateTransform attributeName="transform" attributeType="XML"
+                        type="rotate" from="25,30,-22" to="-20,30,-22"
+                        begin="3.6s" dur="0.6s" fill="freeze"/>
+      <svg:animateTransform attributeName="transform" attributeType="XML"
+                        type="rotate" from="-20,30,-22" to="15,30,-22"
+                        begin="4.2s" dur="0.8s" fill="freeze"/>
+      <svg:animateTransform attributeName="transform" attributeType="XML"
+                        type="rotate" from="15,30,-22" to="-10,30,-22"
+                        begin="5s" dur="1s" fill="freeze"/>
+      <svg:animateTransform attributeName="transform" attributeType="XML"
+                        type="rotate" from="-10,30,-22" to="0,30,-22"
+                        begin="6s" dur="0.6s" fill="freeze"/>
+    </svg:g>
     <!-- M scale -->
     <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="scale" from=".1" to="1" additive="sum" begin="0s"
@@ -68,26 +90,6 @@
     <svg:animateTransform attributeName="transform" attributeType="XML"
                       type="translate" from="0,0" to="118,110" begin="0s"
                       dur="3s" fill="freeze"/>
-    <!-- M oscillations -->
-    <!-- Maybe rotation center is not correct... (30,-22)  -->
-    <svg:animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="0,30,-22" to="-30,30,-22" begin="3s"
-                      dur="0.2s" fill="freeze"/>
-    <svg:animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="-30,30,-22" to="25,30,-22"
-                      begin="3.2s" dur="0.4s" fill="freeze"/>
-    <svg:animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="25,30,-22" to="-20,30,-22"
-                      begin="3.6s" dur="0.6s" fill="freeze"/>
-    <svg:animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="-20,30,-22" to="15,30,-22"
-                      begin="4.2s" dur="0.8s" fill="freeze"/>
-    <svg:animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="15,30,-22" to="-10,30,-22" begin="5s"
-                      dur="1s" fill="freeze"/>
-    <svg:animateTransform attributeName="transform" attributeType="XML"
-                      type="rotate" from="-10,30,-22" to="0,30,-22" begin="6s"
-                      dur="0.6s" fill="freeze"/>
   </svg:g>
 </svg:svg>
 </div>
