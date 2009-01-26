@@ -913,7 +913,7 @@
  <message xml:lang="sk">S&amp;ynchronizovať</message>
  <message xml:lang="ja">同期(&amp;y)</message>
 </label>
- <label define="BSetUpandPrint">
+ <label define="BSendByMail">
 <message xml:lang="en">Send by mail ...</message>
  <message xml:lang="fr">Envoyer par courriel ...</message>
  <message xml:lang="es">&amp;Enviar por correo electrónico ...</message>
