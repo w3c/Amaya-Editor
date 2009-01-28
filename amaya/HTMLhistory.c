@@ -1696,6 +1696,9 @@ int SearchPasswordTable (const char *realm, char *server)
 {
   int        i;
 
+  if (!realm || !server)
+    return 0;
+
   if (*realm == EOS || *server == EOS)
     return 0;
 
