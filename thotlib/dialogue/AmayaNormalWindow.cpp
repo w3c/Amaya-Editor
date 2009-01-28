@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -641,7 +641,7 @@ void AmayaNormalWindow::AppendURL ( const wxString & new_url )
   // Add the url to the MRU menu
   wxMenu     *menu;
   wxMenuItem *item;
-  if(m_URLs.GetCount()<RECENT_DOC_MAX_NB)
+  if(m_URLs.GetCount() < RECENT_DOC_MAX_NB)
     {
       if(m_URLs.Index(new_url)==wxNOT_FOUND)
         {
@@ -1013,10 +1013,12 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   else
     FrameToView (TtaGiveActiveFrame(), &doc, &view);
   AmayaWindow::DoAmayaAction( action_id, doc, view );
-  if (action_id == -1 ||
-      (MenuActionList[action_id].ActionName &&
-      (!strcmp (MenuActionList[action_id].ActionName, "TtcPreviousElement") ||
-       !strcmp (MenuActionList[action_id].ActionName, "TtcNextElement"))))
+  if (action_id == -1)
+    // Open recent documents
+    event.Skip();
+  else if (MenuActionList[action_id].ActionName &&
+           (!strcmp (MenuActionList[action_id].ActionName, "TtcPreviousElement") ||
+            !strcmp (MenuActionList[action_id].ActionName, "TtcNextElement")))
   event.Skip(false);
 }
 
