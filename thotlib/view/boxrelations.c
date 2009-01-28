@@ -670,6 +670,8 @@ void CleanAutoMargins (PtrAbstractBox pAb)
   ----------------------------------------------------------------------*/
 PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
 {
+  PtrAbstractBox prev;
+
   if (pAb)
     {
       pAb = pAb->AbEnclosing;
@@ -680,7 +682,21 @@ PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
               pAb->AbPositioning == NULL ||
               pAb->AbPositioning->PnAlgorithm == PnInherit ||
               pAb->AbPositioning->PnAlgorithm == PnStatic))
-        pAb = pAb->AbEnclosing;
+        {
+          if (pAb->AbPrevious &&
+              !TypeHasException (ExcSetWindowBackground,
+                                 pAb->AbElement->ElTypeNumber,
+                                 pAb->AbElement->ElStructSchema))
+            {
+              // it could be the xtiger head before the HTML body
+              prev = pAb->AbPrevious;
+              while (prev && prev->AbElement == pAb->AbElement)
+                prev = prev->AbPrevious;
+              if (prev)
+                return pAb;
+            }
+          pAb = pAb->AbEnclosing;
+        }
     }
   return pAb;
 }
