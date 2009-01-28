@@ -2015,16 +2015,6 @@ void OpenDocInNewWindow (Document document, View view)
                    docText);
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void OpenRecentDoc (Document document, View view)
-{
-#ifdef AMAYA_DEBUG
-  printf("OpenRecentDoc\n");
-#endif /* AMAYA_DEBUG */
-}
-
-
 
 /*----------------------------------------------------------------------
   OpenNew: create a new document

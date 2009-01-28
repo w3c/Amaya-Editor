@@ -282,7 +282,6 @@ ZoomNormal
 DoAction
 GoToHome
 OpenDoc
-OpenFile
 PreviousLinkOrFormElement
 Reload
 SaveDocumentAs
