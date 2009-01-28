@@ -4859,8 +4859,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
             CheckParsingErrors (newdoc);
 #ifdef TEMPLATES
           // Fill template internal structures and prepare the instance if any
-          t = GetXTigerTemplate (DocumentURLs[doc]);
-          if (t || method == CE_TEMPLATE)
+          t = GetXTigerTemplate (pathname);
+          if (t)
             {
               dispMode = TtaGetDisplayMode (doc);
               if (dispMode != NoComputedDisplay)
