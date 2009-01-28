@@ -1682,6 +1682,10 @@ static void         AHTAcceptLanguagesInit (HTList *c)
   
   lang_list = TtaGetEnvString ("ACCEPT_LANGUAGES");
   s[2] = EOS;
+
+  if (lang_list == NULL)
+    lang_list = TtaGetLanguageCode(TtaGetDefaultLanguage());
+
   if (lang_list && *lang_list != EOS)
     {
       /* add the default language first  */
