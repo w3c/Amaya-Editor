@@ -687,7 +687,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
     }
   if (cNumber == 0)
     return;
-  mbp = pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
+  mbp = /*pBox->BxLPadding + pBox->BxRPadding + */pBox->BxLBorder + pBox->BxRBorder;
   if (table->AbLeftMarginUnit != UnAuto && pBox->BxLMargin > 0)
     mbp += pBox->BxLMargin;
   if (table->AbRightMarginUnit != UnAuto && pBox->BxRMargin > 0)
@@ -790,9 +790,9 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   min = min;
   max = max;
   /* take into account the cell spacing */
-  if (colBox[0] && colBox[0]->AbEnclosing && colBox[0]->AbEnclosing->AbBox)
-    // padding-left of the Table_head gives the cellspacing
-    cellspacing = colBox[0]->AbEnclosing->AbBox->BxLPadding * (cNumber + 1);
+  if (cNumber > 1 && colBox[1] &&  colBox[1]->AbEnclosing && colBox[1]->AbHorizPos.PosDistance)
+    // the distance between 2 columns gives the cellspacing
+    cellspacing = colBox[1]->AbHorizPos.PosDistance * (cNumber + 1);
   else
     cellspacing = 0;
   
@@ -1067,12 +1067,19 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       pTabRel->TaRTable[0]->AbEnclosing->AbBox)
     {
       /* pack all rows */
-      /*DefBoxRegion (frame, pBox, -1, -1, -1, -1);*/
       PackRows = TRUE;
-      width =  pBox->BxW;
-      box = pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox;
-      delta = box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
-      width -=  delta;
+      width = pBox->BxW;
+      delta = 0;
+      // remove the padding border and margin of included boxes
+      pParent = pBox->BxRows->TaRTable[0]->AbEnclosing;
+      while (pParent && pParent->AbEnclosing &&
+             pParent->AbEnclosing->AbBox && pParent->AbEnclosing->AbBox->BxType != BoTable)
+        {
+          box = pParent->AbBox;
+          delta += box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
+          pParent = pParent->AbEnclosing;
+        }
+      width -= delta;
       while (pTabRel)
         {
           for (i = 0; i < MAX_RELAT_DIM &&

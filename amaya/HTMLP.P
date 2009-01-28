@@ -4444,8 +4444,6 @@ FIELDSET: BEGIN
         Background: Enclosing =;
         ShowBox;
         FillPattern: Enclosing =;
-        {MarginTop: Enclosing =;
-        MarginBottom: Enclosing =;}
         MarginRight: Enclosing =;
         MarginLeft: Enclosing =;
         BorderTopWidth: Enclosing =;
@@ -4501,9 +4499,7 @@ FIELDSET: BEGIN
         BorderBottomColor: Enclosing =;
         BorderRightColor: Enclosing =;
         BorderTopWidth: Enclosing =;
-        BorderRightWidth: Enclosing =;
         BorderBottomWidth: Enclosing =;
-        BorderLeftWidth: Enclosing =;
         PaddingTop: Enclosing =;
         PaddingBottom: Enclosing =;
         IN Structure_view BEGIN
