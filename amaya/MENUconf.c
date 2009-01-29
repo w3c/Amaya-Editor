@@ -1178,6 +1178,7 @@ void SetGeneralConf (void)
       if (!value)
         {
           // new user interface
+          WarnRestart = true;
           TtaSetEnvBoolean("ADVANCE_USER_INTERFACE", TRUE, TRUE);
         }
     }
