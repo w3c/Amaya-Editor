@@ -1479,6 +1479,11 @@ static int CopyXClipboard (unsigned char **buffer, View view)
               else
                 maxLength = 7;
             }
+          else if (TypeHasException (ExcIsImg, pFirstEl->ElTypeNumber, pFirstEl->ElStructSchema))
+            {
+              maxLength = 5;
+              pFirstEl = pFirstEl->ElFirstChild;
+            }
           pEl = pFirstEl;
           while (pEl)
             {
@@ -1612,7 +1617,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
                 {
                   pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock,
                                                 BoFloatBlock, BoCellBlock);
-                  if (pBlock != pOldBlock)
+                  if (pBlock != pOldBlock && pOldBlock != NULL)
                     {
                       /* Add a NewLine */
                       text[i++] = EOL;
@@ -1662,12 +1667,11 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   if (*buffer)
     TtaFreeMemory (*buffer);
   /* What is the encoding used by external applications ??? */
-#ifdef _WINGUI
-  *buffer = TtaConvertCHARToByte (text, TtaGetDefaultCharset ());
-#else /* _WINGUI */
   *buffer = TtaConvertCHARToByte (text, UTF_8);
-#endif /* _WINGUI */
   TtaFreeMemory (text);
+  if (*buffer)
+    // give the utf-8 length
+    i = strlen((char*) *buffer);
   return i;
 }
 
@@ -1795,24 +1799,6 @@ void DoCopyToClipboard (Document doc, View view, ThotBool force, ThotBool primar
       wxTheClipboard->Close();
     }
 #endif /* _WX */
-#ifdef _GTK
-  unsigned char     *buffer = NULL;
-  int                len;
-
-  /* Must get the selection */
-  TtcClearClipboard ();
-  len = CopyXClipboard (&buffer, view);
-  if (len)
-    {
-      ClipboardLength = len;
-      Xbuffer = buffer;
-    }
-#endif /* _GTK */
-#ifdef _WINGUI
-  /* Store the current selection */
-  ClipboardURI = FALSE;
-  ClipboardLength = CopyXClipboard (&Xbuffer, view);
-#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------

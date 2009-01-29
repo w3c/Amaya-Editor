@@ -259,7 +259,7 @@ bool AmayaAttributeToolPanel::IsReadOnly()const
   ----------------------------------------------------------------------*/
 void AmayaAttributeToolPanel::ShowAttributeBar(bool bShow)
 {
-  if(m_pVPanelSizer)
+  if (m_pVPanelSizer)
     {
       m_pVPanelSizer->Show((size_t)0, bShow);
     }
@@ -272,20 +272,22 @@ void AmayaAttributeToolPanel::ShowAttributeBar(bool bShow)
   ----------------------------------------------------------------------*/
 void AmayaAttributeToolPanel::SendDataToPanel( AmayaParams& p )
 {
-  DesactivatePanel();
-  
-  switch ( (int)p.param1 )
+  if (IsShown())
     {
-    case wxATTR_ACTION_LISTUPDATE:
-      m_firstSel  = (PtrElement)p.param5;
-      m_lastSel   = (PtrElement)p.param6;
-      m_firstChar = p.param7;
-      m_lastChar  = p.param8;
-      ShowAttributValue( wxATTR_PANEID_NONE );
-      SetupListValue((DLList)p.param2);
-      break;
+      DesactivatePanel();
+      switch ( (int)p.param1 )
+        {
+        case wxATTR_ACTION_LISTUPDATE:
+          m_firstSel  = (PtrElement)p.param5;
+          m_lastSel   = (PtrElement)p.param6;
+          m_firstChar = p.param7;
+          m_lastChar  = p.param8;
+          ShowAttributValue( wxATTR_PANEID_NONE );
+          SetupListValue((DLList)p.param2);
+          break;
+        }
+      ActivePanel();
     }
-  ActivePanel();
 }
 
 /*----------------------------------------------------------------------
@@ -518,7 +520,7 @@ void AmayaAttributeToolPanel::ShowAttributValue( wxATTR_PANEID type )
   for(i=0; i<wxATTR_PANEID_MAX; i++)
     m_pSubpanelSizer->Show(m_subpanels[i], false );
   
-  if(type>=0 && type<wxATTR_PANEID_MAX)
+  if (type >= 0 && type<wxATTR_PANEID_MAX)
     {
       m_pSubpanelSizer->Show( type, true );
       m_pCurrentlyEditedControl = m_subpanels[type]->GetEditionControl();

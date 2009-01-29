@@ -2924,7 +2924,7 @@ static void CreateHTMLContainer (char *pathname, char *docname,
   if (local)
     fprintf (file, "<img src=\"%s\" alt=\"image\">", pathname);
   else
-    fprintf (file, "<img src=\"internal:%s\" alt=\"image\">", pathname);
+    fprintf (file, "<img src=\"internal:%s\" alt=\"image\" width=\"100%%\">", pathname);
   fprintf (file, "</body></html>");
   TtaWriteClose (file);
 }

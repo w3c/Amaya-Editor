@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3681,9 +3681,13 @@ void CheckPastedElement (Element el, Document doc, int info, int position,
                             {
                               /* get the SRC itself */
                               TtaGiveTextAttributeValue (attr, value, &length);
-                              /* update value and SRCattribute */
-                              ComputeSRCattribute (el, doc, originDocument,
-                                                   attr, value);
+                              if (!strncmp (value, "internal:", 9))
+                                ComputeSRCattribute (el, doc, originDocument,
+                                                   attr, &value[9]);
+                              else
+                                /* update value and SRCattribute */
+                                ComputeSRCattribute (el, doc, originDocument,
+                                                     attr, value);
                             }
                           TtaFreeMemory (value);
                         }
