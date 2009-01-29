@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1998-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1998-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -236,11 +236,11 @@ printf ("==>Complete component %s:%d\n",s,elType.ElTypeNum);
 void TemplateElementComplete (ParserData *context, Element el, int *error)
 {
   Document		     doc;
-  ElementType	     elType, childType;
-  Element          ancestor, child;
+  ElementType	     elType, otherType;
+  Element          ancestor, child, next, prev;
 	AttributeType    attType;
   Attribute        att;
-  char            *name, *ancestor_name, *ptr;
+  char            *name, *ancestor_name, *ptr, *types;
   char             msgBuffer[MaxMsgLength];
   int              len;
 
@@ -337,6 +337,54 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
     case Template_EL_bag:
       CheckMandatoryAttribute (el, doc, Template_ATTR_types);
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);
+      // generate a pseudo paragraph if needed
+      types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
+      if (types)
+        {
+          child = TtaGetFirstChild (el);
+          otherType = TtaGetElementType (child);
+          if (otherType.ElSSchema &&
+              // template string or inline html
+              (otherType.ElTypeNum == 1 ||
+               (!strcmp (TtaGetSSchemaName (otherType.ElSSchema), "HTML") &&
+                IsCharacterLevelElement (child))))
+            {
+              if (otherType.ElSSchema == elType.ElSSchema)
+                {
+                  // look for the target language
+                  ancestor = el;
+                  while (otherType.ElSSchema == elType.ElSSchema)
+                    {
+                      ancestor = TtaGetParent (ancestor);
+                      otherType = TtaGetElementType (ancestor);
+                    }
+                  if (otherType.ElSSchema &&
+                      strcmp (TtaGetSSchemaName (otherType.ElSSchema), "HTML"))
+                    otherType.ElSSchema = NULL;
+                }
+              if (otherType.ElSSchema)
+                {
+                  // generate a pseudo paragraph
+                  otherType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+                  ancestor = TtaNewElement (doc, otherType);
+                  TtaInsertSibling (ancestor, child, TRUE, doc);
+                  prev = NULL;
+                  while (child)
+                    {
+                      next = child;
+                      TtaNextSibling (&next);
+                      TtaRemoveTree (child, doc);
+                      if (prev)
+                        TtaInsertSibling (child, prev, FALSE, doc);
+                      else
+                        TtaInsertFirstChild (&child, ancestor, doc);
+                      prev = child;
+                      child = next;
+                    }
+                }
+            }
+          TtaFreeMemory (types);
+        }
       break;
 
     case Template_EL_attribute:
@@ -354,12 +402,12 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
       child = TtaGetFirstChild (el);
       while (child)
         {
-          childType = TtaGetElementType (child);
-          if (childType.ElSSchema != elType.ElSSchema ||
-              (childType.ElTypeNum != Template_EL_useSimple &&
-               childType.ElTypeNum != Template_EL_useEl &&
-               childType.ElTypeNum != Template_EL_component &&
-               childType.ElTypeNum != Template_EL_Comment_))
+          otherType = TtaGetElementType (child);
+          if (otherType.ElSSchema != elType.ElSSchema ||
+              (otherType.ElTypeNum != Template_EL_useSimple &&
+               otherType.ElTypeNum != Template_EL_useEl &&
+               otherType.ElTypeNum != Template_EL_component &&
+               otherType.ElTypeNum != Template_EL_Comment_))
             // report an error
             XmlParseError (errorParsing,
                            (unsigned char *)"Invalid child of repeat element",

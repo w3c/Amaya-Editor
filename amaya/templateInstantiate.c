@@ -285,9 +285,9 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
   AttributeType attType;
   Attribute     att;
   Element       next, child = NULL, savedInline, prev, parent = NULL;
+  ElementType   elType, otherType;
   Declaration   dec;
   char         *name, *types;
-  ElementType   elType, otherType;
 
   if (!t || !el)
     return parentLine;
@@ -352,8 +352,6 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
           TtaUpdateAccessRightInViews (doc, el);
           break;
         case Template_EL_bag :
-          //Link to types
-          //Allow editing the content
           break;
         case Template_EL_useEl :
         case Template_EL_useSimple :

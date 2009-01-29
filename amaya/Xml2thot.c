@@ -1307,7 +1307,8 @@ static void RemoveTrailingSpaces (Element el)
     }
 
   /* create an empty text element after the math element */
-  if (strcmp ((char *)CurrentParserCtxt->SSchemaName, "HTML") == 0)
+  if (CurrentParserCtxt &&
+      strcmp ((char *)CurrentParserCtxt->SSchemaName, "HTML") == 0)
     {
       lastChild = TtaGetLastChild (el);
       if (lastChild)
