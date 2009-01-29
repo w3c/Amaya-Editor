@@ -1,7 +1,7 @@
 #
 # Main Makefile for Thot/Amaya source tree
 # Generated from Makefile.in
-# Daniel Veillard, Irene Vatton, 2007
+# Daniel Veillard, Irene Vatton, 2009
 #
 
 @VPATHOPT@= @srcdir@
