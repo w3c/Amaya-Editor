@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1278,7 +1278,7 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
               length = MAX_LENGTH - 1;
               name = (char *)TtaGetMemory (MAX_LENGTH);
               TtaGiveTextAttributeValue (attr, name, &length);
-	      name[MAX_LENGTH] = EOS;
+              name[MAX_LENGTH-1] = EOS;
               sprintf (msgBuffer, "Invalid ID value \"%s\"", name);
               lineNum = TtaGetElementLineNumber(el);
               if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
@@ -1295,7 +1295,7 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
                   length = MAX_LENGTH - 1;
                   name = (char *)TtaGetMemory (MAX_LENGTH);
                   TtaGiveTextAttributeValue (attr, name, &length);
-	          name[MAX_LENGTH] = EOS;
+                  name[MAX_LENGTH-1] = EOS;
                   sprintf (msgBuffer, "Duplicate ID value \"%s\"", name);
                   lineNum = TtaGetElementLineNumber(el);
                   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
