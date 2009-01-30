@@ -684,9 +684,9 @@ PtrAbstractBox GetEnclosingViewport (PtrAbstractBox pAb)
               pAb->AbPositioning->PnAlgorithm == PnStatic))
         {
           if (pAb->AbPrevious &&
-              !TypeHasException (ExcSetWindowBackground,
-                                 pAb->AbElement->ElTypeNumber,
-                                 pAb->AbElement->ElStructSchema))
+              TypeHasException (ExcSetWindowBackground,
+                                pAb->AbElement->ElTypeNumber,
+                                pAb->AbElement->ElStructSchema))
             {
               // it could be the xtiger head before the HTML body
               prev = pAb->AbPrevious;
