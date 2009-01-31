@@ -28,13 +28,14 @@
 <div id="logo">
 <svg:svg height="150px" width="230px">
   <svg:title>Amaya logo</svg:title>
-  <svg:ellipse cx="0px" cy="0px" rx="66px" ry="45px"
-        style="fill: #EDF3FF; stroke: #EDF3FF"
-        transform="translate(143,98) scale(0.552043) ">
-    <svg:animateTransform attributeName="transform" attributeType="XML"
-                      type="scale" from=".1" to="1" additive="sum" begin="0s"
-                      dur="6s" fill="freeze"/>
-  </svg:ellipse>
+  <svg:g transform="translate(143,98)">
+    <svg:ellipse rx="66px" ry="45px"
+		 style="fill: #edf3ff; stroke: #edf3ff">
+      <svg:animateTransform attributeName="transform" attributeType="XML"
+			    type="scale" from="0" to="1" begin="0s"
+			    dur="6s" fill="freeze"/>
+    </svg:ellipse>
+  </svg:g>
   <svg:g transform="rotate(-30,100,150)">
     <svg:polygon points="0,117 66,0 21,117" transform="translate(49,22)"
              style="fill: #B27700; stroke: #D9E500"/>
