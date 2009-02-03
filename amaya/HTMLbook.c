@@ -829,7 +829,7 @@ void SetupAndPrint (Document doc, View view)
   TtaSetToggleMenu (BasePrint + PrintOptions, 4, IgnoreCSS);
   
   /* activates the Print form */
-  TtaShowDialogue (BasePrint+FormPrint, FALSE);
+  TtaShowDialogue (BasePrint+FormPrint, FALSE, TRUE);
   if (textFile)
     {
       /* invalid dialogue entries */
@@ -901,7 +901,7 @@ void SetupAndPrint (Document doc, View view)
                                 ignore_css);
     if (created)
       {
-        TtaShowDialogue (BasePrint+FormPrint, FALSE);
+        TtaShowDialogue (BasePrint+FormPrint, FALSE, TRUE);
       }
   }
   

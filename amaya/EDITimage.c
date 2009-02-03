@@ -547,7 +547,7 @@ static char *GetImageURL (Document document, View view,
                       TtaGetMessage (LIB, TMSG_BUTTON_IMG),
                       LastURLImage, ImgAlt, isSVG);
   TtaSetDialoguePosition ();
-  TtaShowDialogue (RefFormImage, FALSE);
+  TtaShowDialogue (RefFormImage, FALSE, TRUE);
   TtaWaitShowDialogue ();
   if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
     {

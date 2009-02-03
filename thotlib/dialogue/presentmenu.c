@@ -2072,7 +2072,7 @@ void TtcChangeGraphics (Document document, View view)
 #endif /* _GTK */
           DocModPresent = pDoc;
 #ifdef _GTK
-          TtaShowDialogue (NumFormPresGraphics, TRUE);
+          TtaShowDialogue (NumFormPresGraphics, TRUE, TRUE);
 #endif /* _GTK */
         }
     }

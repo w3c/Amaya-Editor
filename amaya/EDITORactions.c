@@ -1600,7 +1600,7 @@ void UpdateNSDeclaration (Document document, View view)
 	{
 	  NSList = p_dlg;
 	  TtaSetDialoguePosition ();
-	  TtaShowDialogue (BaseDialog + ListNSForm, FALSE);
+	  TtaShowDialogue (BaseDialog + ListNSForm, FALSE, TRUE);
 	  /* wait for an answer */
 	  TtaWaitShowDialogue ();
 	}
@@ -3248,7 +3248,7 @@ void CreateTable (Document doc, View view)
                                             NumberCols, NumberRows, TBorder);
           if (created)
             {
-              TtaShowDialogue (BaseDialog + TableForm, FALSE);
+              TtaShowDialogue (BaseDialog + TableForm, FALSE, TRUE);
               /* wait for an answer */
               TtaWaitShowDialogue ();
             }

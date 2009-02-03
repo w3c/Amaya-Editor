@@ -830,7 +830,7 @@ static char* QueryStringFromMenu (Document doc, char* items)
                      nbitems, menuString , NULL, false, 'L');
   TtaFreeMemory (menuString);
   ReturnOption = -1;
-  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+  TtaShowDialogue (BaseDialog + OptionMenu, FALSE, TRUE);
   TtaWaitShowProcDialogue ();
   TtaDestroyDialogue (BaseDialog + OptionMenu);
 

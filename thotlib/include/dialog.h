@@ -453,7 +453,7 @@ extern void TtaSetDialoguePosition (void);
 /*----------------------------------------------------------------------
    TtaShowDialogue active le catalogue de'signe.                      
   ----------------------------------------------------------------------*/
-extern void TtaShowDialogue (int ref, ThotBool remanent);
+extern void TtaShowDialogue (int ref, ThotBool remanent, ThotBool move);
 
 /*----------------------------------------------------------------------
    TtaWaitShowProcDialogue waits for a catalogue (that has its own

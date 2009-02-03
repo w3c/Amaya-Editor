@@ -1823,7 +1823,7 @@ void ChangeTitle (Document doc, View view)
       if (created)
         {
           TtaSetDialoguePosition ();
-          TtaShowDialogue (BaseDialog + TitleForm, FALSE);
+          TtaShowDialogue (BaseDialog + TitleForm, FALSE, TRUE);
         }
     }   
 }
@@ -2058,7 +2058,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
       if (created)
         {
           TtaSetDialoguePosition ();
-          TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
+          TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE, TRUE);
         }
 #endif /* _WX */
     }

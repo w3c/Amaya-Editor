@@ -181,7 +181,8 @@ extern ThotWidget TtaNewComboBox ( int ref,
 extern void TtaAbortShowDialogue ( void );
 extern void TtaSetDialoguePosition ( void );
 extern void TtaShowDialogue ( int ref,
-                              ThotBool remanent );
+                              ThotBool remanent,
+                              ThotBool move );
 extern void TtaWaitShowProcDialogue ( void );
 extern void TtaWaitShowDialogue ( void );
 extern ThotBool TtaTestWaitShowDialogue ( void );
@@ -364,7 +365,8 @@ extern ThotWidget TtaNewComboBox ( int ref,
 extern void TtaAbortShowDialogue ( void );
 extern void TtaSetDialoguePosition ( void );
 extern void TtaShowDialogue ( int ref,
-                                ThotBool remanent );
+                                ThotBool remanent,
+                                ThotBool move );
 extern void TtaWaitShowProcDialogue ( void );
 extern void TtaWaitShowDialogue ( void );
 extern ThotBool TtaTestWaitShowDialogue ( void );

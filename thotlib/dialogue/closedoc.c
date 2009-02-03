@@ -107,7 +107,7 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
   TtaNewLabel (NumLabelSaveBeforeClosing, NumFormClose, buftext);
   /* active le formulaire "Fermer" */
   TtaSetDialoguePosition();
-  TtaShowDialogue (NumFormClose, FALSE);
+  TtaShowDialogue (NumFormClose, FALSE, TRUE);
   /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
   TtaWaitShowDialogue ();
 #endif /* _GTK */

@@ -467,7 +467,7 @@ void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc, PtrElement pEl)
   pRuleAttr = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1];
   /* toujours lie a la vue 1 du document */
   MenuValues (pRuleAttr, TRUE, NULL, pEl, pDoc, 1, TRUE);
-  TtaShowDialogue (NumMenuAttrRequired, FALSE);
+  TtaShowDialogue (NumMenuAttrRequired, FALSE, TRUE);
   TtaWaitShowDialogue ();
 }
 
@@ -1551,9 +1551,9 @@ void CallbackAttrMenu (int refmenu, int attMenu, int frame)
                 /* restore the toggle state */
                 /* display the form */
                 if (mandatory)
-                  TtaShowDialogue (NumMenuAttrRequired, TRUE);
+                  TtaShowDialogue (NumMenuAttrRequired, TRUE, TRUE);
                 else
-                  TtaShowDialogue (NumMenuAttr, TRUE);
+                  TtaShowDialogue (NumMenuAttr, TRUE, TRUE);
               }
             DeleteAttribute (NULL, pAttrNew);
           }

@@ -216,7 +216,7 @@ void Execute_ACommand(Document document, View view)
 		       "main();");
 
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + JavascriptPromptForm, FALSE);
+      TtaShowDialogue (BaseDialog + JavascriptPromptForm, FALSE, TRUE);
       TtaWaitShowDialogue ();
 
       /* The script must be stopped. Do not evaluate the command */
@@ -1570,7 +1570,7 @@ static JSBool window_prompt(JSContext *cx, JSObject *obj, uintN argc,
 		   BaseDialog + JavascriptPromptText,
 		   TtaGetViewFrame (jsdocument, jsview), "Prompt", msg, value);
   TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + JavascriptPromptForm, FALSE);
+  TtaShowDialogue (BaseDialog + JavascriptPromptForm, FALSE, TRUE);
   TtaWaitShowDialogue ();
   if(!ContinueScript)return JS_FALSE;
 

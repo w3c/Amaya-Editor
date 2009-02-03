@@ -857,7 +857,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
                                document, saveImgs,
                                IsTemplateInstanceDocument(document));
   if (created)
-    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+    TtaShowDialogue (BaseDialog + SaveForm, FALSE, TRUE);
 }
 
 
@@ -931,7 +931,7 @@ void DoSaveObjectAs (void)
         {
           Saving_lock = FALSE;
           TtaSetDialoguePosition ();
-          TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+          TtaShowDialogue (BaseDialog + SaveForm, FALSE, TRUE);
           return;
         }
       SavingObject = 0;
@@ -950,7 +950,7 @@ void DoSaveObjectAs (void)
         {
           /* the user has to change the name of the saving file */
           TtaSetDialoguePosition ();
-          TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+          TtaShowDialogue (BaseDialog + SaveForm, FALSE, TRUE);
           // redisplay Save form
           res = SavingObject;
           SavingObject = 0;
@@ -2605,7 +2605,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       if (created)
         {
           TtaSetDialoguePosition ();
-          TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
+          TtaShowDialogue (BaseDialog + ConfirmSave, FALSE, TRUE);
           /* wait for an answer */
           TtaWaitShowDialogue ();
         }

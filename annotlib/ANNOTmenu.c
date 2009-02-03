@@ -226,7 +226,7 @@ void CustomQueryMenuInit (Document document, View view)
 
   /* display the menu */
   TtaSetDialoguePosition ();
-  TtaShowDialogue (CustomQueryBase + CustomQueryMenu, TRUE);
+  TtaShowDialogue (CustomQueryBase + CustomQueryMenu, TRUE, TRUE);
 #else /* _GTK */
   /* function not implemented yet */
   InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
@@ -939,7 +939,7 @@ void AnnotFilter (Document document, View view)
   /* display the menu */
 #ifndef _WINGUI
   TtaSetDialoguePosition ();
-  TtaShowDialogue (AnnotFilterBase + AnnotFilterMenu, TRUE);
+  TtaShowDialogue (AnnotFilterBase + AnnotFilterMenu, TRUE, TRUE);
 #else /* !_WINGUI */
   if (!FilterHwnd)
     /* only activate the menu if it isn't active already */
@@ -1044,7 +1044,7 @@ RDFResourceP AnnotTypes (Document document, View view)
 #ifndef _WINGUI
   TtaSetDialoguePosition ();
 #endif /* !_WINGUI */
-  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+  TtaShowDialogue (BaseDialog + OptionMenu, FALSE, TRUE);
   /* wait for an answer from the user */
   TtaWaitShowDialogue ();
   TtaDestroyDialogue (BaseDialog + OptionMenu);

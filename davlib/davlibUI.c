@@ -15,7 +15,12 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.29  2008-05-13 09:30:27  kia
+** Revision 1.30  2009-02-03 15:26:19  carcone
+** Change the prototype of the function 'TtaShowDialogue'
+** to avoid to move a dialogue in some cases.
+** Laurent
+**
+** Revision 1.29  2008/05/13 09:30:27  kia
 ** More char* fixes
 **
 ** Revision 1.28  2008/05/07 13:49:07  kia
@@ -322,7 +327,7 @@ void DAVPropertiesVerticalDialog (Document docid, const char *title,
       TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
                    (char *)"              ");
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + form, TRUE);            
+      TtaShowDialogue (BaseDialog + form, TRUE, TRUE);            
 #else /* _GTK */
       /* function not implemented yet */
       InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
@@ -391,7 +396,7 @@ void DAVHorizontalDialog (Document docid, char *title, char *rheader,
       TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
                    "              ");
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + form, TRUE);   
+      TtaShowDialogue (BaseDialog + form, TRUE, TRUE);   
 #else /* _GTK */
       /* function not implemented yet */
       InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
@@ -1310,7 +1315,7 @@ void DAVShowPreferencesDlg (Document document)
   
   /* show the dialogue */
   TtaSetDialoguePosition ();
-  TtaShowDialogue (DAVBase + DAVPreferencesDlg, TRUE);
+  TtaShowDialogue (DAVBase + DAVPreferencesDlg, TRUE, TRUE);
 #endif /* _GTK */
 #ifdef _WINGUI
   if (!DAVDlg)

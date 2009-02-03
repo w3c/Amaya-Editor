@@ -2757,7 +2757,7 @@ void TransformType (Document doc, View view)
                                               i, menuBuf);
           FormVal = 0;
           if (created)
-            TtaShowDialogue (TransBaseDialog + TransForm, TRUE);
+            TtaShowDialogue (TransBaseDialog + TransForm, TRUE, TRUE);
 #else /* _WX */
           /* if some transformations have been matched, shows the menu */
           TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
@@ -2766,7 +2766,7 @@ void TransformType (Document doc, View view)
 #ifndef _WINGUI
           TtaSetDialoguePosition ();
 #endif /* _WINGUI */
-          TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
+          TtaShowDialogue (TransBaseDialog + TransMenu, TRUE, TRUE);
 #endif /* _WX */
         }
       else

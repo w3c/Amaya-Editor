@@ -281,7 +281,7 @@ BOOL AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *d
   if (reply && msgnum >= 0)
     {
       TtaSetTextForm (BaseDialog + AnswerText, "");
-      TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
+      TtaShowDialogue (BaseDialog + FormAnswer, FALSE, TRUE);
       TtaWaitShowDialogue ();
 
       /* give back the reply to the libwww */

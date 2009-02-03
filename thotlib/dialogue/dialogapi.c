@@ -5568,7 +5568,7 @@ void TtaSetDialoguePosition ()
 /*----------------------------------------------------------------------
   TtaShowDialogue active le catalogue de'signe.                      
   ----------------------------------------------------------------------*/
-void TtaShowDialogue (int ref, ThotBool remanent)
+void TtaShowDialogue (int ref, ThotBool remanent, ThotBool move)
 {
 #ifdef _WINGUI
   POINT               curPoint;
@@ -5622,7 +5622,10 @@ void TtaShowDialogue (int ref, ThotBool remanent)
             pos.x = display_width_px - width;
           if (pos.y + height > display_height_px)
             pos.x = display_height_px - height;
-          catalogue->Cat_Widget->Move(pos);
+	  if (move)
+	    {
+	      catalogue->Cat_Widget->Move(pos);
+	    }
           catalogue->Cat_Widget->Show();
           catalogue->Cat_Widget->Raise();
         }

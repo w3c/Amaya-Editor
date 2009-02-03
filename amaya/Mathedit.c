@@ -1215,7 +1215,7 @@ static void GetIntegralType(Document doc)
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (MathsDialogue + FormMathIntegral, FALSE);
+      TtaShowDialogue (MathsDialogue + FormMathIntegral, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
@@ -1235,7 +1235,7 @@ static void GetFenceAttributes(Document doc)
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (MathsDialogue + FormMathFenceAttributes, FALSE);
+      TtaShowDialogue (MathsDialogue + FormMathFenceAttributes, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
@@ -1258,7 +1258,7 @@ static int GetOccurrences(Document doc, char *label, int val, int mini)
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (MathsDialogue + FormMaths, FALSE);
+      TtaShowDialogue (MathsDialogue + FormMaths, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
       val = Math_occurences;
@@ -1286,7 +1286,7 @@ static int GetOperatorType(Document doc)
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (MathsDialogue + FormMathOperator, FALSE);
+      TtaShowDialogue (MathsDialogue + FormMathOperator, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
@@ -7030,7 +7030,7 @@ void CreateMathEntity (Document document, View view)
                    TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME),
                    "");
   TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
+  TtaShowDialogue (BaseDialog + MathEntityForm, FALSE, TRUE);
   TtaWaitShowDialogue ();
 #endif /* _WX */
 

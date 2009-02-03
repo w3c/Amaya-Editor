@@ -768,7 +768,7 @@ void CacheConfMenu (Document document, View view)
   GetCacheConf ();
   /* display the menu */
   TtaSetDialoguePosition ();
-  TtaShowDialogue (CacheBase + CacheMenu, TRUE);
+  TtaShowDialogue (CacheBase + CacheMenu, TRUE, TRUE);
 }
 
 
@@ -959,7 +959,7 @@ void         ProxyConfMenu (Document document, View view)
   RefreshProxyMenu ();
   /* display the menu */
   TtaSetDialoguePosition ();
-  TtaShowDialogue (ProxyBase + ProxyMenu, TRUE);
+  TtaShowDialogue (ProxyBase + ProxyMenu, TRUE, TRUE);
 }
 
 
@@ -1578,7 +1578,7 @@ void PublishConfMenu (Document document, View view)
 
   /* display the menu */
   TtaSetDialoguePosition ();
-  TtaShowDialogue (PublishBase + PublishMenu, TRUE);
+  TtaShowDialogue (PublishBase + PublishMenu, TRUE, TRUE);
 }
 
 /**********************
@@ -2059,7 +2059,7 @@ void         ColorConfMenu (Document document, View view)
   RefreshColorMenu ();
   /* display the menu */
   TtaSetDialoguePosition ();
-  TtaShowDialogue (ColorBase + ColorMenu, TRUE);
+  TtaShowDialogue (ColorBase + ColorMenu, TRUE, TRUE);
 }
 
 
@@ -3382,7 +3382,7 @@ void PreferenceMenu (Document document, View view)
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (PreferenceBase, TRUE);
+      TtaShowDialogue (PreferenceBase, TRUE, TRUE);
     }
 }
 

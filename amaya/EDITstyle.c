@@ -2040,7 +2040,7 @@ void CreateClass (Document doc, View view)
 
           /* pop-up the dialogue box. */
           TtaSetDialoguePosition ();
-          TtaShowDialogue (BaseDialog + ClassForm, TRUE);
+          TtaShowDialogue (BaseDialog + ClassForm, TRUE, TRUE);
         }
     }
 }

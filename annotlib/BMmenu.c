@@ -684,7 +684,7 @@ void BM_BookmarkMenu (Document doc, View view, int ref, BookmarkP bookmark)
    RefreshBookmarkMenu ();
   /* display the menu */
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BookmarkBase + BookmarkMenu, TRUE);
+   TtaShowDialogue (BookmarkBase + BookmarkMenu, TRUE, TRUE);
 #else
 #if 0
    /* @@@ JK: To be programmed in win32 */
@@ -1045,7 +1045,7 @@ void BM_TopicMenu (Document doc, View view, int ref, BookmarkP bookmark)
    RefreshTopicMenu ();
   /* display the menu */
    TtaSetDialoguePosition ();
-   TtaShowDialogue (TopicBase + TopicMenu, TRUE);
+   TtaShowDialogue (TopicBase + TopicMenu, TRUE, TRUE);
 #else
 #if 0
    /* @@@ JK: To be programmed in win32 */
@@ -1237,7 +1237,7 @@ char *GetTopicURL (Document document, View view)
 
    TtaSetDialoguePosition ();
 
-   TtaShowDialogue (TopicURLBase + TopicURLMenu, FALSE);
+   TtaShowDialogue (TopicURLBase + TopicURLMenu, FALSE, TRUE);
    TtaWaitShowDialogue ();
 
 #endif /* _WINGUI */

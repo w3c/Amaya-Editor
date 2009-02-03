@@ -535,7 +535,7 @@ void DocumentInfo (Document document, View view)
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + DocInfoForm, FALSE);
+      TtaShowDialogue (BaseDialog + DocInfoForm, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
@@ -1696,7 +1696,7 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
+      TtaShowDialogue (BaseDialog + FormAnswer, FALSE, FALSE);
     }
   TtaWaitShowDialogue ();
 }
@@ -1731,7 +1731,7 @@ void InitAlert(Document document, View view, char *label)
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
@@ -1754,7 +1754,7 @@ void ConfirmError (Document document, View view, char *label,
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
@@ -1774,7 +1774,7 @@ void ConfirmError3L (Document document, View view, char *label1, char *label2,
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
@@ -1807,7 +1807,7 @@ void InitConfirm3L (Document document, View view, const char *label1, const char
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
       //if (AmayaIsAlive ())
@@ -1838,7 +1838,7 @@ void InitConfirm (Document document, View view, char *label)
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
+      TtaShowDialogue (BaseDialog + ConfirmForm, FALSE, TRUE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
     }
@@ -1990,7 +1990,7 @@ static void InitOpenDocForm (Document doc, View view, const char *name, const ch
   if (created)
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + OpenForm, TRUE);
+      TtaShowDialogue (BaseDialog + OpenForm, TRUE, TRUE);
     }
 }
 
@@ -7449,12 +7449,12 @@ void MakeIDMenu (Document doc, View view)
   /* select the current radio button */
   TtaSetMenuForm (BaseDialog + mIdUseSelection, IdApplyToSelection);
   TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
+  TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE, TRUE);
 
   if (CreateMakeIdDlgWX (BaseDialog + MakeIdMenu, TtaGetViewFrame (doc, view)))
     {
       TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + MakeIdMenu, FALSE);
+      TtaShowDialogue (BaseDialog + MakeIdMenu, FALSE, TRUE);
     }
 }
 

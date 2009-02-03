@@ -228,7 +228,7 @@ void TtcSearchText (Document document, View view)
                                Caption, SearchedString, ReplacingString,
                                WithReplace, UpperLower, SearchAfter);
   if (created)
-    TtaShowDialogue ( NumFormSearchText, TRUE );
+    TtaShowDialogue ( NumFormSearchText, TRUE, TRUE);
 }
 
 /*----------------------------------------------------------------------

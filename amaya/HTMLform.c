@@ -1414,7 +1414,7 @@ void SelectOneOption (Document doc, Element el)
 #if defined(_GTK)  || defined(_WX)
               TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) || _WX */
-              TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+              TtaShowDialogue (BaseDialog + OptionMenu, FALSE, TRUE);
               /* wait for an answer from the user */
               TtaWaitShowProcDialogue ();
               /* destroy the dialogue */

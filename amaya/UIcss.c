@@ -2527,7 +2527,7 @@ static void InitCSSDialog (Document doc, char *s)
                                      s, nb, buf);
   TtaFreeMemory (buf);
   if (created)
-    TtaShowDialogue (BaseCSS + CSSForm, TRUE);
+    TtaShowDialogue (BaseCSS + CSSForm, TRUE, TRUE);
 #endif /* _WX */
 
 #ifdef _WINGUI
@@ -2551,7 +2551,7 @@ static void InitCSSDialog (Document doc, char *s)
     TtaNewLabel (BaseCSS + CSSSelect, BaseCSS + CSSForm,
                  TtaGetMessage (AMAYA, AM_NO_CSS));
   TtaFreeMemory (buf);
-  TtaShowDialogue (BaseCSS + CSSForm, TRUE);
+  TtaShowDialogue (BaseCSS + CSSForm, TRUE, TRUE);
   if (nb > 0)
     TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
 #endif /* _GTK */
@@ -2627,6 +2627,6 @@ void SetCSSStyle (Document doc, View view)
 
   created = CreateStyleDlgWX (BaseCSS + CSSValue, TtaGetViewFrame (doc, view));
   if (created)
-    TtaShowDialogue (BaseCSS + CSSValue, FALSE);
+    TtaShowDialogue (BaseCSS + CSSValue, FALSE, TRUE);
 #endif /* _WX */
 }

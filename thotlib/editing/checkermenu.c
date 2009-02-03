@@ -509,7 +509,7 @@ void TtcSpellCheck (Document doc, View view)
   TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 3, IgnoreSpecial);
 
   /* Et enfin, afficher le formulaire de CORRECTION */
-  TtaShowDialogue (SpellingBase + ChkrFormCorrect, TRUE);
+  TtaShowDialogue (SpellingBase + ChkrFormCorrect, TRUE, TRUE);
 #endif /* _GTK */
 
   /* Indique que c'est une nouvelle correction qui debute */
@@ -542,7 +542,7 @@ void TtcSpellCheck (Document doc, View view)
                                    SpellingBase, TtaGetViewFrame (doc, view), i);
   CallbackChecker (SpellingBase + ChkrMenuOR, INTEGER_DATA, (char *)i);
   if (created)
-    TtaShowDialogue (SpellingBase + ChkrFormCorrect, FALSE);
+    TtaShowDialogue (SpellingBase + ChkrFormCorrect, FALSE, TRUE);
 #endif /* _WX */
 }
 
