@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1479,7 +1479,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   Element             colgroup, col, colcolgroup, colhead, prevColhead;
   Element             cell, nextCell, group, prevGroup, new_, prev, el, next,
     parent;
-  ElementType         elType, elType1;
+  ElementType         elType, elType1, elType2;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType, attrTypeSpan,
     attrTypeRef, attrTypeWidth, attrTypeForced;
   Attribute           attr;
@@ -1556,25 +1556,17 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   else
     {
       elType1.ElSSchema = tableSS;
-      elType1.ElTypeNum = HTML_EL_Table_;
+      elType1.ElTypeNum = HTML_EL_COL;
+      elType2.ElSSchema = tableSS;
+      elType2.ElTypeNum = HTML_EL_Table_;
       elType.ElTypeNum = HTML_EL_COLGROUP;
-      colgroup = TtaSearchElementAmong5Types (elType, elType1, elType1,
+      colgroup = TtaSearchElementAmong5Types (elType, elType1, elType2,
                                               elType1, elType1, SearchInTree, table);
       if (colgroup && TtaGetElementType (colgroup).ElTypeNum == HTML_EL_Table_)
         /* we have found a nested table. No COLGROUP in this table */
         colgroup = NULL;
       if (colgroup)
         colcolgroup = colgroup;
-      else
-        {
-          elType.ElTypeNum = HTML_EL_COL;
-          colcolgroup = TtaSearchElementAmong5Types (elType, elType1, elType1,
-                                                     elType1, elType1, SearchInTree, table);
-          if (colcolgroup &&
-              TtaGetElementType (colcolgroup).ElTypeNum == HTML_EL_Table_)
-            /* we have found a nested table. No COL in this table */
-            colcolgroup = NULL;
-        }
 
       if (colcolgroup)
         {
