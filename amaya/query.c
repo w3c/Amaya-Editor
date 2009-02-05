@@ -610,7 +610,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 
 #ifdef DAV /* if there is a DAV context object, delete it */
       if (me->dav_context)
-        AHTDAVContext_delete ((AHTDAVContext*)me->dav_context);
+        AHTDAVContext_delete ((AHTDAVContext*)(me->dav_context));
       me->dav_context = NULL;
 #endif /* DAV */
 
@@ -663,7 +663,7 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
         {
           if (me->outputfile && me->outputfile[0] != EOS)
             {
-              TtaFileUnlink (me->outputfile);
+              TtaFileUnlink ((const char *) &(me->outputfile[0]));
               me->outputfile[0] = EOS;
             }
         }
@@ -759,7 +759,7 @@ static void Thread_deleteAll (void)
 /*----------------------------------------------------------------------
   AHTOpen_file
   ----------------------------------------------------------------------*/
-int                 AHTOpen_file (HTRequest * request)
+int AHTOpen_file (HTRequest * request)
 {
   AHTReqContext      *me;      /* current request */
 
@@ -1764,7 +1764,7 @@ static void         AHTAcceptLanguagesInit (HTList *c)
   Bindings between a source media type and a destination media type
   (conversion).
   ----------------------------------------------------------------------*/
-static void         AHTConverterInit (HTList *c)
+static void  AHTConverterInit (HTList *c)
 {
   /* Handler for custom http error messages */
   HTConversion_add (c, "*/*", "www/debug", AHTMemConverter, 1.0, 0.0, 0.0);
@@ -1838,8 +1838,6 @@ static void         AHTProtocolInit (void)
 #ifdef AMAYA_WWW_CACHE
   HTProtocol_add("cache",  "local", 0, YES, HTLoadCache, NULL);
 #endif /* AMAYA_WWW_CACHE */
-#if 0 /* experimental code */
-#endif
   HTProtocol_add ("ftp", "tcp", FTP_PORT, NO, HTLoadFTP, NULL);
 
   /* initialize pipelining */
@@ -1921,7 +1919,7 @@ static void         AHTAlertInit (void)
   RecCleanCache
   Clears an existing cache directory
   ----------------------------------------------------------------------*/
-static void RecCleanCache (char *dirname)
+static ThotBool RecCleanCache (char *dirname)
 {
   char     buf[MAX_LENGTH];
   wxString name, path;
@@ -1930,7 +1928,7 @@ static void RecCleanCache (char *dirname)
 
   /* try to delete the current directory */
   if (wxRmdir(wx_dir_name))
-    return;
+    return TRUE;
 
   /* try to delete the files & directorys inside */
   wxDir wx_dir(wx_dir_name);
@@ -1954,7 +1952,9 @@ static void RecCleanCache (char *dirname)
 	wxRemoveFile(path);
     }
   /* try to delete the current directory */
-  wxRmdir(wx_dir_name);
+  if (wxRmdir(wx_dir_name))
+    return TRUE;
+  return FALSE;
 }
 #endif /* AMAYA_WWW_CACHE */
 
@@ -1966,9 +1966,8 @@ void libwww_CleanCache (void)
 {
 #ifdef AMAYA_WWW_CACHE
   char    *real_dir, *cache_dir, *tmp, *ptr;
-  int      cache_size;
-  int      cache_expire;
-  int      cache_disconnect;
+  int      cache_size, cache_expire, cache_disconnect;
+  int      retry = 20;
 
   if (!HTCacheMode_enabled ())
     /* don't do anything if we're not using a cache */
@@ -2003,8 +2002,9 @@ void libwww_CleanCache (void)
   clear_cachelock ();
   HTCacheTerminate ();
   HTCacheMode_setEnabled (FALSE);
-  
-  RecCleanCache (real_dir);
+  // On Mac OS X it's necessary to relaunch the clean cache
+  while (retry > 0 && !RecCleanCache (real_dir))
+    retry --;
   HTCacheMode_setExpires ((HTExpiresMode)cache_expire);
   HTCacheMode_setDisconnected ((HTDisconnectedMode)cache_disconnect);
   HTCacheInit (cache_dir, cache_size);
@@ -2095,7 +2095,7 @@ static void CacheInit (void)
   cache_dir = HTLocalToWWW (real_dir, "file:");
   /* get the cache size (or use a default one) */
   ptr = TtaGetEnvString ("CACHE_SIZE");
-  if (ptr && *ptr) 
+  if (ptr && *ptr)
     cache_size = atoi (ptr);
   else
     cache_size = DEFAULT_CACHE_SIZE;
@@ -2109,28 +2109,31 @@ static void CacheInit (void)
       strcpy (cache_lockfile, real_dir);
       strcat (cache_lockfile, ".lock");
       cache_locked = FALSE;
-      if ( TtaFileExist(cache_lockfile) &&
-           !(cache_locked = (test_cachelock(cache_lockfile) != 0))
-           )
-        {
+      if (TtaFileExist(cache_lockfile))
+	{
+	  cache_locked = (test_cachelock(cache_lockfile) != 0);
+	  if (!cache_locked)
+	    {
 #ifdef DEBUG_LIBWWW
-          fprintf (stderr, "found a stale cache, removing it\n");
+	      fprintf (stderr, "found a stale cache, removing it\n");
 #endif /* DEBUG_LIBWWW */
-          /* remove the lock and clean the cache (the clean cache 
-             will remove all, making the following call unnecessary */
-          /* little trick to win some memory */
-          ptr = strrchr (cache_lockfile, '.');
-          *ptr = EOS;
-          RecCleanCache (cache_lockfile);
-          *ptr = '.';
-        }
+	      /* remove the lock and clean the cache (the clean cache 
+		 will remove all, making the following call unnecessary */
+	      /* little trick to win some memory */
+	      ptr = strrchr (cache_lockfile, '.');
+	      *ptr = EOS;
+	      RecCleanCache (cache_lockfile);
+	      *ptr = '.';
+	    }
+	}
 
       if (!cache_locked) 
         {
           /* initialize the cache if there's no other amaya
              instance running */
           HTCacheMode_setMaxCacheEntrySize (cache_entry_size);
-          if (TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &tmp_bool) && tmp_bool)
+	  TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &tmp_bool);
+          if (tmp_bool)
             HTCacheMode_setExpires (HT_EXPIRES_IGNORE);
           else
             HTCacheMode_setExpires (HT_EXPIRES_AUTO);
@@ -3586,8 +3589,8 @@ void StopAllRequests (int docid)
                       else
                         {
                           if (me->terminate_cbf)
-                            (*me->terminate_cbf) (me->docid, -1, me->urlName,
-                                                  me->outputfile,
+                            (*me->terminate_cbf) (me->docid, -1, &(me->urlName[0]),
+                                                  &(me->outputfile[0]),
                                                   NULL, NULL,
                                                   me->context_tcbf);
 			   
