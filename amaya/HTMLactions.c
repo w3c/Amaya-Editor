@@ -2955,6 +2955,7 @@ void UpdateContextSensitiveMenus (Document doc, View view)
     return;
   /* check if there are HTML elements in the document */
   sch = TtaGetSSchema ("HTML", doc);
+  elType.ElSSchema = sch;
   withHTML = (DocumentTypes[doc] == docHTML && DocumentURLs[doc]);
   if (!withHTML)
     /* this is not a HTML document */

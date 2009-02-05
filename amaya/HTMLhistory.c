@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -754,7 +754,6 @@ void HelpAmaya (Document document, View view)
 {
   wxString str;
   wxAboutDialogInfo info;
-  char  localname[MAX_LENGTH];
 #if !defined(_WINDOWS) && !defined(_MACOS)
   char *s = TtaGetEnvString ("THOTDIR");
 #endif /* _WINDOWS && _MACOS */
@@ -764,7 +763,8 @@ void HelpAmaya (Document document, View view)
   memset(0, 0, 10);
 #endif /* AMAYA_CRASH */
 #ifdef AMAYA_DEBUG
-  Element             el;
+  char               localname[MAX_LENGTH];
+ Element             el;
   View                structView, altView, linksView, tocView;
   int                 n;
   FILE               *list;

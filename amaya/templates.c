@@ -2524,13 +2524,12 @@ static Element Template_CreateEmptyBlockUse (Document doc)
 #ifdef TEMPLATES
   SSchema        sstempl = TtaGetSSchema ("Template", doc);
   ElementType    useType;
-  Element        selElem, use;
+  Element        selElem, use = NULL;
   XTigerTemplate t = GetXTigerDocTemplate(doc);
   Declaration    dec;
   char          *proposed, *label = NULL, *types=NULL;
   int            firstChar, lastChar;
   ThotBool       option;
-
 
   if (t && sstempl)
     {

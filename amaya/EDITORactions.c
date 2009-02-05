@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -387,8 +387,7 @@ static void AddRDFaNS (Document doc)
   elType = TtaGetElementType (docEl);
   elType.ElTypeNum = HTML_EL_HTML;
   root = TtaSearchTypedElement (elType, SearchInTree, docEl);
-
-  if (root)
+   if (root)
     {
       // XHTML namespace
       TtaSetANamespaceDeclaration (doc, root, NULL, XHTML_URI);
@@ -468,11 +467,10 @@ static void AddRDFaNS (Document doc)
             }
           TtaReadClose (file);
         }
-    }  
-
-  TtaFreeMemory(path);
-  TtaFreeMemory(configPath);
-  TtaFreeMemory(tempPath);
+      TtaFreeMemory(path);
+      TtaFreeMemory(configPath);
+      TtaFreeMemory(tempPath);
+    }
 }
 
 /*--------------------------------------------------------------------------

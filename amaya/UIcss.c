@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1399,7 +1399,7 @@ void DoStyleSVG (Document doc, View view, int current_value, int type)
   PRule               rule;
   DisplayMode         dispMode;
   int                 firstChar, lastChar;
-  int                 value;
+  int                 value = 0;
   char                buffer[100], *name;
   ThotBool            open = FALSE;
 
