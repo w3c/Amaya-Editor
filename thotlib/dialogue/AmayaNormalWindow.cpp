@@ -136,10 +136,17 @@ m_pToolBarEditing(NULL),
 m_pToolBarBrowsing(NULL),
 m_pComboBox(NULL)
 {
-  m_haveTBEditing = Prof_ShowGUI("AmayaToolBarEditing");
-  m_haveTBBrowsing = Prof_ShowGUI("AmayaToolBarBrowsing");
   if (kind != WXAMAYAWINDOW_HELP && kind != WXAMAYAWINDOW_ANNOT)
-    s_normalWindowCount++;
+    {
+      m_haveTBEditing = Prof_ShowGUI("AmayaToolBarEditing");
+      m_haveTBBrowsing = Prof_ShowGUI("AmayaToolBarBrowsing");
+      s_normalWindowCount++;
+    }
+  else
+    {
+      m_haveTBEditing = false;
+      m_haveTBBrowsing = false;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1071,12 +1078,12 @@ void AmayaNormalWindow::OnClose(wxCloseEvent& event)
     {
       AmayaWindowIterator it;
       AmayaHelpWindow* help = NULL;
-      for( it.first(); !it.isDone(); it.next() )
+      for ( it.first(); !it.isDone(); it.next() )
         {
           AmayaWindow* win = (AmayaWindow*)it.currentElement();
-          if(win && win!=this)
+          if (win && win != this)
             {
-              if(!win->IsKindOf(CLASSINFO(AmayaHelpWindow)))
+              if (!win->IsKindOf(CLASSINFO(AmayaHelpWindow)))
                 // There is at least one window not help nor closed.
                 // Dont do anything
                 return;
@@ -1084,7 +1091,7 @@ void AmayaNormalWindow::OnClose(wxCloseEvent& event)
                 help = (AmayaHelpWindow*)win;
             }
         }
-      if(help)
+      if (help)
         {
           AmayaFrame* frame = help->GetActiveFrame();
           if(frame)
