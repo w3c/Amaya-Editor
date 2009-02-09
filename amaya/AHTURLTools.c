@@ -2336,10 +2336,13 @@ void         SimplifyUrl (char **url)
     path += 2;
   else
     path = *url;
+#ifndef _WINDOWS
   if (*path == used_sep && *(path+1) == used_sep)
     /* Some URLs start //<foo> */
     path += 1;
-  else if (IsFilePath (path))
+  else
+#endif /* _WINDOWS */
+  if (IsFilePath (path))
     {
       /* doesn't need to do anything more */
       return;
@@ -2387,7 +2390,7 @@ void         SimplifyUrl (char **url)
           if (!ddot_simplify && *p != '.' && *p != used_sep)
             ddot_simplify = TRUE;
 
-          if (*p==used_sep)
+          if (*p == used_sep)
             {
               if (p > *url && *(p+1) == '.' && (*(p+2) == used_sep || !*(p+2)))
                 {
@@ -2412,7 +2415,7 @@ void         SimplifyUrl (char **url)
                   /* Start again with prev slash */
                   p = newptr;
                 }
-              else if (*(p+1) == used_sep)
+              else if (p != path && *(p+1) == used_sep)
                 {
                   while (*(p+1) == used_sep)
                     {
@@ -2472,17 +2475,12 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
       if (strncmp (&src[start_index], "//localhost/", 12) == 0)
         start_index += 11;
        
-#ifdef _IV
       /* remove the first two slashes in / / /path */
-      while (src[start_index] &&
-             src[start_index] == '/' 
-             && src[start_index + 1] == '/')
-        start_index++;
-#endif /* IV */
-
-#ifdef _IV
+      if (src[start_index] == '/' && src[start_index + 1] == '/')
+        start_index +=2;
+#ifdef _WINDOWS
       /* remove any extra slash before the drive name */
-      if (src[start_index] == '/' &&src[start_index+2] == ':')
+      if (src[start_index] == '/' && src[start_index+2] == ':')
         start_index++;
 #endif /* _WINDOWS */
 
