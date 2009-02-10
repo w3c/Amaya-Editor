@@ -657,21 +657,36 @@ void OpenDocDlgWX::UseTemplate(bool use)
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::OnTemplateButton( wxCommandEvent& event )
 {
-  wxFileName path = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue();
-  
-  
-  
-  
-  wxFileDialog dlg(this, TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
-                         path.GetPath(), path.GetFullName(), _T("Templates (*.xtd)|*.xtd"),
-                         wxOPEN | wxCHANGE_DIR);
-  
-  if (dlg.ShowModal() == wxID_OK)
+  wxFileDialog  *p_dlg;
+  wxString       url, file_value;
+
+  p_dlg = new wxFileDialog (this, TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OPEN_URL) ),
+                            _T(""), _T(""), _T("Templates (*.xtd)|*.xtd"),
+                            wxOPEN | wxCHANGE_DIR);
+  url = XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->GetValue( );
+ // set an initial path
+ if (url.StartsWith(_T("http")) ||
+     url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
+   p_dlg->SetDirectory(wxGetHomeDir());
+  else
     {
-      path = dlg.GetPath();
-      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue(path.GetFullPath());
+      file_value = url.AfterLast (DIR_SEP);
+      p_dlg->SetPath (url);
+      p_dlg->SetFilename (file_value);
+      // Open the directory in the url
+      wxString address = url.BeforeLast (DIR_SEP);
+      p_dlg->SetDirectory(address);
+    }
+  
+  if (p_dlg->ShowModal() == wxID_OK)
+    {
+      XRCCTRL(*this, "wxID_TEMPLATEFILENAME", wxComboBox)->SetValue(p_dlg->GetPath());
       UseTemplate(true);
     }
+  p_dlg->Destroy();
+
+  //Focus the open button after the file blowser is closed
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetFocus();
 }
 
 
