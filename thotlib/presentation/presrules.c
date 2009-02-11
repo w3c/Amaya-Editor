@@ -4232,8 +4232,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             pAb->AbVis = 'V';
            break;
         case PtDisplay:
-          pAb->AbDisplay = CharRule (pPRule, pEl, pAb->AbDocView,
-                                     &appl);
+          pAb->AbDisplay = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
           if (appl)
             {
               if (pAb->AbDisplay == 'N')

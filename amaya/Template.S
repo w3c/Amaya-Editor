@@ -10,8 +10,9 @@ ATTR
   { generic attributes for internal use }
   Unknown_attribute = TEXT;	{ to store an unknown attribute }
   xmlid = Text;		{ id }
-  Highlight = Yes_;    { to show the HTML element corresponding to the
-			  current selection in the source view }
+  Highlight = Yes_;    { to show the element corresponding to the
+			                   current selection in the source view }
+  SetInLine = Yes_;    { to force display: inline }
 
 CONST
 
@@ -91,6 +92,7 @@ EXCEPT
   bag:               NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak, ClickableSurface;
   {Hiding unkown and language attributes}
   Highlight:        Invisible;
+  SetInLine:        Invisible;
   Unknown_attribute:Invisible;
   Language:         Invisible;
   types :           GiveTypes, DuplicateAttr;

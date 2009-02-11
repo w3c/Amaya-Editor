@@ -58,7 +58,7 @@ const char* XTigerHTMLElements = "em strong cite dfn code var samp kbd abbr acro
                     "input option optgroup select button label "
                     "a font span img br object "
                     "p h1 h2 h3 h4 h5 h6 textarea ol ul li dd dl dt "
-                    "address fieldset legend ins del div"
+                    "address fieldset legend ins del div "
                     "table thead tbody tfoot caption tr th td";
                     
 

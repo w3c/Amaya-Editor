@@ -150,9 +150,36 @@ ThotBool IsInLineTemplateElement (Element el, Document doc)
             return FALSE;
         }
     }
-#else /* TEMPLATES */
 #endif /* TEMPLATES */
   return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+Element GetParentLine (Element el, SSchema templateSSchema)
+{
+  Element        parent = TtaGetParent(el);
+#ifdef TEMPLATES
+  ElementType    parentType;
+  char          *name;
+
+  // look for the enclosing parent line element
+  parentType = TtaGetElementType(parent);
+  while (parent && parentType.ElSSchema == templateSSchema)
+    {
+      parent = TtaGetParent(parent);
+      parentType = TtaGetElementType(parent);
+    }
+  if (parent && parentType.ElSSchema)
+    {
+      name = TtaGetSSchemaName (parentType.ElSSchema);
+      if (name == NULL || strcmp (name, "HTML") ||
+          (parentType.ElTypeNum != HTML_EL_Pseudo_paragraph &&
+           parentType.ElTypeNum != HTML_EL_Paragraph))
+        parent = NULL;
+    }
+#endif /* TEMPLATES */
+  return parent;
 }
 
 /*----------------------------------------------------------------------
@@ -762,8 +789,9 @@ void UseCreated (NotifyElement *event)
             }
         }
     }
-
-  InstantiateUse (t, el, doc, TRUE);
+  // look for the enclosing target element
+  parent = GetParentLine (parent, templateSSchema);
+  InstantiateUse (t, el, doc, parent, TRUE);
 #endif /* TEMPLATES */
 }
 
@@ -968,9 +996,10 @@ void DoReplicateUseElement (XTigerTemplate t, Document doc, int view,
                             Element el, Element repeatEl, char *name)
 {
   Declaration     decl;
-  Element         newEl, firstEl, prevRepeat;
-  ThotBool        oldStructureChecking;
+  Element         newEl, firstEl, prevRepeat, parentLine;
+  ElementType     elType;
   DisplayMode     dispMode;
+  ThotBool        oldStructureChecking;
 
   if (repeatEl == Creating_repeat)
     return;
@@ -978,6 +1007,7 @@ void DoReplicateUseElement (XTigerTemplate t, Document doc, int view,
   Creating_repeat = repeatEl;
 
   decl = Template_GetDeclaration (t, name);
+  elType = TtaGetElementType (el);
   if (decl)
     {
       dispMode = TtaGetDisplayMode (doc);
@@ -994,7 +1024,11 @@ void DoReplicateUseElement (XTigerTemplate t, Document doc, int view,
         newEl = Template_InsertRepeatChildAfter (doc, repeatEl, decl, NULL);
       else
         newEl = Template_InsertRepeatChildAfter (doc, repeatEl, decl, el);
-      
+
+      parentLine = GetParentLine (el, elType.ElSSchema);
+      if (parentLine)
+        // display the element in line
+        Template_SetInline (el, elType.ElSSchema, doc, TRUE);
       /* Finish insertion.*/
       TtaCloseUndoSequence(doc);
       
@@ -1069,7 +1103,6 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 #ifdef TEMPLATE_DEBUG
               printf("RepeatButtonClicked : \n  > %s\n", listtypes);
 #endif /* TEMPLATE_DEBUG */
-
               result = QueryStringFromMenu (doc, listtypes);
               TtaFreeMemory (listtypes);
               if (result)
@@ -1096,7 +1129,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
 #ifdef TEMPLATES
   Document        doc = event->document;
   Element         el = event->element;
-  Element         child;
+  Element         child, parent;
   ElementType     elType, childType;
   View            view;
   XTigerTemplate  t;
@@ -1148,13 +1181,12 @@ ThotBool UseButtonClicked (NotifyElement *event)
                   TtaSetStructureChecking (FALSE, doc);
                   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 
+                  // look for the enclosing target element
+                  parent = GetParentLine (el, elType.ElSSchema);
                   /* Insert */
-                  newEl = Template_InsertUseChildren(doc, el, decl);
+                  newEl = Template_InsertUseChildren(doc, el, decl, parent, TRUE);
                   for (child = TtaGetFirstChild(newEl); child; TtaNextSibling(&child))
-                    {
                       TtaRegisterElementCreate (child, doc);
-                    }
-
                   TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
                   TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
 
@@ -1228,7 +1260,7 @@ ThotBool UseSimpleButtonClicked (NotifyElement *event)
 ThotBool OptionButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-  Element         useEl, contentEl, next;
+  Element         useEl, contentEl, next, parent;
   ElementType     useType;
   Document        doc;
   XTigerTemplate  t;
@@ -1261,7 +1293,10 @@ ThotBool OptionButtonClicked (NotifyElement *event)
       t = GetXTigerDocTemplate (doc);
       if (!t)
         return FALSE; // no template ?!?!
-      InstantiateUse (t, useEl, doc, TRUE);
+
+      // look for the enclosing target element
+      parent = GetParentLine (useEl, useType.ElSSchema);
+      InstantiateUse (t, useEl, doc, parent, TRUE);
     }
   else
     /* remove the content of the "use" element */
@@ -1695,7 +1730,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   Element        elem = event->element;
   Element        xtElem, parent = NULL, sibling;
   ElementType    xtType, elType;
-  char*          type;
+  char          *type;
   Declaration    dec;
   SSchema        templateSSchema;
   XTigerTemplate t;
@@ -1719,14 +1754,12 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   if (xtElem)
     {
       xtType = TtaGetElementType(xtElem);
-
-
-
       if (xtType.ElTypeNum==Template_EL_bag)
         {
           elType = TtaGetElementType(elem);
           if (elType.ElSSchema==templateSSchema &&
-              (elType.ElTypeNum==Template_EL_useSimple || elType.ElTypeNum==Template_EL_useEl))
+              (elType.ElTypeNum==Template_EL_useSimple ||
+               elType.ElTypeNum==Template_EL_useEl))
             {
               // Remove element manually.
               TtaOpenUndoSequence(doc, elem, elem, 0, 0);
@@ -1749,7 +1782,8 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
               TtaFreeMemory (type);
 
               if (dec && dec->nature == XmlElementNat)
-                return FALSE; // Can remove element only if in xt:use current type is base language element.
+                // Can remove only if the current type is a target element.
+                return FALSE;
               else
                 return TRUE;
             }
@@ -1764,9 +1798,10 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
               if (sibling == NULL)
                 selparent = TRUE;
             }
-          TtaRegisterElementDelete(elem, doc);
-          TtaDeleteTree(elem, doc);
-          InstantiateRepeat(t, xtElem, doc, TRUE);
+          TtaRegisterElementDelete (elem, doc);
+          TtaDeleteTree (elem, doc);
+          parent = GetParentLine (xtElem, templateSSchema);
+          InstantiateRepeat (t, xtElem, doc, parent, TRUE);
           if (selparent)
             // look for the new sibling
             sibling = TtaGetFirstChild (parent);
@@ -2586,8 +2621,7 @@ static Element Template_CreateEmptyBlockUse (Document doc)
   If createComp is true, create a component with the selection.
   Return the xt:use element.
   ----------------------------------------------------------------------*/
-Element Template_CreateUseFromSelection (Document doc, int view,
-                                         ThotBool createComp)
+Element Template_CreateUseFromSelection (Document doc, int view, ThotBool createComp)
 {
 #ifdef TEMPLATES
   DisplayMode    dispMode;

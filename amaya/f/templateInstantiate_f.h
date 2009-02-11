@@ -34,19 +34,27 @@ extern Element InsertWithNotify ( Element el,
                                   Document doc );
 extern Element Template_InsertUseChildren ( Document doc,
                                             Element el,
-                                            Declaration dec );
+                                            Declaration dec,
+                                            Element parentLine,
+                                            ThotBool registerUndo );
 extern void Template_FixAccessRight ( XTigerTemplate t,
                                       Element el,
                                       Document doc );
 extern void AddPromptIndicator ( Element el,
                                  Document doc );
+extern void Template_SetInline ( Element el,
+                                 SSchema sstempl,
+                                 Document doc,
+                                 ThotBool registerUndo );
 extern Element InstantiateUse ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
+                                Element parentLine,
                                 ThotBool registerUndo );
 extern void InstantiateRepeat ( XTigerTemplate t,
                                 Element el,
                                 Document doc,
+                                Element parentLine,
                                 ThotBool registerUndo );
 extern void Template_InsertXTigerPI ( Document doc,
                                       XTigerTemplate t );
@@ -90,19 +98,27 @@ extern Element InsertWithNotify ( Element el,
                                     Document doc );
 extern Element Template_InsertUseChildren ( Document doc,
                                               Element el,
-                                              Declaration dec );
+                                              Declaration dec,
+                                              Element parentLine,
+                                              ThotBool registerUndo );
 extern void Template_FixAccessRight ( XTigerTemplate t,
                                         Element el,
                                         Document doc );
 extern void AddPromptIndicator ( Element el,
                                    Document doc );
+extern void Template_SetInline ( Element el,
+                                   SSchema sstempl,
+                                   Document doc,
+                                   ThotBool registerUndo );
 extern Element InstantiateUse ( XTigerTemplate t,
                                   Element el,
                                   Document doc,
+                                  Element parentLine,
                                   ThotBool registerUndo );
 extern void InstantiateRepeat ( XTigerTemplate t,
                                   Element el,
                                   Document doc,
+                                  Element parentLine,
                                   ThotBool registerUndo );
 extern void Template_InsertXTigerPI ( Document doc,
                                         XTigerTemplate t );

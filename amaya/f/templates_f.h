@@ -11,6 +11,8 @@ extern ThotBool IsTemplateDocument ( Document doc );
 extern char *GetUsedTypeName ( Element el );
 extern ThotBool IsInLineTemplateElement ( Element el,
                                           Document doc );
+extern Element GetParentLine ( Element el,
+                               SSchema templateSSchema );
 extern ThotBool IsInternalTemplateDocument ( Document doc );
 extern char* GetDocumentInstanceTemplateUrl ( Document doc );
 extern ThotBool CheckPromptIndicator ( Element el,
@@ -112,6 +114,8 @@ extern ThotBool IsTemplateDocument ( Document doc );
 extern char *GetUsedTypeName ( Element el );
 extern ThotBool IsInLineTemplateElement ( Element el,
                                             Document doc );
+extern Element GetParentLine ( Element el,
+                                 SSchema templateSSchema );
 extern ThotBool IsInternalTemplateDocument ( Document doc );
 extern char* GetDocumentInstanceTemplateUrl ( Document doc );
 extern ThotBool CheckPromptIndicator ( Element el,
