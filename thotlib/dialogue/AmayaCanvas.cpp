@@ -145,7 +145,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
 
   // get the new dimensions  
   int new_width, new_height;
-  // dont use event.GetSize() becaus it returns bad value ...
+  // dont use event.GetSize() because it returns bad value ...
   new_width = GetClientSize().GetWidth();
   new_height = GetClientSize().GetHeight();
  

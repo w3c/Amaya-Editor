@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -116,6 +116,7 @@ void AmayaToolPanelBar::OnClose( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 bool AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
 {
+
   AmayaToolPanelItem* item = new AmayaToolPanelItem(panel, m_scwin);
   m_scwin->GetSizer()->Add(item, 0, wxEXPAND);
   panel->SetWindow((AmayaNormalWindow*)this->GetParent());
@@ -323,14 +324,26 @@ AmayaToolPanelItem::~AmayaToolPanelItem()
 bool AmayaToolPanelItem::Minimize(bool bMinimize)
 {
   wxSizer* sz = GetSizer();
-  if(sz->GetItem(1))
+  Document doc;
+  int      view;
+
+  if (sz->GetItem(1))
     {
       m_bMinimized = bMinimize;
       sz->Show((size_t)1, !bMinimize);
       if (bMinimize)
         XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_Minimized );
       else
+        {
         XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton)->SetBitmapLabel( s_Bitmap_Expanded );
+        // test if the attribute panel should be updated
+        if (m_panel && m_panel->GetToolPanelType() == WXAMAYA_PANEL_ATTRIBUTE)
+          {
+            TtaGetActiveView (&doc, &view);
+            if (doc)
+              TtaUpdateAttrMenu (doc);
+          }
+        }
       GetParent()->Layout();
       return true;
     }

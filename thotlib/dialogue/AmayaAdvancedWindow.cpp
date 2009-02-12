@@ -226,11 +226,21 @@ void AmayaAdvancedWindow::LoadConfig()
  -----------------------------------------------------------------------*/
 void AmayaAdvancedWindow::OnToggleToolPanelMenu(wxCommandEvent& event)
 {
-  int id = event.GetId();
+  int      id = event.GetId();
+  Document doc;
+  int      view;
+
   m_manager.GetPane(m_panelMenus[id]).Show(event.IsChecked());
   m_panelMenus[id]->SetVisibleFlag(event.IsChecked());
   //event.Skip(); doesn't work on MacOSX
   m_manager.Update();
+  // test if the attribute panel should be updated
+  if (event.IsChecked() && m_panelMenus[id]->GetToolPanelType() == WXAMAYA_PANEL_ATTRIBUTE)
+    {
+      TtaGetActiveView (&doc, &view);
+      if (doc)
+        TtaUpdateAttrMenu (doc);
+    }
 }
 
 /*----------------------------------------------------------------------
