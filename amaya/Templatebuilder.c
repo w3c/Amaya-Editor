@@ -141,7 +141,9 @@ ThotBool NeedAMenu (Element el, Document doc)
       if (t)
         {
           dec = Template_GetDeclaration (t, types);
-          if (dec && dec->nature == UnionNat)
+          if (dec == NULL && elType.ElTypeNum == Template_EL_useEl)
+            res =  TtaGetFirstChild (el) != NULL;
+          else if (dec && dec->nature == UnionNat)
             {
               /* TODO utiliser la liste étendue plutot que la liste d'inclusion.*/ 
               iter = SearchSet_GetForwardIterator(dec->unionType.include);

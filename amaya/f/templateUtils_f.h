@@ -34,7 +34,7 @@ extern Element GetFirstEditableElement ( Element el );
 extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                               Element parent,
                                               Document document );
-extern ThotBool ValidateTemplateAttrInMenu ( NotifyAttribute * event );
+extern ThotBool CheckTemplateAttrInMenu ( NotifyAttribute *event );
 extern void DumpElementSubPath ( Element el,
                                  char* buffer );
 extern void DumpElementPath ( Element el );
@@ -78,7 +78,7 @@ extern Element GetFirstEditableElement ( Element el );
 extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                                 Element parent,
                                                 Document document );
-extern ThotBool ValidateTemplateAttrInMenu ( NotifyAttribute * event );
+extern ThotBool CheckTemplateAttrInMenu ( NotifyAttribute *event );
 extern void DumpElementSubPath ( Element el,
                                    char* buffer );
 extern void DumpElementPath ( Element el );

@@ -76,8 +76,6 @@ static PtrAttribute PtrReqAttr;
 static PtrDocument  PtrDocOfReqAttr;
 /* External function that manages attribute changes */
 static Proc2        AttributeChangeFunction = NULL;
-/* External procedure that filter attribute listing. */
-static AttributeFilterProc AttributeFilterProcedure = NULL;
 
 #include "appdialogue_f.h"
 #include "appli_f.h"
@@ -497,7 +495,7 @@ static PtrAttrListElem TteItemMenuAttrExtended (PtrSSchema pSS, int att,
   notifyAttr.restr.RestrDefVal = NULL;
   notifyAttr.restr.RestrEnumVal = NULL;
 
-  if(!CallEventAttribute (&notifyAttr, TRUE))
+  if (!CallEventAttribute (&notifyAttr, TRUE))
     {
       elem = (PtrAttrListElem)TtaGetMemory(sizeof(AttrListElem));
       elem->pSS      = pSS;
@@ -518,9 +516,9 @@ static PtrAttrListElem TteItemMenuAttrExtended (PtrSSchema pSS, int att,
   ----------------------------------------------------------------------*/
 static int CompareAttrList(PtrAttrListElem elem1, PtrAttrListElem elem2)
 {
-  if(elem1 && elem2)
+  if (elem1 && elem2)
     {
-      if(elem1->categ!=elem2->categ)
+      if (elem1->categ!=elem2->categ)
         {
           return elem1->categ-elem2->categ;
         }
@@ -571,7 +569,7 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
                   {
                     /* conserve le schema de structure et le numero */
                     /* d'attribut de cette nouvelle entree du menu */
-                    if(AttrHasException (ExcEventAttr, num, pSS))
+                    if (AttrHasException (ExcEventAttr, num, pSS))
                       attrElem->categ = attr_event;
                     else
                       attrElem->categ = attr_global;
@@ -604,13 +602,13 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
                   {
                     attrElem = TteItemMenuAttrExtended (pSS, pRe1->SrLocalAttr->Num[num],
                                      firstSel, pDoc);
-                    if(attrElem)
+                    if (attrElem)
                       {
                         /* conserve le schema de structure et le numero */
                         /* d'attribut de cette nouvelle entree du menu */
-                        if(pRe1->SrRequiredAttr->Bln[num])
+                        if (pRe1->SrRequiredAttr->Bln[num])
                           attrElem->restr.RestrFlags |= attr_mandatory;
-                        if(AttrHasException (ExcEventAttr, 
+                        if (AttrHasException (ExcEventAttr, 
                             pRe1->SrLocalAttr->Num[num], pSS))
                           attrElem->categ = attr_event;
                         else
@@ -661,11 +659,11 @@ static DLList BuildAttrList(PtrDocument pDoc, PtrElement firstSel)
             {
               attrElem = TteItemMenuAttrExtended (pAttr->AeAttrSSchema, pAttr->AeAttrNum,
                                firstSel, pDoc);
-              if(attrElem)
+              if (attrElem)
                 {
                   /* conserve le schema de structure et le numero */
                   /* d'attribut de cette nouvelle entree du menu */
-                  if(AttrHasException (ExcEventAttr, 
+                  if (AttrHasException (ExcEventAttr, 
                       pAttr->AeAttrNum, pAttr->AeAttrSSchema))
                     attrElem->categ = attr_event;
                   else
@@ -875,26 +873,18 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
   pEl = pFirstSel;
   while (pEl)
     {
-#ifdef EK
-// Removed to enable attr change in templates.
-// Reactive it if any problems.
-// Normally, attr changes for really readonly element cant pass here !
-//      if (!ElementIsReadOnly (pEl))
-#endif /* EK */
+      isDone = TRUE;
+      if (pEl->ElStructSchema &&
+          pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1] &&
+          pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
         {
-          isDone = TRUE;
-          if (pEl->ElStructSchema &&
-              pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1] &&
-              pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
-            {
-              /* cannot attach the attribute to that element */
-              if (pEl->ElParent &&
-                  pEl->ElNext == NULL && pEl->ElPrevious == NULL)
-                AttachAttrToElem (pAttr, pEl->ElParent, pDoc);
-            }
-          else
-            AttachAttrToElem (pAttr, pEl, pDoc);
+          /* cannot attach the attribute to that element */
+          if (pEl->ElParent &&
+              pEl->ElNext == NULL && pEl->ElPrevious == NULL)
+            AttachAttrToElem (pAttr, pEl->ElParent, pDoc);
         }
+      else
+        AttachAttrToElem (pAttr, pEl, pDoc);
       /* cherche l'element a traiter ensuite */
       pEl = NextInSelection (pEl, pLastSel);
     }
@@ -1141,7 +1131,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   Set a new value for the specified attr for the currently selected range.
   \param value char* is the attr is text and int if num or enum.
   ----------------------------------------------------------------------*/
-void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
+void SetAttrValueToRange (PtrAttrListElem elem, intptr_t value)
 {
   PtrDocument         pDoc;
   PtrElement          firstSel, lastSel;
@@ -1154,12 +1144,11 @@ void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
   ThotBool            isID = FALSE, isACCESS = FALSE;
   ThotBool            isCLASS = FALSE, isSpan = FALSE;
 
-  if(!elem || !elem->pSS || elem->num<=0)
+  if (!elem || !elem->pSS || elem->num<=0)
     return;
 
   /* demande quelle est la selection courante */
-  if (!GetValidatedCurrentSelection (&pDoc, &firstSel, &lastSel,
-                                                        &firstChar, &lastChar))
+  if (!GetValidatedCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     {
       /* no selection. quit */
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_NO_SELECT);
@@ -1269,12 +1258,12 @@ void SetAttrValueToRange(PtrAttrListElem elem, intptr_t value)
   Get the current selection but validate it with selecting the IMG element if
   element is a picture.
   ----------------------------------------------------------------------*/
-static ThotBool GetValidatedCurrentSelection (PtrDocument *pDoc,
-    PtrElement *firstSel, PtrElement*lastSel, int *firstChar,int *lastChar)
+static ThotBool GetValidatedCurrentSelection (PtrDocument *pDoc, PtrElement *firstSel,
+                                              PtrElement*lastSel, int *firstChar,int *lastChar)
 {
   PtrElement parent;
   
-  if(!GetCurrentSelection (pDoc, firstSel, lastSel, firstChar, lastChar))
+  if (!GetCurrentSelection (pDoc, firstSel, lastSel, firstChar, lastChar))
     return FALSE;
   else
     {
@@ -1307,9 +1296,8 @@ void CallbackEditRefAttribute(PtrAttrListElem pAttrElem, int frame)
   pAttr = AttrListElem_GetTtAttribute(pAttrElem);
   FrameToView (frame, &doc, &view);
   
-  if(pAttr && pAttr->AttrType == AtReferenceAttr &&
-      GetValidatedCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar,
-                                                                    &lastChar))
+  if (pAttr && pAttr->AttrType == AtReferenceAttr &&
+      GetValidatedCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     {
       GetAttribute (&pAttrNew);
       pAttrNew->AeAttrSSchema = pAttrElem->pSS;
@@ -1349,7 +1337,7 @@ void CallbackEditAttribute(PtrAttrListElem pAttrElem, int frame)
   pAttr = AttrListElem_GetTtAttribute(pAttrElem);
   FrameToView (frame, &doc, &view);
 
-  if(pAttr && GetValidatedCurrentSelection (&pDoc, &firstSel, &lastSel,
+  if (pAttr && GetValidatedCurrentSelection (&pDoc, &firstSel, &lastSel,
               &firstChar, &lastChar))
     {
       

@@ -2502,6 +2502,30 @@ int TtaIsReadOnly (Element element)
 }
 
 /* ----------------------------------------------------------------------
+   TtaIsSetReadOnly
+   Tests whether the given element itself is ReadOnly.
+   Parameter:
+   element: the element to be tested.
+   Return Value:
+   1 if the element is protected, 0 if not.
+   ---------------------------------------------------------------------- */
+int TtaIsSetReadOnly (Element element)
+{
+  int                 result;
+
+  UserErrorCode = 0;
+  result = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      if (((PtrElement) element)->ElAccess == ReadOnly)
+        result = 1;
+    }
+  return result;
+}
+
+/* ----------------------------------------------------------------------
    TtaIsHidden
    Tests whether a given element is hidden to the user.
    Parameter:

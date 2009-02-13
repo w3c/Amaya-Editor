@@ -5311,7 +5311,7 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
       event->attributeType.AttrTypeNum != MathML_ATTR_xml_space)
     /* it's not a global attribute. Accept it */
 #ifdef TEMPLATES
-    return ValidateTemplateAttrInMenu(event);
+    return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
     return FALSE;
 #endif /* TEMPLATES */
@@ -5331,7 +5331,7 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
         return TRUE;
     }
 #ifdef TEMPLATES
-  return ValidateTemplateAttrInMenu(event);
+  return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
   return FALSE;
 #endif /* TEMPLATES */

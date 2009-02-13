@@ -181,6 +181,7 @@ Element Template_InsertBagChild (Document doc, Element sel, Element bag,
               else
                  TtaInsertFirstChild (&use, bag, doc);
               TtaRegisterElementCreate (use, doc);
+              
               sel = use;
             }
         }
@@ -354,6 +355,8 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
           TtaUpdateAccessRightInViews (doc, el);
           break;
         case Template_EL_bag :
+          Template_FixAccessRight (t, el, doc);
+          TtaUpdateAccessRightInViews (doc, el);
           break;
         case Template_EL_useEl :
         case Template_EL_useSimple :
@@ -940,12 +943,37 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec,
         break;   
     }
     Template_FixAccessRight (dec->usedIn, el, doc);
+    if (dec->nature == ComponentNat)
+      Component_FixAccessRight (el, doc);
     TtaUpdateAccessRightInViews (doc, el);
   }  
 #endif /* TEMPLATES */
   return newEl;
 }
 
+
+/*----------------------------------------------------------------------
+  Component_FixAccessRight locks children of the component
+  ----------------------------------------------------------------------*/
+void Component_FixAccessRight (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  ElementType elType;
+  Element     child;
+  
+  if (el && doc)
+    {
+      TtaSetAccessRight (el, ReadOnly, doc);
+      // fix access right to children
+      child = TtaGetFirstChild (el);
+      while (child)
+        {
+          TtaSetAccessRight (child, ReadOnly, doc);
+          TtaNextSibling (&child);
+        }
+    }
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   Template_FixAccessRight fixes access rights of the el element
@@ -968,6 +996,9 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
             case Template_EL_TEXT_UNIT:
               //TtaSetAccessRight( el, ReadWrite, doc);
               return;
+            case Template_EL_component:
+              Component_FixAccessRight (el, doc);
+              break;
             case Template_EL_useEl:
             case Template_EL_useSimple:
               GiveAttributeStringValueFromNum(el, Template_ATTR_currentType,
@@ -988,7 +1019,12 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
                       case SimpleTypeNat:
                         TtaSetAccessRight (el, ReadWrite, doc);
                         return;
+                      case ComponentNat:
+                        Component_FixAccessRight (el, doc);
+                        return;
                       case XmlElementNat:
+                        if (TtaIsSetReadOnly (el))
+                          break;
                         child = TtaGetFirstChild (el);
                         if (child)
                           TtaSetAccessRight (child, ReadWrite, doc);

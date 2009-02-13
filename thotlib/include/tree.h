@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -888,6 +888,16 @@ extern int TtaIsHolophrasted (Element element);
    1 if the element is protected, 0 if not.
    ---------------------------------------------------------------------- */
 extern int TtaIsReadOnly (Element element);
+
+/* ----------------------------------------------------------------------
+   TtaIsSetReadOnly
+   Tests whether the given element itself is ReadOnly.
+   Parameter:
+   element: the element to be tested.
+   Return Value:
+   1 if the element is protected, 0 if not.
+   ---------------------------------------------------------------------- */
+extern int TtaIsSetReadOnly (Element element);
 
 /* ----------------------------------------------------------------------
    TtaIsHidden

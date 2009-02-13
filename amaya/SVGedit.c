@@ -1060,7 +1060,7 @@ ThotBool GlobalSVGAttrInMenu (NotifyAttribute * event)
       event->attributeType.AttrTypeNum != SVG_ATTR_xml_space)
     /* it's not a global attribute. Accept it */
 #ifdef TEMPLATES
-    return ValidateTemplateAttrInMenu(event);
+    return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
   return FALSE;
 #endif /* TEMPLATES */
@@ -1070,7 +1070,7 @@ ThotBool GlobalSVGAttrInMenu (NotifyAttribute * event)
     return TRUE;
 
 #ifdef TEMPLATES
-  return ValidateTemplateAttrInMenu(event);
+  return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
   return FALSE;
 #endif /* TEMPLATES */

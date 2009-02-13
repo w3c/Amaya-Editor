@@ -4955,7 +4955,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
       event->attributeType.AttrTypeNum != HTML_ATTR_xml_space)
 #ifdef TEMPLATES
     /* it's not a global attribute. Accept it */
-    return ValidateTemplateAttrInMenu(event);
+    return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
   /* it's not a global attribute. Accept it */
     return FALSE;
@@ -4978,7 +4978,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
         {
           if (event->attributeType.AttrTypeNum == HTML_ATTR_ID)
 #ifdef TEMPLATES
-            return ValidateTemplateAttrInMenu(event);
+            return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
             return FALSE;
 #endif /* TEMPLATES */
@@ -5004,7 +5004,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
           else
             /* let Thot perform normal operation */
 #ifdef TEMPLATES
-            return ValidateTemplateAttrInMenu(event);
+            return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
             return FALSE;
 #endif /* TEMPLATES */
@@ -5022,7 +5022,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
             return TRUE;
           else
 #ifdef TEMPLATES
-            return ValidateTemplateAttrInMenu(event);
+            return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
             return FALSE;
 #endif /* TEMPLATES */
@@ -5063,7 +5063,7 @@ ThotBool GlobalAttrInMenu (NotifyAttribute * event)
           return TRUE;
         }
 #ifdef TEMPLATES
-      return ValidateTemplateAttrInMenu(event);
+      return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
       return FALSE;
 #endif /* TEMPLATES */
@@ -5096,7 +5096,7 @@ ThotBool AttrNAMEinMenu (NotifyAttribute * event)
   else
     /* let Thot perform normal operation */
 #ifdef TEMPLATES
-    return ValidateTemplateAttrInMenu(event);
+    return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
     /* it's not a global attribute. Accept it */
     return FALSE;
@@ -5117,7 +5117,7 @@ ThotBool  AttrScriptLanguageinMenu (NotifyAttribute * event)
   else
     /* let Thot perform normal operation */
 #ifdef TEMPLATES
-    return ValidateTemplateAttrInMenu(event);
+    return CheckTemplateAttrInMenu(event);
 #else /* TEMPLATES */
     /* it's not a global attribute. Accept it */
     return FALSE;

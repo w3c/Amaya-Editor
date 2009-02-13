@@ -37,7 +37,6 @@ DEFAULT
    BEGIN
    Visibility: Enclosing =;
    VertRef: * . Left ;
-   {HorizRef: Enclosed AnyElem . HRef;}
    HorizRef: * . Bottom - 2 px;
    Height: Enclosed . Height;
    Width: Enclosed . Width;
@@ -62,7 +61,6 @@ DEFAULT
    IN Structure_view BEGIN
 	    VertPos: Top = Previous . Bottom;
 	    HorizPos: Left = Enclosing . Left;
-      HorizRef: Enclosed . HRef;
 	    END;
    END;
 
@@ -1024,7 +1022,10 @@ ATTRIBUTES
   PaddingTop : 2 px;
   PaddingBottom: 2 px;
   HorizRef: Enclosed AnyElem . HRef;
-  {HorizRef: Enclosed . HRef;}
+  IN Structure_view BEGIN
+    Display: Block;
+    HorizRef: * . Bottom - 2 px;
+    END;
   END;
 
   Unknown_attribute:
