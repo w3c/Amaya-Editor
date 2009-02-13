@@ -39,10 +39,6 @@ ELEMENTS
       BEGIN
          ElemLClick.Pre -> BagButtonClicked;
       END;
-   {option :
-      BEGIN
-         ElemLClick.Pre -> OptionButtonClicked;
-      END;}
 
    union :
       BEGIN

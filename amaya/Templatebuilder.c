@@ -135,6 +135,8 @@ ThotBool NeedAMenu (Element el, Document doc)
   if (ptr)
     // there are several types
     res = TRUE;
+  else if (!strcmp (types, "string") || !strcmp (types, "number"))
+    res = FALSE;
   else
     {
       t = GetXTigerDocTemplate (doc);
@@ -142,16 +144,18 @@ ThotBool NeedAMenu (Element el, Document doc)
         {
           dec = Template_GetDeclaration (t, types);
           if (dec == NULL && elType.ElTypeNum == Template_EL_useEl)
-            res =  TtaGetFirstChild (el) != NULL;
+            res =  (TtaGetFirstChild (el) == NULL);
           else if (dec && dec->nature == UnionNat)
             {
-              /* TODO utiliser la liste étendue plutot que la liste d'inclusion.*/ 
+              /* check the extended list of the union */ 
               iter = SearchSet_GetForwardIterator(dec->unionType.include);
-              if(ForwardIterator_GetCount(iter)>1)
+              if(ForwardIterator_GetCount(iter) > 1)
                 res = TRUE;
               TtaFreeMemory(iter);
             }
         }
+      else if (elType.ElTypeNum == Template_EL_useEl)
+        res =  (TtaGetFirstChild (el) == NULL);
     }
 
   // When only one type is possible add the currentType attribute
