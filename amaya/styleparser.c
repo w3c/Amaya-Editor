@@ -6319,7 +6319,8 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
     ParseCSSRule (el, NULL, ctxt, cssRule, NULL, isHTML);
 
   /* restore the display mode if necessary */
-  TtaSetDisplayMode (doc, dispMode);
+  if (dispMode != NoComputedDisplay)
+    TtaSetDisplayMode (doc, dispMode);
   /* check if the context can be freed */
   ctxt->uses -= 1;
   if (ctxt->uses == 0)

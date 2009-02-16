@@ -1685,25 +1685,15 @@ static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
   Element           tree, el, svg, defs, marker;
   ElementType       elType;
   ThotBool          isHTML;
-  Document markersDoc;
-  
-  const char *name = "markers.svg";
-  wxString path; char *path2;
-    
-  ThotBool oldStructureChecking = TtaGetStructureChecking (doc);
-  DisplayMode  dispMode = TtaGetDisplayMode (doc); 
-
-  if (oldStructureChecking)
-    TtaSetStructureChecking (FALSE, doc);
-
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
+  Document          markersDoc;  
+  const char       *name = "markers.svg";
+  wxString          path; char *path2;
+  ThotBool         oldStructureChecking = TtaGetStructureChecking (doc);
+  DisplayMode      dispMode = TtaGetDisplayMode (doc); 
 
   svgSchema = GetSVGSSchema (doc);
-
   /* 1) Is it a HTML or SVG document? */
   docSchema = TtaGetDocumentSSchema (doc);
-
   if (!strcmp (TtaGetSSchemaName (docSchema), "HTML"))
     isHTML = TRUE;
   else if(!strcmp (TtaGetSSchemaName (docSchema), "SVG"))
@@ -1727,35 +1717,33 @@ static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
     }
   
   tree = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot(doc));
-
   if(tree == NULL)
       return FALSE;
 
   /* 3) Now look into all defs elements  */
-  if(isHTML)
+  if (isHTML)
     {
       /* Search all embedded <svg/> element in the HTML document */
       elType.ElTypeNum = SVG_EL_SVG;
       elType.ElSSchema = svgSchema;
-
-      for(el = TtaSearchTypedElement (elType, SearchInTree, tree); el;
-	  el = TtaSearchTypedElementInTree (elType, SearchForward, tree, el))
-	/* el is a <svg/>: search markers */
-	if(searchMarkers(doc, el, marker_id) != NULL)
-	  return TRUE;
+      for (el = TtaSearchTypedElement (elType, SearchInTree, tree); el;
+           el = TtaSearchTypedElementInTree (elType, SearchForward, tree, el))
+        /* el is a <svg/>: search markers */
+        if (searchMarkers(doc, el, marker_id) != NULL)
+          return TRUE;
     }
   else
     {
       /* Search markers in the <svg/> root */
-      if(searchMarkers(doc, tree, marker_id) != NULL)
-	return TRUE;
+      if (searchMarkers(doc, tree, marker_id) != NULL)
+        return TRUE;
     }
 
   /* 4) marker_id has not been found: open markers.svg */
   path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
   path2 = TtaStrdup(path.mb_str(wxConvUTF8));
   markersDoc = GetAmayaDoc (path2, NULL,
-			    0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
+                            0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
   TtaFreeMemory(path2);
 
   /* 5) Search marker_id in markersDoc */
@@ -1765,7 +1753,7 @@ static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
   el = TtaSearchTypedElement (elType, SearchInTree, el);
   marker = searchMarkers(markersDoc, el, marker_id);
 
-  if(marker == NULL)
+  if (marker == NULL)
     {
       /* The marker_id does not match any marker in markers.svg */
       TtaRemoveDocumentReference (markersDoc);
@@ -1773,20 +1761,24 @@ static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
     }
 
   /* 6) Create or get an <svg/> element */
-  if(isHTML)
+  if (oldStructureChecking)
+    TtaSetStructureChecking (FALSE, doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+  if (isHTML)
     {
       /* Get the first embedded <svg/> element in the HTML document */
       elType.ElTypeNum = SVG_EL_SVG;
       elType.ElSSchema = svgSchema;
       svg = TtaSearchTypedElement (elType, SearchInTree, tree);
 
-      if(svg == NULL)
-	{
-	  /* No <svg/> element: create one as the first child of the <body/> */
-	  svg = TtaNewElement(doc, elType);
-	  TtaInsertFirstChild(&svg, tree, doc);
-	  TtaRegisterElementCreate (svg, doc);
-	}
+      if (svg == NULL)
+        {
+          /* No <svg/> element: create one as the first child of the <body/> */
+          svg = TtaNewElement(doc, elType);
+          TtaInsertFirstChild(&svg, tree, doc);
+          TtaRegisterElementCreate (svg, doc);
+        }
     }
   else
     /* Get the root element of the svg document */
@@ -1799,9 +1791,9 @@ static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
   if(defs == NULL)
     {
       /* No <defs/> element: create one as the first child of the <svg/> */
-	  defs = TtaNewElement(doc, elType);
-	  TtaInsertFirstChild(&defs, svg, doc);
-	  TtaRegisterElementCreate (defs, doc);
+      defs = TtaNewElement(doc, elType);
+      TtaInsertFirstChild(&defs, svg, doc);
+      TtaRegisterElementCreate (defs, doc);
     }
   
   /* 8) Copy the marker into the document */
@@ -1810,10 +1802,8 @@ static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
   TtaRegisterElementCreate (el, doc);
 
   TtaRemoveDocumentReference (markersDoc);
-
   TtaSetStructureChecking (oldStructureChecking, doc);
   TtaSetDisplayMode (doc, dispMode);
-
   return TRUE;
 }
 
