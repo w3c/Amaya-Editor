@@ -3583,8 +3583,8 @@ ThotBool DeleteSpan (NotifyAttribute * event)
   ApplyCSSRuleOneCol
   apply a CSS rule attached to the COL or COLGROUP leaf.
   ----------------------------------------------------------------------*/
-static void ApplyCSSRuleOneCol (Element col, PresentationContext ctxt,
-                                char *cssRule, CSSInfoPtr css)
+void ApplyCSSRuleOneCol (Element col, PresentationContext ctxt,
+                         char *cssRule, CSSInfoPtr css)
 {
   Element             colhead;
   ElementType         elType;
@@ -3663,6 +3663,7 @@ void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule,
             }
         }
     }
+
   if (!el)
     return;
 

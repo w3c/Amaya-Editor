@@ -767,6 +767,7 @@ static void GenerateStyle (const char * data , ThotBool add, ThotBool check)
   if (el == NULL)
     /* no selection */
     return;
+
   if (check && NoStyleEdit (el, doc))
     return;
 
@@ -782,38 +783,37 @@ static void GenerateStyle (const char * data , ThotBool add, ThotBool check)
         {
           if (elType.ElTypeNum == HTML_EL_COL ||
               elType.ElTypeNum == HTML_EL_COLGROUP)
-            // a COL or COLGROUP element is selected
-            colcolgroup = TRUE;
-          else if (TtaIsColumnSelected (doc))
-            // a whole column is selected. Is there a COL or COLGROUP element
-            // for that column ?
             {
-              if (elType.ElTypeNum == HTML_EL_Data_cell ||
-                  elType.ElTypeNum == HTML_EL_Heading_cell)
+              // a COL or COLGROUP element is selected
+              colcolgroup = TRUE;
+              col = el;
+            }
+          else if (!colcolgroup &&
+              (elType.ElTypeNum == HTML_EL_Data_cell ||
+               elType.ElTypeNum == HTML_EL_Heading_cell))
+            {
+              // get the relevant COL or COLGROUP element
+              attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr)
                 {
-                  // get the relevant COL or COLGROUP element
-                  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
-                  attr = TtaGetAttribute (el, attrType);
-                  if (attr)
+                  TtaGiveReferenceAttributeValue (attr, &colhead);
+                  if (colhead)
                     {
-                      TtaGiveReferenceAttributeValue (attr, &colhead);
-                      if (colhead)
+                      attrType.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
+                      attr = TtaGetAttribute (colhead, attrType);
+                      if (attr)
+                        // this Column-head is linked to a COL or COLGROUP
                         {
-                          attrType.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
-                          attr = TtaGetAttribute (colhead, attrType);
-                          if (attr)
-                            // this Column-head is linked to a COL or COLGROUP
+                          TtaGiveReferenceAttributeValue (attr, &col);
+                          if (col)
                             {
-                              TtaGiveReferenceAttributeValue (attr, &col);
-                              if (col)
-                                {
-                                  attrType.AttrTypeNum = HTML_ATTR_span_;
-                                  attr = TtaGetAttribute (col, attrType);
-                                  if (!attr ||
-                                      TtaGetAttributeValue (attr) <= 1)
-                                    // no spanning
-                                    colcolgroup = TRUE;
-                                }
+                              //attrType.AttrTypeNum = HTML_ATTR_span_;
+                              //attr = TtaGetAttribute (col, attrType);
+                              //if (!attr ||
+                              //    TtaGetAttributeValue (attr) <= 1)
+                              // no spanning
+                              colcolgroup = TRUE;
                             }
                         }
                     }
@@ -832,7 +832,27 @@ static void GenerateStyle (const char * data , ThotBool add, ThotBool check)
           ctxt->cssSpecificity = 1;
           ctxt->cssLine = TtaGetElementLineNumber (el);
           ctxt->destroy = FALSE;
-          ColApplyCSSRule (NULL, ctxt, (char*)data, NULL);
+          if (TtaIsColumnSelected (doc))
+            {
+              open = !TtaHasUndoSequence (doc);
+              if (open)
+                TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              attrType.AttrTypeNum = HTML_ATTR_Style_;
+              attr = TtaGetAttribute (col, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (col, attr, doc);
+                }
+              TtaSetAttributeText (attr, (char*)data, col, doc);
+              TtaRegisterAttributeCreate (attr, col, doc);
+              ApplyCSSRuleOneCol (col, ctxt, (char*)data, NULL);
+              TtaSetDocumentModified (doc);
+              if (open)
+                TtaCloseUndoSequence (doc);
+            }
+          else
+            GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data, !add);
         }
       else if (strcmp (name, "Template"))
         GenerateInlineElement (HTML_EL_Span, NULL, HTML_ATTR_Style_, data, !add);
@@ -1022,6 +1042,7 @@ void DoStyleColor (char *color, ThotBool isBg)
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   if (el == NULL)
     return;
+
   elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp (name, "Template"))

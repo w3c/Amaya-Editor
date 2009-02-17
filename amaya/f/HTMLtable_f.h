@@ -63,6 +63,10 @@ extern ThotBool ModifySpan ( NotifyAttribute * event );
 extern void SpanModified ( NotifyAttribute * event );
 extern void SpanCreated ( NotifyAttribute * event );
 extern ThotBool DeleteSpan ( NotifyAttribute * event );
+extern void ApplyCSSRuleOneCol ( Element col,
+                                 PresentationContext ctxt,
+                                 char *cssRule,
+                                 CSSInfoPtr css );
 extern void ColApplyCSSRule ( Element el,
                               PresentationContext ctxt,
                               char *cssRule,
@@ -172,6 +176,10 @@ extern ThotBool ModifySpan ( NotifyAttribute * event );
 extern void SpanModified ( NotifyAttribute * event );
 extern void SpanCreated ( NotifyAttribute * event );
 extern ThotBool DeleteSpan ( NotifyAttribute * event );
+extern void ApplyCSSRuleOneCol ( Element col,
+                                   PresentationContext ctxt,
+                                   char *cssRule,
+                                   CSSInfoPtr css );
 extern void ColApplyCSSRule ( Element el,
                                 PresentationContext ctxt,
                                 char *cssRule,
