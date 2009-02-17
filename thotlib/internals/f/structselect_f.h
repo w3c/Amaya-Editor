@@ -92,6 +92,8 @@ extern void BuildSelectionMessage ( void );
 extern ThotBool SelectPairInterval ( void );
 extern ThotBool MoveSelectionToCol ( PtrElement *firstSel,
                                      PtrElement *lastSel );
+extern void SelColumns ( PtrElement col1,
+                         PtrElement col2 );
 extern Element TtaGetColumn ( Element el );
 extern void TtaSelectEnclosingColumn ( Element el );
 extern void SelectAround ( int val );
@@ -192,6 +194,8 @@ extern void BuildSelectionMessage ( void );
 extern ThotBool SelectPairInterval ( void );
 extern ThotBool MoveSelectionToCol ( PtrElement *firstSel,
                                        PtrElement *lastSel );
+extern void SelColumns ( PtrElement col1,
+                           PtrElement col2 );
 extern Element TtaGetColumn ( Element el );
 extern void TtaSelectEnclosingColumn ( Element el );
 extern void SelectAround ( int val );

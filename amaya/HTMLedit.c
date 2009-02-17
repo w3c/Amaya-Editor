@@ -4678,29 +4678,35 @@ ThotBool AttrWidthDelete (NotifyAttribute *event)
   StoreWidth (event);
   el = event->element;
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == HTML_EL_Object)
-    /* the width attribute is attached to an Object element */
+  if (elType.ElSSchema == TtaGetSSchema ("HTML", event->document))
     {
-      child = TtaGetFirstChild (el);
-      if (child)
+      if (elType.ElTypeNum == HTML_EL_COL ||
+          elType.ElTypeNum == HTML_EL_COLGROUP)
+        TransmitWidthToColhead (el, event->document, NULL, -1);
+      else if (elType.ElTypeNum == HTML_EL_Object)
+        /* the width attribute is attached to an Object element */
         {
-          childType = TtaGetElementType (child);
-          if (childType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-            /* the Object element is of type image. Apply the width
-               attribute to the actual image element */
-            el = child;
+          child = TtaGetFirstChild (el);
+          if (child)
+            {
+              childType = TtaGetElementType (child);
+              if (childType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+                /* the Object element is of type image. Apply the width
+                   attribute to the actual image element */
+                el = child;
+            }
         }
-    }
-  attrType = event->attributeType;
-  attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr == NULL)
-    {
-      attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+      attrType.AttrSSchema = event->attributeType.AttrSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
       attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
+        {
+          attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+          attr = TtaGetAttribute (el, attrType);
+        }
+      if (attr)
+        TtaRemoveAttribute (el, attr, event->document);
     }
-  if (attr != NULL)
-    TtaRemoveAttribute (el, attr, event->document);
   return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -4712,6 +4718,8 @@ ThotBool AttrWidthDelete (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void AttrWidthModified (NotifyAttribute *event)
 {
+  Element             table;
+  ElementType         elType;
   char               *buffer;
   int                 length;
 
@@ -4720,6 +4728,11 @@ void AttrWidthModified (NotifyAttribute *event)
   TtaGiveTextAttributeValue (event->attribute, buffer, &length);
   CreateAttrWidthPercentPxl (buffer, event->element, event->document,
                              OldWidth);
+  elType = TtaGetElementType (event->element);
+  if (elType.ElSSchema == TtaGetSSchema ("HTML", event->document) &&
+       (elType.ElTypeNum == HTML_EL_COL ||
+        elType.ElTypeNum == HTML_EL_COLGROUP))
+    TransmitWidthToColhead (event->element, event->document, buffer, -1);
   TtaFreeMemory (buffer);
   OldWidth = -1;
 }

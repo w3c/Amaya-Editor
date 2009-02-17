@@ -199,6 +199,8 @@ void AmayaAttributeToolPanel::RedirectFocusToEditableControl()
 {
   if(m_pCurrentlyEditedControl)
     m_pCurrentlyEditedControl->SetFocus();
+  else
+    TtaRedirectFocus ();
 }
 
 /*----------------------------------------------------------------------

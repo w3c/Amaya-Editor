@@ -36,6 +36,10 @@ extern Element NewColumnHead ( Element lastcolhead,
                                ThotBool generateEmptyCells,
                                ThotBool generateCol );
 extern Element NextTableRow ( Element row );
+extern void TransmitWidthToColhead ( Element col,
+                                     Document doc,
+                                     char *value,
+                                     int oldwidth );
 extern void CheckAllRows ( Element table,
                            Document doc,
                            ThotBool placeholder,
@@ -141,6 +145,10 @@ extern Element NewColumnHead ( Element lastcolhead,
                                  ThotBool generateEmptyCells,
                                  ThotBool generateCol );
 extern Element NextTableRow ( Element row );
+extern void TransmitWidthToColhead ( Element col,
+                                       Document doc,
+                                       char *value,
+                                       int oldwidth );
 extern void CheckAllRows ( Element table,
                              Document doc,
                              ThotBool placeholder,

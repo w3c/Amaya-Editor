@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1997-2008
+ *  (c) COPYRIGHT INRIA 1997-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -16,6 +16,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "appdialogue.h"
+#include "application.h"
 #include "frame.h"
 
 #ifdef _GL
@@ -27,7 +28,7 @@
 #include "boxes_tv.h"
 #include "edit_tv.h"
 #include "frame_tv.h"
-
+#include "thotmsg_f.h"
 
 typedef struct _LockRelations *PtrLockRelations;
 typedef struct _LockRelations
@@ -1775,6 +1776,29 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
         }
     }
   return (reformat);
+}
+
+/*----------------------------------------------------------------------
+  TtaUpdateTableWidths
+  Force the rebuild of a table after presentation changes
+  ----------------------------------------------------------------------*/
+void TtaUpdateTableWidths (Element table, Document doc)
+{
+  PtrAbstractBox pAb;
+
+  UserErrorCode = 0;
+  if (table == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (doc < 1 || doc > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[doc - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      pAb = ((PtrElement) table)->ElAbstractBox[0];
+      if (pAb)
+        SetTableWidths (pAb, LoadedDocument[doc - 1]->DocViewFrame[0]);
+    }
 }
 
 /*----------------------------------------------------------------------

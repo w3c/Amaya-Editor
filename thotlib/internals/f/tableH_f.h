@@ -16,6 +16,8 @@ extern void GetCellSpans ( PtrElement cell,
                            int *colspan,
                            int *rowspan,
                            PtrAttribute *colspanAttr );
+extern void TtaUpdateTableWidths ( Element table,
+                                   Document doc );
 extern void UpdateCellHeight ( PtrAbstractBox cell,
                                int frame );
 extern void UpdateColumnWidth ( PtrAbstractBox cell,
@@ -45,6 +47,8 @@ extern void GetCellSpans ( PtrElement cell,
                              int *colspan,
                              int *rowspan,
                              PtrAttribute *colspanAttr );
+extern void TtaUpdateTableWidths ( Element table,
+                                     Document doc );
 extern void UpdateCellHeight ( PtrAbstractBox cell,
                                  int frame );
 extern void UpdateColumnWidth ( PtrAbstractBox cell,

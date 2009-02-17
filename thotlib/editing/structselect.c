@@ -4105,7 +4105,7 @@ ThotBool MoveSelectionToCol (PtrElement *firstSel, PtrElement *lastSel)
   SelColumns
   Select the whole columns between col1 and col2.
   ----------------------------------------------------------------------*/
-static void SelColumns (PtrElement col1, PtrElement col2)
+void SelColumns (PtrElement col1, PtrElement col2)
 {
   PtrElement          pNextRow, pCell;
   PtrElement          pFirst, pLast, pRow, pTable;

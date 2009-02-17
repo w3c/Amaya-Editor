@@ -1460,6 +1460,78 @@ Element NextTableRow (Element row)
   return next;
 }
 
+/*----------------------------------------------------------------------
+  TransmitWidthToColhead
+  Transmit the new width value to all colhead attached to the col element
+  ----------------------------------------------------------------------*/
+void TransmitWidthToColhead (Element col, Document doc, char *value, int oldwidth)
+{
+  Element             table, colhead, ref;
+  ElementType         elType;
+  AttributeType       attrTypeRef, attrTypeForced, attrTypeWidth;
+  Attribute           attr;
+
+  /* reformat the whole table */
+  elType = TtaGetElementType (col);
+  elType.ElTypeNum = HTML_EL_Table_;
+  table = TtaGetTypedAncestor (col, elType);
+  if (table)
+    {
+      elType.ElTypeNum = HTML_EL_Column_head;
+      colhead = TtaSearchTypedElement (elType, SearchInTree, table);
+      attrTypeRef.AttrSSchema = elType.ElSSchema;
+      attrTypeRef.AttrTypeNum = HTML_ATTR_Ref_ColColgroup;
+      attrTypeForced.AttrSSchema = elType.ElSSchema;
+      attrTypeForced.AttrTypeNum = HTML_ATTR_IntWidthForced;
+      attrTypeWidth.AttrSSchema = elType.ElSSchema;
+      while (colhead)
+        {
+          attr = TtaGetAttribute (colhead, attrTypeRef);
+          if (attr)
+            {
+              TtaGiveReferenceAttributeValue (attr, &ref);
+              if (ref == col)
+                {
+                  if (value == NULL)
+                    {
+                      // remove the forced value
+                      attr = TtaGetAttribute (colhead, attrTypeForced);
+                      if (attr)
+                        //TtaRegisterAttributeDelete (attr, colhead, doc);
+                        TtaRemoveAttribute (colhead, attr, doc);
+                      attrTypeWidth.AttrTypeNum = HTML_ATTR_IntWidthPxl;
+                      attr = TtaGetAttribute (colhead, attrTypeWidth);
+                      if (attr == NULL)
+                        {
+                          attrTypeWidth.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+                          attr = TtaGetAttribute (colhead, attrTypeWidth);
+                        }
+                      if (attr)
+                        //TtaRegisterAttributeDelete (attr, colhead, doc);
+                        TtaRemoveAttribute (colhead, attr, doc);
+                    }
+                  else
+                    {
+                      // store the new internal width
+                      CreateAttrWidthPercentPxl (value, colhead, doc, oldwidth);
+                      // set the indicator
+                      attr = TtaGetAttribute (colhead, attrTypeForced);
+                      if (attr == NULL)
+                        {
+                          attr = TtaNewAttribute (attrTypeForced);
+                          TtaSetAttributeValue (attr, HTML_ATTR_IntWidthForced_VAL_IntWidthForced_,
+                                                colhead, doc);
+                          TtaAttachAttribute (colhead, attr, doc);
+                        }
+                    }
+                }
+            }
+          TtaNextSibling (&colhead);
+        }
+      TtaUpdateTableWidths (table, doc);
+    }
+}
+
 #define MAX_COLS 100
 /*----------------------------------------------------------------------
   CheckAllRows

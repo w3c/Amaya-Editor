@@ -793,6 +793,12 @@ extern int TtaGetPRuleView (PRule pRule);
   ----------------------------------------------------------------------*/
 extern int TtaSamePRules (PRule pRule1, PRule pRule2);
 
+/*----------------------------------------------------------------------
+  TtaUpdateTableWidths
+  Force the rebuild of a table after presentation changes
+  ----------------------------------------------------------------------*/
+extern void TtaUpdateTableWidths (Element table, Document doc);
+
 #endif /* __CEXTRACT__ */
 
 #endif
