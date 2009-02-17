@@ -801,8 +801,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   if (sumPercent > 0)
     {
       minOfPercent = sumPercent * width / 100;
-      if (min + sum + minOfPercent > width ||
-          minOfPercent < width - sum - max)
+      if (min + sum + minOfPercent > width /*|| minOfPercent < width - sum - max*/)
         {
           delta = width - sum - min;
           /* table contents too narrow */
