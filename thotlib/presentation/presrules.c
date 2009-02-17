@@ -4064,6 +4064,12 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           pAb->AbOpacity = IntegerRule (pPRule, pEl,
                                         pAb->AbDocView, &appl, &unit,
                                         pAttr, pAb);
+	  if (appl && strcmp (pEl->ElStructSchema->SsName, "SVG"))
+	    /* don't change for SVG */
+	    {
+	      pAb->AbFillOpacity = pAb->AbOpacity;
+	      pAb->AbStrokeOpacity = pAb->AbOpacity;
+	    }
           if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
@@ -4072,22 +4078,28 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtFillOpacity:
-          pAb->AbFillOpacity = IntegerRule (pPRule, pEl,
-                                            pAb->AbDocView, &appl, &unit,
-                                            pAttr, pAb);
-	  	  
-          if (!appl && pEl->ElParent == NULL)
-            /* Pas de regle pour la racine, on met la valeur par defaut */
-            {
-              pAb->AbFillOpacity = 1000;
-              appl = TRUE;	      
-            }
+	  if (pPRule->PrPresMode != PresInherit &&
+	      strcmp (pEl->ElStructSchema->SsName, "SVG"))
+	    {
+	      pAb->AbFillOpacity = IntegerRule (pPRule, pEl,
+						pAb->AbDocView, &appl, &unit,
+						pAttr, pAb);
+	    }
+	  if (!appl && pEl->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbFillOpacity = 1000;
+	      appl = TRUE;	      
+	    }
           break;
-        case PtStrokeOpacity:	      
-          pAb->AbStrokeOpacity = IntegerRule (pPRule, pEl,
-                                              pAb->AbDocView, &appl, &unit,
-                                              pAttr, pAb);
-	   
+        case PtStrokeOpacity:
+	  if (pPRule->PrPresMode != PresInherit &&
+	      strcmp (pEl->ElStructSchema->SsName, "SVG"))
+	    {
+	      pAb->AbStrokeOpacity = IntegerRule (pPRule, pEl,
+						  pAb->AbDocView, &appl, &unit,
+						  pAttr, pAb);
+	    }
           if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {

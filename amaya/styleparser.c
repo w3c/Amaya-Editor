@@ -546,6 +546,7 @@ char *ParseClampedUnit (char *cssRule, PresentationValue *pval)
   p = cssRule;
   cssRule = ParseNumber (cssRule, pval);
   if (*cssRule != EOS && *cssRule != SPACE && *cssRule != ';' && *cssRule != '}')
+    /* the value contains something after the number. Invalid */
     {
       cssRule++;
       pval->typed_data.unit = UNIT_REL;
@@ -556,6 +557,7 @@ char *ParseClampedUnit (char *cssRule, PresentationValue *pval)
       CSSParseError ("Invalid value", p, cssRule);
     }
   else
+    /* it's a number. Check its value */
     {
       pval->typed_data.unit = UNIT_REL;
       if (pval->typed_data.real)
@@ -4444,6 +4446,30 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+  ParseCSSOpacity: parse a CSS opacity property
+  ----------------------------------------------------------------------*/
+static char *ParseCSSOpacity (Element element, PSchema tsch,
+                              PresentationContext context, char *cssRule,
+                              CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     opacity;
+
+  opacity.typed_data.unit = UNIT_INVALID;
+  opacity.typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      opacity.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
+  else
+    cssRule = ParseClampedUnit (cssRule, &opacity);
+  if (DoApply)
+    /* install the new presentation. */
+    TtaSetStylePresentation (PROpacity, element, tsch, context, opacity);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
   ParseCSSPaddingTop: parse a CSS PaddingTop attribute string
   ----------------------------------------------------------------------*/
 static char *ParseCSSPaddingTop (Element element, PSchema tsch,
@@ -6049,6 +6075,7 @@ static CSSProperty CSSProperties[] =
     {"margin-right", ParseCSSMarginRight},
     {"margin-left", ParseCSSMarginLeft},
     {"margin", ParseCSSMargin},
+    {"opacity", ParseCSSOpacity},
     {"padding-top", ParseCSSPaddingTop},
     {"padding-right", ParseCSSPaddingRight},
     {"padding-bottom", ParseCSSPaddingBottom},
