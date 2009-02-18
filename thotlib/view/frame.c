@@ -937,6 +937,7 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
   PtrAbstractBox      pAb, root, pNext;
   PtrBox              pBox;
   ViewFrame          *pFrame;
+  PtrBox              systemOriginRoot = NULL;
   int                 plane;
   int                 nextplane;
   int                 l, h;
@@ -1013,9 +1014,12 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
                                                  pBox->BxWidth, 
                                                  pBox->BxHeight);
                         }
-                      if (pAb->AbElement->ElSystemOrigin)
+                      if (pAb->AbElement->ElSystemOrigin &&
+                          /* skip boxes already managed */
+                          !IsParentBox (systemOriginRoot, pBox))
                         { 
-                          if (pFrame->FrXOrg ||pFrame->FrYOrg)
+                          systemOriginRoot = pBox;
+                          if (pFrame->FrXOrg || pFrame->FrYOrg)
                             {
                               OldXOrg = pFrame->FrXOrg;
                               OldYOrg = pFrame->FrYOrg;
@@ -1059,10 +1063,13 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
                     {
                       OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
                       if (IfPopMatrix (pAb))
-                        OriginSystemExit (pAb, pFrame, plane,
-                                          &OldXOrg, &OldYOrg, 
-                                          ClipXOfFirstCoordSys,
-                                          ClipYOfFirstCoordSys);
+                        {
+                          if (pAb->AbBox == systemOriginRoot)
+                            OriginSystemExit (pAb, pFrame, plane,
+                                              &OldXOrg, &OldYOrg, 
+                                              ClipXOfFirstCoordSys,
+                                              ClipYOfFirstCoordSys);
+                        }
                     }
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
@@ -1679,9 +1686,9 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                                    pBox->BxWidth, pBox->BxHeight);
                           if (pAb->AbElement->ElSystemOrigin &&
                               /* skip boxes already managed */
-                              !IsParentBox (systemOriginRoot, pAb->AbBox))
+                              !IsParentBox (systemOriginRoot, pBox))
                             {
-                              systemOriginRoot = pAb->AbBox;
+                              systemOriginRoot = pBox;
                               /*Need to Get REAL computed COORD ORIG
                                 instead of Computing Bounding Boxes forever...
                                 As it's an "optimisation it'll come later :
