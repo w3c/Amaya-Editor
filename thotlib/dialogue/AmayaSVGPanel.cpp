@@ -44,6 +44,8 @@
 
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaSVGToolDef)
+  AMAYA_TOOLBAR_DEF("wxID_SVG_TEXT", "CreateSVG_Text", LIB, TMSG_SVG_Text)
+  AMAYA_TOOLBAR_DEF("wxID_SVG_IMG", "CreateSVG_Image", LIB, TMSG_SVG_Image)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_SELECT", "EditSVG_Select", LIB, TMSG_SEL)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_GROUP", "CreateSVG_Group", LIB, TMSG_SVG_Group)
   AMAYA_TOOLBAR_DEF("wxID_PANEL_SVG_UNGROUP", "TransformSVG_Ungroup", LIB, TMSG_SVG_Ungroup)
@@ -127,12 +129,12 @@ typedef struct svg_constructs_
 /* list of all constructions */
 static svg_constructs list_of_constructs[] =
   {
-    {"", 6,
+    {"", 4,
      {
        {"document_svg", TMSG_SVG_SvgCanvas, "CreateSVG_Svg", FALSE},
-       {"SVG_text", TMSG_SVG_Text, "CreateSVG_Text", FALSE},
+       //{"SVG_text", TMSG_SVG_Text, "CreateSVG_Text", FALSE},
        {"SVG_foreign_object", TMSG_SVG_ForeigObject, "CreateSVG_ForeignObject", FALSE},
-       {"document_image", TMSG_SVG_Image, "CreateSVG_Image", FALSE},
+       //{"document_image", TMSG_SVG_Image, "CreateSVG_Image", FALSE},
        {NULL, TMSG_SVG_Information, "EditSVG_Information", FALSE},
        {NULL, TMSG_SVG_GenerateDescription, "EditSVG_GenerateDescription", FALSE}
      }
