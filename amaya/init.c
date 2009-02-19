@@ -209,7 +209,7 @@ static int AmayaPopupDocContextMenu (int doc, int view, int window,
         display_item[i] = TRUE;
 
       /* Is the element a link? */
-      if(CanFollowTheLink(doc))
+      if (CanFollowTheLink(doc))
         {
           for(i = 0; i < 4; i++)
             display_item[i] = TRUE;
@@ -6860,7 +6860,7 @@ void InitAmaya (NotifyEvent * event)
   LinkAsJavascript = FALSE;
   ImgPosition = 0;
   AttrHREFelement = NULL;
-  Right_ClikedElement = NULL;
+  Right_ClickedElement = NULL;
 
   /* init transformation callback */
   TtaSetTransformCallback ((Func2) TransformIntoType);

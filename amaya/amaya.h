@@ -454,7 +454,7 @@ THOT_EXPORT Document   SelectionDoc;
 THOT_EXPORT Document   W3Loading; /* the document being loaded */
 THOT_EXPORT Document   BackupDocument; /* the current backup */
 THOT_EXPORT Element    AttrHREFelement;
-THOT_EXPORT Element    Right_ClikedElement;
+THOT_EXPORT Element    Right_ClickedElement;
 THOT_EXPORT Document	 HighlightDocument;
 THOT_EXPORT Element	   HighlightElement;
 THOT_EXPORT Attribute  HighLightAttribute;

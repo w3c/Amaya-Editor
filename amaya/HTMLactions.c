@@ -1979,9 +1979,9 @@ static ThotBool ActivateElement (Element element, Document doc)
   ----------------------------------------------------------------------*/
 ThotBool CanFollowTheLink (Document doc)
 {
-  if (Right_ClikedElement && TtaGetDocument(Right_ClikedElement) == doc)
+  if (Right_ClickedElement && TtaGetDocument(Right_ClickedElement) == doc)
     {
-      if (WithinLinkElement (Right_ClikedElement, doc))
+      if (WithinLinkElement (Right_ClickedElement, doc))
         return TRUE;
     }
   return FALSE;
@@ -1993,9 +1993,9 @@ ThotBool CanFollowTheLink (Document doc)
 void FollowTheLink (Document doc, View view)
 {
   DontReplaceOldDoc = FALSE;
-  if (Right_ClikedElement)
-    ActivateElement (Right_ClikedElement, doc);
-  Right_ClikedElement = NULL;
+  if (Right_ClickedElement)
+    ActivateElement (Right_ClickedElement, doc);
+  Right_ClickedElement = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -2004,9 +2004,9 @@ void FollowTheLinkNewWin (Document doc, View view)
 {
   DontReplaceOldDoc = TRUE;
   InNewWindow       = TRUE;
-  if (Right_ClikedElement)
-    ActivateElement (Right_ClikedElement, doc);
-  Right_ClikedElement = NULL;
+  if (Right_ClickedElement)
+    ActivateElement (Right_ClickedElement, doc);
+  Right_ClickedElement = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -2015,9 +2015,9 @@ void FollowTheLinkNewTab (Document doc, View view)
 {
   DontReplaceOldDoc = TRUE;
   InNewWindow       = FALSE;
-  if (Right_ClikedElement)
-    ActivateElement (Right_ClikedElement, doc);
-  Right_ClikedElement = NULL;
+  if (Right_ClickedElement)
+    ActivateElement (Right_ClickedElement, doc);
+  Right_ClickedElement = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -2523,6 +2523,7 @@ ThotBool SimpleClick (NotifyElement *event)
 ThotBool SimpleLClick (NotifyElement *event)
 {
   /* let Thot perform normal operation */
+  Right_ClickedElement = NULL;
   return FALSE;
 }
 
@@ -2535,36 +2536,36 @@ ThotBool SimpleRClick (NotifyElement *event)
   ElementType         elType;
   Element             el;
 
-  Right_ClikedElement = event->element;
+  Right_ClickedElement = event->element;
 #ifdef TEMPLATES
-  elType = TtaGetElementType (Right_ClikedElement);
+  elType = TtaGetElementType (Right_ClickedElement);
   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
     {
       if (elType.ElTypeNum == Template_EL_repeat ||
           elType.ElTypeNum == Template_EL_bag)
         {
-          el = TtaGetFirstChild (Right_ClikedElement);
+          el = TtaGetFirstChild (Right_ClickedElement);
           if (el)
-            Right_ClikedElement = el;
+            Right_ClickedElement = el;
         }
       else
         {
           /* select the following use element in the repeat */
-           el = TtaGetParent (Right_ClikedElement);
+           el = TtaGetParent (Right_ClickedElement);
            if (el)
              {
                elType = TtaGetElementType (el);
                if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template") &&
                    elType.ElTypeNum == Template_EL_repeat)
                  {
-                   el = Right_ClikedElement;
+                   el = Right_ClickedElement;
                    TtaNextSibling (&el);
                    if (el)
-                     Right_ClikedElement = el;
+                     Right_ClickedElement = el;
                  }
              }
         }
-      TtaSelectElement (event->document, Right_ClikedElement);
+      TtaSelectElement (event->document, Right_ClickedElement);
     }
 #endif /* _TEMPLATES */
   /* let Thot perform normal operation */
