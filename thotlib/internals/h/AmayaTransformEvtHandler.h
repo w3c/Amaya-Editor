@@ -71,7 +71,7 @@ class AmayaTransformEvtHandler : public wxEvtHandler
   float cx, cy;
 
   /* Coordinates of the box */
-  int top2, left2, bottom2, right2;
+  int top2, left2, bottom2, right2, size;
   float top, left, bottom, right;
 
   /* Mouse Button Down */

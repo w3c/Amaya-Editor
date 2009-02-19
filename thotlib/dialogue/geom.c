@@ -734,7 +734,7 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame *p_frame,
                                 int x0, int y0, int width, int height,
                                 void *inverseCTM, ThotBool convert,
                                 char *msg, int *x, int *y,
-				ThotBool displayCoordinates)
+                                ThotBool displayCoordinates)
 {
   int      frame;
   int      newx, newy;
@@ -746,12 +746,12 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame *p_frame,
   if (inverseCTM)
     {
       /* Get the coefficients of the Matrix */
-      a = ((PtrTransform)(inverseCTM)) -> AMatrix;
-      b = ((PtrTransform)(inverseCTM)) -> BMatrix;
-      c = ((PtrTransform)(inverseCTM)) -> CMatrix;
-      d = ((PtrTransform)(inverseCTM)) -> DMatrix;
-      e = ((PtrTransform)(inverseCTM)) -> EMatrix;
-      f = ((PtrTransform)(inverseCTM)) -> FMatrix;
+      a = ((PtrTransform)(inverseCTM))->AMatrix;
+      b = ((PtrTransform)(inverseCTM))->BMatrix;
+      c = ((PtrTransform)(inverseCTM))->CMatrix;
+      d = ((PtrTransform)(inverseCTM))->DMatrix;
+      e = ((PtrTransform)(inverseCTM))->EMatrix;
+      f = ((PtrTransform)(inverseCTM))->FMatrix;
     }
   else
     {
@@ -762,10 +762,9 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame *p_frame,
   if (BoxCanvas)
     {
       // take into account MBP of the canvas
-      x0 = x0 - BoxCanvas->BxLMargin - BoxCanvas->BxLBorder - BoxCanvas->BxLPadding;
-      y0 = y0 - BoxCanvas->BxTMargin - BoxCanvas->BxTBorder - BoxCanvas->BxTPadding;
+      x0 = x0 + BoxCanvas->BxLMargin + BoxCanvas->BxLBorder + BoxCanvas->BxLPadding;
+      y0 = y0 + BoxCanvas->BxTMargin + BoxCanvas->BxTBorder + BoxCanvas->BxTPadding;
     }
-
   frame = p_frame->GetFrameId();
   width = LogicalValue (width, UnPixel, NULL,
                         ViewFrameTable[frame - 1].FrMagnification);
@@ -779,7 +778,6 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame *p_frame,
   /* SVG ancestor coordinates to SVG canvas */
   newx2 = (int)(a * newx + c * newy + e);
   newy2 = (int)(b * newx + d * newy + f);
-
   /* Modify x and y if asked */
   if (convert)
     {
@@ -810,16 +808,15 @@ ThotBool MouseCoordinatesToSVG (Document doc, AmayaFrame *p_frame,
     }
 
   /* Display the coordinates in the status bar */
-  if(msg != NULL)
+  if (msg)
     {
-      if(displayCoordinates)
-	{
-	  sprintf(buffer, "(%d,%d) - ", newx2, newy2);
-	  strcat(buffer, msg);
-	}
+      if (displayCoordinates)
+        {
+          sprintf(buffer, "(%d,%d) - ", newx2, newy2);
+          strcat(buffer, msg);
+        }
       else
-	strcpy(buffer, msg);
-
+        strcpy(buffer, msg);
       TtaSetStatus (doc, 1, buffer, NULL);
     }
   return inside;
@@ -840,12 +837,12 @@ void SVGToMouseCoordinates (Document doc, AmayaFrame *p_frame,
   if (CTM)
     {
       /* Get the coefficients of the Matrix */
-      a = ((PtrTransform)(CTM)) -> AMatrix;
-      b = ((PtrTransform)(CTM)) -> BMatrix;
-      c = ((PtrTransform)(CTM)) -> CMatrix;
-      d = ((PtrTransform)(CTM)) -> DMatrix;
-      e = ((PtrTransform)(CTM)) -> EMatrix;
-      f = ((PtrTransform)(CTM)) -> FMatrix;
+      a = ((PtrTransform)(CTM))->AMatrix;
+      b = ((PtrTransform)(CTM))->BMatrix;
+      c = ((PtrTransform)(CTM))->CMatrix;
+      d = ((PtrTransform)(CTM))->DMatrix;
+      e = ((PtrTransform)(CTM))->EMatrix;
+      f = ((PtrTransform)(CTM))->FMatrix;
     }
   else
     {

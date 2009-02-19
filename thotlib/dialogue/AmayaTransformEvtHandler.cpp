@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -40,6 +40,9 @@
 
 #include "logdebug.h"
 
+/* DELTA is the sensitivity toward mouse moves. */
+#define DELTA 0
+#define CURSOR_SIZE 8
 
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
@@ -134,10 +137,9 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
   ,hasBeenTransformed(transformApplied)
 {
   PtrAbstractBox pAb;
-  wxCursor cursor;
+  wxCursor       cursor;
 
   *hasBeenTransformed = FALSE;
-
   pAb = ((PtrElement)el)->ElAbstractBox[0];
   if (!pAb || !pAb->AbBox)
     {
@@ -146,6 +148,10 @@ AmayaTransformEvtHandler::AmayaTransformEvtHandler(AmayaFrame * p_frame,
     }
 
   box = pAb->AbBox;
+  // get the minimum size of the box
+  size = box->BxClipW;
+  if (box->BxClipH < box->BxClipW)
+    size = box->BxClipH;
   if (pFrame)
     {
       /* attach this handler to the canvas */
@@ -303,7 +309,7 @@ void AmayaTransformEvtHandler::OnMouseDown( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
 {
-  int x,y;
+  int   x, y;
 
   if (IsFinish())
     return;
@@ -330,8 +336,8 @@ void AmayaTransformEvtHandler::OnMouseUp( wxMouseEvent& event )
       MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
                             inverse, TRUE, NULL,
                             &x, &y, FALSE);
-      cx = x;
-      cy = y;
+      cx = (float)x;
+      cy = (float)y;
       ButtonDown = false;
       break;
 
@@ -392,15 +398,12 @@ void AmayaTransformEvtHandler::OnMouseDbClick( wxMouseEvent& event )
  -----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 {
-  int x1,y1,x2,y2;
-  float theta, dx1, dx2, dy1, dy2, d;
-  float det;
-  float skew,sx,sy;
+  int      x1, y1, x2, y2;
+  float    theta, dx1, dx2, dy1, dy2, d;
+  float    det;
+  float    skew, sx, sy;
   ThotBool shift = event.ShiftDown();
-  char *msg;
-
-  /* DELTA is the sensitivity toward mouse moves. */
-#define DELTA 0
+  char    *msg;
 
   /* Update the current mouse coordinates */
   mouse_x = event.GetX();
@@ -433,9 +436,9 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
                             &x1, &y1, FALSE);
 
       if(type == 0)
-	msg = TtaGetMessage (LIB, BUTTON_UP);
+        msg = TtaGetMessage (LIB, BUTTON_UP);
       else
-	msg = TtaGetMessage (LIB, TMSG_DOUBLECLICK);
+        msg = TtaGetMessage (LIB, TMSG_DOUBLECLICK);
 
       MouseCoordinatesToSVG(document, pFrame, x0, y0, width, height,
                             inverse, TRUE, msg,
@@ -505,8 +508,8 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
               */
               det = dx1*dy2 - dy1*dx2;
               theta = acos((dx1*dx2 + dy1*dy2)/d);
-              if (det < 0)theta = -theta;
-
+              if (det < 0)
+                theta = -theta;
               /* Apply rotate(theta,cx,cy) */
               TtaApplyMatrixTransform (document, el, 1, 0, 0, 1, -cx, -cy);
               TtaApplyMatrixTransform (document, el,
@@ -523,13 +526,9 @@ void AmayaTransformEvtHandler::OnMouseMove( wxMouseEvent& event )
 
         case 3:
           /* Moving center of rotation  */
-          if (MouseCoordinatesToSVG (document, pFrame, x0, y0, width, height,
-                                     inverse, FALSE, NULL,
-                                     &mouse_x, &mouse_y, FALSE))
-            {
-              cx2 = mouse_x;
-              cy2 = mouse_y;
-            }
+          cx2 = mouse_x; // final value will be done on mouse up
+          cy2 = mouse_y; // final value will be done on mouse up
+          DrawRotationCenter();
           break;
 
         case 5:
@@ -896,10 +895,7 @@ void AmayaTransformEvtHandler::OnMouseWheel( wxMouseEvent& event )
   *----------------------------------------------------------------------*/
 void AmayaTransformEvtHandler::DrawRotationCenter()
 {
-#define CURSOR_SIZE 15
-
   InitDrawing (5, 1, 0);
-
   glEnable(GL_COLOR_LOGIC_OP);
 #ifdef _WINDOWS
   glLogicOp(GL_COPY_INVERTED);
@@ -1072,7 +1068,10 @@ void AmayaTransformEvtHandler::DrawScalingArrows()
   *----------------------------------------------------------------------*/
 bool AmayaTransformEvtHandler::IsNear(int x, int y)
 {
-  return (abs(mouse_x - x) + abs(mouse_y - y) <= CURSOR_SIZE*1.5);
+  if (size < CURSOR_SIZE*1.5)
+    return (abs(mouse_x - x) + abs(mouse_y - y) <= size);
+  else
+    return (abs(mouse_x - x) + abs(mouse_y - y) <= CURSOR_SIZE*1.5);
 }
 
 /*----------------------------------------------------------------------
