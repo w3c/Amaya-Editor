@@ -275,7 +275,9 @@ void RemoveDeprecatedElements (Document doc, View view)
             {
               elType = TtaGetElementType (el);
               if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-                  (/*elType.ElTypeNum != HTML_EL_Division && */
+                  (elType.ElTypeNum != HTML_EL_Division &&
+                   elType.ElTypeNum != HTML_EL_Table_ &&
+                   elType.ElTypeNum != HTML_EL_IMG &&
                    elType.ElTypeNum != HTML_EL_Span))
                 {
                   parent = TtaGetParent (el);

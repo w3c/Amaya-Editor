@@ -27,7 +27,7 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>La plupart des traitements de texte sont capables d'exporter des documents
 en HTM, mais ils produisent souvent du mauvais code HTML. Amaya fournit une
 commande <strong>Nettoyage du code</strong> qui permet d'améliorer ces
-documents. Cette commande retire les éléments dépréciés comme 
+documents. Cette commande retire les éléments dépréciés comme
 <code>&lt;font&gt;</code>, <code>&lt;basefont&gt;</code>,
 <code>&lt;center&gt;</code>, <code>&lt;dir&gt;</code>,
 <code>&lt;menu&gt;</code>, <code>&lt;applet&gt;</code>,
@@ -40,10 +40,11 @@ cette information à plus haut niveau (un attribut <code>lang</code> sur
 <code>&lt;body&gt;</code> ou <code>&lt;div&gt;</code>, une règle de style
 générique au lieu d'un grand nombre d'attributs <code>style</code>).</p>
 
-<p>Le retrait de tous ces attributs  <code>lang</code> et <code>style</code>
+<p>Le retrait de tous ces attributs <code>lang</code> et <code>style</code>
 peut être une tâche fastidieuse qui est heureusement réalisée par la commande
 <strong>Nettoyage du code</strong>. Elle retire ces attributs sauf s'ils
-s'appliquent à un élément <code>&lt;span&gt;</code>.</p>
+s'appliquent à un élément <code>&lt;div&gt;</code>, <code>&lt;table&gt;</code>,
+<code>&lt;span&gt;</code>, ou <code>&lt;img&gt;</code>.</p>
 
 <h2 id="Editer">Changer la structure d'un document</h2>
 
