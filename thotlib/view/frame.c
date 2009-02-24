@@ -1274,7 +1274,6 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
   PtrBox              pBox, box;
   PtrBox              topBox;
   ViewFrame          *pFrame;
-  /* ThotPictInfo       *imageDesc; */
   int                 plane;
   int                 nextplane;
   int                 winTop, winBottom;
@@ -1315,9 +1314,8 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
       /* Draw all the boxes not yet displayed */
       pAb = pInitAb->AbFirstEnclosed;
       while (pAb)
-        { 
-          if (pAb->AbDepth == plane && pAb->AbBox &&
-              pAb != pInitAb/*pFrame->FrAbstractBox*/)
+        {
+          if (pAb->AbDepth == plane && pAb->AbBox && pAb != pInitAb)
             {
               /* box in the current plane */
               pBox = pAb->AbBox;

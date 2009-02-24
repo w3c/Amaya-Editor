@@ -608,7 +608,9 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
 
   /* make a copy of the marker element */
   copy = TtaNewTranscludedElement (doc, marker);
-  /* remove the id attribute from the copy */
+  /* mark the new Coordinate System */
+  TtaSetElCoordinateSystem (copy);
+   /* remove the id attribute from the copy */
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_id;
   attr = TtaGetAttribute (copy, attrType);

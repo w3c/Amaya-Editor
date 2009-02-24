@@ -736,6 +736,8 @@ BOXES
         Visibility: Enclosing =;
         Content: Text '<img>';
         Foreground: TAG_Color;
+        HorizPos: Left = Creator . Left;
+        VertPos: Top = Creator . Top;        
         MarginTop: 1 px;
         MarginLeft: 3 px;
         MarginBottom: 1 px;
@@ -757,6 +759,9 @@ BOXES
 
  SHOW_ALT: BEGIN
         Visibility: Enclosing =;
+        Inline: No;
+        HorizPos: Left = Creator . Left;
+        VertPos: Top = Creator . Top;        
         Content: (ALT);
         IN Structure_view BEGIN
                 Visibility: 0;
