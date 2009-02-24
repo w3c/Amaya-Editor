@@ -553,12 +553,12 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
   const char         *c;
   unsigned char       val;
 
+  if (IgnoreErrors)
+    return;
   if (!ShowParsingErrors)
     return;
-
   if (line == 0 && Parser == NULL)
     return;
-
   if (!ErrFile)
     if (OpenParsingErrors (XMLcontext.doc) == FALSE)
       return;
@@ -5312,10 +5312,11 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
     }
   else
     strcpy ((char *)tempName, (char *)fileName);
-  
+
+  // Ignore errors of imported documents
   savParsingError = ShowParsingErrors;
   ShowParsingErrors = FALSE;
-
+  IgnoreErrors = TRUE;
   charset = TtaGetDocumentCharset (doc);
   /* For XML documents, the default charset is ISO_8859_1 */
   if (charset == UNDEFINED_CHARSET && !DocumentMeta[doc]->xmlformat)
@@ -5456,6 +5457,7 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
     }
 
   /* Restore ParsingError indicator */
+  IgnoreErrors = FALSE;
   ShowParsingErrors = savParsingError;
 
   /* Delete the external document */

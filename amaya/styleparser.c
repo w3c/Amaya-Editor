@@ -186,7 +186,7 @@ static char *SkipQuotedString (char *ptr, char quote)
   ----------------------------------------------------------------------*/
 static void CSSPrintError (const char *msg, const char *value)
 {
-  if (!DoDialog && !TtaIsPrinting () && ParsedDoc > 0)
+  if (!IgnoreErrors && !DoDialog && !TtaIsPrinting () && ParsedDoc > 0)
     {
       if (!ErrFile)
         {

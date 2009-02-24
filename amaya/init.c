@@ -6817,6 +6817,7 @@ void InitAmaya (NotifyEvent * event)
   AmayaInitialized = 1;
   ErrFile = NULL;
   CSSErrFile = NULL;
+  IgnoreErrors = FALSE;
   W3Loading = 0;
   BackupDocument = 0;
   DoDialog = TRUE; /* don't update the CSS dialog by default */

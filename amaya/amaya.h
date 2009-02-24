@@ -461,7 +461,7 @@ THOT_EXPORT Attribute  HighLightAttribute;
 
 THOT_EXPORT FILE      *ErrFile;
 THOT_EXPORT FILE      *CSSErrFile;
-
+THOT_EXPORT ThotBool   IgnoreErrors;
 THOT_EXPORT ThotBool   URL_list_keep;
 THOT_EXPORT ThotBool   Answer_save_password;
 THOT_EXPORT ThotBool   TMAX_Width;

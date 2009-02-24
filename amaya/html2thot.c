@@ -975,6 +975,9 @@ static ThotBool Within (int ThotType, SSchema ThotSSchema)
   ----------------------------------------------------------------------*/
 void HTMLParseError (Document doc, const char* msg, int lineNumber)
 {
+  if (IgnoreErrors)
+    return;
+
   HTMLErrorsFound = TRUE;
   if (!ErrFile)
     if (OpenParsingErrors (doc) == FALSE)
@@ -7310,6 +7313,7 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile, CHARSET charset, char *e
     }
   DocumentSSchema = NULL;
   HTMLcontext.doc = 0;
+  CleanUpParsingErrors ();
   return;
 }
 
