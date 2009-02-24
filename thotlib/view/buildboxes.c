@@ -2372,8 +2372,16 @@ static ThotBool HasFloatingChild (PtrAbstractBox pAb, int frame,
                 }
               if (!TypeHasException (ExcNotAnElementNode, pChildAb->AbElement->ElTypeNumber,
                                      pChildAb->AbElement->ElStructSchema))
-                // Comments and PIs should be ignored
-               nb ++;
+                {
+                  // Comments and PIs should be ignored
+                  if (!found ||
+                      pChildAb->AbElement->ElTypeNumber != 1 ||
+                      pChildAb->AbElement->ElVolume > 1 ||
+                      pChildAb->AbElement->ElText == NULL ||
+                      pChildAb->AbElement->ElText->BuContent[0] != SPACE)
+                    // Spaces are ignored too
+                    nb ++;
+                }
             }
           pChildAb = pChildAb->AbNext;
         }
