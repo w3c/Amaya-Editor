@@ -2141,6 +2141,9 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
+  /* Clear the markers before the edition of the element */
+  UpdateMarkers(el, doc, TRUE, FALSE);
+
   /* Call the interactive module */
   transformApplied = PathEdit (frame, doc,  inverse, svgBox,
                                ancestorX, ancestorY, el, point);
@@ -2152,7 +2155,7 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   if(transformApplied)
     {
       UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
-      UpdateMarkers(el, doc);
+      UpdateMarkers(el, doc, FALSE, TRUE);
     }
 
   return transformApplied;
@@ -2425,7 +2428,7 @@ ThotBool ContentEditing (int editType)
 			    {
 			      Element el = TtaGetParent((Element)FirstSelectedElement);
 			      UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
-			      UpdateMarkers(el, doc);
+			      UpdateMarkers(el, doc, TRUE, TRUE);
 			      TtaSetDocumentModified(doc);
 			    }
 		    }

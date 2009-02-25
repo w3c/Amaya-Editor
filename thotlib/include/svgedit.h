@@ -42,8 +42,8 @@ extern void UpdateShapeElement(Document doc, Element el,
 			       int x, int y, int width, int height,
 			       int rx, int ry);
 
-extern void UpdateMarkers (Element el, Document doc);
-
+extern void UpdateMarkers (Element el, Document doc,
+			   ThotBool Clear, ThotBool Rebuild);
 #endif /* #ifndef __SVGEDIT_H__ */
 
 #endif /* _WX */

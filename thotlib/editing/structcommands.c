@@ -3580,7 +3580,7 @@ void TtaInsertAnyElement (Document document, ThotBool before)
             {
 	      Element el = TtaGetParent((Element)firstSel);
               UpdatePointsOrPathAttribute(document, el, 0, 0, TRUE);
-	      UpdateMarkers(el, document);
+	      UpdateMarkers(el, document, TRUE, TRUE);
               TtaSetDocumentModified(document);
             }
           return;

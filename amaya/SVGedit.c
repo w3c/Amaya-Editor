@@ -4063,12 +4063,11 @@ printf ("------------->UpdateSVGElement\nold=\"%s\"\nnew=\"%s\"\n",value,text);
     }
 }
 
-
 /*----------------------------------------------------------------------
   UpdateMarkers
   Remove all the markers attached to an element and rebuild them.
   ----------------------------------------------------------------------*/
-void UpdateMarkers (Element el, Document doc)
+void UpdateMarkers (Element el, Document doc, ThotBool Clear, ThotBool Rebuild)
 {
   Element child, next;
   ElementType      elType;
@@ -4083,23 +4082,29 @@ void UpdateMarkers (Element el, Document doc)
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
-  /* Clear all the markers */
-  child = TtaGetFirstChild (el);
-  while (child)
+  if(Clear)
     {
-      next = child;
-      TtaNextSibling(&next);
-      elType = TtaGetElementType(child);
-      if (elType.ElSSchema == svgSchema && elType.ElTypeNum == SVG_EL_marker)
-        {
-          TtaRegisterElementDelete (child, doc);
-          TtaDeleteTree(child, doc);
-        }
-      child = next;
+      /* Clear all the markers */
+      child = TtaGetFirstChild (el);
+      while (child)
+	{
+	  next = child;
+	  TtaNextSibling(&next);
+	  elType = TtaGetElementType(child);
+	  if (elType.ElSSchema == svgSchema &&
+	      elType.ElTypeNum == SVG_EL_marker)
+	    {
+	      TtaRegisterElementDelete (child, doc);
+	      TtaDeleteTree(child, doc);
+	    }
+	  child = next;
+	}
     }
 
-  /* Rebuild the markers */
-  ProcessMarkers (el, doc);
+  if(Rebuild)
+    /* Rebuild the markers */
+    ProcessMarkers (el, doc);
+
   TtaSetStructureChecking (oldStructureChecking, doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
