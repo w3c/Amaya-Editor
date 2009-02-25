@@ -3468,7 +3468,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   PtrSSchema          pSS;
   PtrElement          pEl, pParent;
   PtrAttribute        pAttr;
-  PtrAbstractBox      pGroup;
+  PtrAbstractBox      pGroup, pOld = pAb;
   NotifyElement       notifyEl;
   Document            doc;
   int                 view;
@@ -3516,8 +3516,8 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
       if (pGroup)
         pAb = pGroup;
     }
-  pEl = pAb->AbElement;
 
+  pEl = pAb->AbElement;
   error = FALSE;
   doubleClickRef = FALSE;
   graphSel = (pAb->AbElement->ElLeafType == LtPolyLine ||

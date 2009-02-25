@@ -4001,6 +4001,8 @@ void SelectionChanged (NotifyElement *event)
 
   if (DocumentTypes[doc] != docLog)
     {
+      TtaGiveFirstSelectedElement (doc, &el, &index, &i);
+      child = el;
       if (DocumentTypes[doc] != docSource && DocumentTypes[doc] != docCSS)
         {
           // update the XML list
@@ -4011,8 +4013,7 @@ void SelectionChanged (NotifyElement *event)
             // no current text insertion
             CheckPromptIndicator (el, doc);
 #endif /* TEMPLATES */
-          TtaGiveFirstSelectedElement (doc, &child, &index, &i);
-          elType = TtaGetElementType (el);
+          elType = TtaGetElementType (child);
           s = TtaGetSSchemaName (elType.ElSSchema);
           if (!strcmp (s, "HTML"))
             TtaRaiseDoctypePanels (WXAMAYA_DOCTYPE_XHTML);
@@ -4021,9 +4022,7 @@ void SelectionChanged (NotifyElement *event)
       else
         {
           // manage the selection in source or css file
-          TtaGiveFirstSelectedElement (doc, &child, &index, &i);
           elType = TtaGetElementType (el);
-          child = el;
           if (elType.ElTypeNum == TextFile_EL_TEXT_UNIT)
             {
               TtaPreviousSibling (&child);

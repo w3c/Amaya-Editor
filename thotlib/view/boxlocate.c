@@ -296,7 +296,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
   PtrBox              pBox;
   PtrElement          pEl = NULL, firstEl;
   PtrDocument         selecteddoc;
-  PtrTextBuffer       pBuffer;
+  PtrTextBuffer       pBuffer = NULL;
   PtrAbstractBox      pAb;
   PtrElement          el = NULL;
   ViewFrame          *pFrame;
@@ -353,7 +353,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
             pBox = pBox->BxPrevious;
         }
 
-      if (pBox)
+      if (pBox && pBox->BxAbstractBox)
         {
 #ifndef _GL
           xOrg =  pBox->BxXOrg;
