@@ -64,6 +64,7 @@ static const char       *DisplayCategory[]={
 #include "Xmlbuilder_f.h"
 #include "paneltypes_wx.h"
 #include "SVGbuilder_f.h"
+#include "SVGedit_f.h"
 #ifdef TEMPLATES
 #include "templateUtils_f.h"
 #endif /* TEMPLATES */
@@ -1521,11 +1522,16 @@ void DoStyleSVG (Document doc, View view, int current_value, int type)
               
             case PRLineWeight:
               sprintf(buffer, "stroke-width: %d", current_value);
-              //TtaSetPRuleValue (el, rule, current_value, doc);
+              // TtaSetPRuleValue (el, rule, current_value, doc);
               break;
             }
 
           GenerateStyle (buffer, TRUE, TRUE);
+
+	  /* SVG stroke width has changed: so does the size of markers */
+	  if(type == PRLineWeight)
+	     UpdateMarkers(el, doc, TRUE, TRUE);
+
           TtaSetDisplayMode (doc, dispMode);
           
           if (open)
