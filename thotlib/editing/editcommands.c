@@ -2153,10 +2153,9 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
 
   /* Update the attribute */
   if(transformApplied)
-    {
-      UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
-      UpdateMarkers(el, doc, FALSE, TRUE);
-    }
+    UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
+
+  UpdateMarkers(el, doc, FALSE, TRUE);
 
   return transformApplied;
 }
