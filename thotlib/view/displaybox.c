@@ -135,7 +135,7 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
       width = pBox->BxW;
       height = pBox->BxH;
       DrawPicture (pBox, (ThotPictInfo *) pBox->BxPictInfo, frame, xd, yd,
-                   width, height, t, l);
+                   width, height, t, l, TRUE);
       /* Should the end of de line be filled with dots */
       if (pBox->BxEndOfBloc > 0)
         {

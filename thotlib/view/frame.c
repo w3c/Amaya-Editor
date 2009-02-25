@@ -834,12 +834,18 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                              pFrom->AbForeground, pFrom->AbBackground,
                              pFrom->AbFillPattern);
             }
-          if (imageDesc && show_bgimage)
+          if (imageDesc && show_bgimage && imageDesc->PicFileName &&
+              imageDesc->PicFileName[0] != EOS)
             {
-              /* draw the background image the default presentation is repeat */
               pres = imageDesc->PicPresent;
-              DrawPicture (pBox, imageDesc, frame, xbg - x, ybg - y,
-                           wbg, hbg, t, l);
+              if (pBox->BxType != BoPiece ||
+                  (pBox == pAb->AbBox->BxNexChild &&
+                   (imageDesc->PicPosX < 10 || imageDesc->PicXUnit != UnPercent)) ||
+                  (pBox->BxNexChild == NULL && imageDesc->PicPosX > 70 &&
+                   imageDesc->PicXUnit == UnPercent))
+                /* draw the background image the default presentation is repeat */
+                DrawPicture (pBox, imageDesc, frame, xbg - x, ybg - y,
+                             wbg, hbg, t, l, (ThotBool)(pBox == from));
             }
         }
       if ((bt || bb || bl || br) &&

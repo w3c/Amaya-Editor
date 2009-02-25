@@ -51,7 +51,8 @@ extern void DrawPicture ( PtrBox box,
                           int w,
                           int h,
                           int t,
-                          int l );
+                          int l,
+                          ThotBool self );
 extern unsigned char *ZoomPicture ( unsigned char *cpic,
                                     int cWIDE,
                                     int cHIGH,
@@ -137,7 +138,8 @@ extern void DrawPicture ( PtrBox box,
                             int w,
                             int h,
                             int t,
-                            int l );
+                            int l,
+                            ThotBool self );
 extern unsigned char *ZoomPicture ( unsigned char *cpic,
                                       int cWIDE,
                                       int cHIGH,
