@@ -3496,7 +3496,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if  (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
        y + box->BxHeight > boxPrevL->BxYOrg)
     /* can be inserted next to this previous float ? */
-    w -= (boxPrevL->BxXOrg + boxPrevL->BxWidth - x);
+    w -= (boxPrevL->BxXOrg + boxPrevL->BxWidth - left - orgX);
 
   /* check if a clear is requested */
   SetClear (box, &clearl, &clearr);
