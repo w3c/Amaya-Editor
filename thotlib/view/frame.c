@@ -844,14 +844,12 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                     (imageDesc->PicPosX < 10 || imageDesc->PicXUnit != UnPercent)) ||
                    (pBox->BxNexChild == NULL && imageDesc->PicPosX > 70 &&
                     imageDesc->PicXUnit == UnPercent)) &&
-                  ((pAb->AbLeafType != LtCompound ||
-                    (!pAb->AbTruncatedHead &&
-                     (imageDesc->PicPosY < 10 || imageDesc->PicYUnit != UnPercent)) ||
-                    (!pAb->AbTruncatedTail && imageDesc->PicPosY > 70 &&
-                     imageDesc->PicYUnit == UnPercent))))
+                  (pAb->AbLeafType != LtCompound ||
+                   ((!pAb->AbTruncatedHead || imageDesc->PicPosY > 50) &&
+                    (!pAb->AbTruncatedTail || imageDesc->PicPosY < 50))))
                 /* draw the background image the default presentation is repeat */
                 DrawPicture (pBox, imageDesc, frame, xbg - x, ybg - y,
-                             wbg, hbg, t, l, (ThotBool)(pBox == from));
+                             wbg, hbg, t, l, (ThotBool)(pBox != from));
             }
         }
       if ((bt || bb || bl || br) &&
