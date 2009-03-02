@@ -54,7 +54,8 @@ simplement l'élément correspondant à la position courante.</p>
 
 <p>L'outil <strong>Eléments</strong> donne un moyen direct pour :</p>
 <ul>
-  <li>insérer (ou remplacer la sélection courante par) un élément XHTML :
+  <li>insérer - ou remplacer la sélection courante par - un élément XHTML : <br
+    />
     division (<img alt="Bouton Division"
     src="../../resources/icons/16x16/XHTML_Div.png" />), titre (<img
     alt="Bouton Titre niveau 1" src="../../resources/icons/16x16/XHTML_H1.png"
@@ -78,11 +79,11 @@ simplement l'élément correspondant à la position courante.</p>
     alt="Bouton Image" src="../../resources/icons/16x16/XHTML_Image.png" />),
     objet (<img alt="Bouton Objet"
     src="../../resources/icons/16x16/XHTML_object.png" />).</li>
-  <li>ouvrir/fermer (ou englober la sélection courante dans) un élément
-    <em>en-ligne</em> de XHTML : <em>mise en évidence</em> (<img
-    src="../../resources/icons/16x16/XHTML_I.png" alt="Bouton Mise en evidence"
-    />), <strong>important</strong> (<img
-    src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />)
+  <li>ouvrir/fermer - ou englober la sélection courante dans - un élément
+    <em>en-ligne</em> de XHTML : <em><br />
+    mise en évidence</em> (<img src="../../resources/icons/16x16/XHTML_I.png"
+    alt="Bouton Mise en evidence" />), <strong>important</strong> (<img
+    src="../../resources/icons/16x16/XHTML_B.png" alt="Bouton Important" />),
     <code>code</code> (<img src="../../resources/icons/16x16/XHTML_T.png"
     alt="Bouton Code" />), <ins>insertion</ins> (<img alt="Bouton Insertion"
     src="../../resources/icons/16x16/XHTML_ins.png" />), <del>suppression</del>
@@ -96,8 +97,9 @@ simplement l'élément correspondant à la position courante.</p>
 <p class="Note">Note : Dans le profil Lite d'Amaya seul un sous-ensemble de ces
 boutons est disponible.</p>
 
-<p>Pour plus d'information sur ces éléments <a href="HTML.html.fr">voir la
-liste de tous les éléments HTML 4.0</a>.</p>
+<p>Pour plus d'information sur ces éléments <a
+href="HTML-elements/HTML.html.fr">voir la liste de tous les éléments HTML
+4.0</a>.</p>
 
 <h3 id="Point">Point d'insertion</h3>
 
