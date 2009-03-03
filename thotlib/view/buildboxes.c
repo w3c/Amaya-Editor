@@ -2880,6 +2880,10 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           inlineFloatC = FALSE;
           if (boxType == BoRow || boxType == BoColumn)
             pAb->AbFloat = 'N';
+          else if (pAb->AbFloat == 'L')
+            AddFloatingBox (pAb, frame, TRUE);
+          else if (pAb->AbFloat == 'R')
+            AddFloatingBox (pAb, frame, FALSE);
         }
       else
         {
