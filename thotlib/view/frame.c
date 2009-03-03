@@ -703,21 +703,35 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
     }
   else
     {
+if(!strcmp(pFrom->AbElement->ElLabel,"L98"))
+    printf ("DisplayFilled L98 \n");  
       // the box is displayed on a set of lines
       GetExtraMargins (from, frame, FALSE, &t, &b, &l, &r);
+      t += from->BxTMargin;
+      b += from->BxBMargin;
       bt = from->BxTBorder;
       bb = from->BxBBorder;
       if (first)
-        bl = from->BxLBorder;
+        {
+          l += from->BxLMargin;
+          bl = from->BxLBorder;
+        }
       else
         bl = 0;
       if (last)
-        br = from->BxRBorder;
+        {
+          r += from->BxRMargin;
+          br = from->BxRBorder;
+        }
       else
         br = 0;
       xd = pBox->BxXOrg + shiftx;
+      if (l > 0)
+        xd += l;
       width =  pBox->BxWidth;
       yd = pBox->BxYOrg;
+      if (t > 0)
+        yd += t;
       height = pBox->BxHeight;
     }
   if (l > 0)
@@ -794,7 +808,6 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       wbg = width - bl - br;
       hbg = height - bt - bb;
     }
-  
   if (setWindow ||
       (width && height &&
        yd + height >= ymin && yd <= ymax &&
@@ -849,7 +862,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
                     (!pAb->AbTruncatedTail || imageDesc->PicPosY < 50))))
                 /* draw the background image the default presentation is repeat */
                 DrawPicture (pBox, imageDesc, frame, xbg - x, ybg - y,
-                             wbg, hbg, t, l, (ThotBool)(pBox != from));
+                             wbg, hbg, t, l, (ThotBool)(pBox == from));
             }
         }
       if ((bt || bb || bl || br) &&
