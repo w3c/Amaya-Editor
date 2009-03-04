@@ -18,6 +18,7 @@
  <language encoding="utf8">sk</language>
  <language encoding="utf8">jp</language>
  <language encoding="utf8">ja</language>
+ <language encoding="latin1">nl</language>
 </control>
  <messages>
 <label define="TMSG_LIB_X11_ERR">

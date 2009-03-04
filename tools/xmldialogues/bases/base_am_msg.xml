@@ -16,7 +16,9 @@
  <language encoding="utf8">tw</language>
  <language encoding="utf8">sk</language>
  <language encoding="utf8">jp</language>
- <language encoding="utf8">ja</language></control>
+ <language encoding="utf8">ja</language>
+ <language encoding="latin1">nl</language>
+</control>
 <messages>
 <label define="AM_FILES">
 <message xml:lang="en">Files</message>
