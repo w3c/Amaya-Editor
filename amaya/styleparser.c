@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -4875,7 +4875,7 @@ static char *ParseSVGStrokeOpacity (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-  ParseSVGFillOpacity: parse a SVG fil-opacityl property
+  ParseSVGFillOpacity: parse a SVG fill-opacityl property
   ----------------------------------------------------------------------*/
 static char *ParseSVGFillOpacity (Element element, PSchema tsch,
                                   PresentationContext context, char *cssRule,
@@ -4889,6 +4889,42 @@ static char *ParseSVGFillOpacity (Element element, PSchema tsch,
   if (DoApply)
     /* install the new presentation. */
     TtaSetStylePresentation (PRFillOpacity, element, tsch, context, best);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseSVGFillRule: parse a SVG fill-rule property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGFillRule (Element element, PSchema tsch,
+                               PresentationContext context, char *cssRule,
+                               CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     best;
+
+  best.typed_data.unit = UNIT_INVALID;
+  best.typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      best.typed_data.unit = VALUE_INHERIT;
+      best.typed_data.value = 0;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "nonzero", 7))
+    {
+      best.typed_data.unit = VALUE_AUTO;
+      best.typed_data.value = 0;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "evenodd", 7))
+    {
+      best.typed_data.unit = VALUE_AUTO;
+      best.typed_data.value = 1;
+      cssRule = SkipWord (cssRule);
+    }
+
+  if (DoApply)
+    /* install the new presentation. */
+    TtaSetStylePresentation (PRFillRule, element, tsch, context, best);
   return (cssRule);
 }
 
@@ -5984,10 +6020,15 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
   cssRule = SkipBlanksAndComments (cssRule);
   ptr = cssRule;
   /* first parse the attribute string */
-  if (!strncasecmp (cssRule, "auto", 4) ||
-      !strncasecmp (cssRule, "inherit", 7))
+  if (!strncasecmp (cssRule, "auto", 4))
     {
       val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_INHERIT;
       val.typed_data.value = 0;
       cssRule = SkipWord (cssRule);
     }
@@ -5999,13 +6040,12 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
           cssRule = SkipValue ("Invalid z-index value", ptr);
           return (cssRule);
         }
+      val.typed_data.value = - val.typed_data.value;
     }
   if (DoDialog)
-        DisplayStyleValue ("z-index", ptr, cssRule);
-  /***
-      else if (DoApply)
-      TtaSetStylePresentation (PR, element, tsch, context, val);
-  ***/
+    DisplayStyleValue ("z-index", ptr, cssRule);
+  else if (DoApply)
+    TtaSetStylePresentation (PRDepth, element, tsch, context, val);
   return (cssRule);
 }
 
@@ -6104,6 +6144,7 @@ static CSSProperty CSSProperties[] =
 
     /* SVG extensions */
     {"fill-opacity", ParseSVGFillOpacity},
+    {"fill-rule", ParseSVGFillRule},
     {"fill", ParseSVGFill},
     {"opacity", ParseSVGOpacity},
     {"stroke-opacity", ParseSVGStrokeOpacity},

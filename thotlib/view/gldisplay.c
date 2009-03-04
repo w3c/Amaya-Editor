@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1230,9 +1230,10 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 
 /*----------------------------------------------------------------------
   DoDrawMesh : Draw Path as lines or polygons
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 static void DoDrawMesh (int frame, int thick, int style, void *mesh,
-                        int fg, int bg, int pattern)
+                        int fg, int bg, int pattern, int mode)
 {
   /* Fill in the polygon */
   if (pattern == 2) 
@@ -1240,7 +1241,7 @@ static void DoDrawMesh (int frame, int thick, int style, void *mesh,
       /*  InitDrawing (style, thick, bg); */
       GL_SetForeground (bg, TRUE);
       // by default mode NONZERO
-      MakeMesh (mesh, 0);
+      MakeMesh (mesh, mode);
     }
   /* Draw the border */
   if (thick > 0 && fg >= 0)
@@ -1357,7 +1358,7 @@ void DrawRectangle2 (int frame, int thick, int style, int x, int y, int width,
 
   /* Draw the shape and free the memory used */
   CountourCountAdd (mesh);
-  DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern);
+  DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern, 0);
   FreeMesh (mesh);
 
   /* Segments are not joined well when using DoDrawMesh,
@@ -1393,7 +1394,7 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   PtrTextBuffer       adbuff;
   
   /* fill the included polygon */
-  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern);
+  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern, 0);
   if (thick == 0 || fg < 0)
     return;
   
@@ -1441,10 +1442,11 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   Draw a polygon whose points are stored in buffer points
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 static void DoDrawLines (int frame, int thick, int style,
                          ThotPoint *points, int npoints, int fg, int bg,
-                         int pattern)
+                         int pattern, int mode)
 {
 
   /* Fill in the polygon */
@@ -1452,7 +1454,7 @@ static void DoDrawLines (int frame, int thick, int style,
     {
       /*  InitDrawing (style, thick, bg); */
       GL_SetForeground (bg, TRUE);
-      GL_DrawPolygon (points, npoints, 0);
+      GL_DrawPolygon (points, npoints, mode);
     }
 
   /* Draw the border */
@@ -1506,7 +1508,7 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
 /*       GL_DrawPolygon (points, 5, 0); */
 /*     } */
 
-  DoDrawLines (frame, thick, style, points, 5, fg, bg, pattern);
+  DoDrawLines (frame, thick, style, points, 5, fg, bg, pattern, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -1533,7 +1535,7 @@ void DrawParallelogram (int frame, int thick, int style, int x, int y,
   points[3].x = x;
   points[3].y = y + height;
 
-  DoDrawLines (frame, thick, style, points, 5, fg, bg, pattern);
+  DoDrawLines (frame, thick, style, points, 5, fg, bg, pattern, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -1585,7 +1587,7 @@ void DrawTrapezium (int frame, int thick, int style, int x, int y,
   points[4].x = points[0].x;
   points[4].y = points[0].y;
 
-  DoDrawLines (frame, thick, style, points, 5, fg, bg, pattern);
+  DoDrawLines (frame, thick, style, points, 5, fg, bg, pattern, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -1595,9 +1597,10 @@ void DrawTrapezium (int frame, int thick, int style, int x, int y,
   The first point is a fake one containing the geometry.
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 void DrawPolygon (int frame, int thick, int style, int x, int y,
-                  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
+                  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern, int mode)
 {
   ThotPoint          *points;
   int                 i, j;
@@ -1623,7 +1626,7 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
   /* Close the polygon */
   points[nb - 1].x = points[0].x;
   points[nb - 1].y = points[0].y;
-  DoDrawLines (frame, thick, style, points, nb, fg, bg, pattern);
+  DoDrawLines (frame, thick, style, points, nb, fg, bg, pattern, mode);
   /* free the table of points */
   TtaFreeMemory (points);
 }
@@ -1830,9 +1833,10 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 void DrawPath (int frame, int thick, int style, int x, int y,
-               PtrPathSeg path, int fg, int bg, int pattern)
+               PtrPathSeg path, int fg, int bg, int pattern, int mode)
 {
   PtrPathSeg   pPa;
   double       x1, y1, cx1, cy1, x2, y2, cx2, cy2;
@@ -1904,7 +1908,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
           pPa = pPa->PaNext;
         }
       CountourCountAdd (mesh);
-      DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern);     
+      DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern, mode);     
       /* free the table of points */
       FreeMesh (mesh);
     }  
@@ -2004,7 +2008,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 
   /* Draw the shape and free the memory used */
   CountourCountAdd (mesh);
-  DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern);
+  DoDrawMesh (frame, thick, style, mesh, fg, bg, pattern, 0);
   FreeMesh (mesh);
 
   /* The arcs are not always drawn well using DoDrawMesh,
@@ -3162,7 +3166,6 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
       points[2].y = y_point - size;
       break;
 
-
     case 7: /* SE */
       points[0].x = x_point - size;
       points[0].y = y_point;
@@ -3178,10 +3181,7 @@ void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
     }
 
   points[3] = points[0];
-
-  DoDrawLines (frame, 1, 5,
-	       points, 4, fg, bg,
-	       2);
+  DoDrawLines (frame, 1, 5, points, 4, fg, bg, 2, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -3205,7 +3205,7 @@ void DrawTriangle (int frame, int thick, int style, int fg, int bg, int pattern,
   points[2].y = y3;
   points[3] = points[0];
 
-  DoDrawLines (frame, thick, style, points, 4, fg, bg, pattern);
+  DoDrawLines (frame, thick, style, points, 4, fg, bg, pattern, 0);
 }
 
 

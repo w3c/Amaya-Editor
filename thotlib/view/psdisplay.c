@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1212,7 +1212,7 @@ void  DrawSegments (int frame, int thick, int style, int x, int y,
   if (fg < 0)
     thick = 0;
   /* fill the included polygon */
-  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern);
+  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern, 0);
   y += FrameTable[frame].FrTopMargin;
   xp = yp = 0;
   prevx = prevy = 0;
@@ -1274,9 +1274,10 @@ void  DrawSegments (int frame, int thick, int style, int x, int y,
    The first point is a fake one containing the geometry.
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 void DrawPolygon (int frame, int thick, int style, int x, int y,
-		  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
+                  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern, int mode)
 {
 #ifndef _WX
   float               xp, yp;
@@ -1494,9 +1495,10 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 void DrawPath (int frame, int thick, int style, int x, int y,
-	       PtrPathSeg path, int fg, int bg, int pattern)
+	       PtrPathSeg path, int fg, int bg, int pattern, int mode)
 {
 #ifndef _WX
   PtrPathSeg          pPa;

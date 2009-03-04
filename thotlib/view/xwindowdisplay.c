@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1498,7 +1498,7 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
   PtrTextBuffer       adbuff;
 
   /* fill the included polygon */
-  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern);
+  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern, 0);
   if (thick == 0 || fg < 0)
     return;
 
@@ -1593,9 +1593,10 @@ static void DoDrawLines (int frame, int thick, int style,
   The first point is a fake one containing the geometry.
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 void DrawPolygon (int frame, int thick, int style, int x, int y,
-                  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
+                  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern, int mode)
 {
   ThotPoint          *points;
   int                 i, j;
@@ -1873,9 +1874,9 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
-static void  DrawCurrent (int frame, int thick, int style,
-                          ThotPoint *points, int npoints,
-                          int fg, int bg, int pattern)
+static void DrawCurrent (int frame, int thick, int style,
+                         ThotPoint *points, int npoints,
+                         int fg, int bg, int pattern)
 {
   if (npoints > 1)
     {
@@ -1896,9 +1897,10 @@ static void  DrawCurrent (int frame, int thick, int style,
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
+  mode = 0 (GLU_TESS_WINDING_NONZERO), 1 (GLU_TESS_WINDING_ODD)
   ----------------------------------------------------------------------*/
 void DrawPath (int frame, int thick, int style, int x, int y,
-               PtrPathSeg path, int fg, int bg, int pattern)
+               PtrPathSeg path, int fg, int bg, int pattern, int mode)
 {
   ThotPoint           *points;
   int                 npoints, maxpoints;

@@ -783,7 +783,7 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                   break;
                 case PtDepth:
                   if (pPRule->PrInhPercent)
-                    val = (pAbb->AbDepth * i) / 100;
+                    val = pAbb->AbDepth;
                   else
                     val = pAbb->AbDepth + i;
                   break;

@@ -2423,7 +2423,7 @@ static void AddFlow (PtrAbstractBox pAb, int frame)
 
       /* check if the flow is already registered */
       pFlow = pFrame->FrFlow;
-      while (pFlow)
+      while (pFlow && pFlow->FlRootBox && pFlow->FlRootBox->AbDepth >= pAb->AbDepth)
         {
           if (pFlow->FlRootBox == pAb)
             /* already registered */

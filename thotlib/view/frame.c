@@ -703,8 +703,6 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
     }
   else
     {
-if(!strcmp(pFrom->AbElement->ElLabel,"L98"))
-    printf ("DisplayFilled L98 \n");  
       // the box is displayed on a set of lines
       GetExtraMargins (from, frame, FALSE, &t, &b, &l, &r);
       t += from->BxTMargin;
@@ -781,6 +779,7 @@ if(!strcmp(pFrom->AbElement->ElLabel,"L98"))
 #ifdef _GL
   if (pFrom && pFrom->AbFillBox)
     tex_bg_id = SetTextureScale (IsBoxDeformed(pBox));
+  GL_SetFillOpacity (pFrom->AbFillOpacity);
 #endif /* _GL */
   if (setWindow)
     {
@@ -880,6 +879,7 @@ if(!strcmp(pFrom->AbElement->ElLabel,"L98"))
 #ifdef _GL
   if (tex_bg_id)
     StopTextureScale (tex_bg_id);
+  GL_SetFillOpacity (1000);
   pBox->BxClipX -= shiftx;
   pBox->BxClipY -= shifty;
 #endif /*_GL*/
@@ -1889,14 +1889,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
 #ifdef _GL
             }
 #endif /* _GL */
-          else if (pAb->AbDepth < plane)
-            {
-              /* keep the lowest value for plane depth */
-              if (plane == nextplane)
-                nextplane = pAb->AbDepth;
-              else if (pAb->AbDepth > nextplane)
-                nextplane = pAb->AbDepth;
-            }
+          else if (pAb->AbDepth < plane &&
+                   (plane == nextplane || pAb->AbDepth > nextplane))
+            /* keep the lowest value for plane depth */
+            nextplane = pAb->AbDepth;
 
           /* get next abstract box */
           if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed &&
@@ -1927,6 +1923,11 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                               clipXOfFirstCoordSys, clipYOfFirstCoordSys);
                         }
                     }
+                  else if (pAb->AbDepth < plane &&
+                           (plane == nextplane || pAb->AbDepth > nextplane))
+                    /* keep the lowest value for plane depth */
+                    nextplane = pAb->AbDepth;
+
                   not_g_opacity_displayed = TRUE;
 #else /* _GL */
                   OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin,
@@ -2087,14 +2088,10 @@ void ComputeChangedBoundingBoxes (int frame)
                     }
                 }
             }
-          else if (pAb->AbDepth < plane)
-            {
-              /* keep the lowest value for plane depth */
-              if (plane == nextplane)
-                nextplane = pAb->AbDepth;
-              else if (pAb->AbDepth > nextplane)
-                nextplane = pAb->AbDepth;
-            }
+          else if (pAb->AbDepth < plane &&
+                   (plane == nextplane || pAb->AbDepth > nextplane))
+            /* keep the lowest value for plane depth */
+            nextplane = pAb->AbDepth;
 
           /* get next abstract box */
           if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed&&
@@ -2122,6 +2119,11 @@ void ComputeChangedBoundingBoxes (int frame)
                             }
                         }
                     }
+                  else if (pAb->AbDepth < plane &&
+                           (plane == nextplane || pAb->AbDepth > nextplane))
+                    /* keep the lowest value for plane depth */
+                    nextplane = pAb->AbDepth;
+
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
                     pAb = pNext = NULL;

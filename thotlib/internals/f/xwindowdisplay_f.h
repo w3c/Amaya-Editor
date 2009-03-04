@@ -207,7 +207,8 @@ extern void DrawPolygon ( int frame,
                           int nb,
                           int fg,
                           int bg,
-                          int pattern );
+                          int pattern,
+                          int mode );
 extern void DrawCurve ( int frame,
                         int thick,
                         int style,
@@ -237,7 +238,8 @@ extern void DrawPath ( int frame,
                        PtrPathSeg path,
                        int fg,
                        int bg,
-                       int pattern );
+                       int pattern,
+                       int mode );
 extern void DrawOval ( int frame,
                        int thick,
                        int style,
@@ -631,7 +633,8 @@ extern void DrawPolygon ( int frame,
                             int nb,
                             int fg,
                             int bg,
-                            int pattern );
+                            int pattern,
+                            int mode );
 extern void DrawCurve ( int frame,
                           int thick,
                           int style,
@@ -661,7 +664,8 @@ extern void DrawPath ( int frame,
                          PtrPathSeg path,
                          int fg,
                          int bg,
-                         int pattern );
+                         int pattern,
+                         int mode );
 extern void DrawOval ( int frame,
                          int thick,
                          int style,

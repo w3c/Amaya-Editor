@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2826,6 +2826,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRFillPattern:
       *intRule = PtFillPattern;
       break;
+    case PRFillRule:
+      *intRule = PtFillRule;
+      break;
     case PROpacity:
       *intRule = PtOpacity;
       break;
@@ -3193,6 +3196,9 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       break;
     case PtFillOpacity:
       setting->type = PRFillOpacity;
+      break;
+    case PtFillRule:
+      setting->type = PRFillRule;
       break;
     case PtBackground:
       setting->type = PRBackground;
@@ -3980,6 +3986,13 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       add_unit = 1;
       break;
     case PRDepth:
+      if (settings->value.typed_data.unit == VALUE_INHERIT)
+        sprintf (buffer, "z-index: inherit");
+      else if (settings->value.typed_data.unit == VALUE_AUTO)
+        sprintf (buffer, "z-index: auto");
+      else
+        sprintf (buffer, "z-index: %d", - settings->value.typed_data.value);
+      break;
       break;
     case PRAdjust:
       elType = TtaGetElementType(el);
@@ -4081,6 +4094,14 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       break;
     case PRFillOpacity:
       sprintf (buffer, "fill-opacity: %g", fval);
+      break;
+    case PRFillRule:
+      if (settings->value.typed_data.unit == VALUE_INHERIT)
+        sprintf (buffer, "fill-rule: inherit");
+      else if (settings->value.typed_data.value == 0)
+        sprintf (buffer, "fill-rule: nonzero");
+      else if (settings->value.typed_data.value == 1)
+        sprintf (buffer, "fill-rule: evenodd");
       break;
     case PRStrokeOpacity:
       sprintf (buffer, "stroke-opacity: %g", fval);

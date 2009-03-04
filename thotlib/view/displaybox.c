@@ -1390,7 +1390,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
           break;
         case 'p':	/* polygon */
           DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
-                       pBox->BxNChars, fg, bg, pat);
+                       pBox->BxNChars, fg, bg, pat, 0);
           break;
         case 's':	/* closed spline */
           /* compute control points */
@@ -1475,7 +1475,7 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected,
         }
 
       DrawPath (frame, i, style, xd, yd, pBox->BxFirstPathSeg, fg,
-                bg, pat);
+                bg, pat, 0);
 
       if (pBox->BxEndOfBloc > 0)
         {

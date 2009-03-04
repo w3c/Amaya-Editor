@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -226,7 +226,7 @@ typedef enum
   PtSize, PtStyle, PtWeight, PtVariant, PtFont, PtUnderline, PtThickness,
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, 
-  PtOpacity, PtFillOpacity, PtStrokeOpacity,
+  PtOpacity, PtFillOpacity, PtStrokeOpacity, PtFillRule,
   PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
   PtXRadius, PtYRadius,
   PtPosition, PtTop, PtRight, PtBottom, PtLeft, PtFloat, PtClear,
