@@ -1361,6 +1361,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_STROKE_OPACITY:
       TypeRP = PtStrokeOpacity;
       break;
+    case C_PR_FILL_RULE:
+      TypeRP = PtFillRule;
+      break;
     case C_PR_BACKGROUND:
       TypeRP = PtBackground;
       break;
@@ -1544,6 +1547,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtBorderRightStyle:
       case PtBorderBottomStyle:
       case PtBorderLeftStyle:
+      case PtFillRule:
         if (!TtaReadByte (pivFile, (unsigned char *)&ch))
           PivotError (pivFile, "PivotError: PresRule 3");
         break;
@@ -1786,6 +1790,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
           case PtBorderRightStyle:
           case PtBorderBottomStyle:
           case PtBorderLeftStyle:
+	  case PtFillRule:
             pPRule->PrChrValue = ch;
             break;
           case PtHyphenate:

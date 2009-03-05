@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1352,6 +1352,8 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
   PRWidth, PRHeight: an integer (size in points)
   PRHyphenate: Hyphenation, NoHyphenation.
   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
+  PROpacity, PRStrokeOpacity, PRFillOpacity: an integer.
+  PRFillRule: NonZero, EvenOdd.
   ----------------------------------------------------------------------*/
 void TtaSetPRuleValue (Element element, PRule pRule, int value, Document document)
 {
@@ -1909,6 +1911,25 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
               break;
             case LeftWithDots:
               ((PtrPRule) pRule)->PrAdjust = AlignLeftDots;
+              break;
+            default:
+#ifndef NODISPLAY
+              done = FALSE;
+#endif
+              TtaError (ERR_invalid_parameter);
+              break;
+            }
+          break;
+
+        case PtFillRule:
+          ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+          switch (value)
+            {
+            case NonZero:
+              ((PtrPRule) pRule)->PrChrValue = 'n';
+              break;
+            case EvenOdd:
+              ((PtrPRule) pRule)->PrChrValue = 'e';
               break;
             default:
 #ifndef NODISPLAY
@@ -3004,6 +3025,8 @@ int                 TtaGetPRuleType (PRule pRule)
   PtWidth, PtHeight: distance
   PRHyphenate: Hyphenation, NoHyphenation.
   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
+  PROpacity, PRStrokeOpacity, PRFillOpacity: an integer.
+  PRFillRule: NonZero, EvenOdd.
   ----------------------------------------------------------------------*/
 int TtaGetPRuleValue (PRule pRule)
 {
@@ -3431,6 +3454,21 @@ int TtaGetPRuleValue (PRule pRule)
           }
         break;
 
+      case PtFillRule:
+        switch (((PtrPRule) pRule)->PrChrValue)
+          {
+          case 'n':
+            value = NonZero;
+            break;
+          case 'e':
+            value = EvenOdd;
+            break;
+          default:
+            TtaError (ERR_invalid_parameter);
+            break;
+          }
+        break;
+
       default:
         TtaError (ERR_invalid_parameter);
         break;
@@ -3628,6 +3666,7 @@ int TtaSamePRules (PRule pRule1, PRule pRule2)
                     case PtBorderRightStyle:
                     case PtBorderBottomStyle:
                     case PtBorderLeftStyle:
+		    case PtFillRule:
                       if (pR1->PrChrValue == pR2->PrChrValue)
                         result = 1;
                       break;

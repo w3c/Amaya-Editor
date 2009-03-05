@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -261,6 +261,9 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       break;
     case PtStrokeOpacity:
       fprintf (fileDescriptor, "StrokeOpacity");
+      break;
+    case PtFillRule:
+      fprintf (fileDescriptor, "FillRule");
       break;
     case PtBackground:
       fprintf (fileDescriptor, "Background");
@@ -1151,6 +1154,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
       fprintf (fileDescriptor, "Opacity:%d", pAb->AbOpacity);
       fprintf (fileDescriptor, " FillOpacity:%d", pAb->AbFillOpacity);
       fprintf (fileDescriptor, " StrokeOpacity:%d", pAb->AbStrokeOpacity);
+      fprintf (fileDescriptor, " FillRule:%c", pAb->AbFillRule);
 
       fprintf (fileDescriptor, "\n");
       for (j = 1; j <= Indent + 6; j++)
@@ -2866,6 +2870,19 @@ static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
             fprintf (fileDescriptor, "Outset");
             break;
           }
+      else if (pR->PrType == PtFillRule)
+	switch (pR->PrChrValue)
+          {
+          case 'e':
+            fprintf (fileDescriptor, "EvenOdd");
+            break;
+          case 'n':
+            fprintf (fileDescriptor, "NonZero");
+            break;
+          default:
+            fprintf (fileDescriptor, "%c", pR->PrChrValue);
+            break;
+	  }
       else
         fprintf (fileDescriptor, "%c", pR->PrChrValue);
     }
@@ -3670,13 +3687,17 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
           fprintf (fileDescriptor, "Opacity: ");
           wrnbherit (RP, fileDescriptor);
           break;
+        case PtFillOpacity:
+          fprintf (fileDescriptor, "FillOpacity: ");
+          wrnbherit (RP, fileDescriptor);
+          break;
         case PtStrokeOpacity:
           fprintf (fileDescriptor, "StrokeOpacity: ");
           wrnbherit (RP, fileDescriptor);
           break;
-        case PtFillOpacity:
-          fprintf (fileDescriptor, "FillOpacity: ");
-          wrnbherit (RP, fileDescriptor);
+        case PtFillRule:
+          fprintf (fileDescriptor, "FillRule: ");
+          wrfontstyle (RP, fileDescriptor);
           break;
         case PtBackground:
           fprintf (fileDescriptor, "Background: ");

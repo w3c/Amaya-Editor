@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3365,6 +3365,7 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
     case PtForeground:
     case PtXRadius:
     case PtYRadius:
+    case PtFillRule:
       pAb->AbAspectChange = TRUE;
       break;
     case PtFloat:
@@ -3445,6 +3446,7 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
       || typeRule == PtOpacity
       || typeRule == PtStrokeOpacity
       || typeRule == PtFillOpacity
+      || typeRule == PtFillRule
       || typeRule == PtBackground
       || typeRule == PtForeground)
     /* cherche la regle de ce type qui s'applique au pave' */

@@ -251,6 +251,10 @@ typedef int        *PRule;
 #define Hyphenation 1
 #define NoHyphenation 2
 
+/* values for rule PRFillRule */
+#define NonZero 1
+#define EvenOdd 2
+
 /* values for PRVis (CSS visibility) */
 #define VsInherit 0
 #define VsVisible 1

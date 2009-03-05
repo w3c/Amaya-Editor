@@ -510,25 +510,26 @@ typedef struct _PresRule
 	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 
 	  int  _PrIntValue_;   /* Border colors: -2 means Transparent and
-				        -1 means "same color as foreground" */
+				  -1 means "same color as foreground" */
 	}  s0;
 	struct	/* PRuleType = PtListStyleType, PtListStylePosition, PtDisplay,
                                PtFont, PtStyle, PtWeight, PtUnderline,
 	        	       PtThickness, PtDirection, PtUnicodeBidi,
                                PtLineStyle, PtFloat, PtClear, PtPosition,
 	                       PtBorderTopStyle, PtBorderRightStyle,
-                               PtBorderBottomStyle, PtBorderLeftStyle */
+                               PtBorderBottomStyle, PtBorderLeftStyle,
+                               PtFillRule */
 	{
 	  char     _PrChrValue_;
 	}  s1;
 	struct	/* PRuleType = PtBreak1, PtBreak2,
 	           PtIndent, PtSize, PtLineSpacing, PtLineWeight,
-		         PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft,
+		   PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft,
 	           PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
-             PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth,
-             PtBorderLeftWidth, PtXRadius, PtYRadius,
-             PtTop, PtRight, PtBottom, PtLeft,
-             PtBackgroundHorizPos, PtBackgroundVertPos */
+                   PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth,
+                   PtBorderLeftWidth, PtXRadius, PtYRadius,
+                   PtTop, PtRight, PtBottom, PtLeft,
+                   PtBackgroundHorizPos, PtBackgroundVertPos */
 	{
 	  TypeUnit _PrMinUnit_;	/* the distance is expressed in picas,
 				   1/10 of a character, etc. */

@@ -280,6 +280,9 @@ void                WritePRuleType (PRuleType ruleType)
     case PtFillOpacity:
       TtaWriteByte (outfile, C_PR_FILL_OPACITY);
       break;
+    case PtFillRule:
+      TtaWriteByte (outfile, C_PR_FILL_RULE);
+      break;
     case PtBackground:
       TtaWriteByte (outfile, C_PR_BACKGROUND);
       break;
@@ -1076,6 +1079,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
             case PtBorderRightStyle:
             case PtBorderBottomStyle:
             case PtBorderLeftStyle:
+	    case PtFillRule:
               TtaWriteByte (outfile, currentRule->PrChrValue);
               break;
             case PtBreak1:

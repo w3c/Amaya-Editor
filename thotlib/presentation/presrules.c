@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -474,6 +474,9 @@ char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                 break;
               case PtBorderLeftStyle:
                 val = BorderStyleCharValue (pAbb->AbLeftStyle);
+                break;
+              case PtFillRule:
+                val = pAbb->AbFillRule;
                 break;
               default:
                 break;
@@ -4104,6 +4107,14 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
               pAb->AbStrokeOpacity = 1000;
+              appl = TRUE;
+            }
+          break;
+        case PtFillRule:
+          pAb->AbFillRule = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
+          if (!appl && pEl->ElParent == NULL)
+            {
+              pAb->AbFillRule = 'n';
               appl = TRUE;
             }
           break;

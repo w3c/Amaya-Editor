@@ -536,6 +536,7 @@ typedef struct _AbstractBox
                                          list item marker */
   char            AbFloat;            /* Float mode */
   char            AbClear;            /* Clear mode */
+  char            AbFillRule;         /* SVG fill rule */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */
   TypeUnit        AbSizeUnit;         /* Unit for the size */
   TypeUnit        AbIndentUnit;       /* Indentation unit */

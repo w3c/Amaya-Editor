@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -590,6 +590,9 @@ int          NumTypePRuleAPI (PtrPRule pRule)
       break;
     case PtStrokeOpacity:
       return PRStrokeOpacity;
+      break;
+    case PtFillRule:
+      return PRFillRule;
       break;
     case PtBackground:
       return PRBackground;

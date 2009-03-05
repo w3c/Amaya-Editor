@@ -85,6 +85,7 @@
 #define C_PR_FILL_OPACITY ']'
 #define C_PR_BORDERTOPSTYLE '^'
 #define C_PR_BORDERBOTTOMSTYLE '_'
+#define C_PR_FILL_RULE '`'
 #define C_PR_MARGINTOP 'a'
 #define C_PR_BACKGROUND 'b'
 #define C_PR_MARGINRIGHT 'c'

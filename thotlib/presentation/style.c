@@ -1817,6 +1817,17 @@ static void PresentationValueToPRule (PresentationValue val, int type,
           break;
         }
       break;
+    case PtFillRule:
+      switch (value)
+        {
+        case NonZero:
+          rule->PrChrValue = 'n';
+          break;
+        case EvenOdd:
+          rule->PrChrValue = 'e';
+          break;
+        }
+      break;
     case PtVertRef:
       rule->PrPosRule.PoDistUnit = int_unit;
       rule->PrPosRule.PoDistance = value;
@@ -2557,6 +2568,18 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
         }
       break;
 
+    case PtFillRule:
+      switch (rule->PrChrValue)
+        {
+        case 'n':
+          value = NonZero;
+          break;
+        case 'e':
+          value = EvenOdd;
+          break;
+        }
+      break;
+
     case PtFunction:
       switch (rule->PrPresFunction)
         {
@@ -2826,9 +2849,6 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRFillPattern:
       *intRule = PtFillPattern;
       break;
-    case PRFillRule:
-      *intRule = PtFillRule;
-      break;
     case PROpacity:
       *intRule = PtOpacity;
       break;
@@ -2837,6 +2857,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       break;
     case PRStrokeOpacity:
       *intRule = PtStrokeOpacity;
+      break;
+    case PRFillRule:
+      *intRule = PtFillRule;
       break;
     case PRBackground:
       *intRule = PtBackground;
@@ -4098,9 +4121,9 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
     case PRFillRule:
       if (settings->value.typed_data.unit == VALUE_INHERIT)
         sprintf (buffer, "fill-rule: inherit");
-      else if (settings->value.typed_data.value == 0)
+      else if (settings->value.typed_data.value == NonZero)
         sprintf (buffer, "fill-rule: nonzero");
-      else if (settings->value.typed_data.value == 1)
+      else if (settings->value.typed_data.value == EvenOdd)
         sprintf (buffer, "fill-rule: evenodd");
       break;
     case PRStrokeOpacity:

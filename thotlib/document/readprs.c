@@ -197,6 +197,9 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
     case C_PR_STROKE_OPACITY:
       return PtStrokeOpacity;
       break;
+    case C_PR_FILL_RULE:
+      return PtFillRule;
+      break;
     case C_PR_BACKGROUND:
       return PtBackground;
       break;
@@ -1236,6 +1239,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
                   case PtBorderRightStyle:
                   case PtBorderBottomStyle:
                   case PtBorderLeftStyle:
+                  case PtFillRule:
                     if (!TtaReadByte (file, (unsigned char *)&pPR->PrChrValue))
                       error = True;
                     break;
