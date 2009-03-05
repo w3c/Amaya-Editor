@@ -6148,11 +6148,13 @@ static ThotBool      PageCounter (int counter)
   de ce type dans la chaine et retourne un pointeur sur la        
   regle creee.                                                    
   ----------------------------------------------------------------------*/
-static PtrPRule SearchPRule (PtrPRule *firstRule, PRuleType ruleType, int view)
+static PtrPRule SearchPRule (PtrPRule *firstRule, PRuleType ruleType, int view,
+			     ThotBool *newRule)
 {
   PtrPRule            pR, pPRule;
-  ThotBool             stop, cree;
+  ThotBool            stop, cree;
 
+  *newRule = False;  
   pR = *firstRule;
   pPRule = NULL;
   stop = False;
@@ -6195,22 +6197,26 @@ static PtrPRule SearchPRule (PtrPRule *firstRule, PRuleType ruleType, int view)
       GetPresentRule (&pR);
       if (pR == NULL)
         TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);
-      pR->PrType = ruleType;
-      /* on insere la regle cree */
-      if (pPRule == NULL)
-        {
-          pR->PrNextPRule = *firstRule;
-          *firstRule = pR;
-        }
       else
-        {
-          pR->PrNextPRule = pPRule->PrNextPRule;
-          pPRule->PrNextPRule = pR;
-        }
-      pR->PrCond = NULL;
-      pR->PrViewNum = view;
-      pR->PrSpecifAttr = 0;
-      pR->PrSpecifAttrSSchema = NULL;
+	{
+	  *newRule = True;
+	  pR->PrType = ruleType;
+	  /* on insere la regle cree */
+	  if (pPRule == NULL)
+	    {
+	      pR->PrNextPRule = *firstRule;
+	      *firstRule = pR;
+	    }
+	  else
+	    {
+	      pR->PrNextPRule = pPRule->PrNextPRule;
+	      pPRule->PrNextPRule = pR;
+	    }
+	  pR->PrCond = NULL;
+	  pR->PrViewNum = view;
+	  pR->PrSpecifAttr = 0;
+	  pR->PrSpecifAttrSSchema = NULL;
+	}
     }
   return pR;
 }
@@ -6223,9 +6229,8 @@ static PtrPRule SearchPRule (PtrPRule *firstRule, PRuleType ruleType, int view)
 static void         CheckPageBoxes ()
 {
   PtrPRule            pR, pHeadR, pPRule, pRule;
-  int                 b, hfB, el, view, footHeight, headHeight, h, i,
-    counter;
-  ThotBool            stop, stop1, exist;
+  int                 b, hfB, el, view, footHeight, headHeight, h, i, counter;
+  ThotBool            stop, stop1, exist, newRule;
   PtrPresentationBox  pPresBox;
   PresVariable       *pPresVar;
   PtrCondition        pCond;
@@ -6793,7 +6798,7 @@ static void         CheckPageBoxes ()
     /* cherche la regle de positionnement vertical */
     {
       pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
-                        PtVertPos, view);
+                        PtVertPos, view, &newRule);
       /* modifie la regle: positionnement au-dessous de l'element */
       /* precedent */
       pR->PrPresMode = PresImmediate;
@@ -6810,7 +6815,7 @@ static void         CheckPageBoxes ()
       pR->PrPosRule.PoRefIdent = 0;
       /* cherche la regle de positionnement horizontal */
       pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
-                        PtHorizPos, view);
+                        PtHorizPos, view, &newRule);
       /* modifie la regle: positionnement sur le bord gauche de la */
       /* boite racine */
       pR->PrPresMode = PresImmediate;
@@ -6827,7 +6832,7 @@ static void         CheckPageBoxes ()
       pR->PrPosRule.PoRefIdent = 0;
       /* cherche la regle de largeur */
       pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
-                        PtWidth, view);
+                        PtWidth, view, &newRule);
       /* modifie la regle: largeur du contenu */
       pR->PrPresMode = PresImmediate;
       pR->PrDimRule.DrPosition = False;
@@ -6842,7 +6847,7 @@ static void         CheckPageBoxes ()
       pR->PrDimRule.DrRefIdent = 0;
       /* cherche la regle de hauteur */
       pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
-                        PtHeight, view);
+                        PtHeight, view, &newRule);
       /* modifie la regle: hauteur du contenu */
       pR->PrPresMode = PresImmediate;
       pR->PrDimRule.DrPosition = False;
@@ -6857,7 +6862,7 @@ static void         CheckPageBoxes ()
       pR->PrDimRule.DrRefIdent = 0;
       /* modifie la regle: HorizOverflow: True; */
       pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
-                        PtHorizOverflow, view);
+                        PtHorizOverflow, view, &newRule);
       pR->PrType = PtHorizOverflow;
       pR->PrPresMode = PresImmediate;
       pR->PrBoolValue = True;
@@ -7002,6 +7007,7 @@ int PRSmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
                              identificateur */
   int                 i;
   int                 param;
+  PtrPRule            pR;
 #ifdef _WINGUI
   char               *CMD;
   char               *cmd[100];
@@ -7015,7 +7021,7 @@ int PRSmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
 #else  /* !_WINGUI */
   char                cmd[800];
 #endif /* _WINGUI */
-  ThotBool            fileOK;
+  ThotBool            fileOK, newRule;
 
 #ifdef _WINGUI 
   COMPWnd = hwnd;
@@ -7247,6 +7253,14 @@ int PRSmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
                           TtaGetMessage (PRS, SINGLE_VIEW));
                   pPSchema->PsHostViewList[0] = NULL;
                 }
+	      /* check that there exists a FillRule rule in the default
+		 presentation rules */
+	      pR = SearchPRule (&pPSchema->PsFirstDefaultPRule, PtFillRule,
+				1, &newRule);
+	      if (newRule)
+		/* there was no FillRule in the default presentation rules.
+		   Make an inheritance rule. */
+		pR->PrPresMode = PresInherit;
               /* verifie que toutes les boites de presentation declarees */
               /* pour les pages sont bien utilisees et adapte les regles. */
               /* cela ne peut se faire qu'apres avoir ajoute' la vue par */
