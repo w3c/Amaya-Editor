@@ -2202,9 +2202,8 @@ ThotBool RedrawFrameTop (int frame, int scroll)
   PtrFlow             pFlow;
   int                 y, tVol, bVol, h, l;
   int                 top, bottom;
-  int                 xmin, xmax;
-  int                 ymin, ymax;
-  int                 delta, t, b;
+  int                 xmin, xmax, ymin, ymax;
+  int                 delta, t, b, plane = 0;
   ThotBool            toadd;  
 
   /* are new abstract boxes needed */
@@ -2244,13 +2243,22 @@ ThotBool RedrawFrameTop (int frame, int scroll)
           /* Is there a need to redisplay part of the frame ? */
           if (xmin < xmax && ymin < ymax)
             {
+              if (pFrame->FrAbstractBox)
+                plane = pFrame->FrAbstractBox->AbDepth;
+              pFlow = pFrame->FrFlow;
+              while (pFlow && pFlow->FlRootBox && pFlow->FlRootBox->AbDepth < plane)
+                {
+                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
+                  pFlow = pFlow->FlNext;
+                }
               topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
                                         &tVol, &bVol);
               /* now display extra flows */
               pFlow = pFrame->FrFlow;
               while (pFlow)
                 {
-                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
+                  if (pFlow->FlRootBox && pFlow->FlRootBox->AbDepth >= plane)
+                    DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
                   pFlow = pFlow->FlNext;
                 }
             }

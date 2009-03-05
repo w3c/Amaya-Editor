@@ -1304,8 +1304,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
   int                 i, xd, yd;
   int                 fg, bg;
   int                 pat;
-  int                 style, arrow;
-  int                 width;
+  int                 style, arrow, mode, width;
 
   /* If no point is defined, no need to draw it */
   if (pBox->BxBuffer == NULL || pBox->BxNChars <= 1)
@@ -1344,6 +1343,12 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
         default:
           style = 5; /* solid */
         }
+
+      // set the current fill mode
+      if (pAb->AbFillRule == 'e')
+        mode = 1;
+      else
+        mode = 0;
 
       switch (pAb->AbPolyLineShape)
         {
@@ -1390,7 +1395,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
           break;
         case 'p':	/* polygon */
           DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
-                       pBox->BxNChars, fg, bg, pat, 0);
+                       pBox->BxNChars, fg, bg, pat, mode);
           break;
         case 's':	/* closed spline */
           /* compute control points */
@@ -1438,8 +1443,7 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected,
   int                 i, xd, yd;
   int                 fg, bg;
   int                 pat;
-  int                 style;
-  int                 width;
+  int                 style, mode, width;
 
   /* If the path does not contain any segment, return */
   if (!pBox->BxFirstPathSeg)
@@ -1474,8 +1478,13 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected,
           style = 5; /* solid */
         }
 
+      // set the current fill mode
+      if (pAb->AbFillRule == 'e')
+        mode = 1;
+      else
+        mode = 0;
       DrawPath (frame, i, style, xd, yd, pBox->BxFirstPathSeg, fg,
-                bg, pat, 0);
+                bg, pat, mode);
 
       if (pBox->BxEndOfBloc > 0)
         {

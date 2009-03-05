@@ -3300,7 +3300,7 @@ RULES
  Text_Area: BEGIN
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
-  CreateBefore(NEW_LINE);
+        CreateBefore(NEW_LINE);
         CreateAfter(NEW_LINE);
         BorderTopWidth: 1 px;
         BorderLeftWidth: 1 px;
