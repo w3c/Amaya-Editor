@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -451,11 +451,12 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
   pAb->AbLineWeight = 1;
   pAb->AbLineSpacing = 10;
   pAb->AbFillPattern = 0;
-  pAb->AbBackground = DefaultBColor;	/* blanc */
-  pAb->AbForeground = DefaultFColor;	/* noir */
+  pAb->AbBackground = DefaultBColor;	/* white */
+  pAb->AbForeground = DefaultFColor;	/* black */
   pAb->AbOpacity = 1000;       /* Full opaque*/
   pAb->AbFillOpacity = 1000;   /* Full opaque*/
   pAb->AbStrokeOpacity = 1000; /* Full opaque*/
+  pAb->AbFillRule = 'n';  /* fill-rule: nonzero */
   pAb->AbTopBColor = -1;
   pAb->AbRightBColor = -1;
   pAb->AbBottomBColor = -1;

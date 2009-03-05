@@ -4912,13 +4912,13 @@ static char *ParseSVGFillRule (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "nonzero", 7))
     {
       best.typed_data.unit = VALUE_AUTO;
-      best.typed_data.value = 0;
+      best.typed_data.value = NonZero;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "evenodd", 7))
     {
       best.typed_data.unit = VALUE_AUTO;
-      best.typed_data.value = 1;
+      best.typed_data.value = EvenOdd;
       cssRule = SkipWord (cssRule);
     }
 

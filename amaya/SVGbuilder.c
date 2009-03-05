@@ -99,7 +99,8 @@ void SVGEntityCreated (unsigned char *entityValue, Language lang,
   Create or update a specific presentation rule for element el that reflects
   the value of attribute attr, which is equivalent to a CSS property (fill,
   stroke, stroke-width, font-family, font-size, font-style, font-variant,
-  font-weight).
+  font-weight, text-decoration, opacity, fill-opacity, stroke-opacity,
+  fill-rule).
   ----------------------------------------------------------------------*/
 void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
                              Document doc, ThotBool delete_)
@@ -113,7 +114,8 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
   /* get the value of the attribute */
   if (attrType == SVG_ATTR_font_style ||
       attrType == SVG_ATTR_font_variant ||
-      attrType == SVG_ATTR_font_weight)
+      attrType == SVG_ATTR_font_weight ||
+      attrType == SVG_ATTR_fill_rule)
     /* enumerated value */
     val = TtaGetAttributeValue (attr);
   else
@@ -251,6 +253,20 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
         sprintf (css_command, "fill-opacity: 0.0");
       else
         sprintf (css_command, "fill-opacity: %s", text);
+      break;
+    case SVG_ATTR_fill_rule:
+      switch (val)
+        {
+        case SVG_ATTR_fill_rule_VAL_nonzero:
+          sprintf (css_command, "fill-rule: nonzero");
+          break;
+        case SVG_ATTR_fill_rule_VAL_evenodd:
+          sprintf (css_command, "fill-rule: evenodd");
+          break;
+        case SVG_ATTR_fill_rule_VAL_inherit:
+          sprintf (css_command, "fill-rule: inherit");
+          break;
+        }
       break;
     default:
       break;
@@ -3982,6 +3998,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_opacity_:
     case SVG_ATTR_stroke_opacity:
     case SVG_ATTR_fill_opacity:
+    case SVG_ATTR_fill_rule:
       ParseCSSequivAttribute (attrType.AttrTypeNum, attr, el, doc, FALSE);
       break;
     case SVG_ATTR_height_:
