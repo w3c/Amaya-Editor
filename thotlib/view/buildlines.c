@@ -535,7 +535,9 @@ static void Align (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
   /* take into account the writing direction */
   rtl = pBBox->BxAbstractBox->AbDirection == 'R';
   pBox = pLine->LiFirstBox;
-  if (rtl)
+  if (pBBox->BxContentWidth)
+    x = pLine->LiXOrg;
+  else if (rtl)
     {
       /* right-to-left writing */
       if (pLine->LiRealLength > pLine->LiXMax)
