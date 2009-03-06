@@ -68,6 +68,15 @@ static Document DocMathElementSelected = 0;
 #include "XLinkedit_f.h"
 #include "templateUtils_f.h"
 
+// Uncomment this line if you want to experiment the advanced mathedit
+//#define ADVANCED_MATHEDIT 1
+#ifdef ADVANCED_MATHEDIT
+enum { DEFAULT_MODE, CHEMISTRY_MODE, UNITS_MODE, LATEX_MODE};
+// Only chemistry mode is available for the moment
+int CurrentMathEditMode = CHEMISTRY_MODE;
+void InsertMathElementFromText(Element theElem, Element theText, Document doc);
+#endif
+
 /* Function name table */
 typedef char     functName[10];
 static  functName  functionName[] =
@@ -6179,23 +6188,35 @@ static void SeparateFunctionNames (Element *firstEl, Element lastEl,
   -----------------------------------------------------------------------*/
 static void ParseMathString (Element theText, Element theElem, Document doc)
 {
-  Element	      el, selEl, prevEl, nextEl, textEl, newEl, lastEl;
-	Element	      firstEl, newSelEl, prev, next, parent, placeholderEl;
-  ElementType	  elType, elType2;
+  Element       el, selEl, prevEl, nextEl, textEl, newEl, lastEl;
+  Element       firstEl, newSelEl, prev, next, parent, placeholderEl;
+  ElementType   elType, elType2;
   AttributeType attrType;
   Attribute     attr;
-  SSchema	      MathMLSchema;
-  int		        firstSelChar, lastSelChar, newSelChar, len, totLen, i, j;
-	int           start, trailingSpaces;
+  SSchema	MathMLSchema;
+  int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j;
+  int           start, trailingSpaces;
   char	        script;
   CHAR_T        c;
-  Language	    lang;
+  Language	lang;
 #define TXTBUFLEN 100
   CHAR_T        text[TXTBUFLEN];
   Language      language[TXTBUFLEN];
   char          mathType[TXTBUFLEN];
   ThotBool      oldStructureChecking;
   ThotBool      empty, closeUndoSeq, separate, ok, leadingSpace;
+
+  /************************************************************/
+#ifdef ADVANCED_MATHEDIT
+  TtaSetDisplayMode (doc, DeferredDisplay);
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  TtaSetStructureChecking (FALSE, doc);
+  CurrentMathEditMode = CHEMISTRY_MODE;
+  InsertMathElementFromText(theElem, theText, doc);
+  TtaSetStructureChecking (oldStructureChecking, doc);
+  TtaSetDisplayMode (doc, DisplayImmediately);
+#endif
+  /**************************************************************/
 
   elType = TtaGetElementType (theElem);
   MathMLSchema = elType.ElSSchema;
@@ -8934,3 +8955,7 @@ void HandleColAndRowAlignAttributes (Element row, Document doc)
        applies that attribute again to the whole table */
     HandleColumnlinesAttribute (attr, table, doc, FALSE);
 }
+
+#ifdef ADVANCED_MATHEDIT
+#include "mathedit/parser.c"
+#endif
