@@ -34,29 +34,30 @@ void yyerror(const char *s)
 %type<node> integer
 %type<node> sign
 
-%type<node> list_of_formulae
-%type<node> chemical_formula
-%type<node> chemical_formula2
-%type<node> exponent
+%type<node> chemical_compound
+%type<node> chemical_entity
+%type<node> chemical_entity2
+%type<node> chemical_entity3
+%type<node> ionic_charge
 
 %start result
 
 %destructor {
   printf("Element deleted\n");
   TtaDeleteTree($$, parser_doc);
- } atom integer sign list_of_formulae chemical_formula chemical_formula2 exponent
+ } atom integer sign chemical_compound chemical_entity chemical_entity2 chemical_entity3 ionic_charge
 
 %%
 
-result:
-  list_of_formulae
+result
+:chemical_compound
   {
     parser_new_el = $1;
   }
 ;
 
-list_of_formulae
-: list_of_formulae chemical_formula
+chemical_compound
+: chemical_compound chemical_entity
   {
     Element leaf;
     leaf = TtaGetLastChild($1);
@@ -64,26 +65,41 @@ list_of_formulae
     $$ = $1;
   }
 
-| chemical_formula
+| chemical_entity
   {
     $$ = ParserNewMROW(parser_doc);
     TtaInsertFirstChild(&($1), $$, parser_doc);
   }
 ;
 
-chemical_formula
-: chemical_formula2 { $$ = $1}
-| chemical_formula2 integer { $$ = ParserNewMSUB(parser_doc, $1, $2); }
+chemical_entity
+: chemical_entity3 ionic_charge { $$ = ParserNewMSUP(parser_doc, $1, $2); }
+| chemical_entity2 { $$ = $1; }
 ;
 
-chemical_formula2:
-  atom { $$ = $1 }
-| '(' list_of_formulae ')' { $$ = $2; }
-| '[' list_of_formulae ']' { $$ = $2; }
-| chemical_formula2 exponent { $$ = ParserNewMSUP(parser_doc, $1, $2); }
+chemical_entity2
+:chemical_entity3 integer { $$ = ParserNewMSUB(parser_doc, $1, $2); }
+| chemical_entity3 { $$ = $1; }
+;
 
-exponent:
-integer sign
+chemical_entity3
+:  atom { $$ = $1 }
+
+| '(' chemical_compound  ')'
+  {
+    $$ = ParserNewFencedExpression(parser_doc, $2, "(", ")");
+  }
+
+| '[' chemical_compound ']'
+  {
+    $$ = ParserNewFencedExpression(parser_doc, $2, "[", "]");
+  }
+
+| '{' chemical_compound '}' { $$ = $2; }
+;
+
+ionic_charge
+:integer sign
   {
     $$ = ParserNewMROW(parser_doc);
     TtaInsertFirstChild(&($1), $$, parser_doc);
@@ -95,13 +111,15 @@ integer sign
 
 integer:
 INTEGER { $$ = ParserNewMathElement(parser_doc, $1, MathML_EL_MN); }
+;
 
 sign:
 SIGN { $$ = ParserNewMathElement(parser_doc, $1, MathML_EL_MO); }
+;
 
 atom:
 ATOM { $$ = ParserNewMathElement(parser_doc, $1, MathML_EL_MI); }
-
+;
 %%
 
 #include "lex.yy.c"

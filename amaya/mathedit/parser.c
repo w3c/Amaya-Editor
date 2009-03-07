@@ -14,6 +14,27 @@ static Document parser_doc;
 static Element parser_el;
 static Element parser_new_el;
 
+static Element ParserNewMathElement(Document doc, const char *string,
+				    int elTypeNum)
+{
+  ElementType elType;
+  Element newEl, textUnit;
+
+  elType.ElSSchema = GetMathMLSSchema (doc);
+  elType.ElTypeNum = elTypeNum;
+  newEl = TtaNewElement(doc, elType);
+
+  if(string != NULL)
+    {
+      elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+      textUnit = TtaNewElement(doc, elType);
+      TtaInsertFirstChild (&textUnit, newEl, doc);
+      TtaInsertTextContent (textUnit, 0, (unsigned char *)string, doc);
+    }
+
+  return newEl;
+  }
+
 static Element ParserNewMROW(Document doc)
 {
   ElementType elType;
@@ -24,6 +45,20 @@ static Element ParserNewMROW(Document doc)
   mrow = TtaNewTree(parser_doc, elType, "");
   TtaDeleteTree(TtaGetFirstChild(mrow), doc);
   return mrow;
+}
+
+static Element ParserNewFencedExpression(Document doc, Element el,
+					 const char *open, const char *close)
+{
+  Element fenced;
+  Element open_, close_;
+  fenced = ParserNewMROW(doc);
+  open_ = ParserNewMathElement(doc, open, MathML_EL_MO);
+  close_ = ParserNewMathElement(doc, close, MathML_EL_MO);
+  TtaInsertFirstChild(&open_, fenced, doc);
+  TtaInsertSibling(el, open_, FALSE, doc);
+  TtaInsertSibling(close_, el, FALSE, doc);
+  return fenced;
 }
 
 static Element ParserNewMSUP(Document doc, Element base, Element supscript)
@@ -68,26 +103,6 @@ static Element ParserNewMSUB(Document doc, Element base, Element subscript)
   return msub_;
 }
 
-static Element ParserNewMathElement(Document doc, const char *string,
-				    int elTypeNum)
-{
-  ElementType elType;
-  Element newEl, textUnit;
-
-  elType.ElSSchema = GetMathMLSSchema (doc);
-  elType.ElTypeNum = elTypeNum;
-  newEl = TtaNewElement(doc, elType);
-
-  if(string != NULL)
-    {
-      elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-      textUnit = TtaNewElement(doc, elType);
-      TtaInsertFirstChild (&textUnit, newEl, doc);
-      TtaInsertTextContent (textUnit, 0, (unsigned char *)string, doc);
-    }
-
-  return newEl;
-  }
 
 #include "chemistry.tab.c"
 
