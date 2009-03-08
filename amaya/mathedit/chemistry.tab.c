@@ -356,7 +356,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  14
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   31
+#define YYLAST   38
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  13
@@ -365,7 +365,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  17
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  25
+#define YYNSTATES  26
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -381,12 +381,12 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       7,     8,     2,     2,     2,     2,     2,     2,     2,     2,
+       9,    10,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     9,     2,    10,     2,     2,     2,     2,     2,     2,
+       2,     7,     2,     8,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,    11,     2,    12,     2,     2,     2,     2,
@@ -412,24 +412,24 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     5,     8,    10,    13,    15,    18,    20,
-      22,    26,    30,    34,    37,    39,    41,    43
+      24,    26,    30,    34,    37,    39,    41,    43
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      14,     0,    -1,    15,    -1,    15,    16,    -1,    16,    -1,
-      18,    19,    -1,    17,    -1,    18,    20,    -1,    18,    -1,
-      22,    -1,     7,    15,     8,    -1,     9,    15,    10,    -1,
-      11,    15,    12,    -1,    20,    21,    -1,    21,    -1,     4,
+      14,     0,    -1,    15,    -1,    16,    19,    -1,    16,    -1,
+      16,    17,    -1,    17,    -1,    18,    20,    -1,    18,    -1,
+       7,    16,     8,    -1,    22,    -1,     9,    16,    10,    -1,
+      11,    16,    12,    -1,    20,    21,    -1,    21,    -1,     4,
       -1,     5,    -1,     3,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    53,    53,    60,    68,    76,    77,    81,    82,    86,
-      88,    93,    98,   102,   109,   113,   117,   121
+       0,    54,    54,    61,    62,    66,    74,    82,    83,    84,
+      91,    93,    98,   102,   109,   113,   117,   121
 };
 #endif
 
@@ -439,9 +439,9 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "ATOM", "INTEGER", "SIGN",
-  "UNKNOWN_TOKEN", "'('", "')'", "'['", "']'", "'{'", "'}'", "$accept",
-  "result", "chemical_compound", "chemical_entity", "chemical_entity2",
-  "chemical_entity3", "ionic_charge", "integer", "sign", "atom", 0
+  "UNKNOWN_TOKEN", "'['", "']'", "'('", "')'", "'{'", "'}'", "$accept",
+  "result", "chemical_compound", "chemical_compound2", "chemical_entity",
+  "chemical_entity2", "ionic_charge", "integer", "sign", "atom", 0
 };
 #endif
 
@@ -450,23 +450,23 @@ static const char *const yytname[] =
    token YYLEX-NUM.  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,   260,   261,    40,    41,    91,
-      93,   123,   125
+       0,   256,   257,   258,   259,   260,   261,    91,    93,    40,
+      41,   123,   125
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    13,    14,    15,    15,    16,    16,    17,    17,    18,
+       0,    13,    14,    15,    15,    16,    16,    17,    17,    17,
       18,    18,    18,    19,    19,    20,    21,    22
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     2,     1,     2,     1,     2,     1,     1,
-       3,     3,     3,     2,     1,     1,     1,     1
+       0,     2,     1,     2,     1,     2,     1,     2,     1,     3,
+       1,     3,     3,     2,     1,     1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -475,8 +475,8 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        0,    17,     0,     0,     0,     0,     2,     4,     6,     8,
-       9,     0,     0,     0,     1,     3,    15,    16,     5,     7,
-      14,    10,    11,    12,    13
+      10,     0,     0,     0,     1,    15,    16,     5,     3,     0,
+      14,     7,     9,    11,    12,    13
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -490,15 +490,15 @@ static const yytype_int8 yydefgoto[] =
 #define YYPACT_NINF -4
 static const yytype_int8 yypact[] =
 {
-      16,    -4,    16,    16,    16,     5,    16,    -4,    -4,    17,
-      -4,     4,     7,    -3,    -4,    -4,    -4,    -4,    -4,    15,
-      -4,    -4,    -4,    -4,    -4
+      24,    -4,    24,    24,    24,     5,    -4,     7,    -4,     3,
+      -4,    12,    19,    -3,    -4,    -4,    -4,    -4,    -4,     8,
+      -4,    -4,    -4,    -4,    -4,    -4
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -4,    -4,    -1,    18,    -4,    -4,    -4,    -4,     9,    -4
+      -4,    -4,    -4,    -1,    25,    -4,    -4,    15,    -2,    -4
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -508,18 +508,18 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       1,    11,    12,    13,     2,    14,     3,     1,     4,    23,
-       1,     2,    21,     3,     2,     4,     3,    22,     4,     1,
-      17,    16,    17,     2,    15,     3,     0,     4,    24,    15,
-      15,    15
+       1,    11,    12,    13,     2,    14,     3,    15,     4,    24,
+       1,    15,    16,    16,     2,     1,     3,    25,     4,     2,
+      22,     3,     1,     4,    21,     0,     2,     1,     3,    23,
+       4,     2,    17,     3,     0,     4,    17,    17,    17
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     2,     3,     4,     7,     0,     9,     3,    11,    12,
-       3,     7,     8,     9,     7,    11,     9,    10,    11,     3,
-       5,     4,     5,     7,     6,     9,    -1,    11,    19,    11,
-      12,    13
+       3,     2,     3,     4,     7,     0,     9,     4,    11,    12,
+       3,     4,     5,     5,     7,     3,     9,    19,    11,     7,
+       8,     9,     3,    11,     9,    -1,     7,     3,     9,    10,
+      11,     7,     7,     9,    -1,    11,    11,    12,    13
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -527,8 +527,8 @@ static const yytype_int8 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,     3,     7,     9,    11,    14,    15,    16,    17,    18,
-      22,    15,    15,    15,     0,    16,     4,     5,    19,    20,
-      21,     8,    10,    12,    21
+      22,    16,    16,    16,     0,     4,     5,    17,    19,    20,
+      21,    20,     8,    10,    12,    21
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1042,7 +1042,7 @@ yydestruct (yymsg, yytype, yyvaluep)
       case 15: /* "chemical_compound" */
 
 /* Line 1000 of yacc.c  */
-#line 45 "chemistry.y"
+#line 46 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
@@ -1051,10 +1051,10 @@ yydestruct (yymsg, yytype, yyvaluep)
 /* Line 1000 of yacc.c  */
 #line 1053 "chemistry.tab.c"
 	break;
-      case 16: /* "chemical_entity" */
+      case 16: /* "chemical_compound2" */
 
 /* Line 1000 of yacc.c  */
-#line 45 "chemistry.y"
+#line 46 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
@@ -1063,10 +1063,10 @@ yydestruct (yymsg, yytype, yyvaluep)
 /* Line 1000 of yacc.c  */
 #line 1065 "chemistry.tab.c"
 	break;
-      case 17: /* "chemical_entity2" */
+      case 17: /* "chemical_entity" */
 
 /* Line 1000 of yacc.c  */
-#line 45 "chemistry.y"
+#line 46 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
@@ -1075,10 +1075,10 @@ yydestruct (yymsg, yytype, yyvaluep)
 /* Line 1000 of yacc.c  */
 #line 1077 "chemistry.tab.c"
 	break;
-      case 18: /* "chemical_entity3" */
+      case 18: /* "chemical_entity2" */
 
 /* Line 1000 of yacc.c  */
-#line 45 "chemistry.y"
+#line 46 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
@@ -1090,7 +1090,7 @@ yydestruct (yymsg, yytype, yyvaluep)
       case 19: /* "ionic_charge" */
 
 /* Line 1000 of yacc.c  */
-#line 45 "chemistry.y"
+#line 46 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
@@ -1102,7 +1102,7 @@ yydestruct (yymsg, yytype, yyvaluep)
       case 20: /* "integer" */
 
 /* Line 1000 of yacc.c  */
-#line 45 "chemistry.y"
+#line 46 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
@@ -1114,7 +1114,7 @@ yydestruct (yymsg, yytype, yyvaluep)
       case 21: /* "sign" */
 
 /* Line 1000 of yacc.c  */
-#line 45 "chemistry.y"
+#line 46 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
@@ -1126,7 +1126,7 @@ yydestruct (yymsg, yytype, yyvaluep)
       case 22: /* "atom" */
 
 /* Line 1000 of yacc.c  */
-#line 45 "chemistry.y"
+#line 46 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
@@ -1438,7 +1438,7 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 54 "chemistry.y"
+#line 55 "chemistry.y"
     {
     parser_new_el = (yyvsp[(1) - (1)].node);
   ;}
@@ -1448,6 +1448,20 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 61 "chemistry.y"
+    { (yyval.node) = ParserNewMSUP(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
+    break;
+
+  case 4:
+
+/* Line 1455 of yacc.c  */
+#line 62 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 5:
+
+/* Line 1455 of yacc.c  */
+#line 67 "chemistry.y"
     {
     Element leaf;
     leaf = TtaGetLastChild((yyvsp[(1) - (2)].node));
@@ -1456,58 +1470,44 @@ yyreduce:
   ;}
     break;
 
-  case 4:
+  case 6:
 
 /* Line 1455 of yacc.c  */
-#line 69 "chemistry.y"
+#line 75 "chemistry.y"
     {
     (yyval.node) = ParserNewMROW(parser_doc);
     TtaInsertFirstChild(&((yyvsp[(1) - (1)].node)), (yyval.node), parser_doc);
   ;}
     break;
 
-  case 5:
-
-/* Line 1455 of yacc.c  */
-#line 76 "chemistry.y"
-    { (yyval.node) = ParserNewMSUP(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
-    break;
-
-  case 6:
-
-/* Line 1455 of yacc.c  */
-#line 77 "chemistry.y"
-    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
-    break;
-
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 81 "chemistry.y"
+#line 82 "chemistry.y"
     { (yyval.node) = ParserNewMSUB(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 82 "chemistry.y"
+#line 83 "chemistry.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 86 "chemistry.y"
-    { (yyval.node) = (yyvsp[(1) - (1)].node) ;}
+#line 85 "chemistry.y"
+    {
+    (yyval.node) = ParserNewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "[", "]");
+  ;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 89 "chemistry.y"
-    {
-    (yyval.node) = ParserNewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "(", ")");
-  ;}
+#line 91 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node) ;}
     break;
 
   case 11:
@@ -1515,7 +1515,7 @@ yyreduce:
 /* Line 1455 of yacc.c  */
 #line 94 "chemistry.y"
     {
-    (yyval.node) = ParserNewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "[", "]");
+    (yyval.node) = ParserNewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "(", ")");
   ;}
     break;
 

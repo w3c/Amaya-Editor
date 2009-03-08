@@ -35,17 +35,18 @@ void yyerror(const char *s)
 %type<node> sign
 
 %type<node> chemical_compound
+%type<node> chemical_compound2
 %type<node> chemical_entity
 %type<node> chemical_entity2
-%type<node> chemical_entity3
 %type<node> ionic_charge
 
 %start result
+%expect 1
 
 %destructor {
   printf("Element deleted\n");
   TtaDeleteTree($$, parser_doc);
- } atom integer sign chemical_compound chemical_entity chemical_entity2 chemical_entity3 ionic_charge
+ } atom integer sign chemical_compound chemical_compound2 chemical_entity chemical_entity2 ionic_charge
 
 %%
 
@@ -57,7 +58,12 @@ result
 ;
 
 chemical_compound
-: chemical_compound chemical_entity
+: chemical_compound2 ionic_charge { $$ = ParserNewMSUP(parser_doc, $1, $2); }
+| chemical_compound2 { $$ = $1; }
+;
+
+chemical_compound2
+: chemical_compound2 chemical_entity
   {
     Element leaf;
     leaf = TtaGetLastChild($1);
@@ -73,29 +79,23 @@ chemical_compound
 ;
 
 chemical_entity
-: chemical_entity3 ionic_charge { $$ = ParserNewMSUP(parser_doc, $1, $2); }
+:chemical_entity2 integer { $$ = ParserNewMSUB(parser_doc, $1, $2); }
 | chemical_entity2 { $$ = $1; }
+| '[' chemical_compound2 ']'
+  {
+    $$ = ParserNewFencedExpression(parser_doc, $2, "[", "]");
+  }
 ;
 
 chemical_entity2
-:chemical_entity3 integer { $$ = ParserNewMSUB(parser_doc, $1, $2); }
-| chemical_entity3 { $$ = $1; }
-;
-
-chemical_entity3
 :  atom { $$ = $1 }
 
-| '(' chemical_compound  ')'
+| '(' chemical_compound2  ')'
   {
     $$ = ParserNewFencedExpression(parser_doc, $2, "(", ")");
   }
 
-| '[' chemical_compound ']'
-  {
-    $$ = ParserNewFencedExpression(parser_doc, $2, "[", "]");
-  }
-
-| '{' chemical_compound '}' { $$ = $2; }
+| '{' chemical_compound2 '}' { $$ = $2; }
 ;
 
 ionic_charge
