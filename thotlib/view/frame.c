@@ -1591,7 +1591,6 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
   updatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  
 #endif /* _GL */
-
   pFrame = &ViewFrameTable[frame - 1];
   if (pFlow)
     root = pFlow->FlRootBox;
@@ -2154,19 +2153,27 @@ void ComputeChangedBoundingBoxes (int frame)
   ----------------------------------------------------------------------*/
 static void AddingOnTop (int frame, ViewFrame *pFrame, PtrBox topBox, int top)
 {
-  int y, delta;
+  PtrElement pEl = NULL;
+  int        y, delta, volume, view;
 
-
-  if (topBox)
+  if (topBox && topBox->BxAbstractBox)
     {
       /* register previous location */
       y = topBox->BxYOrg;
       delta = y + topBox->BxHeight;
-      //printf("------- box=%s y=%d\n", topBox->BxAbstractBox->AbElement->ElLabel, y);
+      pEl = topBox->BxAbstractBox->AbElement;
+      view = topBox->BxAbstractBox->AbDocView;
     }
+
   /* Adding abstract boxes on top of the frame */
-  IncreaseVolume (TRUE, GetCharsCapacity (top, frame), frame);
+  volume = GetCharsCapacity (top, frame);
+  IncreaseVolume (TRUE, volume, frame);
+  // Pay attention: box could be regenerated
+  if (pEl && pEl->ElAbstractBox[view-1] &&
+      topBox->BxAbstractBox != pEl->ElAbstractBox[view-1])
+    topBox = pEl->ElAbstractBox[view-1]->AbBox;
   /* Recompute the location of the frame in the abstract image */
+
   if (topBox)
     {
       y = -y + topBox->BxYOrg;
@@ -2222,27 +2229,27 @@ ThotBool RedrawFrameTop (int frame, int scroll)
            pFrame->FrXOrg + l > xmin &&
            pFrame->FrYOrg - scroll + h > ymin)
     {
-      pFrame->FrYOrg -= scroll;
-#ifdef _GL
-      SyncBoundingboxes (pFrame->FrAbstractBox, 0, -scroll, frame,
-                         pFrame->FrXOrg, pFrame->FrYOrg);
-#endif /* _GL */
-      top = pFrame->FrYOrg;
-      bottom = top + h;
-      tVol = bVol = 0;
-#if defined(_WINGUI) && !defined(_WIN_PRINT)
-      WIN_GetDeviceContext (frame);
-#endif /* __WINGUI && !_WINT_PRINT */
 #ifdef _GL      
       if (GL_prepare (frame))
         {
 #endif /* _GL */
-          DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
-                          &xmin, &ymin, &xmax, &ymax, 1);
-	  
+          pFrame->FrYOrg -= scroll;
+#ifdef _GL
+          SyncBoundingboxes (pFrame->FrAbstractBox, 0, -scroll, frame,
+                             pFrame->FrXOrg, pFrame->FrYOrg);
+#endif /* _GL */
+          top = pFrame->FrYOrg;
+          bottom = top + h;
+          tVol = bVol = 0;
+#if defined(_WINGUI) && !defined(_WIN_PRINT)
+          WIN_GetDeviceContext (frame);
+#endif /* __WINGUI && !_WINT_PRINT */
           /* Is there a need to redisplay part of the frame ? */
           if (xmin < xmax && ymin < ymax)
             {
+              DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
+                              &xmin, &ymin, &xmax, &ymax, 1);
+	  
               if (pFrame->FrAbstractBox)
                 plane = pFrame->FrAbstractBox->AbDepth;
               pFlow = pFrame->FrFlow;
@@ -2300,7 +2307,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
                       delta = 0;
                       /* Volume of the area to recompute */
                       toadd = TRUE;
-                        AddingOnTop (frame, pFrame, topBox, top);
+                      AddingOnTop (frame, pFrame, topBox, top);
                       if (topBox == NULL)
                         {
                           /* No previous box. The frame is drawn */
@@ -2372,7 +2379,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   int                 y, tVol, bVol, h, l;
   int                 top, bottom;
   int                 xmin, xmax;
-  int                 ymin, ymax;
+  int                 ymin, ymax, plane = 0;
   ThotBool            toadd;
 
   /* are new abstract boxes needed */
@@ -2421,14 +2428,21 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
               DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
                               &xmin, &ymin, &xmax, &ymax, 1);
 	      
-              topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin,
-                                        ymax, &tVol, &bVol);
+              if (pFrame->FrAbstractBox)
+                plane = pFrame->FrAbstractBox->AbDepth;
+              pFlow = pFrame->FrFlow;
+              while (pFlow && pFlow->FlRootBox && pFlow->FlRootBox->AbDepth < plane)
+                {
+                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
+                  pFlow = pFlow->FlNext;
+                }
+              topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
+                                        &tVol, &bVol);
               /* now display extra flows */
               pFlow = pFrame->FrFlow;
               while (pFlow)
                 {
-                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax,
-                                   &t, &b);
+                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
                   pFlow = pFlow->FlNext;
                 }
               /* The updated area is redrawn */

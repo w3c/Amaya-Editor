@@ -378,7 +378,7 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
       GLResize (new_width, new_height, 0, 0);
       DefClip (frame, -1, -1, -1, -1);
       FrameRedraw (frame, new_width, new_height);
-      //GL_SwapEnable (frame);
+      GL_SwapEnable (frame);
       GL_Swap (frame);
 
       //#if !defined(_MACOS) && !defined(_WINDOWS)
