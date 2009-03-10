@@ -2161,6 +2161,7 @@ static void AddingOnTop (int frame, ViewFrame *pFrame, PtrBox topBox, int top)
       /* register previous location */
       y = topBox->BxYOrg;
       delta = y + topBox->BxHeight;
+      // keep the referred element
       pEl = topBox->BxAbstractBox->AbElement;
       view = topBox->BxAbstractBox->AbDocView;
     }
@@ -2168,12 +2169,12 @@ static void AddingOnTop (int frame, ViewFrame *pFrame, PtrBox topBox, int top)
   /* Adding abstract boxes on top of the frame */
   volume = GetCharsCapacity (top, frame);
   IncreaseVolume (TRUE, volume, frame);
-  // Pay attention: box could be regenerated
+
+  // Pay attention: the box could be regenerated
   if (pEl && pEl->ElAbstractBox[view-1] &&
       topBox->BxAbstractBox != pEl->ElAbstractBox[view-1])
     topBox = pEl->ElAbstractBox[view-1]->AbBox;
   /* Recompute the location of the frame in the abstract image */
-
   if (topBox)
     {
       y = -y + topBox->BxYOrg;
@@ -2371,14 +2372,14 @@ ThotBool RedrawFrameTop (int frame, int scroll)
   ----------------------------------------------------------------------*/
 ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 {
-  PtrBox              topBox;
-  PtrBox              pRootBox;
+  PtrBox              topBox, pRootBox;
+  PtrElement          pEl = NULL;
   ViewFrame          *pFrame;
   PtrFlow             pFlow;
   int                 delta, t, b;
   int                 y, tVol, bVol, h, l;
-  int                 top, bottom;
-  int                 xmin, xmax;
+  int                 top, bottom, org;
+  int                 xmin, xmax, view;
   int                 ymin, ymax, plane = 0;
   ThotBool            toadd;
 
@@ -2484,10 +2485,19 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
                           if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)
                             {
                               /* free abstract boxes on top of the frame */
-                              int org = 0;
-                              if (topBox)
-                                org = topBox->BxYOrg;
+                              if (topBox && topBox->BxAbstractBox)
+                                {
+                                  org = topBox->BxYOrg;
+                                  // keep the referred element
+                                  pEl = topBox->BxAbstractBox->AbElement;
+                                  view = topBox->BxAbstractBox->AbDocView;
+                                }
                               DecreaseVolume (TRUE, tVol, frame);
+
+                              // Pay attention: the box could be regenerated
+                              if (pEl && pEl->ElAbstractBox[view-1] &&
+                                  topBox->BxAbstractBox != pEl->ElAbstractBox[view-1])
+                                topBox = pEl->ElAbstractBox[view-1]->AbBox;
                               DefClip (frame, 0, 0, 0, 0);
                               /* check location of frame in concrete image */
                               if (topBox)
