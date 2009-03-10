@@ -536,6 +536,9 @@ RULES
         CreateWith (VerticalLine);
         Width: Enclosing . Width;
         Height: Enclosing . Height;
+        Foreground: Black;
+        Background: White;
+        FillPattern: nopattern;
         IN Structure_view BEGIN
                 if within use_
                     Visibility: 0;
@@ -885,18 +888,20 @@ RULES
         BEGIN
         CreateBefore (ElementName);
         CreateWith (VerticalLine);
-	if not immediately within path and not immediately within line_ and
+        if not immediately within path and not immediately within line_ and
            not immediately within polygon and not immediately within polyline
            Visibility: 0;
+        Foreground: Black;
+        FillPattern: backgroundcolor;
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
-		if immediately within path
+                if immediately within path
                   Visibility: 0;
-		if immediately within line_
+                if immediately within line_
                   Visibility: 0;
-		if immediately within polyline
+                if immediately within polyline
                   Visibility: 0;
-		if immediately within polygon
+                if immediately within polygon
                   Visibility: 0;
                 Size: DOC_FONTSIZE;
                 Width: Enclosing . Width - STRUCT_INDENT;

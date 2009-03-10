@@ -693,35 +693,34 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
     /* there is a 'markerUnits' attribute. Get its value */
     {
       if (TtaGetAttributeValue(attr) == SVG_ATTR_markerUnits_VAL_userSpaceOnUse)
-	strokeWidth = FALSE;
+        strokeWidth = FALSE;
     }
   if (strokeWidth)
     {
-      if (TtaGetStylePresentation (PRLineWeight, el, NULL, context, &presValue)
-          == 0)
-	{
-	  if (presValue.typed_data.real)
-	    scale = presValue.typed_data.value / 1000;
-	  else
-	    scale = presValue.typed_data.value;
-	  if (presValue.typed_data.unit == UNIT_REL)
-	    scale = scale / 10;
-	}
+      if (TtaGetStylePresentation (PRLineWeight, el, NULL, context, &presValue) == 0)
+        {
+          if (presValue.typed_data.real)
+            scale = presValue.typed_data.value / 1000;
+          else
+            scale = presValue.typed_data.value;
+          if (presValue.typed_data.unit == UNIT_REL)
+            scale = scale / 10;
+          if (scale != 1)
+            TtaAppendTransform (copy, TtaNewTransformScale (scale, scale), doc);
+        }
     }
-  if (scale != 1)
-    TtaAppendTransform (copy, TtaNewTransformScale (scale, scale), doc);
 
   /* add a translate to put the reference point of the marker on the vertex of
      the host element, using the 'refX' and 'refY' attributes of the marker */
   attrType.AttrTypeNum = SVG_ATTR_refX;
   attr = TtaGetAttribute (marker, attrType);
-
+  if (attr)
+    {
   /* @@@@ to be written @@@@ */
-
-
   /* add a transform to scale the coordinate system based on the viewBox and
      the markerHeight and the markerWidth attributes of the marker */
   /* @@@@ to be written @@@@ */
+    }
 
   if (oldStructureChecking)
     TtaSetStructureChecking (oldStructureChecking, doc);
