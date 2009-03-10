@@ -4765,7 +4765,8 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
       best.typed_data.unit = UNIT_REL;
       cssRule = SkipWord (cssRule);
     }
-  else if (!strncasecmp (cssRule, "currentColor", 12))
+  else if (!strncasecmp (cssRule, "currentColor", 12) ||
+           !strncasecmp (cssRule, "inherit", 7))
     {
       best.typed_data.unit = VALUE_INHERIT;
       cssRule = SkipWord (cssRule);
@@ -4809,7 +4810,8 @@ static char *ParseSVGFill (Element element, PSchema tsch,
       cssRule = SkipWord (cssRule);
       return (cssRule);
     }
-  else if (!strncasecmp (cssRule, "currentColor", 12))
+  else if (!strncasecmp (cssRule, "currentColor", 12) ||
+           !strncasecmp (cssRule, "inherit", 7))
     {
       best.typed_data.unit = VALUE_INHERIT;
       cssRule = SkipWord (cssRule);

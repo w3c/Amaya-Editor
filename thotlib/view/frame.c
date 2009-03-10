@@ -1668,7 +1668,13 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
               /* box in the current plane */
               pBox = pAb->AbBox;
 
-              if (!selected && pAb->AbSelected)
+              if (pAb->AbDocView == 1 &&
+                  TypeHasException (ExcIsMarker, pAb->AbElement->ElTypeNumber,
+                                    pAb->AbElement->ElStructSchema))
+                {
+                  selected = pAb->AbSelected = FALSE;
+                }
+              else if (!selected && pAb->AbSelected)
                 // open the selected sequence
                 selected = pAb->AbSelected;
 #ifdef _GL
@@ -1786,10 +1792,8 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                        xmin, xmax, ymin, ymax,
                                        selected, TRUE, TRUE, show_bgimage);
                       if (pAb->AbSelected && pAb->AbDocView == 1 &&
-                          (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
-                                            pAb->AbElement->ElStructSchema) ||
-                           TypeHasException (ExcIsMarker, pAb->AbElement->ElTypeNumber,
-                                             pAb->AbElement->ElStructSchema)))
+                          TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
+                                            pAb->AbElement->ElStructSchema))
                         selected = FALSE;
                       if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
                         {

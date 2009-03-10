@@ -1650,22 +1650,22 @@ static Element searchMarkers(Document doc, Element svg, const char *marker_id)
   for(defs = TtaSearchTypedElement (defsType, SearchInTree, svg); defs;
       defs = TtaSearchTypedElementInTree (defsType, SearchForward, svg, defs))
     {
-      for(marker = TtaSearchTypedElement (markerType, SearchInTree, defs);
-	  marker;
-	  marker = TtaSearchTypedElementInTree (markerType, SearchForward,
-						defs, marker))
-	{
-	  /* Get the id attribute */
-	  attr = TtaGetAttribute (marker, attrType);
-	  if (attr)
-	    {
-	      len = MAX_LENGTH - 1;
-	      TtaGiveTextAttributeValue (attr, buffer, &len);
-
-	      if(!strcmp(buffer, marker_id))
-		return marker;
-	    }
-	}
+      for (marker = TtaSearchTypedElement (markerType, SearchInTree, defs);
+           marker;
+           marker = TtaSearchTypedElementInTree (markerType, SearchForward,
+                                                 defs, marker))
+        {
+          /* Get the id attribute */
+          attr = TtaGetAttribute (marker, attrType);
+          if (attr)
+            {
+              len = MAX_LENGTH - 1;
+              TtaGiveTextAttributeValue (attr, buffer, &len);
+              
+              if(!strcmp(buffer, marker_id))
+                return marker;
+            }
+        }
     }
 
   return NULL;

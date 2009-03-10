@@ -595,6 +595,142 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
   return TRUE;
 }
 
+/*----------------------------------------------------------------------
+  SkipBlanksAndComma skips all spaces, tabs, linefeeds, newlines and
+  commas at the beginning of the string and returns the pointer to the
+  new position. 
+  ----------------------------------------------------------------------*/
+static char *SkipBlanksAndComma (char *ptr)
+{
+  while (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
+         *ptr == TAB || *ptr == __CR__ || *ptr == ',')
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+  GetFloat
+  Parse an integer or floating point number and skip to the next token.
+  Return the value of that number in number and moves ptr to the next
+  token to be parsed.
+  ----------------------------------------------------------------------*/
+static char *GetFloat (char *ptr, float* number)
+{
+  int      i;
+  char     *start, c;
+  float     val = 0.;
+  ThotBool negative, decimal, exponent, useDotForFloat;
+
+  /* test if the system uses dot or comma in the float syntax */
+  sscanf (".5", "%f", &val);
+  useDotForFloat = (val == 0.5);
+  negative = FALSE;
+  decimal = FALSE;
+  exponent = FALSE;
+  *number = 0.;
+  /* read the sign */
+  if (*ptr == '+')
+    ptr++;
+  else if (*ptr == '-')
+    {
+      ptr++;
+      negative = TRUE;
+    }
+
+  start = ptr;
+  /* read the integer part */
+  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
+    ptr++;
+  if (*ptr == '.')
+    /* there is a decimal part */
+    {
+      if (!useDotForFloat)
+        *ptr = ',';
+      ptr++;
+      decimal = TRUE;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+        ptr++;
+    }
+
+  if (*ptr == 'e' || *ptr == 'E')
+    /* there is an exponent, parse it */
+    {
+      exponent = TRUE;
+      ptr++;
+      /* read the sign of the exponent */
+      if (*ptr == '+')
+        ptr++;
+      else if (*ptr == '-')
+        ptr++;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+        ptr++;
+    }
+  /* remove possible extra characters */
+  c = *ptr;
+	if (c != EOS)
+    *ptr = EOS;
+  if (exponent)
+    sscanf (start, "%e", number);
+  else if (decimal)
+    sscanf (start, "%f", number);
+  else
+    {
+      sscanf (start, "%d", &i);
+      *number = (float)i;
+    }
+
+  if (negative)
+    *number = - *number;
+  /* restore extra characters */
+  *ptr = c;
+
+  /* skip the following spaces */
+  while (*ptr != EOS &&
+         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
+          *ptr == EOL    || *ptr == TAB   || *ptr == __CR__))
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+  ParseviewBoxAttribute
+  Parse the value of a viewbox attribute
+  ----------------------------------------------------------------------*/
+static void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
+                                   float* x, float* y, float* width,
+                                   float* height, ThotBool delete_)
+{
+  int                  length;
+  char                *text, *ptr;
+
+  *x = 0;
+  *y = 0;
+  *width = 0;
+  *height = 0;
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = (char *)TtaGetMemory (length);
+  if (text)
+    {
+      /* get the value of the attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value */
+      ptr = text;
+      if (*ptr != EOS)
+        {
+          /* skip space characters */
+          ptr = SkipBlanksAndComma (ptr);
+          ptr = GetFloat (ptr, x);
+          ptr = SkipBlanksAndComma (ptr);
+          ptr = GetFloat (ptr, y);
+          ptr = SkipBlanksAndComma (ptr);
+          ptr = GetFloat (ptr, width);
+          ptr = SkipBlanksAndComma (ptr);
+          ptr = GetFloat (ptr, height);
+        }       
+      TtaFreeMemory (text);
+    }
+}
+
 
 /*----------------------------------------------------------------------
   CopyAMarker
@@ -609,9 +745,9 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   Element              copy, child;
   AttributeType        attrType;
   Attribute            attr;
-  char                 *val;
-  int                  x, y, length;
-  float                scale;
+  char                 *val, buffer[50];
+  int                  x, y, length, w, h, i;
+  float                scaleX, scaleY;
   double               angle;
   PresentationContext  context = NULL;
   PresentationValue    presValue;
@@ -664,28 +800,71 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
       val = (char *)TtaGetMemory (length + 1);
       TtaGiveTextAttributeValue (attr, val, &length);
       if (!strcmp (val, "auto"))
-	/* angle="auto". Compute the angle for the relevant vertex */
-	{
-	  if (elType.ElTypeNum == SVG_EL_polyline ||
-	      elType.ElTypeNum == SVG_EL_polygon ||
-	      elType.ElTypeNum == SVG_EL_line_)
-	    TtaGivePolylineAngle (leaf, vertex, &angle);
-	  else if (elType.ElTypeNum == SVG_EL_path)
-	    TtaGivePathAngle (leaf, vertex, &angle);
-	}
+        /* angle="auto". Compute the angle for the relevant vertex */
+        {
+          if (elType.ElTypeNum == SVG_EL_polyline ||
+              elType.ElTypeNum == SVG_EL_polygon ||
+              elType.ElTypeNum == SVG_EL_line_)
+            TtaGivePolylineAngle (leaf, vertex, &angle);
+          else if (elType.ElTypeNum == SVG_EL_path)
+            TtaGivePathAngle (leaf, vertex, &angle);
+        }
       else
-	/* not "auto". Parse the value of the angle */
-	{
-	  /* @@@@ to be written @@@@ */
-	}
+        /* not "auto". Parse the value of the angle */
+        {
+          /* @@@@ to be written @@@@ */
+        }
       TtaFreeMemory (val);
     }
   if (angle != 0)
     TtaAppendTransform (copy, TtaNewTransformRotate (angle, 0, 0), doc);
 
+  /* add a translate to put the reference point of the marker on the vertex of
+     the host element, using the 'refX' and 'refY' attributes of the marker */
+  attrType.AttrTypeNum = SVG_ATTR_refX;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    {
+      i = 50;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      sscanf (buffer, "%d", &x);
+    }
+  else
+    x = 0;
+  attrType.AttrTypeNum = SVG_ATTR_refY;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    {
+      i = 50;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      sscanf (buffer, "%d", &y);
+    }
+  else
+    y = 0;
+
+  attrType.AttrTypeNum = SVG_ATTR_markerWidth;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    {
+      i = 50;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      sscanf (buffer, "%d", &w);
+    }
+  else
+    w = 3;
+  attrType.AttrTypeNum = SVG_ATTR_markerWidth;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    {
+      i = 50;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      sscanf (buffer, "%d", &h);
+    }
+  else
+    h = 3;
   /* add a scaling to match the coordinate system indicated by the
      'markerUnits' attribute */
-  scale = 1;
+  scaleX = 1;
   strokeWidth = TRUE;  /* default value */
   attrType.AttrTypeNum = SVG_ATTR_markerUnits;
   attr = TtaGetAttribute (marker, attrType);
@@ -700,27 +879,17 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
       if (TtaGetStylePresentation (PRLineWeight, el, NULL, context, &presValue) == 0)
         {
           if (presValue.typed_data.real)
-            scale = presValue.typed_data.value / 1000;
+            scaleX = presValue.typed_data.value / 1000;
           else
-            scale = presValue.typed_data.value;
+            scaleX = presValue.typed_data.value;
           if (presValue.typed_data.unit == UNIT_REL)
-            scale = scale / 10;
-          if (scale != 1)
-            TtaAppendTransform (copy, TtaNewTransformScale (scale, scale), doc);
+            scaleX = scaleX / 10;
         }
     }
-
-  /* add a translate to put the reference point of the marker on the vertex of
-     the host element, using the 'refX' and 'refY' attributes of the marker */
-  attrType.AttrTypeNum = SVG_ATTR_refX;
-  attr = TtaGetAttribute (marker, attrType);
-  if (attr)
-    {
-  /* @@@@ to be written @@@@ */
-  /* add a transform to scale the coordinate system based on the viewBox and
-     the markerHeight and the markerWidth attributes of the marker */
-  /* @@@@ to be written @@@@ */
-    }
+  scaleY = scaleX;
+  // normally we need to know the bounding box of the marker
+  if (scaleX != 1 || scaleY != 1)
+    TtaAppendTransform (copy, TtaNewTransformScale (scaleX, scaleY), doc);
 
   if (oldStructureChecking)
     TtaSetStructureChecking (oldStructureChecking, doc);
@@ -1480,142 +1649,6 @@ void CreateCSSRules (Element el, Document doc)
                         FALSE, el); 
           TtaFreeMemory (text);
         }
-    }
-}
-
-/*----------------------------------------------------------------------
-  SkipBlanksAndComma skips all spaces, tabs, linefeeds, newlines and
-  commas at the beginning of the string and returns the pointer to the
-  new position. 
-  ----------------------------------------------------------------------*/
-static char *SkipBlanksAndComma (char *ptr)
-{
-  while (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
-         *ptr == TAB || *ptr == __CR__ || *ptr == ',')
-    ptr++;
-  return (ptr);
-}
-
-/*----------------------------------------------------------------------
-  GetFloat
-  Parse an integer or floating point number and skip to the next token.
-  Return the value of that number in number and moves ptr to the next
-  token to be parsed.
-  ----------------------------------------------------------------------*/
-static char *GetFloat (char *ptr, float* number)
-{
-  int      i;
-  char     *start, c;
-  float     val = 0.;
-  ThotBool negative, decimal, exponent, useDotForFloat;
-
-  /* test if the system uses dot or comma in the float syntax */
-  sscanf (".5", "%f", &val);
-  useDotForFloat = (val == 0.5);
-  negative = FALSE;
-  decimal = FALSE;
-  exponent = FALSE;
-  *number = 0.;
-  /* read the sign */
-  if (*ptr == '+')
-    ptr++;
-  else if (*ptr == '-')
-    {
-      ptr++;
-      negative = TRUE;
-    }
-
-  start = ptr;
-  /* read the integer part */
-  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
-    ptr++;
-  if (*ptr == '.')
-    /* there is a decimal part */
-    {
-      if (!useDotForFloat)
-        *ptr = ',';
-      ptr++;
-      decimal = TRUE;
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-        ptr++;
-    }
-
-  if (*ptr == 'e' || *ptr == 'E')
-    /* there is an exponent, parse it */
-    {
-      exponent = TRUE;
-      ptr++;
-      /* read the sign of the exponent */
-      if (*ptr == '+')
-        ptr++;
-      else if (*ptr == '-')
-        ptr++;
-      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
-        ptr++;
-    }
-  /* remove possible extra characters */
-  c = *ptr;
-	if (c != EOS)
-    *ptr = EOS;
-  if (exponent)
-    sscanf (start, "%e", number);
-  else if (decimal)
-    sscanf (start, "%f", number);
-  else
-    {
-      sscanf (start, "%d", &i);
-      *number = (float)i;
-    }
-
-  if (negative)
-    *number = - *number;
-  /* restore extra characters */
-  *ptr = c;
-
-  /* skip the following spaces */
-  while (*ptr != EOS &&
-         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
-          *ptr == EOL    || *ptr == TAB   || *ptr == __CR__))
-    ptr++;
-  return (ptr);
-}
-
-/*----------------------------------------------------------------------
-  ParseviewBoxAttribute
-  Parse the value of a viewbox attribute
-  ----------------------------------------------------------------------*/
-static void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
-                                   float* x, float* y, float* width,
-                                   float* height, ThotBool delete_)
-{
-  int                  length;
-  char                *text, *ptr;
-
-  *x = 0;
-  *y = 0;
-  *width = 0;
-  *height = 0;
-  length = TtaGetTextAttributeLength (attr) + 2;
-  text = (char *)TtaGetMemory (length);
-  if (text)
-    {
-      /* get the value of the attribute */
-      TtaGiveTextAttributeValue (attr, text, &length);
-      /* parse the attribute value */
-      ptr = text;
-      if (*ptr != EOS)
-        {
-          /* skip space characters */
-          ptr = SkipBlanksAndComma (ptr);
-          ptr = GetFloat (ptr, x);
-          ptr = SkipBlanksAndComma (ptr);
-          ptr = GetFloat (ptr, y);
-          ptr = SkipBlanksAndComma (ptr);
-          ptr = GetFloat (ptr, width);
-          ptr = SkipBlanksAndComma (ptr);
-          ptr = GetFloat (ptr, height);
-        }       
-      TtaFreeMemory (text);
     }
 }
 
