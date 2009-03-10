@@ -442,7 +442,7 @@ dnl  ***************************************************************
 
 # the wx version
 AMAYAWX_MAJVER=11
-AMAYAWX_MINVER=1
+AMAYAWX_MINVER=2
 AMAYAWX_SUBVER=0
 APP_MAJVER=$AMAYAWX_MAJVER
 APP_MINVER=$AMAYAWX_MINVER

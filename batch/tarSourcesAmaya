@@ -12,7 +12,7 @@
 #
 
 # default parameters
-AMAYAVERSION="11.1"
+AMAYAVERSION="11.2"
 DEST=$HOME
 
 # Check argument number on the command line
@@ -214,6 +214,9 @@ ${AMAYADIR}/amaya/*.png \
 ${AMAYADIR}/amaya/*.rc \
 ${AMAYADIR}/amaya/*.ico \
 ${AMAYADIR}/amaya/*.cur \
+${AMAYADIR}/amaya/mathedit/*.c \
+${AMAYADIR}/amaya/mathedit/*.l \
+${AMAYADIR}/amaya/mathedit/*.y \
 ${AMAYADIR}/amaya/wxdialog/*.h \
 ${AMAYADIR}/amaya/wxdialog/*.cpp \
 ${AMAYADIR}/amaya/wxdialog/*.rc \
