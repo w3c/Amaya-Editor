@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -866,11 +866,13 @@ void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
   PtrAbstractBox      pChildAb;
   ViewFrame          *pFrame;
 
-  if (pAb && pAb->AbElement && pAb->AbElement->ElStructSchema &&
-      (!status ||
-       !TypeHasException (ExcIsMarker, pAb->AbElement->ElTypeNumber,
-                          pAb->AbElement->ElStructSchema)))
+  if (pAb && pAb->AbElement && pAb->AbElement->ElStructSchema)
     {
+      if (pAb->AbDocView == 1 &&
+          TypeHasException (ExcIsMarker, pAb->AbElement->ElTypeNumber,
+                            pAb->AbElement->ElStructSchema))
+        // don't select markers in the formatted view
+        status = FALSE;
       if (pAb->AbSelected)
         {
           /* the abstract box is selected */
@@ -888,6 +890,11 @@ void SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
       else if (pAb->AbLeafType == LtCompound)
         /* check the subtree */
         {
+          if (pAb->AbDocView == 1 && status == TRUE &&
+              TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
+                                pAb->AbElement->ElStructSchema))
+            // don't select children of a selected group in the formatted view
+            status = FALSE;
           pChildAb = pAb->AbFirstEnclosed;
           while (pChildAb != NULL)
             {

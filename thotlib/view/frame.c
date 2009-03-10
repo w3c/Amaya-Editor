@@ -1785,9 +1785,11 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                         DrawFilledBox (pBox, pAb, frame, pFlow,
                                        xmin, xmax, ymin, ymax,
                                        selected, TRUE, TRUE, show_bgimage);
-                      if (pAb->AbSelected && FrameTable[frame].FrView == 1 &&
-                          TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
-                                            pAb->AbElement->ElStructSchema))
+                      if (pAb->AbSelected && pAb->AbDocView == 1 &&
+                          (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
+                                            pAb->AbElement->ElStructSchema) ||
+                           TypeHasException (ExcIsMarker, pAb->AbElement->ElTypeNumber,
+                                             pAb->AbElement->ElStructSchema)))
                         selected = FALSE;
                       if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
                         {
