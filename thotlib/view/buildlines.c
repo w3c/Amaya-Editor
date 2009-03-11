@@ -3455,16 +3455,23 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     orgX += pBlock->BxXOrg;
   if (yAbs)
     orgY += pBlock->BxYOrg;
+
+  if (box->BxAbstractBox && box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+    bw = pBlock->BxW * box->BxAbstractBox->AbWidth.DimValue / 100;
+  else
+    {
+      bw = box->BxWidth;
+      if (box->BxAbstractBox->AbFloat == 'L' && box->BxLMargin < 0)
+        bw += box->BxLMargin;
+      else if (box->BxAbstractBox->AbFloat == 'R' && box->BxRMargin < 0)
+        bw += box->BxRMargin;
+      if (box->BxAbstractBox->AbFloat == 'L' && box->BxRMargin < 0)
+        bw += box->BxRMargin;
+      else if (box->BxAbstractBox->AbFloat == 'R' && box->BxLMargin < 0)
+        bw += box->BxLMargin;
+    }
+
   /* initial position */
-  bw = box->BxWidth;
-  if (box->BxAbstractBox->AbFloat == 'L' && box->BxLMargin < 0)
-    bw += box->BxLMargin;
-  else if (box->BxAbstractBox->AbFloat == 'R' && box->BxRMargin < 0)
-    bw += box->BxRMargin;
-  if (box->BxAbstractBox->AbFloat == 'L' && box->BxRMargin < 0)
-    bw += box->BxRMargin;
-  else if (box->BxAbstractBox->AbFloat == 'R' && box->BxLMargin < 0)
-    bw += box->BxLMargin;
   if (box->BxAbstractBox->AbFloat == 'L')
     /* left float */
     x = left + orgX;
@@ -3515,7 +3522,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
-      if (bw <= w + 1)
+      if (bw <= w)
         {
           /* it's possible to display the floating box at the current position */
           if (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
