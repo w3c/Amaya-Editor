@@ -69,9 +69,7 @@ static Document DocMathElementSelected = 0;
 #include "XLinkedit_f.h"
 #include "templateUtils_f.h"
 
-enum { DEFAULT_MODE, CHEMISTRY_MODE, UNITS_MODE, LATEX_MODE};
-//int CurrentMathEditMode = DEFAULT_MODE;
-int CurrentMathEditMode = CHEMISTRY_MODE;
+int CurrentMathEditMode;
 
 /* Function name table */
 typedef char     functName[10];
@@ -5735,6 +5733,9 @@ void InitMathML ()
   MathsDialogue = TtaSetCallback ((Proc)CallbackMaths, MAX_MATHS);
   TtaSetMoveForwardCallback ((Func) MathMoveForward);
   TtaSetMoveBackwardCallback ((Func) MathMoveBackward);
+
+  if(!TtaGetEnvInt ("MATHEDIT_MODE", &CurrentMathEditMode))
+    CurrentMathEditMode = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -6203,7 +6204,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   ThotBool      empty, closeUndoSeq, separate, ok, leadingSpace;
 
   /************************************************************/
-  if(CurrentMathEditMode != DEFAULT_MODE)
+  if(CurrentMathEditMode > 0)
     {
       TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);

@@ -19,7 +19,6 @@
 
 #include "fetchXMLname_f.h"
 
-// TODO: share this with Mathedit
 enum { DEFAULT_MODE, CHEMISTRY_MODE, UNITS_MODE, LATEX_MODE};
 
 static Document parser_doc;
