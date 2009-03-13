@@ -1061,14 +1061,10 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
                     }
                 }
             }	  
-          else if (pAb->AbDepth < plane)
-            {
-              /* keep the lowest value for plane depth */
-              if (plane == nextplane)
-                nextplane = pAb->AbDepth;
-              else if (pAb->AbDepth > nextplane)
-                nextplane = pAb->AbDepth;
-            }
+          else if (pAb->AbDepth < plane &&
+                   (plane == nextplane || pAb->AbDepth > nextplane))
+            /* keep the lowest value for plane depth */
+            nextplane = pAb->AbDepth;
 
           /* get next abstract box */
           if (pAb->AbLeafType == LtCompound &&  pAb->AbFirstEnclosed &&
@@ -1498,14 +1494,11 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
                     cliph = (pBox->BxClipY + pBox->BxClipH) - clipy;		  
                 }
             }
-          else if (pAb->AbDepth < plane)
-            {
-              /* keep the lowest value for plane depth */
-              if (plane == nextplane)
-                nextplane = pAb->AbDepth;
-              else if (pAb->AbDepth > nextplane)
-                nextplane = pAb->AbDepth;
-            }
+          else if (pAb->AbDepth < plane &&
+                   (plane == nextplane || pAb->AbDepth > nextplane))
+            /* keep the lowest value for plane depth */
+            nextplane = pAb->AbDepth;
+
           /* get the next sibling */
           pAb = pAb->AbNext;
         }
@@ -1928,10 +1921,6 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                               clipXOfFirstCoordSys, clipYOfFirstCoordSys);
                         }
                     }
-                  else if (pAb->AbDepth < plane &&
-                           (plane == nextplane || pAb->AbDepth > nextplane))
-                    /* keep the lowest value for plane depth */
-                    nextplane = pAb->AbDepth;
 
                   not_g_opacity_displayed = TRUE;
 #else /* _GL */
@@ -2124,10 +2113,6 @@ void ComputeChangedBoundingBoxes (int frame)
                             }
                         }
                     }
-                  else if (pAb->AbDepth < plane &&
-                           (plane == nextplane || pAb->AbDepth > nextplane))
-                    /* keep the lowest value for plane depth */
-                    nextplane = pAb->AbDepth;
 
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
