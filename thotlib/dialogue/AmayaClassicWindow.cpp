@@ -196,7 +196,9 @@ void AmayaClassicWindow::LoadConfig()
 void AmayaClassicWindow::SaveConfig()
 {
   // TODO : save the global config about the toolPanelBar
-  m_pPanel->SaveConfig();
+  int kind = GetKind();
+  if (kind != WXAMAYAWINDOW_ANNOT && kind != WXAMAYAWINDOW_HELP)
+    m_pPanel->SaveConfig();
   AmayaNormalWindow::SaveConfig();
 }
 
