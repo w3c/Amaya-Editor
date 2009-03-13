@@ -53,6 +53,7 @@ static Document DocMathElementSelected = 0;
 #include "HTMLedit_f.h"
 #include "HTMLpresentation_f.h"
 #include "MathMLbuilder_f.h"
+#include "Mathedit_parser_f.h"
 #include "styleparser_f.h"
 #include "trans_f.h"
 #include "UIcss_f.h"
@@ -68,14 +69,9 @@ static Document DocMathElementSelected = 0;
 #include "XLinkedit_f.h"
 #include "templateUtils_f.h"
 
-// Uncomment this line if you want to experiment the advanced mathedit
-//#define ADVANCED_MATHEDIT 1
-#ifdef ADVANCED_MATHEDIT
 enum { DEFAULT_MODE, CHEMISTRY_MODE, UNITS_MODE, LATEX_MODE};
-// Only chemistry mode is available for the moment
+//int CurrentMathEditMode = DEFAULT_MODE;
 int CurrentMathEditMode = CHEMISTRY_MODE;
-void InsertMathElementFromText(Element theElem, Element theText, Document doc);
-#endif
 
 /* Function name table */
 typedef char     functName[10];
@@ -720,7 +716,7 @@ void InsertSymbol (Element *el, int TypeNum, int symbol, Document doc)
   child = TtaNewElement (doc, newType);
   TtaInsertFirstChild (&child, op, doc);
   text[0] = symbol;
-  text[1] = EOS;	  
+  text[1] = EOS;
   TtaSetBufferContent (child, text, TtaGetLanguageIdFromScript('L'), doc);
   *el = op;
 }
@@ -6207,15 +6203,15 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   ThotBool      empty, closeUndoSeq, separate, ok, leadingSpace;
 
   /************************************************************/
-#ifdef ADVANCED_MATHEDIT
-  TtaSetDisplayMode (doc, DeferredDisplay);
-  oldStructureChecking = TtaGetStructureChecking (doc);
-  TtaSetStructureChecking (FALSE, doc);
-  CurrentMathEditMode = CHEMISTRY_MODE;
-  InsertMathElementFromText(theElem, theText, doc);
-  TtaSetStructureChecking (oldStructureChecking, doc);
-  TtaSetDisplayMode (doc, DisplayImmediately);
-#endif
+  if(CurrentMathEditMode != DEFAULT_MODE)
+    {
+      TtaSetDisplayMode (doc, DeferredDisplay);
+      oldStructureChecking = TtaGetStructureChecking (doc);
+      TtaSetStructureChecking (FALSE, doc);
+      InsertMathElementFromText(theElem, theText, doc, CurrentMathEditMode);
+      TtaSetStructureChecking (oldStructureChecking, doc);
+      TtaSetDisplayMode (doc, DisplayImmediately);
+    }
   /**************************************************************/
 
   elType = TtaGetElementType (theElem);
@@ -8955,7 +8951,3 @@ void HandleColAndRowAlignAttributes (Element row, Document doc)
        applies that attribute again to the whole table */
     HandleColumnlinesAttribute (attr, table, doc, FALSE);
 }
-
-#ifdef ADVANCED_MATHEDIT
-#include "mathedit/parser.c"
-#endif

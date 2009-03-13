@@ -19,12 +19,25 @@ H|D|T|He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu
  yylval.string = yytext;
  return ATOM; }
 
-[0-9]+ { yylval.string = yytext; return INTEGER; }
+(\+|\-)?[I|V|X]+(\/[I|V|X]+)?|0 {
+ yylval.string = yytext; return OXIDATION_NUMBER; }
 
-\-|\+ { yylval.string = yytext; return SIGN; }
+\^\{((\+|\-)?[I|V|X]+(\/[I|V|X]+)?|0)\} {
+ yytext[yyleng-1] = '\0';
+ yylval.string = yytext+2; return OXIDATION_NUMBER; }
 
-\]|\[|\)|\(|\{|\} { return *yytext; }
+[1-9][0-9]* { yylval.string = yytext; return INTEGER; }
 
-. { yylval.string = NULL; return UNKNOWN_TOKEN;}
+\=\=|---- { return QUADRUPLE_BOND; }
+-\=|\=-|--- { return TRIPLE_BOND; }
+\=|-- { return DOUBLE_BOND; }
+_ { return SIMPLE_BOND; }
+\.\.\. { return GENERIC_BOND; }
+
+\. { return DOT; }
+
+\]|\[|\)|\(|\{|\}|\-|\+|^|\* { return *yytext; }
+
+. { return UNKNOWN_TOKEN;}
 
 %%

@@ -63,6 +63,14 @@
 /* Using locations.  */
 #define YYLSP_NEEDED 0
 
+/* Substitute the variable and function names.  */
+#define yyparse         chemistryparse
+#define yylex           chemistrylex
+#define yyerror         chemistryerror
+#define yylval          chemistrylval
+#define yychar          chemistrychar
+#define yydebug         chemistrydebug
+#define yynerrs         chemistrynerrs
 
 
 /* Copy the first part of user declarations.  */
@@ -80,7 +88,7 @@ void yyerror(const char *s)
 
 
 /* Line 189 of yacc.c  */
-#line 84 "chemistry.tab.c"
+#line 92 "chemistry.bison.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -109,8 +117,14 @@ void yyerror(const char *s)
    enum yytokentype {
      ATOM = 258,
      INTEGER = 259,
-     SIGN = 260,
-     UNKNOWN_TOKEN = 261
+     OXIDATION_NUMBER = 260,
+     SIMPLE_BOND = 261,
+     DOUBLE_BOND = 262,
+     TRIPLE_BOND = 263,
+     QUADRUPLE_BOND = 264,
+     GENERIC_BOND = 265,
+     DOT = 266,
+     UNKNOWN_TOKEN = 267
    };
 #endif
 
@@ -129,7 +143,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 133 "chemistry.tab.c"
+#line 147 "chemistry.bison.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -141,7 +155,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 145 "chemistry.tab.c"
+#line 159 "chemistry.bison.c"
 
 #ifdef short
 # undef short
@@ -354,22 +368,22 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  14
+#define YYFINAL  28
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   38
+#define YYLAST   83
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  13
+#define YYNTOKENS  22
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  10
+#define YYNNTS  19
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  17
+#define YYNRULES  35
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  26
+#define YYNSTATES  44
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   261
+#define YYMAXUTOK   267
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -381,15 +395,15 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       9,    10,     2,     2,     2,     2,     2,     2,     2,     2,
+      15,    16,    19,    20,     2,    21,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     7,     2,     8,     2,     2,     2,     2,     2,     2,
+       2,    13,     2,    14,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    11,     2,    12,     2,     2,     2,     2,
+       2,     2,     2,    17,     2,    18,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -403,7 +417,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6
+       5,     6,     7,     8,     9,    10,    11,    12
 };
 
 #if YYDEBUG
@@ -412,24 +426,32 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     5,     8,    10,    13,    15,    18,    20,
-      24,    26,    30,    34,    37,    39,    41,    43
+      24,    26,    28,    30,    34,    38,    41,    43,    45,    47,
+      49,    52,    54,    56,    58,    60,    62,    64,    66,    68,
+      70,    72,    74,    76,    78,    80
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      14,     0,    -1,    15,    -1,    16,    19,    -1,    16,    -1,
-      16,    17,    -1,    17,    -1,    18,    20,    -1,    18,    -1,
-       7,    16,     8,    -1,    22,    -1,     9,    16,    10,    -1,
-      11,    16,    12,    -1,    20,    21,    -1,    21,    -1,     4,
-      -1,     5,    -1,     3,    -1
+      23,     0,    -1,    24,    -1,    25,    28,    -1,    25,    -1,
+      25,    26,    -1,    26,    -1,    27,    29,    -1,    27,    -1,
+      13,    25,    14,    -1,    33,    -1,    40,    -1,    30,    -1,
+      15,    25,    16,    -1,    17,    25,    18,    -1,    29,    39,
+      -1,    39,    -1,    19,    -1,     4,    -1,    31,    -1,    31,
+      32,    -1,     3,    -1,     5,    -1,    34,    -1,    35,    -1,
+      36,    -1,    37,    -1,    38,    -1,     6,    -1,     7,    -1,
+       8,    -1,     9,    -1,    10,    -1,    20,    -1,    21,    -1,
+      11,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    54,    54,    61,    62,    66,    74,    82,    83,    84,
-      91,    93,    98,   102,   109,   113,   117,   121
+       0,    70,    70,    77,    78,    82,    90,    98,    99,   100,
+     104,   105,   109,   111,   116,   120,   127,   128,   132,   136,
+     137,   141,   145,   149,   150,   151,   152,   153,   156,   159,
+     162,   165,   168,   171,   172,   176
 };
 #endif
 
@@ -438,10 +460,14 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "ATOM", "INTEGER", "SIGN",
-  "UNKNOWN_TOKEN", "'['", "']'", "'('", "')'", "'{'", "'}'", "$accept",
-  "result", "chemical_compound", "chemical_compound2", "chemical_entity",
-  "chemical_entity2", "ionic_charge", "integer", "sign", "atom", 0
+  "$end", "error", "$undefined", "ATOM", "INTEGER", "OXIDATION_NUMBER",
+  "SIMPLE_BOND", "DOUBLE_BOND", "TRIPLE_BOND", "QUADRUPLE_BOND",
+  "GENERIC_BOND", "DOT", "UNKNOWN_TOKEN", "'['", "']'", "'('", "')'",
+  "'{'", "'}'", "'*'", "'+'", "'-'", "$accept", "result",
+  "chemical_compound", "chemical_compound2", "chemical_entity",
+  "chemical_entity2", "ionic_charge", "integer", "atom", "atom2",
+  "oxidation_number", "bond", "simple_bond", "double_bond", "triple_bond",
+  "quadruple_bond", "generic_bond", "sign", "dot", 0
 };
 #endif
 
@@ -450,23 +476,28 @@ static const char *const yytname[] =
    token YYLEX-NUM.  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,   260,   261,    91,    93,    40,
-      41,   123,   125
+       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+     265,   266,   267,    91,    93,    40,    41,   123,   125,    42,
+      43,    45
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    13,    14,    15,    15,    16,    16,    17,    17,    17,
-      18,    18,    18,    19,    19,    20,    21,    22
+       0,    22,    23,    24,    24,    25,    25,    26,    26,    26,
+      26,    26,    27,    27,    27,    28,    28,    28,    29,    30,
+      30,    31,    32,    33,    33,    33,    33,    33,    34,    35,
+      36,    37,    38,    39,    39,    40
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     2,     1,     2,     1,     2,     1,     3,
-       1,     3,     3,     2,     1,     1,     1,     1
+       1,     1,     1,     3,     3,     2,     1,     1,     1,     1,
+       2,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -474,31 +505,37 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,    17,     0,     0,     0,     0,     2,     4,     6,     8,
-      10,     0,     0,     0,     1,    15,    16,     5,     3,     0,
-      14,     7,     9,    11,    12,    13
+       0,    21,    28,    29,    30,    31,    32,    35,     0,     0,
+       0,     0,     2,     4,     6,     8,    12,    19,    10,    23,
+      24,    25,    26,    27,    11,     0,     0,     0,     1,    18,
+      17,    33,    34,     5,     3,     0,    16,     7,    22,    20,
+       9,    13,    14,    15
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     5,     6,     7,     8,     9,    18,    19,    20,    10
+      -1,    11,    12,    13,    14,    15,    34,    35,    16,    17,
+      39,    18,    19,    20,    21,    22,    23,    36,    24
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -4
+#define YYPACT_NINF -21
 static const yytype_int8 yypact[] =
 {
-      24,    -4,    24,    24,    24,     5,    -4,     7,    -4,     3,
-      -4,    12,    19,    -3,    -4,    -4,    -4,    -4,    -4,     8,
-      -4,    -4,    -4,    -4,    -4,    -4
+      57,   -21,   -21,   -21,   -21,   -21,   -21,   -21,    57,    57,
+      57,     2,   -21,    -3,   -21,     5,   -21,     6,   -21,   -21,
+     -21,   -21,   -21,   -21,   -21,    29,    42,    16,   -21,   -21,
+     -21,   -21,   -21,   -21,   -21,     0,   -21,   -21,   -21,   -21,
+     -21,   -21,   -21,   -21
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -4,    -4,    -4,    -1,    25,    -4,    -4,    15,    -2,    -4
+     -21,   -21,   -21,    67,    56,   -21,   -21,    -2,   -21,   -21,
+     -21,   -21,   -21,   -21,   -21,   -21,   -21,   -20,   -21
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -508,27 +545,39 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       1,    11,    12,    13,     2,    14,     3,    15,     4,    24,
-       1,    15,    16,    16,     2,     1,     3,    25,     4,     2,
-      22,     3,     1,     4,    21,     0,     2,     1,     3,    23,
-       4,     2,    17,     3,     0,     4,    17,    17,    17
+       1,    29,    28,     2,     3,     4,     5,     6,     7,    29,
+       8,    38,     9,    37,    10,    43,    30,    31,    32,     1,
+      31,    32,     2,     3,     4,     5,     6,     7,     0,     8,
+       0,     9,     1,    10,    42,     2,     3,     4,     5,     6,
+       7,     0,     8,    40,     9,     1,    10,     0,     2,     3,
+       4,     5,     6,     7,     0,     8,     0,     9,    41,    10,
+       1,     0,     0,     2,     3,     4,     5,     6,     7,    33,
+       8,     0,     9,     0,    10,    25,    26,    27,     0,     0,
+       0,    33,    33,    33
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     2,     3,     4,     7,     0,     9,     4,    11,    12,
-       3,     4,     5,     5,     7,     3,     9,    19,    11,     7,
-       8,     9,     3,    11,     9,    -1,     7,     3,     9,    10,
-      11,     7,     7,     9,    -1,    11,    11,    12,    13
+       3,     4,     0,     6,     7,     8,     9,    10,    11,     4,
+      13,     5,    15,    15,    17,    35,    19,    20,    21,     3,
+      20,    21,     6,     7,     8,     9,    10,    11,    -1,    13,
+      -1,    15,     3,    17,    18,     6,     7,     8,     9,    10,
+      11,    -1,    13,    14,    15,     3,    17,    -1,     6,     7,
+       8,     9,    10,    11,    -1,    13,    -1,    15,    16,    17,
+       3,    -1,    -1,     6,     7,     8,     9,    10,    11,    13,
+      13,    -1,    15,    -1,    17,     8,     9,    10,    -1,    -1,
+      -1,    25,    26,    27
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     7,     9,    11,    14,    15,    16,    17,    18,
-      22,    16,    16,    16,     0,     4,     5,    17,    19,    20,
-      21,    20,     8,    10,    12,    21
+       0,     3,     6,     7,     8,     9,    10,    11,    13,    15,
+      17,    23,    24,    25,    26,    27,    30,    31,    33,    34,
+      35,    36,    37,    38,    40,    25,    25,    25,     0,     4,
+      19,    20,    21,    26,    28,    29,    39,    29,     5,    32,
+      14,    16,    18,    39
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1039,101 +1088,209 @@ yydestruct (yymsg, yytype, yyvaluep)
 
   switch (yytype)
     {
-      case 15: /* "chemical_compound" */
+      case 24: /* "chemical_compound" */
 
 /* Line 1000 of yacc.c  */
-#line 46 "chemistry.y"
+#line 63 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1053 "chemistry.tab.c"
+#line 1102 "chemistry.bison.c"
 	break;
-      case 16: /* "chemical_compound2" */
+      case 25: /* "chemical_compound2" */
 
 /* Line 1000 of yacc.c  */
-#line 46 "chemistry.y"
+#line 63 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1065 "chemistry.tab.c"
+#line 1114 "chemistry.bison.c"
 	break;
-      case 17: /* "chemical_entity" */
+      case 26: /* "chemical_entity" */
 
 /* Line 1000 of yacc.c  */
-#line 46 "chemistry.y"
+#line 63 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1077 "chemistry.tab.c"
+#line 1126 "chemistry.bison.c"
 	break;
-      case 18: /* "chemical_entity2" */
+      case 27: /* "chemical_entity2" */
 
 /* Line 1000 of yacc.c  */
-#line 46 "chemistry.y"
+#line 63 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1089 "chemistry.tab.c"
+#line 1138 "chemistry.bison.c"
 	break;
-      case 19: /* "ionic_charge" */
+      case 28: /* "ionic_charge" */
 
 /* Line 1000 of yacc.c  */
-#line 46 "chemistry.y"
+#line 63 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1101 "chemistry.tab.c"
+#line 1150 "chemistry.bison.c"
 	break;
-      case 20: /* "integer" */
+      case 29: /* "integer" */
 
 /* Line 1000 of yacc.c  */
-#line 46 "chemistry.y"
+#line 63 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1113 "chemistry.tab.c"
+#line 1162 "chemistry.bison.c"
 	break;
-      case 21: /* "sign" */
+      case 30: /* "atom" */
 
 /* Line 1000 of yacc.c  */
-#line 46 "chemistry.y"
+#line 63 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1125 "chemistry.tab.c"
+#line 1174 "chemistry.bison.c"
 	break;
-      case 22: /* "atom" */
+      case 31: /* "atom2" */
 
 /* Line 1000 of yacc.c  */
-#line 46 "chemistry.y"
+#line 63 "chemistry.y"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1137 "chemistry.tab.c"
+#line 1186 "chemistry.bison.c"
+	break;
+      case 32: /* "oxidation_number" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1198 "chemistry.bison.c"
+	break;
+      case 33: /* "bond" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1210 "chemistry.bison.c"
+	break;
+      case 34: /* "simple_bond" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1222 "chemistry.bison.c"
+	break;
+      case 35: /* "double_bond" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1234 "chemistry.bison.c"
+	break;
+      case 36: /* "triple_bond" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1246 "chemistry.bison.c"
+	break;
+      case 37: /* "quadruple_bond" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1258 "chemistry.bison.c"
+	break;
+      case 38: /* "generic_bond" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1270 "chemistry.bison.c"
+	break;
+      case 39: /* "sign" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1282 "chemistry.bison.c"
+	break;
+      case 40: /* "dot" */
+
+/* Line 1000 of yacc.c  */
+#line 63 "chemistry.y"
+	{
+  printf("Element deleted\n");
+  TtaDeleteTree((yyvaluep->node), parser_doc);
+ };
+
+/* Line 1000 of yacc.c  */
+#line 1294 "chemistry.bison.c"
 	break;
 
       default:
@@ -1438,7 +1595,7 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 55 "chemistry.y"
+#line 71 "chemistry.y"
     {
     parser_new_el = (yyvsp[(1) - (1)].node);
   ;}
@@ -1447,21 +1604,21 @@ yyreduce:
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 61 "chemistry.y"
-    { (yyval.node) = ParserNewMSUP(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
+#line 77 "chemistry.y"
+    { (yyval.node) = NewMSUP(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 62 "chemistry.y"
+#line 78 "chemistry.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 67 "chemistry.y"
+#line 83 "chemistry.y"
     {
     Element leaf;
     leaf = TtaGetLastChild((yyvsp[(1) - (2)].node));
@@ -1473,9 +1630,9 @@ yyreduce:
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 75 "chemistry.y"
+#line 91 "chemistry.y"
     {
-    (yyval.node) = ParserNewMROW(parser_doc);
+    (yyval.node) = NewMROW(parser_doc);
     TtaInsertFirstChild(&((yyvsp[(1) - (1)].node)), (yyval.node), parser_doc);
   ;}
     break;
@@ -1483,92 +1640,218 @@ yyreduce:
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 82 "chemistry.y"
-    { (yyval.node) = ParserNewMSUB(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
+#line 98 "chemistry.y"
+    { (yyval.node) = NewMSUB(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 83 "chemistry.y"
+#line 99 "chemistry.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 85 "chemistry.y"
+#line 101 "chemistry.y"
     {
-    (yyval.node) = ParserNewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "[", "]");
+    (yyval.node) = NewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "[", "]");
   ;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 91 "chemistry.y"
-    { (yyval.node) = (yyvsp[(1) - (1)].node) ;}
+#line 104 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 94 "chemistry.y"
-    {
-    (yyval.node) = ParserNewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "(", ")");
-  ;}
+#line 105 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 98 "chemistry.y"
-    { (yyval.node) = (yyvsp[(2) - (3)].node); ;}
+#line 109 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node) ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 103 "chemistry.y"
+#line 112 "chemistry.y"
     {
-    (yyval.node) = ParserNewMROW(parser_doc);
-    TtaInsertFirstChild(&((yyvsp[(1) - (2)].node)), (yyval.node), parser_doc);
-    TtaInsertSibling((yyvsp[(2) - (2)].node), (yyvsp[(1) - (2)].node), FALSE, parser_doc);
+    (yyval.node) = NewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "(", ")");
   ;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 109 "chemistry.y"
-    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+#line 116 "chemistry.y"
+    { (yyval.node) = (yyvsp[(2) - (3)].node); ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 113 "chemistry.y"
-    { (yyval.node) = ParserNewMathElement(parser_doc, (yyvsp[(1) - (1)].string), MathML_EL_MN); ;}
+#line 121 "chemistry.y"
+    {
+    (yyval.node) = NewMROW(parser_doc);
+    TtaInsertFirstChild(&((yyvsp[(1) - (2)].node)), (yyval.node), parser_doc);
+    TtaInsertSibling((yyvsp[(2) - (2)].node), (yyvsp[(1) - (2)].node), FALSE, parser_doc);
+  ;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 117 "chemistry.y"
-    { (yyval.node) = ParserNewMathElement(parser_doc, (yyvsp[(1) - (1)].string), MathML_EL_MO); ;}
+#line 127 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 121 "chemistry.y"
-    { (yyval.node) = ParserNewMathElement(parser_doc, (yyvsp[(1) - (1)].string), MathML_EL_MI); ;}
+#line 128 "chemistry.y"
+    { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, '*'); ;}
+    break;
+
+  case 18:
+
+/* Line 1455 of yacc.c  */
+#line 132 "chemistry.y"
+    { (yyval.node) = NewMathElement(parser_doc, MathML_EL_MN, (yyvsp[(1) - (1)].string)); ;}
+    break;
+
+  case 19:
+
+/* Line 1455 of yacc.c  */
+#line 136 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 20:
+
+/* Line 1455 of yacc.c  */
+#line 137 "chemistry.y"
+    { (yyval.node) = NewMSUP(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
+    break;
+
+  case 21:
+
+/* Line 1455 of yacc.c  */
+#line 141 "chemistry.y"
+    { (yyval.node) = NewMathElement(parser_doc, MathML_EL_MI, (yyvsp[(1) - (1)].string)); ;}
+    break;
+
+  case 22:
+
+/* Line 1455 of yacc.c  */
+#line 145 "chemistry.y"
+    { (yyval.node) = NewMathElement(parser_doc, MathML_EL_MTEXT, (yyvsp[(1) - (1)].string)); ;}
+    break;
+
+  case 23:
+
+/* Line 1455 of yacc.c  */
+#line 149 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 24:
+
+/* Line 1455 of yacc.c  */
+#line 150 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 25:
+
+/* Line 1455 of yacc.c  */
+#line 151 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 26:
+
+/* Line 1455 of yacc.c  */
+#line 152 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 27:
+
+/* Line 1455 of yacc.c  */
+#line 153 "chemistry.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 28:
+
+/* Line 1455 of yacc.c  */
+#line 156 "chemistry.y"
+    { (yyval.node) = (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, '-');;}
+    break;
+
+  case 29:
+
+/* Line 1455 of yacc.c  */
+#line 159 "chemistry.y"
+    { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, '=');;}
+    break;
+
+  case 30:
+
+/* Line 1455 of yacc.c  */
+#line 162 "chemistry.y"
+    { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x2261);;}
+    break;
+
+  case 31:
+
+/* Line 1455 of yacc.c  */
+#line 165 "chemistry.y"
+    { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x2263);;}
+    break;
+
+  case 32:
+
+/* Line 1455 of yacc.c  */
+#line 168 "chemistry.y"
+    { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x20dB); ;}
+    break;
+
+  case 33:
+
+/* Line 1455 of yacc.c  */
+#line 171 "chemistry.y"
+    { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, '+'); ;}
+    break;
+
+  case 34:
+
+/* Line 1455 of yacc.c  */
+#line 172 "chemistry.y"
+    { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x2212); ;}
+    break;
+
+  case 35:
+
+/* Line 1455 of yacc.c  */
+#line 176 "chemistry.y"
+    { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x00b7); ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1572 "chemistry.tab.c"
+#line 1855 "chemistry.bison.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1780,8 +2063,8 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 123 "chemistry.y"
+#line 178 "chemistry.y"
 
 
-#include "lex.yy.c"
+#include "chemistry.flex.c"
 

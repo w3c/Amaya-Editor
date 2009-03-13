@@ -9,7 +9,8 @@ AMAYA_MATH_OPTIONS=
 AMAYA_MATH_OBJ= \
 	MathMLAPP.o \
 	MathMLbuilder.o \
-	Mathedit.o
+	Mathedit.o \
+	Mathedit_parser.o
 
 AMAYA_MATH_SRC= \
         MathML.h \
@@ -66,4 +67,3 @@ MathML.h MathMLAPP.c: $(AMAYA)/MathML.STR $(AMAYA)/MathML.A ../bin/app
 	fi)
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(ALL_AMAYA_OPTIONS) MathML.A
-
