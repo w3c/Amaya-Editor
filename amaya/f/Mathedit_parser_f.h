@@ -8,15 +8,13 @@
 
 extern void InsertMathElementFromText ( Element theElem,
                                         Element theText,
-                                        Document doc,
-                                        int mode );
+                                        Document doc );
 
 #else /* __STDC__ */
 
 extern void InsertMathElementFromText ( Element theElem,
                                           Element theText,
-                                          Document doc,
-                                          int mode );
+                                          Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

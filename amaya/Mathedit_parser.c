@@ -24,6 +24,37 @@ enum { DEFAULT_MODE, CHEMISTRY_MODE, UNITS_MODE, LATEX_MODE};
 static Document parser_doc;
 static Element parser_el;
 static Element parser_new_el;
+extern int CurrentMathEditMode;
+
+
+/*----------------------------------------------------------------------
+  AttachClassName
+  -----------------------------------------------------------------------*/
+static void AttachClassName(Document doc, Element el)
+{
+  AttributeType attrType;
+  Attribute attr;
+
+  if(CurrentMathEditMode != CHEMISTRY_MODE &&
+     CurrentMathEditMode != UNITS_MODE)
+    return;
+    
+  attrType.AttrSSchema = GetMathMLSSchema (doc);
+  attrType.AttrTypeNum = MathML_ATTR_class;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (el, attr, doc);
+
+  switch(CurrentMathEditMode)
+    {
+    case CHEMISTRY_MODE:
+      TtaSetAttributeText (attr, "chem", el, doc);
+      break;
+
+    case UNITS_MODE:
+      TtaSetAttributeText (attr, "MathML-Unit", el, doc);
+      break;
+    }
+}
 
 /*----------------------------------------------------------------------
   NewMathElement
@@ -41,11 +72,17 @@ static Element NewMathElement(Document doc, int elTypeNum, const char *string)
 
   if(string != NULL)
     {
+      /* String is not empty: insert the corresponding text unit */
       elType.ElTypeNum = MathML_EL_TEXT_UNIT;
       textUnit = TtaNewElement(doc, elType);
       TtaInsertFirstChild (&textUnit, newEl, doc);
       TtaInsertTextContent (textUnit, 0, (unsigned char *)string, doc);
     }
+
+  if(elTypeNum == MathML_EL_MI)
+      /* It's an <mi/> element add a class element according to the
+	 current mode*/
+      AttachClassName(doc, newEl);
 
   return newEl;
   }
@@ -170,8 +207,7 @@ static Element NewMSUB(Document doc, Element base, Element subscript)
 /*----------------------------------------------------------------------
   InsertMathElementFromText
   -----------------------------------------------------------------------*/
-void InsertMathElementFromText(Element theElem, Element theText, Document doc,
-			       int mode)
+void InsertMathElementFromText(Element theElem, Element theText, Document doc)
 {
   ElementType   elType;
 #define TXTBUFLEN 100
@@ -201,7 +237,7 @@ void InsertMathElementFromText(Element theElem, Element theText, Document doc,
 
   elType.ElTypeNum = MathML_EL_MROW;
 
-  switch(mode)
+  switch(CurrentMathEditMode)
     {
     case CHEMISTRY_MODE:
       chemistry_delete_buffer( YY_CURRENT_BUFFER );
@@ -220,12 +256,33 @@ void InsertMathElementFromText(Element theElem, Element theText, Document doc,
 
   if(parser_new_el != NULL)
     {
+      Element el, el2;
+
       TtaInsertSibling(parser_new_el, parser_el, FALSE, parser_doc);
       TtaRegisterElementCreate (parser_new_el, parser_doc);
       TtaRegisterElementDelete (parser_el, parser_doc);
       TtaDeleteTree(parser_el, parser_doc);
+
+      /* Move at the last position */
+      el2 = parser_new_el;
+      while(el2)
+	{
+	  el = el2;
+	  el2 = TtaGetLastChild(el);
+	}
+
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+	  elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
+	{
+	  /* Create a caret */
+	  len = TtaGetElementVolume (el);
+	  TtaSelectString (doc, el, len + 1, len);
+	}
+      else
+	/* Select the whole element */
+	TtaSelectElement (doc, el);
     }
 
-  printf("*********\n");
   return;
 }
