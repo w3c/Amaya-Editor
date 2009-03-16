@@ -636,7 +636,7 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
 #ifdef _WINDOWS
   /* Test to avoid a crash with background images > 1024 on Windows */
   /* Laurent and Irene 28/11/2007 */
-  if ((float)desc->PicWidth < 1024)
+  if ((float)desc->PicWidth < MAX_GL_SIZE)
   {
 #endif /* _WINDOWS */
   
