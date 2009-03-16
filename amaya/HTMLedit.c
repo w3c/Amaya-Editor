@@ -4718,7 +4718,6 @@ ThotBool AttrWidthDelete (NotifyAttribute *event)
   ----------------------------------------------------------------------*/
 void AttrWidthModified (NotifyAttribute *event)
 {
-  Element             table;
   ElementType         elType;
   char               *buffer;
   int                 length;

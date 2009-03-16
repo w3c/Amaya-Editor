@@ -754,7 +754,6 @@ void HelpAmaya (Document document, View view)
 {
   wxString str;
   wxAboutDialogInfo info;
-  char localname[MAX_LENGTH];
 
 #if !defined(_WINDOWS) && !defined(_MACOS)
   char *s = TtaGetEnvString ("THOTDIR");
@@ -765,6 +764,7 @@ void HelpAmaya (Document document, View view)
   memset(0, 0, 10);
 #endif /* AMAYA_CRASH */
 #ifdef AMAYA_DEBUG
+  char localname[MAX_LENGTH];
   Element             el;
   View                structView, altView, linksView, tocView;
   int                 n;

@@ -115,7 +115,7 @@ void yyerror(const char *s)
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     ATOM = 258,
+     ATOM_Y = 258,
      INTEGER = 259,
      OXIDATION_NUMBER = 260,
      SIMPLE_BOND = 261,
@@ -460,7 +460,7 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "ATOM", "INTEGER", "OXIDATION_NUMBER",
+  "$end", "error", "$undefined", "ATOM_Y", "INTEGER", "OXIDATION_NUMBER",
   "SIMPLE_BOND", "DOUBLE_BOND", "TRIPLE_BOND", "QUADRUPLE_BOND",
   "GENERIC_BOND", "DOT", "UNKNOWN_TOKEN", "'['", "']'", "'('", "')'",
   "'{'", "'}'", "'*'", "'+'", "'-'", "$accept", "result",

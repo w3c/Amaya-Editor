@@ -25,7 +25,7 @@ void yyerror(const char *s)
   char *string;
 }
 
-%token<string> ATOM
+%token<string> ATOM_Y
 %token<string> INTEGER
 %token<string> OXIDATION_NUMBER
 %token<string> SIMPLE_BOND
@@ -138,7 +138,7 @@ atom
 ;
 
 atom2:
-ATOM { $$ = NewMathElement(parser_doc, MathML_EL_MI, $1); }
+ATOM_Y { $$ = NewMathElement(parser_doc, MathML_EL_MI, $1); }
 ;
 
 oxidation_number:
