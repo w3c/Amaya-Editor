@@ -6920,7 +6920,14 @@ void InitAmaya (NotifyEvent * event)
     }
   else
     ptr = NULL;
+  // The mathedit mode 1=chemistry 2=latex
   TtaSetEnvInt ("MATHEDIT_MODE", 0, FALSE);
+  // Table options
+  TtaSetEnvInt ("TABLE_ROWS", 2, FALSE);
+  TtaSetEnvInt ("TABLE_COLUMNS", 5, FALSE);
+  TtaSetEnvInt ("TABLE_BORDER", 1, FALSE);
+  TtaSetEnvBoolean ("TABLE_EXTEND_WIDTH", TRUE, FALSE);
+  TtaSetEnvBoolean ("TABLE_CAPTION", TRUE, FALSE);
 
   /* Initialize environment variables if they are not defined */
   TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);

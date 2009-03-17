@@ -3190,7 +3190,7 @@ void CreateTable (Document doc, View view)
   SSchema             sch;
   int                 firstChar, lastChar;
   char               *name;
-  ThotBool            withinTable, inMath;
+  ThotBool            withinTable, inMath, created;
 
   withinTable = FALSE;
   inMath = FALSE;
@@ -3241,10 +3241,9 @@ void CreateTable (Document doc, View view)
       if (TtaIsSelectionEmpty ())
         /* selection empty.  Display the Table dialogue box */
         {
-          NumberRows = 2;
-          NumberCols = 5;
-          TBorder = 1;
-          ThotBool created;
+          TtaGetEnvInt ("TABLE_ROWS", &NumberRows);
+          TtaGetEnvInt ("TABLE_COLUMNS", &NumberCols);
+          TtaGetEnvInt ("TABLE_BORDER", &TBorder);
           created = CreateCreateTableDlgWX (BaseDialog + TableForm,
                                             TtaGetViewFrame (doc, view),
                                             NumberCols, NumberRows, TBorder);

@@ -45,6 +45,8 @@ END_EVENT_TABLE()
 				      const wxString & caption ) : 
     AmayaDialog( parent, ref )
 {
+  ThotBool   valset;
+
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("CreateTableDlgWX"));
   SetTitle( caption );
   MyRef = ref;
@@ -57,9 +59,14 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_FORMAT_BUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_USE_THEME) ));
   XRCCTRL(*this, "wxID_NUMBER_COL_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_COLS) ));
   XRCCTRL(*this, "wxID_NUMBER_ROW_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_ROWS) ));
+  // extend
   XRCCTRL(*this, "wxID_EXTEND_WIDTH", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_MAX_WIDTH) ));
+  TtaGetEnvBoolean ("TABLE_EXTEND_WIDTH", &valset);
+  XRCCTRL(*this, "wxID_EXTEND_WIDTH", wxCheckBox)->SetValue(valset);
+  // caption
   XRCCTRL(*this, "wxID_CAPTION", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_CAPTION) ));
-  XRCCTRL(*this, "wxID_CAPTION", wxCheckBox)->SetValue(true);
+  TtaGetEnvBoolean ("TABLE_CAPTION", &valset);
+  XRCCTRL(*this, "wxID_CAPTION", wxCheckBox)->SetValue(valset);
 
   // update dialog Spin Ctrls
   XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl)->SetValue(def_rows);
@@ -106,18 +113,29 @@ CreateTableDlgWX::~CreateTableDlgWX()
 void CreateTableDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
   NumberCols = XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl)->GetValue();
+  TtaSetEnvInt ("TABLE_COLUMNS", NumberCols, TRUE);
   NumberRows = XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl)->GetValue();
+      TtaSetEnvInt ("TABLE_ROWS", NumberRows, TRUE);
   TBorder = XRCCTRL(*this, "wxID_TABLE_BORDER", wxSpinCtrl)->GetValue();
+  TtaSetEnvInt ("TABLE_BORDER", TBorder, TRUE);
+
   // return done
   Waiting = 0;
   if (XRCCTRL(*this, "wxID_EXTEND_WIDTH", wxCheckBox)->IsChecked())
     TMAX_Width = TRUE;
   else
     TMAX_Width = FALSE;
+  TtaSetEnvBoolean ("TABLE_EXTEND_WIDTH", TMAX_Width, TRUE);
   if (XRCCTRL(*this, "wxID_CAPTION", wxCheckBox)->IsChecked())
-    TCaption = 1;
+    {
+      TCaption = 1;
+      TtaSetEnvBoolean ("TABLE_CAPTION", TRUE, TRUE);
+    }
   else
-    TCaption = 0;
+    {
+      TCaption = 0;
+      TtaSetEnvBoolean ("TABLE_CAPTION", FALSE, TRUE);
+    }
   ThotCallback (BaseDialog + TableForm, INTEGER_DATA, (char *) 1);
   TtaRedirectFocus();
 }
