@@ -5730,17 +5730,9 @@ void FreeMathML ()
   ----------------------------------------------------------------------*/
 void InitMathML ()
 {
-  ThotBool  editmode;
-
   MathsDialogue = TtaSetCallback ((Proc)CallbackMaths, MAX_MATHS);
   TtaSetMoveForwardCallback ((Func) MathMoveForward);
   TtaSetMoveBackwardCallback ((Func) MathMoveBackward);
-
-  TtaGetEnvBoolean ("MATHEDIT_MODE", &editmode);
-  if (editmode)
-    CurrentMathEditMode = 1;
-  else
-    CurrentMathEditMode = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -6209,6 +6201,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   ThotBool      empty, closeUndoSeq, separate, ok, leadingSpace;
 
   /************************************************************/
+  // get the current edit mode
+  TtaGetEnvInt ("MATHEDIT_MODE", &CurrentMathEditMode);
   if (CurrentMathEditMode > 0)
     {
       TtaSetDisplayMode (doc, DeferredDisplay);

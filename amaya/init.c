@@ -6920,6 +6920,7 @@ void InitAmaya (NotifyEvent * event)
     }
   else
     ptr = NULL;
+  TtaSetEnvInt ("MATHEDIT_MODE", 0, FALSE);
 
   /* Initialize environment variables if they are not defined */
   TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);
@@ -6962,7 +6963,6 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvBoolean ("XML_EDIT_MODE", FALSE, FALSE);
   TtaSetEnvBoolean ("USE_XML_DECLARATION", TRUE, FALSE);
   TtaSetEnvBoolean ("COLOR_SOURCE", TRUE, FALSE);
-  TtaSetEnvBoolean ("MATHEDIT_MODE", TRUE, FALSE);
   /* get current value */
   TtaGetEnvBoolean ("SHOW_MAP_AREAS", &map);
   /* Create and intialize resources needed for each document */
