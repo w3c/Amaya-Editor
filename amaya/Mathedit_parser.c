@@ -207,7 +207,8 @@ static Element NewMSUB(Document doc, Element base, Element subscript)
 /*----------------------------------------------------------------------
   InsertMathElementFromText
   -----------------------------------------------------------------------*/
-void InsertMathElementFromText(Element theElem, Element theText, Document doc)
+Element InsertMathElementFromText(Element theElem, Element theText,
+				  Document doc)
 {
   ElementType   elType;
 #define TXTBUFLEN 100
@@ -218,17 +219,17 @@ void InsertMathElementFromText(Element theElem, Element theText, Document doc)
 
   elType = TtaGetElementType(theText);
   if (elType.ElTypeNum != MathML_EL_TEXT_UNIT)
-    return;
+    return NULL;
 
   len = TtaGetElementVolume (theText);
   if (len <= 0)
-    return;
+    return NULL;
 
   len = TXTBUFLEN;
   TtaGiveBufferContent (theText, text, len, &lang);
   iso = (char *)TtaConvertCHARToByte (text, ISO_8859_1);
   if(iso == NULL)
-    return;
+    return NULL;
 
   printf("*********\nstring=%s\n", iso);
   parser_doc = doc;
@@ -256,33 +257,13 @@ void InsertMathElementFromText(Element theElem, Element theText, Document doc)
 
   if(parser_new_el != NULL)
     {
-      Element el, el2;
-
       TtaInsertSibling(parser_new_el, parser_el, FALSE, parser_doc);
       TtaRegisterElementCreate (parser_new_el, parser_doc);
       TtaRegisterElementDelete (parser_el, parser_doc);
       TtaDeleteTree(parser_el, parser_doc);
 
-      /* Move at the last position */
-      el2 = parser_new_el;
-      while(el2)
-	{
-	  el = el2;
-	  el2 = TtaGetLastChild(el);
-	}
-
-      elType = TtaGetElementType (el);
-      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-	  elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
-	{
-	  /* Create a caret */
-	  len = TtaGetElementVolume (el);
-	  TtaSelectString (doc, el, len + 1, len);
-	}
-      else
-	/* Select the whole element */
-	TtaSelectElement (doc, el);
+      return parser_new_el;
     }
 
-  return;
+  return NULL;
 }

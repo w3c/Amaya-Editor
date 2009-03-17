@@ -6208,7 +6208,13 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
       TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (FALSE, doc);
-      InsertMathElementFromText(theElem, theText, doc);
+      newEl = InsertMathElementFromText(theElem, theText, doc);
+      if(newEl)
+	{
+	  nextEl = InsertPlaceholder (newEl, FALSE, doc, TRUE);
+	  TtaSelectElement (doc, nextEl);
+	}
+	
       TtaSetStructureChecking (oldStructureChecking, doc);
       TtaSetDisplayMode (doc, DisplayImmediately);
       return;
