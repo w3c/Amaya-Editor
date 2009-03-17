@@ -896,9 +896,10 @@ void HelpAmaya (Document document, View view)
 #if !defined(_WINDOWS) && !defined(_MACOS)
   if (s != NULL)
     {
+      char welcomename[MAX_LENGTH];
       /* get the welcome in the current language */
-      sprintf (localname, "%s%camaya%cCOPYRIGHT", s, DIR_SEP, DIR_SEP);      
-      wxFFile file(TtaConvMessageToWX(localname));
+      sprintf (welcomename, "%s%camaya%cCOPYRIGHT", s, DIR_SEP, DIR_SEP);      
+      wxFFile file(TtaConvMessageToWX(welcomename));
       wxString str;
       if (file.ReadAll(&str, wxConvISO8859_1))
         {
