@@ -59,30 +59,21 @@ static ThotIcon   iconGraphNo;
 static ThotIcon   mIcons[12];
 static ThotBool   PaletteDisplayed = FALSE;
 static Element    PastedGraphics = NULL;
-extern int ActiveFrame;
+static Element    SavedGraphics = NULL;
+static Element    SavedDefs = NULL;
 
-#ifdef _GTK
-/* used for the close palette callback*/
-ThotWidget CatWidget(int ref);
-#endif/*  _GTK */
+extern int ActiveFrame;
 
 #ifdef _WX
 #include "appdialogue_wx.h"
 #include "paneltypes_wx.h"
 #endif /* _WX */
 
-#ifdef _WINGUI
-#include "wininclude.h"
-#define iconGraph 22
-#define iconGraphNo 22
-#endif /* _WINGUI */
-
 #ifdef _WINDOWS
 #include <commctrl.h>
 #endif /* _WINDOWS */
 
 #ifdef _SVG
-
 /*----------------------------------------------------------------------
   GetGraphicsUnit
   -----------------------------------------------------------------------*/
@@ -158,6 +149,271 @@ void NameSpaceGenerated (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+  ClearSVGDefs rmoves all saved SVG definitions
+  ----------------------------------------------------------------------*/
+void ClearSVGDefs ()
+{
+  if (SavedDefs)
+    {
+      TtaDeleteTree (SavedDefs, 0);
+      SavedDefs = NULL;
+      SavedGraphics = NULL;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  GetReferredDef returns the referred symbol or marker included in the
+  root element.
+  ----------------------------------------------------------------------*/
+static Element GetReferredDef (Attribute attr, Element root, SSchema svgSchema)
+{
+  Element              child, next;
+  AttributeType        idType;
+  Attribute            idAttr;
+  char                *attrVal = NULL, *start, *end, *id;
+  int                  length;
+  
+  if (attr)
+    /* the element has this attribute */
+    {
+      /* get its value */
+      length = TtaGetTextAttributeLength (attr);
+      attrVal = (char *)TtaGetMemory (length + 1);
+      TtaGiveTextAttributeValue (attr, attrVal, &length);
+      start = strstr (attrVal, "#");
+      if (start)
+        {
+          start++;
+          end = strstr (attrVal, ")");
+          if (end)
+            *end = EOS;
+        }
+      else
+        start = attrVal;
+      /* look for the id */
+      idType.AttrSSchema = svgSchema;
+      idType.AttrTypeNum = SVG_ATTR_id;
+      child = TtaGetFirstChild (root);
+      while (child)
+        {
+          next = child;
+          TtaNextSibling (&next);
+          // check if the element has an id
+          idAttr = TtaGetAttribute (child, idType);
+          if (idAttr)
+            {
+              length = TtaGetTextAttributeLength (idAttr);
+              id = (char *)TtaGetMemory (length + 1);
+              TtaGiveTextAttributeValue (idAttr, id, &length);
+              if (!strcmp (start, id))
+                {
+                  // the referred element is found
+                  TtaFreeMemory (id);
+                  return child;
+                }
+              TtaFreeMemory (id);
+            }
+          child = next;
+        }
+      TtaFreeMemory (attrVal);
+    }
+  // not found
+  return NULL;
+}
+
+/*----------------------------------------------------------------------
+  SaveSVGDefs saves referred markers or symbols
+  ----------------------------------------------------------------------*/
+void SaveSVGDefs (Element el, Document doc)
+{
+  Element              svgCanvas, defs = NULL, prev, ref, copy;
+  ElementType	         elType;
+  AttributeType        attrType;
+  Attribute            attr;
+  SSchema	             svgSchema;
+
+  svgSchema = TtaGetSSchema ("SVG", doc);
+  if (svgSchema)
+    {
+      elType = TtaGetElementType (el);
+      if (elType.ElSSchema == svgSchema &&
+          (elType.ElTypeNum == SVG_EL_use_ ||
+           elType.ElTypeNum == SVG_EL_marker))
+        {
+          /* Look for the ancestor svgCanvas ans definitions */
+          elType.ElTypeNum = SVG_EL_SVG;
+          elType.ElSSchema = svgSchema;
+          svgCanvas = TtaGetTypedAncestor (el, elType);
+          if (svgCanvas)
+            {
+              elType.ElTypeNum = SVG_EL_defs;
+              defs = TtaSearchTypedElement (elType, SearchInTree, svgCanvas);
+            }
+          if (defs)
+            {
+              if (SavedDefs == NULL)
+                // create if necessary a saved defs
+                SavedDefs = TtaNewElement (doc, elType);
+              else if (SavedGraphics != svgCanvas)
+                {
+                  // the svgCanvas changed
+                  do
+                    {
+                      copy = TtaGetFirstChild (SavedDefs);
+                      if (copy)
+                        TtaDeleteTree (copy, 0);
+                    }
+                  while (copy);
+                }
+              SavedGraphics = svgCanvas;
+              if (elType.ElTypeNum == SVG_EL_use_)
+                {
+                  // get the referred symbol
+                  attrType.AttrSSchema = elType.ElSSchema;
+                  attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr && !GetReferredDef (attr, SavedDefs, svgSchema))
+                    {
+                      // the symbol is not already saved
+                      ref = GetReferredDef (attr, defs, svgSchema);
+                      if (ref)
+                        {
+                          copy = TtaCopyTree (ref, doc, doc, SavedDefs);
+                          TtaInsertFirstChild (&copy, SavedDefs, doc);
+                        }
+                    }
+                }
+              else
+                {
+                  prev = el;
+                  TtaPreviousSibling (&prev);
+                  elType = TtaGetElementType (prev);
+                  if (elType.ElTypeNum == SVG_EL_marker)
+                    // all markers of the element are already managed
+                    return;
+                  el = TtaGetParent (el);
+                  attrType.AttrSSchema = elType.ElSSchema;
+                  attrType.AttrTypeNum = SVG_ATTR_marker_start;
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr && !GetReferredDef (attr, SavedDefs, svgSchema))
+                    {
+                      // the symbol is not already saved
+                      ref = GetReferredDef (attr, defs, svgSchema);
+                      if (ref)
+                        {
+                          copy = TtaCopyTree (ref, doc, doc, SavedDefs);
+                          TtaInsertFirstChild (&copy, SavedDefs, doc);
+                        }
+                    }
+                  attrType.AttrTypeNum = SVG_ATTR_marker_mid;
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr && !GetReferredDef (attr, SavedDefs, svgSchema))
+                    {
+                      // the symbol is not already saved
+                      ref = GetReferredDef (attr, defs, svgSchema);
+                      if (ref)
+                        {
+                          copy = TtaCopyTree (ref, doc, doc, SavedDefs);
+                          TtaInsertFirstChild (&copy, SavedDefs, doc);
+                        }
+                    }
+                  attrType.AttrTypeNum = SVG_ATTR_marker_end;
+                  attr = TtaGetAttribute (el, attrType);
+                  if (attr && !GetReferredDef (attr, SavedDefs, svgSchema))
+                    {
+                      // the symbol is not already saved
+                      ref = GetReferredDef (attr, defs, svgSchema);
+                      if (ref)
+                        {
+                          copy = TtaCopyTree (ref, doc, doc, SavedDefs);
+                          TtaInsertFirstChild (&copy, SavedDefs, doc);
+                        }
+                    }
+                }
+            }
+         }
+    }
+  else
+    ClearSVGDefs ();
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void InsertSVGDefs (Element el, Document doc)
+{
+  Element              svgCanvas, defs = NULL, child, next, copy;
+  ElementType	         elType;
+  AttributeType        idType;
+  Attribute            idAttr;
+  SSchema	             svgSchema;
+
+  if (SavedDefs)
+    {
+      svgSchema = TtaGetSSchema ("SVG", doc);
+      if (svgSchema)
+        {
+          elType = TtaGetElementType (el);
+          if (elType.ElSSchema == svgSchema &&
+              (elType.ElTypeNum == SVG_EL_use_ ||
+               elType.ElTypeNum == SVG_EL_marker))
+            {
+               /* Search the ancestor which is a direct child of the svgCanvas */
+              elType.ElTypeNum = SVG_EL_SVG;
+              elType.ElSSchema = svgSchema;
+              svgCanvas = TtaGetTypedAncestor (el, elType);
+              if (svgCanvas)
+                {
+                  if (svgCanvas == SavedGraphics)
+                    // nothing to do
+                    return;
+                  elType.ElTypeNum = SVG_EL_defs;
+                  defs = TtaSearchTypedElement (elType, SearchInTree, svgCanvas);
+                }
+              if (defs)
+                {
+                  /* look for the id */
+                  idType.AttrSSchema = svgSchema;
+                  idType.AttrTypeNum = SVG_ATTR_id;
+                  child = TtaGetFirstChild (SavedDefs);
+                  while (child)
+                    {
+                      next = child;
+                      TtaNextSibling (&next);
+                      // check if the element is already there
+                      idAttr = TtaGetAttribute (child, idType);
+                      if (idAttr && !GetReferredDef (idAttr, defs, svgSchema))
+                        {
+                          copy = TtaCopyTree (child, doc, doc, svgCanvas);
+                          TtaInsertFirstChild (&copy, defs, doc);
+                          TtaRegisterElementCreate (copy, doc);
+                        }
+                      child = next;
+                    }
+                }
+              else
+                {
+                  defs = TtaCopyTree (SavedDefs, doc, doc, svgCanvas);
+                  TtaInsertFirstChild (&defs, svgCanvas, doc);
+                  TtaRegisterElementCreate (defs, doc);
+                }
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  CopyGraphElem
+  An element will be copied
+  -----------------------------------------------------------------------*/
+ThotBool CopyGraphElem (NotifyElement *event)
+{
+  SaveSVGDefs (event->element, event->document);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
   A new element has been selected.
   Check that this element can be selected.
   Synchronize selection in source view.
@@ -195,26 +451,6 @@ void GraphicsSelectionChanged (NotifyElement * event)
        elType.ElTypeNum == SVG_EL_GRAPHICS_UNIT)
       )
     {
-#ifdef IV
-      /* Search the ancestor which is a direct child of the svgCanvas */
-      elType.ElTypeNum = SVG_EL_SVG;
-      elType.ElSSchema = svgSchema;
-      svgCanvas = TtaGetTypedAncestor (event->element, elType);
-      asc = event->element;
-      while(TtaGetParent(asc) != svgCanvas)
-        asc = TtaGetParent(asc);
-      
-      /* Select the element asc, except if we actually select its
-         graphics leaf */
-      elType = TtaGetElementType (event->element);
-      if(elType.ElTypeNum != SVG_EL_GRAPHICS_UNIT ||
-         TtaGetParent(event->element) != asc)
-        {
-          TtaSelectElement (event->document, asc);
-          event->element = asc;
-          event->elementType = TtaGetElementType(asc);
-        }
-#endif
     }
   else
     {
@@ -276,10 +512,10 @@ void GraphicsSelectionChanged (NotifyElement * event)
   -----------------------------------------------------------------------*/
 ThotBool ExtendSelectSVGElement (NotifyElement *event)
 {
-  Element	firstSel, newFirstSel, ancestor, parent, selEl;
+  Element	    firstSel, newFirstSel, ancestor, parent, selEl;
   ElementType	elType, ancestType, parentType;
-  int		c1, i;
-  SSchema	SvgSSchema;
+  int		      c1, i;
+  SSchema	    svgSchema;
 
   TtaGiveFirstSelectedElement (event->document, &firstSel, &c1, &i);
   if (firstSel == NULL)
@@ -291,9 +527,9 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
   ancestor = TtaGetCommonAncestor (firstSel, event->element);
   if (ancestor == NULL)
     return TRUE;	/* Don't let Thot perform normal operation */
-  SvgSSchema = TtaGetSSchema ("SVG", event->document);
+  svgSchema = TtaGetSSchema ("SVG", event->document);
   ancestType = TtaGetElementType (ancestor);
-  if (ancestType.ElSSchema != SvgSSchema)
+  if (ancestType.ElSSchema != svgSchema)
     /* common ancestor is not a SVG element */
     {
       /* is the common ancestor within a SVG element? */
@@ -304,7 +540,7 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
           if (parent != NULL)
             parentType = TtaGetElementType (parent);
         }
-      while (parent != NULL && parentType.ElSSchema != SvgSSchema);
+      while (parent != NULL && parentType.ElSSchema != svgSchema);
       if (parent)
         /* the common ancestor is within a SVG element. Let Thot
            perform normal operation: selection is being extended within
@@ -316,7 +552,7 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
 
   newFirstSel = firstSel;
   elType = TtaGetElementType (firstSel);
-  if (elType.ElSSchema != SvgSSchema ||
+  if (elType.ElSSchema != svgSchema ||
       (elType.ElTypeNum != SVG_EL_g &&
        elType.ElTypeNum != SVG_EL_path &&
        elType.ElTypeNum != SVG_EL_rect &&
@@ -330,14 +566,14 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
        elType.ElTypeNum != SVG_EL_switch &&
        elType.ElTypeNum != SVG_EL_SVG))
     {
-      elType.ElSSchema = SvgSSchema;
+      elType.ElSSchema = svgSchema;
       elType.ElTypeNum = SVG_EL_GraphicsElement;
       newFirstSel = TtaGetTypedAncestor (newFirstSel, elType);
     }
 
   selEl = event->element;
   elType = TtaGetElementType (selEl);
-  if (elType.ElSSchema != SvgSSchema ||
+  if (elType.ElSSchema != svgSchema ||
       (elType.ElTypeNum != SVG_EL_g &&
        elType.ElTypeNum != SVG_EL_path &&
        elType.ElTypeNum != SVG_EL_rect &&
@@ -351,7 +587,7 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
        elType.ElTypeNum != SVG_EL_switch &&
        elType.ElTypeNum != SVG_EL_SVG))
     {
-      elType.ElSSchema = SvgSSchema;
+      elType.ElSSchema = svgSchema;
       elType.ElTypeNum = SVG_EL_GraphicsElement;
       selEl = TtaGetTypedAncestor (selEl, elType);
     }
@@ -726,8 +962,7 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
   else if (elType.ElTypeNum == SVG_EL_SVG ||
            elType.ElTypeNum == SVG_EL_rect ||
            elType.ElTypeNum == SVG_EL_image ||
-           elType.ElTypeNum == SVG_EL_foreignObject ||
-           elType.ElTypeNum == SVG_EL_SVG)
+           elType.ElTypeNum == SVG_EL_foreignObject)
     {
       if (horiz)
         attrType.AttrTypeNum = SVG_ATTR_width_;
@@ -966,6 +1201,7 @@ void GraphElemPasted (NotifyElement *event)
         UpdateTitle (el, doc);
       else
         {
+          InsertSVGDefs (el, doc);
           // check if the element must be shifted
           parent = TtaGetParent (el);
           if (parent == PastedGraphics)
@@ -1549,7 +1785,7 @@ ThotBool SetElementData (Document doc, Element el,
 
 /*----------------------------------------------------------------------
   GetAncestorCanvasAndObject
-  Get all the Elements necessary to draw SVG:
+  Get all the elements necessary to draw SVG:
   
   - svgCanvas: the innermost <svg> element containing el
   - svgAncestor: the ancestor last <svg> ancestor of el, so we suppose
@@ -1558,8 +1794,8 @@ ThotBool SetElementData (Document doc, Element el,
   child of the svgCanvas, then we take the 
   
   ----------------------------------------------------------------------*/
-ThotBool GetAncestorCanvasAndObject(Document doc, Element *el,
-                                    Element *svgAncestor, Element *svgCanvas)
+ThotBool GetAncestorCanvasAndObject (Document doc, Element *el,
+                                     Element *svgAncestor, Element *svgCanvas)
 {
 #ifdef _SVG
   Element parent, newEl;
@@ -1673,86 +1909,41 @@ static Element searchMarkers(Document doc, Element svg, const char *marker_id)
 
 /*----------------------------------------------------------------------
   LoadSVG_Markers
-  
   Check if an SVG marker of id marker_id exists in the document
   If no marker is found, load one from the file resources/svg/markers.svg
-
   return TRUE = success
   ----------------------------------------------------------------------*/
-static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
+static ThotBool LoadSVG_Markers (Document doc, const char *marker_id,
+                                 Element svgCanvas, SSchema svgSchema)
 {
-  SSchema           docSchema, svgSchema;
-  Element           tree, el, svg, defs, marker;
+  Element           el, defs, marker;
   ElementType       elType;
-  ThotBool          isHTML;
   Document          markersDoc;  
   const char       *name = "markers.svg";
-  wxString          path; char *path2;
-  ThotBool         oldStructureChecking = TtaGetStructureChecking (doc);
-  DisplayMode      dispMode = TtaGetDisplayMode (doc); 
+  wxString          path;
+  char             *path2;
+  DisplayMode       dispMode = TtaGetDisplayMode (doc); 
+  ThotBool          oldStructureChecking = TtaGetStructureChecking (doc);
 
-  svgSchema = GetSVGSSchema (doc);
-  /* 1) Is it a HTML or SVG document? */
-  docSchema = TtaGetDocumentSSchema (doc);
-  if (!strcmp (TtaGetSSchemaName (docSchema), "HTML"))
-    isHTML = TRUE;
-  else if(!strcmp (TtaGetSSchemaName (docSchema), "SVG"))
-    isHTML = FALSE;
-  else
-    /* Markers can not be inserted in the document */
+  if (svgCanvas == NULL)
     return FALSE;
+  /* Search markers in the <svg/> root */
+  if (searchMarkers (doc, svgCanvas, marker_id) != NULL)
+    return TRUE;
 
-  /* 2) Get the tree where the markers can be found/inserted */
-  if(isHTML)
-    {
-      /* The <body/> element */
-      elType.ElTypeNum = HTML_EL_BODY;
-      elType.ElSSchema = GetXHTMLSSchema (doc);
-    }
-  else
-    {
-      /* The <svg/> root */
-      elType.ElTypeNum = SVG_EL_SVG;
-      elType.ElSSchema = svgSchema;
-    }
-  
-  tree = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot(doc));
-  if(tree == NULL)
-      return FALSE;
-
-  /* 3) Now look into all defs elements  */
-  if (isHTML)
-    {
-      /* Search all embedded <svg/> element in the HTML document */
-      elType.ElTypeNum = SVG_EL_SVG;
-      elType.ElSSchema = svgSchema;
-      for (el = TtaSearchTypedElement (elType, SearchInTree, tree); el;
-           el = TtaSearchTypedElementInTree (elType, SearchForward, tree, el))
-        /* el is a <svg/>: search markers */
-        if (searchMarkers(doc, el, marker_id) != NULL)
-          return TRUE;
-    }
-  else
-    {
-      /* Search markers in the <svg/> root */
-      if (searchMarkers(doc, tree, marker_id) != NULL)
-        return TRUE;
-    }
-
-  /* 4) marker_id has not been found: open markers.svg */
-  path = TtaGetResourcePathWX(WX_RESOURCES_SVG, name);
-  path2 = TtaStrdup(path.mb_str(wxConvUTF8));
+  /* The marker_id was not found: open markers.svg */
+  path = TtaGetResourcePathWX (WX_RESOURCES_SVG, name);
+  path2 = TtaStrdup (path.mb_str(wxConvUTF8));
   markersDoc = GetAmayaDoc (path2, NULL,
                             0, 0, CE_TEMPLATE, FALSE, NULL, NULL);
-  TtaFreeMemory(path2);
+  TtaFreeMemory (path2);
 
-  /* 5) Search marker_id in markersDoc */
+  /* Search marker_id in markersDoc */
   elType.ElTypeNum = SVG_EL_SVG;
-  elType.ElSSchema = GetSVGSSchema (markersDoc);
-  el = TtaGetMainRoot(markersDoc);
+  elType.ElSSchema = svgSchema;
+  el = TtaGetMainRoot (markersDoc);
   el = TtaSearchTypedElement (elType, SearchInTree, el);
-  marker = searchMarkers(markersDoc, el, marker_id);
-
+  marker = searchMarkers (markersDoc, el, marker_id);
   if (marker == NULL)
     {
       /* The marker_id does not match any marker in markers.svg */
@@ -1760,45 +1951,21 @@ static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
       return FALSE;
     }
 
-  /* 6) Create or get an <svg/> element */
-  if (oldStructureChecking)
-    TtaSetStructureChecking (FALSE, doc);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
-  if (isHTML)
-    {
-      /* Get the first embedded <svg/> element in the HTML document */
-      elType.ElTypeNum = SVG_EL_SVG;
-      elType.ElSSchema = svgSchema;
-      svg = TtaSearchTypedElement (elType, SearchInTree, tree);
-
-      if (svg == NULL)
-        {
-          /* No <svg/> element: create one as the first child of the <body/> */
-          svg = TtaNewElement(doc, elType);
-          TtaInsertFirstChild(&svg, tree, doc);
-          TtaRegisterElementCreate (svg, doc);
-        }
-    }
-  else
-    /* Get the root element of the svg document */
-    svg = tree;
-
-  /* 7) Create or get a <defs> element */
+  /* Create or get a <defs> element */
   elType.ElTypeNum = SVG_EL_defs;
   elType.ElSSchema = svgSchema;
-  defs = TtaSearchTypedElement (elType, SearchInTree, svg);
-  if(defs == NULL)
+  defs = TtaSearchTypedElement (elType, SearchInTree, svgCanvas);
+  if (defs == NULL)
     {
       /* No <defs/> element: create one as the first child of the <svg/> */
       defs = TtaNewElement(doc, elType);
-      TtaInsertFirstChild(&defs, svg, doc);
+      TtaInsertFirstChild(&defs, svgCanvas, doc);
       TtaRegisterElementCreate (defs, doc);
     }
   
-  /* 8) Copy the marker into the document */
-  el = TtaCopyTree(marker, markersDoc, doc, defs);
-  TtaInsertFirstChild(&el, defs, doc);
+  /* Copy the marker into the document */
+  el = TtaCopyTree (marker, markersDoc, doc, defs);
+  TtaInsertFirstChild (&el, defs, doc);
   TtaRegisterElementCreate (el, doc);
 
   TtaRemoveDocumentReference (markersDoc);
@@ -1815,18 +1982,19 @@ static ThotBool LoadSVG_Markers(Document doc, const char *marker_id)
 
   return TRUE = success
   ----------------------------------------------------------------------*/
-static ThotBool AttachMarker(Document doc, Element el, int attrnum,
-			     const char *marker_id)
+static ThotBool AttachMarker (Document doc, Element el, int attrnum,
+                              const char *marker_id, Element svgCanvas,
+                              SSchema svgSchema)
 {
-  SSchema svgSchema = GetSVGSSchema (doc);
   Attribute     attr;
   AttributeType attrType;
+  char         *buffer;
 
-  char *buffer = (char *)TtaGetMemory(strlen(marker_id) + 10);
+  buffer = (char *)TtaGetMemory(strlen(marker_id) + 10);
   if(buffer == NULL)
     return FALSE;
     
-  if(!LoadSVG_Markers(doc, marker_id))
+  if (!LoadSVG_Markers (doc, marker_id, svgCanvas, svgSchema))
     return FALSE;
 
   attrType.AttrTypeNum = attrnum;
@@ -1836,9 +2004,7 @@ static ThotBool AttachMarker(Document doc, Element el, int attrnum,
   sprintf(buffer, "url(#%s)", marker_id);
   TtaSetAttributeText (attr, buffer, el, doc);
   TtaRegisterAttributeCreate (attr, el, doc);
-
   TtaFreeMemory(buffer);
-
   return TRUE;
 }
 
@@ -2037,8 +2203,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
     }
 
   /* Look for the outermost <svg> element containg the svgCanvas. */
-  GetAncestorCanvasAndObject(doc, NULL,
-                             &svgAncestor, &svgCanvas);
+  GetAncestorCanvasAndObject(doc, NULL, &svgAncestor, &svgCanvas);
 
   /* look for the element (sibling) in front of which the new element will be
      created */
@@ -2812,17 +2977,16 @@ void CreateGraphicElement (Document doc, View view, int entry)
             shape = 0;
           else
             shape = entry;
-          created = AskShapePoints (doc, svgAncestor, svgCanvas,
-                                    shape, newEl);
+          created = AskShapePoints (doc, svgAncestor, svgCanvas, shape, newEl);
           if (created)
             {
               if (entry == 12 || entry == 14)
-                AttachMarker(doc, newEl, SVG_ATTR_marker_start,
-                             Arrow1Mstart_id);
+                AttachMarker (doc, newEl, SVG_ATTR_marker_start, Arrow1Mstart_id,
+                              svgCanvas, svgSchema);
               if (entry == 13 || entry == 14)
-                AttachMarker(doc, newEl, SVG_ATTR_marker_end,
-                             Arrow1Mend_id);
-              UpdatePointsOrPathAttribute(doc, newEl, 0, 0, TRUE);
+                AttachMarker (doc, newEl, SVG_ATTR_marker_end, Arrow1Mend_id,
+                              svgCanvas, svgSchema);
+              UpdatePointsOrPathAttribute (doc, newEl, 0, 0, TRUE);
               SVGElementComplete (&context, newEl, &error);
               //UpdateMarkers(newEl, doc);
             }
@@ -4640,6 +4804,8 @@ static void CallbackGraph (int ref, int typedata, char *data)
 void FreeSVG ()
 {
 #ifdef _SVG
+  // free saved defs elements
+  ClearSVGDefs ();
 #if defined(_WX)
   if (iconGraph)
     delete iconGraph;

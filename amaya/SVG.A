@@ -6,6 +6,7 @@ DEFAULT
    ElemClick.Pre -> SimpleClick;
    ElemRClick.Pre -> SimpleRClick;
    ElemNew.Pre -> NewGraphElem;
+   ElemCopy.Pre -> CopyGraphElem;
    ElemPaste.Pre -> NewGraphElem;
    ElemPaste.Post -> GraphElemPasted;
    AttrMenu.Pre -> GlobalSVGAttrInMenu;

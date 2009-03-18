@@ -6788,11 +6788,9 @@ void FreeAmayaStructures ()
 #ifdef BOOKMARKS
       BM_Quit ();
 #endif /* BOOKMARKS */
-
 #ifdef TEMPLATES
       FreeTemplateEnvironment ();
 #endif /* TEMPLATES */
-
       /* Write and free password table  */
       WritePasswordTable ();
 

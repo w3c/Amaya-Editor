@@ -438,13 +438,19 @@ Declaration Declaration_Clone (Declaration dec)
 void Declaration_Destroy (Declaration dec)
 {
 #ifdef TEMPLATES
+  Element          el;
+
   if (dec->nature == XmlElementNat)
     {
       TtaFreeMemory (dec->elementType.name);
       dec->elementType.name = NULL;
     }
   else if (dec->nature == ComponentNat)
-    dec->componentType.content = NULL;
+    {
+      el = dec->componentType.content;
+      TtaDeleteTree (el, 0);
+      dec->componentType.content = NULL;
+    }
   else if (dec->nature==UnionNat)
     {
     SearchSet_Destroy (dec->unionType.include);

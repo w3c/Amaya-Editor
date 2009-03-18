@@ -789,23 +789,29 @@ void TtaDeleteTree (Element element, Document document)
   else
     {
       /* Checks the parameter document */
-      if (document < 1 || document > MAX_DOCUMENTS)
+      if (document == 0 && DocumentOfElement ((PtrElement) element) != NULL)
         TtaError (ERR_invalid_document_parameter);
-      else if (LoadedDocument[document - 1] == NULL)
+      else if (document < 0 || document > MAX_DOCUMENTS)
+        TtaError (ERR_invalid_document_parameter);
+      else if (document > 0 && LoadedDocument[document - 1] == NULL)
         TtaError (ERR_invalid_document_parameter);
       else
         /* Parameter document is ok */
         {
-          pDoc = LoadedDocument[document - 1];
           pEl = (PtrElement) element;
-          root = (pEl->ElParent == NULL);
+          if (document == 0)
+            pDoc = NULL;
+          else
+            {
+              pDoc = LoadedDocument[document - 1];
+              root = (pEl->ElParent == NULL);
 #ifndef NODISPLAY
-          UndisplayElement (pEl, document);
+              UndisplayElement (pEl, document);
 #endif
-          if (root && pDoc->DocDocElement == pEl)
-            /* The whole main tree is destroyed */
-            pDoc->DocDocElement = NULL;
-	  
+              if (root && pDoc->DocDocElement == pEl)
+                /* The whole main tree is destroyed */
+                pDoc->DocDocElement = NULL;
+            }
           DeleteElement (&pEl, pDoc);
         }
     }

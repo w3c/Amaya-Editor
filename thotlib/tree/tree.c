@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3029,8 +3029,9 @@ void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
           if (pEl1->ElLeafType == LtReference)
             /* frees and unlinks the reference */
             {
-              CancelReference (*pEl, pDoc);
-              if (pEl1->ElReference != NULL)
+              if (pDoc)
+                CancelReference (*pEl, pDoc);
+              if (pEl1->ElReference)
                 {
                   FreeReference (pEl1->ElReference);
                   pEl1->ElReference = NULL;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1440,8 +1440,14 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
 	}
 
       if (xmlDecl)
-	// check if the user wants to generate xml declaration
-	TtaGetEnvBoolean ("USE_XML_DECLARATION", &xmlDecl);
+        {
+          if (DocumentTypes[doc]  == docHTML)
+            // according to new specs don't generate it
+            xmlDecl = FALSE;
+          else
+            // check if the user wants to generate xml declaration
+            TtaGetEnvBoolean ("USE_XML_DECLARATION", &xmlDecl);
+        }
       if (xmlDecl && charsetname[0] != EOS)
 	{
 	  /* generate the XML declaration */

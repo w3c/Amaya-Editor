@@ -901,7 +901,7 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   <polygon> in the subtree of element el.
   ----------------------------------------------------------------------*/
 static void CopyMarkersSubtree (Element el, Element marker, int att,
-				Document doc)
+                                Document doc)
 {
   Element              child, leaf;
   ElementType          elType;
@@ -1083,28 +1083,28 @@ void ProcessMarkers (Element el, Document doc)
   for (i = 1; i <= 3; i++)
     {
       /* choose one of the three possible attributes */
-      if (i==1)
-	attrType.AttrTypeNum = SVG_ATTR_marker_start;
-      else if (i==2)
-	attrType.AttrTypeNum = SVG_ATTR_marker_mid;
+      if (i == 1)
+        attrType.AttrTypeNum = SVG_ATTR_marker_start;
+      else if (i == 2)
+        attrType.AttrTypeNum = SVG_ATTR_marker_mid;
       else
-	attrType.AttrTypeNum = SVG_ATTR_marker_end;
+        attrType.AttrTypeNum = SVG_ATTR_marker_end;
       attr = TtaGetAttribute (el, attrType);
       if (attr)
-	/* the element has this attribute */
-	{
-	  /* get its value */
-	  length = TtaGetTextAttributeLength (attr);
-	  attrVal = (char *)TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, attrVal, &length);
-	  ok = CopyMarkers (el, doc, attrVal, attrType.AttrTypeNum);
-	  TtaFreeMemory (attrVal);
-	  if (!ok)
-	    /* the referred marker was not found. It may be a forward reference
-	       to an element that has not been parsed yet. We should retry when
-	       the document is complete. */
-	    SetAttributeOnRoot (el, SVG_ATTR_UnresolvedRef, doc);
-	}
+        /* the element has this attribute */
+        {
+          /* get its value */
+          length = TtaGetTextAttributeLength (attr);
+          attrVal = (char *)TtaGetMemory (length + 1);
+          TtaGiveTextAttributeValue (attr, attrVal, &length);
+          ok = CopyMarkers (el, doc, attrVal, attrType.AttrTypeNum);
+          TtaFreeMemory (attrVal);
+          if (!ok)
+            /* the referred marker was not found. It may be a forward reference
+               to an element that has not been parsed yet. We should retry when
+               the document is complete. */
+            SetAttributeOnRoot (el, SVG_ATTR_UnresolvedRef, doc);
+        }
     }
 }
 
@@ -1754,7 +1754,7 @@ static void ParsePreserveAspectRatioAttribute (Attribute attr, Element el,
   The XML parser has just inserted a new element in the abstract tree,
   with all its attributes, but without its children.
   ----------------------------------------------------------------------*/
-void      SVGElementCreated (Element el, Document doc)
+void SVGElementCreated (Element el, Document doc)
 {
   ElementType		elType;
   AttributeType attrType;
@@ -2302,12 +2302,12 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
         case SVG_EL_marker:
           /* case SVG_EL_view: */
           TtaSetElCoordinateSystem (el);
-	  ProcessMarkers (el, doc);
+          ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_g:
           TtaSetElCoordinateSystem (el);
-	  ProcessMarkers (el, doc);
+          ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_SVG:
@@ -2322,7 +2322,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
               InstanciateUseElements (el, doc);
               TtaRemoveAttribute (el, attr, doc);
             } 
-	  ProcessMarkers (el, doc);
+          ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_image:
@@ -2374,18 +2374,18 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	case SVG_EL_path:
         case SVG_EL_polyline:
         case SVG_EL_polygon:
-	  GraphicLeafComplete(doc, el);
-	  /* this element may use markers. Check its marker-start, marker-end
-	     and maker-mid attributes and copy the referred marker(s) */
-	  ProcessMarkers (el, doc);
-	  break;
+          GraphicLeafComplete(doc, el);
+          /* this element may use markers. Check its marker-start, marker-end
+             and maker-mid attributes and copy the referred marker(s) */
+          ProcessMarkers (el, doc);
+          break;
 
         case SVG_EL_a:
           /* it's an anchor element */
           /* if it has a href attribute from the XLink namespace, replace
              that attribute by a href attribute from the SVG namespace */
           CheckHrefAttr (el, doc);
-	  ProcessMarkers (el, doc);
+          ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_switch:
@@ -2394,7 +2394,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
              systemLanguage attributes on its direct child elements to select
              the child to be rendered */
           EvaluateTestAttrs (el, doc);
-	  ProcessMarkers (el, doc);
+          ProcessMarkers (el, doc);
           break;
 
         case SVG_EL_style__:
@@ -4139,6 +4139,8 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       TtaSetStopColorGradient (red, green, blue, el);
       break;
     case SVG_ATTR_id:
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum != SVG_EL_use_ && elType.ElTypeNum != SVG_EL_marker)
       CheckUniqueName (el, doc, attr, attrType);
       break;
     default:
