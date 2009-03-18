@@ -33,6 +33,7 @@
 
 #include "SVG.h"
 #include "HTML.h"
+#include "XLink.h"
 
 #include "anim_f.h"
 #include "Mathedit_f.h"
@@ -231,6 +232,7 @@ void SaveSVGDefs (Element el, Document doc)
   ElementType	         elType;
   AttributeType        attrType;
   Attribute            attr;
+  int                  typenum;
   SSchema	             svgSchema;
 
   svgSchema = TtaGetSSchema ("SVG", doc);
@@ -242,6 +244,7 @@ void SaveSVGDefs (Element el, Document doc)
            elType.ElTypeNum == SVG_EL_marker))
         {
           /* Look for the ancestor svgCanvas ans definitions */
+          typenum = elType.ElTypeNum;
           elType.ElTypeNum = SVG_EL_SVG;
           elType.ElSSchema = svgSchema;
           svgCanvas = TtaGetTypedAncestor (el, elType);
@@ -267,7 +270,7 @@ void SaveSVGDefs (Element el, Document doc)
                   while (copy);
                 }
               SavedGraphics = svgCanvas;
-              if (elType.ElTypeNum == SVG_EL_use_)
+              if (typenum == SVG_EL_use_)
                 {
                   // get the referred symbol
                   attrType.AttrSSchema = elType.ElSSchema;
@@ -281,6 +284,21 @@ void SaveSVGDefs (Element el, Document doc)
                         {
                           copy = TtaCopyTree (ref, doc, doc, SavedDefs);
                           TtaInsertFirstChild (&copy, SavedDefs, doc);
+                        }
+                    }
+                  else
+                    {
+                      attrType.AttrSSchema = GetXLinkSSchema (doc);
+                      attrType.AttrTypeNum = XLink_ATTR_href_;
+                      if (attr && !GetReferredDef (attr, SavedDefs, svgSchema))
+                        {
+                          // the symbol is not already saved
+                          ref = GetReferredDef (attr, defs, svgSchema);
+                          if (ref)
+                            {
+                              copy = TtaCopyTree (ref, doc, doc, SavedDefs);
+                              TtaInsertFirstChild (&copy, SavedDefs, doc);
+                            }
                         }
                     }
                 }
@@ -356,10 +374,14 @@ void InsertSVGDefs (Element el, Document doc)
         {
           elType = TtaGetElementType (el);
           if (elType.ElSSchema == svgSchema &&
-              (elType.ElTypeNum == SVG_EL_use_ ||
+              (elType.ElTypeNum == SVG_EL_symbol_ ||
                elType.ElTypeNum == SVG_EL_marker))
             {
                /* Search the ancestor which is a direct child of the svgCanvas */
+              el = TtaGetParent (el);
+              elType = TtaGetElementType (el);
+              if (elType.ElTypeNum == SVG_EL_defs)
+                return;
               elType.ElTypeNum = SVG_EL_SVG;
               elType.ElSSchema = svgSchema;
               svgCanvas = TtaGetTypedAncestor (el, elType);
