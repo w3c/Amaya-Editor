@@ -29,6 +29,8 @@ extern void SetTableMenuOff ( Document doc,
 extern void SetTableMenuOn ( Document doc,
                              View view );
 extern void UpdateEditorMenus ( Document doc );
+extern void StartACopyCommand ( Document doc,
+                                View view );
 extern void ShowLogFile ( Document doc,
                           View view );
 extern void MenuShowLogFile ( Document doc,
@@ -295,6 +297,8 @@ extern void SetTableMenuOff ( Document doc,
 extern void SetTableMenuOn ( Document doc,
                                View view );
 extern void UpdateEditorMenus ( Document doc );
+extern void StartACopyCommand ( Document doc,
+                                  View view );
 extern void ShowLogFile ( Document doc,
                             View view );
 extern void MenuShowLogFile ( Document doc,

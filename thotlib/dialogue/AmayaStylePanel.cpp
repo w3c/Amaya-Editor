@@ -39,6 +39,7 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "paneltypes_wx.h"
+#include "select_tv.h"
 
 #include "AmayaStylePanel.h"
 #include "AmayaNormalWindow.h"
@@ -172,6 +173,14 @@ wxString AmayaStyleToolPanel::GetDefaultAUIConfig()
  -----------------------------------------------------------------------*/
 void AmayaStyleToolPanel::RaiseDoctypePanels(int doctype)
 {
+  
+  // manage a svg root within a xml document as default
+  if (doctype == WXAMAYA_DOCTYPE_SVG &&
+      FirstSelectedElement == LastSelectedElement &&
+      FirstSelectedElement &&
+      FirstSelectedElement->ElParent &&
+      FirstSelectedElement->ElStructSchema != FirstSelectedElement->ElParent->ElStructSchema)
+    doctype = WXAMAYA_DOCTYPE_XHTML;
   switch(doctype)
   {
     case WXAMAYA_DOCTYPE_SVG:
@@ -183,7 +192,6 @@ void AmayaStyleToolPanel::RaiseDoctypePanels(int doctype)
           Current_StylePanel = 1;
         }
       break;      
-    case WXAMAYA_DOCTYPE_XHTML:
     default:
       if (Current_StylePanel == -1 || Current_StylePanel == 1)
         {

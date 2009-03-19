@@ -694,7 +694,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
           
           /* register this element in the editing history */
           elType = TtaGetElementType (firstSel);
-          if (eSchema!=NULL)
+          if (eSchema)
             newType.ElSSchema = eSchema;
           else
             newType.ElSSchema = elType.ElSSchema;
@@ -720,7 +720,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
               if (eType == HTML_EL_Anchor)
                 newType.ElTypeNum = SVG_EL_a;
               else
-                newType.ElTypeNum = 0;
+                newType.ElTypeNum = SVG_EL_tspan;
               if (aType == HTML_ATTR_HREF_)
                 attrType.AttrTypeNum = SVG_ATTR_xlink_href;
               else if (aType == HTML_ATTR_Class)
@@ -931,9 +931,17 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                         }
                     }
                   // remove the current inline element to extend it
-                  removed = (aType != HTML_ATTR_Style_  &&
-                             elType.ElTypeNum == newType.ElTypeNum &&
-                             elType.ElSSchema == newType.ElSSchema);
+                  name = TtaGetSSchemaName (elType.ElSSchema);
+                  if (!strcmp (name, "HTML"))
+                    removed = (aType != HTML_ATTR_Style_  &&
+                               elType.ElTypeNum == newType.ElTypeNum &&
+                               elType.ElSSchema == newType.ElSSchema);
+#ifdef _SVG
+                  else if (!strcmp (name, "SVG"))
+                    removed = (aType != SVG_ATTR_style_  &&
+                               elType.ElTypeNum == newType.ElTypeNum &&
+                               elType.ElSSchema == newType.ElSSchema);
+#endif /* _SVG */
                   if (removed)
                     {
                       attr = NULL;
@@ -947,7 +955,6 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                           done = TRUE; // action done
                         }
                     }
-                  name = TtaGetSSchemaName (elType.ElSSchema);
                   lg =  TtaGetElementVolume (el);
                   split = ((el == firstSel || el == lastSel) &&
                            !strcmp(name, "HTML") &&

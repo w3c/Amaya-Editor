@@ -55,10 +55,8 @@
 #include "registry_wx.h"
 #include "wxdialogapi_f.h"
 
-static ThotIcon   iconGraph;
-static ThotIcon   iconGraphNo;
-static ThotIcon   mIcons[12];
 static ThotBool   PaletteDisplayed = FALSE;
+static ThotBool   SVG_root_copied = FALSE;
 static Element    PastedGraphics = NULL;
 static Element    SavedGraphics = NULL;
 static Element    SavedDefs = NULL;
@@ -73,6 +71,20 @@ extern int ActiveFrame;
 #ifdef _WINDOWS
 #include <commctrl.h>
 #endif /* _WINDOWS */
+
+/*----------------------------------------------------------------------
+  ClearSVGDefs removes all saved SVG definitions
+  ----------------------------------------------------------------------*/
+void ClearSVGDefs ()
+{
+  if (SavedDefs)
+    {
+      TtaDeleteTree (SavedDefs, 0);
+      SavedDefs = NULL;
+    }
+  SavedGraphics = NULL;
+  SVG_root_copied = FALSE;
+}
 
 #ifdef _SVG
 /*----------------------------------------------------------------------
@@ -150,20 +162,6 @@ void NameSpaceGenerated (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
-  ClearSVGDefs rmoves all saved SVG definitions
-  ----------------------------------------------------------------------*/
-void ClearSVGDefs ()
-{
-  if (SavedDefs)
-    {
-      TtaDeleteTree (SavedDefs, 0);
-      SavedDefs = NULL;
-      SavedGraphics = NULL;
-    }
-}
-
-
-/*----------------------------------------------------------------------
   GetReferredDef returns the referred symbol or marker included in the
   root element.
   ----------------------------------------------------------------------*/
@@ -236,12 +234,20 @@ void SaveSVGDefs (Element el, Document doc)
   SSchema	             svgSchema;
 
   svgSchema = TtaGetSSchema ("SVG", doc);
+  if (SVG_root_copied)
+    return;
   if (svgSchema)
     {
       elType = TtaGetElementType (el);
-      if (elType.ElSSchema == svgSchema &&
-          (elType.ElTypeNum == SVG_EL_use_ ||
-           elType.ElTypeNum == SVG_EL_marker))
+      if (elType.ElSSchema == svgSchema && elType.ElTypeNum == SVG_EL_SVG)
+        {
+          // the whole SVG element is copied
+          ClearSVGDefs ();
+          SVG_root_copied = TRUE;
+        }
+      else if (elType.ElSSchema == svgSchema &&
+               (elType.ElTypeNum == SVG_EL_use_ ||
+                elType.ElTypeNum == SVG_EL_marker))
         {
           /* Look for the ancestor svgCanvas ans definitions */
           typenum = elType.ElTypeNum;
@@ -4828,21 +4834,6 @@ void FreeSVG ()
 #ifdef _SVG
   // free saved defs elements
   ClearSVGDefs ();
-#if defined(_WX)
-  if (iconGraph)
-    delete iconGraph;
-  if (iconGraphNo)
-    delete iconGraphNo;
-  for (int i = 0; i < 12; i++)
-    {
-      if (mIcons[i])
-        delete mIcons[i];
-    }
-
-  iconGraph =   (ThotIcon) NULL;
-  iconGraphNo = (ThotIcon) NULL;
-  memset( mIcons, 0, 12 * sizeof(ThotIcon) );
-#endif /* defined(_WX) */
 #endif /* _SVG */
 }
 
@@ -4852,23 +4843,6 @@ void FreeSVG ()
 void InitSVG ()
 {
 #ifdef _SVG
-#if defined(_GTK)
-  iconGraph = TtaCreatePixmapLogo (Graph_xpm);
-  iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
-  mIcons[0] = TtaCreatePixmapLogo (line_xpm);
-  mIcons[1] = TtaCreatePixmapLogo (rect_xpm);
-  mIcons[2] = TtaCreatePixmapLogo (roundrect_xpm);
-  mIcons[3] = TtaCreatePixmapLogo (circle_xpm);
-  mIcons[4] = TtaCreatePixmapLogo (oval_xpm);
-  mIcons[5] = TtaCreatePixmapLogo (polyline_xpm);
-  mIcons[6] = TtaCreatePixmapLogo (polygon_xpm);
-  mIcons[7] = TtaCreatePixmapLogo (spline_xpm);
-  mIcons[8] = TtaCreatePixmapLogo (closed_xpm);
-  mIcons[9] = TtaCreatePixmapLogo (label_xpm);
-  mIcons[10] = TtaCreatePixmapLogo (text_xpm);
-  mIcons[11] = TtaCreatePixmapLogo (group_xpm);
-#endif /* #if defined(_GTK) */
-
   GraphDialogue = TtaSetCallback ((Proc)CallbackGraph, MAX_GRAPH);
 #endif /* _SVG */
 }

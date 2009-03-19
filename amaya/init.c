@@ -139,11 +139,8 @@ static int          Loading_method = CE_INIT;
 #ifdef BOOKMARKS
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
-
 #include "wxdialogapi_f.h"
-
 #include "archives.h"
-
 #ifdef DAV
 #define WEBDAV_EXPORT extern
 #include "davlib.h"
@@ -1145,6 +1142,15 @@ void UpdateEditorMenus (Document doc)
   TtaRefreshTopMenuStats (doc, -1);
 }
 
+/*----------------------------------------------------------------------
+  StartACopyCommand says that a new copy command starts
+  ----------------------------------------------------------------------*/
+void StartACopyCommand (Document doc, View view)
+{
+#ifdef _SVG
+  ClearSVGDefs ();
+#endif /* _SVG */
+}
 
 /*----------------------------------------------------------------------
   ShowLogFile

@@ -938,9 +938,13 @@ void CopyCommand ()
           FreeSavedElements ();
           /* document d'ou vient la partie sauvee */
           DocOfSavedElements = pSelDoc;
+          doc = IdentDocument (DocOfSavedElements);
+
+          // start a new copy
+          TtaExecuteMenuAction ("StartACopyCommand", doc, 1, TRUE);
+
           /* tell the application what document the saved elements
              come from */
-          doc = IdentDocument (DocOfSavedElements);
           if (CopyAndCutFunction)
             (*(Proc1)CopyAndCutFunction) ((void *) doc);
           pEl = NULL;
@@ -1412,6 +1416,9 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
     return FALSE;
 
   doc = IdentDocument (pSelDoc);
+  if (save)
+    // start a new copy
+    TtaExecuteMenuAction ("StartACopyCommand", doc, 1, TRUE);
   dispMode = TtaGetDisplayMode (doc);
   /* lock tables formatting */
   TtaGiveTableFormattingLock (&lock);

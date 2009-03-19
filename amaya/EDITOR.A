@@ -698,5 +698,6 @@ FUNCTIONS
   DoSelectStrokeWidth,
   DoUpdateStrokeStatus,
   DoUpdateFillStatus,
-  TtcNextSearchReplace;
+  TtcNextSearchReplace,
+  StartACopyCommand;
 END

@@ -1894,7 +1894,7 @@ void DoRemoveFont (Document doc, View view)
 void DoLeftAlign (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("text-align:left;", TRUE, TRUE);
+    GenerateStyle ("text-align:left;margin-left:0;margin-right:auto;", FALSE, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1904,7 +1904,9 @@ void DoLeftAlign (Document doc, View view)
 void DoRightAlign (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("text-align:right;", TRUE, TRUE);
+    {
+    GenerateStyle ("text-align:right;margin-left:auto;margin-right:0;", FALSE, TRUE);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1914,7 +1916,7 @@ void DoRightAlign (Document doc, View view)
 void DoCenter (Document doc, View view)
 {
   if (GetEnclosingBlock(doc))
-    GenerateStyle ("text-align:center;", TRUE, TRUE);
+    GenerateStyle ("text-align:center;margin-left:auto;margin-right:auto;", FALSE, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -1934,7 +1936,7 @@ void DoJustify (Document doc, View view)
   ----------------------------------------------------------------------*/
 void DoRemoveAlign (Document doc, View view)
 {
-  RemoveSpecificStyle (doc, "text-align: left");
+  RemoveSpecificStyle (doc, "text-align:left");
 }
 
 /*----------------------------------------------------------------------
