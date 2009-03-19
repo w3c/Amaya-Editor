@@ -1441,10 +1441,12 @@ void SetNamespacesAndDTD (Document doc, ThotBool removeTemplate)
 
       if (xmlDecl)
         {
+#ifdef IV
           if (DocumentTypes[doc]  == docHTML)
             // according to new specs don't generate it
             xmlDecl = FALSE;
           else
+#endif
             // check if the user wants to generate xml declaration
             TtaGetEnvBoolean ("USE_XML_DECLARATION", &xmlDecl);
         }
