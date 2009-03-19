@@ -1338,6 +1338,8 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
         }
 
       if (cutAll && !replace &&
+          firstSel->ElStructSchema &&
+          strcmp (firstSel->ElStructSchema->SsName, "SVG") &&
           CanCutElement (firstSel->ElParent, pSelDoc, NULL) &&
           !TypeHasException (ExcIsCell, firstSel->ElParent->ElTypeNumber,
                              firstSel->ElParent->ElStructSchema))
