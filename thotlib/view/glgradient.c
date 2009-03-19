@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1998-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1998-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -70,49 +70,85 @@
 
 #define EPSILON 1e-10
 
-unsigned char *fill_linear_gradient_image (RgbaDef *First, 
+unsigned char *fill_linear_gradient_image (Gradient *gradient, 
 					   int width, 
 					   int height)
 {
 #ifdef _GL
-  RgbaDef *current_gradient;
+  GradientStop *current_stop, *First, *Last;
   unsigned char *p0, *pixel;
   int     x, y;
   double  delta_r, delta_g, delta_b, delta_a;
   double  curr_r, curr_g, curr_b, curr_a;
   double  grad_width;
-  int     int_grad_width;
+  int     size, int_grad_width;
 
-  int_grad_width = 4 * width * height * sizeof (unsigned char);
-  pixel = (unsigned char *)malloc (int_grad_width);
-  memset (pixel, 0, int_grad_width);
-  current_gradient = First;
-  p0 = pixel;
-  while (current_gradient->next)
+  size = 4 * width * height * sizeof (unsigned char);
+  pixel = (unsigned char *)malloc (size);
+  memset (pixel, 0, size);
+
+  First = gradient->firstStop;
+  if (First->length > 0)
+    /* the first stop is not zero. Create the part of the gradient before the
+       first stop */
     {
-      grad_width = (current_gradient->next->length - current_gradient->length) * width;
+      current_stop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
+      gradient->firstStop = current_stop;
+      current_stop->next = First;
+      current_stop->el = NULL;
+      current_stop->r = First->r;
+      current_stop->g = First->g;
+      current_stop->b = First->b;
+      current_stop->a = First->a;
+      current_stop->length = 0;
+    }
+  Last = First;
+  while (Last->next)
+     Last = Last->next;
+  if (Last->length < 1)
+    /* the last stop is less than 1. Create the part of the gradient after the
+       last stop */
+    {
+      current_stop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
+      Last->next = current_stop;
+      current_stop->next = NULL;
+      current_stop->el = NULL;
+      current_stop->r = Last->r;
+      current_stop->g = Last->g;
+      current_stop->b = Last->b;
+      current_stop->a = Last->a;
+      current_stop->length = 1;
+    }  
+
+  current_stop = gradient->firstStop;
+  p0 = pixel;
+  while (current_stop->next)
+    {
+      grad_width = (current_stop->next->length - current_stop->length) * width;
       int_grad_width = (int) grad_width;
-      if (current_gradient->next->r - current_gradient->r)
-	delta_r = (current_gradient->next->r - current_gradient->r) / grad_width;
+      if (current_stop->next->r - current_stop->r)
+	delta_r = (current_stop->next->r - current_stop->r) / grad_width;
       else
 	delta_r = 0;
-      if (current_gradient->next->g - current_gradient->g)
-	delta_g = (current_gradient->next->g - current_gradient->g) / grad_width;
+      if (current_stop->next->g - current_stop->g)
+	delta_g = (current_stop->next->g - current_stop->g) / grad_width;
       else
 	delta_g = 0;      
-      if (current_gradient->next->b - current_gradient->b)
-	delta_b = (current_gradient->next->b - current_gradient->b) / grad_width;
+      if (current_stop->next->b - current_stop->b)
+	delta_b = (current_stop->next->b - current_stop->b) / grad_width;
       else
 	delta_b = 0;      
-      if (current_gradient->next->a - current_gradient->a)
-	delta_a = (current_gradient->next->a - current_gradient->a) / grad_width;
+      if (current_stop->next->a - current_stop->a)
+	delta_a = (current_stop->next->a - current_stop->a) / grad_width;
       else 
 	delta_a = 0;      
       x = 0;
-      curr_r = current_gradient->r;
-      curr_g = current_gradient->g;
-      curr_b = current_gradient->b;
-      curr_a = current_gradient->a;
+      curr_r = current_stop->r;
+      curr_g = current_stop->g;
+      curr_b = current_stop->b;
+      curr_a = current_stop->a;
+      /* Create a unique gradient line 
+       that will be copied height times*/
       while (x < int_grad_width) 
 	{
 	  *p0++ = (unsigned char) curr_r;
@@ -125,11 +161,9 @@ unsigned char *fill_linear_gradient_image (RgbaDef *First,
 	  curr_a += delta_a;
 	  x++;
 	}
-      /* Create a unique gradient line 
-       that will be copied height times*/
-      current_gradient = current_gradient->next;
+      current_stop = current_stop->next;
     }
-  /* Fill all row's image */
+  /* Fill all lines in the gradient */
   p0 = pixel;
   width = width * 4;  
   for (y = 1; y < height; y++)

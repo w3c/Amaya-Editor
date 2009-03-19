@@ -148,6 +148,8 @@ extern void TtaSetStopColorGradient ( unsigned short red,
                                       Element el );
 extern void TtaSetStopOffsetColorGradient ( float offset,
                                             Element el );
+extern void TtaLinkGradient ( Element gradient,
+                              Element el );
 extern ThotBool TtaDeletePointInCurve ( Document doc,
                                         Element el,
                                         int point_number );
@@ -429,6 +431,8 @@ extern void TtaSetStopColorGradient ( unsigned short red,
                                         Element el );
 extern void TtaSetStopOffsetColorGradient ( float offset,
                                               Element el );
+extern void TtaLinkGradient ( Element gradient,
+                                Element el );
 extern ThotBool TtaDeletePointInCurve ( Document doc,
                                           Element el,
                                           int point_number );

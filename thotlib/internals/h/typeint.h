@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2007
+ *  (c) COPYRIGHT INRIA 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -315,7 +315,7 @@ typedef struct _ThotPath {
 } ThotPath;
 
 
-/*Animation Path defining successive position*/
+/* Animation Path defining successive positions */
 typedef struct _AnimPath
 {
   PtrPathSeg      FirstPathSeg; /*linked list of segment defining the path*/
@@ -327,26 +327,24 @@ typedef struct _AnimPath
   int             maxpoints;
  } AnimPath;
 
-
 #endif /*_GL */
 
-
-/* Typedef of SVG gradient part*/
-typedef struct _RgbaDef 
+/* a stop in an SVG gradient */
+typedef struct _GradientStop 
 {
-  unsigned short  r, g, b, a;   	/* color def */
-  float           length;               /* length til next color */  
-  Element         el;                   /* identify stop reference */  
-  struct _RgbaDef *next;  
-} RgbaDef;
+  unsigned short  r, g, b, a;      /* color and alpha channel */
+  float           length;          /* length where this color starts */  
+  PtrElement      el;              /* reference to the stop element */  
+  struct _GradientStop *next;      /* next stop for the same gradient */
+} GradientStop;
 
-/* Typedef of SVG gradient part*/
-typedef struct _GradDef 
+/* an SVG gradient */
+typedef struct _Gradient
 {
-  int            x1, x2, y1, y2;
-  RgbaDef        *next;  
-} GradDef;
-
+  int                  x1, x2, y1, y2; /* coordinates for the direction of the gradient */
+  PtrElement           el;
+  struct _GradientStop *firstStop;  
+} Gradient;
 
 /* type of a SVG Transform */
 typedef enum
@@ -575,8 +573,10 @@ typedef struct _ElementDescr
  
   PtrTransform          ElTransform;    /* the element is transformed */
   void                 *ElAnimation;
-  void                 *ElGradient;
-  
+  Gradient             *ElGradient;
+  PtrElement            ElGradientCopy; /* used when copying trees */
+  ThotBool              ElGradientDef;  /* ElGradient is a gradient definition
+				  otherwise it is a reference to a definition */
   union
   {
     struct		      /* ElTerminal = False */

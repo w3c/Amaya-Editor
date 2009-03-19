@@ -2314,80 +2314,61 @@ void TtaAppendPathSeg (Element element, PathSegment segment, Document document)
       }
 }
 
-
 #ifndef NODISPLAY
 #ifdef _GL
 /*----------------------------------------------------------------------
+  NewGradient
   ---------------------------------------------------------------------- */
-static RgbaDef *NewRgbaDef (Element el)
+static Gradient *NewGradient ()
 {
-  RgbaDef *seek;
+  Gradient *grad;
  
-  seek = (RgbaDef *)TtaGetMemory (sizeof (RgbaDef));
-  seek->el = el;
-  seek->next = NULL;
-
-  return seek;
-}
-
-/*----------------------------------------------------------------------
-  ---------------------------------------------------------------------- */
-static GradDef *NewGradDef ()
-{
-  GradDef *grad;
- 
-  grad = (GradDef *)TtaGetMemory (sizeof (GradDef));
+  grad = (Gradient *)TtaGetMemory (sizeof (Gradient));
   grad->x1 = 0;
-  grad->x2 = 0;
+  grad->x2 = 1;   /* default value = horizontal axis */
   grad->y1 = 0;
   grad->y2 = 0;
-  grad->next = NULL;
-  
+  grad->el = NULL;
+  grad->firstStop = NULL;
   return grad;
 }
 
 /*----------------------------------------------------------------------
+  NewGradientStop
   ---------------------------------------------------------------------- */
-static GradDef *GetGradientRef (PtrElement father)
-{  
-  GradDef *grad;
-  
-  if (father->ElGradient == NULL)
-    father->ElGradient = NewGradDef ();
-  grad = (GradDef *) father->ElGradient;
-  return grad;
-}
-
-/*----------------------------------------------------------------------
-  ---------------------------------------------------------------------- */
-static RgbaDef *GetStopRef (Element el, PtrElement father)
+static GradientStop *NewGradientStop (Element el, PtrElement father)
 {
-  RgbaDef *previous = NULL;
-  RgbaDef *seek;
-  GradDef *grad;
+  GradientStop *previous;
+  GradientStop *gstop;
+  Gradient *grad;
 
   if (father->ElGradient == NULL)
-    father->ElGradient = NewGradDef ();
-  grad = (GradDef *) father->ElGradient;
-  
-  seek = grad->next;
-  while (seek)
     {
-      if (seek->el == el)
-        return seek;
-      previous = seek;
-      seek = seek->next;
+      father->ElGradient = NewGradient ();
+      father->ElGradient->el = father;
+      father->ElGradientDef = TRUE;
     }
-  seek = NewRgbaDef (el);
-  if (previous)
-    previous->next = seek;
-  else
-    grad->next = seek;
+  grad = (Gradient *) father->ElGradient;
   
-  return seek;
+  previous = NULL;
+  gstop = grad->firstStop;
+  while (gstop)
+    {
+      if (gstop->el == (PtrElement)el)
+        return gstop;
+      previous = gstop;
+      gstop = gstop->next;
+    }
+  gstop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
+  gstop->el = (PtrElement)el;
+  gstop->next = NULL;
+  if (previous)
+    previous->next = gstop;
+  else
+    grad->firstStop = gstop;
+  return gstop;
 }
 #endif /*_GL*/
-
 
 /*----------------------------------------------------------------------
   ---------------------------------------------------------------------- */
@@ -2395,24 +2376,42 @@ void AddStopColor (Element el, PtrElement Father,
                    unsigned short red, unsigned short green, unsigned short blue)
 {
 #ifdef _GL
-  RgbaDef *stop_grad;
+  GradientStop *gstop;
   
-  stop_grad = GetStopRef (el, Father);
-  stop_grad->r = red;
-  stop_grad->g = green;
-  stop_grad->b = blue;
-  stop_grad->a = 255;
+  gstop = NewGradientStop (el, Father);
+  gstop->r = red;
+  gstop->g = green;
+  gstop->b = blue;
+  gstop->a = 255;
 #endif /* _GL */
 }
 
+/*----------------------------------------------------------------------
+  ---------------------------------------------------------------------- */
 void AddOffset (Element el, PtrElement Father, float offset)
 {
 #ifdef _GL
-  RgbaDef *Stop;
+  GradientStop *gstop;
   
-  Stop = GetStopRef (el, Father);
-  Stop->length = offset;
+  gstop = NewGradientStop (el, Father);
+  gstop->length = offset;
 #endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  ---------------------------------------------------------------------- */
+static Gradient *GetGradientRef (PtrElement father)
+{  
+  Gradient *grad;
+  
+  if (father->ElGradient == NULL)
+    {
+      father->ElGradient = NewGradient ();
+      father->ElGradient->el = father;
+      father->ElGradientDef = TRUE;
+    }
+  grad = (Gradient *) father->ElGradient;
+  return grad;
 }
 
 /*----------------------------------------------------------------------
@@ -2421,9 +2420,9 @@ void AddOffset (Element el, PtrElement Father, float offset)
 void TtaSetLinearx1Gradient (int value, Element el)
 {
 #ifdef _GL
-  GradDef *grad;
+  Gradient *grad;
   
-  grad = GetGradientRef ((PtrElement) TtaGetParent (el));
+  grad = GetGradientRef ((PtrElement)el);
   grad->x1 = value;
 #endif /* _GL */
 }
@@ -2434,9 +2433,9 @@ void TtaSetLinearx1Gradient (int value, Element el)
 void TtaSetLineary1Gradient (int value, Element el)
 {
 #ifdef _GL
-  GradDef *grad;
+  Gradient *grad;
   
-  grad = GetGradientRef ((PtrElement) TtaGetParent (el));
+  grad = GetGradientRef ((PtrElement)el);
   grad->y1 = value;
 #endif /* _GL */
 }
@@ -2447,9 +2446,9 @@ void TtaSetLineary1Gradient (int value, Element el)
 void TtaSetLinearx2Gradient (int value, Element el)
 {
 #ifdef _GL
-  GradDef *grad;
+  Gradient *grad;
   
-  grad = GetGradientRef ((PtrElement) TtaGetParent (el));
+  grad = GetGradientRef ((PtrElement)el);
   grad->x2 = value;
 #endif /* _GL */
 }
@@ -2460,9 +2459,9 @@ void TtaSetLinearx2Gradient (int value, Element el)
 void TtaSetLineary2Gradient (int value, Element el)
 {
 #ifdef _GL
-  GradDef *grad;
+  Gradient *grad;
   
-  grad = GetGradientRef ((PtrElement) TtaGetParent (el));
+  grad = GetGradientRef ((PtrElement)el);
   grad->y2 = value;
 #endif /* _GL */
 }
@@ -2474,7 +2473,7 @@ void TtaSetStopColorGradient (unsigned short red, unsigned short green,
                               unsigned short blue, Element el)
 {
 #ifdef _GL
-  AddStopColor (el, (PtrElement) (TtaGetParent(TtaGetParent(el))), red, green, blue);  
+  AddStopColor (el, (PtrElement) (TtaGetParent(el)), red, green, blue);  
 #endif /* _GL */
 }
 
@@ -2484,11 +2483,20 @@ void TtaSetStopColorGradient (unsigned short red, unsigned short green,
 void TtaSetStopOffsetColorGradient (float offset, Element el)
 {
 #ifdef _GL
-  AddOffset (el, (PtrElement)(TtaGetParent(TtaGetParent (el))),
-             offset);  
+  AddOffset (el, (PtrElement)(TtaGetParent (el)), offset);  
 #endif /* _GL */
 }
 
+/*----------------------------------------------------------------------
+  TtaLinkGradient
+  ----------------------------------------------------------------------*/
+void TtaLinkGradient (Element gradient, Element el)
+{
+#ifdef _GL
+  ((PtrElement)el)->ElGradient = ((PtrElement)gradient)->ElGradient;
+  ((PtrElement)el)->ElGradientDef = FALSE;
+#endif /* _GL */
+}
 
 /* ----------------------------------------------------------------------
    getPathSegment

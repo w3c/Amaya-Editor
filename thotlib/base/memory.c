@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -721,7 +721,10 @@ void GetElement (PtrElement * pEl)
       pNewEl->ElTerminal = FALSE;
       pNewEl->ElSystemOrigin = FALSE;
       pNewEl->ElTransform = NULL;
-      pNewEl->ElAnimation = NULL;       
+      pNewEl->ElAnimation = NULL;
+      pNewEl->ElGradient = NULL;
+      pNewEl->ElGradientCopy = NULL;
+      pNewEl->ElGradientDef = FALSE;
       pNewEl->ElFirstChild = NULL;
 
       NbUsed_Element++;
@@ -734,6 +737,7 @@ void GetElement (PtrElement * pEl)
 void FreeElement (PtrElement pEl)
 {
   PtrPathSeg       pPa, pPaNext;
+  GradientStop     *gstop, *next;
 
   if (pEl->ElTransform)
     {
@@ -745,6 +749,18 @@ void FreeElement (PtrElement pEl)
       TtaFreeAnimation (pEl->ElAnimation);
       pEl->ElAnimation = NULL;
     }
+  if (pEl->ElGradient && pEl->ElGradientDef)
+    {
+      gstop = pEl->ElGradient->firstStop;
+      while (gstop)
+	{
+	  next = gstop->next;
+	  TtaFreeMemory (gstop);
+	  gstop = next;
+	}
+      TtaFreeMemory (pEl->ElGradient);
+    }
+  pEl->ElGradient = NULL;
   if (pEl->ElLeafType == LtText && pEl->ElText)
     {
       FreeTextBuffer (pEl->ElText);

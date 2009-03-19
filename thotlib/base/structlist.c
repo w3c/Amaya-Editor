@@ -560,7 +560,9 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
         }
       if (pNode->ElHolophrast)
         fprintf (fileDescriptor, " Holophrast");
-       
+      if (pNode->ElGradient)
+        fprintf (fileDescriptor, " Gradient");
+	
       /* ecrit les attributs de l'element */
       if (pNode->ElFirstAttr != NULL)
         {

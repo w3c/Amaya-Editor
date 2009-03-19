@@ -95,6 +95,104 @@ void SVGEntityCreated (unsigned char *entityValue, Language lang,
 }
 
 /*----------------------------------------------------------------------
+  GetElementFromUri
+  Element el has an attribute whose value uri is "url(xxxxx)". Get the element
+  referred by this attribute.
+  ----------------------------------------------------------------------*/
+static Element GetElementFromUri (Element el, Document doc, char *uri)
+{
+  ElementType          elType;
+  Element              refEl, curEl, elFound;
+  AttributeType        attrType;
+  Attribute            attr;
+  SearchDomain         direction;
+  char                 *id;
+  int                  length, i;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_id;
+  /* search backwards first */
+  direction = SearchBackward;
+  refEl = NULL;
+  if (uri[4] == '#') /* handles only internal links */
+    for (i = 1; i <= 2 && refEl == NULL; i++)
+      {
+        curEl = el;
+        do
+          {
+            TtaSearchAttribute (attrType, direction, curEl, &elFound, &attr);
+            if (attr)
+              /* an id attribute has been found */
+              {
+                /* get its value */
+                length = TtaGetTextAttributeLength (attr);
+                id = (char *)TtaGetMemory (length + 1);
+                TtaGiveTextAttributeValue (attr, id, &length);
+                /* compare with the uri attribute */
+                if (!strcasecmp (&uri[5], id))
+                  /* same  values. we found it */
+                  refEl = elFound;
+                TtaFreeMemory (id);
+              }
+            curEl = elFound;
+          }
+        while (elFound && !refEl);
+        /* search forward if not found */
+        direction = SearchForward;
+      }
+  return refEl;
+}
+
+/*----------------------------------------------------------------------
+  SetAttributeOnRoot
+  Put attribute att on the <svg> element to which element el belongs.
+  ----------------------------------------------------------------------*/
+static void SetAttributeOnRoot (Element el, int att, Document doc)
+{
+  ElementType     elType, parentType;
+  Element         root, parent, prev;
+  AttributeType   attrType;
+  Attribute       attr;
+
+  /* find the root of the current SVG tree */
+  root = NULL;
+  elType = TtaGetElementType (el);
+  parent = TtaGetParent (el);
+  while (parent && !root)
+    {
+      parentType = TtaGetElementType (parent);
+      prev = parent;
+      parent = TtaGetParent (parent);
+      if (parentType.ElSSchema == elType.ElSSchema &&
+	  parentType.ElTypeNum == SVG_EL_SVG)
+	/* this is an <svg> element */
+	if (parent)
+	  {
+	    parentType = TtaGetElementType (parent);
+	    if (parentType.ElTypeNum == SVG_EL_Document)
+	      /* its parent is the root of the document */
+	      root = prev;
+	    else if (parentType.ElSSchema != elType.ElSSchema)
+	      /* its parent is in a different namespace */
+	      root = prev;
+	  }
+    }
+  if (root)
+    /* put the attribute on the root if it is not present yet */
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = att;
+      attr = TtaGetAttribute (root, attrType);
+      if (!attr)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (root, attr, doc);
+	}
+    } 
+}
+
+/*----------------------------------------------------------------------
   ParseCSSequivAttribute
   Create or update a specific presentation rule for element el that reflects
   the value of attribute attr, which is equivalent to a CSS property (fill,
@@ -109,6 +207,7 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
   int                length, val = 0;
   float              value;
   char              *text;
+  Element            refElement;
 
   text = NULL;
   /* get the value of the attribute */
@@ -132,7 +231,23 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
   switch (attrType)
     {
     case SVG_ATTR_fill:
-      sprintf (css_command, "fill: %s", text);
+      if (!strncmp (text, "url(", 4) && text[length - 1] == ')')
+	/* reference to a paint server */
+	{
+	  text[length-1] = EOS;
+	  /* look for an element with an id attribute with the same value as
+	     the uri in the fill attribute value */
+	  refElement = GetElementFromUri (el, doc, text);
+	  if (!refElement)
+	    /* the referred element was not found. It may be a forward reference
+	       to an element that has not been parsed yet. We should retry when
+	       the document is complete. */
+	    SetAttributeOnRoot (el, SVG_ATTR_UnresolvedRef, doc);
+	  else
+	    TtaLinkGradient (refElement, el);
+	}
+      else
+        sprintf (css_command, "fill: %s", text);
       break;
     case SVG_ATTR_stroke:
       sprintf (css_command, "stroke: %s", text);
@@ -957,13 +1072,8 @@ static void CopyMarkersSubtree (Element el, Element marker, int att,
   ----------------------------------------------------------------------*/
 static ThotBool CopyMarkers (Element el, Document doc, char *attrVal, int att)
 {
-  ElementType          elType;
-  Element              marker, curEl, elFound;
-  AttributeType        attrType;
-  Attribute            attr;
-  SearchDomain         direction;
-  char                 *id;
-  int                  length, i;
+  Element              marker;
+  int                  length;
 
   if (!strncmp (attrVal, "none", 4))
     return TRUE;
@@ -972,94 +1082,14 @@ static ThotBool CopyMarkers (Element el, Document doc, char *attrVal, int att)
     return TRUE;
   attrVal[length-1] = EOS;
   /* look for an element with an id attribute with the same value as the
-     marker-* attribute */
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = SVG_ATTR_id;
-  /* search backwards first */
-  direction = SearchBackward;
-  marker = NULL;
-  if (attrVal[4] == '#') /* handles only internal links */
-    for (i = 1; i <= 2 && marker == NULL; i++)
-      {
-        curEl = el;
-        do
-          {
-            TtaSearchAttribute (attrType, direction, curEl, &elFound, &attr);
-            if (attr)
-              /* an id attribute has been found */
-              {
-                /* get its value */
-                length = TtaGetTextAttributeLength (attr);
-                id = (char *)TtaGetMemory (length + 1);
-                TtaGiveTextAttributeValue (attr, id, &length);
-                /* compare with the marker-* attribute of the use element */
-                if (!strcasecmp (&attrVal[5], id))
-                  /* same  values. we found it */
-                  marker = elFound;
-                TtaFreeMemory (id);
-              }
-            curEl = elFound;
-          }
-        while (elFound && !marker);
-        /* search forward if not found */
-        direction = SearchForward;
-      }
+     uri in the marker-* attribute */
+  marker = GetElementFromUri (el, doc, attrVal);
   if (!marker)
     return FALSE;
   else
     /* the marker to be copied has been found */
     CopyMarkersSubtree (el, marker, att, doc);
-
   return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  SetAttributeOnRoot
-  Put attribute att on the <svg> element to which element el belongs.
-  ----------------------------------------------------------------------*/
-static void SetAttributeOnRoot (Element el, int att, Document doc)
-{
-  ElementType     elType, parentType;
-  Element         root, parent, prev;
-  AttributeType   attrType;
-  Attribute       attr;
-
-  /* find the root of the current SVG tree */
-  root = NULL;
-  elType = TtaGetElementType (el);
-  parent = TtaGetParent (el);
-  while (parent && !root)
-    {
-      parentType = TtaGetElementType (parent);
-      prev = parent;
-      parent = TtaGetParent (parent);
-      if (parentType.ElSSchema == elType.ElSSchema &&
-	  parentType.ElTypeNum == SVG_EL_SVG)
-	/* this is an <svg> element */
-	if (parent)
-	  {
-	    parentType = TtaGetElementType (parent);
-	    if (parentType.ElTypeNum == SVG_EL_Document)
-	      /* its parent is the root of the document */
-	      root = prev;
-	    else if (parentType.ElSSchema != elType.ElSSchema)
-	      /* its parent is in a different namespace */
-	      root = prev;
-	  }
-    }
-  if (root)
-    /* put the attribute on the root if it is not present yet */
-    {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = att;
-      attr = TtaGetAttribute (root, attrType);
-      if (!attr)
-	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (root, attr, doc);
-	}
-    } 
 }
 
 /*----------------------------------------------------------------------
@@ -2322,7 +2352,9 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
               InstanciateUseElements (el, doc);
               TtaRemoveAttribute (el, attr, doc);
             } 
-          ProcessMarkers (el, doc);
+	  ProcessMarkers (el, doc);
+	  /* check also all references to gradient elements */
+	  /* @@@@ */
           break;
 
         case SVG_EL_image:
@@ -3984,7 +4016,7 @@ int ParseIntAttribute (Attribute attr)
 }
 
 /*----------------------------------------------------------------------
-  ParseFloatAttrbute : 
+  ParseFloatAttribute : 
   Parse the value of a float data attribute
   ----------------------------------------------------------------------*/
 float ParseFloatAttribute (Attribute attr)
@@ -3998,7 +4030,7 @@ float ParseFloatAttribute (Attribute attr)
   if (text != NULL)
     {
       TtaGiveTextAttributeValue (attr, text, &length);
-      /* parse the attribute value (a number followed by a unit) */
+      /* parse the attribute value (just a number) */
       ptr = text;
       ptr = (char*)TtaSkipBlanks (ptr);
       ptr = ParseClampedUnit (ptr, &pval);
@@ -4006,6 +4038,39 @@ float ParseFloatAttribute (Attribute attr)
       return (float) pval.typed_data.value/1000;
     }
   return 0;
+}
+
+/*----------------------------------------------------------------------
+  ParseNumberPercentAttribute : 
+  Parse the value of a <number> or <percentage> attribute
+  ----------------------------------------------------------------------*/
+float ParseNumberPercentAttribute (Attribute attr)
+{
+  float                value;
+  int                  length;
+  char                *text;
+  PresentationValue    pval;
+
+  value = 0;
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = (char *)TtaGetMemory (length);
+  if (text != NULL)
+    {
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value */
+      ParseCSSUnit (text, &pval);
+      if (pval.typed_data.unit == UNIT_BOX)
+	{
+	  if (pval.typed_data.real)
+	    value = (float) pval.typed_data.value/1000;
+	  else
+	    value = (float) pval.typed_data.value;
+	}
+      else if (pval.typed_data.unit == UNIT_PERCENT)
+	/* it's a percentage */
+	value = (float) pval.typed_data.value/100;
+    }
+  return value;
 }
 
 /*----------------------------------------------------------------------
@@ -4129,7 +4194,8 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
         }
       break;
     case SVG_ATTR_offset:
-      offset = ParseFloatAttribute (attr);
+      /* parse <number> or <percentage> */
+      offset = ParseNumberPercentAttribute (attr);
       TtaSetStopOffsetColorGradient (offset, el);
       break;
     case SVG_ATTR_stop_color:

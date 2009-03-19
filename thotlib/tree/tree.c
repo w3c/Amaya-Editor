@@ -3154,6 +3154,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
   PtrSSchema          pSS;
   ThotBool            sameSSchema;
   ThotBool            doCopy;
+  GradientStop        *gStop, *prev, *gStopCopy;
 
   pEl = NULL;
   nR = 0;
@@ -3318,8 +3319,47 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
                 pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
               if (pSource->ElTransform)
                 pEl->ElTransform = (Transform*)TtaCopyTransform (pSource->ElTransform);
-              /* if (pSource->ElGradient)
-                 pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
+	      pEl->ElGradientDef = pSource->ElGradientDef;
+	      if (pSource->ElGradientDef)
+		{
+		  if (pSource->ElGradient)
+		    {
+		       pEl->ElGradient = (Gradient *)TtaGetMemory (sizeof (Gradient));
+		       pSource->ElGradientCopy = pEl;
+		       pEl->ElGradient->x1 = pSource->ElGradient->x1;
+		       pEl->ElGradient->x2 = pSource->ElGradient->x2;
+		       pEl->ElGradient->y1 = pSource->ElGradient->y1;
+		       pEl->ElGradient->y2 = pSource->ElGradient->y2;
+		       pEl->ElGradient->el = pEl;
+		       pEl->ElGradient->firstStop = NULL;
+		       prev = NULL;
+		       gStop = pSource->ElGradient->firstStop;
+		       while (gStop)
+			 {
+			   gStopCopy = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
+			   if (prev)
+			     prev->next = gStopCopy;
+			   else
+			     pEl->ElGradient->firstStop = gStopCopy;
+			   gStopCopy->r = gStop->r;
+			   gStopCopy->g = gStop->g;
+			   gStopCopy->b = gStop->b;
+			   gStopCopy->a = gStop->a;
+			   gStopCopy->length = gStop->length;
+			   gStopCopy->el = NULL;
+			   gStopCopy->next = NULL;
+			   prev = gStopCopy;
+			   gStop = gStop->next;
+			 }
+		    }
+		}
+	      else
+		{
+		  pEl->ElGradient = pSource->ElGradient;
+		  if (pSource->ElGradient && pSource->ElGradient->el &&
+		      pSource->ElGradient->el->ElGradientCopy)
+		    pEl->ElGradient = pSource->ElGradient->el->ElGradientCopy->ElGradient;
+		}
 #endif /* _GL */
               pEl->ElTerminal = pSource->ElTerminal;
 
@@ -3655,6 +3695,7 @@ PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
   pNew->ElTransform = NULL;
   pNew->ElAnimation = NULL;
   pNew->ElGradient = NULL;
+  pNew->ElGradientDef = FALSE;
   pNew->ElFirstChild = NULL;
   pNew->ElText = NULL;
   pNew->ElTextLength = 0;

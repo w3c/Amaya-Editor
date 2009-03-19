@@ -1008,12 +1008,12 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box, int frame,
                           ThotBool selected, int t, int b, int l, int r)
 {
 #ifdef _GL
-  GradDef           *gradient;
+  Gradient           *gradient;
   int                x, y, width, height;
   unsigned char     *pattern;
 
-  gradient = (GradDef *)pAb->AbElement->ElParent->ElGradient;
-  if (gradient->next == NULL)
+  gradient = (Gradient *)pAb->AbElement->ElParent->ElGradient;
+  if (gradient->firstStop == NULL)
     return FALSE;
   
   /* orientation*/
@@ -1030,8 +1030,8 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box, int frame,
   if (box->Pre_computed_Pic == NULL)
     {
       /*create the gradient pattern and put it on a texture*/
-      pattern = fill_linear_gradient_image (gradient->next, width, height);
-      box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, width, height);    
+      pattern = fill_linear_gradient_image (gradient, width, height);
+      box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, width, height);
     }
     
   /* GL_GetCurrentClipping (&clipx, &clipy, &clipw, &cliph); */
