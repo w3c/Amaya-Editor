@@ -259,7 +259,7 @@ void SaveSVGDefs (Element el, Document doc)
               elType.ElTypeNum = SVG_EL_defs;
               defs = TtaSearchTypedElement (elType, SearchInTree, svgCanvas);
             }
-          if (defs)
+          if (defs && defs != TtaGetParent (el))
             {
               if (SavedDefs == NULL)
                 // create if necessary a saved defs

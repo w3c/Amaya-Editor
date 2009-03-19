@@ -1165,7 +1165,8 @@ void PasteCommand ()
                       pSel = CreatedElement[i];
                 }
               if (pSel)
-                if (!pSel->ElTerminal)
+                if (!pSel->ElTerminal && pSel->ElStructSchema &&
+                    strcmp (pSel->ElStructSchema->SsName, "SVG"))
                   pSel = LastLeaf (pSel);
               if (pSel)
                 SelectPositionWithEvent (pDoc, pSel, pSel->ElTextLength+1);

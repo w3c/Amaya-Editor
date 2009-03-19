@@ -1749,7 +1749,7 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
                   ChangeLabel = FALSE;
                   ok = SendEventSubTree (TteElemCopy, pSelDoc, pE, 0, 0,
                                          FALSE, FALSE);
-                  if (ok)
+                  if (!ok)
                     /* save the current element */
                     SaveElement (pE, pParentEl, doc, NULL);
                 }
