@@ -53,70 +53,56 @@
 #include "animbox_f.h"
 #include "picture_f.h"
 
-#ifdef _GL
-	#ifdef _GTK
-		#include <gtkgl/gtkglarea.h>
-		#include <GL/gl.h>
-		#include <GL/glu.h>
-	#else /* _GTK */
-		#ifdef _WINGUI
-			#include <windows.h>
-			#include <GL/gl.h>
-			#include <GL/glu.h>
-		#endif /* _WINGUI */
-	#endif /* _GTK */
-#endif /*  _GL */
-
-
 #define EPSILON 1e-10
 
-unsigned char *fill_linear_gradient_image (Gradient *gradient, 
-					   int width, 
-					   int height)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+unsigned char *fill_linear_gradient_image (Gradient *gradient,
+					   int width, int height)
 {
 #ifdef _GL
-  GradientStop *current_stop, *First, *Last;
+  GradientStop  *current_stop, *first, *last;
   unsigned char *p0, *pixel;
-  int     x, y;
-  double  delta_r, delta_g, delta_b, delta_a;
-  double  curr_r, curr_g, curr_b, curr_a;
-  double  grad_width;
-  int     size, int_grad_width;
+  int            x, y;
+  double         delta_r, delta_g, delta_b, delta_a;
+  double         curr_r, curr_g, curr_b, curr_a;
+  double         grad_width;
+  int            size, int_grad_width;
 
   size = 4 * width * height * sizeof (unsigned char);
   pixel = (unsigned char *)malloc (size);
   memset (pixel, 0, size);
 
-  First = gradient->firstStop;
-  if (First->length > 0)
+  first = gradient->firstStop;
+  if (first->length > 0)
     /* the first stop is not zero. Create the part of the gradient before the
        first stop */
     {
       current_stop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
       gradient->firstStop = current_stop;
-      current_stop->next = First;
+      current_stop->next = first;
       current_stop->el = NULL;
-      current_stop->r = First->r;
-      current_stop->g = First->g;
-      current_stop->b = First->b;
-      current_stop->a = First->a;
+      current_stop->r = first->r;
+      current_stop->g = first->g;
+      current_stop->b = first->b;
+      current_stop->a = first->a;
       current_stop->length = 0;
     }
-  Last = First;
-  while (Last->next)
-     Last = Last->next;
-  if (Last->length < 1)
+  last = first;
+  while (last->next)
+     last = last->next;
+  if (last->length < 1)
     /* the last stop is less than 1. Create the part of the gradient after the
        last stop */
     {
       current_stop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
-      Last->next = current_stop;
+      last->next = current_stop;
       current_stop->next = NULL;
       current_stop->el = NULL;
-      current_stop->r = Last->r;
-      current_stop->g = Last->g;
-      current_stop->b = Last->b;
-      current_stop->a = Last->a;
+      current_stop->r = last->r;
+      current_stop->g = last->g;
+      current_stop->b = last->b;
+      current_stop->a = last->a;
       current_stop->length = 1;
     }  
 
@@ -130,7 +116,7 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
 	delta_r = (current_stop->next->r - current_stop->r) / grad_width;
       else
 	delta_r = 0;
-      if (current_stop->next->g - current_stop->g)
+      if (current_stop->next->g - current_stop->g )
 	delta_g = (current_stop->next->g - current_stop->g) / grad_width;
       else
 	delta_g = 0;      
@@ -156,16 +142,20 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
 	  *p0++ = (unsigned char) curr_b;
 	  *p0++ = (unsigned char) curr_a;
 	  curr_r += delta_r;
+	  if (curr_r < 0.) curr_r = 0.;
 	  curr_g += delta_g;
+	  if (curr_g < 0.) curr_g = 0.;
 	  curr_b += delta_b;
+	  if (curr_b < 0.) curr_b = 0.;
 	  curr_a += delta_a;
+	  if (curr_a < 0.) curr_a = 0.;
 	  x++;
 	}
       current_stop = current_stop->next;
     }
   /* Fill all lines in the gradient */
   p0 = pixel;
-  width = width * 4;  
+  width = width * 4;
   for (y = 1; y < height; y++)
     {
       p0 += width;

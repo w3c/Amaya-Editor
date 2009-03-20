@@ -366,13 +366,13 @@ static int ceil_pow2_minus_1(unsigned int x)
 }
 
 /*----------------------------------------------------------------------
-  p2 :  Lowest power of two bigger than the argument.
+   GetLowerPowerLowest power of two bigger than the argument.
   ----------------------------------------------------------------------*/
-static int p2(int p)
+int GetLowerPower (int p)
 {
-  if (p ==1)
+  if (p == 1)
     return 2;
-  else if (p && p > 0)
+  else if (p > 0)
     return (ceil_pow2_minus_1((unsigned int) p) + 1);
   else
     return p;
@@ -471,7 +471,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
             img->PicShiftX = 0;
         }
       else
-        p2_w = p2 (img->PicWidth);
+        p2_w = GetLowerPower (img->PicWidth);
       if (glhard () && img->PicHeight > MAX_GL_SIZE)
         {
           // keep only a part of the image height
@@ -497,7 +497,7 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
             img->PicShiftY = 0;
         }
       else
-        p2_h = p2 (img->PicHeight);
+        p2_h = GetLowerPower (img->PicHeight);
       /* We have resized the picture to match a power of 2
          We don't want to see all the picture, just the w and h 
          portion*/
@@ -1501,56 +1501,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
     {
 #ifdef _GL
       GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
-#else /*_GL*/
-#ifdef _GTK
-      if (imageDesc->PicMask)
-        {
-          gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
-                                  yFrame - picYOrg);
-          gdk_gc_set_clip_mask (TtGraphicGC, 
-                                (ThotPixmap) imageDesc->PicMask);
-        }
-      gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-                       (ThotPixmap) imageDesc->PicPixmap, 
-                       picXOrg, picYOrg, xFrame, yFrame, w, h);
-      /*Restablish to normal clip*/
-      if (imageDesc->PicMask)
-        {
-          gdk_gc_set_clip_mask (TtGraphicGC, (ThotPixmap)None);
-          gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
-        }
-#endif /* _GTK */
-#ifdef _WINGUI
-      if (imageDesc->PicBgMask != -1 && imageDesc->PicType != -1)
-        {
-          TransparentPicture (pixmap, xFrame, yFrame,
-                              imageDesc->PicWArea, imageDesc->PicHArea,
-                              imageDesc->PicBgMask);
-        }
-      else
-        {
-          /* No color transparence */
-          /* size of the copied zone */
-          clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
-          clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
-          /* shift in the source image */
-          x = pFrame->FrClipXBegin - box->BxXOrg - l;
-          y = pFrame->FrClipYBegin - box->BxYOrg - t;
-          hMemDC = CreateCompatibleDC (TtDisplay);
-          SetMapMode (hMemDC, GetMapMode (TtDisplay));
-          GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
-          if (x > 0 && clipWidth > bm.bmWidth - x)
-            clipWidth = bm.bmWidth - x;
-          if (y > 0 && clipHeight > bm.bmHeight - y)
-            clipHeight = bm.bmHeight - y;
-          bitmap = SelectObject (hMemDC, pixmap);
-          BitBlt (TtDisplay, xFrame + x, yFrame + y,
-                  clipWidth, clipHeight, hMemDC, x, y, SRCCOPY);
-          SelectObject (hMemDC, bitmap);
-          if (hMemDC)
-            DeleteDC (hMemDC);
-        }
-#endif /* _WINGUI */
 #endif /* _GL */
     }
   else
@@ -2455,7 +2405,7 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
   ThotPictInfo *imageDesc = NULL;
 
   imageDesc = (ThotPictInfo*)malloc (sizeof (ThotPictInfo));  
-  imageDesc->PicFileName = NULL;  /*"testinggrad";*/
+  memset (imageDesc, 0, sizeof (ThotPictInfo));
   imageDesc->RGBA = TRUE;
   imageDesc->PicWidth = width;
   imageDesc->PicHeight = height;
