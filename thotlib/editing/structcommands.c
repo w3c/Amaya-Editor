@@ -3082,10 +3082,8 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
           ok = CanInsertBySplitting (&pEl, firstChar, &splitElem,
                                      &pSplitEl, &pElSplit, createAfter,
                                      typeNum, pSS, pSelDoc);
-          if (ok)
-            if (empty)
-              if (!EmptyElement (pEl))
-                empty = FALSE;
+          if (ok && empty && !EmptyElement (pEl))
+            empty = FALSE;
 
           ancestorRule = 0;
           if (!ok)
@@ -3144,7 +3142,7 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
             {
               /* demande a l'application si on peut creer ce type d'element */
               notifyEl.event = TteElemNew;
-              notifyEl.document = (Document) IdentDocument (pSelDoc);
+              notifyEl.document = doc;
               notifyEl.element = (Element) (pEl->ElParent);
               notifyEl.info = 0; /* not sent by undo */
               notifyEl.elementType.ElTypeNum = typeNum;
@@ -3168,8 +3166,11 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
           if (ok && pEl)
             {
               /* After element */
-              OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
-                                   origFirstChar, origLastChar);
+              histOpen = TtaHasUndoSequence (doc);
+              if (!histOpen)
+                OpenHistorySequence (pSelDoc, firstSel, lastSel, NULL,
+                                     origFirstChar, origLastChar);
+
               ok = !CannotInsertNearElement (pEl, FALSE);
               if (ok)
                 {
@@ -3412,7 +3413,8 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                         }
                     }
                 }
-              CloseHistorySequence (pSelDoc);
+              if (!histOpen)
+                CloseHistorySequence (pSelDoc);
             }
         }
     }
