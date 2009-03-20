@@ -2328,6 +2328,7 @@ static Gradient *NewGradient ()
   grad->x2 = 1;   /* default value = horizontal axis */
   grad->y1 = 0;
   grad->y2 = 0;
+  grad->spreadMethod = 1;  /* spreadMethod = pad by default */
   grad->el = NULL;
   grad->firstStop = NULL;
   return grad;
@@ -2415,7 +2416,7 @@ static void AddOffset (Element el, PtrElement Father, float offset)
 
 /*----------------------------------------------------------------------
   ---------------------------------------------------------------------- */
-static Gradient *GetGradientRef (PtrElement father)
+static Gradient *GetGradientDef (PtrElement father)
 {  
   Gradient *grad;
   
@@ -2432,12 +2433,12 @@ static Gradient *GetGradientRef (PtrElement father)
 /*----------------------------------------------------------------------
   TtaSetLinearx1Gradient
   ----------------------------------------------------------------------*/
-void TtaSetLinearx1Gradient (int value, Element el)
+void TtaSetLinearx1Gradient (float value, Element el)
 {
 #ifdef _GL
   Gradient *grad;
   
-  grad = GetGradientRef ((PtrElement)el);
+  grad = GetGradientDef ((PtrElement)el);
   grad->x1 = value;
 #endif /* _GL */
 }
@@ -2445,12 +2446,12 @@ void TtaSetLinearx1Gradient (int value, Element el)
 /*----------------------------------------------------------------------
   TtaSetLineary1Gradient
   ----------------------------------------------------------------------*/
-void TtaSetLineary1Gradient (int value, Element el)
+void TtaSetLineary1Gradient (float value, Element el)
 {
 #ifdef _GL
   Gradient *grad;
   
-  grad = GetGradientRef ((PtrElement)el);
+  grad = GetGradientDef ((PtrElement)el);
   grad->y1 = value;
 #endif /* _GL */
 }
@@ -2458,12 +2459,12 @@ void TtaSetLineary1Gradient (int value, Element el)
 /*----------------------------------------------------------------------
   TtaSetLinearx2Gradient
   ----------------------------------------------------------------------*/
-void TtaSetLinearx2Gradient (int value, Element el)
+void TtaSetLinearx2Gradient (float value, Element el)
 {
 #ifdef _GL
   Gradient *grad;
   
-  grad = GetGradientRef ((PtrElement)el);
+  grad = GetGradientDef ((PtrElement)el);
   grad->x2 = value;
 #endif /* _GL */
 }
@@ -2471,13 +2472,42 @@ void TtaSetLinearx2Gradient (int value, Element el)
 /*----------------------------------------------------------------------
   TtaSetLineary2Gradient
   ----------------------------------------------------------------------*/
-void TtaSetLineary2Gradient (int value, Element el)
+void TtaSetLineary2Gradient (float value, Element el)
 {
 #ifdef _GL
   Gradient *grad;
   
-  grad = GetGradientRef ((PtrElement)el);
+  grad = GetGradientDef ((PtrElement)el);
   grad->y2 = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetSpreadMethodGradient
+  value = 1: pad
+  value = 2: reflect
+  value = 3: repeat
+  ----------------------------------------------------------------------*/
+void TtaSetSpreadMethodGradient (int value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+  
+  grad = GetGradientDef ((PtrElement)el);
+  grad->spreadMethod = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaGradientCheckStops
+  ----------------------------------------------------------------------*/
+void TtaGradientCheckStops (Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+  
+  grad = GetGradientDef ((PtrElement)el);
+  /*  @@@@@@@ */
 #endif /* _GL */
 }
 

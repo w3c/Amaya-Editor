@@ -458,10 +458,12 @@ extern void *TtaCopyAnim (void *src);
    TtaSetLinearGradient
    ----------------------------------------------------------------------*/
 void TtaSetLinearGradient (Element el);
-void TtaSetLinearx1Gradient (int value, Element el);
-void TtaSetLineary1Gradient (int value, Element el);
-void TtaSetLinearx2Gradient (int value, Element el);
-void TtaSetLineary2Gradient (int value, Element el);
+void TtaSetLinearx1Gradient (float value, Element el);
+void TtaSetLineary1Gradient (float value, Element el);
+void TtaSetLinearx2Gradient (float value, Element el);
+void TtaSetLineary2Gradient (float value, Element el);
+void TtaSetSpreadMethodGradient (int value, Element el);
+void TtaGradientCheckStops (Element el);
 void TtaSetStopColorGradient (unsigned short red, unsigned short green,
 			      unsigned short blue, Element el);
 void TtaSetStopOffsetColorGradient (float offset, Element el);

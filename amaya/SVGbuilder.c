@@ -2459,6 +2459,13 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	  ProcessMarkers (el, doc);
           break;
 
+	case SVG_EL_linearGradient:
+	  /* a linearGradient element is now complete. Check all its stop
+	     children and generate additional stops based on the
+	     spreadMethod attribute */
+	  TtaGradientCheckStops (el);
+	  break;
+
         default:
           /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
              of the element, if it has not been done when creating attributes
@@ -3991,31 +3998,6 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 }
 
 /*----------------------------------------------------------------------
-  ParseIntAttrbute : 
-  Parse the value of a integer data attribute
-  ----------------------------------------------------------------------*/
-int ParseIntAttribute (Attribute attr)
-{
-  int                  length;
-  char                *text, *ptr;
-  PresentationValue    pval;
-
-  length = TtaGetTextAttributeLength (attr) + 2;
-  text = (char *)TtaGetMemory (length);
-  if (text != NULL)
-    {
-      TtaGiveTextAttributeValue (attr, text, &length);
-      /* parse the attribute value (a number followed by a unit) */
-      ptr = text;
-      ptr = (char*)TtaSkipBlanks (ptr);
-      ptr = ParseCSSUnit (ptr, &pval);
-      TtaFreeMemory (text);
-      return pval.typed_data.value;
-    }
-  return 0;
-}
-
-/*----------------------------------------------------------------------
   ParseFloatAttribute : 
   Parse the value of a float data attribute
   ----------------------------------------------------------------------*/
@@ -4083,7 +4065,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
   Attribute            intAttr;
   ElementType          elType;
   Element	       leaf;
-  int		       attrKind;
+  int		       attrKind, method;
   ThotBool	       closed;
   unsigned short       red, green, blue;
   char                 *color;
@@ -4131,28 +4113,28 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_x1:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
-        TtaSetLinearx1Gradient (ParseIntAttribute (attr), el);
+        TtaSetLinearx1Gradient (ParseNumberPercentAttribute (attr), el);
       else
         ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_y1:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
-        TtaSetLineary1Gradient (ParseIntAttribute (attr), el);
+        TtaSetLineary1Gradient (ParseNumberPercentAttribute (attr), el);
       else
         ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_x2:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
-        TtaSetLinearx2Gradient (ParseIntAttribute (attr), el);
+        TtaSetLinearx2Gradient (ParseNumberPercentAttribute (attr), el);
        else
         ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_y2:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
-        TtaSetLineary2Gradient (ParseIntAttribute (attr), el);
+        TtaSetLineary2Gradient (ParseNumberPercentAttribute (attr), el);
       else
         ParseCoordAttribute (attr, el, doc);
       break;
@@ -4192,6 +4174,11 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
                                     el, doc);
             }
         }
+      break;
+    case SVG_ATTR_spreadMethod:
+      /* parse <number> or <percentage> */
+      method = TtaGetAttributeValue (attr);
+      TtaSetSpreadMethodGradient (method, el);
       break;
     case SVG_ATTR_offset:
       /* parse <number> or <percentage> */

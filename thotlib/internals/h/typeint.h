@@ -341,7 +341,8 @@ typedef struct _GradientStop
 /* an SVG gradient */
 typedef struct _Gradient
 {
-  int                  x1, x2, y1, y2; /* coordinates for the direction of the gradient */
+  float                x1, x2, y1, y2; /* coordinates for the direction of the gradient */
+  int                  spreadMethod;  /* 1: pad, 2: reflect, 3: repeat */
   PtrElement           el;
   struct _GradientStop *firstStop;  
 } Gradient;

@@ -69,6 +69,10 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
   double         grad_width;
   int            size, int_grad_width;
 
+  if (!gradient->firstStop)
+    /* no stop means fill = none */
+    return NULL;
+
   size = 4 * width * height * sizeof (unsigned char);
   pixel = (unsigned char *)malloc (size);
   memset (pixel, 0, size);

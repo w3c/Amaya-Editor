@@ -1014,7 +1014,10 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box, int frame,
 
   gradient = (Gradient *)pAb->AbElement->ElParent->ElGradient;
   if (gradient->firstStop == NULL)
-    return FALSE;
+    {
+      pAb->AbFillPattern = 0;
+      return FALSE;
+    }
   
   /* orientation*/
   /* gradient->x2 - gradient->x1;
