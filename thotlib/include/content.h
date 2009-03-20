@@ -465,6 +465,7 @@ void TtaSetLineary2Gradient (int value, Element el);
 void TtaSetStopColorGradient (unsigned short red, unsigned short green,
 			      unsigned short blue, Element el);
 void TtaSetStopOffsetColorGradient (float offset, Element el);
+void TtaSetStopOpacityGradient (float opacity, Element el);
 void TtaLinkGradient (Element gradient, Element el);
      
 /*----------------------------------------------------------------------

@@ -2362,6 +2362,10 @@ static GradientStop *NewGradientStop (Element el, PtrElement father)
   gstop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
   gstop->el = (PtrElement)el;
   gstop->next = NULL;
+  gstop->r = 0;
+  gstop->g = 0;
+  gstop->b = 0;
+  gstop->a = 255;
   if (previous)
     previous->next = gstop;
   else
@@ -2372,7 +2376,7 @@ static GradientStop *NewGradientStop (Element el, PtrElement father)
 
 /*----------------------------------------------------------------------
   ---------------------------------------------------------------------- */
-void AddStopColor (Element el, PtrElement Father, 
+static void AddStopColor (Element el, PtrElement Father, 
                    unsigned short red, unsigned short green, unsigned short blue)
 {
 #ifdef _GL
@@ -2382,13 +2386,24 @@ void AddStopColor (Element el, PtrElement Father,
   gstop->r = red;
   gstop->g = green;
   gstop->b = blue;
-  gstop->a = 255;
 #endif /* _GL */
 }
 
 /*----------------------------------------------------------------------
   ---------------------------------------------------------------------- */
-void AddOffset (Element el, PtrElement Father, float offset)
+static void AddStopOpacity (Element el, PtrElement Father, float opacity)
+{
+#ifdef _GL
+  GradientStop *gstop;
+  
+  gstop = NewGradientStop (el, Father);
+  gstop->a = (unsigned short) (opacity * 255);
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  ---------------------------------------------------------------------- */
+static void AddOffset (Element el, PtrElement Father, float offset)
 {
 #ifdef _GL
   GradientStop *gstop;
@@ -2484,6 +2499,16 @@ void TtaSetStopOffsetColorGradient (float offset, Element el)
 {
 #ifdef _GL
   AddOffset (el, (PtrElement)(TtaGetParent (el)), offset);  
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetStopOpacityGradient
+  ----------------------------------------------------------------------*/
+void TtaSetStopOpacityGradient (float opacity, Element el)
+{
+#ifdef _GL
+  AddStopOpacity (el, (PtrElement) (TtaGetParent(el)), opacity);  
 #endif /* _GL */
 }
 

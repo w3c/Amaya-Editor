@@ -126,14 +126,6 @@ extern void TtaSplitPathSeg ( void *segment,
 extern void TtaAppendPathSeg ( Element element,
                                PathSegment segment,
                                Document document );
-extern void AddStopColor ( Element el,
-                           PtrElement Father,
-                           unsigned short red,
-                           unsigned short green,
-                           unsigned short blue );
-extern void AddOffset ( Element el,
-                        PtrElement Father,
-                        float offset );
 extern void TtaSetLinearx1Gradient ( int value,
                                      Element el );
 extern void TtaSetLineary1Gradient ( int value,
@@ -148,6 +140,8 @@ extern void TtaSetStopColorGradient ( unsigned short red,
                                       Element el );
 extern void TtaSetStopOffsetColorGradient ( float offset,
                                             Element el );
+extern void TtaSetStopOpacityGradient ( float opacity,
+                                        Element el );
 extern void TtaLinkGradient ( Element gradient,
                               Element el );
 extern ThotBool TtaDeletePointInCurve ( Document doc,
@@ -409,14 +403,6 @@ extern void TtaSplitPathSeg ( void *segment,
 extern void TtaAppendPathSeg ( Element element,
                                  PathSegment segment,
                                  Document document );
-extern void AddStopColor ( Element el,
-                             PtrElement Father,
-                             unsigned short red,
-                             unsigned short green,
-                             unsigned short blue );
-extern void AddOffset ( Element el,
-                          PtrElement Father,
-                          float offset );
 extern void TtaSetLinearx1Gradient ( int value,
                                        Element el );
 extern void TtaSetLineary1Gradient ( int value,
@@ -431,6 +417,8 @@ extern void TtaSetStopColorGradient ( unsigned short red,
                                         Element el );
 extern void TtaSetStopOffsetColorGradient ( float offset,
                                               Element el );
+extern void TtaSetStopOpacityGradient ( float opacity,
+                                          Element el );
 extern void TtaLinkGradient ( Element gradient,
                                 Element el );
 extern ThotBool TtaDeletePointInCurve ( Document doc,
