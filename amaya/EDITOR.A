@@ -425,6 +425,7 @@ FUNCTIONS
   ShowLogFile,
   CloseHelpWindow,
   CloseDocumentDialogs,
+  SetOnOffChemistry,
   CreateMIntegral,
   CreateMSum,
   CreateMOVERARROW,

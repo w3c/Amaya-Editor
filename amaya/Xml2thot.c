@@ -2449,10 +2449,10 @@ ThotBool  IsLeadingSpaceUseless (Element lastEl, Document doc,
                   prevType = TtaGetElementType (last);
                   s = TtaGetSSchemaName (prevType.ElSSchema);
                   if (strcmp (s, "HTML") ||
-                      prevType.ElTypeNum != HTML_EL_Comment_ &&
-                      prevType.ElTypeNum != HTML_EL_ASP_element &&
-                      prevType.ElTypeNum != HTML_EL_XMLPI &&
-                      prevType.ElTypeNum != HTML_EL_DOCTYPE)
+                      (prevType.ElTypeNum != HTML_EL_Comment_ &&
+		       prevType.ElTypeNum != HTML_EL_ASP_element &&
+		       prevType.ElTypeNum != HTML_EL_XMLPI &&
+		       prevType.ElTypeNum != HTML_EL_DOCTYPE))
                   // there is a previous element before
                     removeLeadingSpaces = (prevType.ElTypeNum == HTML_EL_TEXT_UNIT);
                   TtaPreviousSibling (&last);

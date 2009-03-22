@@ -44,6 +44,8 @@ extern void UnFrameMath ( void );
 extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
 extern void MathElementCreated ( NotifyElement *event );
+extern void SetOnOffChemistry ( Document document,
+                                View view );
 extern void CreateMath ( Document document,
                          View view );
 extern void CreateMROOT ( Document document,
@@ -620,6 +622,8 @@ extern void UnFrameMath ( void );
 extern void ClearMathFrame ( Document doc );
 extern void MathSelectionChanged ( NotifyElement *event );
 extern void MathElementCreated ( NotifyElement *event );
+extern void SetOnOffChemistry ( Document document,
+                                  View view );
 extern void CreateMath ( Document document,
                            View view );
 extern void CreateMROOT ( Document document,

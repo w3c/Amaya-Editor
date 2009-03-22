@@ -16,10 +16,9 @@
 
 #include "amaya.h"
 #include "undo.h"
+#include "mathedit.h"
 
 #include "fetchXMLname_f.h"
-
-enum { DEFAULT_MODE, CHEMISTRY_MODE, UNITS_MODE, LATEX_MODE};
 
 static Document parser_doc;
 static Element parser_el;
@@ -248,7 +247,6 @@ Element InsertMathElementFromText(Element theElem, Element theText,
 
     case DEFAULT_MODE:
     case UNITS_MODE:
-    case LATEX_MODE:
     default:
       break;
     }

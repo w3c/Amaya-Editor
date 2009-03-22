@@ -34,6 +34,7 @@
 #endif /* _SVG */
 #include "document.h"
 
+#include "mathedit.h"
 
 /* Global variables for dialogues */
 static int Math_occurences = 0;
@@ -69,7 +70,7 @@ static Document DocMathElementSelected = 0;
 #include "XLinkedit_f.h"
 #include "templateUtils_f.h"
 
-int CurrentMathEditMode;
+int CurrentMathEditMode = DEFAULT_MODE;
 
 /* Function name table */
 typedef char     functName[10];
@@ -3425,6 +3426,16 @@ static void CallbackMaths (int ref, int typedata, char *data)
     }
 }
 
+/*----------------------------------------------------------------------
+  SetOnOffChemistry
+  ----------------------------------------------------------------------*/
+void SetOnOffChemistry(Document document, View view)
+{
+  if(CurrentMathEditMode == CHEMISTRY_MODE)
+    CurrentMathEditMode = DEFAULT_MODE;
+  else
+    CurrentMathEditMode = CHEMISTRY_MODE;
+}
 
 /*----------------------------------------------------------------------
   CreateMath
@@ -6201,9 +6212,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   ThotBool      empty, closeUndoSeq, separate, ok, leadingSpace;
 
   /************************************************************/
-  // get the current edit mode
-  TtaGetEnvInt ("MATHEDIT_MODE", &CurrentMathEditMode);
-  if (CurrentMathEditMode > 0)
+  if (CurrentMathEditMode != DEFAULT_MODE)
     {
       TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);

@@ -1,0 +1,9 @@
+#ifndef AMAYA_MATHEDIT_H
+#define AMAYA_MATHEDIT_H
+
+enum { DEFAULT_MODE, CHEMISTRY_MODE, UNITS_MODE};
+
+#endif /* AMAYA_MATHEDIT_H */
+
+
+

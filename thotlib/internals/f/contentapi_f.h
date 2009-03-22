@@ -126,14 +126,17 @@ extern void TtaSplitPathSeg ( void *segment,
 extern void TtaAppendPathSeg ( Element element,
                                PathSegment segment,
                                Document document );
-extern void TtaSetLinearx1Gradient ( int value,
+extern void TtaSetLinearx1Gradient ( float value,
                                      Element el );
-extern void TtaSetLineary1Gradient ( int value,
+extern void TtaSetLineary1Gradient ( float value,
                                      Element el );
-extern void TtaSetLinearx2Gradient ( int value,
+extern void TtaSetLinearx2Gradient ( float value,
                                      Element el );
-extern void TtaSetLineary2Gradient ( int value,
+extern void TtaSetLineary2Gradient ( float value,
                                      Element el );
+extern void TtaSetSpreadMethodGradient ( int value,
+                                         Element el );
+extern void TtaGradientCheckStops ( Element el );
 extern void TtaSetStopColorGradient ( unsigned short red,
                                       unsigned short green,
                                       unsigned short blue,
@@ -403,14 +406,17 @@ extern void TtaSplitPathSeg ( void *segment,
 extern void TtaAppendPathSeg ( Element element,
                                  PathSegment segment,
                                  Document document );
-extern void TtaSetLinearx1Gradient ( int value,
+extern void TtaSetLinearx1Gradient ( float value,
                                        Element el );
-extern void TtaSetLineary1Gradient ( int value,
+extern void TtaSetLineary1Gradient ( float value,
                                        Element el );
-extern void TtaSetLinearx2Gradient ( int value,
+extern void TtaSetLinearx2Gradient ( float value,
                                        Element el );
-extern void TtaSetLineary2Gradient ( int value,
+extern void TtaSetLineary2Gradient ( float value,
                                        Element el );
+extern void TtaSetSpreadMethodGradient ( int value,
+                                           Element el );
+extern void TtaGradientCheckStops ( Element el );
 extern void TtaSetStopColorGradient ( unsigned short red,
                                         unsigned short green,
                                         unsigned short blue,

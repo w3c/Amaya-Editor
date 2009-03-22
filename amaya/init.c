@@ -6924,8 +6924,6 @@ void InitAmaya (NotifyEvent * event)
     }
   else
     ptr = NULL;
-  // The mathedit mode 1=chemistry 2=latex
-  TtaSetEnvInt ("MATHEDIT_MODE", 0, FALSE);
   // Table options
   TtaSetEnvInt ("TABLE_ROWS", 2, FALSE);
   TtaSetEnvInt ("TABLE_COLUMNS", 5, FALSE);

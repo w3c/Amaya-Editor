@@ -116,7 +116,6 @@ extern void *ParsePathDataAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
                                       ThotBool IsDrawn );
-extern int ParseIntAttribute ( Attribute attr );
 extern float ParseFloatAttribute ( Attribute attr );
 extern float ParseNumberPercentAttribute ( Attribute attr );
 extern void SVGAttributeComplete ( Attribute attr,
@@ -235,7 +234,6 @@ extern void *ParsePathDataAttribute ( Attribute attr,
                                         Element el,
                                         Document doc,
                                         ThotBool IsDrawn );
-extern int ParseIntAttribute ( Attribute attr );
 extern float ParseFloatAttribute ( Attribute attr );
 extern float ParseNumberPercentAttribute ( Attribute attr );
 extern void SVGAttributeComplete ( Attribute attr,
