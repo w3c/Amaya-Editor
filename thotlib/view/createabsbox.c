@@ -88,6 +88,7 @@ typedef struct _Cascade
   AllRules     AfterPseudoEl;
 } Cascade;
 
+
 typedef struct _RuleQueue
 {
   PtrPRule         queuePR[MAX_QUEUE_LEN];
@@ -96,6 +97,15 @@ typedef struct _RuleQueue
   PtrAbstractBox   queuePP[MAX_QUEUE_LEN];
   AllRules*        rulesPseudo[MAX_QUEUE_LEN];
 } RuleQueue;
+
+static  PtrPRule         PriorRuleV;
+static  PtrPSchema       PriorschemaOfRuleV;
+static  PtrAttribute     PriorattrOfRuleV;
+static  PtrAttributePres PriorattrBlockOfRuleV;  
+static  PtrPRule         PriorRuleD;
+static  PtrPSchema       PriorschemaOfRuleD;
+static  PtrAttribute     PriorattrOfRuleD;
+static  PtrAttributePres PriorattrBlockOfRuleD;  
 
 static PresRule ListItemVisibility, ListItemListStyleType, ListItemListStyleImage, ListItemListStylePosition, ListItemVertPos, ListItemHorizPos, ListItemMarginRight, ListItemMarginLeft, ListItemSize, ListItemStyle, ListItemPtWeight, ListItemVariant, ListItemFont, ListItemOpacity, ListItemDirection, ListItemBackground, ListItemForeground;
 
@@ -4167,8 +4177,46 @@ PtrPRule GetNextAttrPresRule (PtrPRule *pR, PtrSSchema pSS,
 }
 
 /*----------------------------------------------------------------------
+  CascadeVisibility
+  If rule pRule is a candidate for the cascade, register it.
+  ----------------------------------------------------------------------*/
+static void CascadeVisibility (PtrPRule pRule, PtrPSchema pSchP,
+                                PtrAttribute pAttr, PtrAttributePres pAttrBlk)
+{
+  if (pRule)
+    /* register the rule in the appropriate rule table */
+    if (pRule->PrType == PtVisibility)
+      {
+        if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
+                                   PriorRuleV,
+                                   PriorschemaOfRuleV, PriorattrBlockOfRuleV))
+          {
+            // keep the right rule
+            PriorRuleV = pRule;
+            PriorschemaOfRuleV = pSchP;      
+            PriorattrOfRuleV = pAttr;
+            PriorattrBlockOfRuleV = pAttrBlk;
+          }
+      }
+    else
+      {
+        if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
+                                   PriorRuleD,
+                                   PriorschemaOfRuleD, PriorattrBlockOfRuleD))
+          {
+            // keep the right rule
+            PriorRuleD = pRule;
+            PriorschemaOfRuleD = pSchP;      
+            PriorattrOfRuleD = pAttr;
+            PriorattrBlockOfRuleD = pAttrBlk;
+          }
+      }
+}
+
+/*----------------------------------------------------------------------
   ApplyVisibRuleAttr modifie le parametre vis selon la regle de   
-  visibilite de pAttr.                                    
+  visibilite de pAttr.
+  Compare thre priority with previous visibility and display rules
   ----------------------------------------------------------------------*/
 static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                                     PtrElement pElAttr, PtrDocument pDoc,
@@ -4179,7 +4227,6 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
   PtrPSchema          pSchP;
   PtrHandlePSchema    pHd;
   PtrAttributePres    attrBlock;
-  TypeUnit            unit;
   int                 view, valNum, match;
   ThotBool            stop, useView1, cssUndisplay = FALSE;
 
@@ -4211,6 +4258,9 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                   stop = FALSE;
                   useView1 = TRUE;
                   pRuleView1 = NULL;
+                    /* si on n'a pas trouve de regle specifique pour la vue view */
+                    /* On utilise la regle de visibilite de la vue 1 si elle
+                       existe */
                   /* cherche s'il y a une regle de visibilite pour la vue */
                   while (!stop)
                     {
@@ -4223,8 +4273,7 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                             if (view == 1)
                               stop = TRUE;
                             else
-                              /* saute les regles de visibilite suivantes
-                                 de la vue 1 */
+                              /* saute les regles de visibilite suivantes de la vue 1 */
                               while (pR->PrNextPRule &&
                                      pR->PrNextPRule->PrType == PtVisibility &&
                                      pR->PrNextPRule->PrViewNum == 1)
@@ -4236,9 +4285,9 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                               CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
                                                 pR, view, pAttr->AeAttrSSchema, pDoc))
                             {
+
                               /* regle trouvee, on l'evalue */
-                              *vis = IntegerRule (pR, pEl, viewNb, ok, &unit,
-                                                  pAttr, NULL);
+                              CascadeVisibility (pR, pSchP, pAttr, attrBlock);
                               useView1 = FALSE;
                               stop = TRUE;
                             }
@@ -4254,11 +4303,7 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                     }
 		
                   if (useView1 && pRuleView1)
-                    /* on n'a pas trouve de regle specifique pour la vue view */
-                    /* On utilise la regle de visibilite de la vue 1 si elle
-                       existe */
-                    *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit,
-                                        pAttr, NULL);
+                    CascadeVisibility (pRuleView1, pSchP, pAttr, attrBlock);
                 }
               else if (pR->PrType == PtDisplay && pR->PrBoxType == BtElement)
                 /* this is a Display rule that applies to the element itslef,
@@ -4267,12 +4312,7 @@ static ThotBool ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
                   if (pR->PrViewNum == view &&
                       CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
                                         pR, view, pAttr->AeAttrSSchema, pDoc))
-                    if (CharRule (pR, pEl, viewNb, ok) == 'N')
-                      {
-                        /* display: none */
-                        *vis = 0;
-                        cssUndisplay = TRUE;
-                      }
+                    CascadeVisibility (pR, pSchP, pAttr, attrBlock);
                 }
               pR = pR->PrNextPRule;
             }
@@ -4321,8 +4361,15 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
   InheritAttrTable   *inheritTable;
   TypeUnit            unit;
   int                 view, l;
+  char                val;
   ThotBool            ok, stop, cssUndisplay;
 
+if (!strcmp(pEl->ElLabel, "L54"))
+  printf ("ComputeVisib\n");
+ PriorRuleV = PriorRuleD = NULL;
+ PriorschemaOfRuleV = PriorschemaOfRuleD = NULL;
+ PriorattrOfRuleV = PriorattrOfRuleD = NULL;
+ PriorattrBlockOfRuleV = PriorattrBlockOfRuleD = NULL;
   *vis = 0;
   cssUndisplay = FALSE;
   /* if an ancestor is hidden (Thot Access), the element is invisible */
@@ -4334,6 +4381,7 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
       pAsc = pAsc->ElParent;
 
   /* first, look at specific presentation rules attached ot the element */
+  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
   pRule = pEl->ElFirstPRule;
   while (pRule)
     /* apply a rule if it is related to the view */
@@ -4357,26 +4405,8 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
                 else
                   pAttr = pAttr->AeNext;
             }
-          if (pRule->PrType == PtVisibility)
-            *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, pAttr, NULL);
-          if (pRule->PrType == PtDisplay && pRule->PrBoxType == BtElement)
-            /* this is a Display rule that applies to the element itslef,
-               not to a pseudo belement generated by :before or :after */
-            {
-              if (CharRule (pRule, pEl, viewNb, &ok) == 'N')
-                {
-                  if (ok)
-                    {
-                      /* rule "display: none" */
-                      *vis = 0;
-                      cssUndisplay = TRUE;
-                    }
-                }
-              else
-                ok = FALSE;
-            }
-          if (ok)
-            return cssUndisplay;
+          // keep the right rule
+          CascadeVisibility (pRule, pSP, NULL, NULL);
         }
       pRule = pRule->PrNextPRule;
     }
@@ -4385,7 +4415,6 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
   pRule = GetRule (pRSpec, pRDef, pEl, NULL, pEl->ElStructSchema, pDoc);
   /* first rule to be applied */
   /* the first rule is the visibility rule for view 1 (formatted view) */
-  *vis = 0;
   /* check all views defined in the presentation schema, to find the visibility
      rule for the view of interest */
   for (view = 1; view <= MAX_VIEW; view++)
@@ -4399,31 +4428,23 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
       if (view == viewSch && DoesViewExist (pEl, pDoc, viewNb))
         {
           /* if there is a visibility rule for this view, we take it */
+          if (pRuleV == NULL)
+            pRuleV = pRule;
           if (pRuleV)
-            *vis = IntegerRule (pRuleV, pEl, viewNb, &ok, &unit, NULL, NULL);
-          /* otherwise, we take the visibility rule for view 1 */
-          else
-            *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, NULL, NULL);
+            // keep the right rule
+            CascadeVisibility (pRuleV, pSP, NULL, NULL);
+
           /* is there a display rule with value none? */
           pRuleDisplay = GetRuleView (pRSpec, pRDef, PtDisplay, view, pEl,
                                       NULL, pEl->ElStructSchema, pDoc);
           if (pRuleDisplay && pRuleDisplay->PrBoxType == BtElement)
             /* this is a Display rule that applies to the element itslef,
                not to a pseudo element generated by :before or :after */
-            {
-              if (CharRule (pRuleDisplay, pEl, viewNb, &ok) == 'N')
-                if (ok)
-                  {
-                    /* display: none */
-                    *vis = 0;
-                    cssUndisplay = TRUE;
-                  }
-            }
+            CascadeVisibility (pRuleDisplay, pSP, NULL, NULL);
         }
     }
 
   pHd = NULL;
-  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
   while (pSP)
     {
       if (viewSch == 1 && pHd)
@@ -4443,20 +4464,7 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
                                         1, pEl->ElStructSchema, pDoc))
                     /* conditions are ok */
                     {
-                      /* consider that rule only if it has a higher priority
-                         than the rule for the same property we have already
-                         encountered */
-                      /* @@@@ */
-                      if (pRule->PrType == PtVisibility)
-                        *vis = IntegerRule (pRule, pEl, 1, &ok, &unit, NULL,
-                                            NULL);
-                      else
-                        if (CharRule (pRule, pEl, 1, &ok) == 'N' && ok)
-                          /* CSS display: none */
-                          {
-                            *vis = 0;
-                            cssUndisplay = TRUE;
-                          }
+                      CascadeVisibility (pRule, pSP, NULL, NULL);
                     }
                 }
               /* next rule for the element type in the same P schema extens. */
@@ -4464,7 +4472,7 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
             }
         }
 
-      /* do the inherited attributes change visibility? */
+      /* do the inherited attributes change visibility ? */
       if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
         {
           /* there is a possibility of inheritance */
@@ -4547,6 +4555,21 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
       cssUndisplay = ApplyVisibRuleAttr (pEl, pAttr, pEl, pDoc, vis,
                                          viewNb, &ok, FALSE);
       pAttr = pAttr->AeNext;	/* next attribute for the element */
+    }
+
+
+  // apply the selected rule
+  if (PriorRuleV)
+    *vis = IntegerRule (PriorRuleV, pEl,  PriorRuleV->PrViewNum, &ok, &unit, PriorattrOfRuleV, NULL);
+  if (PriorRuleD)
+    {
+      val = CharRule (PriorRuleD, pEl, PriorRuleD->PrViewNum, &ok);
+      if (val == 'N' && ok)
+        {
+          /* rule "display: none" */
+          *vis = 0;
+          cssUndisplay = TRUE;
+        }
     }
 
   /* if it's the root element and its visibility has not been set yet,
@@ -4974,6 +4997,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       /* get the rule to be applied for view 1 (main view) */
       pRule = GetRule (pRSpec, pRDef, pEl, NULL, pSchS, pDoc);
       if (pRule)
+        {
         /* if its a rule that creates a presentation box, apply it */
         if (!ApplCrRule (pRule, pSchS, pSchP, NULL, pAbbReturn, viewNb, pDoc,
                          pEl, forward, lqueue, queue, pNewAbbox,
@@ -4987,7 +5011,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
               else
                 pRuleView = GetRuleView (pRSpec, pRDef, pRule->PrType, view,
                                          pEl, NULL, pSchS, pDoc);
-              if (view == viewSch && pNewAbbox != NULL &&
+              if (view == viewSch && pNewAbbox &&
                   DoesViewExist (pEl, pDoc, viewNb))
                 {
                   if (pRuleView == NULL)
@@ -4995,6 +5019,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                     pRuleView = pRule;
                   /* if it's the main view, register the rule for the cascade*/
                   if (!CascRegistered (pRuleView, pSchP, NULL, NULL, casc))
+                    {
                     if (fileDescriptor)
                       DisplayPRule (pRuleView, fileDescriptor, pEl, pSchP, 0);
                     else if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc,
@@ -5002,12 +5027,14 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                       /* it's a presentation function, apply the rule now */
                       WaitingRule (pRuleView, pNewAbbox, pSchP, NULL, NULL,
                                    queue, lqueue);
+                    }
                 }
             }
+        } 
     }
   while (pRule);
 
-  if (!pNewAbbox)
+  if (pNewAbbox == NULL && fileDescriptor == NULL)
     return;
 
   /* fetch all rules that apply to any element type in all extensions of the

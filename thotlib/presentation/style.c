@@ -4300,6 +4300,9 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
         case InlineBlock:
           strcpy (buffer, "display: inlineblock");
           break;
+        case DisplayNone:
+          strcpy (buffer, "display: none");
+          break;
         default:
           break;
         }
