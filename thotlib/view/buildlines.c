@@ -2173,10 +2173,10 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   /* minimum width needed to format the line */
   if (!pBox)
     width = 0;
-  else if (variable &&
+  else if (variable /*&&
            (pBox->BxType == BoBlock ||
             pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock ||
-            pBox->BxType == BoTable))
+            pBox->BxType == BoTable)*/)
     {
       width = pBox->BxMinWidth - ml - mr;
       if (width == 0)
@@ -2382,18 +2382,33 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           else if (!newFloat)
             {
               /* not enough space: move to the first bottom */
-              if (pLine->LiYOrg < bottomL)
+              if (pLine->LiYOrg < bottomL && bottomL <= bottomR)
                 {
                   pLine->LiYOrg = bottomL;
                   pLine->LiXOrg = left + indent;
                   pLine->LiXMax += delta;
                 }
-              if (pLine->LiYOrg < bottomR)
+              else if (pLine->LiYOrg < bottomR)
                 {
                   pLine->LiYOrg = bottomR;
                   pLine->LiXMax = pBlock->BxW - pLine->LiXOrg;
                 }
-            }
+              if (pLine->LiXMax < width)
+                {
+                  // still not enough space
+                  if (pLine->LiYOrg < bottomL)
+                    {
+                      pLine->LiYOrg = bottomL;
+                      pLine->LiXOrg = left + indent;
+                      pLine->LiXMax += delta;
+                    }
+                  else if (pLine->LiYOrg < bottomR)
+                    {
+                      pLine->LiYOrg = bottomR;
+                      pLine->LiXMax = pBlock->BxW - pLine->LiXOrg;
+                    }
+                }
+             }
 
           if (newFloat)
             /* let SetFloat find the right position of this new floating box */
@@ -3291,7 +3306,8 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   PtrFloat            pfloat;
   PtrBox              box;
   PtrAbstractBox      pAb;
-  int                 y, x, x1, x2, w, ml, mr;
+  int                 y, x, x1, x2, w, minx1, minx2;
+  int                 ml, mr, pl, pr;
   int                 t = 0, b = 0, l = 0, r = 0;
   ThotBool            extensibleblock;
 
@@ -3308,7 +3324,7 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   x += l + pBlock->BxLBorder + pBlock->BxLPadding;
   if (pBlock->BxLMargin > 0)
     x += pBlock->BxLMargin;
-  x1 = x2 = 0;
+  x1 = x2 = minx1 = minx2 = 0;
   if (yAbs || !pBlock->BxYToCompute)
     y = pBlock->BxYOrg;
   else
@@ -3322,14 +3338,17 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
     {
       box = pfloat->FlBox;
       GetLeftRightMargins (box, pBlock, &ml, &mr);
+      GetLeftRightPaddings (box, pBlock, &pl, &pr);
       if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxContentWidth)
-        w = box->BxMaxWidth + ml + box->BxLBorder + box->BxLPadding + box->BxRBorder + box->BxRPadding;
-      else if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
-        w = box->BxMinWidth + ml + box->BxLBorder + box->BxLPadding + box->BxRBorder + box->BxRPadding;
+        w = box->BxMaxWidth + ml + box->BxLBorder + box->BxRBorder + pl + pr;
+      else if (/*(box->BxType == BoFloatBlock || box->BxType == BoBlock) &&*/ box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+        w = box->BxMinWidth + ml + box->BxLBorder + box->BxRBorder + pl + pr;
       else
-        w = box->BxWidth - box->BxRMargin;
-      if (box->BxRMargin < 0)
-        w += box->BxRMargin;
+        w = box->BxWidth - mr;
+      if (mr < 0)
+        w += mr;
+      if (minx1 < w)
+        minx1 = w;
       if (box->BxXOrg + w - x > x1)
         /* float change the minimum width of the block */
         x1 = box->BxXOrg + w - x;
@@ -3343,14 +3362,18 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   while (pfloat && pfloat->FlBox)
     {
       box = pfloat->FlBox;
+      GetLeftRightMargins (box, pBlock, &ml, &mr);
+      GetLeftRightPaddings (box, pBlock, &pl, &pr);
       if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxContentWidth)
-        w = box->BxMaxWidth + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
-      else if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
-        w = box->BxMinWidth + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
+        w = box->BxMaxWidth + box->BxLBorder + ml + box->BxRBorder + pl + pr;
+      else if (/*(box->BxType == BoFloatBlock || box->BxType == BoBlock) &&*/ box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+        w = box->BxMinWidth + box->BxLBorder + ml + box->BxRBorder + pl + pr;
       else
-        w = box->BxWidth - box->BxLMargin;
-      if (box->BxLMargin < 0)
-        w += box->BxLMargin;
+        w = box->BxWidth - ml;
+      if (ml < 0)
+        w += ml;
+      if (minx2 < w)
+        minx2 = w;
       if (box->BxXOrg + w > x + pBlock->BxMaxWidth + x2)
         /* float change the minimum width of the block */
         x2 = box->BxXOrg + w - x - pBlock->BxMaxWidth;
@@ -3363,10 +3386,10 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   if (updateWidth)
     {
       /* update min and max widths */
-      if (pBlock->BxMinWidth < x1)
-        pBlock->BxMinWidth = x1;
-      if (pBlock->BxMinWidth < x2)
-        pBlock->BxMinWidth = x2;
+      if (pBlock->BxMinWidth < minx1)
+        pBlock->BxMinWidth = minx1;
+      if (pBlock->BxMinWidth < minx2)
+        pBlock->BxMinWidth = minx2;
       pBlock->BxMaxWidth += x1+ x2;
     }
 
