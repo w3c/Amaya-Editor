@@ -4364,8 +4364,6 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
   char                val;
   ThotBool            ok, stop, cssUndisplay;
 
-if (!strcmp(pEl->ElLabel, "L54"))
-  printf ("ComputeVisib\n");
  PriorRuleV = PriorRuleD = NULL;
  PriorschemaOfRuleV = PriorschemaOfRuleD = NULL;
  PriorattrOfRuleV = PriorattrOfRuleD = NULL;
