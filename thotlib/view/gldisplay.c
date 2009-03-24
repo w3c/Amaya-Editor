@@ -1844,7 +1844,8 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 
   if (thick > 0 || fg >= 0)
     {
-      y += FrameTable[frame].FrTopMargin;
+      y = 0;
+      //printf ("============>Path x= %d y=%d + %d\n",x,y,ViewFrameTable[frame-1].FrYOrg);
       mesh = GetNewMesh ();
       pPa = path;
       while (pPa)

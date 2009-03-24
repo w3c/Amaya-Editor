@@ -1441,8 +1441,7 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected,
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
   int                 i, xd, yd;
-  int                 fg, bg;
-  int                 pat;
+  int                 fg, bg, pat;
   int                 style, mode, width;
 
   /* If the path does not contain any segment, return */
