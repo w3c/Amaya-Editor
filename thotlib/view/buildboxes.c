@@ -2688,7 +2688,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
       *inlineChildren = inLine;
       *inlineFloatC = inLineFloat;
     }
-  else if ((*inlineChildren || *inlineFloatC) &&
+  else if ((*inlineChildren || (*inlineFloatC && uniqueChild)) &&
            inLineFloat &&
            pAb->AbFloat == 'N' &&
            /* a sized not inline box cannot be a ghost */
