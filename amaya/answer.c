@@ -202,14 +202,17 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
     {
     case HT_MSG_RETRY_PROXY_AUTH:
     case HT_MSG_RETRY_AUTHENTICATION:
-      InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_AUTHENTICATION_CONFIRM));
+      if (!TtaTestWaitShowDialogue ())
+        // avoid to close the current authentication dialog
+        InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_AUTHENTICATION_CONFIRM));
       break;
     case HT_MSG_REDIRECTION:
       if (me)
         {
           TtaSetStatus (0, 1, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM), NULL);
-          if (!SafePut_query(me->urlName))
-	    InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
+          if (!SafePut_query(me->urlName) && !TtaTestWaitShowDialogue ())
+            // no more than one redirect confirm message
+            InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
         }
       break;
     case HT_MSG_FILE_REPLACE:
