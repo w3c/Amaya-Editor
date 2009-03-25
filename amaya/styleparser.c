@@ -5512,7 +5512,11 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
       if (!strncasecmp (cssRule, "url", 3) || !strncasecmp (cssRule, "none", 4))
         {
           if (!strncasecmp (cssRule, "none", 4))
-            repeat = TRUE;
+            {
+              repeat = TRUE;
+              ParseCSSBackgroundColor (element, tsch, ctxt, "transparent",
+                                       css, isHTML);
+            }
           cssRule = ParseCSSBackgroundImage (element, tsch, ctxt, cssRule,
                                              css, isHTML);
           img = TRUE;
