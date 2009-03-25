@@ -1093,7 +1093,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
             }
           
           /* Move also enclosed boxes */
-          if (appl || appr)
+          if ((appl || appr) && pRefAb != pAb->AbEnclosing)
             {
               pAb->AbHorizPosChange = FALSE;
               pBox->BxXToCompute = TRUE;
@@ -1157,7 +1157,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
           else
             ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);
           
-          if (appt || appb)
+          if ((appt || appb) && pRefAb != pAb->AbEnclosing)
             {
               pAb->AbVertPosChange = FALSE;
               pBox->BxYToCompute = TRUE;
