@@ -8,7 +8,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "11.1"
+  !define VERSION "11.2"
   Name "Amaya"
   OutFile "amaya-WinXP-${VERSION}.exe"
   
