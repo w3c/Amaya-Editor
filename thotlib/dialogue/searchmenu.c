@@ -202,7 +202,9 @@ void TtcSearchText (Document document, View view)
       pDocSel = pDoc;
       pFirstSel = pLastSel = pDoc->DocDocElement;
       firstChar = lastChar = 0;
-      SearchAfter = FALSE;
+      ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+      if (!ok)
+        SearchAfter = FALSE;
     }
   
   StartSearch = TRUE;
@@ -218,7 +220,10 @@ void TtcSearchText (Document document, View view)
   ReplaceDone = FALSE;
   strcpy ((char *)pPrecedentString, ""); 
   /* active le formulaire */
-  if (!SearchAfter)
+  if (SearchAfter)
+    /* new activation */
+    InitSearchDomain (2, SearchingD);
+  else
     /* new activation */
     InitSearchDomain (3, SearchingD);
   SearchingD->SDocument = pDoc;
@@ -375,7 +380,20 @@ void CallbackTextReplace (int ref, int val, char *txt)
               selectionOK = FALSE;
               StartSearch = TRUE;
             }
-          else if (firstChar == 0 && lastChar == 0 && pFirstSel == pLastSel)
+          else
+            {
+              if (SearchingD->SStartToEnd)
+                {
+                  SearchingD->SEndElement = pLastSel;
+                  SearchingD->SEndChar = lastChar;
+                }
+              else
+                {
+                  SearchingD->SStartElement = pLastSel;
+                  SearchingD->SStartChar = lastChar;
+                }
+            }
+          if (firstChar == 0 && lastChar == 0 && pFirstSel == pLastSel)
             {
               firstChar = 1;
               lastChar = pFirstSel->ElVolume + 1;
