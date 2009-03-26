@@ -2328,6 +2328,7 @@ static Gradient *NewGradient ()
   grad->x2 = 1;   /* default value = horizontal axis */
   grad->y1 = 0;
   grad->y2 = 0;
+  grad->userSpace = FALSE;
   grad->spreadMethod = 1;  /* spreadMethod = pad by default */
   grad->el = NULL;
   grad->firstStop = NULL;
@@ -2410,7 +2411,7 @@ static void AddOffset (Element el, PtrElement Father, float offset)
   GradientStop *gstop;
   
   gstop = NewGradientStop (el, Father);
-  gstop->length = offset;
+  gstop->offset = offset;
 #endif /* _GL */
 }
 
@@ -2483,6 +2484,19 @@ void TtaSetLineary2Gradient (float value, Element el)
 }
 
 /*----------------------------------------------------------------------
+  TtaSetGradientUnits
+  ----------------------------------------------------------------------*/
+void TtaSetGradientUnits (ThotBool value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+  
+  grad = GetGradientDef ((PtrElement)el);
+  grad->userSpace = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
   TtaSetSpreadMethodGradient
   value = 1: pad
   value = 2: reflect
@@ -2495,19 +2509,6 @@ void TtaSetSpreadMethodGradient (int value, Element el)
   
   grad = GetGradientDef ((PtrElement)el);
   grad->spreadMethod = value;
-#endif /* _GL */
-}
-
-/*----------------------------------------------------------------------
-  TtaGradientCheckStops
-  ----------------------------------------------------------------------*/
-void TtaGradientCheckStops (Element el)
-{
-#ifdef _GL
-  Gradient *grad;
-  
-  grad = GetGradientDef ((PtrElement)el);
-  /*  @@@@@@@ */
 #endif /* _GL */
 }
 

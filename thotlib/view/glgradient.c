@@ -56,90 +56,120 @@
 #define EPSILON 1e-10
 
 /*----------------------------------------------------------------------
+  fill_linear_gradient_image
+  width, height: size in pixels of the shape to be filled with the gradient
   ----------------------------------------------------------------------*/
 unsigned char *fill_linear_gradient_image (Gradient *gradient,
 					   int width, int height)
 {
 #ifdef _GL
-  GradientStop  *current_stop, *first, *last;
-  unsigned char *p0, *pixel;
+  GradientStop  *currentStop, *lastStop;
+  unsigned char *pixel, *pMax, *p0, *pi, *pf, *pc;
   int            x, y;
   double         delta_r, delta_g, delta_b, delta_a;
   double         curr_r, curr_g, curr_b, curr_a;
-  double         grad_width;
-  int            size, int_grad_width;
+  double         grad_width, stop_width, ratio;
+  int            length, size, len;
 
+  if (!gradient || width == 0 || height == 0)
+    return NULL;
   if (!gradient->firstStop)
     /* no stop means fill = none */
     return NULL;
 
-  size = 4 * width * height * sizeof (unsigned char);
+  /* get memory for the bit map to be built */
+  length = width * 4 * sizeof (unsigned char);  /* 4 bytes per pixel: rgba */
+  size = length * height;
   pixel = (unsigned char *)malloc (size);
   memset (pixel, 0, size);
 
-  first = gradient->firstStop;
-  if (first->length > 0)
-    /* the first stop is not zero. Create the part of the gradient before the
-       first stop */
+  /* check the gradient vector, i.e. the interval [x1, x2] */
+  grad_width = gradient->x2 - gradient->x1;
+  if (gradient->userSpace)
+    grad_width = grad_width / width;
+  if (grad_width == 0)
     {
-      current_stop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
-      gradient->firstStop = current_stop;
-      current_stop->next = first;
-      current_stop->el = NULL;
-      current_stop->r = first->r;
-      current_stop->g = first->g;
-      current_stop->b = first->b;
-      current_stop->a = first->a;
-      current_stop->length = 0;
+      if (gradient->userSpace)
+	grad_width = (width - gradient->x1) / width;
+      else
+	grad_width = 1 - gradient->x1;
     }
-  last = first;
-  while (last->next)
-     last = last->next;
-  if (last->length < 1)
-    /* the last stop is less than 1. Create the part of the gradient after the
-       last stop */
-    {
-      current_stop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
-      last->next = current_stop;
-      current_stop->next = NULL;
-      current_stop->el = NULL;
-      current_stop->r = last->r;
-      current_stop->g = last->g;
-      current_stop->b = last->b;
-      current_stop->a = last->a;
-      current_stop->length = 1;
-    }  
+  if (grad_width < 0)
+    grad_width = -grad_width;
+  if (grad_width < 1)
+    ratio = grad_width;
+  else
+    ratio = 1;
 
-  current_stop = gradient->firstStop;
-  p0 = pixel;
-  while (current_stop->next)
+  /* Create a unique line of pixels that will be copied height times */
+
+  /* pi: position in the line of the beginning of the gradient vector (x1) */
+  if (gradient->userSpace)
+    pi = pixel + (int)(gradient->x1) * 4 * sizeof (unsigned char);
+  else
+    pi = pixel + (int)(gradient->x1 * width) * 4 * sizeof (unsigned char);
+  /* pf: position in the line of the end of the gradient vector (x2) */
+  if (gradient->userSpace)
+    pf = pixel + ((int)(gradient->x2) + 1) * 4 * sizeof (unsigned char);
+  else
+    pf = pixel + ((int)(gradient->x2 * width) + 1) * 4 * sizeof (unsigned char);
+  /* pMax: position of the last pixel of the line */
+  pMax = pixel + length;
+  /* p0: current position in the line of pixels */
+  p0 = pi;
+
+  /* first fill the line between positions x1 and x2 of the gradient vector */
+
+  if (gradient->firstStop->offset > 0)
+    /* the first stop is after x1. Create the part of the gradient between
+       x1 and the first stop: same color as first stop */
     {
-      grad_width = (current_stop->next->length - current_stop->length) * width;
-      int_grad_width = (int) grad_width;
-      if (current_stop->next->r - current_stop->r)
-	delta_r = (current_stop->next->r - current_stop->r) / grad_width;
+      /* color to be used */
+      curr_r = gradient->firstStop->r;
+      curr_g = gradient->firstStop->g;
+      curr_b = gradient->firstStop->b;
+      curr_a = gradient->firstStop->a;
+      /* create pixels of that color between x1 and the first gradient stop */
+      len = (int)(gradient->firstStop->offset * ratio * width);
+      for (x = 0; x < len; x++) 
+	{
+	  *p0++ = (unsigned char) curr_r;
+	  *p0++ = (unsigned char) curr_g;
+	  *p0++ = (unsigned char) curr_b;
+	  *p0++ = (unsigned char) curr_a;
+	}
+    }
+
+  /* process all gradient stops */
+  currentStop = gradient->firstStop;
+  while (currentStop->next)
+    {
+      /* number of pixels until next stop */
+      stop_width = (currentStop->next->offset - currentStop->offset) * ratio * width;
+      len = (int) stop_width;
+      /* compute the color difference between two successive pixels */
+      if (currentStop->next->r - currentStop->r)
+	delta_r = (currentStop->next->r - currentStop->r) / stop_width;
       else
 	delta_r = 0;
-      if (current_stop->next->g - current_stop->g )
-	delta_g = (current_stop->next->g - current_stop->g) / grad_width;
+      if (currentStop->next->g - currentStop->g )
+	delta_g = (currentStop->next->g - currentStop->g) / stop_width;
       else
 	delta_g = 0;      
-      if (current_stop->next->b - current_stop->b)
-	delta_b = (current_stop->next->b - current_stop->b) / grad_width;
+      if (currentStop->next->b - currentStop->b)
+	delta_b = (currentStop->next->b - currentStop->b) / stop_width;
       else
 	delta_b = 0;      
-      if (current_stop->next->a - current_stop->a)
-	delta_a = (current_stop->next->a - current_stop->a) / grad_width;
+      if (currentStop->next->a - currentStop->a)
+	delta_a = (currentStop->next->a - currentStop->a) / stop_width;
       else 
 	delta_a = 0;      
-      x = 0;
-      curr_r = current_stop->r;
-      curr_g = current_stop->g;
-      curr_b = current_stop->b;
-      curr_a = current_stop->a;
-      /* Create a unique gradient line 
-       that will be copied height times*/
-      while (x < int_grad_width) 
+      curr_r = currentStop->r;
+      curr_g = currentStop->g;
+      curr_b = currentStop->b;
+      curr_a = currentStop->a;
+      /* Create in the line the pixels corresponding to the current stop */
+      for (x = 0; x < len; x++) 
 	{
 	  *p0++ = (unsigned char) curr_r;
 	  *p0++ = (unsigned char) curr_g;
@@ -153,11 +183,157 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
 	  if (curr_b < 0.) curr_b = 0.;
 	  curr_a += delta_a;
 	  if (curr_a < 0.) curr_a = 0.;
-	  x++;
 	}
-      current_stop = current_stop->next;
+      currentStop = currentStop->next;
     }
-  /* Fill all lines in the gradient */
+  lastStop = currentStop;
+
+  if (p0 < pf)
+    /* the last stop is before x2. Create the part of the gradient between
+       the last stop and x2: same color as last stop */
+    {
+      /* color of the last stop */
+      curr_r = lastStop->r;
+      curr_g = lastStop->g;
+      curr_b = lastStop->b;
+      curr_a = lastStop->a;
+      /* create pixels between the last gradient stop and x2 */
+      while (p0 < pf && p0 < pMax) 
+	{
+	  *p0++ = (unsigned char) curr_r;
+	  *p0++ = (unsigned char) curr_g;
+	  *p0++ = (unsigned char) curr_b;
+	  *p0++ = (unsigned char) curr_a;
+	}
+    }
+
+  /* the interval [x1, x2] is now filled in the line of pixels */
+
+  /* if the interval [x1, x2] is smaller than the interval [0, 1], fill the
+     parts outside [x1, x2] according to attribute spreadMethod */
+  /* first, fill the part before x1 */
+  if (gradient->x1 > 0)
+    {
+      if (gradient->spreadMethod == 1)
+	/* spreadMethod = pad */
+	/* fill the interval [0, x1] with the color of the first stop */
+	{
+	  /* get the color of the first stop */
+	  curr_r = gradient->firstStop->r;
+	  curr_g = gradient->firstStop->g;
+	  curr_b = gradient->firstStop->b;
+	  curr_a = gradient->firstStop->a;
+	  /* fill the beginning of the line of pixels with this color */
+	  p0 = pixel;
+	  while (p0 < pi) 
+	    {
+	      *p0++ = (unsigned char) curr_r;
+	      *p0++ = (unsigned char) curr_g;
+	      *p0++ = (unsigned char) curr_b;
+	      *p0++ = (unsigned char) curr_a;
+	    }
+	}
+      else if (gradient->spreadMethod == 2)
+	/* spreadMethod = reflect */
+	{
+	  /* start from position x1 and repeat the gradient vector down to
+	     position 0 in alternating directions */
+	  p0 = pi;  /*  x1  */
+	  while (p0 >= pixel)
+	    {
+	      /* pc: position of the pixel to be copied from the gradient
+		 vector */
+	      pc = pi;
+	      while (pc < pf && p0 >= pixel)
+		{
+		  /* copy a pixel (4 bytes: rgba) */
+	          p0[0] = pc[0];
+	          p0[1] = pc[1];
+	          p0[2] = pc[2];
+	          p0[3] = pc[3];
+		  pc += 4;
+                  p0 -= 4;
+		}
+	      /* change direction and do the next copy of the vector */
+	      pc = pf - 4;
+              p0 += 4;
+	      while (pc > pi && p0 >= pixel)
+		*p0-- = *pc--;
+	    }
+	}
+      else if (gradient->spreadMethod == 3)
+	/* spreadMethod = repeat */
+	{
+	  p0 = pi;
+	  pc = pf;
+	  while (p0 > pixel)
+	    {
+	      p0--; pc--;
+	      *p0 = *pc;
+	    }
+	}
+    }
+  /* now, fill the part after x2, if there is one */
+  if ((!gradient->userSpace && gradient->x2 < 1) ||
+      (gradient->userSpace && gradient->x2 < width))
+    {
+      if (gradient->spreadMethod == 1)
+	/* spreadMethod = pad */
+	/* fill the interval [x2, 1] with the color of the last stop */
+	{
+	  /* get the color of the last stop */
+	  curr_r = lastStop->r;
+	  curr_g = lastStop->g;
+	  curr_b = lastStop->b;
+	  curr_a = lastStop->a;
+	  /* fill the end of the line with this color */
+	  p0 = pf;
+	  while (p0 < pMax) 
+	    {
+	      *p0++ = (unsigned char) curr_r;
+	      *p0++ = (unsigned char) curr_g;
+	      *p0++ = (unsigned char) curr_b;
+	      *p0++ = (unsigned char) curr_a;
+	    }
+	}
+      else if (gradient->spreadMethod == 2)
+	/* spreadMethod = reflect */
+	{
+	  /* start from position x2 and repeat the gradient vector up to
+	     position 1 in alternating directions */
+	  p0 = pf;   /*  x2  */
+	  while (p0 < pMax)
+	    {
+	      /* pc: position of the pixel to be copied from the gradient
+		 vector */
+	      pc = pf - 4; /* end of the gradient vector */
+	      while (pc >= pi && p0 < pMax)
+		{
+		  /* copy one pixel (4 bytes: rgba) */
+	          p0[0] = pc[0];
+	          p0[1] = pc[1];
+	          p0[2] = pc[2];
+	          p0[3] = pc[3];
+		  pc -= 4;
+                  p0 += 4;
+		}
+	      /* change direction and do the next copy of the vector */
+	      pc = pi;
+	      while (pc < pf && p0 < pMax)
+		*p0++ = *pc++;
+	    }
+	}
+      else if (gradient->spreadMethod == 3)
+	/* spreadMethod = repeat */
+	{
+	  p0 = pf;
+	  pc = pi;
+	  while (p0 < pMax)
+	    *p0++ = *pc++;
+	}
+    }
+
+  /* Fill all lines in the gradient with a copy of the line we have just filled */
   p0 = pixel;
   width = width * 4;
   for (y = 1; y < height; y++)
@@ -171,4 +347,7 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
   return NULL; 
 #endif/*  _GL */
 } 
+
+
+
 

@@ -2459,13 +2459,6 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	  ProcessMarkers (el, doc);
           break;
 
-	case SVG_EL_linearGradient:
-	  /* a linearGradient element is now complete. Check all its stop
-	     children and generate additional stops based on the
-	     spreadMethod attribute */
-	  TtaGradientCheckStops (el);
-	  break;
-
         default:
           /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
              of the element, if it has not been done when creating attributes
@@ -4065,7 +4058,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
   Attribute            intAttr;
   ElementType          elType;
   Element	       leaf;
-  int		       attrKind, method;
+  int		       attrKind, method, value;
   ThotBool	       closed;
   unsigned short       red, green, blue;
   char                 *color;
@@ -4176,9 +4169,18 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
         }
       break;
     case SVG_ATTR_spreadMethod:
-      /* parse <number> or <percentage> */
+      /* get the value of attribute spreadMethod */
       method = TtaGetAttributeValue (attr);
       TtaSetSpreadMethodGradient (method, el);
+      break;
+    case SVG_ATTR_gradientUnits:
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == SVG_EL_linearGradient)
+	{
+	  /* get the value of attribute gradientUnits */
+	  value = TtaGetAttributeValue (attr);
+	  TtaSetGradientUnits ((value == SVG_ATTR_gradientUnits_VAL_userSpaceOnUse), el);
+	}
       break;
     case SVG_ATTR_offset:
       /* parse <number> or <percentage> */

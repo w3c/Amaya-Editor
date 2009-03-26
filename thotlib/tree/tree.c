@@ -3330,6 +3330,8 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		       pEl->ElGradient->x2 = pSource->ElGradient->x2;
 		       pEl->ElGradient->y1 = pSource->ElGradient->y1;
 		       pEl->ElGradient->y2 = pSource->ElGradient->y2;
+		       pEl->ElGradient->userSpace = pSource->ElGradient->userSpace;
+		       pEl->ElGradient->spreadMethod = pSource->ElGradient->spreadMethod;
 		       pEl->ElGradient->el = pEl;
 		       pEl->ElGradient->firstStop = NULL;
 		       prev = NULL;
@@ -3345,7 +3347,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 			   gStopCopy->g = gStop->g;
 			   gStopCopy->b = gStop->b;
 			   gStopCopy->a = gStop->a;
-			   gStopCopy->length = gStop->length;
+			   gStopCopy->offset = gStop->offset;
 			   gStopCopy->el = NULL;
 			   gStopCopy->next = NULL;
 			   prev = gStopCopy;

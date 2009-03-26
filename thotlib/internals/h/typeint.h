@@ -333,7 +333,7 @@ typedef struct _AnimPath
 typedef struct _GradientStop 
 {
   unsigned short  r, g, b, a;      /* color and alpha channel */
-  float           length;          /* length where this color starts */  
+  float           offset;          /* offset where this color starts */  
   PtrElement      el;              /* reference to the stop element */  
   struct _GradientStop *next;      /* next stop for the same gradient */
 } GradientStop;
@@ -342,6 +342,8 @@ typedef struct _GradientStop
 typedef struct _Gradient
 {
   float                x1, x2, y1, y2; /* coordinates for the direction of the gradient */
+  ThotBool             userSpace;     /* units for coordinates are in the user
+					 space on use */
   int                  spreadMethod;  /* 1: pad, 2: reflect, 3: repeat */
   PtrElement           el;
   struct _GradientStop *firstStop;  
