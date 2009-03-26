@@ -134,9 +134,10 @@ extern void TtaSetLinearx2Gradient ( float value,
                                      Element el );
 extern void TtaSetLineary2Gradient ( float value,
                                      Element el );
+extern void TtaSetGradientUnits ( ThotBool value,
+                                  Element el );
 extern void TtaSetSpreadMethodGradient ( int value,
                                          Element el );
-extern void TtaGradientCheckStops ( Element el );
 extern void TtaSetStopColorGradient ( unsigned short red,
                                       unsigned short green,
                                       unsigned short blue,
@@ -414,9 +415,10 @@ extern void TtaSetLinearx2Gradient ( float value,
                                        Element el );
 extern void TtaSetLineary2Gradient ( float value,
                                        Element el );
+extern void TtaSetGradientUnits ( ThotBool value,
+                                    Element el );
 extern void TtaSetSpreadMethodGradient ( int value,
                                            Element el );
-extern void TtaGradientCheckStops ( Element el );
 extern void TtaSetStopColorGradient ( unsigned short red,
                                         unsigned short green,
                                         unsigned short blue,

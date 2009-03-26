@@ -193,6 +193,31 @@ static void SetAttributeOnRoot (Element el, int att, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  ParseFloatAttribute : 
+  Parse the value of a float data attribute
+  ----------------------------------------------------------------------*/
+static float ParseFloatAttribute (Attribute attr)
+{
+  int                  length;
+  char                *text, *ptr;
+  PresentationValue    pval;
+
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = (char *)TtaGetMemory (length);
+  if (text != NULL)
+    {
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value (just a number) */
+      ptr = text;
+      ptr = (char*)TtaSkipBlanks (ptr);
+      ptr = ParseClampedUnit (ptr, &pval);
+      TtaFreeMemory (text);
+      return (float) pval.typed_data.value/1000;
+    }
+  return 0;
+}
+
+/*----------------------------------------------------------------------
   ParseCSSequivAttribute
   Create or update a specific presentation rule for element el that reflects
   the value of attribute attr, which is equivalent to a CSS property (fill,
@@ -3991,31 +4016,6 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 }
 
 /*----------------------------------------------------------------------
-  ParseFloatAttribute : 
-  Parse the value of a float data attribute
-  ----------------------------------------------------------------------*/
-float ParseFloatAttribute (Attribute attr)
-{
-  int                  length;
-  char                *text, *ptr;
-  PresentationValue    pval;
-
-  length = TtaGetTextAttributeLength (attr) + 2;
-  text = (char *)TtaGetMemory (length);
-  if (text != NULL)
-    {
-      TtaGiveTextAttributeValue (attr, text, &length);
-      /* parse the attribute value (just a number) */
-      ptr = text;
-      ptr = (char*)TtaSkipBlanks (ptr);
-      ptr = ParseClampedUnit (ptr, &pval);
-      TtaFreeMemory (text);
-      return (float) pval.typed_data.value/1000;
-    }
-  return 0;
-}
-
-/*----------------------------------------------------------------------
   ParseNumberPercentAttribute : 
   Parse the value of a <number> or <percentage> attribute
   ----------------------------------------------------------------------*/
@@ -4055,11 +4055,11 @@ float ParseNumberPercentAttribute (Attribute attr)
 void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 {
   AttributeType	       attrType, attrType1;
-  Attribute            intAttr;
+  Attribute            intAttr, attr1;
   ElementType          elType;
-  Element	       leaf;
+  Element	       leaf, ancestor;
   int		       attrKind, method, value;
-  ThotBool	       closed;
+  ThotBool	       closed, found;
   unsigned short       red, green, blue;
   char                 *color;
   float                offset, opacity;
@@ -4175,7 +4175,8 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       break;
     case SVG_ATTR_gradientUnits:
       elType = TtaGetElementType (el);
-      if (elType.ElTypeNum == SVG_EL_linearGradient)
+      if (elType.ElTypeNum == SVG_EL_linearGradient ||
+	  elType.ElTypeNum == SVG_EL_radialGradient)
 	{
 	  /* get the value of attribute gradientUnits */
 	  value = TtaGetAttributeValue (attr);
@@ -4188,14 +4189,78 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       TtaSetStopOffsetColorGradient (offset, el);
       break;
     case SVG_ATTR_stop_color:
-      color = get_char_attribute_from_el (el, attrType.AttrTypeNum);
-      TtaGiveRGB (color, &red, &green, &blue);
-      TtaFreeMemory (color);
-      TtaSetStopColorGradient (red, green, blue, el);
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == SVG_EL_stop)
+	{
+	  color = get_char_attribute_from_el (el, attrType.AttrTypeNum);
+	  if (!strncmp (color, "inherit", 7) ||
+	      !strncmp (color, "currentColor", 12))
+	    {
+	      if (!strncmp (color, "currentColor", 12))
+		/* check attribute color on an ancestor */
+		attrType.AttrTypeNum = SVG_ATTR_color;
+	      TtaFreeMemory (color);
+	      color = NULL;
+	      /* is there a stop-color attribute on an ancestor? */
+	      ancestor = TtaGetParent (el);
+	      found = FALSE;
+	      while (ancestor && !found)
+		{
+		  attr1 = TtaGetAttribute (ancestor, attrType);
+		  if (attr1)
+		    /* this ancestor has an attribute stop-color */
+		    {
+		      color = get_char_attribute_from_el (ancestor, attrType.AttrTypeNum);
+		      if (strncmp (color, "inherit", 7))
+			found = TRUE;
+		      else
+			{
+			  TtaFreeMemory (color);
+			  color = NULL;
+			}
+		    }
+		  if (!found)
+		    ancestor = TtaGetParent (ancestor);
+		}
+	    }
+	  if (color)
+	    {
+	      TtaGiveRGB (color, &red, &green, &blue);
+	      TtaFreeMemory (color);
+	      TtaSetStopColorGradient (red, green, blue, el);
+	    }
+	}
       break;
     case SVG_ATTR_stop_opacity:
-      opacity = ParseFloatAttribute (attr);
-      TtaSetStopOpacityGradient (opacity, el);
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == SVG_EL_stop)
+	{
+	  attr1 = NULL;
+	  color = get_char_attribute_from_el (el, attrType.AttrTypeNum);
+	  if (strncmp (color, "inherit", 7))
+	    TtaFreeMemory (color);
+	  else
+	    {
+	      TtaFreeMemory (color);
+	      /* is there a stop-color attribute on an ancestor? */
+	      ancestor = TtaGetParent (el);
+	      found = FALSE;
+	      while (ancestor && !found)
+		{
+		  attr1 = TtaGetAttribute (ancestor, attrType);
+		  if (attr1)
+		    /* this ancestor has an attribute stop-opacity */
+		    found = TRUE;
+		  else
+		    ancestor = TtaGetParent (ancestor);
+		}
+	    }
+	  if (attr1)
+	    opacity = ParseFloatAttribute (attr1);
+	  else
+	    opacity = ParseFloatAttribute (attr);
+	  TtaSetStopOpacityGradient (opacity, el);
+	}
       break;
     case SVG_ATTR_id:
       elType = TtaGetElementType (el);
