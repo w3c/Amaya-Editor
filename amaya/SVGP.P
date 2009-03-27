@@ -76,17 +76,7 @@ DEFAULT
         HorizRef: Enclosed . HRef;
         END;
    IN Links_view
-        BEGIN
         Visibility: 0;
-        VertPos: Top = Previous . Bottom;
-        HorizPos: Left = Enclosing . Left + 1;
-        Width: Enclosed . Width;
-        Height: Enclosed . Height;
-        HorizRef: Enclosed . HRef;
-        Opacity: 100%;
-        FillOpacity: 100%;
-        StrokeOpacity: 100%;
-        END;
    END;
 
 BOXES
@@ -382,7 +372,7 @@ RULES
         IN Links_view BEGIN
                 if not within SVG BEGIN
                     Visibility: 10;
-                    VertPos: Top = Enclosing . Top;
+                    VertPos: Top = Previous . Bottom;
                     HorizPos: Left = Enclosing . Left;
                     Width: Enclosed . Width;
                     Height: Enclosed . Height;
@@ -556,7 +546,7 @@ RULES
                 Visibility: 0;
                 Width: Enclosed . Width;
                 Height: Enclosed . Height;
-                END;                
+                END;
         END;
 
    style__:
@@ -1390,7 +1380,9 @@ RULES
         IN Alternate_view
                 Visibility: 0;
         IN Links_view BEGIN
-                Visibility: 0;
+                Visibility: 7;
+                VertPos : Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left;
                 Width: Enclosed . Width;
                 Height: Enclosed . Height;
                 END;                
