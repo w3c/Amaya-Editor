@@ -9,7 +9,7 @@ THOTDIR = @top_srcdir@
 WWWDAV = @WWWDAV@
 LIBWWW_RDF_PARSER = @LIBWWW_RDF_PARSER@
 
-OBJDIRS = wxdialog
+OBJDIRS = wxdialog mathedit
 
 include ../Options
 
@@ -82,7 +82,7 @@ redland:
 	$(MAKE) -C ../redland
 
 .depends depend : ../tools/mkdep/mkdep
-	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c > .depends
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  $(VPATH)/mathedit/*.cpp > .depends
 
 #########################################################################
 #									#
@@ -220,7 +220,7 @@ AMAYA_OBJ = \
 	wxdialog/SpellCheckDlgWX.o \
 	wxdialog/SendByMailDlgWX.o \
 	wxdialog/StyleDlgWX.o \
-  wxdialog/StyleListToolPanel.o \
+	wxdialog/StyleListToolPanel.o \
 	wxdialog/TitleDlgWX.o \
 	wxdialogapi.o \
 	EDITORAPP.o \

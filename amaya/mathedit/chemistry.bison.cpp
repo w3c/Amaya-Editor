@@ -76,7 +76,7 @@
 /* Copy the first part of user declarations.  */
 
 /* Line 189 of yacc.c  */
-#line 13 "chemistry.y"
+#line 13 "chemistry.ypp"
 
 int yylex (void);
 
@@ -88,7 +88,7 @@ void yyerror(const char *s)
 
 
 /* Line 189 of yacc.c  */
-#line 92 "chemistry.bison.c"
+#line 92 "chemistry.bison.cpp"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -135,7 +135,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 23 "chemistry.y"
+#line 23 "chemistry.ypp"
 
   Element node;
   char *string;
@@ -143,7 +143,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 147 "chemistry.bison.c"
+#line 147 "chemistry.bison.cpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -155,7 +155,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 159 "chemistry.bison.c"
+#line 159 "chemistry.bison.cpp"
 
 #ifdef short
 # undef short
@@ -1091,206 +1091,206 @@ yydestruct (yymsg, yytype, yyvaluep)
       case 24: /* "chemical_compound" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1102 "chemistry.bison.c"
+#line 1102 "chemistry.bison.cpp"
 	break;
       case 25: /* "chemical_compound2" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1114 "chemistry.bison.c"
+#line 1114 "chemistry.bison.cpp"
 	break;
       case 26: /* "chemical_entity" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1126 "chemistry.bison.c"
+#line 1126 "chemistry.bison.cpp"
 	break;
       case 27: /* "chemical_entity2" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1138 "chemistry.bison.c"
+#line 1138 "chemistry.bison.cpp"
 	break;
       case 28: /* "ionic_charge" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1150 "chemistry.bison.c"
+#line 1150 "chemistry.bison.cpp"
 	break;
       case 29: /* "integer" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1162 "chemistry.bison.c"
+#line 1162 "chemistry.bison.cpp"
 	break;
       case 30: /* "atom" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1174 "chemistry.bison.c"
+#line 1174 "chemistry.bison.cpp"
 	break;
       case 31: /* "atom2" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1186 "chemistry.bison.c"
+#line 1186 "chemistry.bison.cpp"
 	break;
       case 32: /* "oxidation_number" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1198 "chemistry.bison.c"
+#line 1198 "chemistry.bison.cpp"
 	break;
       case 33: /* "bond" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1210 "chemistry.bison.c"
+#line 1210 "chemistry.bison.cpp"
 	break;
       case 34: /* "simple_bond" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1222 "chemistry.bison.c"
+#line 1222 "chemistry.bison.cpp"
 	break;
       case 35: /* "double_bond" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1234 "chemistry.bison.c"
+#line 1234 "chemistry.bison.cpp"
 	break;
       case 36: /* "triple_bond" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1246 "chemistry.bison.c"
+#line 1246 "chemistry.bison.cpp"
 	break;
       case 37: /* "quadruple_bond" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1258 "chemistry.bison.c"
+#line 1258 "chemistry.bison.cpp"
 	break;
       case 38: /* "generic_bond" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1270 "chemistry.bison.c"
+#line 1270 "chemistry.bison.cpp"
 	break;
       case 39: /* "sign" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1282 "chemistry.bison.c"
+#line 1282 "chemistry.bison.cpp"
 	break;
       case 40: /* "dot" */
 
 /* Line 1000 of yacc.c  */
-#line 63 "chemistry.y"
+#line 63 "chemistry.ypp"
 	{
   printf("Element deleted\n");
   TtaDeleteTree((yyvaluep->node), parser_doc);
  };
 
 /* Line 1000 of yacc.c  */
-#line 1294 "chemistry.bison.c"
+#line 1294 "chemistry.bison.cpp"
 	break;
 
       default:
@@ -1595,7 +1595,7 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 71 "chemistry.y"
+#line 71 "chemistry.ypp"
     {
     parser_new_el = (yyvsp[(1) - (1)].node);
   ;}
@@ -1604,21 +1604,21 @@ yyreduce:
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 77 "chemistry.y"
+#line 77 "chemistry.ypp"
     { (yyval.node) = NewMSUP(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 78 "chemistry.y"
+#line 78 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 83 "chemistry.y"
+#line 83 "chemistry.ypp"
     {
     Element leaf;
     leaf = TtaGetLastChild((yyvsp[(1) - (2)].node));
@@ -1630,7 +1630,7 @@ yyreduce:
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 91 "chemistry.y"
+#line 91 "chemistry.ypp"
     {
     (yyval.node) = NewMROW(parser_doc);
     TtaInsertFirstChild(&((yyvsp[(1) - (1)].node)), (yyval.node), parser_doc);
@@ -1640,21 +1640,21 @@ yyreduce:
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 98 "chemistry.y"
+#line 98 "chemistry.ypp"
     { (yyval.node) = NewMSUB(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 99 "chemistry.y"
+#line 99 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 101 "chemistry.y"
+#line 101 "chemistry.ypp"
     {
     (yyval.node) = NewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "[", "]");
   ;}
@@ -1663,28 +1663,28 @@ yyreduce:
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 104 "chemistry.y"
+#line 104 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 105 "chemistry.y"
+#line 105 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 109 "chemistry.y"
+#line 109 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node) ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 112 "chemistry.y"
+#line 112 "chemistry.ypp"
     {
     (yyval.node) = NewFencedExpression(parser_doc, (yyvsp[(2) - (3)].node), "(", ")");
   ;}
@@ -1693,14 +1693,14 @@ yyreduce:
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 116 "chemistry.y"
+#line 116 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(2) - (3)].node); ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 121 "chemistry.y"
+#line 121 "chemistry.ypp"
     {
     (yyval.node) = NewMROW(parser_doc);
     TtaInsertFirstChild(&((yyvsp[(1) - (2)].node)), (yyval.node), parser_doc);
@@ -1711,147 +1711,147 @@ yyreduce:
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 127 "chemistry.y"
+#line 127 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 128 "chemistry.y"
+#line 128 "chemistry.ypp"
     { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, '*'); ;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 132 "chemistry.y"
+#line 132 "chemistry.ypp"
     { (yyval.node) = NewMathElement(parser_doc, MathML_EL_MN, (yyvsp[(1) - (1)].string)); ;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 136 "chemistry.y"
+#line 136 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 137 "chemistry.y"
+#line 137 "chemistry.ypp"
     { (yyval.node) = NewMSUP(parser_doc, (yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node)); ;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 141 "chemistry.y"
+#line 141 "chemistry.ypp"
     { (yyval.node) = NewMathElement(parser_doc, MathML_EL_MI, (yyvsp[(1) - (1)].string)); ;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 145 "chemistry.y"
+#line 145 "chemistry.ypp"
     { (yyval.node) = NewMathElement(parser_doc, MathML_EL_MTEXT, (yyvsp[(1) - (1)].string)); ;}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 149 "chemistry.y"
+#line 149 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 150 "chemistry.y"
+#line 150 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 151 "chemistry.y"
+#line 151 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 152 "chemistry.y"
+#line 152 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 153 "chemistry.y"
+#line 153 "chemistry.ypp"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 156 "chemistry.y"
+#line 156 "chemistry.ypp"
     { (yyval.node) = (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, '-');;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 159 "chemistry.y"
+#line 159 "chemistry.ypp"
     { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, '=');;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 162 "chemistry.y"
+#line 162 "chemistry.ypp"
     { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x2261);;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 165 "chemistry.y"
+#line 165 "chemistry.ypp"
     { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x2263);;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 168 "chemistry.y"
+#line 168 "chemistry.ypp"
     { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x20dB); ;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 171 "chemistry.y"
+#line 171 "chemistry.ypp"
     { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, '+'); ;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 172 "chemistry.y"
+#line 172 "chemistry.ypp"
     { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x2212); ;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 176 "chemistry.y"
+#line 176 "chemistry.ypp"
     { (yyval.node) = NewSymbol(parser_doc, MathML_EL_MO, 0x00b7); ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1855 "chemistry.bison.c"
+#line 1855 "chemistry.bison.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2063,7 +2063,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 178 "chemistry.y"
+#line 178 "chemistry.ypp"
 
 
 #include "chemistry.flex.c"

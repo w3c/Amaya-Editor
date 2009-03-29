@@ -7,5 +7,7 @@
 # Chemistry mode
 MODE=chemistry
 
+#quex -i $MODE.qx --token-prefix TKN_
 flex --prefix=$MODE --outfile=$MODE.flex.c $MODE.l 
-bison --name-prefix=$MODE --output=$MODE.bison.c $MODE.y
+bison --name-prefix=$MODE --output=$MODE.bison.cpp $MODE.ypp
+

@@ -9,6 +9,7 @@
  *
  * Author: F. Wang
  */         
+#include <iostream> 
 #include <stdarg.h>
 
 #undef THOT_EXPORT
@@ -200,7 +201,7 @@ static Element NewMSUB(Document doc, Element base, Element subscript)
 }
 
 #ifndef __CEXTRACT__
-#include "mathedit/chemistry.bison.c"
+#include "mathedit/chemistry.bison.cpp"
 #endif
 
 /*----------------------------------------------------------------------
@@ -230,7 +231,8 @@ Element InsertMathElementFromText(Element theElem, Element theText,
   if(iso == NULL)
     return NULL;
 
-  printf("*********\nstring=%s\n", iso);
+  std::cout << "*********\nstring=" << iso;
+
   parser_doc = doc;
   parser_el = theElem;
   parser_new_el = NULL;

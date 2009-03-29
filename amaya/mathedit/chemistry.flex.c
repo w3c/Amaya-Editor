@@ -593,7 +593,7 @@ char *chemistrytext;
 #line 594 "chemistry.flex.c"
 
 #define INITIAL 0
-#ifndef _WINDOWS
+
 #ifndef YY_NO_UNISTD_H
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
  * down here because we want the user's section 1 to have been scanned first.
@@ -601,7 +601,6 @@ char *chemistrytext;
  */
 #include <unistd.h>
 #endif
-#endif /* _WINDOWS */
 
 #ifndef YY_EXTRA_TYPE
 #define YY_EXTRA_TYPE void *
