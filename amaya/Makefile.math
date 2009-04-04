@@ -10,7 +10,7 @@ AMAYA_MATH_OBJ= \
 	MathMLAPP.o \
 	MathMLbuilder.o \
 	Mathedit.o \
-	mathedit/Mathedit_parser.o
+	Mathedit_parser.o
 
 AMAYA_MATH_SRC= \
         MathML.h \

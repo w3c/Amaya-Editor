@@ -200,9 +200,7 @@ static Element NewMSUB(Document doc, Element base, Element subscript)
   return msub_;
 }
 
-#ifndef __CEXTRACT__
 #include "mathedit/chemistry.bison.cpp"
-#endif
 
 /*----------------------------------------------------------------------
   InsertMathElementFromText

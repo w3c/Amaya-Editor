@@ -82,7 +82,7 @@ redland:
 	$(MAKE) -C ../redland
 
 .depends depend : ../tools/mkdep/mkdep
-	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  $(VPATH)/mathedit/*.cpp > .depends
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  $(VPATH)/*.cpp > .depends
 
 #########################################################################
 #									#
