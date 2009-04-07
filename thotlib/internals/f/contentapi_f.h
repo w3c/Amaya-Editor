@@ -126,25 +126,41 @@ extern void TtaSplitPathSeg ( void *segment,
 extern void TtaAppendPathSeg ( Element element,
                                PathSegment segment,
                                Document document );
-extern void TtaSetLinearx1Gradient ( float value,
-                                     Element el );
-extern void TtaSetLineary1Gradient ( float value,
-                                     Element el );
-extern void TtaSetLinearx2Gradient ( float value,
-                                     Element el );
-extern void TtaSetLineary2Gradient ( float value,
-                                     Element el );
+extern void TtaNewGradient ( ThotBool linear,
+                             Element el );
+extern void TtaNewGradientStop ( Element stop,
+                                 Element gradient );
 extern void TtaSetGradientUnits ( ThotBool value,
                                   Element el );
-extern void TtaSetSpreadMethodGradient ( int value,
+extern void TtaAppendGradientTransform ( Element el,
+                                         void *transform );
+extern void TtaSetGradientSpreadMethod ( int value,
                                          Element el );
-extern void TtaSetStopColorGradient ( unsigned short red,
+extern void TtaSetLinearGradientx1 ( float value,
+                                     Element el );
+extern void TtaSetLinearGradienty1 ( float value,
+                                     Element el );
+extern void TtaSetLinearGradientx2 ( float value,
+                                     Element el );
+extern void TtaSetLinearGradienty2 ( float value,
+                                     Element el );
+extern void TtaSetRadialGradientRadius ( float value,
+                                         Element el );
+extern void TtaSetRadialGradientcx ( float value,
+                                     Element el );
+extern void TtaSetRadialGradientcy ( float value,
+                                     Element el );
+extern void TtaSetRadialGradientfx ( float value,
+                                     Element el );
+extern void TtaSetRadialGradientfy ( float value,
+                                     Element el );
+extern void TtaSetGradientStopOffset ( float offset,
+                                       Element el );
+extern void TtaSetGradientStopColor ( unsigned short red,
                                       unsigned short green,
                                       unsigned short blue,
                                       Element el );
-extern void TtaSetStopOffsetColorGradient ( float offset,
-                                            Element el );
-extern void TtaSetStopOpacityGradient ( float opacity,
+extern void TtaSetGradientStopOpacity ( float opacity,
                                         Element el );
 extern void TtaLinkGradient ( Element gradient,
                               Element el );
@@ -407,25 +423,41 @@ extern void TtaSplitPathSeg ( void *segment,
 extern void TtaAppendPathSeg ( Element element,
                                  PathSegment segment,
                                  Document document );
-extern void TtaSetLinearx1Gradient ( float value,
-                                       Element el );
-extern void TtaSetLineary1Gradient ( float value,
-                                       Element el );
-extern void TtaSetLinearx2Gradient ( float value,
-                                       Element el );
-extern void TtaSetLineary2Gradient ( float value,
-                                       Element el );
+extern void TtaNewGradient ( ThotBool linear,
+                               Element el );
+extern void TtaNewGradientStop ( Element stop,
+                                   Element gradient );
 extern void TtaSetGradientUnits ( ThotBool value,
                                     Element el );
-extern void TtaSetSpreadMethodGradient ( int value,
+extern void TtaAppendGradientTransform ( Element el,
+                                           void *transform );
+extern void TtaSetGradientSpreadMethod ( int value,
                                            Element el );
-extern void TtaSetStopColorGradient ( unsigned short red,
+extern void TtaSetLinearGradientx1 ( float value,
+                                       Element el );
+extern void TtaSetLinearGradienty1 ( float value,
+                                       Element el );
+extern void TtaSetLinearGradientx2 ( float value,
+                                       Element el );
+extern void TtaSetLinearGradienty2 ( float value,
+                                       Element el );
+extern void TtaSetRadialGradientRadius ( float value,
+                                           Element el );
+extern void TtaSetRadialGradientcx ( float value,
+                                       Element el );
+extern void TtaSetRadialGradientcy ( float value,
+                                       Element el );
+extern void TtaSetRadialGradientfx ( float value,
+                                       Element el );
+extern void TtaSetRadialGradientfy ( float value,
+                                       Element el );
+extern void TtaSetGradientStopOffset ( float offset,
+                                         Element el );
+extern void TtaSetGradientStopColor ( unsigned short red,
                                         unsigned short green,
                                         unsigned short blue,
                                         Element el );
-extern void TtaSetStopOffsetColorGradient ( float offset,
-                                              Element el );
-extern void TtaSetStopOpacityGradient ( float opacity,
+extern void TtaSetGradientStopOpacity ( float opacity,
                                           Element el );
 extern void TtaLinkGradient ( Element gradient,
                                 Element el );

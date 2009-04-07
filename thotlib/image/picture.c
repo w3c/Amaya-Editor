@@ -1033,7 +1033,7 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box, int frame,
   if (box->Pre_computed_Pic == NULL)
     {
       /*create the gradient pattern and put it on a texture*/
-      pattern = fill_linear_gradient_image (gradient, width, height);
+      pattern = fill_gradient_image (gradient, width, height);
       box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, width, height);
     }
     

@@ -56,10 +56,10 @@
 #define EPSILON 1e-10
 
 /*----------------------------------------------------------------------
-  fill_linear_gradient_image
+  fill_gradient_image
   width, height: size in pixels of the shape to be filled with the gradient
   ----------------------------------------------------------------------*/
-unsigned char *fill_linear_gradient_image (Gradient *gradient,
+unsigned char *fill_gradient_image (Gradient *gradient,
 					   int width, int height)
 {
 #ifdef _GL
@@ -76,6 +76,8 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
   if (!gradient->firstStop)
     /* no stop means fill = none */
     return NULL;
+  if (gradient->gradType != Linear)
+    return NULL;
 
   /* get memory for the bit map to be built */
   length = width * 4 * sizeof (unsigned char);  /* 4 bytes per pixel: rgba */
@@ -84,15 +86,15 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
   memset (pixel, 0, size);
 
   /* check the gradient vector, i.e. the interval [x1, x2] */
-  grad_width = gradient->x2 - gradient->x1;
+  grad_width = gradient->gradX2 - gradient->gradX1;
   if (gradient->userSpace)
     grad_width = grad_width / width;
   if (grad_width == 0)
     {
       if (gradient->userSpace)
-	grad_width = (width - gradient->x1) / width;
+	grad_width = (width - gradient->gradX1) / width;
       else
-	grad_width = 1 - gradient->x1;
+	grad_width = 1 - gradient->gradX1;
     }
   if (grad_width < 0)
     grad_width = -grad_width;
@@ -105,14 +107,14 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
 
   /* pi: position in the line of the beginning of the gradient vector (x1) */
   if (gradient->userSpace)
-    pi = pixel + (int)(gradient->x1) * 4 * sizeof (unsigned char);
+    pi = pixel + (int)(gradient->gradX1) * 4 * sizeof (unsigned char);
   else
-    pi = pixel + (int)(gradient->x1 * width) * 4 * sizeof (unsigned char);
+    pi = pixel + (int)(gradient->gradX1 * width) * 4 * sizeof (unsigned char);
   /* pf: position in the line of the end of the gradient vector (x2) */
   if (gradient->userSpace)
-    pf = pixel + ((int)(gradient->x2) + 1) * 4 * sizeof (unsigned char);
+    pf = pixel + ((int)(gradient->gradX2) + 1) * 4 * sizeof (unsigned char);
   else
-    pf = pixel + ((int)(gradient->x2 * width) + 1) * 4 * sizeof (unsigned char);
+    pf = pixel + ((int)(gradient->gradX2 * width) + 1) * 4 * sizeof (unsigned char);
   /* pMax: position of the last pixel of the line */
   pMax = pixel + length;
   /* p0: current position in the line of pixels */
@@ -212,7 +214,7 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
   /* if the interval [x1, x2] is smaller than the interval [0, 1], fill the
      parts outside [x1, x2] according to attribute spreadMethod */
   /* first, fill the part before x1 */
-  if (gradient->x1 > 0)
+  if (gradient->gradX1 > 0)
     {
       if (gradient->spreadMethod == 1)
 	/* spreadMethod = pad */
@@ -274,8 +276,8 @@ unsigned char *fill_linear_gradient_image (Gradient *gradient,
 	}
     }
   /* now, fill the part after x2, if there is one */
-  if ((!gradient->userSpace && gradient->x2 < 1) ||
-      (gradient->userSpace && gradient->x2 < width))
+  if ((!gradient->userSpace && gradient->gradX2 < 1) ||
+      (gradient->userSpace && gradient->gradX2 < width))
     {
       if (gradient->spreadMethod == 1)
 	/* spreadMethod = pad */

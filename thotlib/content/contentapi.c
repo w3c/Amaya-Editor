@@ -2315,173 +2315,105 @@ void TtaAppendPathSeg (Element element, PathSegment segment, Document document)
 }
 
 #ifndef NODISPLAY
-#ifdef _GL
+
 /*----------------------------------------------------------------------
-  NewGradient
-  ---------------------------------------------------------------------- */
-static Gradient *NewGradient ()
+  TtaNewGradient
+  ----------------------------------------------------------------------*/
+void TtaNewGradient (ThotBool linear, Element el)
 {
+#ifdef _GL
   Gradient *grad;
- 
+
   grad = (Gradient *)TtaGetMemory (sizeof (Gradient));
-  grad->x1 = 0;
-  grad->x2 = 1;   /* default value = horizontal axis */
-  grad->y1 = 0;
-  grad->y2 = 0;
   grad->userSpace = FALSE;
+  grad->gradTransform = NULL;
   grad->spreadMethod = 1;  /* spreadMethod = pad by default */
-  grad->el = NULL;
+  grad->el = (PtrElement)el;
+  grad->el->ElGradient = grad;
+  grad->el->ElGradientDef = TRUE;
   grad->firstStop = NULL;
-  return grad;
+  if (linear)
+    {
+      grad->gradType = Linear;
+      grad->gradX1 = 0;
+      grad->gradX2 = 1;   /* default value = horizontal axis */
+      grad->gradY1 = 0;
+      grad->gradY2 = 0;
+    }
+  else
+    {
+      grad->gradType = Radial;
+      grad->gradCx = 0;
+      grad->gradCy = 0;
+      grad->gradFx = 0;
+      grad->gradFy = 0;
+      grad->gradR = 1;
+    }
+#endif /* _GL */
 }
 
 /*----------------------------------------------------------------------
-  NewGradientStop
-  ---------------------------------------------------------------------- */
-static GradientStop *NewGradientStop (Element el, PtrElement father)
+  TtaNewGradientStop
+  ----------------------------------------------------------------------*/
+void TtaNewGradientStop (Element stop, Element gradient)
 {
-  GradientStop *previous;
-  GradientStop *gstop;
+#ifdef _GL
+  GradientStop *previous, *gstop, *newStop;
   Gradient *grad;
 
-  if (father->ElGradient == NULL)
-    {
-      father->ElGradient = NewGradient ();
-      father->ElGradient->el = father;
-      father->ElGradientDef = TRUE;
-    }
-  grad = (Gradient *) father->ElGradient;
-  
+  if (!stop || !gradient)
+    /* error */
+    return;
+  grad = ((PtrElement)gradient)->ElGradient;
+  if (!grad)
+    /* error */
+    return;
+  newStop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
+  newStop->el = (PtrElement)stop;
+  newStop->next = NULL;
+  newStop->r = 0;
+  newStop->g = 0;
+  newStop->b = 0;
+  newStop->a = 255;
+
   previous = NULL;
   gstop = grad->firstStop;
   while (gstop)
     {
-      if (gstop->el == (PtrElement)el)
-        return gstop;
       previous = gstop;
       gstop = gstop->next;
     }
-  gstop = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
-  gstop->el = (PtrElement)el;
-  gstop->next = NULL;
-  gstop->r = 0;
-  gstop->g = 0;
-  gstop->b = 0;
-  gstop->a = 255;
   if (previous)
-    previous->next = gstop;
+    previous->next = newStop;
   else
-    grad->firstStop = gstop;
-  return gstop;
-}
-#endif /*_GL*/
-
-/*----------------------------------------------------------------------
-  ---------------------------------------------------------------------- */
-static void AddStopColor (Element el, PtrElement Father, 
-                   unsigned short red, unsigned short green, unsigned short blue)
-{
-#ifdef _GL
-  GradientStop *gstop;
-  
-  gstop = NewGradientStop (el, Father);
-  gstop->r = red;
-  gstop->g = green;
-  gstop->b = blue;
+    grad->firstStop = newStop;
 #endif /* _GL */
 }
 
-/*----------------------------------------------------------------------
-  ---------------------------------------------------------------------- */
-static void AddStopOpacity (Element el, PtrElement Father, float opacity)
-{
 #ifdef _GL
-  GradientStop *gstop;
-  
-  gstop = NewGradientStop (el, Father);
-  gstop->a = (unsigned short) (opacity * 255);
-#endif /* _GL */
-}
-
 /*----------------------------------------------------------------------
-  ---------------------------------------------------------------------- */
-static void AddOffset (Element el, PtrElement Father, float offset)
+  GetGradientStop
+  ----------------------------------------------------------------------*/
+static GradientStop* GetGradientStop (PtrElement stop, PtrElement gradient)
 {
-#ifdef _GL
   GradientStop *gstop;
-  
-  gstop = NewGradientStop (el, Father);
-  gstop->offset = offset;
-#endif /* _GL */
-}
+  Gradient     *grad;
 
-/*----------------------------------------------------------------------
-  ---------------------------------------------------------------------- */
-static Gradient *GetGradientDef (PtrElement father)
-{  
-  Gradient *grad;
-  
-  if (father->ElGradient == NULL)
+  if (stop == NULL || gradient == NULL || gradient->ElGradient == NULL)
+    /* error */
+    return NULL;
+  grad = gradient->ElGradient;
+  gstop = grad->firstStop;
+  while (gstop)
     {
-      father->ElGradient = NewGradient ();
-      father->ElGradient->el = father;
-      father->ElGradientDef = TRUE;
+      if (gstop->el == stop)
+        return gstop;
+      else
+	gstop = gstop->next;
     }
-  grad = (Gradient *) father->ElGradient;
-  return grad;
+  return NULL;
 }
-
-/*----------------------------------------------------------------------
-  TtaSetLinearx1Gradient
-  ----------------------------------------------------------------------*/
-void TtaSetLinearx1Gradient (float value, Element el)
-{
-#ifdef _GL
-  Gradient *grad;
-  
-  grad = GetGradientDef ((PtrElement)el);
-  grad->x1 = value;
 #endif /* _GL */
-}
-
-/*----------------------------------------------------------------------
-  TtaSetLineary1Gradient
-  ----------------------------------------------------------------------*/
-void TtaSetLineary1Gradient (float value, Element el)
-{
-#ifdef _GL
-  Gradient *grad;
-  
-  grad = GetGradientDef ((PtrElement)el);
-  grad->y1 = value;
-#endif /* _GL */
-}
-
-/*----------------------------------------------------------------------
-  TtaSetLinearx2Gradient
-  ----------------------------------------------------------------------*/
-void TtaSetLinearx2Gradient (float value, Element el)
-{
-#ifdef _GL
-  Gradient *grad;
-  
-  grad = GetGradientDef ((PtrElement)el);
-  grad->x2 = value;
-#endif /* _GL */
-}
-
-/*----------------------------------------------------------------------
-  TtaSetLineary2Gradient
-  ----------------------------------------------------------------------*/
-void TtaSetLineary2Gradient (float value, Element el)
-{
-#ifdef _GL
-  Gradient *grad;
-  
-  grad = GetGradientDef ((PtrElement)el);
-  grad->y2 = value;
-#endif /* _GL */
-}
 
 /*----------------------------------------------------------------------
   TtaSetGradientUnits
@@ -2490,56 +2422,257 @@ void TtaSetGradientUnits (ThotBool value, Element el)
 {
 #ifdef _GL
   Gradient *grad;
-  
-  grad = GetGradientDef ((PtrElement)el);
-  grad->userSpace = value;
+
+  if (el == NULL)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad)
+    grad->userSpace = value;
 #endif /* _GL */
 }
 
 /*----------------------------------------------------------------------
-  TtaSetSpreadMethodGradient
+  TtaAppendGradientTransform
+  ----------------------------------------------------------------------*/
+void TtaAppendGradientTransform (Element el, void *transform)
+{
+#ifdef _GL
+  Gradient *grad;
+  PtrTransform       pPa, pPrevPa;
+
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && transform)
+    {
+      pPa = grad->gradTransform;
+      pPrevPa = NULL;
+      while (pPa)
+	{
+	  pPrevPa = pPa;
+	  pPa = pPa->Next;
+	}
+      if (pPrevPa == NULL)
+	grad->gradTransform = (PtrTransform) transform;
+      else
+	pPrevPa->Next = (PtrTransform) transform;
+    }
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetGradientSpreadMethod
   value = 1: pad
   value = 2: reflect
   value = 3: repeat
   ----------------------------------------------------------------------*/
-void TtaSetSpreadMethodGradient (int value, Element el)
+void TtaSetGradientSpreadMethod (int value, Element el)
 {
 #ifdef _GL
   Gradient *grad;
   
-  grad = GetGradientDef ((PtrElement)el);
-  grad->spreadMethod = value;
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad)
+    grad->spreadMethod = value;
 #endif /* _GL */
 }
 
 /*----------------------------------------------------------------------
-  TtaSetStopColorGradient
+  TtaSetLinearGradientx1
   ----------------------------------------------------------------------*/
-void TtaSetStopColorGradient (unsigned short red, unsigned short green,
+void TtaSetLinearGradientx1 (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Linear)
+    grad->gradX1 = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetLinearGradienty1
+  ----------------------------------------------------------------------*/
+void TtaSetLinearGradienty1 (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+  
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Linear)
+    grad->gradY1 = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetLinearGradientx2
+  ----------------------------------------------------------------------*/
+void TtaSetLinearGradientx2 (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Linear)
+    grad->gradX2 = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetLinearGradienty2
+  ----------------------------------------------------------------------*/
+void TtaSetLinearGradienty2 (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+  
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Linear)
+    grad->gradY2 = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetRadialGradientRadius
+  ----------------------------------------------------------------------*/
+void TtaSetRadialGradientRadius (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Radial)
+    grad->gradR = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetRadialGradientcx
+  ----------------------------------------------------------------------*/
+void TtaSetRadialGradientcx (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Radial)
+    grad->gradCx = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetRadialGradientcy
+  ----------------------------------------------------------------------*/
+void TtaSetRadialGradientcy (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Radial)
+    grad->gradCy = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetRadialGradientfx
+  ----------------------------------------------------------------------*/
+void TtaSetRadialGradientfx (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Radial)
+    grad->gradFx = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetRadialGradientfy
+  ----------------------------------------------------------------------*/
+void TtaSetRadialGradientfy (float value, Element el)
+{
+#ifdef _GL
+  Gradient *grad;
+  
+  if (!el)
+    return;
+  grad = ((PtrElement)el)->ElGradient;
+  if (grad && grad->gradType == Radial)
+    grad->gradFy = value;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetGradientStopOffset
+  ----------------------------------------------------------------------*/
+void TtaSetGradientStopOffset (float offset, Element el)
+{
+#ifdef _GL
+  GradientStop *gstop;
+  
+  if (!el)
+    return;
+  gstop = GetGradientStop ((PtrElement)el, (PtrElement)(TtaGetParent (el)));
+  if (gstop)
+    gstop->offset = offset;
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
+  TtaSetGradientStopColor
+  ----------------------------------------------------------------------*/
+void TtaSetGradientStopColor (unsigned short red, unsigned short green,
                               unsigned short blue, Element el)
 {
 #ifdef _GL
-  AddStopColor (el, (PtrElement) (TtaGetParent(el)), red, green, blue);  
+  GradientStop *gstop;
+  
+  if (!el)
+    return;
+  gstop = GetGradientStop ((PtrElement)el, (PtrElement) (TtaGetParent(el)));
+  if (gstop)
+    {
+      gstop->r = red;
+      gstop->g = green;
+      gstop->b = blue;
+    }
 #endif /* _GL */
 }
 
 /*----------------------------------------------------------------------
-  TtaSetStopOffsetColorGradient
+  TtaSetGradientStopOpacity
   ----------------------------------------------------------------------*/
-void TtaSetStopOffsetColorGradient (float offset, Element el)
+void TtaSetGradientStopOpacity (float opacity, Element el)
 {
 #ifdef _GL
-  AddOffset (el, (PtrElement)(TtaGetParent (el)), offset);  
-#endif /* _GL */
-}
-
-/*----------------------------------------------------------------------
-  TtaSetStopOpacityGradient
-  ----------------------------------------------------------------------*/
-void TtaSetStopOpacityGradient (float opacity, Element el)
-{
-#ifdef _GL
-  AddStopOpacity (el, (PtrElement) (TtaGetParent(el)), opacity);  
+  GradientStop *gstop;
+  
+  if (!el)
+    return;
+  gstop = GetGradientStop ((PtrElement)el, (PtrElement) (TtaGetParent(el)));
+  if (gstop)
+    gstop->a = (unsigned short) (opacity * 255);
 #endif /* _GL */
 }
 
@@ -2549,6 +2682,8 @@ void TtaSetStopOpacityGradient (float opacity, Element el)
 void TtaLinkGradient (Element gradient, Element el)
 {
 #ifdef _GL
+  if (!el || !gradient)
+    return;
   ((PtrElement)el)->ElGradient = ((PtrElement)gradient)->ElGradient;
   ((PtrElement)el)->ElGradientDef = FALSE;
 #endif /* _GL */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2007
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -457,17 +457,24 @@ extern void *TtaCopyAnim (void *src);
 /*----------------------------------------------------------------------
    TtaSetLinearGradient
    ----------------------------------------------------------------------*/
-void TtaSetLinearGradient (Element el);
-void TtaSetLinearx1Gradient (float value, Element el);
-void TtaSetLineary1Gradient (float value, Element el);
-void TtaSetLinearx2Gradient (float value, Element el);
-void TtaSetLineary2Gradient (float value, Element el);
+void TtaNewGradient (ThotBool linear, Element el);
+void TtaNewGradientStop (Element stop, Element gradient);
 void TtaSetGradientUnits (ThotBool value, Element el);
-void TtaSetSpreadMethodGradient (int value, Element el);
-void TtaSetStopColorGradient (unsigned short red, unsigned short green,
-			      unsigned short blue, Element el);
-void TtaSetStopOffsetColorGradient (float offset, Element el);
-void TtaSetStopOpacityGradient (float opacity, Element el);
+void TtaAppendGradientTransform (Element el, void *transform);
+void TtaSetGradientSpreadMethod (int value, Element el);
+void TtaSetLinearGradientx1 (float value, Element el);
+void TtaSetLinearGradienty1 (float value, Element el);
+void TtaSetLinearGradientx2 (float value, Element el);
+void TtaSetLinearGradienty2 (float value, Element el);
+void TtaSetRadialGradientRadius (float value, Element el);
+void TtaSetRadialGradientcx (float value, Element el);
+void TtaSetRadialGradientcy (float value, Element el);
+void TtaSetRadialGradientfx (float value, Element el);
+void TtaSetRadialGradientfy (float value, Element el);
+void TtaSetGradientStopOffset (float offset, Element el);
+void TtaSetGradientStopColor (unsigned short red, unsigned short green,
+                              unsigned short blue, Element el);
+void TtaSetGradientStopOpacity (float opacity, Element el);
 void TtaLinkGradient (Element gradient, Element el);
      
 /*----------------------------------------------------------------------

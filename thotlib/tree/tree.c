@@ -3134,7 +3134,8 @@ void CopyGradient (PtrElement pSource, PtrElement pEl)
       if (pSource->ElGradient)
 	{
 	  if (pEl->ElGradient)
-	    /* free existing gradient before making a fresh copy */
+	    /* free the existing gradient and its stops before making a
+	       fresh copy */
 	    {
 	      gStop = pEl->ElGradient->firstStop;
 	      while (gStop)
@@ -3147,11 +3148,10 @@ void CopyGradient (PtrElement pSource, PtrElement pEl)
 	    }
 	  pEl->ElGradient = (Gradient *)TtaGetMemory (sizeof (Gradient));
 	  pSource->ElGradientCopy = pEl;
-	  pEl->ElGradient->x1 = pSource->ElGradient->x1;
-	  pEl->ElGradient->x2 = pSource->ElGradient->x2;
-	  pEl->ElGradient->y1 = pSource->ElGradient->y1;
-	  pEl->ElGradient->y2 = pSource->ElGradient->y2;
 	  pEl->ElGradient->userSpace = pSource->ElGradient->userSpace;
+	  pEl->ElGradient->gradTransform = pSource->ElGradient->gradTransform;
+          if (pSource->ElGradient->gradTransform)
+            pEl->ElGradient->gradTransform = (Transform*)TtaCopyTransform (pSource->ElGradient->gradTransform);
 	  pEl->ElGradient->spreadMethod = pSource->ElGradient->spreadMethod;
 	  pEl->ElGradient->el = pEl;
 	  pEl->ElGradient->firstStop = NULL;
@@ -3173,6 +3173,22 @@ void CopyGradient (PtrElement pSource, PtrElement pEl)
 	      gStopCopy->next = NULL;
 	      prev = gStopCopy;
 	      gStop = gStop->next;
+	    }
+	  pEl->ElGradient->gradType = pSource->ElGradient->gradType;
+          if (pEl->ElGradient->gradType == Linear)
+	    {
+	      pEl->ElGradient->gradX1 = pSource->ElGradient->gradX1;
+	      pEl->ElGradient->gradX2 = pSource->ElGradient->gradX2;
+	      pEl->ElGradient->gradY1 = pSource->ElGradient->gradY1;
+	      pEl->ElGradient->gradY2 = pSource->ElGradient->gradY2;
+	    }
+          else if (pEl->ElGradient->gradType == Radial)
+	    {
+	      pEl->ElGradient->gradCx = pSource->ElGradient->gradCx;
+	      pEl->ElGradient->gradCy = pSource->ElGradient->gradCy;
+	      pEl->ElGradient->gradFx = pSource->ElGradient->gradFx;
+	      pEl->ElGradient->gradFy = pSource->ElGradient->gradFy;
+	      pEl->ElGradient->gradR = pSource->ElGradient->gradR;
 	    }
 	}
     }

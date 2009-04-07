@@ -6,15 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char *fill_linear_gradient_image ( Gradient *gradient,
-                                                   int width,
-                                                   int height );
+extern unsigned char *fill_gradient_image ( Gradient *gradient,
+                                            int width,
+                                            int height );
 
 #else /* __STDC__ */
 
-extern unsigned char *fill_linear_gradient_image ( Gradient *gradient,
-                                                     int width,
-                                                     int height );
+extern unsigned char *fill_gradient_image ( Gradient *gradient,
+                                              int width,
+                                              int height );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

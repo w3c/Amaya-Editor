@@ -403,7 +403,7 @@ static void    InitXmlParserContexts (void)
   ctxt->MapAttribute = (Proc) MapSVGAttribute;
   ctxt->MapAttributeValue = (Proc) MapSVGAttributeValue;
   ctxt->CheckContext = (Proc) XmlCheckContext;
-  ctxt->CheckInsert = (Proc) XmlCheckInsert;
+  ctxt->CheckInsert = (Proc) SVGCheckInsert;
   ctxt->ElementCreated =  (Proc) SVGElementCreated;
   ctxt->ElementComplete = (Proc) SVGElementComplete;
   ctxt->AttributeComplete = (Proc) SVGAttributeComplete;
@@ -1204,7 +1204,7 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
 
 /*---------------------------------------------------------------------------
   InsertXmlElement   
-  Inserts an element el in the Thot abstract tree , at the current position.
+  Inserts an element el in the Thot abstract tree at the current position.
   ---------------------------------------------------------------------------*/
 void InsertXmlElement (Element *el)
 {

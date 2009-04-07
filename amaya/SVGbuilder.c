@@ -660,9 +660,7 @@ static void ParseGradientRadius (Attribute attr, Element el)
       if (pval.typed_data.unit == UNIT_BOX)
 	pval.typed_data.unit = UNIT_PX;
       if (pval.typed_data.unit != UNIT_INVALID)
-	{
-	  /* @@@@@@@ */
-	}
+	TtaSetRadialGradientRadius (pval.typed_data.value, el);
     }
 }
 
@@ -671,7 +669,7 @@ static void ParseGradientRadius (Attribute attr, Element el)
   Parse and process attributes cx, cy, fx, fy (attr) for a radialGradient
   element (el)
   ----------------------------------------------------------------------*/
-static void ParseGradientCoordinate (Attribute attr, Element el)
+static void ParseGradientCoordinate (Attribute attr, Element el, int at)
 {
   int                  length;
   char                *text, *ptr;
@@ -691,8 +689,22 @@ static void ParseGradientCoordinate (Attribute attr, Element el)
       if (pval.typed_data.unit == UNIT_BOX)
         pval.typed_data.unit = UNIT_PX;
       if (pval.typed_data.unit != UNIT_INVALID)
-        {
-	  /* @@@@@ */
+	{
+	  switch (at)
+	    {
+	    case SVG_ATTR_cx:
+	      TtaSetRadialGradientcx (pval.typed_data.value, el);
+	      break;
+	    case SVG_ATTR_cy:
+	      TtaSetRadialGradientcy (pval.typed_data.value, el);
+	      break;
+	    case SVG_ATTR_fx:
+	      TtaSetRadialGradientfx (pval.typed_data.value, el);
+	      break;
+	    case SVG_ATTR_fy:
+	      TtaSetRadialGradientfy (pval.typed_data.value, el);
+	      break;
+	    }
 	}
     }
 }
@@ -806,19 +818,19 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
 		switch (attrType.AttrTypeNum)
 		  {
 		  case SVG_ATTR_x1:
-		    TtaSetLinearx1Gradient (ParseNumberPercentAttribute (attr), el);
+		    TtaSetLinearGradientx1 (ParseNumberPercentAttribute (attr), el);
 		    break;
 		  case SVG_ATTR_y1:
-		    TtaSetLineary1Gradient (ParseNumberPercentAttribute (attr), el);
+		    TtaSetLinearGradienty1 (ParseNumberPercentAttribute (attr), el);
 		    break;
 		  case SVG_ATTR_x2:
-		    TtaSetLinearx2Gradient (ParseNumberPercentAttribute (attr), el);
+		    TtaSetLinearGradientx2 (ParseNumberPercentAttribute (attr), el);
 		    break;
 		  case SVG_ATTR_y2:
-		    TtaSetLineary2Gradient (ParseNumberPercentAttribute (attr), el);
+		    TtaSetLinearGradienty2 (ParseNumberPercentAttribute (attr), el);
 		    break;
 		  case SVG_ATTR_spreadMethod:
-		    TtaSetSpreadMethodGradient (TtaGetAttributeValue (attr), el);
+		    TtaSetGradientSpreadMethod (TtaGetAttributeValue (attr), el);
 		    break;
 		  case SVG_ATTR_gradientUnits:
 		    TtaSetGradientUnits ((TtaGetAttributeValue (attr) == SVG_ATTR_gradientUnits_VAL_userSpaceOnUse), el);
@@ -833,7 +845,7 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
 		  case SVG_ATTR_cy:
 		  case SVG_ATTR_fx:
 		  case SVG_ATTR_fy:
-		    ParseGradientCoordinate (attr, el);
+		    ParseGradientCoordinate (attr, el, attrType.AttrTypeNum);
 		    break;
 		  }
 	      TtaNextAttribute (el, &attr);
@@ -2360,7 +2372,27 @@ void GraphicLeafComplete(Document doc, Element el)
 	  UpdatePointsOrPathAttribute(doc, el, w, h, FALSE);
 	}
     }
+}
 
+/*----------------------------------------------------------------------
+  SVGCheckInsert
+  The XML parser has just created an element in the SVG namespace, before
+  parsing any of its attribute.
+  ----------------------------------------------------------------------*/
+void SVGCheckInsert (Element *el, Element parent,
+		     Document doc, ThotBool *inserted)
+{
+  ElementType  elType;
+
+  elType = TtaGetElementType (*el);
+  if (elType.ElTypeNum == SVG_EL_linearGradient)
+    TtaNewGradient (TRUE, *el);
+  else if (elType.ElTypeNum == SVG_EL_radialGradient)
+    TtaNewGradient (FALSE, *el);
+  else if (elType.ElTypeNum == SVG_EL_stop)
+    TtaNewGradientStop (*el, parent);
+  *inserted = FALSE;
+  return;
 }
 
 /*----------------------------------------------------------------------
@@ -3331,11 +3363,6 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
   PresentationContext  ctxt;
 #endif /* _GL */
 
-  if (gradient)
-    {
-      /* something has to be done to handle attribute gradientTransform @@@@@ */
-      return;
-    }
   length = TtaGetTextAttributeLength (attr) + 2;
   text = (char *)TtaGetMemory (length);
   if (text)
@@ -3396,10 +3423,14 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaAppendTransform (el, 
-                                           TtaNewTransformMatrix (a, b, c,
-                                                                  d, e, f),
-                                           doc);
+		      if (gradient)
+			TtaAppendGradientTransform (el, 
+				     TtaNewTransformMatrix (a, b, c, d, e, f));
+		      else
+			TtaAppendTransform (el, 
+					    TtaNewTransformMatrix (a, b, c,
+								   d, e, f),
+					    doc);
 #else /* _GL */
                       pval.typed_data.value = 0;
                       pval.typed_data.unit = UNIT_PX;
@@ -3466,7 +3497,12 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                   else
                     error = TRUE;
 #ifdef _GL
-                  TtaAppendTransform (el, TtaNewTransformTranslate (x, y), doc);
+		  if (gradient)
+                    TtaAppendGradientTransform (el,
+					      TtaNewTransformTranslate (x, y));
+		  else
+                    TtaAppendTransform (el, TtaNewTransformTranslate (x, y),
+					doc);
 #else /* _GL */
                   pval.typed_data.value = (int)y;
                   TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
@@ -3500,9 +3536,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaAppendTransform (el, 
-                                           TtaNewTransformScale (scaleX, 
-                                                                 scaleY),
+		      if (gradient)
+                        TtaAppendGradientTransform (el, 
+                                        TtaNewTransformScale (scaleX, scaleY));
+		      else
+                       TtaAppendTransform (el, 
+					   TtaNewTransformScale (scaleX, 
+								 scaleY),
                                            doc);
 #endif /* _GL */
                     }
@@ -3545,9 +3585,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaAppendTransform (el, 
-                                           TtaNewTransformRotate (angle, x, y),
-                                           doc);
+		      if (gradient)
+			TtaAppendGradientTransform (el, 
+					 TtaNewTransformRotate (angle, x, y));
+		      else
+			TtaAppendTransform (el, 
+					    TtaNewTransformRotate (angle, x, y),
+					    doc);
 #endif /* _GL */
                     }
                   else
@@ -3569,9 +3613,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaAppendTransform (el, 
-                                           TtaNewTransformSkewX (x),
-                                           doc);
+		      if (gradient)
+			TtaAppendGradientTransform (el, 
+						    TtaNewTransformSkewX (x));
+		      else
+			TtaAppendTransform (el, 
+					    TtaNewTransformSkewX (x),
+					    doc);
 #endif /* _GL */
                     }
                   else
@@ -3593,9 +3641,13 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
                     {
                       ptr++;
 #ifdef _GL
-                      TtaAppendTransform (el, 
-                                           TtaNewTransformSkewY (y),
-                                           doc);
+		      if (gradient)
+			TtaAppendGradientTransform (el, 
+						    TtaNewTransformSkewY (y));
+		      else
+			TtaAppendTransform (el, 
+					    TtaNewTransformSkewY (y),
+					    doc);
 #endif /* _GL */
                     }
                   else
@@ -4237,7 +4289,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_fy:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_radialGradient)
-	ParseGradientCoordinate (attr, el);
+	ParseGradientCoordinate (attr, el, attrType.AttrTypeNum);
       else
 	ParseCoordAttribute (attr, el, doc);
       break;
@@ -4245,28 +4297,28 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_x1:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
-        TtaSetLinearx1Gradient (ParseNumberPercentAttribute (attr), el);
+        TtaSetLinearGradientx1 (ParseNumberPercentAttribute (attr), el);
       else
         ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_y1:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
-        TtaSetLineary1Gradient (ParseNumberPercentAttribute (attr), el);
+        TtaSetLinearGradienty1 (ParseNumberPercentAttribute (attr), el);
       else
         ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_x2:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
-        TtaSetLinearx2Gradient (ParseNumberPercentAttribute (attr), el);
+        TtaSetLinearGradientx2 (ParseNumberPercentAttribute (attr), el);
        else
         ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_y2:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
-        TtaSetLineary2Gradient (ParseNumberPercentAttribute (attr), el);
+        TtaSetLinearGradienty2 (ParseNumberPercentAttribute (attr), el);
       else
         ParseCoordAttribute (attr, el, doc);
       break;
@@ -4310,7 +4362,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_spreadMethod:
       /* get the value of attribute spreadMethod */
       method = TtaGetAttributeValue (attr);
-      TtaSetSpreadMethodGradient (method, el);
+      TtaSetGradientSpreadMethod (method, el);
       break;
     case SVG_ATTR_gradientUnits:
       elType = TtaGetElementType (el);
@@ -4328,7 +4380,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_offset:
       /* parse <number> or <percentage> */
       offset = ParseNumberPercentAttribute (attr);
-      TtaSetStopOffsetColorGradient (offset, el);
+      TtaSetGradientStopOffset (offset, el);
       break;
     case SVG_ATTR_stop_color:
       elType = TtaGetElementType (el);
@@ -4369,7 +4421,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	    {
 	      TtaGiveRGB (color, &red, &green, &blue);
 	      TtaFreeMemory (color);
-	      TtaSetStopColorGradient (red, green, blue, el);
+	      TtaSetGradientStopColor (red, green, blue, el);
 	    }
 	}
       break;
@@ -4401,7 +4453,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	    opacity = ParseFloatAttribute (attr1);
 	  else
 	    opacity = ParseFloatAttribute (attr);
-	  TtaSetStopOpacityGradient (opacity, el);
+	  TtaSetGradientStopOpacity (opacity, el);
 	}
       break;
     case SVG_ATTR_id:
