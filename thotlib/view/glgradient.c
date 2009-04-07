@@ -55,14 +55,14 @@
 
 #define EPSILON 1e-10
 
+#ifdef _GL
 /*----------------------------------------------------------------------
-  fill_gradient_image
+  fill_linear_gradient_image
   width, height: size in pixels of the shape to be filled with the gradient
   ----------------------------------------------------------------------*/
-unsigned char *fill_gradient_image (Gradient *gradient,
-					   int width, int height)
+static unsigned char *fill_linear_gradient_image (Gradient *gradient,
+						  int width, int height)
 {
-#ifdef _GL
   GradientStop  *currentStop, *lastStop;
   unsigned char *pixel, *pMax, *p0, *pi, *pf, *pc;
   int            x, y;
@@ -79,7 +79,7 @@ unsigned char *fill_gradient_image (Gradient *gradient,
   if (gradient->gradType != Linear)
     return NULL;
 
-  /* get memory for the bit map to be built */
+  /* Get memory for the bit map to be built */
   length = width * 4 * sizeof (unsigned char);  /* 4 bytes per pixel: rgba */
   size = length * height;
   pixel = (unsigned char *)malloc (size);
@@ -344,10 +344,288 @@ unsigned char *fill_gradient_image (Gradient *gradient,
       memcpy (p0, pixel, width);
     }
 
-  return pixel; 
-#else
-  return NULL; 
+  return pixel;
+}
+
+/*----------------------------------------------------------------------
+  fill_radial_gradient_image
+  width, height: size in pixels of the shape to be filled with the gradient
+  ----------------------------------------------------------------------*/
+static unsigned char *fill_radial_gradient_image (Gradient *gradient,
+						  int width, int height)
+{
+  GradientStop  *currentStop, *lastStop;
+  int            beamLength, bxPix, byPix, len, diagonal, x, y,
+                 length, size, cxPix, cyPix, dist, dx, dy;
+  double         cx, cy, r, bx, by;
+  double         delta_r, delta_g, delta_b, delta_a;
+  double         curr_r, curr_g, curr_b, curr_a;
+  double         stop_width;
+  unsigned char  *beam, *pixel, *pMax, *pf, *p0, *beamPix, *pc;
+
+  if (!gradient || width == 0 || height == 0)
+    return NULL;
+  if (!gradient->firstStop)
+    /* no stop means fill = none */
+    return NULL;
+  if (gradient->gradType != Radial)
+    return NULL;
+
+  if (gradient->gradR == 0)
+    /* zero causes the area to be painted as a single color using the color
+       and opacity of the last gradient stop */
+    {
+      /* Get memory for the bit map to be built */
+      length = width * 4 * sizeof (unsigned char); /* 4 bytes per pixel: rgba */
+      size = length * height;
+      pixel = (unsigned char *)malloc (size);
+      memset (pixel, 0, size);
+      /* get the last stop */
+      currentStop = gradient->firstStop;
+      while (currentStop->next)
+	currentStop = currentStop->next;
+      /* get its color and opacity */
+      curr_r = currentStop->r;
+      curr_g = currentStop->g;
+      curr_b = currentStop->b;
+      curr_a = currentStop->a;
+      /* fill the map with that color */
+      x = 0; y = 0; p0 = pixel;
+      for (y = 0; y < height; y++)
+	for (x = 0; x < width; x++)
+	  {
+	  *p0++ = (unsigned char) curr_r;
+	  *p0++ = (unsigned char) curr_g;
+	  *p0++ = (unsigned char) curr_b;
+	  *p0++ = (unsigned char) curr_a;
+	  }
+      return pixel;
+    }
+
+  diagonal = sqrt (width*width + height*height);
+  if (gradient->userSpace)
+    {
+      cx = gradient->gradCx / width;
+      cy = gradient->gradCy / height;
+      r = gradient->gradR / diagonal;
+    }
+  else
+    {
+      cx = gradient->gradCx;
+      cy = gradient->gradCy;
+      r = gradient->gradR;
+    }
+  /* compute beamLength, the distance between the center (cx, cy) and the
+     farthest corner of the rectangle */
+  if (cx > .5)
+    bx = cx;
+  else
+    bx = 1 - cx;
+  bxPix = (int)(bx * width);
+  if (cy > .5)
+    by = cy;
+  else
+    by = 1 - cy;
+  byPix = (int)(by * height);
+  beamLength = 4 * (int)sqrt (bxPix*bxPix + byPix*byPix);
+
+  /* get memory for the beam */
+  beam = (unsigned char *)malloc (beamLength);
+  memset (beam, 0, beamLength);
+  pMax = beam + beamLength;
+
+  /* create pixels along the beam according to the gradient stops and the
+     spreadMethod */
+  p0 = beam;
+  /* first fill the beam between the center and the first stop */
+  if (gradient->firstStop->offset > 0)
+    {
+      /* uniform color to be used in this part of the beam */
+      curr_r = gradient->firstStop->r;
+      curr_g = gradient->firstStop->g;
+      curr_b = gradient->firstStop->b;
+      curr_a = gradient->firstStop->a;
+      /* create pixels of that color between the center and the first gradient
+	 stop */
+      len = (int)(gradient->firstStop->offset * r * diagonal);
+      for (x = 0; x < len; x++) 
+	{
+	  *p0++ = (unsigned char) curr_r;
+	  *p0++ = (unsigned char) curr_g;
+	  *p0++ = (unsigned char) curr_b;
+	  *p0++ = (unsigned char) curr_a;
+	}
+    }
+  /* now, process all gradient stops */
+  currentStop = gradient->firstStop;
+  while (currentStop->next)
+    {
+      /* number of pixels until next stop */
+      stop_width = (currentStop->next->offset - currentStop->offset) * r * diagonal;
+      len = (int) stop_width;
+      /* compute the color difference between two successive pixels */
+      if (currentStop->next->r - currentStop->r)
+	delta_r = (currentStop->next->r - currentStop->r) / stop_width;
+      else
+	delta_r = 0;
+      if (currentStop->next->g - currentStop->g )
+	delta_g = (currentStop->next->g - currentStop->g) / stop_width;
+      else
+	delta_g = 0;      
+      if (currentStop->next->b - currentStop->b)
+	delta_b = (currentStop->next->b - currentStop->b) / stop_width;
+      else
+	delta_b = 0;      
+      if (currentStop->next->a - currentStop->a)
+	delta_a = (currentStop->next->a - currentStop->a) / stop_width;
+      else 
+	delta_a = 0;      
+      curr_r = currentStop->r;
+      curr_g = currentStop->g;
+      curr_b = currentStop->b;
+      curr_a = currentStop->a;
+      /* Create in the beam the pixels corresponding to the current stop */
+      for (x = 0; x < len; x++) 
+	{
+	  *p0++ = (unsigned char) curr_r;
+	  *p0++ = (unsigned char) curr_g;
+	  *p0++ = (unsigned char) curr_b;
+	  *p0++ = (unsigned char) curr_a;
+	  curr_r += delta_r;
+	  if (curr_r < 0.) curr_r = 0.;
+	  curr_g += delta_g;
+	  if (curr_g < 0.) curr_g = 0.;
+	  curr_b += delta_b;
+	  if (curr_b < 0.) curr_b = 0.;
+	  curr_a += delta_a;
+	  if (curr_a < 0.) curr_a = 0.;
+	}
+      currentStop = currentStop->next;
+    }
+  lastStop = currentStop;
+  if (lastStop->offset < 1)
+    /* the last stop is less than the radius. Create the part of the gradient
+       between the last stop and the end of the radius: same color as last stop */
+    {
+      /* color of the last stop */
+      curr_r = lastStop->r;
+      curr_g = lastStop->g;
+      curr_b = lastStop->b;
+      curr_a = lastStop->a;
+      /* create the pixels */
+      pf = beam + (int)(r * diagonal) * 4 * sizeof (unsigned char);
+      while (p0 < pf && p0 < pMax) 
+	{
+	  *p0++ = (unsigned char) curr_r;
+	  *p0++ = (unsigned char) curr_g;
+	  *p0++ = (unsigned char) curr_b;
+	  *p0++ = (unsigned char) curr_a;
+	}
+    }
+  /* the radius is now filled in the beam */
+  /* if the radius is smaller than the beam, fill the part after the radius
+     according to attribute spreadMethod */
+  if (r * diagonal < beamLength/4)
+    {
+      if (gradient->spreadMethod == 1)
+	/* spreadMethod = pad */
+	/* fill the end of the beam with the color of the last stop */
+	{
+	  /* get the color of the last stop */
+	  curr_r = lastStop->r;
+	  curr_g = lastStop->g;
+	  curr_b = lastStop->b;
+	  curr_a = lastStop->a;
+	  /* fill the end of the line with this color */
+	  while (p0 < pMax) 
+	    {
+	      *p0++ = (unsigned char) curr_r;
+	      *p0++ = (unsigned char) curr_g;
+	      *p0++ = (unsigned char) curr_b;
+	      *p0++ = (unsigned char) curr_a;
+	    }
+	}
+      else if (gradient->spreadMethod == 2)
+	/* spreadMethod = reflect */
+	{
+	  /* start from end of radius and repeat the gradient vector up to
+	     end of beam in alternating directions */
+	  pf = p0;   /*  end of radius  */
+	  while (p0 < pMax)
+	    {
+	      /* pc: position of the pixel to be copied from the gradient
+		 vector */
+	      pc = pf - 4; /* end of the gradient vector */
+	      while (pc >= beam && p0 < pMax)
+		{
+		  /* copy one pixel (4 bytes: rgba) */
+	          p0[0] = pc[0];
+	          p0[1] = pc[1];
+	          p0[2] = pc[2];
+	          p0[3] = pc[3];
+		  pc -= 4;
+                  p0 += 4;
+		}
+	      /* change direction and do the next copy of the vector */
+	      pc = beam;
+	      while (pc < pf && p0 < pMax)
+		*p0++ = *pc++;
+	    }
+	}
+      else if (gradient->spreadMethod == 3)
+	/* spreadMethod = repeat */
+	{
+	  pc = beam;
+	  while (p0 < pMax)
+	    *p0++ = *pc++;
+	}
+    }
+  /* we have a beam, now. Fill the largest octant */
+  /* Get memory for the bit map to be built */
+  length = width * 4 * sizeof (unsigned char);  /* 4 bytes per pixel: rgba */
+  size = length * height;
+  pixel = (unsigned char *)malloc (size);
+  memset (pixel, 0, size);
+  p0 = pixel;
+  cxPix = (int)(cx * width);
+  cyPix = (int)(cy * height);
+  x = 0; y = 0;
+  for (y = 0; y < height; y++)
+    for (x = 0; x < width; x++)
+      {
+	/* distance of current pixel from the center */
+	dx = x - cxPix;
+	dy = y - cyPix;
+	dist = (int)sqrt (dx*dx + dy*dy);
+        beamPix = beam + dist * 4;
+        *p0++ = *beamPix++;
+        *p0++ = *beamPix++;
+        *p0++ = *beamPix++;
+        *p0++ = *beamPix;
+      }
+  free (beam);
+  return (pixel);
+}
 #endif/*  _GL */
+
+/*----------------------------------------------------------------------
+  fill_gradient_image
+  width, height: size in pixels of the shape to be filled with the gradient
+  ----------------------------------------------------------------------*/
+unsigned char *fill_gradient_image (Gradient *gradient, int width, int height)
+{
+#ifdef _GL
+  if (!gradient || width == 0 || height == 0)
+    return NULL;
+  if (!gradient->firstStop)
+    /* no stop means fill = none */
+    return NULL;
+  if (gradient->gradType == Linear)
+    return fill_linear_gradient_image (gradient, width, height);
+  else if (gradient->gradType == Radial)
+    return fill_radial_gradient_image (gradient, width, height);
+#endif/*  _GL */
+  return NULL; 
 } 
 
 

@@ -2343,11 +2343,11 @@ void TtaNewGradient (ThotBool linear, Element el)
   else
     {
       grad->gradType = Radial;
-      grad->gradCx = 0;
-      grad->gradCy = 0;
-      grad->gradFx = 0;
-      grad->gradFy = 0;
-      grad->gradR = 1;
+      grad->gradCx = .5;   /* default value */
+      grad->gradCy = .5;   /* default value */
+      grad->gradFx = .5;
+      grad->gradFy = .5;
+      grad->gradR = .5;    /* default value */
     }
 #endif /* _GL */
 }

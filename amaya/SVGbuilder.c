@@ -637,79 +637,6 @@ void CopyTRefContent (Element source, Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  ParseGradientRadius
-  Parse and process attribute "r" (attr) for a radialGradient element (el)
-  ----------------------------------------------------------------------*/
-static void ParseGradientRadius (Attribute attr, Element el)
-{
-  int                  length;
-  char		       *text, *ptr;
-  PresentationValue    pval;
-  
-  length = TtaGetTextAttributeLength (attr) + 2;
-  text = (char *)TtaGetMemory (length);
-  if (text)
-    {
-      /* get the value of the attribute */
-      TtaGiveTextAttributeValue (attr, text, &length); 
-      /* parse the attribute value (a number followed by a unit) */
-      ptr = text;
-      ptr = (char*)TtaSkipBlanks (ptr);
-      ptr = ParseCSSUnit (ptr, &pval);
-      TtaFreeMemory (text);
-      if (pval.typed_data.unit == UNIT_BOX)
-	pval.typed_data.unit = UNIT_PX;
-      if (pval.typed_data.unit != UNIT_INVALID)
-	TtaSetRadialGradientRadius (pval.typed_data.value, el);
-    }
-}
-
-/*----------------------------------------------------------------------
-  ParseGradientCoordinate
-  Parse and process attributes cx, cy, fx, fy (attr) for a radialGradient
-  element (el)
-  ----------------------------------------------------------------------*/
-static void ParseGradientCoordinate (Attribute attr, Element el, int at)
-{
-  int                  length;
-  char                *text, *ptr;
-  PresentationValue    pval;
-
-  length = TtaGetTextAttributeLength (attr) + 2;
-  text = (char *)TtaGetMemory (length);
-  if (text)
-    {
-      /* get the value of the attribute */
-      TtaGiveTextAttributeValue (attr, text, &length);
-      /* parse the attribute value (a number followed by a unit) */
-      ptr = text;
-      ptr = (char*)TtaSkipBlanks (ptr);
-      ptr = ParseCSSUnit (ptr, &pval);
-      TtaFreeMemory (text);
-      if (pval.typed_data.unit == UNIT_BOX)
-        pval.typed_data.unit = UNIT_PX;
-      if (pval.typed_data.unit != UNIT_INVALID)
-	{
-	  switch (at)
-	    {
-	    case SVG_ATTR_cx:
-	      TtaSetRadialGradientcx (pval.typed_data.value, el);
-	      break;
-	    case SVG_ATTR_cy:
-	      TtaSetRadialGradientcy (pval.typed_data.value, el);
-	      break;
-	    case SVG_ATTR_fx:
-	      TtaSetRadialGradientfx (pval.typed_data.value, el);
-	      break;
-	    case SVG_ATTR_fy:
-	      TtaSetRadialGradientfy (pval.typed_data.value, el);
-	      break;
-	    }
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
   CopyUseContent
   Copy the subtree pointed by the href URI as a subtree of element el,
   which is of type use, tref, linearGradient or radialGradient.
@@ -839,13 +766,19 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
 		    ParseTransformAttribute (attr, el, doc, FALSE, TRUE);
 		    break;
 		  case SVG_ATTR_r:
-		    ParseGradientRadius (attr, el);
+		    TtaSetRadialGradientRadius (ParseNumberPercentAttribute (attr), el);
 		    break;
 		  case SVG_ATTR_cx:
+		    TtaSetRadialGradientcx (ParseNumberPercentAttribute (attr), el);
+		    break;
 		  case SVG_ATTR_cy:
+		    TtaSetRadialGradientcy (ParseNumberPercentAttribute (attr), el);
+		    break;
 		  case SVG_ATTR_fx:
+		    TtaSetRadialGradientfx (ParseNumberPercentAttribute (attr), el);
+		    break;
 		  case SVG_ATTR_fy:
-		    ParseGradientCoordinate (attr, el, attrType.AttrTypeNum);
+		    TtaSetRadialGradientfy (ParseNumberPercentAttribute (attr), el);
 		    break;
 		  }
 	      TtaNextAttribute (el, &attr);
@@ -4198,7 +4131,7 @@ float ParseNumberPercentAttribute (Attribute attr)
 {
   float                value;
   int                  length;
-  char                *text;
+  char                *text, *ptr;
   PresentationValue    pval;
 
   value = 0;
@@ -4208,7 +4141,10 @@ float ParseNumberPercentAttribute (Attribute attr)
     {
       TtaGiveTextAttributeValue (attr, text, &length);
       /* parse the attribute value */
-      ParseCSSUnit (text, &pval);
+      ptr = text;
+      ptr = (char*)TtaSkipBlanks (ptr);
+      ptr = ParseCSSUnit (ptr, &pval);
+      TtaFreeMemory (text);
       if (pval.typed_data.unit == UNIT_BOX)
 	{
 	  if (pval.typed_data.real)
@@ -4255,7 +4191,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_r:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_radialGradient)
-	ParseGradientRadius (attr, el);
+	TtaSetRadialGradientRadius (ParseNumberPercentAttribute (attr), el);
       else
 	ParseWidthHeightAttribute (attr, el, doc, FALSE);
       break;
@@ -4284,16 +4220,33 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       break;
       
     case SVG_ATTR_cx:
-    case SVG_ATTR_cy:
-    case SVG_ATTR_fx:
-    case SVG_ATTR_fy:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_radialGradient)
-	ParseGradientCoordinate (attr, el, attrType.AttrTypeNum);
+	TtaSetRadialGradientcx (ParseNumberPercentAttribute (attr), el);
       else
 	ParseCoordAttribute (attr, el, doc);
       break;
-
+    case SVG_ATTR_cy:
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == SVG_EL_radialGradient)
+	TtaSetRadialGradientcy (ParseNumberPercentAttribute (attr), el);
+      else
+	ParseCoordAttribute (attr, el, doc);
+      break;
+    case SVG_ATTR_fx:
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == SVG_EL_radialGradient)
+	TtaSetRadialGradientfx (ParseNumberPercentAttribute (attr), el);
+      else
+	ParseCoordAttribute (attr, el, doc);
+      break;
+    case SVG_ATTR_fy:
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == SVG_EL_radialGradient)
+	TtaSetRadialGradientfy (ParseNumberPercentAttribute (attr), el);
+      else
+	ParseCoordAttribute (attr, el, doc);
+      break;
     case SVG_ATTR_x1:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
