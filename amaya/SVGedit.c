@@ -650,7 +650,7 @@ void AttrTransformChanged (NotifyAttribute *event)
 {
   TtaRemoveTransform (event->document, event->element);
   ParseTransformAttribute (event->attribute, event->element, event->document,
-                           FALSE);
+                           FALSE, FALSE);
   /*******   CheckSVGRoot (event->document, event->element); *****/
 }
 
@@ -2502,7 +2502,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
                   TtaAttachAttribute (newEl, attr, doc);
                   sprintf(buffer, "translate(%d,%d) scale(%f,%f)", x1, y1, valx,valy);
                   TtaSetAttributeText (attr, buffer, newEl, doc);
-                  ParseTransformAttribute (attr, newEl, doc, FALSE);
+                  ParseTransformAttribute (attr, newEl, doc, FALSE, FALSE);
                 }
               created = TRUE;
             }
@@ -2793,7 +2793,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
               TtaAttachAttribute (newEl, attr, doc);
               sprintf(buffer, "translate(%d,%d)", x1, y1);
               TtaSetAttributeText (attr, buffer, newEl, doc);
-              ParseTransformAttribute (attr, newEl, doc, FALSE);
+              ParseTransformAttribute (attr, newEl, doc, FALSE, FALSE);
 
               /* Create a switch element */
               childType.ElSSchema = svgSchema;
@@ -3875,7 +3875,7 @@ void UpdateSVGElement (Document doc, Element el, int oldw, int oldh,
       if (attr)
         {
           // update the current transform attribute
-          ParseTransformAttribute (attr, el, doc, FALSE);
+          ParseTransformAttribute (attr, el, doc, FALSE, FALSE);
           return;
         }
     }

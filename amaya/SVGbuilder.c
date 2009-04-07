@@ -637,10 +637,71 @@ void CopyTRefContent (Element source, Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  ParseGradientRadius
+  Parse and process attribute "r" (attr) for a radialGradient element (el)
+  ----------------------------------------------------------------------*/
+static void ParseGradientRadius (Attribute attr, Element el)
+{
+  int                  length;
+  char		       *text, *ptr;
+  PresentationValue    pval;
+  
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = (char *)TtaGetMemory (length);
+  if (text)
+    {
+      /* get the value of the attribute */
+      TtaGiveTextAttributeValue (attr, text, &length); 
+      /* parse the attribute value (a number followed by a unit) */
+      ptr = text;
+      ptr = (char*)TtaSkipBlanks (ptr);
+      ptr = ParseCSSUnit (ptr, &pval);
+      TtaFreeMemory (text);
+      if (pval.typed_data.unit == UNIT_BOX)
+	pval.typed_data.unit = UNIT_PX;
+      if (pval.typed_data.unit != UNIT_INVALID)
+	{
+	  /* @@@@@@@ */
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  ParseGradientCoordinate
+  Parse and process attributes cx, cy, fx, fy (attr) for a radialGradient
+  element (el)
+  ----------------------------------------------------------------------*/
+static void ParseGradientCoordinate (Attribute attr, Element el)
+{
+  int                  length;
+  char                *text, *ptr;
+  PresentationValue    pval;
+
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = (char *)TtaGetMemory (length);
+  if (text)
+    {
+      /* get the value of the attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value (a number followed by a unit) */
+      ptr = text;
+      ptr = (char*)TtaSkipBlanks (ptr);
+      ptr = ParseCSSUnit (ptr, &pval);
+      TtaFreeMemory (text);
+      if (pval.typed_data.unit == UNIT_BOX)
+        pval.typed_data.unit = UNIT_PX;
+      if (pval.typed_data.unit != UNIT_INVALID)
+        {
+	  /* @@@@@ */
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   CopyUseContent
   Copy the subtree pointed by the href URI as a subtree of element el,
-  which is of type use or tref.
-  Return TRUE is successful.
+  which is of type use, tref, linearGradient or radialGradient.
+  Return TRUE if successful.
   ----------------------------------------------------------------------*/
 ThotBool CopyUseContent (Element el, Document doc, char *href)
 {
@@ -649,14 +710,15 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
   Attribute            attr;
   AttributeType        attrType;
   SearchDomain         direction;
-  int                  i, length;
+  int                  i, length, attrKind;
   char *               id;
-  ThotBool             isUse, oldStructureChecking;
+  ThotBool             isUse, isTref, oldStructureChecking;
 
   /* look for an element with an id attribute with the same value as the
      href attribute */
   elType = TtaGetElementType (el);
   isUse = (elType.ElTypeNum == SVG_EL_use_);
+  isTref = (elType.ElTypeNum == SVG_EL_tref);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_id;
   /* search backwards first */
@@ -691,7 +753,7 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
   if (!source)
     return FALSE;
   else
-    /* the element to be copied in the use or tref element has been found */
+    /* the element to be copied in the element has been found */
     {
       /* remove the old copy if there is one */
       child = TtaGetFirstChild (el);
@@ -725,9 +787,58 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
           else
             TtaInsertFirstChild (&copy, el, doc);
         }
-      else
-        /* it's a tref element. Copy all the contents of the source element */
+      else if (isTref)
+        /* it's a tref, linearGradient or radialGradient element.
+	   Copy all the contents of the source element */
         CopyTRefContent (source, el, doc);
+      else if (elType.ElTypeNum ==SVG_EL_linearGradient ||
+	       elType.ElTypeNum ==SVG_EL_radialGradient)
+	/* it's a gradient. Copy the gradient stops and update attributes */
+	{
+	  TtaCopyGradient (source, el);
+	  /* update attributes */
+	  attr = NULL;
+	  TtaNextAttribute (el, &attr);
+	  while (attr)
+	    {
+	      TtaGiveAttributeType (attr, &attrType, &attrKind);
+	      if (attrType.AttrSSchema == elType.ElSSchema)
+		switch (attrType.AttrTypeNum)
+		  {
+		  case SVG_ATTR_x1:
+		    TtaSetLinearx1Gradient (ParseNumberPercentAttribute (attr), el);
+		    break;
+		  case SVG_ATTR_y1:
+		    TtaSetLineary1Gradient (ParseNumberPercentAttribute (attr), el);
+		    break;
+		  case SVG_ATTR_x2:
+		    TtaSetLinearx2Gradient (ParseNumberPercentAttribute (attr), el);
+		    break;
+		  case SVG_ATTR_y2:
+		    TtaSetLineary2Gradient (ParseNumberPercentAttribute (attr), el);
+		    break;
+		  case SVG_ATTR_spreadMethod:
+		    TtaSetSpreadMethodGradient (TtaGetAttributeValue (attr), el);
+		    break;
+		  case SVG_ATTR_gradientUnits:
+		    TtaSetGradientUnits ((TtaGetAttributeValue (attr) == SVG_ATTR_gradientUnits_VAL_userSpaceOnUse), el);
+		    break;
+		  case SVG_ATTR_gradientTransform:
+		    ParseTransformAttribute (attr, el, doc, FALSE, TRUE);
+		    break;
+		  case SVG_ATTR_r:
+		    ParseGradientRadius (attr, el);
+		    break;
+		  case SVG_ATTR_cx:
+		  case SVG_ATTR_cy:
+		  case SVG_ATTR_fx:
+		  case SVG_ATTR_fy:
+		    ParseGradientCoordinate (attr, el);
+		    break;
+		  }
+	      TtaNextAttribute (el, &attr);
+	    }
+	}
 
       if (oldStructureChecking)
         TtaSetStructureChecking (oldStructureChecking, doc);
@@ -1169,7 +1280,7 @@ void ProcessMarkers (Element el, Document doc)
   that attribute by a href attribute in the SVG namespace with the
   same value.
   ----------------------------------------------------------------------*/
-static void CheckHrefAttr (Element el, Document doc)
+static Attribute CheckHrefAttr (Element el, Document doc)
 {
   Element              root;
   SSchema              XLinkSSchema;
@@ -1178,6 +1289,7 @@ static void CheckHrefAttr (Element el, Document doc)
   int                  length;
   char                 *href;
 
+  attr = NULL;
   XLinkSSchema = GetXLinkSSchema (doc);
   if (XLinkSSchema)
     /* the XLink namespace is used in that document */
@@ -1206,6 +1318,7 @@ static void CheckHrefAttr (Element el, Document doc)
           TtaFreeMemory (href);
         }
     }
+  return attr;
 }
 
 /*----------------------------------------------------------------------
@@ -2400,16 +2513,20 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 
         case SVG_EL_use_:
         case SVG_EL_tref:
-          /* it's a use or a tref element */
-          /* if it has a href attribute from the XLink namespace, replace
-             that attribute by a href attribute from the SVG namespace */
-          CheckHrefAttr (el, doc);
+        case SVG_EL_linearGradient:
+        case SVG_EL_radialGradient:
           /* make a transclusion of the element addressed by its xlink_href
              attribute after the last child */
+          /* if the element has a href attribute from the XLink namespace,
+	     replace that attribute by a href attribute from the SVG namespace*/
+          attr = CheckHrefAttr (el, doc);
           /* first, get the xlink:href attribute */
-          attrType.AttrSSchema = elType.ElSSchema;
-          attrType.AttrTypeNum = SVG_ATTR_xlink_href;
-          attr = TtaGetAttribute (el, attrType);
+	  if (!attr)
+	    {
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+	      attr = TtaGetAttribute (el, attrType);
+	    }
           if (attr)
             /* the use element has a xlink:href attribute */
             {
@@ -2987,11 +3104,11 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
                                     ThotBool delete_)
 {
-  AttributeType	attrType;
+  AttributeType	       attrType;
   ElementType          elType;
   Element              child;
-  int			             length, attrKind, ruleType;
-  char		            *text, *ptr;
+  int		       length, attrKind, ruleType;
+  char		       *text, *ptr;
   PresentationValue    pval;
   PresentationContext  ctxt;
   ThotBool             ret;
@@ -3200,9 +3317,10 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
 /*----------------------------------------------------------------------
   ParseTransformAttribute
   Parse the value of a transform attribute
+  if parameter gradient is TRUE, it's a transformGradient attribute
   ----------------------------------------------------------------------*/
 void ParseTransformAttribute (Attribute attr, Element el, Document doc,
-                              ThotBool delete_)
+                              ThotBool delete_, ThotBool gradient)
 {
   int                  length;
   float                scaleX, scaleY, x, y, a, b, c, d, e, f, angle;
@@ -3213,6 +3331,11 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
   PresentationContext  ctxt;
 #endif /* _GL */
 
+  if (gradient)
+    {
+      /* something has to be done to handle attribute gradientTransform @@@@@ */
+      return;
+    }
   length = TtaGetTextAttributeLength (attr) + 2;
   text = (char *)TtaGetMemory (length);
   if (text)
@@ -4075,8 +4198,14 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       break;
     case SVG_ATTR_height_:
     case SVG_ATTR_width_:
-    case SVG_ATTR_r:
       ParseWidthHeightAttribute (attr, el, doc, FALSE);
+      break;
+    case SVG_ATTR_r:
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == SVG_EL_radialGradient)
+	ParseGradientRadius (attr, el);
+      else
+	ParseWidthHeightAttribute (attr, el, doc, FALSE);
       break;
     case SVG_ATTR_font_family:
     case SVG_ATTR_font_size:
@@ -4090,19 +4219,29 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       ParseCSSequivAttribute (attrType.AttrTypeNum, attr, el, doc, FALSE);
       break;
     case SVG_ATTR_transform:
-      ParseTransformAttribute (attr, el, doc, FALSE);
+      ParseTransformAttribute (attr, el, doc, FALSE, FALSE);
       break;
     case SVG_ATTR_points:
       ParsePointsAttribute (attr, el, doc);
       break;
     case SVG_ATTR_x:
     case SVG_ATTR_y:
-    case SVG_ATTR_cx:
-    case SVG_ATTR_cy:
     case SVG_ATTR_dx:
     case SVG_ATTR_dy:
       ParseCoordAttribute (attr, el, doc);
       break;
+      
+    case SVG_ATTR_cx:
+    case SVG_ATTR_cy:
+    case SVG_ATTR_fx:
+    case SVG_ATTR_fy:
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == SVG_EL_radialGradient)
+	ParseGradientCoordinate (attr, el);
+      else
+	ParseCoordAttribute (attr, el, doc);
+      break;
+
     case SVG_ATTR_x1:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
@@ -4182,6 +4321,9 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	  value = TtaGetAttributeValue (attr);
 	  TtaSetGradientUnits ((value == SVG_ATTR_gradientUnits_VAL_userSpaceOnUse), el);
 	}
+      break;
+    case SVG_ATTR_gradientTransform:
+      ParseTransformAttribute (attr, el, doc, FALSE, TRUE);
       break;
     case SVG_ATTR_offset:
       /* parse <number> or <percentage> */

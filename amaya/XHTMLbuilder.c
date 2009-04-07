@@ -1590,10 +1590,10 @@ void CreateAttrWidthPercentPxl (const char *buffer, Element el,
 
 /*----------------------------------------------------------------------
   CreateAttrHeightPercentPxl
-  an HTML attribute "width" has been created for a Table, an image,
+  an HTML attribute "height" has been created for a Table, an image,
   an Object or a HR.
   Create the corresponding attribute IntHeightPercent or IntHeightPxl.
-  oldHeight is -1 or the old image width.
+  oldHeight is -1 or the old image height.
   ----------------------------------------------------------------------*/
 void CreateAttrHeightPercentPxl (const char *buffer, Element el,
                                  Document doc, int oldHeight)

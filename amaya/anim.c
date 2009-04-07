@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 2002-2008
+ *  (c) COPYRIGHT INRIA and W3C, 2002-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1719,7 +1719,7 @@ static void Set_y_translation (Document timelinedoc, Element found, int hg)
 					
   sprintf (buffer, "translate(0,%d);", existing_value+hg);	
   TtaSetAttributeText (attr, buffer, found, timelinedoc);
-  ParseTransformAttribute(attr, found, timelinedoc, FALSE);	
+  ParseTransformAttribute(attr, found, timelinedoc, FALSE, FALSE);	
 }
 #endif /* _SVG */
 

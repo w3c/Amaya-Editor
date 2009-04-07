@@ -169,6 +169,17 @@ extern Element TtaCopyElement (Element sourceElement, Document sourceDocument,
 		               Document destinationDocument, Element parent);
 
 /* ----------------------------------------------------------------------
+   TtaCopyGradient
+   Copy the gradient attached to sourceElement as a gradient attached to the
+   destinationElement (copy also all gradientStop elements)
+   Parameters:
+   sourceElement: element from which the gradient is to be copied.
+   destinationElement: element that will receive the copy of the gradient.
+   No return value.
+   ---------------------------------------------------------------------- */
+void TtaCopyGradient (Element sourceElement, Element destinationElement);
+
+/* ----------------------------------------------------------------------
    TtaCreateDescent
 
    Creates a new element of a given type and inserts it in the tree as a

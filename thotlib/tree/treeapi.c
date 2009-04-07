@@ -394,8 +394,7 @@ static void TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
 Element TtaCopyTree (Element sourceElement, Document sourceDocument,
                      Document destinationDocument, Element parent)
 {
-  PtrElement          element;
-  PtrElement          ancestor;
+  PtrElement          element, ancestor;
   PtrSSchema          pSS, nextExtension;
 
   UserErrorCode = 0;
@@ -538,6 +537,27 @@ Element TtaCopyElement (Element sourceElement, Document sourceDocument,
       TransRef (element, element, LoadedDocument[destinationDocument - 1]);
     }
   return ((Element) element);
+}
+
+/* ----------------------------------------------------------------------
+   TtaCopyGradient
+   Copy the gradient attached to sourceElement as a gradient attached to the
+   destinationElement (copy also all gradientStop elements)
+   Parameters:
+   sourceElement: element from which the gradient is to be copied.
+   destinationElement: element that will receive the copy of the gradient.
+   No return value.
+   ---------------------------------------------------------------------- */
+void TtaCopyGradient (Element sourceElement, Element destinationElement)
+{
+  UserErrorCode = 0;
+  /* check parameters */
+  if (sourceElement == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (destinationElement == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    CopyGradient ((PtrElement)sourceElement, (PtrElement)destinationElement);
 }
 
 /* ---------------------------------------------------------------------- *

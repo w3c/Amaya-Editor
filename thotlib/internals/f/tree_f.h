@@ -136,6 +136,8 @@ extern void DeleteAttribute ( PtrElement pEl,
                               PtrAttribute pAttr );
 extern void DeleteElement ( PtrElement *pEl,
                             PtrDocument pDoc );
+extern void CopyGradient ( PtrElement pSource,
+                           PtrElement pEl );
 extern PtrElement CopyTree ( PtrElement pSource,
                              PtrDocument pDocSource,
                              PtrSSchema pSSchema,
@@ -358,6 +360,8 @@ extern void DeleteAttribute ( PtrElement pEl,
                                 PtrAttribute pAttr );
 extern void DeleteElement ( PtrElement *pEl,
                               PtrDocument pDoc );
+extern void CopyGradient ( PtrElement pSource,
+                             PtrElement pEl );
 extern PtrElement CopyTree ( PtrElement pSource,
                                PtrDocument pDocSource,
                                PtrSSchema pSSchema,

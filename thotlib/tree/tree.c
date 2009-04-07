@@ -3119,6 +3119,74 @@ void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+  CopyGradient
+  Copy the gradient (and its Gradient Stop children) attached to element
+  pSource to element pEl.
+  ----------------------------------------------------------------------*/
+void CopyGradient (PtrElement pSource, PtrElement pEl)
+{
+#ifdef _GL
+  GradientStop        *gStop, *prev, *next, *gStopCopy;
+
+  pEl->ElGradientDef = pSource->ElGradientDef;
+  if (pSource->ElGradientDef)
+    {
+      if (pSource->ElGradient)
+	{
+	  if (pEl->ElGradient)
+	    /* free existing gradient before making a fresh copy */
+	    {
+	      gStop = pEl->ElGradient->firstStop;
+	      while (gStop)
+		{
+		  next = gStop->next;
+		  TtaFreeMemory (gStop);
+		  gStop = next;
+		}
+	      TtaFreeMemory (pEl->ElGradient);
+	    }
+	  pEl->ElGradient = (Gradient *)TtaGetMemory (sizeof (Gradient));
+	  pSource->ElGradientCopy = pEl;
+	  pEl->ElGradient->x1 = pSource->ElGradient->x1;
+	  pEl->ElGradient->x2 = pSource->ElGradient->x2;
+	  pEl->ElGradient->y1 = pSource->ElGradient->y1;
+	  pEl->ElGradient->y2 = pSource->ElGradient->y2;
+	  pEl->ElGradient->userSpace = pSource->ElGradient->userSpace;
+	  pEl->ElGradient->spreadMethod = pSource->ElGradient->spreadMethod;
+	  pEl->ElGradient->el = pEl;
+	  pEl->ElGradient->firstStop = NULL;
+	  prev = NULL;
+	  gStop = pSource->ElGradient->firstStop;
+	  while (gStop)
+	    {
+	      gStopCopy = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
+	      if (prev)
+		prev->next = gStopCopy;
+	      else
+		pEl->ElGradient->firstStop = gStopCopy;
+	      gStopCopy->r = gStop->r;
+	      gStopCopy->g = gStop->g;
+	      gStopCopy->b = gStop->b;
+	      gStopCopy->a = gStop->a;
+	      gStopCopy->offset = gStop->offset;
+	      gStopCopy->el = NULL;
+	      gStopCopy->next = NULL;
+	      prev = gStopCopy;
+	      gStop = gStop->next;
+	    }
+	}
+    }
+  else
+    {
+      pEl->ElGradient = pSource->ElGradient;
+      if (pSource->ElGradient && pSource->ElGradient->el &&
+	  pSource->ElGradient->el->ElGradientCopy)
+	pEl->ElGradient = pSource->ElGradient->el->ElGradientCopy->ElGradient;
+    }
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
   CopyTree
   creates a tree which is a copy of the tree (or subtree) pointed to by
   pSource. Page breaks are not copied.
@@ -3154,8 +3222,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
   PtrSSchema          pSS;
   ThotBool            sameSSchema;
   ThotBool            doCopy;
-  GradientStop        *gStop, *prev, *gStopCopy;
-
+ 
   pEl = NULL;
   nR = 0;
   /* pointer to the element that will be created */
@@ -3319,49 +3386,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
                 pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
               if (pSource->ElTransform)
                 pEl->ElTransform = (Transform*)TtaCopyTransform (pSource->ElTransform);
-	      pEl->ElGradientDef = pSource->ElGradientDef;
-	      if (pSource->ElGradientDef)
-		{
-		  if (pSource->ElGradient)
-		    {
-		       pEl->ElGradient = (Gradient *)TtaGetMemory (sizeof (Gradient));
-		       pSource->ElGradientCopy = pEl;
-		       pEl->ElGradient->x1 = pSource->ElGradient->x1;
-		       pEl->ElGradient->x2 = pSource->ElGradient->x2;
-		       pEl->ElGradient->y1 = pSource->ElGradient->y1;
-		       pEl->ElGradient->y2 = pSource->ElGradient->y2;
-		       pEl->ElGradient->userSpace = pSource->ElGradient->userSpace;
-		       pEl->ElGradient->spreadMethod = pSource->ElGradient->spreadMethod;
-		       pEl->ElGradient->el = pEl;
-		       pEl->ElGradient->firstStop = NULL;
-		       prev = NULL;
-		       gStop = pSource->ElGradient->firstStop;
-		       while (gStop)
-			 {
-			   gStopCopy = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
-			   if (prev)
-			     prev->next = gStopCopy;
-			   else
-			     pEl->ElGradient->firstStop = gStopCopy;
-			   gStopCopy->r = gStop->r;
-			   gStopCopy->g = gStop->g;
-			   gStopCopy->b = gStop->b;
-			   gStopCopy->a = gStop->a;
-			   gStopCopy->offset = gStop->offset;
-			   gStopCopy->el = NULL;
-			   gStopCopy->next = NULL;
-			   prev = gStopCopy;
-			   gStop = gStop->next;
-			 }
-		    }
-		}
-	      else
-		{
-		  pEl->ElGradient = pSource->ElGradient;
-		  if (pSource->ElGradient && pSource->ElGradient->el &&
-		      pSource->ElGradient->el->ElGradientCopy)
-		    pEl->ElGradient = pSource->ElGradient->el->ElGradientCopy->ElGradient;
-		}
+	      CopyGradient (pSource, pEl);
 #endif /* _GL */
               pEl->ElTerminal = pSource->ElTerminal;
 
@@ -3542,8 +3567,8 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
             pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
           if (pSource->ElTransform)
             pEl->ElTransform = (Transform*)TtaCopyTransform (pSource->ElTransform);
-          /* if (pSource->ElGradient)
-             pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
+	  if (pSource->ElGradientDef)
+	    CopyGradient (pSource, pEl);
 #endif /* _GL */
           if (pEl->ElTerminal)
             switch (pSource->ElLeafType)

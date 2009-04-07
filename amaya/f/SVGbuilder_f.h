@@ -104,7 +104,8 @@ extern void ParsePointsAttribute ( Attribute attr,
 extern void ParseTransformAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
-                                      ThotBool delete_ );
+                                      ThotBool delete_,
+                                      ThotBool gradient );
 extern void *ParseValuesDataAttribute ( Attribute attr,
                                         Element el,
                                         Document doc );
@@ -221,7 +222,8 @@ extern void ParsePointsAttribute ( Attribute attr,
 extern void ParseTransformAttribute ( Attribute attr,
                                         Element el,
                                         Document doc,
-                                        ThotBool delete_ );
+                                        ThotBool delete_,
+                                        ThotBool gradient );
 extern void *ParseValuesDataAttribute ( Attribute attr,
                                           Element el,
                                           Document doc );

@@ -29,6 +29,8 @@ extern Element TtaCopyElement ( Element sourceElement,
                                 Document sourceDocument,
                                 Document destinationDocument,
                                 Element parent );
+extern void TtaCopyGradient ( Element sourceElement,
+                              Element destinationElement );
 extern Element TtaCreateDescent ( Document document,
                                   Element element,
                                   ElementType elementType );
@@ -169,6 +171,8 @@ extern Element TtaCopyElement ( Element sourceElement,
                                   Document sourceDocument,
                                   Document destinationDocument,
                                   Element parent );
+extern void TtaCopyGradient ( Element sourceElement,
+                                Element destinationElement );
 extern Element TtaCreateDescent ( Document document,
                                     Element element,
                                     ElementType elementType );
