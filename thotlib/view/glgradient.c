@@ -56,28 +56,73 @@
 #define EPSILON 1e-10
 
 #ifdef _GL
+
+/*----------------------------------------------------------------------
+  FillColorLastStop
+  return a bitmap of size width * height filled with the color of the last 
+  stop of the gradient.
+  ----------------------------------------------------------------------*/
+static unsigned char *FillColorLastStop (Gradient *gradient, int width,
+					 int height)
+{
+  GradientStop  *currentStop;
+  unsigned char *pixel, *p0;
+  int            length, size, i, j;
+
+      /* get memory for the bitmap to be built */
+      length = width * 4 * sizeof (unsigned char); /* 4 bytes per pixel: rgba */
+      size = length * height;
+      pixel = (unsigned char *)malloc (size);
+      memset (pixel, 0, size);
+      /* get the last stop */
+      currentStop = gradient->firstStop;
+      while (currentStop->next)
+	currentStop = currentStop->next;
+      /* fill the map with its color and opacity */
+      i = 0; j = 0; p0 = pixel;
+      for (j = 0; j < height; j++)   /* line by line */
+	for (i = 0; i < width; i++)  /* pixel by pixel */
+	  {
+	    *p0++ = (unsigned char) currentStop->r;
+	    *p0++ = (unsigned char) currentStop->g;
+	    *p0++ = (unsigned char) currentStop->b;
+	    *p0++ = (unsigned char) currentStop->a;
+	  }
+      /* that's it! */
+      return pixel;
+}
+
 /*----------------------------------------------------------------------
   fill_linear_gradient_image
   width, height: size in pixels of the shape to be filled with the gradient
   ----------------------------------------------------------------------*/
 static unsigned char *fill_linear_gradient_image (Gradient *gradient,
-						  int width, int height)
+                                          int x, int y, int width, int height)
 {
   GradientStop  *currentStop, *lastStop;
   unsigned char *pixel, *pMax, *p0, *pi, *pf, *pc;
-  int            x, y;
+  int            i, j;
   double         delta_r, delta_g, delta_b, delta_a;
   double         curr_r, curr_g, curr_b, curr_a;
   double         grad_width, stop_width, ratio;
   int            length, size, len;
 
   if (!gradient || width == 0 || height == 0)
+    /* nothing to do */
     return NULL;
   if (!gradient->firstStop)
     /* no stop means fill = none */
     return NULL;
   if (gradient->gradType != Linear)
+    /* here, we handle only linear gradients */
     return NULL;
+
+
+  if (gradient->gradX1 == gradient->gradX2 &&
+      gradient->gradY1 == gradient->gradY2)
+    /* the area to be painted will be painted as a single color using
+       the color and opacity of the last gradient stop */
+    return FillColorLastStop (gradient, width, height);
 
   /* Get memory for the bit map to be built */
   length = width * 4 * sizeof (unsigned char);  /* 4 bytes per pixel: rgba */
@@ -107,12 +152,12 @@ static unsigned char *fill_linear_gradient_image (Gradient *gradient,
 
   /* pi: position in the line of the beginning of the gradient vector (x1) */
   if (gradient->userSpace)
-    pi = pixel + (int)(gradient->gradX1) * 4 * sizeof (unsigned char);
+    pi = pixel + (int)(gradient->gradX1 - x) * 4 * sizeof (unsigned char);
   else
     pi = pixel + (int)(gradient->gradX1 * width) * 4 * sizeof (unsigned char);
   /* pf: position in the line of the end of the gradient vector (x2) */
   if (gradient->userSpace)
-    pf = pixel + ((int)(gradient->gradX2) + 1) * 4 * sizeof (unsigned char);
+    pf = pixel + ((int)(gradient->gradX2) - x + 1) * 4 * sizeof (unsigned char);
   else
     pf = pixel + ((int)(gradient->gradX2 * width) + 1) * 4 * sizeof (unsigned char);
   /* pMax: position of the last pixel of the line */
@@ -133,7 +178,7 @@ static unsigned char *fill_linear_gradient_image (Gradient *gradient,
       curr_a = gradient->firstStop->a;
       /* create pixels of that color between x1 and the first gradient stop */
       len = (int)(gradient->firstStop->offset * ratio * width);
-      for (x = 0; x < len; x++) 
+      for (i = 0; i < len; i++) 
 	{
 	  *p0++ = (unsigned char) curr_r;
 	  *p0++ = (unsigned char) curr_g;
@@ -277,7 +322,7 @@ static unsigned char *fill_linear_gradient_image (Gradient *gradient,
     }
   /* now, fill the part after x2, if there is one */
   if ((!gradient->userSpace && gradient->gradX2 < 1) ||
-      (gradient->userSpace && gradient->gradX2 < width))
+      (gradient->userSpace && gradient->gradX2 < width + x))
     {
       if (gradient->spreadMethod == 1)
 	/* spreadMethod = pad */
@@ -338,7 +383,7 @@ static unsigned char *fill_linear_gradient_image (Gradient *gradient,
   /* Fill all lines in the gradient with a copy of the line we have just filled */
   p0 = pixel;
   width = width * 4;
-  for (y = 1; y < height; y++)
+  for (j = 1; j < height; j++)
     {
       p0 += width;
       memcpy (p0, pixel, width);
@@ -370,40 +415,13 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
     /* no stop means fill = none */
     return NULL;
   if (gradient->gradType != Radial)
-    /* we handle radial gradients only here */
+    /* here, we handle only radial gradients */
     return NULL;
 
   if (gradient->gradR == 0)
     /* zero causes the area to be painted as a single color using the color
        and opacity of the last gradient stop */
-    {
-      /* get memory for the bitmap to be built */
-      length = width * 4 * sizeof (unsigned char); /* 4 bytes per pixel: rgba */
-      size = length * height;
-      pixel = (unsigned char *)malloc (size);
-      memset (pixel, 0, size);
-      /* get the last stop */
-      currentStop = gradient->firstStop;
-      while (currentStop->next)
-	currentStop = currentStop->next;
-      /* get its color and opacity */
-      curr_r = currentStop->r;
-      curr_g = currentStop->g;
-      curr_b = currentStop->b;
-      curr_a = currentStop->a;
-      /* fill the map with that color and opacity */
-      i = 0; j = 0; p0 = pixel;
-      for (j = 0; j < height; j++)   /* line by line */
-	for (i = 0; i < width; i++)  /* pixel by pixel */
-	  {
-	    *p0++ = (unsigned char) curr_r;
-	    *p0++ = (unsigned char) curr_g;
-	    *p0++ = (unsigned char) curr_b;
-	    *p0++ = (unsigned char) curr_a;
-	  }
-      /* that's it! */
-      return pixel;
-    }
+    return FillColorLastStop (gradient, width, height);
 
   if (gradient->userSpace)
     /* gradientUnits = userSpaceOnUse */
@@ -660,7 +678,7 @@ unsigned char *fill_gradient_image (Gradient *gradient, int x, int y, int width,
     /* no stop means fill = none */
     return NULL;
   if (gradient->gradType == Linear)
-    return fill_linear_gradient_image (gradient, width, height);
+    return fill_linear_gradient_image (gradient, x, y, width, height);
   else if (gradient->gradType == Radial)
     return fill_radial_gradient_image (gradient, x, y, width, height);
 #endif/*  _GL */
