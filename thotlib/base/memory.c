@@ -758,6 +758,11 @@ void FreeElement (PtrElement pEl)
 	  TtaFreeMemory (gstop);
 	  gstop = next;
 	}
+      if (pEl->ElGradient->gradTransform)
+	{
+	  TtaFreeTransform (pEl->ElGradient->gradTransform);
+	  pEl->ElGradient->gradTransform = NULL;
+	}
       TtaFreeMemory (pEl->ElGradient);
     }
   pEl->ElGradient = NULL;

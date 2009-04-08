@@ -7,9 +7,9 @@
  
 /*
  * GLgradient.c : handling of low level drawing routines, 
- *                      for Opengl 
+ *                for Opengl 
  *
- * Author:  P. Cheyrou-lagreze (INRIA)
+ * Author:  P. Cheyrou-Lagreze, V. Quint (INRIA)
  *
  */
 
@@ -352,30 +352,32 @@ static unsigned char *fill_linear_gradient_image (Gradient *gradient,
   width, height: size in pixels of the shape to be filled with the gradient
   ----------------------------------------------------------------------*/
 static unsigned char *fill_radial_gradient_image (Gradient *gradient,
-						  int width, int height)
+					  int x, int y, int width, int height)
 {
   GradientStop  *currentStop, *lastStop;
-  int            beamLength, bxPix, byPix, len, diagonal, x, y,
+  int            beamLength, bxPix, byPix, len, span, i, j,
                  length, size, cxPix, cyPix, dist, dx, dy;
-  double         cx, cy, r, bx, by;
+  double         cx, cy, r, bx, by, xRatio, yRatio;
   double         delta_r, delta_g, delta_b, delta_a;
   double         curr_r, curr_g, curr_b, curr_a;
   double         stop_width;
   unsigned char  *beam, *pixel, *pMax, *pf, *p0, *beamPix, *pc;
 
   if (!gradient || width == 0 || height == 0)
+    /* nothing to do */
     return NULL;
   if (!gradient->firstStop)
     /* no stop means fill = none */
     return NULL;
   if (gradient->gradType != Radial)
+    /* we handle radial gradients only here */
     return NULL;
 
   if (gradient->gradR == 0)
     /* zero causes the area to be painted as a single color using the color
        and opacity of the last gradient stop */
     {
-      /* Get memory for the bit map to be built */
+      /* get memory for the bitmap to be built */
       length = width * 4 * sizeof (unsigned char); /* 4 bytes per pixel: rgba */
       size = length * height;
       pixel = (unsigned char *)malloc (size);
@@ -389,28 +391,46 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
       curr_g = currentStop->g;
       curr_b = currentStop->b;
       curr_a = currentStop->a;
-      /* fill the map with that color */
-      x = 0; y = 0; p0 = pixel;
-      for (y = 0; y < height; y++)
-	for (x = 0; x < width; x++)
+      /* fill the map with that color and opacity */
+      i = 0; j = 0; p0 = pixel;
+      for (j = 0; j < height; j++)   /* line by line */
+	for (i = 0; i < width; i++)  /* pixel by pixel */
 	  {
-	  *p0++ = (unsigned char) curr_r;
-	  *p0++ = (unsigned char) curr_g;
-	  *p0++ = (unsigned char) curr_b;
-	  *p0++ = (unsigned char) curr_a;
+	    *p0++ = (unsigned char) curr_r;
+	    *p0++ = (unsigned char) curr_g;
+	    *p0++ = (unsigned char) curr_b;
+	    *p0++ = (unsigned char) curr_a;
 	  }
+      /* that's it! */
       return pixel;
     }
 
-  diagonal = sqrt (width*width + height*height);
   if (gradient->userSpace)
+    /* gradientUnits = userSpaceOnUse */
     {
-      cx = gradient->gradCx / width;
-      cy = gradient->gradCy / height;
-      r = gradient->gradR / diagonal;
+      span = sqrt (width*width + height*height);
+      cx = (gradient->gradCx - x) / width;
+      cy = (gradient->gradCy - y) / height;
+      r = gradient->gradR / span;
+      xRatio = 1;
+      yRatio = 1;
     }
   else
+    /* gradientUnits = objectBoundingBox */
+    /* it is as if the box was a square */
     {
+      if (width > height)
+	{
+	  span = width;
+	  xRatio = 1;
+	  yRatio = width / height;
+	}
+      else
+	{
+	  span = height;
+	  xRatio = height / width;
+	  yRatio = 1;
+	}
       cx = gradient->gradCx;
       cy = gradient->gradCy;
       r = gradient->gradR;
@@ -421,13 +441,29 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
     bx = cx;
   else
     bx = 1 - cx;
-  bxPix = (int)(bx * width);
   if (cy > .5)
     by = cy;
   else
     by = 1 - cy;
-  byPix = (int)(by * height);
-  beamLength = 4 * (int)sqrt (bxPix*bxPix + byPix*byPix);
+  if (gradient->userSpace)
+    /* gradientUnits = userSpaceOnUse */
+    {
+      bxPix = (int)(bx * width);
+      byPix = (int)(by * height);
+    }
+  else
+    /* gradientUnits = objectBoundingBox */
+    if (width > height)
+      {
+	bxPix = (int)(bx * width);
+	byPix = (int)(by * width);
+      }
+    else
+      {
+	bxPix = (int)(bx * height);
+	byPix = (int)(by * height);
+      }
+  beamLength = 4 * ((int)sqrt (bxPix*bxPix + byPix*byPix) + 1);
 
   /* get memory for the beam */
   beam = (unsigned char *)malloc (beamLength);
@@ -437,7 +473,8 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
   /* create pixels along the beam according to the gradient stops and the
      spreadMethod */
   p0 = beam;
-  /* first fill the beam between the center and the first stop */
+  /* first fill the beam between the center and the first stop with the color
+     of the first stop */
   if (gradient->firstStop->offset > 0)
     {
       /* uniform color to be used in this part of the beam */
@@ -447,8 +484,8 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
       curr_a = gradient->firstStop->a;
       /* create pixels of that color between the center and the first gradient
 	 stop */
-      len = (int)(gradient->firstStop->offset * r * diagonal);
-      for (x = 0; x < len; x++) 
+      len = (int)(gradient->firstStop->offset * r * span);
+      for (i = 0; i < len; i++) 
 	{
 	  *p0++ = (unsigned char) curr_r;
 	  *p0++ = (unsigned char) curr_g;
@@ -461,7 +498,7 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
   while (currentStop->next)
     {
       /* number of pixels until next stop */
-      stop_width = (currentStop->next->offset - currentStop->offset) * r * diagonal;
+      stop_width = (currentStop->next->offset - currentStop->offset) * r * span;
       len = (int) stop_width;
       /* compute the color difference between two successive pixels */
       if (currentStop->next->r - currentStop->r)
@@ -480,12 +517,12 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
 	delta_a = (currentStop->next->a - currentStop->a) / stop_width;
       else 
 	delta_a = 0;      
+      /* create in the beam the pixels corresponding to the current stop */
       curr_r = currentStop->r;
       curr_g = currentStop->g;
       curr_b = currentStop->b;
       curr_a = currentStop->a;
-      /* Create in the beam the pixels corresponding to the current stop */
-      for (x = 0; x < len; x++) 
+      for (i = 0; i < len; i++) 
 	{
 	  *p0++ = (unsigned char) curr_r;
 	  *p0++ = (unsigned char) curr_g;
@@ -502,18 +539,20 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
 	}
       currentStop = currentStop->next;
     }
+  /* remember the last stop */
   lastStop = currentStop;
   if (lastStop->offset < 1)
-    /* the last stop is less than the radius. Create the part of the gradient
-       between the last stop and the end of the radius: same color as last stop */
+    /* the last stop is before the end of the radius the radius. Create the
+       part of the gradient between the last stop and the end of the radius:
+       same color as last stop */
     {
       /* color of the last stop */
       curr_r = lastStop->r;
       curr_g = lastStop->g;
       curr_b = lastStop->b;
       curr_a = lastStop->a;
-      /* create the pixels */
-      pf = beam + (int)(r * diagonal) * 4 * sizeof (unsigned char);
+      /* create the pixels on the beam */
+      pf = beam + (int)(r * span) * 4 * sizeof (unsigned char);
       while (p0 < pf && p0 < pMax) 
 	{
 	  *p0++ = (unsigned char) curr_r;
@@ -525,7 +564,7 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
   /* the radius is now filled in the beam */
   /* if the radius is smaller than the beam, fill the part after the radius
      according to attribute spreadMethod */
-  if (r * diagonal < beamLength/4)
+  if (r * span < beamLength/4)
     {
       if (gradient->spreadMethod == 1)
 	/* spreadMethod = pad */
@@ -536,7 +575,7 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
 	  curr_g = lastStop->g;
 	  curr_b = lastStop->b;
 	  curr_a = lastStop->a;
-	  /* fill the end of the line with this color */
+	  /* fill the end of the beam with this color */
 	  while (p0 < pMax) 
 	    {
 	      *p0++ = (unsigned char) curr_r;
@@ -549,13 +588,12 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
 	/* spreadMethod = reflect */
 	{
 	  /* start from end of radius and repeat the gradient vector up to
-	     end of beam in alternating directions */
+	     the end of the beam in alternating directions */
 	  pf = p0;   /*  end of radius  */
 	  while (p0 < pMax)
 	    {
-	      /* pc: position of the pixel to be copied from the gradient
-		 vector */
-	      pc = pf - 4; /* end of the gradient vector */
+	      /* pc: position of the pixel to be copied from the radius */
+	      pc = pf - 4; /* end of the radius */
 	      while (pc >= beam && p0 < pMax)
 		{
 		  /* copy one pixel (4 bytes: rgba) */
@@ -580,8 +618,9 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
 	    *p0++ = *pc++;
 	}
     }
-  /* we have a beam, now. Fill the largest octant */
-  /* Get memory for the bit map to be built */
+  /* we have a full beam, now */
+
+  /* get memory for the bitmap to be built */
   length = width * 4 * sizeof (unsigned char);  /* 4 bytes per pixel: rgba */
   size = length * height;
   pixel = (unsigned char *)malloc (size);
@@ -589,13 +628,13 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
   p0 = pixel;
   cxPix = (int)(cx * width);
   cyPix = (int)(cy * height);
-  x = 0; y = 0;
-  for (y = 0; y < height; y++)
-    for (x = 0; x < width; x++)
+  i = 0; j = 0;
+  for (j = height; j > 0; j--)
+    for (i = 0; i < width; i++)
       {
 	/* distance of current pixel from the center */
-	dx = x - cxPix;
-	dy = y - cyPix;
+	dx = (int)((i - cxPix) * xRatio);
+	dy = (int)((j - cyPix) * yRatio);
 	dist = (int)sqrt (dx*dx + dy*dy);
         beamPix = beam + dist * 4;
         *p0++ = *beamPix++;
@@ -612,7 +651,7 @@ static unsigned char *fill_radial_gradient_image (Gradient *gradient,
   fill_gradient_image
   width, height: size in pixels of the shape to be filled with the gradient
   ----------------------------------------------------------------------*/
-unsigned char *fill_gradient_image (Gradient *gradient, int width, int height)
+unsigned char *fill_gradient_image (Gradient *gradient, int x, int y, int width, int height)
 {
 #ifdef _GL
   if (!gradient || width == 0 || height == 0)
@@ -623,7 +662,7 @@ unsigned char *fill_gradient_image (Gradient *gradient, int width, int height)
   if (gradient->gradType == Linear)
     return fill_linear_gradient_image (gradient, width, height);
   else if (gradient->gradType == Radial)
-    return fill_radial_gradient_image (gradient, width, height);
+    return fill_radial_gradient_image (gradient, x, y, width, height);
 #endif/*  _GL */
   return NULL; 
 } 
