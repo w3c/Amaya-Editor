@@ -59,10 +59,14 @@
 
 /*----------------------------------------------------------------------
   FillGradientLine
-  
+  Create a line of "length" pixels filled according to "gradient".
+  gradStart: position on that line of the first pixel of the gradient vector
+  (or center for a radial gradient)
+  gradEnd: position on that line of the last pixel of the gradient vector
+  (or radius for a radial gradient)
   ----------------------------------------------------------------------*/
 static unsigned char *FillGradientLine (Gradient *gradient, int length,
-			 int gradStart, int gradEnd)
+					int gradStart, int gradEnd)
 {
   GradientStop  *currentStop, *lastStop;
   int            lengthByte, i, len, gradLength;
@@ -84,11 +88,11 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
 
   /* pi: position in the line of the beginning of the gradient vector (x1
      for a linear gradient, center for a radial gradient) */
-  pi = line + gradStart;
+  pi = line + (gradStart * 4 * sizeof (unsigned char));
   /* pf: position in the line of the end of the gradient vector (x2 for
      a linear gradient, end of radius for a radial gradient) */
-  pf = line + gradEnd;
-  gradLength = (gradEnd - gradStart) / (4 * sizeof (unsigned char));
+  pf = line + (gradEnd * 4 * sizeof (unsigned char));
+  gradLength = gradEnd - gradStart;
 
   /* first fill the line between position x1 (or center for a radial gradient)
      and the first stop of the gradient */
@@ -349,11 +353,10 @@ static unsigned char *FillColorLastStop (Gradient *gradient, int width,
 static unsigned char *FillLinearGradientImage (Gradient *gradient,
                                           int x, int y, int width, int height)
 {
-  unsigned char *line, *pixel, *p0;
-  int            j, length, size, len;
-  int            gradStart, gradEnd, gradLength;
-  double         grad_width;
-
+  unsigned char *line, *pixel, *p0, *pc;
+  int            i, j, size, len;
+  int            gradStart, gradEnd;
+ 
   if (gradient->gradType != Linear)
     /* here, we handle only linear gradients */
     return NULL;
@@ -364,53 +367,80 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
        the color and opacity of the last gradient stop */
     return FillColorLastStop (gradient, width, height);
 
-  /* check the gradient vector, i.e. the interval [x1, x2] */
-  grad_width = gradient->gradX2 - gradient->gradX1;
-  if (gradient->userSpace)
-    grad_width = grad_width / width;
-  if (grad_width == 0)
+  if (gradient->gradY1 == gradient->gradY2)
+    /* horizontal gradient */
     {
       if (gradient->userSpace)
-	grad_width = (width - gradient->gradX1) / width;
+	{
+	  gradStart = (int)(gradient->gradX1 - x);
+	  gradEnd = (int)(gradient->gradX2 - x);
+	}
       else
-	grad_width = 1 - gradient->gradX1;
+	{
+	  gradStart = (int)(gradient->gradX1 * width);
+	  gradEnd = (int)(gradient->gradX2 * width);
+	}
+      /* fill a line of pixels according to the gradient */
+      line = FillGradientLine (gradient, width, gradStart, gradEnd);
+      /* get memory for the gradient bit map to be built */
+      /* fill all lines in the gradient with a copy of the line we have just
+	 filled */
+      len = width * 4 * sizeof (unsigned char);   /* 4 bytes per pixel: rgba */
+      size = height * len;
+      pixel = (unsigned char *)malloc (size);
+      memset (pixel, 0, size);
+      p0 = pixel;
+      for (j = height; j >0 ; j--)
+	{
+	  memcpy (p0, line, len);
+	  p0 += len;
+	}
+      free(line);
+      return pixel;
     }
-  if (grad_width < 0)
-    grad_width = -grad_width;
-  if (grad_width < 1)
-    gradLength = grad_width * width;
-  else
-    gradLength = width;
-  if (gradient->userSpace)
-    {
-      gradStart = (int)(gradient->gradX1 - x) * 4 * sizeof (unsigned char);
-      gradEnd = ((int)(gradient->gradX2) - x) * 4 * sizeof (unsigned char);
-    }
-  else
-    {
-      gradStart = (int)(gradient->gradX1 * width) * 4 * sizeof (unsigned char);
-      gradEnd = ((int)(gradient->gradX2 * width)) * 4 * sizeof (unsigned char);
-    }
-  length = width;
 
-  /* fill a line of pixels according to the gradient */
-  line = FillGradientLine (gradient, length, gradStart, gradEnd);
-
-  /* get memory for the gradient bit map to be built */
-  /* fill all lines in the gradient with a copy of the line we have just
-     filled */
-  len = width * 4 * sizeof (unsigned char);   /* 4 bytes per pixel: rgba */
-  size = height * len;
-  pixel = (unsigned char *)malloc (size);
-  memset (pixel, 0, size);
-  p0 = pixel;
-  for (j = height; j >0 ; j--)
+  if (gradient->gradX1 == gradient->gradX2)
+    /* vertical gradient */
     {
-      memcpy (p0, line, len);
-      p0 += len;
+      if (gradient->userSpace)
+	{
+	  gradStart = (int)(gradient->gradY1 - y);
+	  gradEnd = (int)(gradient->gradY2 - y);
+	}
+      else
+	{
+	  gradStart = (int)(gradient->gradY1 * height);
+	  gradEnd = (int)(gradient->gradY2 * height);
+	}
+      /* fill a line of pixels according to the gradient */
+      line = FillGradientLine (gradient, height, gradStart, gradEnd);
+      /* get memory for the gradient bit map to be built */
+      /* fill all columns in the gradient with a copy of the line we have just
+	 filled */
+      size = height * width * 4 * sizeof (unsigned char);
+             /* 4 bytes per pixel: rgba */
+      pixel = (unsigned char *)malloc (size);
+      memset (pixel, 0, size);
+      p0 = pixel;
+      pc = line + (height * 4 * sizeof (unsigned char));
+      for (j = 0; j < height ; j++)
+	{
+	  pc -= 4;
+	  for (i = 0; i < width; i++)
+	    {
+	      *p0++ = pc[0];
+	      *p0++ = pc[1];
+	      *p0++ = pc[2];
+	      *p0++ = pc[3];
+	    }
+	}
+      free(line);
+      return pixel;
     }
-  free(line);
-  return pixel;
+
+  /* the gradient vector is not horizontal nor vertical */
+  /* @@@@ to be coded @@@@ */
+  return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -492,7 +522,7 @@ static unsigned char *FillRadialGradientImage (Gradient *gradient,
       }
   length = ((int)sqrt (bxPix*bxPix + byPix*byPix) + 1);
   gradStart = 0;
-  gradEnd = (int)(gradLength) * 4 * sizeof (unsigned char);
+  gradEnd = (int)gradLength;
 
   /* fill a line of pixels according to the gradient */
   line = FillGradientLine (gradient, length, gradStart, gradEnd);
