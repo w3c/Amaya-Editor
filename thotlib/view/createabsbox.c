@@ -4558,10 +4558,10 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 
   // apply the selected rule
   if (PriorRuleV)
-    *vis = IntegerRule (PriorRuleV, pEl,  PriorRuleV->PrViewNum, &ok, &unit, PriorattrOfRuleV, NULL);
+    *vis = IntegerRule (PriorRuleV, pEl, viewNb, &ok, &unit, PriorattrOfRuleV, NULL);
   if (PriorRuleD)
     {
-      val = CharRule (PriorRuleD, pEl, PriorRuleD->PrViewNum, &ok);
+      val = CharRule (PriorRuleD, pEl, viewNb, &ok);
       if (val == 'N' && ok)
         {
           /* rule "display: none" */
