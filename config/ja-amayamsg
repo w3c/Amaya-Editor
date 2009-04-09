@@ -342,8 +342,8 @@
 340 説明:
 341 要素を選択してください
 342 全ての CSS
-343 CSS スタイルルールが <%s> 要素に適用されました\n
-344 人種の壁は二重(または単一)かちりと言う音によって活動化させるリンクである\n
+343 CSS スタイルルールが <%s> 要素に 要素に適適用されました\n
+344 色のついた線はダブルクリック(またはシングルクリック)によって活動化させるリンクである\n
 345 オブジェクトのロード (object, embed, iframe)
 346 この要素に対するスタイル規則がありません。
 347 挿入位置が未定義です。先に選択してください
@@ -475,40 +475,40 @@
 473 閉じる
 474 コンポーネント '%s' は複数定義されています
 475 ライブラリ '%s' を読み込めません
-476 **Can not convert an instance document to template.
-477 **The document is already a template
-478 **Template creation fails
-479 **Text area
-480 **Element label:
+476 インスタンスドキュメントをテンプレートに変換することができません。
+477 ドキュメントは既にテンプレートです
+478 テンプレート作成が失敗しました
+479 テキストエリア
+480 要素ラベル
 481 多要素区域
-482 **Repeat element
+482 要素の繰り返し
 483 **New component
-484 **Component is used, you can not remove it.
-485 **at the top left corner
-486 **at the bottom left corner
-487 **on the left
-488 **at the top right corner
-489 **at the bottom right corner
-490 **on the right
-491 **at the top
-492 **at the bottom
-493 **in the center
+484 コンポーネントは使用されていています、 あなたはそれを削除することができません。
+485 最も上の左角において
+486 最も下の左角において
+487 左手に
+488 最も下の右角において
+489 最も下の右角において
+490 右手に
+491 最も上に
+492 最も下に
+493 中央に
 494 **to the left and above
 495 **to the left and below
-496 **to the left of
-497 **to the right and above
-498 **to the right and below
-499 **to the right of
-500 **above
-501 **below
-502 **in front of
-503 **There are %d objects: 
-504 **New use
-505 **Optional use
-506 **Color source code
-507 **Repeat label:
-508 **New union
-509 **Union
+496 左側に
+497 右側上に
+498 右側下に
+499 右側に
+500 上に
+501 下に
+502 前に
+503 %dオブジェクトがいる：
+504 新規の利用
+505 オプションの使用
+506 ソースコードの色
+507 繰り返しラベル:
+508 新規の共用体
+509 共用体
 510 **Union name:
-511 **Use elements
+511 要素を使う
 512 **Label
