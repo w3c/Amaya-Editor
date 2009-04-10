@@ -592,8 +592,20 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
     }
 
   /* the gradient vector is neither horizontal nor vertical */
-  /* perform a rough approximation : as if the vector was the diagonal of the
-     rectangle area to be filled */ /* @@@@@@@ */
+  /* @@@@@@@ */
+  /* perform a rough approximation, as if the vector was the diagonal
+     (top-left to bottom-right ) of the rectangle area to be filled */
+  /* under these asumptions, the vector is on a line defined by:
+     ax + by + c = 0,  with a = height, b = -width, c = 0
+     The gradient is first built on that line, then to compute the color of all
+     pixels in the rectangle area to be filled, each pixel (coordinates i,j)
+     is projected orthogonally on that line. Its color is the same as the
+     projected point (coordinates Px,Py) :
+     Px =  (b*b*i - a*b*j - a*c) / (a*a + b*b)
+     Py = (-a*b*i + a*a*j - b*c) / (a*a + b*b)
+     whose position on the line is  sqrt(Px*Px + Py*Py)
+  */
+     
   if (gradient->userSpace)
     /* gradientUnits = userSpaceOnUse */
     {
@@ -639,7 +651,9 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
 	/* projection of current pixel on the diagonal */
 	Px = (bWidth*bWidth * i * xRatio + bWidth*bHeight * j * yRatio) / den;
         Py = (bWidth*bHeight * i * xRatio + bHeight*bHeight * j * yRatio) / den;
+	/* position of the projected point on the vector line */
 	len = (int)sqrt(Px*Px + Py*Py) * 4;
+	/* copy the color and opacity of the projected point */
 	*p0++ = line[len];
 	*p0++ = line[len + 1];
 	*p0++ = line[len + 2];
@@ -673,8 +687,8 @@ static unsigned char *FillRadialGradientImage (Gradient *gradient,
   if (gradient->userSpace)
     /* gradientUnits = userSpaceOnUse */
     {
-      cx = (gradient->gradCx - x) / width;
-      cy = (gradient->gradCy - y) / height;
+      cx = (gradient->gradCx - (double)x) / (double)width;
+      cy = (gradient->gradCy - (double)y) / (double)height;
       gradLength = gradient->gradR;
       xRatio = 1;
       yRatio = 1;
@@ -689,12 +703,12 @@ static unsigned char *FillRadialGradientImage (Gradient *gradient,
 	{
 	  gradLength = gradient->gradR * width;
 	  xRatio = 1;
-	  yRatio = width / height;
+	  yRatio = (double)width / (double)height;
 	}
       else
 	{
 	  gradLength = gradient->gradR * height;
-	  xRatio = height / width;
+	  xRatio = (double)height / (double)width;
 	  yRatio = 1;
 	}
     }
