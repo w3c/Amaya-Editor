@@ -18,6 +18,7 @@
 
 
 #include "AHTLockBase.h"
+#include "fileaccess.h"
 
 
 /* ------------------------------------------------------------------ 
@@ -451,7 +452,8 @@ PUBLIC HTList *processLockFile (const char *filename, const char *reqUri)
         fprintf (stderr,"AHTLockBase... opening %s\n",path);
 #endif
         /* open the file "filename" for read purposes */
-        if ((fp = fopen (path,"r")) == NULL) 
+	fp = TtaReadOpen (path);
+        if (fp == NULL) 
             return (HTList *)NO;
 
         list  = HTList_new(); 
@@ -501,7 +503,7 @@ PUBLIC HTList *processLockFile (const char *filename, const char *reqUri)
             } /* if (info) */        
         } /* while */
 
-        fclose  (fp); /* closing file */
+        TtaReadClose (fp); /* closing file */
     }
     
     return list;        
@@ -795,10 +797,10 @@ PUBLIC BOOL saveLockLine (char *absolute, LockLine *lockinfo)
 #ifdef DEBUG_LOCK_BASE		
 	fprintf (stderr,"AHTLockBase.... DAVHome is %s\n",DAVHome);
         fprintf (stderr,"AHTLockBase.... open file %s\n", filename);
-#endif	
-        if ( (fp = fopen (filename,"a")) == NULL) 
+#endif
+	fp = TtaAddOpen (filename);
+        if (fp == NULL) 
             return NO;
- 
         status = LockLine_writeline (fp, lockinfo);
      }
 
@@ -838,8 +840,9 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative,
 #ifdef DEBUG_LOCK_BASE		
 	fprintf (stderr,"AHTLockBase.... DAVHome is %s\n",DAVHome);
         fprintf (stderr,"AHTLockBase.... open file %s\n", filename);
-#endif	
-        if ( (fp = fopen (filename,"a")) == NULL) 
+#endif
+	fp = TtaAddOpen (filename);
+        if (fp == NULL) 
             return NO;
  
         /* creates the AwTree with the xml body */
@@ -862,14 +865,13 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative,
             status = LockLine_writeline(fp,line);
         else 
             status = NO;
-       
-        	
+	
         if (tree) AwTree_delete(tree);
         if (line) LockLine_delete(line);
 #ifdef DEBUG_LOCK_BASE		
         fprintf (stderr,"AHTLockBase.... closing file\n");
 #endif		
-        fclose (fp);
+        TtaWriteClose (fp);
      }
         
     return status;
@@ -904,12 +906,12 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
         fprintf (stderr,"AHTLockBase.... opening %s\n", path);
 #endif	
         /* open the file "filename" for read purposes */
-        if ((fp = fopen (path,"r")) == NULL ) 
+	fp = TtaReadOpen (path);
+        if (fp == NULL ) 
             return NO;
         
         status = YES; /* thinking positif! */
         list = HTList_new();
-        
 
         /* copying file to memory */
         while (fgets (buf,DAV_LINE_MAX,fp) != NULL && status) 
@@ -951,17 +953,14 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
         if (status) 
          {
             /* close and remove old file */
-            fclose (fp);
+            TtaReadClose (fp);
             fp = NULL;
             
             /* try to remove the old file, to write a new one.
              * if remove failed, we force the creation of a new empty file.
              * if we have something to write, create a new file. */
-            if ((TtaFileUnlink(path)<0) || (list && !HTList_isEmpty (list))) 
-                fp = fopen (path,"w");
-
-            //if (fp)
-              //  fprintf (fp,"");    
+            if ((TtaFileUnlink(path) < 0) || (list && !HTList_isEmpty (list))) 
+                fp = TtaWriteOpen (path);
          }      
 	
 
@@ -982,7 +981,7 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
         if (status && fp) 
          {
 	    fflush (fp);
-	    fclose (fp);
+	    TtaReadClose (fp);
 	 }
      }
 

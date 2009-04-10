@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.16  2008-05-13 09:30:27  kia
+ ** Revision 1.17  2009-04-10 14:22:18  vatton
+ ** Fix several WebDAV bugs
+ ** Irene
+ **
+ ** Revision 1.16  2008/05/13 09:30:27  kia
  ** More char* fixes
  **
  ** Revision 1.15  2008/05/07 13:49:07  kia
@@ -431,9 +435,9 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
 /*----------------------------------------------------------------------
  * terminate callback - presents the request results to the user
   ----------------------------------------------------------------------*/
-void DAVTerminate_callback (int doc, int status, char *urlName,
-                      char *outputfile, AHTHeaders *http_headers,
-                      void * context)
+void DAVTerminate_callback (int doc, int status, char *urlName,char *outputfile,
+			    char *proxyName, AHTHeaders *http_headers,
+			    void * context)
 {
                                               
     AHTDAVContext *davctx = (context)? 

@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.14  2008-05-13 09:30:27  kia
+ ** Revision 1.15  2009-04-10 14:22:18  vatton
+ ** Fix several WebDAV bugs
+ ** Irene
+ **
+ ** Revision 1.14  2008/05/13 09:30:27  kia
  ** More char* fixes
  **
  ** Revision 1.13  2005/06/23 15:00:48  cvs
@@ -246,21 +250,23 @@ time_t DAVTimeoutValue (char *timeout)
   ----------------------------------------------------------------------*/
 char * DAVCopyFile (char * filename, int size) 
 {
-    char *document = NULL;
+  char *document = NULL, realname[MAX_LENGTH];
     FILE *fp;
     int i = 0;
     char c[1];
 
     if (filename) 
      {
-         document = (char *)TtaGetMemory (size + 1);
-
-         fp = fopen (filename, "r");
-         while (fp && fread(c,1,1,fp)) 
-             document[i++] = c[0];
-         
-         document[i] = '\0';     
-         fclose (fp);
+       document = (char *)TtaGetMemory (size + 1);
+       NormalizeFile (filename, realname, AM_CONV_ALL);
+       fp = TtaReadOpen (realname);
+	 if (fp)
+	   {
+	     while (fread(c,1,1,fp))
+	       document[i++] = c[0];
+	     document[i] = EOS;     
+	     TtaReadClose (fp);
+	   }
      }
 
     return document;
