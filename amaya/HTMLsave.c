@@ -714,7 +714,7 @@ void SetRelativeURLs (Document doc, char *newpath, char *cssbase,
               else
                 // next text unit
                 next = TtaSearchTypedElementInTree (contentType, SearchForward, next,
-                                                    content);
+                                                    next);
             }
         }
 
