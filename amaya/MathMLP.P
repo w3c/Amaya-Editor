@@ -10,8 +10,8 @@ VIEWS
    Structure_view merge with Structure_view,
    Alternate_view merge with Alternate_view;
 
-#define SCRIPTSIZEMULTIPLIER 70 %
-#define SMALLER 85 %
+#define SCRIPTSIZEMULTIPLIER 80 %
+#define SMALLER 90 %
 #define OPERATOR_SPACE 0.20
 #define ROOT_OFFSET 0.6
 #define STRUCT_INDENT 1.5
@@ -847,7 +847,7 @@ RULES
         HorizPos: Left = Enclosing . Left;
         VertPos: HRef = RootBase . Top + 0.5;
         Width: ROOT_OFFSET min;
-           Size: Enclosing * 50 %;
+           Size: Enclosing * 60 %;
         IN Structure_view BEGIN
                 Size: Enclosing =;
                 Width: Enclosing . Width;
@@ -948,7 +948,7 @@ RULES
            BEGIN
            HorizRef: * . Top;
            HorizPos: VMiddle = Bar . VMiddle;
-           VertPos: Top = Bar . Bottom;
+           VertPos: Top = Bar . Bottom + 0.1;
            END;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
