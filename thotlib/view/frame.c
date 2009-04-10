@@ -1169,6 +1169,8 @@ static void SyncBoundingboxesReal (PtrAbstractBox pInitAb,
   int                 x, y;
 
   box = pInitAb->AbBox;
+  if (box == NULL)
+    return;
   x = box->BxClipX - XFrame;
   y = box->BxClipY - YFrame;
   pAb = pInitAb->AbFirstEnclosed;

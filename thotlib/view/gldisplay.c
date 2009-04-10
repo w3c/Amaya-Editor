@@ -1842,7 +1842,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
   double       x1, y1, cx1, cy1, x2, y2, cx2, cy2;
   void        *mesh;  
 
-  if (thick > 0 || fg >= 0)
+  if (thick > 0 || fg >= 0 || (bg >= 0 && pattern == 2))
     {
       y = 0;
       //printf ("============>Path x= %d y=%d + %d\n",x,y,ViewFrameTable[frame-1].FrYOrg);
