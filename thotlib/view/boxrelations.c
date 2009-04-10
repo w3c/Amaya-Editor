@@ -973,9 +973,10 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 
 /*----------------------------------------------------------------------
   ComputePosRelation applies fixed and absolute positioning rules.
+  topCreation points to the top created abstract box.
   Return TRUE if the box is the box position is out of the standard flow.
   ----------------------------------------------------------------------*/
-ThotBool ComputePositioning (PtrBox pBox, int frame)
+ThotBool ComputePositioning (PtrBox pBox, int frame, PtrAbstractBox topCreation)
 {
   PtrAbstractBox      pAb, pRefAb;
   PtrBox              pRefBox = NULL;
@@ -998,7 +999,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
           if (pBox->BxType == BoRow || pBox->BxType == BoColumn ||
               pBox->BxType == BoCell)
             {
-              pos->PnAlgorithm = PnStatic;
+              //pos->PnAlgorithm = PnStatic;
               return FALSE;
             }
 
@@ -1099,7 +1100,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pBox->BxXToCompute = TRUE;
               pAb->AbHorizEnclosing = FALSE;
               pBox->BxXOutOfStruct = TRUE;
-              //PropagateXOutOfStruct (pAb, frame, TRUE, FALSE);
             }
           if (appl)
             {
@@ -1127,7 +1127,10 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   pRefBox->BxMoved = NULL;
                   MoveBoxEdge (pBox, pRefBox, OpWidth, x + lr + w + rr - r, frame, TRUE);
                 }
-              XMoveAllEnclosed (pBox, x + lr + l - pBox->BxXOrg, frame);
+              if (topCreation && IsParentBox (topCreation->AbBox, pRefBox))
+                pBox->BxXOrg += x + lr + l;
+              else
+                XMoveAllEnclosed (pBox, x + lr + l - pBox->BxXOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbHorizPos;
               pPosAb->PosAbRef = pRefAb;
@@ -1163,7 +1166,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               pBox->BxYToCompute = TRUE;
               pAb->AbVertEnclosing = FALSE;
               pBox->BxYOutOfStruct = TRUE;
-              //PropagateYOutOfStruct (pAb, frame, TRUE, FALSE);
             }
           if (appt)
             {
@@ -1178,7 +1180,10 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   ResizeHeight (pBox, pBox, NULL, tr + h + br - b - pBox->BxH, 0, 0, frame);
                   InsertDimRelation (pRefBox, pBox, OpSame, FALSE, FALSE);
                 }
-              YMoveAllEnclosed (pBox, y + tr + t - pBox->BxYOrg, frame);
+              if (topCreation && IsParentBox (topCreation->AbBox, pRefBox))
+                pBox->BxYOrg += y + tr + t;
+              else
+                YMoveAllEnclosed (pBox, y + tr + t - pBox->BxYOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbVertPos;
               pPosAb->PosAbRef = pRefAb;

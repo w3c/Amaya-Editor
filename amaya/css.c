@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -798,6 +798,27 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
     }
   /* there is still a CSS context */
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  DocHasCSS
+  ----------------------------------------------------------------------*/
+ThotBool DocHasCSS (Document doc)
+{
+  CSSInfoPtr      css, next;
+  PInfoPtr        pInfo;
+ 
+  css = CSSList;
+  while (css)
+    {
+      next = css->NextCSS;
+      pInfo = css->infos[doc];
+      if (pInfo && pInfo->PiCategory != CSS_USER_STYLE)
+        return TRUE;
+      /* look at the next CSS context */
+      css = next;
+    }
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------

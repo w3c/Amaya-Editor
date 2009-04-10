@@ -543,9 +543,9 @@ void OpenCreatedView (PtrDocument pDoc, int view,
 {
   PtrSSchema          pSS;
   int                 volume = 0;
-  int                 frame;
-  int                 h;
-  int                 schView;
+  int                 frame, frame_id;
+  int                 h, doc_id;
+  int                 schView, view_id;
 
   frame = 0;
   if (view > 0)
@@ -558,44 +558,28 @@ void OpenCreatedView (PtrDocument pDoc, int view,
 #ifdef _WX
       {
         // close previous open view
-        int doc, view, frame_id;
-        frame_id = TtaGetFrameId( window_id, page_id, page_position );
-        if (frame_id>0)
+        frame_id = TtaGetFrameId (window_id, page_id, page_position);
+        if (frame_id > 0 && FrameTable[frame_id].FrPagePos == page_position)
           {
-            FrameToView(frame_id, &doc, &view);
+            FrameToView(frame_id, &doc_id, &view_id);
             DestroyFrame(frame_id);
-            TtaFreeView (doc, view);
+            TtaFreeView (doc_id, view_id);
           }
       }
   
       /* the new document needs a new frame */
-      int doc_id = IdentDocument(pDoc);
-
-      frame = TtaMakeFrame( pSS->SsName,
-                            schView,
-                            doc_id,
-                            pDoc->DocDName,
-                            width, height, &volume,
-                            viewName,
-                            window_id, page_id, page_position );
-      
+      doc_id = IdentDocument(pDoc);
+      frame = TtaMakeFrame (pSS->SsName, schView, doc_id,
+                            pDoc->DocDName, width, height, &volume,
+                            viewName, window_id, page_id, page_position);
       pDoc->DocViewFrame[view - 1] = frame;
       pDoc->DocViewVolume[view - 1] = volume;
       
       /* the new document need to be attached to a page */      
-      TtaAttachFrame( frame,
-                      window_id,
-                      page_id,
-                      page_position );
+      TtaAttachFrame (frame, window_id, page_id, page_position);
 #endif /* _WX */
-      
-#if defined(_GTK) || defined(_WINGUI)
-      frame = MakeFrame (pSS->SsName, schView,  pDoc->DocDName, X, Y,
-                         width, height, &volume, IdentDocument (pDoc),
-                         withMenu, withButton);
-#endif /* #if defined(_GTK) || defined(_WINGUI) */
-      
-    } 
+    }
+
   if (frame == 0)
     {
       /* on n'a pas pu creer la fenetre, echec */

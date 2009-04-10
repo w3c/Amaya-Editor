@@ -3806,7 +3806,7 @@ Document LoadDocument (Document doc, char *pathname,
       */
       /* content-type */
       if (http_content_type)
-          DocumentMeta[newdoc]->content_type = TtaStrdup (http_content_type);
+        DocumentMeta[newdoc]->content_type = TtaStrdup (http_content_type);
       else if (local_content_type[0] != EOS)
         /* assign a content type to the local files */
         DocumentMeta[newdoc]->content_type = TtaStrdup (local_content_type);
@@ -4978,6 +4978,9 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   TtaFreeMemory (ctx);
   /* check if a refresh is requested */
   CheckRefresh (newdoc);
+  if (DocumentTypes[newdoc] == docXml && !DocHasCSS (newdoc))
+    // Display the source view
+    ShowSource (newdoc, 1);
 }
 
 
@@ -5071,13 +5074,18 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
   else if (IsXTiger (documentname) || IsXMLName (documentname))
     {
       if (IsXTiger (documentname))
-	// a template cannot replace another document
-	DontReplaceOldDoc = TRUE;
+        // a template cannot replace another document
+        DontReplaceOldDoc = TRUE;
       docType = docXml;
       //TODO Check that urlname is a valid URL
       if (!IsW3Path (temp_url) && TtaFileExist (temp_url))
-        CheckDocHeader(temp_url, &xmlDec, &withDoctype, &isXML, &useMath, &isKnown, &parsingLevel, 
-		       &doc_charset, charsetname, (DocumentType*)&docType, &extraProfile);
+        {
+          CheckDocHeader(temp_url, &xmlDec, &withDoctype, &isXML, &useMath,
+                         &isKnown, &parsingLevel, &doc_charset,
+                         charsetname, (DocumentType*)&docType, &extraProfile);
+          if (docType == docText)
+            docType = docXml;
+        }
     }
   else if (method == CE_CSS)
     docType = docCSS;
