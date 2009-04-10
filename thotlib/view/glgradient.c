@@ -74,7 +74,9 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
   double         curr_r, curr_g, curr_b, curr_a;
   double         delta_r, delta_g, delta_b, delta_a;
   double         stop_width;
+  ThotBool       reverse;
 
+  reverse = gradEnd < gradStart;
   /* get memory for the line of pixels */
   lengthByte = length * 4 * sizeof (unsigned char); /* 4 bytes per pixel:
         red, green, blue and alpha channel */
@@ -92,7 +94,10 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
   /* pf: position in the line of the end of the gradient vector (x2 for
      a linear gradient, end of radius for a radial gradient) */
   pf = line + (gradEnd * 4 * sizeof (unsigned char));
-  gradLength = gradEnd - gradStart;
+  if (reverse)
+    gradLength = gradStart - gradEnd;
+  else
+    gradLength = gradEnd - gradStart;
 
   /* first fill the line between position x1 (or center for a radial gradient)
      and the first stop of the gradient */
@@ -109,13 +114,23 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
       /* create pixels of that color between x1 (or center) and the first
 	 gradient stop */
       len = (int)(gradient->firstStop->offset * gradLength);
-      for (i = 0; i < len; i++) 
-	{
-	  *p0++ = (unsigned char) curr_r;
-	  *p0++ = (unsigned char) curr_g;
-	  *p0++ = (unsigned char) curr_b;
-	  *p0++ = (unsigned char) curr_a;
-	}
+      if (reverse)
+	for (i = 0; i < len; i++) 
+	  {
+	    p0[0] = (unsigned char) curr_r;
+	    p0[1] = (unsigned char) curr_g;
+	    p0[2] = (unsigned char) curr_b;
+	    p0[3] = (unsigned char) curr_a;
+	    p0 -= 4;
+	  }
+      else
+	for (i = 0; i < len; i++) 
+	  {
+	    *p0++ = (unsigned char) curr_r;
+	    *p0++ = (unsigned char) curr_g;
+	    *p0++ = (unsigned char) curr_b;
+	    *p0++ = (unsigned char) curr_a;
+	  }
     }
 
   /* now, process all gradient stops */
@@ -149,10 +164,21 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
       curr_a = currentStop->a;
       for (i = 0; i < len; i++) 
 	{
-	  *p0++ = (unsigned char) curr_r;
-	  *p0++ = (unsigned char) curr_g;
-	  *p0++ = (unsigned char) curr_b;
-	  *p0++ = (unsigned char) curr_a;
+	  if (reverse)
+	    {
+	      p0[0] = (unsigned char) curr_r;
+	      p0[1] = (unsigned char) curr_g;
+	      p0[2] = (unsigned char) curr_b;
+	      p0[3] = (unsigned char) curr_a;
+	      p0 -= 4;
+	    }
+	  else
+	    {
+	      *p0++ = (unsigned char) curr_r;
+	      *p0++ = (unsigned char) curr_g;
+	      *p0++ = (unsigned char) curr_b;
+	      *p0++ = (unsigned char) curr_a;
+	    }
 	  curr_r += delta_r;
 	  if (curr_r < 0.) curr_r = 0.;
 	  curr_g += delta_g;
@@ -167,7 +193,7 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
   /* remember the last stop */
   lastStop = currentStop;
 
-  if (p0 < pf)
+  if ((reverse && p0 > pf) || (!reverse && p0 < pf))
     /* the last stop is before x2 (or the end of the radius). Fill the part
        of the gradient between the last stop and x2 (or the end of the radius)
        with the same color as last stop */
@@ -178,18 +204,32 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
       curr_b = lastStop->b;
       curr_a = lastStop->a;
       /* create pixels in the line */
-      while (p0 < pf && p0 < pMax) 
+      if (reverse)
 	{
-	  *p0++ = (unsigned char) curr_r;
-	  *p0++ = (unsigned char) curr_g;
-	  *p0++ = (unsigned char) curr_b;
-	  *p0++ = (unsigned char) curr_a;
+	  while (p0 > pf && p0 >= line)
+	    {
+	      p0[0] = (unsigned char) curr_r;
+	      p0[1] = (unsigned char) curr_g;
+	      p0[2] = (unsigned char) curr_b;
+	      p0[3] = (unsigned char) curr_a;
+	      p0 -= 4;
+	    }
+	}
+      else
+	{
+	  while (p0 < pf && p0 < pMax) 
+	    {
+	      *p0++ = (unsigned char) curr_r;
+	      *p0++ = (unsigned char) curr_g;
+	      *p0++ = (unsigned char) curr_b;
+	      *p0++ = (unsigned char) curr_a;
+	    }
 	}
     }
   /* the interval [x1, x2] (or the full radius) is now filled in the line
      of pixels */
   /* fill the part before x1 (does not apply to radial gradients) */
-  if (line < pi)
+  if ((reverse && pi < pMax) || (!reverse && line < pi))
     {
       if (gradient->spreadMethod == 1)
 	/* spreadMethod = pad */
@@ -200,42 +240,88 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
 	  curr_g = gradient->firstStop->g;
 	  curr_b = gradient->firstStop->b;
 	  curr_a = gradient->firstStop->a;
-	  /* fill the beginning of the line of pixels with this color */
-	  p0 = line;
-	  while (p0 < pi) 
+	  if (reverse)
+	    /* fill the end of the line with this color */
 	    {
-	      *p0++ = (unsigned char) curr_r;
-	      *p0++ = (unsigned char) curr_g;
-	      *p0++ = (unsigned char) curr_b;
-	      *p0++ = (unsigned char) curr_a;
+	      p0 = pi;
+	      while (p0 < pMax)
+		{
+		  *p0++ = (unsigned char) curr_r;
+		  *p0++ = (unsigned char) curr_g;
+		  *p0++ = (unsigned char) curr_b;
+		  *p0++ = (unsigned char) curr_a;
+		}
+	    }
+	  else
+	    /* fill the beginning of the line of pixels with this color */
+	    {
+	      p0 = line;
+	      while (p0 < pi) 
+		{
+		  *p0++ = (unsigned char) curr_r;
+		  *p0++ = (unsigned char) curr_g;
+		  *p0++ = (unsigned char) curr_b;
+		  *p0++ = (unsigned char) curr_a;
+		}
 	    }
 	}
       else if (gradient->spreadMethod == 2)
 	/* spreadMethod = reflect */
 	{
-	  /* start from position x1 and repeat the gradient vector down to
-	     position 0 in alternating directions */
-	  p0 = pi;  /*  x1  */
-	  while (p0 >= line)
+	  if (!reverse)
 	    {
-	      /* pc: position of the pixel to be copied from the gradient
-		 vector */
-	      pc = pi;
-	      while (pc < pf && p0 >= line)
+	      /* start from position x1 and repeat the gradient vector down to
+		 position 0 in alternating directions */
+	      p0 = pi;  /*  x1  */
+	      while (p0 >= line)
 		{
-		  /* copy a pixel (4 bytes: red, green, blue, alpha) */
-	          p0[0] = pc[0];
-	          p0[1] = pc[1];
-	          p0[2] = pc[2];
-	          p0[3] = pc[3];
-		  pc += 4;
-                  p0 -= 4;
+		  /* pc: position of the pixel to be copied from the gradient
+		     vector */
+		  pc = pi;
+		  while (pc < pf && p0 >= line)
+		    {
+		      /* copy a pixel (4 bytes: red, green, blue, alpha) */
+		      p0[0] = pc[0];
+		      p0[1] = pc[1];
+		      p0[2] = pc[2];
+		      p0[3] = pc[3];
+		      pc += 4;
+		      p0 -= 4;
+		    }
+		  /* change direction and do the next copy of the vector */
+		  pc = pf - 4;
+		  p0 += 4;
+		  while (pc > pi && p0 >= line)
+		    *p0-- = *pc--;
 		}
-	      /* change direction and do the next copy of the vector */
-	      pc = pf - 4;
-              p0 += 4;
-	      while (pc > pi && p0 >= line)
-		*p0-- = *pc--;
+	    }
+	  else
+	    /* reverse direction */
+	    {
+	      /* start from position x1 and repeat the gradient vector up to
+		 the end of the line in alternating directions */
+	      p0 = pi;  /*  x1  */
+	      while (p0 < pMax)
+		{
+		  /* pc: position of the pixel to be copied from the gradient
+		     vector */
+		  pc = pi;
+		  while (pc > pf && p0 < pMax)
+		    {
+		      /* copy a pixel (4 bytes: red, green, blue, alpha) */
+		      p0[0] = pc[0];
+		      p0[1] = pc[1];
+		      p0[2] = pc[2];
+		      p0[3] = pc[3];
+		      pc -= 4;
+		      p0 += 4;
+		    }
+		  /* change direction and do the next copy of the vector */
+		  pc = pf;
+		  p0 -= 4;
+		  while (pc < pi && p0 < pMax)
+		    *p0++ = *pc++;
+		}
 	    }
 	}
       else if (gradient->spreadMethod == 3)
@@ -243,10 +329,21 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
 	{
 	  p0 = pi;
 	  pc = pf;
-	  while (p0 > line)
+	  if (reverse)
 	    {
-	      p0--; pc--;
-	      *p0 = *pc;
+	      while (p0 < pMax)
+		{
+		  p0++; pc++;
+		  *p0 = *pc;
+		}
+	    }
+	  else
+	    {
+	      while (p0 > line)
+		{
+		  p0--; pc--;
+		  *p0 = *pc;
+		}
 	    }
 	}
     }
@@ -254,7 +351,6 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
      attribute spreadMethod */
   if (gradLength < length)
     {
-      p0 = pf;  /* x2 or end of radius */
       if (gradient->spreadMethod == 1)
 	/* spreadMethod = pad */
 	/* fill the rest of the line with the color of the last stop */
@@ -265,47 +361,103 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
 	  curr_b = lastStop->b;
 	  curr_a = lastStop->a;
 	  /* fill the end of the line with this color */
-	  while (p0 < pMax) 
+	  if (reverse)
 	    {
-	      *p0++ = (unsigned char) curr_r;
-	      *p0++ = (unsigned char) curr_g;
-	      *p0++ = (unsigned char) curr_b;
-	      *p0++ = (unsigned char) curr_a;
+	      p0 = line;
+	      while (p0 <= pf)
+		{
+		  *p0++ = (unsigned char) curr_r;
+		  *p0++ = (unsigned char) curr_g;
+		  *p0++ = (unsigned char) curr_b;
+		  *p0++ = (unsigned char) curr_a;
+		}
+	    }
+	  else
+	    {
+	      p0 = pf;  /* x2 or end of radius */
+	      while (p0 < pMax) 
+		{
+		  *p0++ = (unsigned char) curr_r;
+		  *p0++ = (unsigned char) curr_g;
+		  *p0++ = (unsigned char) curr_b;
+		  *p0++ = (unsigned char) curr_a;
+		}
 	    }
 	}
       else if (gradient->spreadMethod == 2)
 	/* spreadMethod = reflect */
 	{
-	  /* start from position x2 (or end of radius) and repeat the gradient
-	     vector (or the radius) up to the end of the line in alternating
-	     directions */
-	  while (p0 < pMax)
+	  if (reverse)
 	    {
-	      /* pc: position of the pixel to be copied from the gradient
-		 vector (or radius) */
-	      pc = pf - 4; /* end of the gradient vector or radius */
-	      while (pc >= pi && p0 < pMax)
+	      /* start from position x2 and repeat the gradient vector up to
+		 the beginning of the line in alternating directions */
+	      p0 = pf;  /* x2 */
+	      while (p0 >= line)
 		{
-		  /* copy one pixel (4 bytes: red, green, blue, alpha) */
-	          p0[0] = pc[0];
-	          p0[1] = pc[1];
-	          p0[2] = pc[2];
-	          p0[3] = pc[3];
-		  pc -= 4;
-                  p0 += 4;
+		  /* pc: position of the pixel to be copied from the gradient
+		     vector */
+		  pc = pf + 4; /* end of the gradient vector */
+		  while (pc <= pi && p0 >= line)
+		    {
+		      /* copy one pixel (4 bytes: red, green, blue, alpha) */
+		      p0[0] = pc[0];
+		      p0[1] = pc[1];
+		      p0[2] = pc[2];
+		      p0[3] = pc[3];
+		      pc += 4;
+		      p0 -= 4;
+		    }
+		  /* change direction and do the next copy of the vector or
+		     radius*/
+		  pc = pi;
+		  while (pc > pf && p0 >= line)
+		    *p0-- = *pc--;
 		}
-	      /* change direction and do the next copy of the vector or radius*/
-	      pc = pi;
-	      while (pc < pf && p0 < pMax)
-		*p0++ = *pc++;
+	    }
+	  else
+	    {
+	      /* start from position x2 (or end of radius) and repeat the
+		 gradient vector (or the radius) up to the end of the line
+		 in alternating directions */
+	      p0 = pf;  /* x2 or end of radius */
+	      while (p0 < pMax)
+		{
+		  /* pc: position of the pixel to be copied from the gradient
+		     vector (or radius) */
+		  pc = pf - 4; /* end of the gradient vector or radius */
+		  while (pc >= pi && p0 < pMax)
+		    {
+		      /* copy one pixel (4 bytes: red, green, blue, alpha) */
+		      p0[0] = pc[0];
+		      p0[1] = pc[1];
+		      p0[2] = pc[2];
+		      p0[3] = pc[3];
+		      pc -= 4;
+		      p0 += 4;
+		    }
+		  /* change direction and do the next copy of the vector or
+		     radius*/
+		  pc = pi;
+		  while (pc < pf && p0 < pMax)
+		    *p0++ = *pc++;
+		}
 	    }
 	}
       else if (gradient->spreadMethod == 3)
 	/* spreadMethod = repeat */
 	{
+	  p0 = pf;  /* x2 or end of radius */
 	  pc = pi;
-	  while (p0 < pMax)
-	    *p0++ = *pc++;
+	  if (reverse)
+	    {
+	      while (p0 >= line)
+		*p0-- = *pc--;	      
+	    }
+	  else
+	    {
+	      while (p0 < pMax)
+		*p0++ = *pc++;
+	    }
 	}
     }
   return (line);
@@ -438,7 +590,8 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
       return pixel;
     }
 
-  /* the gradient vector is not horizontal nor vertical */
+  /* the gradient vector is neither horizontal nor vertical */
+  
   /* @@@@ to be coded @@@@ */
   return NULL;
 }
