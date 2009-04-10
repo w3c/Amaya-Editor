@@ -1284,10 +1284,6 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
         }
       else if (pAb)
         {
-if (!strcmp(pAb->AbElement->ElLabel,"L369"))
-  printf ("YMoveAll L369 y=%d+%d\n",pBox->BxYOrg,delta);
-if (!strcmp(pAb->AbElement->ElLabel,"L372"))
-  printf ("YMoveAll L372 y=%d+%d\n",pBox->BxYOrg,delta);
 #ifdef _GL
           pBox->VisibleModification = TRUE;
 #endif /* _GL */

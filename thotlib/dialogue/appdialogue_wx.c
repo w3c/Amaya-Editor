@@ -768,7 +768,7 @@ int TtaMakeFrame( const char * schema_name, int schView,
       /* on MacOSX Reparenting is forbidden, so we must give the
          right parent to the frame at creation */
       AmayaSplittablePage * p_page = wxDynamicCast(p_AmayaWindow->GetPage(page_id),
-                                      AmayaSplittablePage);
+                                                   AmayaSplittablePage);
       wxWindow * p_real_parent = NULL;
       if (p_page)
         p_real_parent = p_page->GetSplitterWindow(); /* it's a AmayaNormalWindow */

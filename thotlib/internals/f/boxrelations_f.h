@@ -24,7 +24,8 @@ extern void ComputeMBP ( PtrAbstractBox pAb,
                          ThotBool horizRef,
                          ThotBool evalAuto );
 extern ThotBool ComputePositioning ( PtrBox pBox,
-                                     int frame );
+                                     int frame,
+                                     PtrAbstractBox topCreation );
 extern void ComputePosRelation ( AbPosition *rule,
                                  PtrBox pBox,
                                  int frame,
@@ -72,7 +73,8 @@ extern void ComputeMBP ( PtrAbstractBox pAb,
                            ThotBool horizRef,
                            ThotBool evalAuto );
 extern ThotBool ComputePositioning ( PtrBox pBox,
-                                       int frame );
+                                       int frame,
+                                       PtrAbstractBox topCreation );
 extern void ComputePosRelation ( AbPosition *rule,
                                    PtrBox pBox,
                                    int frame,

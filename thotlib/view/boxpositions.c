@@ -621,8 +621,6 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
         pChildBox = pChildAb->AbBox;
         if (pChildBox)
           {
-if (!strcmp(pChildAb->AbElement->ElLabel,"L372"))
-  printf ("AddBoxTranslations L372 y=%d+%d\n",pChildBox->BxYOrg,y);
             ghost = pBox->BxType == BoGhost || pChildBox->BxType == BoGhost;
             /* Decale boites englobees dont l'origine depend de l'englobante */
             /* La boite est coupee, on decale les boites de coupure */
@@ -827,8 +825,6 @@ if (!strcmp(pChildAb->AbElement->ElLabel,"L372"))
                 /* decale la boite positionnee en Y dans l'englobante */
                 if (vertRef && newY)
                   {
-if (!strcmp(pChildAb->AbElement->ElLabel,"L369"))
-  printf ("AddBoxTranslations L369 y=%d+%d\n",pChildBox->BxYOrg,y);
                     i = pChildBox->BxYOrg + pChildBox->BxH - height;
                     /* regarde s'il s'agit d'une boite elastique */
                     if (pChildBox->BxVertFlex)
