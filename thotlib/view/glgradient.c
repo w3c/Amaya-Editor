@@ -142,19 +142,19 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
       len = (int) stop_width;
       /* compute the color difference between two successive pixels */
       if (currentStop->next->r - currentStop->r)
-	delta_r = (currentStop->next->r - currentStop->r) / stop_width;
+	delta_r = (double)(currentStop->next->r - currentStop->r) / stop_width;
       else
 	delta_r = 0;
       if (currentStop->next->g - currentStop->g )
-	delta_g = (currentStop->next->g - currentStop->g) / stop_width;
+	delta_g = (double)(currentStop->next->g - currentStop->g) / stop_width;
       else
 	delta_g = 0;      
       if (currentStop->next->b - currentStop->b)
-	delta_b = (currentStop->next->b - currentStop->b) / stop_width;
+	delta_b = (double)(currentStop->next->b - currentStop->b) / stop_width;
       else
 	delta_b = 0;      
       if (currentStop->next->a - currentStop->a)
-	delta_a = (currentStop->next->a - currentStop->a) / stop_width;
+	delta_a = (double)(currentStop->next->a - currentStop->a) / stop_width;
       else 
 	delta_a = 0;      
       /* create in the line the pixels corresponding to the current stop */
@@ -506,8 +506,9 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
                                           int x, int y, int width, int height)
 {
   unsigned char *line, *pixel, *p0, *pc;
-  int            i, j, size, len;
+  int            i, j, size, len, bWidth, bHeight;
   int            gradStart, gradEnd;
+  double         xRatio, yRatio, Px, Py, den;
  
   if (gradient->gradType != Linear)
     /* here, we handle only linear gradients */
@@ -567,12 +568,12 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
       /* fill a line of pixels according to the gradient */
       line = FillGradientLine (gradient, height, gradStart, gradEnd);
       /* get memory for the gradient bit map to be built */
-      /* fill all columns in the gradient with a copy of the line we have just
-	 filled */
       size = height * width * 4 * sizeof (unsigned char);
              /* 4 bytes per pixel: rgba */
       pixel = (unsigned char *)malloc (size);
       memset (pixel, 0, size);
+      /* fill all columns in the gradient with a copy of the line we have just
+	 filled */
       p0 = pixel;
       pc = line + (height * 4 * sizeof (unsigned char));
       for (j = 0; j < height ; j++)
@@ -591,9 +592,61 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
     }
 
   /* the gradient vector is neither horizontal nor vertical */
-  
-  /* @@@@ to be coded @@@@ */
-  return NULL;
+  /* perform a rough approximation : as if the vector was the diagonal of the
+     rectangle area to be filled */ /* @@@@@@@ */
+  if (gradient->userSpace)
+    /* gradientUnits = userSpaceOnUse */
+    {
+      xRatio = 1;
+      yRatio = 1;
+      bWidth = width;
+      bHeight = height;
+      den = width*width + height*height;
+    }
+  else
+    /* gradientUnits = objectBoundingBox */
+    /* it is as if the box was a square */
+    {
+      if (width > height)
+	{
+	  xRatio = 1;
+	  yRatio = (double)width / (double)height;
+	  bWidth = width;
+	  bHeight = width;
+	  den = width*width*2;
+	}
+      else
+	{
+	  xRatio = (double)height / (double)width;
+	  yRatio = 1;
+	  bWidth = height;
+	  bHeight = height;
+	  den = height*height*2;
+	}
+    }
+  len = (int)sqrt (den) + 1;/* length of the diagonal */
+  /* fill a line of pixels according to the gradient */
+  line = FillGradientLine (gradient, len, 0, len);
+  /* get memory for the gradient bit map to be built */
+  size = height * width * 4 * sizeof (unsigned char);
+         /* 4 bytes per pixel: rgba */
+  pixel = (unsigned char *)malloc (size);
+  /* fill the bit map based on the line */
+  p0 = pixel;
+  for (j = height - 1; j >= 0; j--)
+    for (i = 0; i < width; i++)
+      {
+	/* projection of current pixel on the diagonal */
+	Px = (bWidth*bWidth * i * xRatio + bWidth*bHeight * j * yRatio) / den;
+        Py = (bWidth*bHeight * i * xRatio + bHeight*bHeight * j * yRatio) / den;
+	len = (int)sqrt(Px*Px + Py*Py) * 4;
+	*p0++ = line[len];
+	*p0++ = line[len + 1];
+	*p0++ = line[len + 2];
+	*p0++ = line[len + 3];
+      }
+  free(line);
+  return pixel;
 }
 
 /*----------------------------------------------------------------------
