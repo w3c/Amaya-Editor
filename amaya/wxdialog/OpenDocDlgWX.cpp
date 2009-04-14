@@ -32,6 +32,7 @@ static int      Waiting = 0;
 static int      MyRef = 0;
 static int      Ref_doc = 0;
 static ThotBool Mandatory_title = FALSE;
+static ThotBool New_File = FALSE;
 static char    *compound_string;
 
 //-----------------------------------------------------------------------------
@@ -127,6 +128,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
 
   if (newfile)
     {
+      New_File = TRUE;
       // New HTML document
       XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_CREATE) ));
       XRCCTRL(*this, "wxID_BUTTON_DIR", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SEL)));
@@ -188,6 +190,7 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
     }
   else
     {
+      New_File = FALSE;
       // Not a new HTML document
       XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA,AM_OPEN_URL) ));
       Mandatory_title = FALSE;
@@ -511,14 +514,17 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
   where_id = XRCCTRL(*this, "wxID_RADIOBOX", wxRadioBox)->GetSelection();
   ThotCallback (BaseDialog + OpenLocation , INTEGER_DATA, (char*)where_id);
 
-  // get the combobox profile
-  value = XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->GetValue( );
-  if (!value.IsEmpty())
+  // get the combobox profile for new file
+  if (New_File)
     {
-      strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
-      // give the profile to amaya
-      TtaSetEnvString ("XHTML_Profile", buffer, TRUE);
-      ThotCallback (BaseDialog + DocInfoDocType,  STRING_DATA, (char *)buffer );
+      value = XRCCTRL(*this, "wxID_PROFILE", wxComboBox)->GetValue( );
+      if (!value.IsEmpty())
+	{
+	  strcpy( buffer, (const char*)value.mb_str(wxConvUTF8) );
+	  // give the profile to amaya
+	  TtaSetEnvString ("XHTML_Profile", buffer, TRUE);
+	  ThotCallback (BaseDialog + DocInfoDocType,  STRING_DATA, (char *)buffer );
+	}
     }
 
   // give the new url to amaya (to do url completion)
