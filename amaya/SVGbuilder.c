@@ -4408,9 +4408,8 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       if (elType.ElTypeNum == SVG_EL_stop)
 	{
 	  color = get_char_attribute_from_el (el, attrType.AttrTypeNum);
-          color = SVGhandleStopColor (el, color);
-	  if (color)
-	    TtaFreeMemory (color);
+          SVGhandleStopColor (el, color);
+	  TtaFreeMemory (color);
 	}
       break;
     case SVG_ATTR_stop_opacity:
