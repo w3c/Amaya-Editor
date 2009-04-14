@@ -115,7 +115,7 @@ static Element GetElementFromUri (Element el, Document doc, char *uri)
   /* search backwards first */
   direction = SearchBackward;
   refEl = NULL;
-  if (uri[4] == '#') /* handles only internal links */
+  if (uri[0] == '#') /* handles only internal links */
     for (i = 1; i <= 2 && refEl == NULL; i++)
       {
         curEl = el;
@@ -130,7 +130,7 @@ static Element GetElementFromUri (Element el, Document doc, char *uri)
                 id = (char *)TtaGetMemory (length + 1);
                 TtaGiveTextAttributeValue (attr, id, &length);
                 /* compare with the uri attribute */
-                if (!strcasecmp (&uri[5], id))
+                if (!strcasecmp (&uri[1], id))
                   /* same  values. we found it */
                   refEl = elFound;
                 TtaFreeMemory (id);
@@ -218,6 +218,25 @@ static float ParseFloatAttribute (Attribute attr)
 }
 
 /*----------------------------------------------------------------------
+  SVGhandleFillUrl
+  ----------------------------------------------------------------------*/
+void SVGhandleFillUrl (Element el, Document doc, char *text)
+{
+  Element            refElement;
+
+  /* look for an element with an id attribute with the same value as
+     the uri in the fill attribute value */
+  refElement = GetElementFromUri (el, doc, text);
+  if (!refElement)
+    /* the referred element was not found. It may be a forward reference
+       to an element that has not been parsed yet. We should retry when
+       the document is complete. */
+    SetAttributeOnRoot (el, SVG_ATTR_UnresolvedRef, doc);
+  else
+    TtaLinkGradient (refElement, el);
+}
+
+/*----------------------------------------------------------------------
   ParseCSSequivAttribute
   Create or update a specific presentation rule for element el that reflects
   the value of attribute attr, which is equivalent to a CSS property (fill,
@@ -232,7 +251,6 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
   int                length, val = 0;
   float              value;
   char              *text;
-  Element            refElement;
 
   text = NULL;
   /* get the value of the attribute */
@@ -260,16 +278,7 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
 	/* reference to a paint server */
 	{
 	  text[length-1] = EOS;
-	  /* look for an element with an id attribute with the same value as
-	     the uri in the fill attribute value */
-	  refElement = GetElementFromUri (el, doc, text);
-	  if (!refElement)
-	    /* the referred element was not found. It may be a forward reference
-	       to an element that has not been parsed yet. We should retry when
-	       the document is complete. */
-	    SetAttributeOnRoot (el, SVG_ATTR_UnresolvedRef, doc);
-	  else
-	    TtaLinkGradient (refElement, el);
+	  SVGhandleFillUrl (el, doc, &text[4]);
 	}
       else
         sprintf (css_command, "fill: %s", text);
@@ -1164,7 +1173,7 @@ static ThotBool CopyMarkers (Element el, Document doc, char *attrVal, int att)
   attrVal[length-1] = EOS;
   /* look for an element with an id attribute with the same value as the
      uri in the marker-* attribute */
-  marker = GetElementFromUri (el, doc, attrVal);
+  marker = GetElementFromUri (el, doc, &attrVal[4]);
   if (!marker)
     return FALSE;
   else
@@ -4159,6 +4168,66 @@ float ParseNumberPercentAttribute (Attribute attr)
   return value;
 }
 
+
+char *SVGhandleStopColor (Element el, char *color)
+{
+  AttributeType	   attrType;
+  char             *ret, *actualColor;
+  Attribute        attr1;
+  Element	   ancestor;
+  unsigned short   red, green, blue;
+  ThotBool	   found;
+
+  ret = color;
+  actualColor = color;
+  if (!strncmp (color, "inherit", 7) ||
+      !strncmp (color, "currentColor", 12))
+    {
+      attrType.AttrSSchema = TtaGetElementType (el).ElSSchema;
+      if (!strncmp (color, "currentColor", 12))
+	{
+	  /* check attribute color on an ancestor */
+	  attrType.AttrTypeNum = SVG_ATTR_color;
+	  ret += 12;
+	}
+      else
+	{
+	  /* check attribute stop-color on an ancestor */
+	  attrType.AttrTypeNum = SVG_ATTR_stop_color;
+	  ret += 7;
+	}
+      /* is there a stop-color or color attribute on an ancestor? */
+      ancestor = TtaGetParent (el);
+      found = FALSE;
+      while (ancestor && !found)
+	{
+	  attr1 = TtaGetAttribute (ancestor, attrType);
+	  if (attr1)
+	    /* this ancestor has an attribute stop-color */
+	    {
+	      actualColor = get_char_attribute_from_el (ancestor, attrType.AttrTypeNum);
+	      if (strncmp (actualColor, "inherit", 7))
+		found = TRUE;
+	      else
+		{
+		  TtaFreeMemory (actualColor);
+		  actualColor = NULL;
+		}
+	    }
+	  if (!found)
+	    ancestor = TtaGetParent (ancestor);
+	}
+    }
+  if (actualColor)
+    {
+      ret = TtaGiveRGB (actualColor, &red, &green, &blue);
+      TtaSetGradientStopColor (red, green, blue, el);
+      if (actualColor != color)
+	TtaFreeMemory (actualColor);
+    }
+  return ret;
+}
+
 /*----------------------------------------------------------------------
   SVGAttributeComplete
   The XML parser has read attribute attr for element el in document doc.
@@ -4171,7 +4240,6 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
   Element	       leaf, ancestor;
   int		       attrKind, method, value;
   ThotBool	       closed, found;
-  unsigned short       red, green, blue;
   char                 *color;
   float                offset, opacity;
 
@@ -4340,42 +4408,9 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       if (elType.ElTypeNum == SVG_EL_stop)
 	{
 	  color = get_char_attribute_from_el (el, attrType.AttrTypeNum);
-	  if (!strncmp (color, "inherit", 7) ||
-	      !strncmp (color, "currentColor", 12))
-	    {
-	      if (!strncmp (color, "currentColor", 12))
-		/* check attribute color on an ancestor */
-		attrType.AttrTypeNum = SVG_ATTR_color;
-	      TtaFreeMemory (color);
-	      color = NULL;
-	      /* is there a stop-color attribute on an ancestor? */
-	      ancestor = TtaGetParent (el);
-	      found = FALSE;
-	      while (ancestor && !found)
-		{
-		  attr1 = TtaGetAttribute (ancestor, attrType);
-		  if (attr1)
-		    /* this ancestor has an attribute stop-color */
-		    {
-		      color = get_char_attribute_from_el (ancestor, attrType.AttrTypeNum);
-		      if (strncmp (color, "inherit", 7))
-			found = TRUE;
-		      else
-			{
-			  TtaFreeMemory (color);
-			  color = NULL;
-			}
-		    }
-		  if (!found)
-		    ancestor = TtaGetParent (ancestor);
-		}
-	    }
+          color = SVGhandleStopColor (el, color);
 	  if (color)
-	    {
-	      TtaGiveRGB (color, &red, &green, &blue);
-	      TtaFreeMemory (color);
-	      TtaSetGradientStopColor (red, green, blue, el);
-	    }
+	    TtaFreeMemory (color);
 	}
       break;
     case SVG_ATTR_stop_opacity:

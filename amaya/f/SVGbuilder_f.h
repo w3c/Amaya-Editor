@@ -23,6 +23,9 @@ extern void SVGEntityCreated ( unsigned char *entityValue,
                                Language lang,
                                char *entityName,
                                Document doc );
+extern void SVGhandleFillUrl ( Element el,
+                               Document doc,
+                               char *text );
 extern void ParseCSSequivAttribute ( int attrType,
                                      Attribute attr,
                                      Element el,
@@ -122,6 +125,8 @@ extern void *ParsePathDataAttribute ( Attribute attr,
                                       Document doc,
                                       ThotBool IsDrawn );
 extern float ParseNumberPercentAttribute ( Attribute attr );
+extern char *SVGhandleStopColor ( Element el,
+                                  char *color );
 extern void SVGAttributeComplete ( Attribute attr,
                                    Element el,
                                    Document doc );
@@ -145,6 +150,9 @@ extern void SVGEntityCreated ( unsigned char *entityValue,
                                  Language lang,
                                  char *entityName,
                                  Document doc );
+extern void SVGhandleFillUrl ( Element el,
+                                 Document doc,
+                                 char *text );
 extern void ParseCSSequivAttribute ( int attrType,
                                        Attribute attr,
                                        Element el,
@@ -244,6 +252,8 @@ extern void *ParsePathDataAttribute ( Attribute attr,
                                         Document doc,
                                         ThotBool IsDrawn );
 extern float ParseNumberPercentAttribute ( Attribute attr );
+extern char *SVGhandleStopColor ( Element el,
+                                    char *color );
 extern void SVGAttributeComplete ( Attribute attr,
                                      Element el,
                                      Document doc );

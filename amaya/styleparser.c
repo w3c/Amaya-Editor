@@ -43,6 +43,7 @@ CSSImageCallbackBlock, *CSSImageCallbackPtr;
 #include "html2thot_f.h"
 #include "init_f.h"
 #include "styleparser_f.h"
+#include "SVGbuilder_f.h"
 #include "wxdialogapi_f.h"
 
 #define MAX_BUFFER_LENGTH 200
@@ -4820,7 +4821,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
     {  
       cssRule += 3;
       cssRule = ParseCSSUrl (cssRule, &url);
-      /* **** do something with the url ***** */;
+      SVGhandleFillUrl (element, context->doc, url);
       TtaFreeMemory (url);
       /* **** caution: another color value may follow the uri (in case
          the uri could ne be dereferenced) *** */
@@ -4837,6 +4838,17 @@ static char *ParseSVGFill (Element element, PSchema tsch,
       best.typed_data.unit = UNIT_REL;
       TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
     }
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseSVGStopColor: parse a SVG stop-color property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGStopColor (Element element, PSchema tsch,
+				PresentationContext context, char *cssRule,
+				CSSInfoPtr css, ThotBool isHTML)
+{
+  cssRule = SVGhandleStopColor (element, cssRule);
   return (cssRule);
 }
 
@@ -6153,6 +6165,7 @@ static CSSProperty CSSProperties[] =
     {"fill-rule", ParseSVGFillRule},
     {"fill", ParseSVGFill},
     {"opacity", ParseSVGOpacity},
+    {"stop-color", ParseSVGStopColor},
     {"stroke-opacity", ParseSVGStrokeOpacity},
     {"stroke-width", ParseSVGStrokeWidth},
     {"stroke", ParseSVGStroke}

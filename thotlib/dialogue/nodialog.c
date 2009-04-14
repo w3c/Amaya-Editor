@@ -631,3 +631,13 @@ void TtaCloseAllHelpWindows ()
 void ColApplyCSSRule (Element el, PresentationContext ctxt, char *cssRule, CSSInfoPtr css)
 {
 }
+
+void SVGhandleFillUrl (Element el, Document doc, char *text)
+{
+}
+
+char *SVGhandleStopColor (Element el, char *color)
+{
+  return NULL;
+}
+

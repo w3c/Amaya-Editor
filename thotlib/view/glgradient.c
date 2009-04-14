@@ -98,7 +98,6 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
      and alpha channel */
   lengthByte = *delta + length * 4 * sizeof (unsigned char) + extraLen;
   line = (unsigned char *)malloc (lengthByte);
-  memset (line, 0, lengthByte);
   /* pMax: position after the last byte of the last pixel of the line */
   pMax = line + lengthByte;
 
@@ -287,28 +286,31 @@ static unsigned char *FillGradientLine (Gradient *gradient, int length,
 	{
 	  if (!reverse)
 	    {
-	      /* start from position x1 and repeat the gradient vector down to
-		 position 0 in alternating directions */
-	      p0 = pi;  /*  x1 */
-	      while (p0 >= line + *delta)
+	      if (pf-pi > 4)
 		{
-		  /* pc: position of the pixel to be copied from the gradient
-		     vector */
-		  pc = pi;
-		  while (pc < pf - 4 && p0 >= line + *delta)
+		  /* start from position x1 and repeat the gradient vector down
+		     to position 0 in alternating directions */
+		  p0 = pi;  /*  x1 */
+		  while (p0 >= line + *delta)
 		    {
-		      p0 -= 4;
-		      /* copy a pixel (4 bytes: red, green, blue, alpha) */
-		      p0[0] = pc[0];
-		      p0[1] = pc[1];
-		      p0[2] = pc[2];
-		      p0[3] = pc[3];
-		      pc += 4;
+		      /* pc: position of the pixel to be copied from the
+			 gradient vector */
+		      pc = pi;
+		      while (pc < pf - 4 && p0 >= line + *delta)
+			{
+			  p0 -= 4;
+			  /* copy a pixel (4 bytes: red, green, blue, alpha) */
+			  p0[0] = pc[0];
+			  p0[1] = pc[1];
+			  p0[2] = pc[2];
+			  p0[3] = pc[3];
+			  pc += 4;
+			}
+		      /* change direction and do the next copy of the vector */
+		      pc = pf - 4;
+		      while (pc > pi && p0 >= line + *delta)
+			*p0-- = *pc--;
 		    }
-		  /* change direction and do the next copy of the vector */
-		  pc = pf - 4;
-		  while (pc > pi && p0 >= line + *delta)
-		    *p0-- = *pc--;
 		}
 	    }
 	  else
@@ -495,7 +497,6 @@ static unsigned char *FillColorLastStop (Gradient *gradient, int width,
       length = width * 4 * sizeof (unsigned char); /* 4 bytes per pixel: rgba */
       size = length * height;
       pixel = (unsigned char *)malloc (size);
-      memset (pixel, 0, size);
       /* get the last stop */
       currentStop = gradient->firstStop;
       while (currentStop->next)
@@ -589,7 +590,6 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
       size = height * width * 4 * sizeof (unsigned char);
              /* 4 bytes per pixel: rgba */
       pixel = (unsigned char *)malloc (size);
-      memset (pixel, 0, size);
       /* fill all columns in the gradient with a copy of the line we have just
 	 filled */
       p0 = pixel;
@@ -763,6 +763,9 @@ static unsigned char *FillRadialGradientImage (Gradient *gradient,
        color and opacity of the last gradient stop */
     return FillColorLastStop (gradient, width, height);
 
+  /* the focal point is ignored, as if it would always be the same ascoincide
+     with the center of the largest circle */
+
   if (gradient->userSpace)
     /* gradientUnits = userSpaceOnUse */
     {
@@ -831,7 +834,6 @@ static unsigned char *FillRadialGradientImage (Gradient *gradient,
   size = height * width * 4 * sizeof (unsigned char);
          /* 4 bytes per pixel: rgba */
   pixel = (unsigned char *)malloc (size);
-  memset (pixel, 0, size);
   cxPix = (int)(cx * width);
   cyPix = (int)(cy * height);
   p0 = pixel;

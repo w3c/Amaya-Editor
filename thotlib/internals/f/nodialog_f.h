@@ -201,6 +201,11 @@ extern void ColApplyCSSRule ( Element el,
                               PresentationContext ctxt,
                               char *cssRule,
                               CSSInfoPtr css );
+extern void SVGhandleFillUrl ( Element el,
+                               Document doc,
+                               char *text );
+extern char *SVGhandleStopColor ( Element el,
+                                  char *color );
 
 #else /* __STDC__ */
 
@@ -399,6 +404,11 @@ extern void ColApplyCSSRule ( Element el,
                                 PresentationContext ctxt,
                                 char *cssRule,
                                 CSSInfoPtr css );
+extern void SVGhandleFillUrl ( Element el,
+                                 Document doc,
+                                 char *text );
+extern char *SVGhandleStopColor ( Element el,
+                                    char *color );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
