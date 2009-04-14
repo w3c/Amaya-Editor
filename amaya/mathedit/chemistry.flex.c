@@ -360,7 +360,7 @@ void chemistryfree (void *  );
 
 /* Begin user sect3 */
 
-#define chemistrywrap(n) 1
+#define chemistrywrap() 1
 #define YY_SKIP_YYWRAP
 
 typedef unsigned char YY_CHAR;

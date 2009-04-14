@@ -866,7 +866,6 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec,
   ElementType     childType, elType; 
   SSchema         sshtml;
   XTigerTemplate  t;
-  char           *name;
   
   if (TtaGetDocumentAccessMode(doc))
   {
@@ -958,7 +957,6 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec,
 void Component_FixAccessRight (Element el, Document doc)
 {
 #ifdef TEMPLATES
-  ElementType elType;
   Element     child;
   
   if (el && doc)
