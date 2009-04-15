@@ -273,7 +273,7 @@
 270 Sie können zu einer anderen Registerkarte wechseln indem Sie auf das Pfeil-nach-unten Symbol rechts neben den Registerleisten klicken.
 271 Falls Sie "Ziele anzeigen" im "Darstellungen"-Menü wählen, werde sie formatiert dargestellt. Dies ist günstig bei der Erzeugung von Verweisen: Ein Ziel kan durch Klicken ausgewählt werden 
 272 Wenn Sie ein SVG-Objekt drehen, wird der Drehpunkt durch ein Kreuz angezeigt. Sie können die Maus zum Bewegen verwenden.
-273 SVG-Grundformen haben Marker die zur Bearbeitung der Form verwendet werden können. Blaue Dreiecke oder grüne Quadrate ermöglichen es die Größe der Form zu ändern. Bei 
+273 SVG-Grundformen haben Marker die zur Bearbeitung der Form verwendet werden können. Blaue Dreiecke oder grüne Quadrate ermöglichen es die Größe der Form zu ändern. Bei <rect>>-Elementen gibt es rote Kreise um den Radius abgerundeter Ecken zu bearbeiten.
 274 Bei SVG-Zeichnungen werden Linien mit einer Genauigkeit von 15º erstellt wenn Sie dei Hochtaste drücken. Das ist sehr nützlich, wenn Sie gerade Linien zeichnen wollen.
 275 Beim Vergrößern und Verkleinern von Bildern oder SVG-Objekten erhält das Drücken der Hochtaste die Seitenverhältnisse
 276 Verwenden Sie Bearbeiten>Einstellungen>Sprache zur Auswahl der Sprache

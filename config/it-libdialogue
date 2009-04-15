@@ -272,7 +272,7 @@
 270 Ci si può muovere in un altro tab con il menu visualizzato dal pulsante freccia alla destra dei tab del documento.
 271 e attivi "Mostra obiettivi" nel menu "Viste", gli obiettivi sono visualizzati in modo particolare. Questo è utile per la creazione di collegamenti: un obiettivo può essere scelto cliccandoci sopra. 
 272 Quando un oggetto SVG viene ruotato, il centro è indicato con una croce. Si puo' usare il mouse per muoverlo.
-273 Le forme di base SVG hanno delle maniglie che possono essere usate per modificarle. Si puo' cambiare la gradezza deI triangoli blu e dei quadrati verdi. Per l'elemento 
+273 Le forme di base SVG hanno delle maniglie che possono essere usate per modificarle. Si puo' cambiare la gradezza deI triangoli blu e dei quadrati verdi. Per l'elemento <rect> e per i cerchi rossi give il controllo è dato dal raggio degli angoli arrotondati.
 274 Nel disegno SVG , le linee sono crete con una precisione di 15º se si tiene premuto il tasto shift. Questo è utile quando si vogliono disegnare linee diritte.
 275 Quando si ridimensiona un'immagine o un oggetto SVG, tenendo premuto il tasto shift si memorizza il cambiamento.
 276 Usa Edita>Preferenze>Lingua delle finestre di dialogo per scegliere la lingua dell'interfaccia utente.

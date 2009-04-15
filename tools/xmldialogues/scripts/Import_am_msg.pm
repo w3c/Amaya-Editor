@@ -346,16 +346,17 @@ sub end_hndl { #	do the modification if necessary
 		    else {
 			#no problem they are the same or it's a new translation
 			#print "label->$current_label val->$labels{$current_label} . "\n";
-print "Text:    \"$text\"\n";
-print "Correct: \"$texts{$labels{$current_label}}\"\n";
+      print "Text:    \"$text\"\n";
+      print "Correct: \"$texts{$labels{$current_label}}\"\n";
 		    }
 		}
 		else {
 #print '==> ' . "SKIP-- $current_language". "\n";
-                }
+    }
 		#always
-		recopy ( $text);
-		$current_language = $current_tag = undef;
+		recopy ($text);
+		#$current_language = $current_tag = undef;
+    $current_tag = "";
 	}	
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		elsif ($end_tag eq "control") { 
@@ -423,19 +424,18 @@ sub default_hndl {	#for all the cases of an invalid xml document
 	}
 	
 	#to used all the text recognized
-	elsif ( $data !~ /^\n/ && $data !~ /^\t/) {
+	elsif ($data !~ /^\t/) {
 		if ( $current_tag eq "language") {
 			#if ( )
 			@list_of_lang_occur = (@list_of_lang_occur, $data) ;
 			recopy ($data);
 		}
 		elsif ($current_tag eq "message") {
-			$text .= $data;
-			
+			$text .= $data;	
 		}
-		
 	}
 	else { # do nothing
+      print "=>\"$text\" Data:\"$data->utf8\"\n";
 	}
 } #End default_hndl
 
@@ -446,6 +446,3 @@ __END__
 
 
 Package write by Emmanuel Huck
-
-
-
