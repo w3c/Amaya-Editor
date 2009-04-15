@@ -596,7 +596,10 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
               /* check if expat found an invalid utf-8 character or an error
                  in an attribute value or an invalid entity */
               c = XML_GetInputContext (Parser, &pos, &n);
-              val = (unsigned char)(c[pos]);
+              if (c) 
+                val = (unsigned char)(c[pos]);
+              else
+                val = EOS;
               if (strstr ((char *)msg, "invalid token") && val > 127)
                 XMLInvalidToken = TRUE;
               else
