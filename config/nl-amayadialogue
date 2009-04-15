@@ -1,0 +1,357 @@
+# encoding= latin1
+0 &Bestand
+1 Context
+2 Context
+3 Bew&erken
+4 &Weergave
+5 &Invoegen
+6 &Opmaak
+7 &Koppelingen
+8 Attributen
+9 &Gerei
+10 &Help
+11 Nieuw tabblad
+12 Nieuw &document
+13 Nieuw
+14 Nieuw &document...
+15 Nieuwe &formule...
+16 Nieuwe &tekening...
+17 Nieuw &opmaakmodel...
+18 &Document openen...
+19 &Bestand
+20 In nieuw &venster openen
+21 Document opnieuw &laden
+22 Lezen als
+23 Unicode (UTF-8)
+24 West-Europees (ISO 8859-1)
+25 West-Europees (ISO 8859-15)
+26 West-Europees (Windows 1252)
+27 Centraal Europees (ISO 8859-2)
+28 Centraal Europees (Windows 1250)
+29 Zuid-Europees (ISO 8859-3)
+30 Baltisch (ISO 8859-4)
+31 Baltisch (Windows 1257)
+32 Cyrillisch (ISO 8859-5)
+33 Cyrillisch (Windows 1251)
+34 Cyrillisch (KOI8-R)
+35 Arabisch (ISO 8859-6)
+36 Arabisch (Windows 1256)
+37 Grieks (ISO 8859-7)
+38 Grieks (Windows 1253)
+39 Hebreeuws (ISO 8859-8)
+40 Hebreeuws (Windows 1255)
+41 Turks (ISO 8859-9)
+42 Turks (Windows 1254)
+43 Chinees (vereenvoudigd) (GB-2312)
+44 Japans (ISO 2022-JP)
+45 Japans (EUC-JP)
+46 Japans (Shift-JIS)
+47 Vo&rige
+48 Vol&gende
+49 &Opslaan
+50 Opslaan &als...
+51 Alle opslaan
+52 &Synchroniseren
+53 Verzenden per e-mail...
+54 &Instellen en afdrukken...
+55 Afdru&kken
+56 &Tabblad sluiten
+57 &Venster sluiten
+58 Amaya verlate&n
+59 Nieuw tabblad
+60 Tabblad vernieuwen
+61 Alle tabbladen vernieuwen
+62 Andere tabbladen sluiten
+63 Tabblad sluiten
+64 Koppeling openen
+65 Koppeling in nieuw tabblad openen
+66 Koppeling in nieuw venster openen
+67 Roteren
+68 Hellen
+69 Grootte
+70 Verplaatsen
+71 Groepering opheffen
+72 Knippen
+73 Kopiëren
+74 Plakken
+75 Wissen
+76 Invoegen
+77 Toevoegen
+78 &Ongedaan maken
+79 &Herhalen
+80 K&nippen
+81 &Kopiëren
+82 &Plakken
+83 &Wissen
+84 &Invoegen
+85 &Toevoegen
+86 Alles selecteren
+87 Selecteren
+88 Bovenliggend element
+89 Eerste onderliggende element
+90 Voorafgaand element
+91 Volgend element
+92 &Zoeken...
+93 &Voorkeuren...
+94 Werkbalken
+95 &Navigatie
+96 &Standaard
+97 &Werkset
+98 &Kaartgebieden
+99 &Doelen
+100 &Opmaak
+101 &Structuur
+102 &Broncode
+103 K&oppelingen
+104 &Alternatieve weergave
+105 &Inhoudsopgave
+106 Horizontaal splitsen
+107 Verticaal splitsen
+108 &Documentinformatie
+109 Parseerfouten
+110 &Volledig scherm
+111 Inzoomen
+112 Uitzoomen
+113 Geen zoom
+114 Alinea (p)
+115 Kop
+116 Kopniveau 1 (h1)
+117 Kopniveau 2 (h2)
+118 Kopniveau 3 (h3)
+119 Kopniveau 4 (h4)
+120 Kopniveau 5 (h5)
+121 Kopniveau 6 (h6)
+122 Lijst
+123 Ongestructureerde lijst (ul)
+124 Gestructureerde lijst (ol)
+125 Definitielijst (dl)
+126 Term (dt)
+127 Definitie (dd)
+128 Informatiebepaling
+129 Nadruk (em)
+130 Sterke nadruk (strong)
+131 Citaat (cite)
+132 Definitie (dfn)
+133 Code (code)
+134 Variabele (var)
+135 Voorbeeld (samp)
+136 Toetsaanslag (kbd)
+137 Afkorting (abbr)
+138 Acroniem (acronym)
+139 Invoeging (ins)
+140 Verwijdering (del)
+141 Tekenelement
+142 Cursief (i)
+143 Vet (b)
+144 Teletype (tt)
+145 Groot (big)
+146 Klein (small)
+147 Span (span)
+148 Subscript (sub)
+149 Superscript (sup)
+150 Aanhaling (q)
+151 Bidirectioneel opheffen (bdo)
+152 Afbeelding (img)...
+153 Horizontale lijn (hr)
+154 Eindemarkering (br)
+155 Voorgeformatteerd (pre)
+156 Tabel invoegen
+157 Tabel
+158 Tabel invoegen...
+159 Bijschrift (caption)
+160 Koptekst (thead)
+161 Tabeltekst (tbody)
+162 Voettekst (tfoot)
+163 &Wiskundige notatie
+164 Formule invoegen
+165 Platte tekst (mtext)
+166 Identificator (mi)
+167 Getal (mn)
+168 Operator (mo)
+169 Spatie (mspace)
+170 Teken (&&xxx;)
+171 Impliciete vermenigvuldiging (InvisibleTimes)
+172 Functie toepassen (ApplyFunction)
+173 Wortel (mroot)
+174 Vierkantswortel (msqrt)
+175 Insluiten (menclose)
+176 Breuk (mfrac)
+177 Subscript en superscript (msubsup)
+178 Subscript (msub)
+179 Superscript (msup)
+180 Boven en onder (munderover)
+181 Onder (munder)
+182 Boven (mover)
+183 Haakjes (mrow)
+184 Multiscripts (mmultiscripts)
+185 Matrix (mtable)
+186 Figuur
+187 Lijn
+188 Pijl
+189 Tekst
+190 Extern object (foreignObject)
+191 Groep
+192 Vierkant
+193 Rechthoek
+194 Ruit
+195 Driehoek
+196 Cirkel
+197 Ellips
+198 Gebroken lijn
+199 Veelhoek
+200 Open curve
+201 Gesloten curve
+202 Formulier
+203 Formulier invoegen...
+204 Knop (input)
+205 Selectievakje (input)
+206 Bestandsselectieknop (input)
+207 Verborgen (input)
+208 Afbeelding (input)...
+209 Wachtwoord (input)
+210 Radioknop (input)
+211 Reset (input)
+212 Verzenden (input)
+213 Tekstveld (input)
+214 Formuliergroep (fieldset)
+215 Bijschrift (label)
+216 Menu (option)
+217 Submenu (optgroup)
+218 Tekstveld (textarea)
+219 Object
+220 Object (object)
+221 Parameter (param)
+222 Kaartgebied
+223 Kaart invoegen
+224 Cirkelvormig gebied
+225 Veelhoekig gebied
+226 Rechthoekig gebied
+227 Verborgen elementen
+228 Opmaak (style)
+229 Commentaar
+230 Basis (base)
+231 Meta-informatie (meta)
+232 Koppeling (link)
+233 Script (script)
+234 Geen script (noscript)
+235 Sectie (div)
+236 Adres (address)
+237 Blokquotatie (blockquote)
+238 Inline frame (iframe)
+239 Ruby (ruby)
+240 Thema
+241 Klassiek
+242 Modern
+243 Geen thema
+244 Tekstkleur
+245 Tekstkleur selecteren?
+246 Geen kleur
+247 Achtergrondkleur
+248 Achtergrondkleur selecteren?
+249 Geen kleur
+250 Uitlijning
+251 Links
+252 Midden
+253 Rechts
+254 Uitvullen
+255 Standaard
+256 Regelafstand
+257 Enkel
+258 Anderhalf
+259 Dubbel
+260 Standaard
+261 Inspringing
+262 Inspringing vergroten
+263 Inspringing verkleinen
+264 Standaard
+265 Tekst
+266 Lettertype selecteren?
+267 Standaard
+268 &Opmaakeditor?
+269 &Regel maken...
+270 Toegepaste opmaak weergeven?
+271 Opmaakmodellen
+272 Koppeling?
+273 Openen?
+274 Uitschakelen...
+275 Inschakelen...
+276 Verwijderen...
+277 Lokatie kopiëren
+278 Lokatie plakken
+279 &Koppelen naar vorige doel
+280 Koppeling &maken of wijzigen...
+281 &Doel maken
+282 Koppeling of doel &verwijderen
+283 &ID's toevoegen/verwijderen...
+284 &Spelling controleren...
+285 &Transformeren...
+286 Code zuiveren
+287 Tabel bewerken
+288 Wijzigen in gegevenscel
+289 Wijzigen in kopcel
+290 Cellen samenvoegen
+291 Samenvoegen met cel rechts
+292 Samenvoegen met cel beneden
+293 Samengevoegde cel horizontaal splitsen
+294 Samengevoegde cel verticaal splitsen
+295 Rij selecteren
+296 Rij invoegen
+297 Rij toevoegen
+298 Kolom selecteren
+299 Kolom invoegen
+300 Kolom toevoegen
+301 Plakken vóór
+302 Plakken na
+303 Titel wijzigen?
+304 Doctype wijzigen
+305 Doctype verwijderen
+306 Doctype toevoegen
+307 Wijzigen in XHTML 1.1
+308 Wijzigen in XHTML 1.0 Transitional
+309 Wijzigen in XHTML 1.0 Strict
+310 Wijzigen in XHTML 1.0 Basic
+311 Wijzigen in XHTML+RDFa
+312 Wijzigen in HTML 4.01 Transitional
+313 Wijzigen in HTML 4.01 Strict
+314 Sectie&nummering
+315 &Inhoudsopgave toevoegen/bewerken
+316 &Boek maken
+317 Tijdstempel invoegen
+318 Namespace-declaraties...
+319 &Annotaties
+320 Annotatie maken voor selectie
+321 Annotatie maken voor document
+322 Naar selectie verplaatsen
+323 Selectie opslaan als &XPointer
+324 Verplaatsen naar opgeslagen XPointer
+325 Annotatie beantwoorden
+326 Naar server posten
+327 Verwijderen
+328 Laden
+329 Zoekopdracht aanpassen?
+330 Lokaal filter...
+331 &Samenwerken
+332 Bron vergrendelen...
+333 Bron ontgrendelen...
+334 Eigenschappen van bron bekijken...
+335 Informatie over vergrendeling kopiëren...
+336 Vergrendeling controleren
+337 Sjablonen
+338 Sjabloon maken van huidige document
+339 Tekstveld maken...
+340 Component of element gebruiken
+341 Component maken en gebruiken...
+342 Huidige gebruik herhalen
+343 Component maken en herhalen...
+344 Verzamelveld maken...
+345 Nieuwe typenverbinding maken...
+346 &JavaScript/DOM
+347 Inschakelen/Uitschakelen
+348 Opdracht uitvoeren
+349 Extern script uitvoeren
+350 Extern script toevoegen
+351 Script invoegen
+352 Controleren op nieuwere versie
+353 Amaya Help...
+354 Tip van de dag...
+355 Over Amaya

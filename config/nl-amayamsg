@@ -1,0 +1,514 @@
+# encoding= latin1
+0 Bestanden
+1 Openen
+2 Nieuw MathML-document
+3 Nieuw SVG-document
+4 Nieuw CSS-opmaakmodel
+5 Op basis van sjabloon:
+6 In nieuw tabblad
+7 In nieuw venster
+8 Wissen
+9 Aanklikken
+10 Het document is opgeslagen: %s
+11 Attribuut
+12 URL
+13 Tekst
+14 Naam
+15 Wachtwoord
+16 Als klasse gebruiken
+17 Bezig met ophalen %s
+18 Kan %s niet laden
+19 De bewerking is voltooid.
+20 Selecteer het doel
+21 Het doel is ongeldig
+22 Typ de URI of blader ernaar
+23 Titel
+24 Titel wijzigen
+25 Het document is gewijzigd. Wilt u het opslaan?
+26 Het ophalen van %s is omgeleid
+27 Er zijn te veel omleidingen aangetroffen
+28 Kan het lokale bestand %s niet maken
+29 Kan de map %s niet maken
+30 Wacht op een vrij socket...
+31 Bezig met lezen %s
+32 Bezig met schrijven %s
+33 Bezig met wachten op verbinding
+34 Bezig met contacteren %s
+35 Bezig met opzoeken van %s
+36 Onbekende status
+37 Verificatie
+38 Identificeer uzelf voor
+39 Verificatiefout voor %s
+40 %s is geladen maar er zijn geen gegevens beschikbaar
+41 Het overzetten is onderbroken.
+42 %s is op dit moment niet beschikbaar. Probeer het later opnieuw.
+43 %s is geladen
+44 %s wordt opgeslagen
+45 Kan niet opslaan in: %s
+46 Engelse systeemfoutmeldingen
+47 Deze elementen kunnen niet in een anker worden geplaatst
+48 Een anker kan niet binnen een ander anker worden geplaatst
+49 GET wordt nog niet ondersteund voor dit type URL: %s
+50 PUT wordt nog niet ondersteund voor dit type URL: %s
+51 Deze functie is niet beschikbaar in de versie van Amaya die u gebruikt
+52 Het schrijven van %s is voltooid
+53 %s kon niet genormaliseerd worden
+54 Kon geen tijdelijke map maken voor bestand %s
+55 Er kan geen transformatie uitgevoerd worden op de selectie
+56 De transformatie is mislukt
+57 Er is een syntaxisfout in het bestand HTML.trans regel %s
+58 Wiskunde
+59 Figuur
+60 Opslaan als
+61 Identificeer u voor realm \'%s\' op server \'%s\'
+62 Realm: %s
+63 Server: %s
+64 Editor/Browser
+65 Aanvraagtime-out, de server heeft niet geantwoord
+66 %s bestaat al. Wilt u het overschrijven?
+67 %s is gewijzigd. Wilt u het overschrijven?
+68 Achtergrondafbeelding
+69 Hier kan geen achtergrondafbeelding gebruikt worden.
+70 CSS-opmaakmodel
+71 Bij het opslaan ook de volgende afbeeldingen opslaan?
+72 De URL kon niet worden opgeslagen
+73 Opslaan?
+74 Afbeeldingen kopiëren
+75 URL's transformeren
+76 Locatie document
+77 Map voor afbeeldingen
+78 Locatie object
+79 CSS-opmaakbestanden
+80 CSS-opmaakmodel openen
+81 CSS-opmaakmodel uitschakelen
+82 CSS-opmaakmodel inschakelen
+83 CSS-opmaakmodel verwijderen
+84 De webeditor and -browser van het W3C
+85 (neem bij problemen contact op met www-amaya@w3.org)
+86 Copyright © 1994-%s INRIA en W3C® (MIT, ERCIM, Keio). Alle rechten voorbehouden.
+87 w3.org/Amaya/
+88 URL's met meer dan %s tekens kunnen niet gebruikt worden
+89 Alleen het standaardtype is toegestaan
+90 Links bijwerken: %s%% is voltooid
+91 Er zijn geen wijzigingen om op te slaan
+92 Herhalen langs y-as (repeat-y)
+93 Vul uw gebruikersnaam in:
+94 %d openstaande aanvragen
+95 Er is geen CSS-opmaakbestand beschikbaar
+96 Niet opslaan
+97 Niet herhalen (no-repeat)
+98 Het document heeft geen naam. Opslaan naar:
+99 Plug-ins
+100 Onbekende fout tijdens het opslaan van URL %s
+101 Kan geen verbinding maken met de server
+102 Toegang tot %s is niet toegestaan op de server
+103 De bewerking is voltooid voor %s
+104 %s is gemaakt
+105 %s is bijgewerkt
+106 De bewerking is voltooid met statuscode %s
+107 De server heeft de syntaxis van de aanvraag niet begrepen
+108 De server heeft geen nieuwe informatie
+109 Deze methode is niet toegestaan
+110 Identificeer u voor toegang tot %s
+111 Bezig met verifiëren...
+112 Opslaan naar %s mislukt. Opslaan op schijf?
+113 Bij het opslaan naar %s worden wellicht gegevens beschadigd. Wilt u dit negeren?
+114 URL %s is omgeleid naar %s. Wilt u dit negeren?
+115 Opnieuw laden van %s is mislukt. Wilt u dit negeren?
+116 Server meldt een fout: %s
+117 De server ondersteunt deze aanvraagmethode niet
+118 Filter
+119 actieve overdrachten
+120 overdrachten in de wachtrij
+121 Inhoudsopgave maken
+122 Lijst met koppelingen maken
+123 Herhaalmodus
+124 Herhalen (repeat)
+125 Herhalen langs x-as (repeat-x)
+126 Uw vorige sessie werd niet correct afgesloten. Wilt u back-upbestanden van de documenten laden?
+127 Verificatie is mislukt. Wilt het opnieuw proberen?
+128 De bewerking wordt omgeleid. Wilt u doorgaan?
+129 Rijen
+130 Kolommen
+131 Rand (pixels)
+132 Plaatsvervangende tekst:
+133 Typ de plaatsvervangende tekst
+134 URL afdrukken
+135 Toepassen
+136 Standaardwaarden
+137 Cache leegmaken
+138 Cache
+139 Cache inschakelen
+140 Beveiligde documenten in cache opslaan
+141 Altijd cache gebruiken
+142 Verloopdatum in header (Expires:) negeren
+143 Map voor cache:
+144 Cachegrootte (MB):
+145 Maximale grootte voor item in cache (MB):
+146 Proxy
+147 HTTP-proxy (bijvoorbeeld www.w3.org:1234):
+148 Proxy-domeinlijst (bijvoorbeeld lists.w3.org):
+149 Algemeen
+150 Startpagina:
+151 Vertraging voor knopinfo (ms)
+152 Vertraging voor dubbelklik (ms)
+153 Tekengrootte in menu's
+154 Lettertype in-/uitzoomen:
+155 Menutaal:
+156 Regels behouden bij plakken
+157 Back-upbestand maken
+158 Venstergrootte onthouden bij verlaten
+159 Achtergrondafbeeldingen weergeven
+160 Knoppenbalk weergeven
+161 Adres weergeven
+162 Doelen weergeven
+163 CR/LF (regelterugloop, regelinvoer) exporteren
+164 Browsen
+165 Afbeeldingen laden (img)
+166 Koppeling activeren met dubbelklik
+167 Publiceren
+168 ETAGS en voorwaarden gebruiken
+169 Elke PUT met GET controleren
+170 Standaardnaam voor URL's die eindigen op '/':
+171 Vensterafmetingen
+172 Huidige afmetingen bewaren
+173 Standaardafmetingen herstellen
+174 De wijzigingen worden toegepast wanneer u een nieuw venster opent.
+175 Voorgrondkleur document:
+176 Achtergrondkleur document:
+177 Voorgrondkleur menu:
+178 Achtergrondkleur menu:
+179 Kon de cache niet openen. Controleer of de cachemap geldig is en of de cache niet wordt gebruikt door een andere instantie van Amaya.
+180 Lijst van voorkeurstalen (bv. "nl, en"):
+181 De wijzigingen worden toegepast als u Amaya opnieuw opstart.
+182 Automatische omleiding van PUT naar deze domeinen toestaan:
+183 Opmaakmodel negeren
+184 Type transformatie
+185 (de verschillende elementen moeten telkens door een spatie gescheiden worden)
+186 Geen proxy op deze domeinen
+187 Proxy alleen voor deze domeinen
+188 Naam van teken
+189 Gebruikersmap voor Amaya
+190 Tijdelijke map
+191 Palet gebruiken
+192 Talen
+193 Annotaties
+194 Koppeling
+195 Gebruiker voor annotaties en bladwijzers:
+196 Postserver voor annotaties:
+197 Annotatieservers:
+198 Lokale annotaties automatisch laden
+199 Annotaties op afstand automatisch laden
+200 Automatisch laden bij opstarten uitschakelen (voor offline werken)
+201 Kleur selectie:
+202 Achtergrondkleur selectie:
+203 Oriëntatie
+204 Staand
+205 Liggend
+206 Opeenvolgende spaties behouden
+207 Fout(en) in de broncode
+208 Kritieke fout. Corrigeer de broncode om verder te gaan
+209 Probeer 'Bestand/Lezen als'
+210 Ongeldige tekens
+211 Documentprofiel:
+212 Er zijn fouten aangetroffen. Zie Weergave > Parseerfouten
+213 De codering van dit document wordt niet ondersteund in Amaya.
+214 Bij het bewerken en opslaan van dit document wordt het type gewijzigd
+215 Niet beschikbaar
+216 Bladeren
+217 Bestandzoeker
+218 Selectie
+219 Lokaal annotatiefilter
+220 Fouten weergeven
+221 Verbergen
+222 Alle weergeven
+223 Alle verbergen
+224 * is verborgen, - is gedeeltelijk verborgen
+225 Filteropties
+226 Op auteur
+227 Op type
+228 Op server
+229 Toegangstoetsen
+230 Negeren
+231 Positie werkset:
+232 links
+233 rechts
+234 Opmaakelement
+235 Kan geen XPointer maken
+236 Er kan geen start-XPointer op een intern toegevoegd element worden gemaakt
+237 Er kan geen einde-XPointer op een intern toegevoegd element worden gemaakt
+238 Kan de verplaatsing voor de annotatie niet bepalen
+239 Kan de annotatie niet naar een ander document verplaatsen
+240 Er is geen gebruiker ingesteld voor annotaties. U kunt dit doen in het menu Voorkeuren > Annotaties
+241 Kan geen XPointer creëren voor deze annotatie
+242 Nieuwe annotatie maken
+243 Kan de annotatie niet posten
+244 Kan de annotatie niet wissen
+245 De annotatie is gewist.
+246 Kan de annotatie-index niet laden
+247 Fout
+248 Selecteer de tekstcodering
+249 Selecteer het MIME-type
+250 Tekstcodering wijzigen
+251 MIME-type wijzigen
+252 Wijzigen
+253 Dit type document ondersteunt geen tekstcodering
+254 Het doel moet een HTTP URL zijn voor deze optie
+255 Fout: ongeldig MIME-type
+256 Onbekend
+257 Opmaak wordt genegeerd. Controleer de parseerfouten
+258 Dit document is al geladen in een ander venster
+259 Als u die versie opslaat, kan bijgewerkte informatie gedeeltelijk verloren gaan
+260 Als u het documenttype toevoegt of wijzigt, worden sommige elementen of attributen verwijderd
+261 Bevestig de handeling
+262 MIME-type 'application/xhtml+xml' gebruiken voor XHTML-documenten
+263 Tekstcodering voor nieuwe documenten:
+264 De vergrendeling is uitgevoerd
+265 Vergrendelen is mislukt
+266 Bezig met vergrendelen van %s...
+267 Document %s is vergrendeld
+268 Document %s is vergrendeld door %s (time-out %s)
+269 Informatie voor vergrendelen overschrijven?
+270 Informatie voor vergrendelen kopiëren?
+271 Probeer het document te ontgrendelen...
+272 De ontgrendelen is voltooid
+273 Ontgrendelen is mislukt
+274 Bezig met ontgrendelen van %s...
+275 Document %s is ontgrendeld
+276 Wilt u het document ontgrendelen?
+277 Documenteigenschappen
+278 De documenteigenschappen zijn niet beschikbaar
+279 De documenteigenschappen kunnen momenteel niet opgevraagd worden. Probeer het later opnieuw.
+280 Bezig met opvragen documenteigenschappen...
+281 WebDAV wordt niet ondersteund voor URL's van type %s
+282 De informatie voor vergrendelen kon niet worden opgeslagen in de lokale database
+283 De informatie voor vergrendelen kon niet worden verwijderd uit de lokale database
+284 Deze bewerking is niet toegestaan voor %s
+285 De opvraging is mislukt. Reden: fout in afhankelijkheid
+286 De opvraging is mislukt. Reden: %s
+287 Wilt u het opnieuw proberen?
+288 WebDAV
+289 Identificatie gebruiker (URL):
+290 Lijst van WebDAV-bronnen van gebruiker (URL URL ...):
+291 Diepte voor vergrendelen:
+292 oneindig
+293 Time-out voor vergrendelen:
+294 Oneindig
+295 Andere (seconden)
+296 Bereik voor vergrendelen:
+297 exclusief
+298 gedeeld
+299 Informeren
+300 Informeren bij openen
+301 Informeren bij verlaten
+302 Animatie
+303 SVG-bibliotheek
+304 Optie kopiëren
+305 Selectie kopiëren
+306 Zie selectie
+307 Nieuw model aan bibliotheek toevoegen
+308 URL van nieuwe SVG...
+309 Titel bibliotheek
+310 URL bibliotheek
+311 Bibliotheek maken
+312 Bibliotheek doorbladeren
+313 Bibliotheek maken of zoeken
+314 De selectie bevat geen SVG-elementen. Maak een andere selectie.
+315 De bibliotheek moet een titel hebben
+316 Verplaats de cursor in het document dat u bewerkt om een nieuwe sleutelpositie te bepalen...
+317 De sleutelpositie is bepaald. Verplaats de schuifknop om de duur van de animatie in te stellen...
+318 Selecteer de beginkleur van het element...
+319 De beginkleur is gedefinieerd. Verplaats de schuifknop om de duur van de animatie in te stellen...
+320 Selecteer de eindkleur...
+321 De animatie is gedefinieerd
+322 Geanimeerd attribuut
+323 Element zonder ID
+324 ID toevoegen
+325 ID verwijderen
+326 ID's toevoegen/verwijderen
+327 Bewerking uitvoeren
+328 Geef een elementnaam op
+329 CSS-opmaakmodel toepassen
+330 Huidige schermtype:
+331 Nieuw onderwerp
+332 Eigenschappen van bladwijzer
+333 Eigenschappen van onderwerp
+334 Hiërarchie van onderwerp:
+335 Titel:
+336 Terugnames:
+337 Auteur:
+338 Gemaakt:
+339 Laatst gewijzigd:
+340 Beschrijving:
+341 Selecteer een element
+342 Alle CSS-opmaakmodellen
+343 CSS-opmaakregels toegepast op element <%s>\n
+344 Gekleurde lijnen zijn koppelingen. Klik er tweemaal (of eenmaal) op om naar de aangegeven locatie te gaan.\n
+345 Objecten laden (object, embed, iframe)
+346 Er is geen opmaakregel voor dit element.
+347 Er is geen invoegpositie bepaald. Selecteer eerst de invoegpositie.
+348 Documentinformatie
+349 Type document
+350 MIME-type
+351 Tekstcodering:
+352 Lengte van inhoud
+353 Locatie van inhoud
+354 Voorkeuren
+355 Teken (&&xxx;)
+356 Object creëren
+357 Map
+358 Bestand
+359 In huidig tabblad
+360 In nieuw venster
+361 Anti-aliasing
+362 ISO-datumnotatie
+363 Locatie voor nieuwe documenten
+364 Locatie voor openen
+365 Waarschuwen als meerdere tabbladen tegelijk worden gesloten
+366 Maximum aantal URL's in geschiedenis:
+367 Lijst van URL's wissen
+368 Alle sneltoetsen tonen
+369 Vaste regellengte (standaardwaarde is 0):
+370 Sjabloon
+371 Document opslaan als...
+372 Sjabloon niet gevonden
+373 Sjabloonvelden tonen
+374 Dialoog sluiten bij toepassen
+375 Niet toegestaan
+376 Beveiligd element
+377 De selectie mag een element van dit type niet overschrijden
+378 Er is geen kopniveau aangetroffen
+379 Toch opslaan
+380 Kan host niet vinden
+381 Het document is gewijzigd (412)
+382 Er is een conflict met de huidige status van de bron
+383 Ongeldige selectie
+384 Onbekend element
+385 %d bijgewerkte elementen
+386 De titel moet worden opgegeven
+387 Sjablonen
+388 Aantal voorkomens
+389 Maximum aantal voorkomens is bereikt
+390 Minimum aantal voorkomens is bereikt
+391 Dubbele ID's controleren
+392 XSL-opmaakmodel voor MathML-elementen toevoegen
+393 Operator invoegen
+394 Selecteer hoe de operator moet worden weergegeven
+395 Integraal invoegen
+396 Selecteer het type integraal
+397 Attributen van omheining
+398 Selecteer de symbolen voor openen, scheiden en sluiten
+399 Aantal operatorsymbolen
+400 Aantal coördinaten
+401 Lengte van N-tupels
+402 Aantal elementen
+403 Aantal variabelen
+404 Graad
+405 Graad van variabele nummer %d
+406 Samengesteld document
+407 Bronnen kopiëren (opmaakmodellen en scripts)
+408 Locatie voor opslaan bronnen
+409 Locatie voor opslaan afbeeldingen
+410 Document
+411 Afbeeldingen, opmaak en scripts
+412 E-mail
+413 Gemeenschappelijke parameters voor het verzenden van e-mail:
+414 SMTP-serveradres:
+415 Serverpoort:
+416 (standaard 25)
+417 Adres afzender (veld "Van"):
+418 Aan:
+419 Per e-mail verzenden
+420 Onderwerp:
+421 Verzenden als:
+422 Hoofdtekst
+423 Bijlage
+424 Zip-archief
+425 Niet verzenden
+426 Verzenden
+427 Het serveradres en de serverpoort moeten eerst in het menu Voorkeuren worden ingesteld.
+428 Bericht:
+429 Alternatief tekstbericht:
+430 De server kan niet worden bereikt of reageert niet
+431 De server heeft het bericht afgewezen
+432 Het adres van de afzender is onjuist ingedeeld
+433 Het adres van de bestemmeling is onjuist ingedeeld
+434 De inhoud van het bericht is onjuist ingedeeld
+435 Het bericht is niet verzonden
+436 Het bericht is verzonden
+437 Wachtwoorden
+438 Wilt u dat Amaya dit wachtwoord bewaart?
+439 Wachtwoorden voor websites bewaren
+440 Websites
+441 Alle verwijderen
+442 XML-namespaces gemaakt voor nieuwe XHTML+RDFa documenten
+443 Selecteer een namespace in de volgende keuzelijst of voeg een nieuwe toe (syntaxis prefix="uri"):
+444 Er is een fout opgetreden tijdens het maken van de JavaScript/DOM-objecten
+445 Een script dat nog wordt uitgevoerd, wordt zo snel mogelijk beëindigd. Probeer het later opnieuw.
+446 JavaScript/DOM is niet beschikbaar in deze weergave.
+447 Geef een JavaScript-opdracht op:
+448 De opdracht retourneerde de waarde: %s
+449 De opdracht retourneerde geen waarde
+450 SpiderMonkey antwoordde met de volgende fout:\n\nBestand: %s\nRegel: %d\n\n%s
+451 Nieuw
+452 Aanpasbaar
+453 Maken
+454 Koppeling maken door het doel aan te klikken
+455 Koppeling verwijderen
+456 Opslaan zonder sjabloon
+457 Met thema...
+458 Volledige breedte
+459 Met bijschrift
+460 Grootte:
+461 Plaatsing:
+462 XML-bewerkingsmodus
+463 Opmaakmodellen
+464 Opmaakmodel toevoegen...
+465 Geselecteerde opmaakmodellen verwijderen
+466 Geselecteerde opmaakmodellen activeren
+467 Geselecteerde opmaakmodellen uitschakelen
+468 Geselecteerde opmaakmodellen openen
+469 Amaya-profiel:
+470 "Tip van de dag" bij opstarten weergeven
+471 Selecteer een lettertype en grootte:
+472 De sjabloon bevat een of meerdere fouten en kan niet worden gebruikt.
+473 Sluiten
+474 Component '%s' heeft een meervoudige definitie.
+475 Bibliotheek '%s' kan niet worden geladen.
+476 Een instantie van een sjabloon kan niet als sjabloon worden gebruikt.
+477 Het document is reeds een sjabloon
+478 De sjabloon kon niet gemaakt worden
+479 Tekstveld
+480 Bijschrift voor element:
+481 Verzamelveld
+482 Element herhalen
+483 Nieuwe component
+484 De component is in gebruik en kan niet verwijderd worden.
+485 linksboven
+486 linksonder
+487 links
+488 rechtsboven
+489 rechtsonder
+490 rechts
+491 boven
+492 onder
+493 in het midden
+494 links en boven
+495 links en onder
+496 links van
+497 rechts en boven
+498 rechts en onder
+499 rechts van
+500 boven
+501 onder
+502 voor
+503 Er zijn %d objecten: 
+504 Nieuw gebruik
+505 Optioneel gebruik
+506 Broncode kleuren
+507 Bijschrift herhalen:
+508 Nieuwe typenverbinding
+509 Verbinding
+510 Naam verbinding:
+511 Elementen gebruiken
+512 Bijschrift
