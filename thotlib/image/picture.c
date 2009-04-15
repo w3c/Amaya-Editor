@@ -2970,11 +2970,6 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
   if (status != Supported_Format)
     {
       pres = RealSize;
-#if defined (_GTK) || defined (_WINGUI)
-      if (PictureLogo == None)
-        /* create a special logo for lost pictures */
-        CreateGifLogo ();
-#endif 
 #ifdef _WINGUI
 #ifdef _WIN_PRINT
       if (TtDisplay == NULL)
@@ -2991,13 +2986,6 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
       drw = PictureLogo;
 #endif /* _WIN_PRINT */
 #endif  /* _WINGUI */
-#ifdef _GTK 
-      imageDesc->PicType = 3;
-      imageDesc->PicPresent = pres;
-      imageDesc->PicHeight = 40;
-      imageDesc->PicWidth = 40;
-      drw = (ThotPixmap) PictureLogo;
-#endif /*_GTK*/
       wBox = w = 40;
       hBox = h = 40;
     }
@@ -3062,53 +3050,6 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
                                                                  (void *)&height,
                                                                  NULL/*ViewFrameTable[frame - 1].FrMagnification*/);
 #endif /* _WINGUI */
-#ifdef _GTK
-      if (typeImage == eps_type)
-        drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-                                                                                (void *)fileName,
-                                                                                (void *)imageDesc,
-                                                                                (void *)&xBox,
-                                                                                (void *)&yBox,
-                                                                                (void *)&wBox,
-                                                                                (void *)&hBox,
-                                                                                (void *)Bgcolor,
-                                                                                (void *)&width,
-                                                                                (void *)&height,
-                                                                                NULL/*ViewFrameTable[frame - 1].FrMagnification*/);
-      else
-        {
-          /* load the picture using ImLib */
-          im = gdk_imlib_load_image (fileName);
-          if (im)
-            {
-              if (pres == RealSize)
-                {
-                  /* if it's a background, dont rescale the picture */
-                  wBox = im->rgb_width;
-                  hBox = im->rgb_height;
-                }
-              else
-                {
-                  if (wBox == 0)
-                    wBox = im->rgb_width;
-                  if (hBox == 0)
-                    hBox = im->rgb_height;
-                }
-              /* if only one info interpolate 
-                 the other with a correct ratio*/
-              if (xBox == 0)
-                xBox = im->rgb_width;
-              if (yBox == 0)
-                yBox = im->rgb_height;
-	      
-              gdk_imlib_render (im, (gint) xBox, (gint) yBox);
-              drw = (ThotPixmap) gdk_imlib_move_image (im);
-              imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);
-            }
-        }
-      width = (gint) wBox;
-      height = (gint) hBox;
-#endif /* _GTK */
       redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
        
       if (drw == NULL)

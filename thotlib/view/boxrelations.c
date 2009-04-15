@@ -973,10 +973,9 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 
 /*----------------------------------------------------------------------
   ComputePosRelation applies fixed and absolute positioning rules.
-  topCreation points to the top created abstract box.
   Return TRUE if the box is the box position is out of the standard flow.
   ----------------------------------------------------------------------*/
-ThotBool ComputePositioning (PtrBox pBox, int frame, PtrAbstractBox topCreation)
+ThotBool ComputePositioning (PtrBox pBox, int frame)
 {
   PtrAbstractBox      pAb, pRefAb;
   PtrBox              pRefBox = NULL;
@@ -1127,10 +1126,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame, PtrAbstractBox topCreation)
                   pRefBox->BxMoved = NULL;
                   MoveBoxEdge (pBox, pRefBox, OpWidth, x + lr + w + rr - r, frame, TRUE);
                 }
-              if (topCreation && IsParentBox (topCreation->AbBox, pRefBox))
-                pBox->BxXOrg += x + lr + l;
-              else
-                XMoveAllEnclosed (pBox, x + lr + l - pBox->BxXOrg, frame);
+              XMoveAllEnclosed (pBox, x + lr + l - pBox->BxXOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbHorizPos;
               pPosAb->PosAbRef = pRefAb;
@@ -1180,10 +1176,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame, PtrAbstractBox topCreation)
                   ResizeHeight (pBox, pBox, NULL, tr + h + br - b - pBox->BxH, 0, 0, frame);
                   InsertDimRelation (pRefBox, pBox, OpSame, FALSE, FALSE);
                 }
-              if (topCreation && IsParentBox (topCreation->AbBox, pRefBox))
-                pBox->BxYOrg += y + tr + t;
-              else
-                YMoveAllEnclosed (pBox, y + tr + t - pBox->BxYOrg, frame);
+              YMoveAllEnclosed (pBox, y + tr + t - pBox->BxYOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbVertPos;
               pPosAb->PosAbRef = pRefAb;
@@ -2486,6 +2479,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             }
         }
 
+      pEl = pAb->AbElement;
       if ((horizRef && !pAb->AbWidth.DimIsPosition) ||
           (!horizRef && !pAb->AbHeight.DimIsPosition))
         {
@@ -3038,7 +3032,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                 {
                   // height rule
                   pDimAb = &pAb->AbHeight;
-                  pEl = pAb->AbElement;
                   if ((inLine && pAb->AbLeafType == LtText) ||
                       (pDimAb->DimAbRef == NULL && pDimAb->DimValue < 0))
                     /* inherited from the contents */

@@ -861,14 +861,14 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
                     pPosRel = pChildBox->BxPosRelations;
                     while (pPosRel)
                       {
-                        i = 1;
-                        notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
+                        i = 0;
+                        notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
                         /* Si la boite est elastique, les relations */
                         /* hors-structure sont deja traitees.       */
                         if (!pChildBox->BxVertFlex)
-                          while (i <= MAX_RELAT_POS && notEmpty)
+                          while (i < MAX_RELAT_POS && notEmpty)
                             {
-                              pRel = &pPosRel->PosRTable[i - 1];
+                              pRel = &pPosRel->PosRTable[i];
                               if (pRel->ReBox->BxAbstractBox &&
                                   // don't move children of a new system origin
                                   (!IsParentBox (pChildBox, pRel->ReBox) ||
@@ -897,8 +897,8 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
                                     }
                                 }
                               i++;
-                              if (i <= MAX_RELAT_POS)
-                                notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
+                              if (i < MAX_RELAT_POS)
+                                notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
                             }
                         pPosRel = pPosRel->PosRNext;
                       }

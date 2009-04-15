@@ -3332,12 +3332,14 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
         checkParent = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
                        pAb->AbEnclosing->AbBox->BxType != BoFloatGhost);
       
-      if (pAb->AbNotInLine &&
-          (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
-           pAb->AbEnclosing->AbBox->BxType == BoFloatGhost ||
-           pAb->AbEnclosing->AbBox->BxType == BoBlock ||
-           pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-           pAb->AbEnclosing->AbBox->BxType == BoCellBlock))
+      if (pAb->AbNotInLine ||
+          ((pAb->AbEnclosing &&  pAb->AbEnclosing->AbBox &&
+            pAb->AbFloat == 'N' &&
+            (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+             pAb->AbEnclosing->AbBox->BxType == BoFloatGhost ||
+             pAb->AbEnclosing->AbBox->BxType == BoBlock ||
+             pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+             pAb->AbEnclosing->AbBox->BxType == BoCellBlock))))
         checkParent = FALSE;
       else
         {
@@ -3563,6 +3565,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                        pAb->AbEnclosing->AbBox->BxType != BoFloatGhost);
       if (pAb->AbNotInLine ||
           ((pAb->AbEnclosing &&  pAb->AbEnclosing->AbBox &&
+            pAb->AbFloat == 'N' &&
             (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
              pAb->AbEnclosing->AbBox->BxType == BoFloatGhost ||
              pAb->AbEnclosing->AbBox->BxType == BoBlock ||
