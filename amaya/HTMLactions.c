@@ -2206,7 +2206,7 @@ void NextLinkOrFormElement (Document doc, View view)
             case HTML_EL_Button_Input:
             case HTML_EL_BUTTON_:
             case HTML_EL_Anchor:
-              /* no included text: select the element itself */
+		    /* no included text: select the element itself */
               TtaSelectElement (doc, el);
               found =TRUE;
               break;
@@ -2232,10 +2232,11 @@ void NextLinkOrFormElement (Document doc, View view)
                   i = TtaGetTextLength (child);
                   TtaSelectString (doc, child, i+1, i);
                 }
-              found =TRUE;
+              found = TRUE;
               break;
 
             default:
+              attr = NULL;
               break;
             }
         }
