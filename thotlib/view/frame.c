@@ -879,6 +879,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
 #ifdef _GL
   if (tex_bg_id)
     StopTextureScale (tex_bg_id);
+  tex_bg_id = 0;
   GL_SetFillOpacity (1000);
   pBox->BxClipX -= shiftx;
   pBox->BxClipY -= shifty;
@@ -2246,14 +2247,6 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 	  
               if (pFrame->FrAbstractBox)
                 plane = pFrame->FrAbstractBox->AbDepth;
-#ifdef IV
-              pFlow = pFrame->FrFlow;
-              while (pFlow && pFlow->FlRootBox && pFlow->FlRootBox->AbDepth < plane)
-                {
-                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
-                  pFlow = pFlow->FlNext;
-                }
-#endif
               topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
                                         &tVol, &bVol);
               /* now display extra flows */
@@ -2426,14 +2419,6 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	      
               if (pFrame->FrAbstractBox)
                 plane = pFrame->FrAbstractBox->AbDepth;
-#ifdef IV
-              pFlow = pFrame->FrFlow;
-              while (pFlow && pFlow->FlRootBox && pFlow->FlRootBox->AbDepth < plane)
-                {
-                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
-                  pFlow = pFlow->FlNext;
-                }
-#endif
               topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
                                         &tVol, &bVol);
               /* now display extra flows */

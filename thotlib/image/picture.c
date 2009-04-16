@@ -298,7 +298,7 @@ void FreeGlTextureNoCache (void *imageDesc)
   img = (ThotPictInfo *)imageDesc;
   if (img->TextureBind && glIsTexture (img->TextureBind))
     {      
-      glDeleteTextures (1,  (GLuint*)&(img->TextureBind));
+      glDeleteTextures (1, (GLuint*)&(img->TextureBind));
 #ifdef _TRACE_GL_PICTURE
       printf ("\n Image %s Freed", img->PicFileName);      
 #endif /* _TRACE_GL_PICTURE */
@@ -337,7 +337,9 @@ void FreeGlTexture (void *imagedesc)
       if (FreeAPicCache (img->TextureBind, ActiveFrame) == 0)
 #endif /* WITH_CACHE */
         /*not found in cache, we free it manually.*/
-        glDeleteTextures (1,  (GLuint*)&(img->TextureBind));
+		if (glIsTexture(img->TextureBind))
+        glDeleteTextures (1, (GLuint*)&(img->TextureBind));
+
 #ifdef _PCLDEBUG
       printf ("\n img %s Freed", img->PicFileName);      
 #endif /*_PCLDEBUG*/
@@ -509,7 +511,8 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
         GL_h = (GLfloat).1; // avoid nul value
       /* We give te texture to opengl Pipeline system */	    
       Mode = (img->RGBA)?GL_RGBA:GL_RGB;
-      glGenTextures (1,  (GLuint*)&(img->TextureBind));
+	  if (img->TextureBind == 0)
+        glGenTextures (1,  (GLuint*)&(img->TextureBind));
       glBindTexture (GL_TEXTURE_2D, img->TextureBind);
       /*Texture Parameter : Here Faster ones...*/
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -2821,7 +2824,8 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 
   /* Picture didn't load (corrupted, don't exists...)
      or format isn't supported*/
-  if (imageDesc->PicPixmap == None && !glIsTexture (imageDesc->TextureBind))
+  if (imageDesc->PicPixmap == None &&
+	  !glIsTexture (imageDesc->TextureBind))
     {
       if (PictureLogo == None)
         /* create a special logo for lost pictures */

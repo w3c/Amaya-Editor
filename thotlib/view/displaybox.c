@@ -1650,9 +1650,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ThotBool            hyphen, rtl, showSpecial = FALSE;
 #ifdef _GL
   int                 texture_id, showtab_id = 0, underline_id = 0;
-
-  texture_id = SetTextureScale (IsBoxDeformed(pBox));
 #endif /* _GL */
+
   indmax = 0;
   buffleft = 0;
   adbuff = NULL;
@@ -1671,6 +1670,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
     }
   if (pBox->BxNChars < 0)
     return;
+#ifdef _GL
+  texture_id = SetTextureScale (IsBoxDeformed(pBox));
+#endif /* _GL */
   if (pAb->AbElement && pAb->AbElement->ElStructSchema &&
       !strcmp (pAb->AbElement->ElStructSchema->SsName, "TextFile"))
     /* only for TextFile documents */

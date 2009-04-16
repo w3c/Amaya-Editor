@@ -1073,7 +1073,6 @@ static int ceil_pow2_minus_1(unsigned int x)
  * when 2 SetTextureScale was called with 2 StopTextureScale after :
  * when the second SetTextureScale the first FontBind was lost so never deleted !
  */
-//static int FontBind;
 
 /*----------------------------------------------------------------------
   returns a texture identifier (0 if no texture to generate)
@@ -1087,6 +1086,8 @@ int SetTextureScale (ThotBool Scaled)
       glEnable (GL_TEXTURE_2D);
       /* get a new identifier for the following font texture */
       glGenTextures (1, (GLuint*)&(texture_id));
+	  if (texture_id)
+	  {
       /* set the allocated texture id to the current used texture
          (setup opengl state machine to use this texture) */
       glBindTexture (GL_TEXTURE_2D, texture_id);
@@ -1098,9 +1099,7 @@ int SetTextureScale (ThotBool Scaled)
       /* does current Color modify texture no = GL_REPLACE, 
          else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
       glTexEnvi (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-#ifdef _WX
-      wxASSERT_MSG( glIsTexture(texture_id), _T("created texture invalid") );
-#endif /* _WX */
+	  }
     }
   return texture_id; /* 0 is a invalid texture identifier */
 }
@@ -1110,12 +1109,10 @@ int SetTextureScale (ThotBool Scaled)
   ----------------------------------------------------------------------*/
 void StopTextureScale ( int texture_id )
 {   
-  if (GL_NotInFeedbackMode () && !GL_TransText ())
+  if (GL_NotInFeedbackMode () && !GL_TransText () && texture_id)
     {
-#ifdef _WX
-      wxASSERT_MSG( glIsTexture(texture_id), _T("try to delete invalid texture") );
-#endif /* _WX */
-      glDeleteTextures (1, (GLuint*)&(texture_id));
+      if (glIsTexture(texture_id))
+       glDeleteTextures (1, (GLuint*)&(texture_id));
       glDisable (GL_TEXTURE_2D);
     }
 }
