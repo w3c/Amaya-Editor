@@ -2246,12 +2246,14 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 	  
               if (pFrame->FrAbstractBox)
                 plane = pFrame->FrAbstractBox->AbDepth;
+#ifdef IV
               pFlow = pFrame->FrFlow;
               while (pFlow && pFlow->FlRootBox && pFlow->FlRootBox->AbDepth < plane)
                 {
                   DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
                   pFlow = pFlow->FlNext;
                 }
+#endif
               topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
                                         &tVol, &bVol);
               /* now display extra flows */
@@ -2424,12 +2426,14 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	      
               if (pFrame->FrAbstractBox)
                 plane = pFrame->FrAbstractBox->AbDepth;
+#ifdef IV
               pFlow = pFrame->FrFlow;
               while (pFlow && pFlow->FlRootBox && pFlow->FlRootBox->AbDepth < plane)
                 {
                   DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
                   pFlow = pFlow->FlNext;
                 }
+#endif
               topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
                                         &tVol, &bVol);
               /* now display extra flows */
