@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1361,6 +1361,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_STROKE_OPACITY:
       TypeRP = PtStrokeOpacity;
       break;
+    case C_PR_STOPOPACITY:
+      TypeRP = PtStopOpacity;
+      break;
     case C_PR_FILL_RULE:
       TypeRP = PtFillRule;
       break;
@@ -1369,6 +1372,12 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       break;
     case C_PR_FOREGROUND:
       TypeRP = PtForeground;
+      break;
+    case C_PR_COLOR:
+      TypeRP = PtColor;
+      break;
+    case C_PR_STOPCOLOR:
+      TypeRP = PtStopColor;
       break;
     case C_PR_BORDERTOPCOLOR:
       TypeRP = PtBorderTopColor;
@@ -1505,12 +1514,15 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtOpacity:
       case PtStrokeOpacity:
       case PtFillOpacity:
+      case PtStopOpacity:
       case PtDepth:
       case PtListStyleImage:
         TtaReadShort (pivFile, &val);
         break;
       case PtBackground:
       case PtForeground:
+      case PtColor:
+      case PtStopColor:
       case PtBorderTopColor:
       case PtBorderRightColor:
       case PtBorderBottomColor:
@@ -1746,12 +1758,15 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
           case PtOpacity:
           case PtFillOpacity:
           case PtStrokeOpacity:
+          case PtStopOpacity:
           case PtListStyleImage:
             pPRule->PrAttrValue = FALSE;
             pPRule->PrIntValue = val;
             break;
           case PtBackground:
           case PtForeground:
+          case PtColor:
+          case PtStopColor:
           case PtBorderTopColor:
           case PtBorderRightColor:
           case PtBorderBottomColor:

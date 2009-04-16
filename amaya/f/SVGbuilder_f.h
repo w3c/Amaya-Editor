@@ -125,8 +125,6 @@ extern void *ParsePathDataAttribute ( Attribute attr,
                                       Document doc,
                                       ThotBool IsDrawn );
 extern float ParseNumberPercentAttribute ( Attribute attr );
-extern char *SVGhandleStopColor ( Element el,
-                                  char *color );
 extern void SVGAttributeComplete ( Attribute attr,
                                    Element el,
                                    Document doc );
@@ -252,8 +250,6 @@ extern void *ParsePathDataAttribute ( Attribute attr,
                                         Document doc,
                                         ThotBool IsDrawn );
 extern float ParseNumberPercentAttribute ( Attribute attr );
-extern char *SVGhandleStopColor ( Element el,
-                                    char *color );
 extern void SVGAttributeComplete ( Attribute attr,
                                      Element el,
                                      Document doc );

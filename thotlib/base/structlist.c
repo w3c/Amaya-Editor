@@ -262,6 +262,9 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtStrokeOpacity:
       fprintf (fileDescriptor, "StrokeOpacity");
       break;
+    case PtStopOpacity:
+      fprintf (fileDescriptor, "StopOpacity");
+      break;
     case PtFillRule:
       fprintf (fileDescriptor, "FillRule");
       break;
@@ -270,6 +273,12 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       break;
     case PtForeground:
       fprintf (fileDescriptor, "Foreground");
+      break;
+    case PtColor:
+      fprintf (fileDescriptor, "Color");
+      break;
+    case PtStopColor:
+      fprintf (fileDescriptor, "StopColor");
       break;
     case PtHyphenate:
       fprintf (fileDescriptor, "Hyphenate");
@@ -1149,13 +1158,15 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
       fprintf (fileDescriptor, "Pattern:%d", pAb->AbFillPattern);
       fprintf (fileDescriptor, " Background:%d", pAb->AbBackground);
       fprintf (fileDescriptor, " Foreground:%d", pAb->AbForeground);
-
+      fprintf (fileDescriptor, " Color:%d", pAb->AbColor);
+      fprintf (fileDescriptor, " StopColor:%d", pAb->AbStopColor);
       fprintf (fileDescriptor, "\n");
       for (j = 1; j <= Indent + 6; j++)
         fprintf (fileDescriptor, " ");
       fprintf (fileDescriptor, "Opacity:%d", pAb->AbOpacity);
       fprintf (fileDescriptor, " FillOpacity:%d", pAb->AbFillOpacity);
       fprintf (fileDescriptor, " StrokeOpacity:%d", pAb->AbStrokeOpacity);
+      fprintf (fileDescriptor, " StopOpacity:%d", pAb->AbStopOpacity);
       fprintf (fileDescriptor, " FillRule:%c", pAb->AbFillRule);
 
       fprintf (fileDescriptor, "\n");
@@ -2928,6 +2939,8 @@ static void wrnbherit (PtrPRule pR, FILE *fileDescriptor)
               wrnumber (pR->PrInhMinOrMax, fileDescriptor);
           }
       }
+  else if (pR->PrPresMode == PresCurrentColor)
+    fprintf (fileDescriptor, "currentColor");
   else if (pR->PrPresMode == PresImmediate)
     if (pR->PrAttrValue)
       wrattrname (pR->PrIntValue, fileDescriptor);
@@ -3697,6 +3710,10 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
           fprintf (fileDescriptor, "StrokeOpacity: ");
           wrnbherit (RP, fileDescriptor);
           break;
+        case PtStopOpacity:
+          fprintf (fileDescriptor, "StopOpacity: ");
+          wrnbherit (RP, fileDescriptor);
+          break;
         case PtFillRule:
           fprintf (fileDescriptor, "FillRule: ");
           wrfontstyle (RP, fileDescriptor);
@@ -3707,6 +3724,14 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
           break;
         case PtForeground:
           fprintf (fileDescriptor, "Foreground: ");
+          wrnbherit (RP, fileDescriptor);
+          break;
+        case PtColor:
+          fprintf (fileDescriptor, "Color: ");
+          wrnbherit (RP, fileDescriptor);
+          break;
+        case PtStopColor:
+          fprintf (fileDescriptor, "StopColor: ");
           wrnbherit (RP, fileDescriptor);
           break;
         case PtHyphenate:

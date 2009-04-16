@@ -406,7 +406,9 @@ RULES
         CreateWith (VerticalLine);
         Width: Enclosing . Width;
         Height: Enclosing . Height;
-        Visibility: 0;
+        Visibility: 1;  {  do not display the definition of a gradient, but
+	                   build its abstract box, to compute the stop-color
+			   and stop-opacity properties }
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 Size: DOC_FONTSIZE;
@@ -918,7 +920,9 @@ RULES
         BEGIN
         CreateBefore (ElementName);
         CreateWith (VerticalLine);
-        Visibility: 0;
+        Visibility: 1;  {  do not display the definition of a gradient, but
+	                   build its abstract box, to compute the stop-color
+			   and stop-opacity properties }
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 Size: DOC_FONTSIZE;
@@ -932,7 +936,9 @@ RULES
         BEGIN
         CreateBefore (ElementName);
         CreateWith (VerticalLine);
-        Visibility: 0;
+        Visibility: 1;  { do not display the definition of a gradient, but
+	                   build its abstract box, to compute the stop-color
+			   and stop-opacity properties }
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 Size: DOC_FONTSIZE;
@@ -946,7 +952,6 @@ RULES
         BEGIN
         CreateBefore (ElementName);
         CreateWith (VerticalLine);
-        Visibility: 0;
         IN Structure_view BEGIN
                 Visibility: Enclosing =;
                 Size: DOC_FONTSIZE;

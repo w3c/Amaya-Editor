@@ -1276,6 +1276,19 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrInhUnit = UnRelative;
       return;
     }
+  if (val.typed_data.unit == VALUE_CURRENT)
+    /* the CSS value is "currentColor". Create an equivalent PRule */
+    {
+      rule->PrPresMode = PresCurrentColor;
+      rule->PrInheritMode = InheritParent;
+      rule->PrInhPercent = False;
+      rule->PrInhAttr = False;
+      rule->PrInhDelta = 0;
+      rule->PrMinMaxAttr = False;
+      rule->PrInhMinOrMax = 0;
+      rule->PrInhUnit = UnRelative;
+      return;      
+    }
   else
     /* in most cases the rule takes an immediate values */
     rule->PrPresMode = PresImmediate;
@@ -1372,13 +1385,16 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
+    case PtColor:
+    case PtStopColor:
     case PtBorderTopColor:
     case PtBorderRightColor:
     case PtBorderBottomColor:
     case PtBorderLeftColor:
+    case PtOpacity:
     case PtStrokeOpacity:
     case PtFillOpacity:
-    case PtOpacity:
+    case PtStopOpacity:
       rule->PrAttrValue = FALSE;
       rule->PrIntValue = value;
       break;
@@ -2115,6 +2131,8 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
+    case PtColor:
+    case PtStopColor:
     case PtBorderTopColor:
     case PtBorderRightColor:
     case PtBorderBottomColor:
@@ -2141,6 +2159,7 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtOpacity:
     case PtFillOpacity:
     case PtStrokeOpacity:
+    case PtStopOpacity:
       real = TRUE;
       value = rule->PrIntValue;
       break;
@@ -2858,6 +2877,9 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRStrokeOpacity:
       *intRule = PtStrokeOpacity;
       break;
+    case PRStopOpacity:
+      *intRule = PtStopOpacity;
+      break;
     case PRFillRule:
       *intRule = PtFillRule;
       break;
@@ -2866,6 +2888,12 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
       break;
     case PRForeground:
       *intRule = PtForeground;
+      break;
+    case PRColor:
+      *intRule = PtColor;
+      break;
+    case PRStopColor:
+      *intRule = PtStopColor;
       break;
     case PRHyphenate:
       *intRule = PtHyphenate;
@@ -3220,6 +3248,9 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
     case PtFillOpacity:
       setting->type = PRFillOpacity;
       break;
+    case PtStopOpacity:
+      setting->type = PRStopOpacity;
+      break;
     case PtFillRule:
       setting->type = PRFillRule;
       break;
@@ -3228,6 +3259,12 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       break;
     case PtForeground:
       setting->type = PRForeground;
+      break;
+    case PtColor:
+      setting->type = PRColor;
+      break;
+    case PtStopColor:
+      setting->type = PRStopColor;
       break;
     case PtBorderTopColor:
       setting->type = PRBorderTopColor;
@@ -4112,11 +4149,25 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       else
         sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
       break;
+    case PRColor:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
+      break;
+    case PRStopColor:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      sprintf (buffer, "stop-color: #%02X%02X%02X", red, green, blue);
+      break;
     case PROpacity:
       sprintf (buffer, "opacity: %g", fval);
       break;
     case PRFillOpacity:
       sprintf (buffer, "fill-opacity: %g", fval);
+      break;
+    case PRStrokeOpacity:
+      sprintf (buffer, "stroke-opacity: %g", fval);
+      break;
+    case PRStopOpacity:
+      sprintf (buffer, "stop-opacity: %g", fval);
       break;
     case PRFillRule:
       if (settings->value.typed_data.unit == VALUE_INHERIT)
@@ -4125,9 +4176,6 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
         sprintf (buffer, "fill-rule: nonzero");
       else if (settings->value.typed_data.value == EvenOdd)
         sprintf (buffer, "fill-rule: evenodd");
-      break;
-    case PRStrokeOpacity:
-      sprintf (buffer, "stroke-opacity: %g", fval);
       break;
     case PRHyphenate:
       /*

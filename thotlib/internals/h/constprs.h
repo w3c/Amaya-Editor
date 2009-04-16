@@ -116,6 +116,7 @@
 /* properties computing mode */
 #define C_IMMEDIATE           'V'
 #define C_INHERIT             'H'
+#define C_CURRENT_COLOR       'C'
 #define C_PRES_FUNCTION       'F'
 
 /* inheritance type */

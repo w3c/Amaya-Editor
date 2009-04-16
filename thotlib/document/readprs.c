@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -197,6 +197,9 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
     case C_PR_STROKE_OPACITY:
       return PtStrokeOpacity;
       break;
+    case C_PR_STOPOPACITY:
+      return PtStopOpacity;
+      break;
     case C_PR_FILL_RULE:
       return PtFillRule;
       break;
@@ -205,6 +208,12 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
       break;
     case C_PR_FOREGROUND:
       return PtForeground;
+      break;
+    case C_PR_COLOR:
+      return PtColor;
+      break;
+    case C_PR_STOPCOLOR:
+      return PtStopColor;
       break;
     case C_PR_HYPHENATE:
       return PtHyphenate;
@@ -268,6 +277,9 @@ static PresMode     ReadPresMode (BinFile file)
       return PresImmediate;
       break;
     case C_INHERIT:
+      return PresInherit;
+      break;
+    case C_CURRENT_COLOR:
       return PresInherit;
       break;
     case C_PRES_FUNCTION:
@@ -1169,6 +1181,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
             switch (pPR->PrPresMode)
               {
               case PresInherit:
+              case PresCurrentColor:
                 pPR->PrInheritMode = ReadInheritMode (file);
                 TtaReadBool (file, &pPR->PrInhPercent);
                 TtaReadBool (file, &pPR->PrInhAttr);
@@ -1211,8 +1224,11 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
                   case PtOpacity:
                   case PtFillOpacity:
                   case PtStrokeOpacity:
+                  case PtStopOpacity:
                   case PtBackground:
                   case PtForeground:
+                  case PtColor:
+                  case PtStopColor:
                   case PtBorderTopColor:
                   case PtBorderRightColor:
                   case PtBorderBottomColor:

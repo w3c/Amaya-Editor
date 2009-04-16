@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA  1996-2005
+ *  (c) COPYRIGHT INRIA  1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -625,7 +625,9 @@ void WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
 			     pCond->TcAttr == PtLineWeight ||
 			     pCond->TcAttr == PtFillPattern ||
 			     pCond->TcAttr == PtBackground ||
-			     pCond->TcAttr == PtForeground)
+			     pCond->TcAttr == PtForeground ||
+			     pCond->TcAttr == PtColor ||
+			     pCond->TcAttr == PtStopColor)
 			   {
 			      WriteSignedShort (pCond->TcLowerBound);
 			      WriteSignedShort (pCond->TcUpperBound);
@@ -704,7 +706,8 @@ void WritePRuleTrans (int pres, PtrSSchema pSS, PtrTSchema pTSch)
       if (pres == PtSize + 1 || pres == PtIndent + 1 ||
 	  pres == PtLineSpacing + 1 || pres == PtLineWeight + 1 ||
 	  pres == PtFillPattern + 1 || pres == PtBackground + 1 ||
-	  pres == PtForeground + 1)
+	  pres == PtForeground + 1 || pres == PtColor + 1 ||
+	  pres == PtStopColor + 1)
 	 /* presentation a valeur numerique */
 	{
 	   WriteShort (pPRuleTr->RtNCase);
@@ -834,7 +837,7 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
 	  {
 	   if (i == PtSize || i == PtIndent || i == PtLineSpacing ||
 	     i == PtLineWeight || i == PtFillPattern || i == PtBackground ||
-	       i == PtForeground)
+	       i == PtForeground || i == PtColor || i == PtStopColor)
 	      /* presentation a valeur numerique */
 	     {
 		WriteShort (pPruleTr->RtNCase);

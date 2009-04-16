@@ -1064,7 +1064,7 @@ void TtaSetGraphicsShape (Element element, char shape, Document document)
   int                 delta;
   ThotBool            polyline;
   PtrElement          pElAsc, pEl;
-  PtrPathSeg pPa, pPaNext;
+  PtrPathSeg          pPa, pPaNext;
 
   UserErrorCode = 0;
   if (element == NULL)

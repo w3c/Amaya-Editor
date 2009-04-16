@@ -4677,6 +4677,7 @@ static char *ParseCSSForeground (Element element, PSchema tsch,
                                  char *cssRule,
                                  CSSInfoPtr css, ThotBool isHTML)
 {
+  ElementType         elType;
   PresentationValue   best;
   char               *p;
 
@@ -4695,7 +4696,14 @@ static char *ParseCSSForeground (Element element, PSchema tsch,
         DisplayStyleValue ("color", p, cssRule);
       else if (DoApply)
         /* install the new presentation */
-        TtaSetStylePresentation (PRForeground, element, tsch, context, best);
+	{
+          elType = TtaGetElementType(element);
+          if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+            /* we are working for an SVG element */
+	    TtaSetStylePresentation (PRColor, element, tsch, context, best);
+	  else
+	    TtaSetStylePresentation (PRForeground, element, tsch, context,best);
+	}
     }
   return (cssRule);
 }
@@ -4766,10 +4774,14 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
       best.typed_data.unit = UNIT_REL;
       cssRule = SkipWord (cssRule);
     }
-  else if (!strncasecmp (cssRule, "currentColor", 12) ||
-           !strncasecmp (cssRule, "inherit", 7))
+  else if (!strncasecmp (cssRule, "inherit", 7))
     {
       best.typed_data.unit = VALUE_INHERIT;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "currentColor", 12))
+    {
+      best.typed_data.unit = VALUE_CURRENT;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "url", 3))
@@ -4811,10 +4823,14 @@ static char *ParseSVGFill (Element element, PSchema tsch,
       cssRule = SkipWord (cssRule);
       return (cssRule);
     }
-  else if (!strncasecmp (cssRule, "currentColor", 12) ||
-           !strncasecmp (cssRule, "inherit", 7))
+  else if (!strncasecmp (cssRule, "inherit", 7))
     {
       best.typed_data.unit = VALUE_INHERIT;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "currentColor", 12))
+    {
+      best.typed_data.unit = VALUE_CURRENT;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "url", 3))
@@ -4823,8 +4839,15 @@ static char *ParseSVGFill (Element element, PSchema tsch,
       cssRule = ParseCSSUrl (cssRule, &url);
       SVGhandleFillUrl (element, context->doc, url);
       TtaFreeMemory (url);
-      /* **** caution: another color value may follow the uri (in case
-         the uri could ne be dereferenced) *** */
+      if (DoApply)
+	{
+	  best.typed_data.value = PATTERN_BACKGROUND;
+	  best.typed_data.unit = UNIT_REL;
+	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
+	  /* **** caution: another color value may follow the uri (in case
+	     the uri could ne be dereferenced) *** */
+	}
+      return (cssRule);
     }
   else
     cssRule = ParseCSSColor (cssRule, &best);
@@ -4848,7 +4871,50 @@ static char *ParseSVGStopColor (Element element, PSchema tsch,
 				PresentationContext context, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SVGhandleStopColor (element, cssRule);
+  PresentationValue     best;
+
+  best.typed_data.unit = UNIT_INVALID;
+  best.typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      best.typed_data.unit = VALUE_INHERIT;
+      cssRule = SkipWord (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "currentColor", 12))
+    {
+      best.typed_data.unit = VALUE_CURRENT;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSColor (cssRule, &best);
+
+  if (best.typed_data.unit != UNIT_INVALID && DoApply)
+    /* install the new presentation */
+    TtaSetStylePresentation (PRStopColor, element, tsch, context, best);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseSVGStopOpacity: parse a SVG opacity property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGStopOpacity (Element element, PSchema tsch,
+				  PresentationContext context, char *cssRule,
+				  CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     opacity;
+
+  opacity.typed_data.unit = UNIT_INVALID;
+  opacity.typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      opacity.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
+  else
+    cssRule = ParseClampedUnit (cssRule, &opacity);
+  if (opacity.typed_data.unit != UNIT_INVALID && DoApply)
+    /* install the new presentation. */
+    TtaSetStylePresentation (PRStopOpacity, element, tsch, context, opacity);
   return (cssRule);
 }
 
@@ -4859,14 +4925,20 @@ static char *ParseSVGOpacity (Element element, PSchema tsch,
                               PresentationContext context, char *cssRule,
                               CSSInfoPtr css, ThotBool isHTML)
 {
-  PresentationValue     best;
+  PresentationValue     opacity;
 
-  best.typed_data.unit = UNIT_INVALID;
-  best.typed_data.real = FALSE;
-  cssRule = ParseClampedUnit (cssRule, &best);
-  if (DoApply)
+  opacity.typed_data.unit = UNIT_INVALID;
+  opacity.typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      opacity.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
+  else
+    cssRule = ParseClampedUnit (cssRule, &opacity);
+  if (opacity.typed_data.unit != UNIT_INVALID && DoApply)
     /* install the new presentation. */
-    TtaSetStylePresentation (PROpacity, element, tsch, context, best);
+    TtaSetStylePresentation (PROpacity, element, tsch, context, opacity);
   return (cssRule);
 }
 
@@ -4877,14 +4949,20 @@ static char *ParseSVGStrokeOpacity (Element element, PSchema tsch,
                                     PresentationContext context, char *cssRule,
                                     CSSInfoPtr css, ThotBool isHTML)
 {
-  PresentationValue     best;
+  PresentationValue     opacity;
 
-  best.typed_data.unit = UNIT_INVALID;
-  best.typed_data.real = FALSE;
-  cssRule = ParseClampedUnit (cssRule, &best);
-  if (DoApply)
+  opacity.typed_data.unit = UNIT_INVALID;
+  opacity.typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      opacity.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
+  else
+    cssRule = ParseClampedUnit (cssRule, &opacity);
+  if (opacity.typed_data.unit != UNIT_INVALID && DoApply)
     /* install the new presentation. */
-    TtaSetStylePresentation (PRStrokeOpacity, element, tsch, context, best);
+    TtaSetStylePresentation (PRStrokeOpacity, element, tsch, context, opacity);
   return (cssRule);
 }
 
@@ -4895,14 +4973,20 @@ static char *ParseSVGFillOpacity (Element element, PSchema tsch,
                                   PresentationContext context, char *cssRule,
                                   CSSInfoPtr css, ThotBool isHTML)
 {
-  PresentationValue     best;
+  PresentationValue     opacity;
 
-  best.typed_data.unit = UNIT_INVALID;
-  best.typed_data.real = FALSE;
-  cssRule = ParseClampedUnit (cssRule, &best);
-  if (DoApply)
+  opacity.typed_data.unit = UNIT_INVALID;
+  opacity.typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      opacity.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
+  else
+    cssRule = ParseClampedUnit (cssRule, &opacity);
+  if (opacity.typed_data.unit != UNIT_INVALID && DoApply)
     /* install the new presentation. */
-    TtaSetStylePresentation (PRFillOpacity, element, tsch, context, best);
+    TtaSetStylePresentation (PRFillOpacity, element, tsch, context, opacity);
   return (cssRule);
 }
 
@@ -6166,6 +6250,7 @@ static CSSProperty CSSProperties[] =
     {"fill", ParseSVGFill},
     {"opacity", ParseSVGOpacity},
     {"stop-color", ParseSVGStopColor},
+    {"stop-opacity", ParseSVGStopOpacity},
     {"stroke-opacity", ParseSVGStrokeOpacity},
     {"stroke-width", ParseSVGStrokeWidth},
     {"stroke", ParseSVGStroke}

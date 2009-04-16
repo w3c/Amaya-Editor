@@ -382,6 +382,7 @@ char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
           else
             val = pPRule->PrChrValue;
           break;
+        case PresCurrentColor:
         case PresInherit:
           pAbb = AbsBoxInherit (pPRule, pEl, view);
           if (pAbb == NULL)
@@ -491,7 +492,7 @@ char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
   AlignRule evalue une regle d'ajustement pour la vue view.	
   La regle a evaluer est pointee par pPRule, et l'element	
   auquel elle s'applique est pointe par pEl.		
-  Au result, ok indique si l'evaluation a pu etre faite.	
+  Au retour, ok indique si l'evaluation a pu etre faite.	
   ----------------------------------------------------------------------*/
 static BAlignment AlignRule (PtrPRule pPRule, PtrElement pEl,
                              DocViewNumber view, ThotBool *ok)
@@ -506,6 +507,7 @@ static BAlignment AlignRule (PtrPRule pPRule, PtrElement pEl,
       switch (pPRule->PrPresMode)
 	      {
         case PresInherit:
+        case PresCurrentColor:
           pAbb = AbsBoxInherit (pPRule, pEl, view);
           if (pAbb == NULL)
             *ok = FALSE;
@@ -544,6 +546,7 @@ ThotBool BoolRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
       switch (pPRule->PrPresMode)
 	      {
         case PresInherit:
+        case PresCurrentColor:
           pAbb = AbsBoxInherit (pPRule, pEl, view);
           if (pAbb == NULL)
             *ok = FALSE;
@@ -634,6 +637,7 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
       switch (pPRule->PrPresMode)
         {
         case PresInherit:
+        case PresCurrentColor:
           if (pPRule->PrType == PtVisibility)
             pAbb = AbsBoxInheritImm (pPRule, pEl, view);
           else
@@ -680,7 +684,8 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                         pPRule->PrType == PtBackgroundVertPos ||
                         pPRule->PrType == PtOpacity ||
                         pPRule->PrType == PtFillOpacity ||
-                        pPRule->PrType == PtStrokeOpacity)
+                        pPRule->PrType == PtStrokeOpacity ||
+                        pPRule->PrType == PtStopOpacity)
                       /* convertit en 1/10 de caractere */
                       /* ou en milliemes pour l'opacite' */
                       i = 10 * i;
@@ -814,11 +819,33 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                   else if (val < 0)
                     val = 0;
                   break;
+                case PtStopOpacity:
+                  val = pAbb->AbStopOpacity + i;
+                  if (val > 1000)
+                    val = 1000;
+                  else if (val < 0)
+                    val = 0;
+                  break;
                 case PtBackground:
-                  val = pAbb->AbBackground;
+		  if (pPRule->PrPresMode == PresCurrentColor)
+		    val = pAbb->AbColor;
+		  else
+		    val = pAbb->AbBackground;
                   break;
                 case PtForeground:
-                  val = pAbb->AbForeground;
+		  if (pPRule->PrPresMode == PresCurrentColor)
+		    val = pAbb->AbColor;
+		  else
+                    val = pAbb->AbForeground;
+                  break;
+                case PtColor:
+                  val = pAbb->AbColor;
+                  break;
+                case PtStopColor:
+		  if (pPRule->PrPresMode == PresCurrentColor)
+		    val = pAbb->AbColor;
+		  else
+		    val = pAbb->AbStopColor;
                   break;
                 case PtLineWeight:
                   if (pPRule->PrInhPercent)
@@ -977,7 +1004,8 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
                             pPRule->PrType == PtLineWeight ||
                             pPRule->PrType == PtOpacity ||
                             pPRule->PrType == PtFillOpacity ||
-                            pPRule->PrType == PtStrokeOpacity)
+                            pPRule->PrType == PtStrokeOpacity ||
+                            pPRule->PrType == PtStopOpacity)
                           /* convertit en 1/10 de caractere ou en milliemes
                              pour l'opacite' */
                           i = 10 * i;
@@ -1026,6 +1054,8 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
               pPRule->PrType == PtFillPattern ||
               pPRule->PrType == PtBackground ||
               pPRule->PrType == PtForeground ||
+              pPRule->PrType == PtColor ||
+              pPRule->PrType == PtStopColor ||
               pPRule->PrType == PtBorderTopColor ||
               pPRule->PrType == PtBorderRightColor ||
               pPRule->PrType == PtBorderBottomColor ||
@@ -1132,7 +1162,8 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
             }
           if (pPRule->PrType == PtOpacity || 
               pPRule->PrType == PtFillOpacity ||
-              pPRule->PrType == PtStrokeOpacity)
+              pPRule->PrType == PtStrokeOpacity ||
+              pPRule->PrType == PtStopOpacity)
             {
               if (pPRule->PrAttrValue)
                 /* c'est la valeur d'un attribut */
@@ -3286,6 +3317,29 @@ static void NewAbPositioning (PtrAbstractBox pAb)
 }
 
 /*----------------------------------------------------------------------
+  GetGradientStop
+  ----------------------------------------------------------------------*/
+static GradientStop* GetGradientStop (PtrElement stop, PtrElement gradient)
+{
+  GradientStop *gstop;
+  Gradient     *grad;
+
+  if (stop == NULL || gradient == NULL || gradient->ElGradient == NULL)
+    /* error */
+    return NULL;
+  grad = gradient->ElGradient;
+  gstop = grad->firstStop;
+  while (gstop)
+    {
+      if (gstop->el == stop)
+        return gstop;
+      else
+	gstop = gstop->next;
+    }
+  return NULL;
+}
+
+/*----------------------------------------------------------------------
   ApplyRule applies the pRule rule to the pAb abstract box.
   The parameter pSchP points to the presentation schema.
   If pAttr is not null, it points to the attribute which generates the rule.
@@ -3308,6 +3362,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   char                fname[MAX_PATH];
   unsigned char       c;
   int                 viewSch, i;
+  GradientStop       *gstop;
+  unsigned short      red, green, blue;
   ThotBool            appl;
   ThotBool            insidePage, afterPageBreak;
   ThotBool            ignorefix = FALSE;
@@ -4110,6 +4166,24 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               appl = TRUE;
             }
           break;
+        case PtStopOpacity:	      
+          pAb->AbStopOpacity = IntegerRule (pPRule, pEl,
+					    pAb->AbDocView, &appl, &unit,
+					    pAttr, pAb);
+          if (!appl && pEl->ElParent == NULL)
+            /* Pas de regle pour la racine, on met la valeur par defaut */
+            {
+              pAb->AbStopOpacity = 1000;
+              appl = TRUE;	      
+            }
+	  if (appl && pEl->ElParent && pEl->ElParent->ElGradient &&
+	      pEl->ElParent->ElGradientDef)
+	    {
+	      gstop = GetGradientStop (pEl, pEl->ElParent);
+	      if (gstop)
+		gstop->a = (unsigned short) (pAb->AbStopOpacity *255 / 1000);
+	    }
+          break;
         case PtFillRule:
           pAb->AbFillRule = CharRule (pPRule, pEl, pAb->AbDocView, &appl);
           if (!appl && pEl->ElParent == NULL)
@@ -4140,6 +4214,40 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
               pAb->AbForeground = DefaultFColor;
               appl = TRUE;
             }
+          break;
+        case PtColor:
+          pAb->AbColor = IntegerRule (pPRule, pEl,
+				      pAb->AbDocView, &appl, &unit,
+				      pAttr, pAb);
+          if (!appl && pEl->ElParent == NULL)
+            /* Pas de regle pour la racine, on met la valeur indefini */
+            {
+              pAb->AbColor = DefaultFColor;
+              appl = TRUE;
+            }
+          break;
+        case PtStopColor:
+          pAb->AbStopColor = IntegerRule (pPRule, pEl,
+					  pAb->AbDocView, &appl, &unit,
+					  pAttr, pAb);
+          if (!appl && pEl->ElParent == NULL)
+            /* Pas de regle pour la racine, on met la valeur black */
+            {
+              pAb->AbStopColor = DefaultFColor;
+              appl = TRUE;
+            }
+	  if (appl && pEl->ElParent && pEl->ElParent->ElGradient &&
+	      pEl->ElParent->ElGradientDef)
+	    {
+	      gstop = GetGradientStop (pEl, pEl->ElParent);
+	      if (gstop)
+		{
+		  TtaGiveThotRGB (pAb->AbStopColor, &red, &green, &blue);
+		  gstop->r = red;
+		  gstop->g = green;
+		  gstop->b = blue;
+		}
+	    }
           break;
         case PtHyphenate:
           pAb->AbHyphenate = BoolRule (pPRule, pEl,

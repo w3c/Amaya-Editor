@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1369,12 +1369,24 @@ static void         wrsuiteregles (PtrPRule RP)
           printf ("StrokeOpacity: ");
           wrnbherit (RP);
           break; 
+        case PtStopOpacity:
+          printf ("StopOpacity: ");
+          wrnbherit (RP);
+          break;
         case PtBackground:
           printf ("Background: ");
           wrnbherit (RP);
           break;
         case PtForeground:
           printf ("Foreground: ");
+          wrnbherit (RP);
+          break;
+        case PtColor:
+          printf ("Color: ");
+          wrnbherit (RP);
+          break;
+        case PtStopColor:
+          printf ("StopColor: ");
           wrnbherit (RP);
           break;
         case PtHyphenate:

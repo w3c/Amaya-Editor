@@ -591,6 +591,9 @@ int          NumTypePRuleAPI (PtrPRule pRule)
     case PtStrokeOpacity:
       return PRStrokeOpacity;
       break;
+    case PtStopOpacity:
+      return PRStopOpacity;
+      break;
     case PtFillRule:
       return PRFillRule;
       break;
@@ -599,6 +602,12 @@ int          NumTypePRuleAPI (PtrPRule pRule)
       break;
     case PtForeground:
       return PRForeground;
+      break;
+    case PtColor:
+      return PRColor;
+      break;
+    case PtStopColor:
+      return PRStopColor;
       break;
     case PtHyphenate:
       return PRHyphenate;

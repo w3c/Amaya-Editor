@@ -273,15 +273,11 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
   css_command[0] = EOS;
   switch (attrType)
     {
+    case SVG_ATTR_color:
+      sprintf (css_command, "color: %s", text);
+      break;
     case SVG_ATTR_fill:
-      if (!strncmp (text, "url(", 4) && text[length - 1] == ')')
-	/* reference to a paint server */
-	{
-	  text[length-1] = EOS;
-	  SVGhandleFillUrl (el, doc, &text[4]);
-	}
-      else
-        sprintf (css_command, "fill: %s", text);
+      sprintf (css_command, "fill: %s", text);
       break;
     case SVG_ATTR_stroke:
       sprintf (css_command, "stroke: %s", text);
@@ -403,6 +399,15 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
       else
         sprintf (css_command, "fill-opacity: %s", text);
       break;
+    case SVG_ATTR_stop_opacity:
+      value = ParseFloatAttribute (attr);
+      if (value > 1.0)
+        sprintf (css_command, "stop-opacity: 1.0");
+      else if (value < 0)
+        sprintf (css_command, "stop-opacity: 0.0");
+      else
+        sprintf (css_command, "stop-opacity: %s", text);
+      break;
     case SVG_ATTR_fill_rule:
       switch (val)
         {
@@ -416,6 +421,9 @@ void ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
           sprintf (css_command, "fill-rule: inherit");
           break;
         }
+      break;
+    case SVG_ATTR_stop_color:
+      sprintf (css_command, "stop-color: %s", text);
       break;
     default:
       break;
@@ -4168,66 +4176,6 @@ float ParseNumberPercentAttribute (Attribute attr)
   return value;
 }
 
-
-char *SVGhandleStopColor (Element el, char *color)
-{
-  AttributeType	   attrType;
-  char             *ret, *actualColor;
-  Attribute        attr1;
-  Element	   ancestor;
-  unsigned short   red, green, blue;
-  ThotBool	   found;
-
-  ret = color;
-  actualColor = color;
-  if (!strncmp (color, "inherit", 7) ||
-      !strncmp (color, "currentColor", 12))
-    {
-      attrType.AttrSSchema = TtaGetElementType (el).ElSSchema;
-      if (!strncmp (color, "currentColor", 12))
-	{
-	  /* check attribute color on an ancestor */
-	  attrType.AttrTypeNum = SVG_ATTR_color;
-	  ret += 12;
-	}
-      else
-	{
-	  /* check attribute stop-color on an ancestor */
-	  attrType.AttrTypeNum = SVG_ATTR_stop_color;
-	  ret += 7;
-	}
-      /* is there a stop-color or color attribute on an ancestor? */
-      ancestor = TtaGetParent (el);
-      found = FALSE;
-      while (ancestor && !found)
-	{
-	  attr1 = TtaGetAttribute (ancestor, attrType);
-	  if (attr1)
-	    /* this ancestor has an attribute stop-color */
-	    {
-	      actualColor = get_char_attribute_from_el (ancestor, attrType.AttrTypeNum);
-	      if (strncmp (actualColor, "inherit", 7))
-		found = TRUE;
-	      else
-		{
-		  TtaFreeMemory (actualColor);
-		  actualColor = NULL;
-		}
-	    }
-	  if (!found)
-	    ancestor = TtaGetParent (ancestor);
-	}
-    }
-  if (actualColor)
-    {
-      ret = TtaGiveRGB (actualColor, &red, &green, &blue);
-      TtaSetGradientStopColor (red, green, blue, el);
-      if (actualColor != color)
-	TtaFreeMemory (actualColor);
-    }
-  return ret;
-}
-
 /*----------------------------------------------------------------------
   SVGAttributeComplete
   The XML parser has read attribute attr for element el in document doc.
@@ -4235,13 +4183,12 @@ char *SVGhandleStopColor (Element el, char *color)
 void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 {
   AttributeType	       attrType, attrType1;
-  Attribute            intAttr, attr1;
+  Attribute            intAttr;
   ElementType          elType;
-  Element	       leaf, ancestor;
+  Element	       leaf;
   int		       attrKind, method, value;
-  ThotBool	       closed, found;
-  char                 *color;
-  float                offset, opacity;
+  ThotBool	       closed;
+  float                offset;
 
   TtaGiveAttributeType (attr, &attrType, &attrKind);
   switch (attrType.AttrTypeNum)
@@ -4249,6 +4196,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_opacity_:
     case SVG_ATTR_stroke_opacity:
     case SVG_ATTR_fill_opacity:
+    case SVG_ATTR_stop_opacity:
     case SVG_ATTR_fill_rule:
       ParseCSSequivAttribute (attrType.AttrTypeNum, attr, el, doc, FALSE);
       break;
@@ -4269,6 +4217,8 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
     case SVG_ATTR_font_variant:
     case SVG_ATTR_font_weight:
     case SVG_ATTR_text_decoration:
+    case SVG_ATTR_color:
+    case SVG_ATTR_stop_color:
     case SVG_ATTR_fill:
     case SVG_ATTR_stroke:
     case SVG_ATTR_stroke_width:
@@ -4402,46 +4352,6 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       /* parse <number> or <percentage> */
       offset = ParseNumberPercentAttribute (attr);
       TtaSetGradientStopOffset (offset, el);
-      break;
-    case SVG_ATTR_stop_color:
-      elType = TtaGetElementType (el);
-      if (elType.ElTypeNum == SVG_EL_stop)
-	{
-	  color = get_char_attribute_from_el (el, attrType.AttrTypeNum);
-          SVGhandleStopColor (el, color);
-	  TtaFreeMemory (color);
-	}
-      break;
-    case SVG_ATTR_stop_opacity:
-      elType = TtaGetElementType (el);
-      if (elType.ElTypeNum == SVG_EL_stop)
-	{
-	  attr1 = NULL;
-	  color = get_char_attribute_from_el (el, attrType.AttrTypeNum);
-	  if (strncmp (color, "inherit", 7))
-	    TtaFreeMemory (color);
-	  else
-	    {
-	      TtaFreeMemory (color);
-	      /* is there a stop-color attribute on an ancestor? */
-	      ancestor = TtaGetParent (el);
-	      found = FALSE;
-	      while (ancestor && !found)
-		{
-		  attr1 = TtaGetAttribute (ancestor, attrType);
-		  if (attr1)
-		    /* this ancestor has an attribute stop-opacity */
-		    found = TRUE;
-		  else
-		    ancestor = TtaGetParent (ancestor);
-		}
-	    }
-	  if (attr1)
-	    opacity = ParseFloatAttribute (attr1);
-	  else
-	    opacity = ParseFloatAttribute (attr);
-	  TtaSetGradientStopOpacity (opacity, el);
-	}
       break;
     case SVG_ATTR_id:
       elType = TtaGetElementType (el);

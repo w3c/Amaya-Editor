@@ -3361,8 +3361,11 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
     case PtOpacity:
     case PtFillOpacity:
     case PtStrokeOpacity:
+    case PtStopOpacity:
     case PtBackground:
     case PtForeground:
+    case PtColor:
+    case PtStopColor:
     case PtXRadius:
     case PtYRadius:
     case PtFillRule:
@@ -3446,9 +3449,12 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
       || typeRule == PtOpacity
       || typeRule == PtStrokeOpacity
       || typeRule == PtFillOpacity
+      || typeRule == PtStopOpacity
       || typeRule == PtFillRule
       || typeRule == PtBackground
-      || typeRule == PtForeground)
+      || typeRule == PtForeground
+      || typeRule == PtColor
+      || typeRule == PtStopColor)
     /* cherche la regle de ce type qui s'applique au pave' */
     {
       pRPres = SearchRulepAb (pDoc, pAb, &pSPR, typeRule, FnAny, TRUE, &pA);

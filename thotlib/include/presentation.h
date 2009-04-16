@@ -65,42 +65,45 @@ typedef int        *PRule;
 #define PRFillPattern 48
 #define PRBackground 49
 #define PRForeground 50
-#define PROpacity 51
-#define PRFillOpacity 52
-#define PRStrokeOpacity 53
-#define PRHyphenate 54
+#define PRColor 51
+#define PRStopColor 52
+#define PROpacity 53
+#define PRFillOpacity 54
+#define PRStrokeOpacity 55
+#define PRStopOpacity 56
+#define PRHyphenate 57
 /* PtPageBreak, PtLineBreak, PtGather */
-#define PRXRadius 58
-#define PRYRadius 59
-#define PRPosition 60
-#define PRTop 61
-#define PRRight 62
-#define PRBottom 63
-#define PRLeft 64
-#define PRFloat 65
-#define PRClear 66
-#define PRDisplay 67
-#define PRBackgroundHorizPos 68
-#define PRBackgroundVertPos 69
-#define PRVis 70 // CSS visibility
-#define PRNoBreak1 71
-#define PRNoBreak2 72
+#define PRXRadius 61
+#define PRYRadius 62
+#define PRPosition 63
+#define PRTop 64
+#define PRRight 65
+#define PRBottom 66
+#define PRLeft 67
+#define PRFloat 68
+#define PRClear 69
+#define PRDisplay 70
+#define PRBackgroundHorizPos 71
+#define PRBackgroundVertPos 72
+#define PRVis 73 // CSS visibility
+#define PRNoBreak1 74
+#define PRNoBreak2 75
 /* PtPictInfo */
-#define PRCreateEnclosing 73
-#define PRShowBox 74
-#define PRBackgroundPicture 75
-#define PRBackgroundRepeat 76
-#define PRNotInLine 77
-#define PRNone 78
-#define PRPageBefore 79
-#define PRPageAfter 80
-#define PRPageInside 81
-#define PRContent 82
-#define PRContentString 83
-#define PRContentURL 84
-#define PRContentAttr 85
-#define PRFillRule 86
-#define LAST_PRES_RULE_TYPE 87
+#define PRCreateEnclosing 76
+#define PRShowBox 77
+#define PRBackgroundPicture 78
+#define PRBackgroundRepeat 79
+#define PRNotInLine 80
+#define PRNone 81
+#define PRPageBefore 82
+#define PRPageAfter 83
+#define PRPageInside 84
+#define PRContent 85
+#define PRContentString 86
+#define PRContentURL 87
+#define PRContentAttr 88
+#define PRFillRule 89
+#define LAST_PRES_RULE_TYPE 90
 
 /*
  * A bunch of constants describing the most common values for presentation
@@ -122,6 +125,7 @@ typedef int        *PRule;
 #define UNIT_BOX	11	/* this is a box number         */
 #define VALUE_AUTO      12      /* not a unit: value = auto     */
 #define VALUE_INHERIT   13      /* not a unit: value = inherit  */
+#define VALUE_CURRENT   14      /* not a unit: value = currentColor  */
 
 /* values for rules PRBorderStyle */
 #define BorderStyleNone 1
@@ -292,7 +296,7 @@ extern void TtaSetFontZoom (int zoom);
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
    PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
    PRUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
-   PRHyphenate, PRWidth, PRHeight, PRVertPos, PRHorizPos.
+   PRColor, PRHyphenate, PRWidth, PRHeight, PRVertPos, PRHorizPos.
    view: the view (this view must be open).
    document: the document.
    Return value:
@@ -310,7 +314,7 @@ extern PRule TtaNewPRule (int presentationType, View view, Document document);
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
    PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
    PRUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
-   PRHyphenate, PRShowBox, PRNotInLine.
+   PRColor, PRHyphenate, PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
    Return value:
@@ -328,7 +332,7 @@ extern PRule TtaNewPRuleForView (int presentationType, int view, Document docume
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
    PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
    PrUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
-   PRHyphenate, PRShowBox, PRNotInLine.
+   PRColor, PRHyphenate, PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
    Return value:
@@ -399,9 +403,11 @@ extern void TtaRemovePRule (Element element, PRule pRule, Document document);
    PRFillPattern: rank of the pattern in file thot.pattern.
    PRBackground: rank of the background color in file thot.color.
    PRForeground: rank of the foreground color in file thot.color.
+   PRColor: rank of the color in file thot.color.
    PRBorderTopColor, PRBorderRightColor, PRBorderBottomColor,PRBorderLeftColor:
       if value >= 0: rank of the color in file thot.color.
-      if value < 0 : -2 means transparent and -1 means same color as foreground
+      if value < 0 : -2 means transparent, -1 means same color as foreground,
+                     -3 means undefined
    PRFont: FontTimes, FontHelvetica, FontCourier.
    PRStyle: StyleRoman, StyleItalics, StyleOblique.
    PRWeight: WeightNormal, WeightBold.
@@ -687,7 +693,7 @@ extern void TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
    values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
    PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRLineStyle, PRDirection,
    PRUnicodeBidi, PRLineWeight, PRFillPattern, PRBackground, PRForeground,
-   PRHyphenate, PRShowBox, PRNotInLine.
+   PRColor, PRHyphenate, PRShowBox, PRNotInLine.
    Return value:
    the presentation rule found, or NULL if the element
    does not have this type of presentation rule.
@@ -704,7 +710,7 @@ extern PRule TtaGetPRule (Element element, int presentationType);
    type of that presentation rule. Available values are RSize, RStyle,
    RFont, RUnderline, RThickness, PRIndent, RLineSpacing, RDepth, RAdjust,
    RLineStyle, RDirection, RUnicodeBidi, RLineWeight, RFillPattern,
-   RBackground, RForeground, RHyphenate, PRShowBox, PRNotInLine.
+   RBackground, RForeground, RColor, RHyphenate, PRShowBox, PRNotInLine.
   ----------------------------------------------------------------------*/
 extern int TtaGetPRuleType (PRule pRule);
 
@@ -720,9 +726,11 @@ extern int TtaGetPRuleType (PRule pRule);
    PRFillPattern: rank of the pattern in file thot.pattern.
    PRBackground: rank of the background color in file thot.color.
    PRForeground: rank of the foreground color in file thot.color.
+   PRColor: rank of the color in file thot.color.
    PRBorderTopColor, PRBorderRightColor, PRBorderBottomColor,PRBorderLeftColor:
       if value >= 0: rank of the color in file thot.color.
-      if value < 0 : -2 means transparent and -1 means same color as foreground
+      if value < 0 : -2 means transparent, -1 means same color as foreground,
+                     -3 means undefined
    PRFont: FontTimes, FontHelvetica, FontCourier.
    PRStyle: StyleRoman, StyleItalics, StyleOblique.
    PRWeight: WeightNormal, WeightBold.

@@ -1314,9 +1314,12 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
   PRFillPattern: rank of the pattern in file thot.pattern.
   PRBackground: rank of the background color in file thot.color.
   PRForeground: rank of the foreground color in file thot.color.
+  PRColor: rank of the color in file thot.color.
+  PRStopColor: rank of the stop-color in file thot.color.
   PRBorderTopColor, PRBorderRightColor, PRBorderBottomColor,PRBorderLeftColor:
   if value >= 0: rank of the color in file thot.color.
-  if value < 0 : -2 means transparent and -1 means same color as foreground
+  if value < 0 : -2 means transparent, -1 means same color as foreground, -3
+                 means undefined
   PRFont: FontTimes, FontHelvetica, FontCourier.
   PRStyle: StyleRoman, StyleItalics, StyleOblique.
   PRWeight: WeightNormal, WeightBold.
@@ -1352,7 +1355,7 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
   PRWidth, PRHeight: an integer (size in points)
   PRHyphenate: Hyphenation, NoHyphenation.
   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
-  PROpacity, PRStrokeOpacity, PRFillOpacity: an integer.
+  PROpacity, PRStrokeOpacity, PRFillOpacity, PRStopOpacity: an integer.
   PRFillRule: NonZero, EvenOdd.
   ----------------------------------------------------------------------*/
 void TtaSetPRuleValue (Element element, PRule pRule, int value, Document document)
@@ -1394,8 +1397,11 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
         case PtOpacity:
         case PtFillOpacity:
         case PtStrokeOpacity:
+        case PtStopOpacity:
         case PtBackground:
         case PtForeground:
+        case PtColor:
+        case PtStopColor:
           if (value < 0)
             TtaError (ERR_invalid_parameter);
           else
@@ -2988,9 +2994,12 @@ int                 TtaGetPRuleType (PRule pRule)
   PRFillPattern: rank of the pattern in file thot.pattern.
   PRBackground: rank of the background color in file thot.color.
   PRForeground: rank of the foreground color in file thot.color.
+  PRColor: rank of the color in file thot.color.
+  PRStopColor: rank of the stop-color in file thot.color.
   PRBorderTopColor, PRBorderRightColor, PRBorderBottomColor,PRBorderLeftColor:
   if value >= 0: rank of the color in file thot.color.
-  if value < 0 : -2 means transparent and -1 means same color as foreground
+  if value < 0 : -2 means transparent, -1 means same color as foreground, -3
+                 means undefined
   PRFont: FontTimes, FontHelvetica, FontCourier.
   PRStyle: StyleRoman, StyleItalics, StyleOblique.
   PRWeight: WeightNormal, WeightBold.
@@ -3025,7 +3034,7 @@ int                 TtaGetPRuleType (PRule pRule)
   PtWidth, PtHeight: distance
   PRHyphenate: Hyphenation, NoHyphenation.
   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
-  PROpacity, PRStrokeOpacity, PRFillOpacity: an integer.
+  PROpacity, PRStrokeOpacity, PRFillOpacity, PRStopOpacity: an integer.
   PRFillRule: NonZero, EvenOdd.
   ----------------------------------------------------------------------*/
 int TtaGetPRuleValue (PRule pRule)
@@ -3045,8 +3054,11 @@ int TtaGetPRuleValue (PRule pRule)
       case PtOpacity:
       case PtFillOpacity:
       case PtStrokeOpacity:
+      case PtStopOpacity:
       case PtBackground:
       case PtForeground:
+      case PtColor:
+      case PtStopColor:
       case PtBorderTopColor:
       case PtBorderRightColor:
       case PtBorderBottomColor:
@@ -3639,8 +3651,11 @@ int TtaSamePRules (PRule pRule1, PRule pRule2)
                     case PtOpacity:
                     case PtStrokeOpacity:
                     case PtFillOpacity:
+                    case PtStopOpacity:
                     case PtBackground:
                     case PtForeground:
+                    case PtColor:
+                    case PtStopColor:
                     case PtBorderTopColor:
                     case PtBorderRightColor:
                     case PtBorderBottomColor:

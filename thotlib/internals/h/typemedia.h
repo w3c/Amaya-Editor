@@ -477,10 +477,10 @@ typedef struct _AbstractBox
                                       created presentation abstract box */
   PtrDelayedPRule AbDelayedPRule;  /* Used by the editor */
   int             AbVolume;	   /* Equivalent characters number */
-  int	            AbTypeNum;	   /* Type number/presentation box number */
+  int	          AbTypeNum;	   /* Type number/presentation box number */
   int             AbVarNum;        /* number of the variable that defines the
                                       content of this box (pres. boxes only) */
-  int	            AbNum;	   /* Abstract box number for debug */
+  int	          AbNum;	   /* Abstract box number for debug */
   AbPosition      AbVertRef;	   /* Vertical reference mark position */
   AbPosition      AbHorizRef;	   /* Horizontal reference mark position */
   AbPosition      AbVertPos;	   /* Vertical position in the box */
@@ -491,19 +491,22 @@ typedef struct _AbstractBox
   int             AbThickness;	   /* Underlining thickness */
   int             AbIndent;	   /* Indentation for line breaking */
   int             AbDepth;	   /* Abstract box display plane */
-  int	            AbVisibility;    /* Abstract box visibility degree */
+  int	          AbVisibility;    /* Abstract box visibility degree */
   int             AbFont;	   /* Font family: index in the family table */
   int             AbFontStyle;	   /* Font style: roman, italic, oblique */
   int             AbFontWeight;	   /* Font weight: normal, bold */
-  int             AbFontVariant;	 /* Font variant: normal, smallcaps, script.. */
+  int             AbFontVariant;   /* Font variant: normal, smallcaps, script.. */
   int             AbSize;	   /* Character logical/real size */
   int             AbLineWeight;    /* Line thickness */
   int             AbLineSpacing;   /* Linespacing */
   int             AbFillPattern;   /* Fill pattern */	
   int             AbBackground;    /* Background color */
   int             AbForeground;    /* Drawing color */
+  int             AbColor;         /* color, in SVG sense */
+  int             AbStopColor;     /* stop-color, in SVG sense */
   int             AbFillOpacity;   /* opacity of the fill part of element*/
   int             AbStrokeOpacity; /* opacity of the stroke part element*/
+  int             AbStopOpacity;   /* SVG stop-opacity */
   int             AbOpacity;       /* opacity of all the element*/
   int             AbTopBColor;     /* Border Top color */
   int             AbRightBColor;   /* Border Right color */

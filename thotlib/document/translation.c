@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2156,7 +2156,9 @@ static ThotBool ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
                                 pPRule->PrMinValue >= Cond->TcLowerBound;
                             else if (pPRule->PrType == PtFillPattern ||
                                      pPRule->PrType == PtBackground ||
-                                     pPRule->PrType == PtForeground)
+                                     pPRule->PrType == PtForeground ||
+				     pPRule->PrType == PtColor ||
+				     pPRule->PrType == PtStopColor)
                               ret = pPRule->PrIntValue <= Cond->TcUpperBound &&
                                 pPRule->PrIntValue >= Cond->TcLowerBound;
                             else
@@ -2896,7 +2898,9 @@ static void ApplyPresTRules (TOrder position, PtrElement pEl,
             }
           else if (pPRule->PrType == PtFillPattern ||
                    pPRule->PrType == PtBackground ||
-                   pPRule->PrType == PtForeground)
+                   pPRule->PrType == PtForeground ||
+		   pPRule->PrType == PtColor ||
+		   pPRule->PrType == PtStopColor)
             {
               i = 0;
               while (pBlock == NULL && i < pPRuleTr->RtNCase)
@@ -3418,10 +3422,13 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
               case PtFillOpacity:
               case PtStrokeOpacity:
               case PtOpacity:
+              case PtStopOpacity:
                 PutInt (pRPres->PrIntValue, fnum,  NULL, doc, *lineBreak);
                 break;
               case PtBackground:
               case PtForeground:
+              case PtColor:
+              case PtStopColor:
                 PutColor (pRPres->PrIntValue, fnum, doc, *lineBreak);
                 break;
               case PtHyphenate:

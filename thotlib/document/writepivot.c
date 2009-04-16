@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -457,8 +457,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         rType == PtLineStyle || rType == PtLineWeight ||
         rType == PtFillPattern || rType == PtOpacity || 
         rType == PtFillOpacity || rType == PtStrokeOpacity ||
-        rType == PtFillRule ||
+        rType == PtStopOpacity || rType == PtFillRule ||
         rType == PtBackground || rType == PtForeground ||
+	rType == PtColor || rType == PtStopColor ||
         rType == PtHyphenate ||
         rType == PtBreak1 || rType == PtBreak2 ||
         rType == PtPictInfo)) ||
@@ -681,6 +682,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtStrokeOpacity:
           TtaWriteByte (pivFile, C_PR_STROKE_OPACITY);
           break;
+        case PtStopOpacity:
+          TtaWriteByte (pivFile, C_PR_STOPOPACITY);
+          break;
         case PtFillRule:
           TtaWriteByte (pivFile, C_PR_FILL_RULE);
           break;
@@ -689,6 +693,12 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
           break;
         case PtForeground:
           TtaWriteByte (pivFile, C_PR_FOREGROUND);
+          break;
+        case PtColor:
+          TtaWriteByte (pivFile, C_PR_COLOR);
+          break;
+        case PtStopColor:
+          TtaWriteByte (pivFile, C_PR_STOPCOLOR);
           break;
         case PtBorderTopColor:
           TtaWriteByte (pivFile, C_PR_BORDERTOPCOLOR);
@@ -799,12 +809,15 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtOpacity:
         case PtFillOpacity:
         case PtStrokeOpacity:
+        case PtStopOpacity:
         case PtFillPattern:
         case PtListStyleImage:
           PutShort (pivFile, pPRule->PrIntValue);
           break;
         case PtBackground:
         case PtForeground:
+	case PtColor:
+	case PtStopColor:
         case PtBorderTopColor:
         case PtBorderRightColor:
         case PtBorderBottomColor:

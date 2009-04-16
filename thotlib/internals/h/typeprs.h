@@ -225,8 +225,9 @@ typedef enum
   PtBorderTopStyle, PtBorderRightStyle, PtBorderBottomStyle, PtBorderLeftStyle,
   PtSize, PtStyle, PtWeight, PtVariant, PtFont, PtUnderline, PtThickness,
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
-  PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, 
-  PtOpacity, PtFillOpacity, PtStrokeOpacity, PtFillRule,
+  PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, PtColor,
+  PtStopColor, PtStopOpacity, PtOpacity, PtFillOpacity, PtStrokeOpacity,
+  PtFillRule,
   PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
   PtXRadius, PtYRadius,
   PtPosition, PtTop, PtRight, PtBottom, PtLeft, PtFloat, PtClear,
@@ -242,7 +243,7 @@ typedef enum
 /* computing mode of the properties */
 typedef enum
   {
-    PresImmediate, PresInherit, PresFunction
+    PresImmediate, PresInherit, PresCurrentColor, PresFunction
   } PresMode;
 
 /* inherit mode */
@@ -463,7 +464,8 @@ typedef struct _PresRule
   PresMode	PrPresMode;	/* computing mode of the value */
   union
   {
-    struct			/* PrPresMode = PresInherit */
+    struct			/* PrPresMode = PresInherit
+				   PrPresMode = PresCurrentColor */
     {
       InheritMode  _PrInheritMode_;
       ThotBool	   _PrInhPercent_;/* PrInhDelta is a precentage if true, an
@@ -502,10 +504,11 @@ typedef struct _PresRule
       union
       {
 	struct	/* PRuleType = PtVisibility, PtListStyleImage, PtDepth,
-		   PtFillPattern, PtBackground, PtForeground,
+		   PtFillPattern, PtBackground, PtForeground, PtColor,
+                   PtStopColor,
 		   PtBorderTopColor, PtBorderRightColor,
 		   PtBorderBottomColor, PtBorderLeftColor,
-		   PtOpacity, PtFillOpacity, PtStrokeOpacity */
+		   PtOpacity, PtFillOpacity, PtStrokeOpacity, PtStopOpacity */
 	{
 	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 

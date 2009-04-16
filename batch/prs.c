@@ -365,6 +365,8 @@ static void         CreatePRule (PRuleType t, indLine wi)
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
+    case PtColor:
+    case PtStopColor:
     case PtBorderTopColor:
     case PtBorderRightColor:
     case PtBorderBottomColor:
@@ -375,6 +377,7 @@ static void         CreatePRule (PRuleType t, indLine wi)
     case PtOpacity:
     case PtStrokeOpacity:
     case PtFillOpacity:
+    case PtStopOpacity:
       CurRule->PrAttrValue = False;
       CurRule->PrIntValue = 1000;
     case PtListStyleType:
@@ -2324,6 +2327,15 @@ static void         CheckDefaultRules ()
       CurRule->PrType = PtStrokeOpacity;
       InheritRule (InheritParent);
     }
+  if (GetTypedRule (PtOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
+    /*  pas de regle Opacity par defaut, on en cree une : */
+    /*  Opacity: 100%; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtOpacity;
+      CurRule->PrAttrValue = FALSE;
+      CurRule->PrIntValue = 1000;
+    }
   if (GetTypedRule (PtBackground, pPSchema->PsFirstDefaultPRule) == NULL)
     /* pas de regle Background par defaut, on en cree une : */
     /* Background: Enclosing =; */
@@ -2339,6 +2351,24 @@ static void         CheckDefaultRules ()
       CreateDefaultRule ();
       CurRule->PrType = PtForeground;
       InheritRule (InheritParent);
+    }
+  if (GetTypedRule (PtColor, pPSchema->PsFirstDefaultPRule) == NULL)
+    /* pas de regle Color par defaut, on en cree une : */
+    /* Color: Enclosing =; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtColor;
+      InheritRule (InheritParent);
+    }
+  if (GetTypedRule (PtStopColor, pPSchema->PsFirstDefaultPRule) == NULL)
+    /* pas de regle StopColor par defaut, on en cree une : */
+    /* StopColor: Black; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtStopColor;
+      CurRule->PrPresMode = PresImmediate;
+      CurRule->PrAttrValue = False;
+      CurRule->PrIntValue = 1;
     }
   if (GetTypedRule (PtHyphenate, pPSchema->PsFirstDefaultPRule) == NULL)
     /* pas de regle Hyphenate par defaut, on en cree une : */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA  1996-2005
+ *  (c) COPYRIGHT INRIA  1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -280,6 +280,9 @@ void                WritePRuleType (PRuleType ruleType)
     case PtFillOpacity:
       TtaWriteByte (outfile, C_PR_FILL_OPACITY);
       break;
+    case PtStopOpacity:
+      TtaWriteByte (outfile, C_PR_STOPOPACITY);
+      break;
     case PtFillRule:
       TtaWriteByte (outfile, C_PR_FILL_RULE);
       break;
@@ -288,6 +291,12 @@ void                WritePRuleType (PRuleType ruleType)
       break;
     case PtForeground:
       TtaWriteByte (outfile, C_PR_FOREGROUND);
+      break;
+    case PtColor:
+      TtaWriteByte (outfile, C_PR_COLOR);
+      break;
+    case PtStopColor:
+      TtaWriteByte (outfile, C_PR_STOPCOLOR);
       break;
     case PtHyphenate:
       TtaWriteByte (outfile, C_PR_HYPHENATE);
@@ -338,6 +347,9 @@ static void WritePresMode (PresMode mode)
       break;
     case PresInherit:
       TtaWriteByte (outfile, C_INHERIT);
+      break;
+    case PresCurrentColor:
+      TtaWriteByte (outfile, C_CURRENT_COLOR);
       break;
     case PresFunction:
       TtaWriteByte (outfile, C_PRES_FUNCTION);
@@ -1015,6 +1027,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
       switch (currentRule->PrPresMode)
 	      {
         case PresInherit:
+        case PresCurrentColor:
           WriteInheritMode (currentRule->PrInheritMode);
           WriteBoolean (currentRule->PrInhPercent);
           WriteBoolean (currentRule->PrInhAttr);
@@ -1050,6 +1063,8 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
             case PtFillPattern:
             case PtBackground:
             case PtForeground:
+            case PtColor:
+            case PtStopColor:
             case PtBorderTopColor:
             case PtBorderRightColor:
             case PtBorderBottomColor:
@@ -1057,6 +1072,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
             case PtOpacity:
             case PtFillOpacity:
             case PtStrokeOpacity:
+            case PtStopOpacity:
             case PtListStyleImage:
               WriteBoolean (currentRule->PrAttrValue);
               WriteSignedShort (currentRule->PrIntValue);
