@@ -742,6 +742,9 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
             TtaInsertSibling (copy, child, FALSE, doc);
           else
             TtaInsertFirstChild (&copy, el, doc);
+	  /* if the use element refers to a gradient, associate the gradient
+	     with the new child of the use element */
+	  TtaCopyGradientUse (copy);
         }
       else if (isTref)
         /* it's a tref, linearGradient or radialGradient element.

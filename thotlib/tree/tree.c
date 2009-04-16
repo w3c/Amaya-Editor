@@ -3129,75 +3129,78 @@ void CopyGradient (PtrElement pSource, PtrElement pEl)
   GradientStop        *gStop, *prev, *next, *gStopCopy;
 
   pEl->ElGradientDef = pSource->ElGradientDef;
+  if (!pSource->ElGradient)
+    return;
   if (pSource->ElGradientDef)
+    /* it's the definition of a gradient */
     {
-      if (pSource->ElGradient)
+      if (pEl->ElGradient)
+	/* free the existing gradient and its stops before making a fresh copy*/
 	{
-	  if (pEl->ElGradient)
-	    /* free the existing gradient and its stops before making a
-	       fresh copy */
-	    {
-	      gStop = pEl->ElGradient->firstStop;
-	      while (gStop)
-		{
-		  next = gStop->next;
-		  TtaFreeMemory (gStop);
-		  gStop = next;
-		}
-	      TtaFreeMemory (pEl->ElGradient);
-	    }
-	  pEl->ElGradient = (Gradient *)TtaGetMemory (sizeof (Gradient));
-	  pSource->ElGradientCopy = pEl;
-	  pEl->ElGradient->userSpace = pSource->ElGradient->userSpace;
-	  pEl->ElGradient->gradTransform = pSource->ElGradient->gradTransform;
-          if (pSource->ElGradient->gradTransform)
-            pEl->ElGradient->gradTransform = (Transform*)TtaCopyTransform (pSource->ElGradient->gradTransform);
-	  pEl->ElGradient->spreadMethod = pSource->ElGradient->spreadMethod;
-	  pEl->ElGradient->el = pEl;
-	  pEl->ElGradient->firstStop = NULL;
-	  prev = NULL;
-	  gStop = pSource->ElGradient->firstStop;
+	  gStop = pEl->ElGradient->firstStop;
 	  while (gStop)
 	    {
-	      gStopCopy = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
-	      if (prev)
-		prev->next = gStopCopy;
-	      else
-		pEl->ElGradient->firstStop = gStopCopy;
-	      gStopCopy->r = gStop->r;
-	      gStopCopy->g = gStop->g;
-	      gStopCopy->b = gStop->b;
-	      gStopCopy->a = gStop->a;
-	      gStopCopy->offset = gStop->offset;
-	      gStopCopy->el = NULL;
-	      gStopCopy->next = NULL;
-	      prev = gStopCopy;
-	      gStop = gStop->next;
+	      next = gStop->next;
+	      TtaFreeMemory (gStop);
+	      gStop = next;
 	    }
-	  pEl->ElGradient->gradType = pSource->ElGradient->gradType;
-          if (pEl->ElGradient->gradType == Linear)
-	    {
-	      pEl->ElGradient->gradX1 = pSource->ElGradient->gradX1;
-	      pEl->ElGradient->gradX2 = pSource->ElGradient->gradX2;
-	      pEl->ElGradient->gradY1 = pSource->ElGradient->gradY1;
-	      pEl->ElGradient->gradY2 = pSource->ElGradient->gradY2;
-	    }
-          else if (pEl->ElGradient->gradType == Radial)
-	    {
-	      pEl->ElGradient->gradCx = pSource->ElGradient->gradCx;
-	      pEl->ElGradient->gradCy = pSource->ElGradient->gradCy;
-	      pEl->ElGradient->gradFx = pSource->ElGradient->gradFx;
-	      pEl->ElGradient->gradFy = pSource->ElGradient->gradFy;
-	      pEl->ElGradient->gradR = pSource->ElGradient->gradR;
-	    }
+	  TtaFreeMemory (pEl->ElGradient);
+	}
+      /* create a copy of the gradient */
+      pEl->ElGradient = (Gradient *)TtaGetMemory (sizeof (Gradient));
+      pSource->ElGradientCopy = pEl;
+      pEl->ElGradient->userSpace = pSource->ElGradient->userSpace;
+      pEl->ElGradient->gradTransform = pSource->ElGradient->gradTransform;
+      if (pSource->ElGradient->gradTransform)
+	pEl->ElGradient->gradTransform = (Transform*)TtaCopyTransform (pSource->ElGradient->gradTransform);
+      pEl->ElGradient->spreadMethod = pSource->ElGradient->spreadMethod;
+      pEl->ElGradient->el = pEl;
+      pEl->ElGradient->firstStop = NULL;
+      prev = NULL;
+      gStop = pSource->ElGradient->firstStop;
+      while (gStop)
+	{
+	  gStopCopy = (GradientStop *)TtaGetMemory (sizeof (GradientStop));
+	  if (prev)
+	    prev->next = gStopCopy;
+	  else
+	    pEl->ElGradient->firstStop = gStopCopy;
+	  gStopCopy->r = gStop->r;
+	  gStopCopy->g = gStop->g;
+	  gStopCopy->b = gStop->b;
+	  gStopCopy->a = gStop->a;
+	  gStopCopy->offset = gStop->offset;
+	  gStopCopy->el = NULL;
+	  gStopCopy->next = NULL;
+	  prev = gStopCopy;
+	  gStop = gStop->next;
+	}
+      pEl->ElGradient->gradType = pSource->ElGradient->gradType;
+      if (pEl->ElGradient->gradType == Linear)
+	{
+	  pEl->ElGradient->gradX1 = pSource->ElGradient->gradX1;
+	  pEl->ElGradient->gradX2 = pSource->ElGradient->gradX2;
+	  pEl->ElGradient->gradY1 = pSource->ElGradient->gradY1;
+	  pEl->ElGradient->gradY2 = pSource->ElGradient->gradY2;
+	}
+      else if (pEl->ElGradient->gradType == Radial)
+	{
+	  pEl->ElGradient->gradCx = pSource->ElGradient->gradCx;
+	  pEl->ElGradient->gradCy = pSource->ElGradient->gradCy;
+	  pEl->ElGradient->gradFx = pSource->ElGradient->gradFx;
+	  pEl->ElGradient->gradFy = pSource->ElGradient->gradFy;
+	  pEl->ElGradient->gradR = pSource->ElGradient->gradR;
 	}
     }
   else
+    /* it's a reference to a gradient */
     {
-      pEl->ElGradient = pSource->ElGradient;
-      if (pSource->ElGradient && pSource->ElGradient->el &&
-	  pSource->ElGradient->el->ElGradientCopy)
+      if (pSource->ElGradient->el && pSource->ElGradient->el->ElGradientCopy)
+	/* the referred gradient was copied, refer to its copy */
 	pEl->ElGradient = pSource->ElGradient->el->ElGradientCopy->ElGradient;
+      else
+	/* avoid to create a reference to a gradient that is not copied */
+	pEl->ElGradient = NULL;
     }
 #endif /* _GL */
 }

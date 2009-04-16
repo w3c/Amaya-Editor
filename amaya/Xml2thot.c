@@ -5405,6 +5405,9 @@ void ParseExternalDocument (char *fileName, char *originalName, Element el,
                   /* Copy the external sub-tree into the main document*/
                   copy = TtaCopyTree (idEl, externalDoc, doc, extEl);
                   TtaInsertFirstChild (&copy, extEl, doc);
+		  if (elType.ElTypeNum == SVG_EL_use_ &&
+		      elType.ElSSchema == extAttrType.AttrSSchema)
+		    TtaCopyGradientUse (copy);
                 }
             }
 #endif /* _SVG */

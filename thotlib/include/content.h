@@ -476,6 +476,7 @@ void TtaSetGradientStopColor (unsigned short red, unsigned short green,
                               unsigned short blue, Element el);
 void TtaSetGradientStopOpacity (float opacity, Element el);
 void TtaLinkGradient (Element gradient, Element el);
+void TtaCopyGradientUse (Element el);
      
 /*----------------------------------------------------------------------
    TtaCopyPage

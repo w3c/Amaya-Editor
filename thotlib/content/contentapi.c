@@ -2689,6 +2689,26 @@ void TtaLinkGradient (Element gradient, Element el)
 #endif /* _GL */
 }
 
+/*----------------------------------------------------------------------
+  TtaCopyGradientUse
+  If the parent of element el refers to a gradient, move this reference
+  to element el itself.
+  ----------------------------------------------------------------------*/
+void TtaCopyGradientUse (Element el)
+{
+#ifdef _GL
+  if (el == NULL || ((PtrElement)el)->ElParent == NULL)
+    return;
+  if (((PtrElement)el)->ElParent->ElGradient &&
+      !((PtrElement)el)->ElParent->ElGradientDef)
+    {
+      ((PtrElement)el)->ElGradient = ((PtrElement)el)->ElParent->ElGradient;
+      ((PtrElement)el)->ElGradientDef = FALSE;
+      ((PtrElement)el)->ElParent->ElGradient = NULL;
+    }
+#endif /* _GL */
+}
+
 /* ----------------------------------------------------------------------
    getPathSegment
    ---------------------------------------------------------------------- */
