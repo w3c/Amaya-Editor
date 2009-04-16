@@ -211,7 +211,7 @@
 209 Prova la voce 'File/Forza codifica caratteri'
 210 Caratteri non validi
 211 Profilo di documento:
-212 Errore - vedi File > Mostra le errore
+212 Errore - vedi Viste > Mostra le errore
 213 La codifica per questo documento non e` supportata da Amaya
 214 Editando e salvando questo documento il suo tipo verrà cambiato
 215 Non disponibile
@@ -239,7 +239,7 @@
 237 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
 238 Non trovo dove muovere l'annotazione
 239 Non posso muovere l'annotazione su un diverso documento
-240 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
+240 Non sono state dichiarate annotazioni utente Preferenze
 241 Non posso creare un XPointer per questa annotazione
 242 Aggiungi una nuova annotazione
 243 Non posso postare l'annotazione

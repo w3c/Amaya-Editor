@@ -211,7 +211,7 @@
 209 **Try the 'File/Read as' entry
 210 Virheellisiä merkkejä
 211 Dokumentin profiili:
-212 Virhe - katso Tiedosto > Näytä käännösvirheet
+212 Virhe - katso Näytä > Näytä käännösvirheet
 213 Amaya ei tue dokumentin tyyppiä
 214 Muokkaus ja tallennus muuttavat dokumentin tyypin
 215 Ei saatavilla
@@ -239,7 +239,7 @@
 237 Mahdotonta liittää lopettavaa XPointeria sisäisesti lisättyyn elementtiin
 238 Merkinnän kohdepaikkaa ei löydy
 239 Merkintää ei voi siirtää toiseen dokumenttiin
-240 Merkinnän käyttäjää ei valittu. Valitse käyttäjä Merkinnät/Määritä asetukset
+240 Merkinnän käyttäjää ei valittu. Valitse käyttäjä Asetukset asetukset
 241 XPointerin luonti merkintää varten epäonnistui
 242 Uusi merkintä
 243 Merkinnän lähetys epäonnistui

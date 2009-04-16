@@ -211,7 +211,7 @@
 209 **Try the 'File/Read as' entry
 210 Caracteres inválidos
 211 Perfil del documento:
-212 Erros - veja Arquivo > Exibir erros de gramática (parsing)
+212 Erros - veja Vistas > Exibir erros de gramática (parsing)
 213 A codificação deste documento não é suportada porAmaya
 214 Editar ou salvar este documento vai mudar seu tipo
 215 Indisponível
@@ -239,7 +239,7 @@
 237 Impossível anexar um XPointer final a um elemento adicionado internamente
 238 Não é possível achar para onde mover a anotação
 239 Não é possível mover a anotação para outro documento
-240 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
+240 Não foi declarado o usuário da anotação. Por favor abra Preferências
 241 Incapaz de construir um XPointer para esta anotação
 242 Fazer uma nova anotação
 243 A postagem da anotação falhou

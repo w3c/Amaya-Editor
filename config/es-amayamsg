@@ -211,7 +211,7 @@
 209 Utiliza el menú 'Archivo > Forzar codificación de caracteres'
 210 Caracteres inválidos
 211 Perfil de este documento:
-212 Eerrores - vea Archivo > Mostrar errores sintácticos
+212 Eerrores - vea Ver > Mostrar errores sintácticos
 213 La codificación de este documento no está soportada por Amaya
 214 Al editar y guardar este documento se cambiará su tipo
 215 No disponible
@@ -239,7 +239,7 @@
 237 Imposible adjuntar un XPointer final sobre un elemento interno agregado
 238 No sé a dónde mover la anotación
 239 No puedo mover la anotación a otro documento
-240 No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones
+240 No hay usuarios de anotaciones declarados. Por favor, abra el Preferencias
 241 No se puede crear un XPointer para esta anotación
 242 Crear una nueva anotación
 243 Fallo al enviar la anotación

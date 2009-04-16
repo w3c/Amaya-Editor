@@ -4357,20 +4357,20 @@ kódovaním'</message>
 	<message xml:lang="nl">Documentprofiel:</message>
 </label>
 <label define="AM_XML_WARNING">
-	<message xml:lang="en">Errors detected - see File &gt; Show parsing
+	<message xml:lang="en">Errors detected - see Views &gt; Show parsing
 errors</message>
-	<message xml:lang="fr">Erreurs détectées - voir Fichier &gt; Montrer les
+	<message xml:lang="fr">Erreurs détectées - voir Affichage &gt; Montrer les
 erreurs</message>
-	<message xml:lang="it">Errore - vedi File &gt; Mostra le errore</message>
-	<message xml:lang="de">Anzeigen - siehe Datei &gt; Parserfehler
+	<message xml:lang="it">Errore - vedi Viste &gt; Mostra le errore</message>
+	<message xml:lang="de">Anzeigen - siehe Ansicht &gt; Parserfehler
 anzeigen</message>
-	<message xml:lang="es">Eerrores - vea Archivo &gt; Mostrar errores
+	<message xml:lang="es">Eerrores - vea Ver &gt; Mostrar errores
 sintácticos</message>
-	<message xml:lang="pt">Erros - veja Arquivo &gt; Exibir erros de gramática
+	<message xml:lang="pt">Erros - veja Vistas &gt; Exibir erros de gramática
 (parsing)</message>
-	<message xml:lang="fi">Virhe - katso Tiedosto &gt; Näytä
+	<message xml:lang="fi">Virhe - katso Näytä &gt; Näytä
 käännösvirheet</message>
-	<message xml:lang="tr">Hata - Dosya &gt; Hataları göster bakın</message>
+	<message xml:lang="tr">Hata - Görünümler &gt; Hataları göster bakın</message>
 	<message xml:lang="ru">Обнаружены ошибки. Выберите
 пункт меню Файл/Показать разбор
 ошибок.</message>
@@ -4379,15 +4379,15 @@ see Fájl &gt; Elemzési hibák mutatása</message>
 	<message xml:lang="ka">შეცდომა - მენიუდან
 ნახეთ &quot;ფაილი'-'დამუშავებული
 შეცდომების ჩვენება'</message>
-	<message xml:lang="cn">Errors detected - see File &gt; Show parsing
+	<message xml:lang="cn">Errors detected - see Views &gt; Show parsing
 errors</message>
-	<message xml:lang="tw">Errors detected - see File &gt; Show parsing
+	<message xml:lang="tw">Errors detected - see Views &gt; Show parsing
 errors</message>
-	<message xml:lang="sk">Nájdené chyby - pozri Súbor &gt; Skontrolovať
+	<message xml:lang="sk">Nájdené chyby - pozri Zobrazenia &gt; Skontrolovať
 chyby</message>
 	<message xml:lang="ja">エラー発見 - ファイルを見る &gt;
 文解析エラー表示</message>
-	<message xml:lang="nl">Er zijn fouten aangetroffen. Zie Weergave > Parseerfouten</message>
+	<message xml:lang="nl">Er zijn fouten aangetroffen. Zie Weergave &gt; Parseerfouten</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
 	<message xml:lang="en">The encoding of this document is not supported by
@@ -4943,26 +4943,19 @@ dokumentu</message>
 </label>
 <label define="AM_NO_ANNOT_USER">
 	<message xml:lang="en">No annotation user declared. Please open the
-Annotations/Configure menu.</message>
-	<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu
-Annotations/Configure.</message>
-	<message xml:lang="it">Non sono state dichiarate annotazioni utente. Apri il
-menu Annotazioni/Configura.</message>
-	<message xml:lang="de">Kein Ersteller für Anmerkung konfiguriert, bitte das
-Menü &quot;Anmerkungen/Konfiguration&quot; öffnen</message>
-	<message xml:lang="es">No hay usuarios de anotaciones declarados. Por favor,
-abra el menú de configuración de Anotaciones</message>
-	<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor
-abra o menu Anotações/Configurar</message>
+Preferences</message>
+	<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir les Préférences</message>
+	<message xml:lang="it">Non sono state dichiarate annotazioni utente Preferenze</message>
+	<message xml:lang="de">Kein Ersteller für Anmerkung konfiguriert, bitte das Einstellungen öffnen</message>
+	<message xml:lang="es">No hay usuarios de anotaciones declarados. Por favor, abra el Preferencias</message>
+	<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor abra Preferências</message>
 	<message xml:lang="fi">Merkinnän käyttäjää ei valittu. Valitse
-käyttäjä Merkinnät/Määritä asetukset</message>
+käyttäjä Asetukset asetukset</message>
 	<message xml:lang="tr">Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar
 menüsüne bakın</message>
 	<message xml:lang="ru">Не указан автор аннотации.
-Откройте меню
-Редактирование/Настройки/Аннотация.</message>
-	<message xml:lang="hu">Nincs jegyzet felhasználó. Kérjük, nyissa meg a
-Jegyzet/Beállítások menüt.</message>
+Откройте меню Настройки</message>
+	<message xml:lang="hu">Nincs jegyzet felhasználó. Kérjük, nyissa meg a Beállítások</message>
 	<message xml:lang="ka">ანოტაციის ავტორი არ
 მითითებულა. გახსენით მენიუ
 ანოტაცია/კონფიგურაცია.</message>
@@ -4970,11 +4963,10 @@ Jegyzet/Beállítások menüt.</message>
 菜单</message>
 	<message xml:lang="tw">未聲明注釋用戶, 請打開 注釋/配置
 菜單</message>
-	<message xml:lang="sk">Nebol vytvorený žiadny uživateľský komentár.
-Otvorte Komentáre/Konfigurácia menu.</message>
+	<message xml:lang="sk">Nebol vytvorený žiadny uživateľský komentár. Otvorte Možnosti</message>
 	<message xml:lang="ja">アノテーションユーザの宣言がありません。アノテーション/コンフィグ
 メニューを開いてください。</message>
-	<message xml:lang="nl">Er is geen gebruiker ingesteld voor annotaties. U kunt dit doen in het menu Voorkeuren > Annotaties</message>
+	<message xml:lang="nl">Er is geen gebruiker ingesteld voor annotaties. U kunt dit doen in het Voorkeuren</message>
 </label>
 <label define="AM_CANNOT_ANNOTATE">
 	<message xml:lang="en">Unable to build an XPointer for this annotation</message>

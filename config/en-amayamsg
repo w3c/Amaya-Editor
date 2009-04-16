@@ -215,7 +215,7 @@
 209 Try the 'File/Read as' entry
 210 Invalid characters
 211 Document profile:
-212 Errors detected - see File > Show parsing errors
+212 Errors detected - see Views > Show parsing errors
 213 The encoding of this document is not supported by Amaya
 214 Editing and saving this document will change its type
 215 Not available
@@ -243,7 +243,7 @@
 237 Impossible to attach an end XPointer on an internal added element
 238 Cannot find where to move the annotation
 239 Cannot move the annotation to a different document
-240 No annotation user declared. Please open the Annotations/Configure menu.
+240 No annotation user declared. Please open the Preferences
 241 Unable to build an XPointer for this annotation
 242 Make a new annotation
 243 Failed to post the annotation

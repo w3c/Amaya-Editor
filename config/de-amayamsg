@@ -211,7 +211,7 @@
 209 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
 210 Ungültige Zeichen
 211 Dokumenttyp:
-212 Anzeigen - siehe Datei > Parserfehler anzeigen
+212 Anzeigen - siehe Ansicht > Parserfehler anzeigen
 213 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
 214 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
 215 Nicht verfügbar
@@ -239,7 +239,7 @@
 237 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
 238 Kein Ziel zum Verschieben der Anmerkung gefunden
 239 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-240 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
+240 Kein Ersteller für Anmerkung konfiguriert, bitte das Einstellungen öffnen
 241 Für diese Anmerkung kann kein XPointer erzeugt werden
 242 Neue Anmerkung erzeugen
 243 Absenden der Anmerkung gescheitert

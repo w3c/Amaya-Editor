@@ -211,7 +211,7 @@
 209 Essayer l'entrée "Fichier/Lire comme"
 210 Caractères invalides
 211 Profil du document :
-212 Erreurs détectées - voir Fichier > Montrer les erreurs
+212 Erreurs détectées - voir Affichage > Montrer les erreurs
 213 Le codage de ce document n'est pas supporté par Amaya
 214 Editer et enregistrer ce document changera son type
 215 Non disponible
@@ -239,7 +239,7 @@
 237 Impossible de terminer un XPointer sur un élément ajouté par Amaya
 238 Je ne peux pas déplacer l'annotation là
 239 Je ne peux pas bouger l'annotation vers un autre document
-240 Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.
+240 Pas de nom d'utilisateur déclaré. Voir les Préférences
 241 Impossible de construire un XPointer pour cette annotation
 242 Faire une nouvelle annotation
 243 La publication de l'annotation a échoué

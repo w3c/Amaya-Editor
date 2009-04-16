@@ -211,7 +211,7 @@
 209 Skúste zvoliť 'Súbor/Načítať s kódovaním'
 210 Neplatný znak
 211 Profil dokumentu:
-212 Nájdené chyby - pozri Súbor > Skontrolovať chyby
+212 Nájdené chyby - pozri Zobrazenia > Skontrolovať chyby
 213 Kódovanie tohto dokumentu nie je podporované programom Amaya
 214 Úpravou a uložením tohto dokumentu zmeníte jeho typ
 215 Nedostupné
@@ -239,7 +239,7 @@
 237 Nie je možné napojiť koniec XPointera na vnútorne pridaný prvok
 238 Nedokážem sa zistiť kam bol presunutý komentár
 239 Nedokážem presunúť komentár do iného dokumentu
-240 Nebol vytvorený žiadny uživateľský komentár. Otvorte Komentáre/Konfigurácia menu.
+240 Nebol vytvorený žiadny uživateľský komentár. Otvorte Možnosti
 241 Nedá sa vytvoriť Xpointer pre kometár
 242 Vytvoriť nový kometár
 243 Odoslanie komentára zlyhalo

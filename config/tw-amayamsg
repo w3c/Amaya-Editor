@@ -211,7 +211,7 @@
 209 Try the 'File/Read as' entry
 210 Invalid characters
 211 Document profile:
-212 Errors detected - see File > Show parsing errors
+212 Errors detected - see Views > Show parsing errors
 213 The encoding of this document is not supported by Amaya
 214 Editing and saving this document will change its type
 215 Not available
