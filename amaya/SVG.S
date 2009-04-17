@@ -21,7 +21,7 @@ ATTR
    Highlight = Yes_;        { to show the SVG element corresponding to the
                               current selection in the source view }
    Namespace = text;        { for children of element foreignObject }
-
+   IsCopy = Yes_;
 
 CONST
 
@@ -1255,7 +1255,7 @@ STRUCT
               color; color_interpolation; {PresentationAttributes-Color}
               color_rendering;            {PresentationAttributes-Color}
               stop_color; stop_opacity;   {PresentationAttributes-Gradients}
-              offset = text) 
+              offset = text)
         = LIST OF
              (CASE OF
                 animate; set_; animateColor;
@@ -2456,7 +2456,7 @@ STRUCT
           height_)
         = PICTURE;
 
-   GraphicsElement
+  GraphicsElement
         = CASE OF
               desc; title; metadata; defs;
               path; text_; rect; circle_; ellipse; line_; polyline; polygon;
@@ -2523,6 +2523,7 @@ EXCEPT
    RealLang:                Invisible;
    Charset:                  Invisible;
    UnresolvedRef:     Invisible;
+   IsCopy:	       Invisible;
    Timeline_cross:    MoveResize, NoResize, HighlightChildren, NoShowBox, NoCut;
    { the following attributes are made invisible to prevent the Attributes
      menu from becoming too long }

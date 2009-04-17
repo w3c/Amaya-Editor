@@ -567,6 +567,8 @@ RULES
 	BEGIN
 	if immediately within use_
            Ignore;
+	if IsCopy
+	   Ignore;
 	create SOT;
 	create 'stop';
 	indent +6;

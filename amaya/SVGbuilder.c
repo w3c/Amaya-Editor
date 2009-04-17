@@ -770,8 +770,13 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
 		  else
 		    TtaInsertSibling (copy, prevCopy, FALSE, doc);
 		  TtaNewGradientStop (copy, el);
-		  /* copy attribute offset */
+		  /* Put attribute IsCopy to indicate that this copy must not
+		     be saved with the document */
 		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = SVG_ATTR_IsCopy;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (copy, attr, doc);
+		  /* copy attribute offset */
 		  attrType.AttrTypeNum = SVG_ATTR_offset;
 		  attr = TtaGetAttribute (copy, attrType);
 		  if (attr)
