@@ -3170,7 +3170,7 @@ void CopyGradient (PtrElement pSource, PtrElement pEl)
 	  gStopCopy->b = gStop->b;
 	  gStopCopy->a = gStop->a;
 	  gStopCopy->offset = gStop->offset;
-	  gStopCopy->el = NULL;
+	  gStopCopy->el = gStop->el->ElCopy;
 	  gStopCopy->next = NULL;
 	  prev = gStopCopy;
 	  gStop = gStop->next;
@@ -3198,9 +3198,9 @@ void CopyGradient (PtrElement pSource, PtrElement pEl)
       if (pSource->ElGradient->el && pSource->ElGradient->el->ElGradientCopy)
 	/* the referred gradient was copied, refer to its copy */
 	pEl->ElGradient = pSource->ElGradient->el->ElGradientCopy->ElGradient;
-      else
-	/* avoid to create a reference to a gradient that is not copied */
-	pEl->ElGradient = NULL;
+      /*      else
+	 avoid to create a reference to a gradient that is not copied 
+	pEl->ElGradient = NULL; */
     }
 #endif /* _GL */
 }
@@ -3405,7 +3405,6 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
                 pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
               if (pSource->ElTransform)
                 pEl->ElTransform = (Transform*)TtaCopyTransform (pSource->ElTransform);
-	      CopyGradient (pSource, pEl);
 #endif /* _GL */
               pEl->ElTerminal = pSource->ElTerminal;
 
@@ -3498,6 +3497,11 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
                     }
                   while (pS2);
                 }
+#ifdef _GL
+	      /* if it's a gradient element, its stop children are now copied.
+		 We can copy the gradient structure */
+	      CopyGradient (pSource, pEl);
+#endif /* _GL */
             }
         }
     }

@@ -661,12 +661,13 @@ void CopyTRefContent (Element source, Element el, Document doc)
   ----------------------------------------------------------------------*/
 ThotBool CopyUseContent (Element el, Document doc, char *href)
 {
-  Element              source, curEl, copy, child, nextChild, elFound;
-  ElementType          elType;
+  Element              source, curEl, copy, prevCopy, child, nextChild, elFound;
+  ElementType          elType, childType;
   Attribute            attr;
   AttributeType        attrType;
   SearchDomain         direction;
   int                  i, length, attrKind;
+  float                offset;
   char *               id;
   ThotBool             isUse, isTref, oldStructureChecking;
 
@@ -754,7 +755,34 @@ ThotBool CopyUseContent (Element el, Document doc, char *href)
 	       elType.ElTypeNum ==SVG_EL_radialGradient)
 	/* it's a gradient. Copy the gradient stops and update attributes */
 	{
-	  TtaCopyGradient (source, el);
+	  /* copy the gradient stops */
+	  child = TtaGetFirstChild (source);
+	  prevCopy = NULL;
+	  while (child)
+	    {
+	      childType = TtaGetElementType (child);
+	      if (childType.ElTypeNum == SVG_EL_stop &&
+		  childType.ElSSchema == elType.ElSSchema)
+		{
+		  copy = TtaCopyTree (child, doc, doc, el);
+		  if (!prevCopy)
+		    TtaInsertFirstChild (&copy, el, doc);
+		  else
+		    TtaInsertSibling (copy, prevCopy, FALSE, doc);
+		  TtaNewGradientStop (copy, el);
+		  /* copy attribute offset */
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = SVG_ATTR_offset;
+		  attr = TtaGetAttribute (copy, attrType);
+		  if (attr)
+		    {
+		      offset = ParseNumberPercentAttribute (attr);
+		      TtaSetGradientStopOffset (offset, copy);
+		    }
+		  prevCopy = copy;
+		}
+	      TtaNextSibling (&child);
+	    }
 	  /* update attributes */
 	  attr = NULL;
 	  TtaNextAttribute (el, &attr);
