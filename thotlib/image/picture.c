@@ -557,9 +557,9 @@ static void GL_TextureBind (ThotPictInfo *img, ThotBool isPixmap,
         /* create a texture whose sizes are power of 2*/
         glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
                       GL_UNSIGNED_BYTE, NULL);
-#ifdef _GL_DEBUG
+//#ifdef _GL_DEBUG
       GL_Err ();
-#endif
+//#endif
       if (!Printing)
         img->PicPixmap = NULL;
       img->TexCoordW = GL_w;
@@ -650,8 +650,8 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
     {
       if (GL_NotInFeedbackMode ())
         {
-          glBindTexture (GL_TEXTURE_2D, desc->TextureBind); 	
           glEnable (GL_TEXTURE_2D);
+          glBindTexture (GL_TEXTURE_2D, desc->TextureBind); 	
         }
 
       /* Not sure of the vertex order 
@@ -671,16 +671,16 @@ static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
          to the size of the square */
       /* lower left */
       glTexCoord2f (texX, texH);
-      glVertex2i   (x, y + h);
+      glVertex2f   ((float)x, (float)(y + h));
       /* upper right*/
       glTexCoord2f (texW, texH);
-      glVertex2i   (x + w, y + h);
+      glVertex2f   ((float)(x + w), (float)(y + h));
       /* lower right */
       glTexCoord2f (texW, texY);
-      glVertex2i   (x + w, y);
+      glVertex2f   ((float)(x + w), (float)y);
       /* upper left */
       glTexCoord2f (texX, texY);
-      glVertex2i   (x, y);
+      glVertex2f   ((float)x, (float)y);
       glEnd ();
 
       /* State disabling */
@@ -1687,17 +1687,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
                   GL_TexturePartialMap (imageDesc, dx, dy, x+i, y+j,
                                         /*dx+*/dw, /*dy+*/dh, frame);
 #else /* _GL */
-#ifdef _GTK
-                  if (imageDesc->PicMask)
-                    {
-                      gdk_gc_set_clip_origin (TtGraphicGC, x+i-dx, y+j-dy);
-                      gdk_gc_set_clip_mask (TtGraphicGC, 
-                                            (ThotPixmap) imageDesc->PicMask);
-                    }
-                  gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-                                   (ThotPixmap) imageDesc->PicPixmap, 
-                                   dx, dy, x+i, y+j, dw, dh);
-#endif /* _GTK */
 #ifdef _WINGUI
                   BitBlt (hMemDC, i, j, dw, dh, hOrigDC, dx, dy, SRCCOPY);
 #endif /* _WINGUI */

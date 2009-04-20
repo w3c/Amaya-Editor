@@ -2253,8 +2253,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
               pFlow = pFrame->FrFlow;
               while (pFlow)
                 {
-                  if (pFlow->FlRootBox && pFlow->FlRootBox->AbDepth >= plane)
-                    DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
+                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
                   pFlow = pFlow->FlNext;
                 }
             }
