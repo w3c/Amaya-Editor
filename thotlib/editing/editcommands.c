@@ -3198,36 +3198,48 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                   pViewSelEnd->VsIndBuf--;
                                 }
                               if (pBuffer->BuLength == 0)
-                                if (pBuffer->BuPrevious)
-                                  {
-                                    /* free that buffer */
-                                    if (pSelBox->BxBuffer == pBuffer)
-                                      {
-                                        /* and update the box */
+                                {
+                                  if (pBuffer->BuPrevious)
+                                    {
+                                      /* free that buffer */
+                                      if (pSelBox->BxBuffer == pBuffer)
+                                        {
+                                          /* and update the box */
+                                          pBuffer = DeleteBuffer (pBuffer, frame);
+                                          pSelBox->BxBuffer = pBuffer;
+                                          /* the index will be decremented */
+                                          pSelBox->BxIndChar = pBuffer->BuLength + 1;
+                                          if (pSelBox->BxFirstChar == 1)
+                                            {
+                                              pAb->AbText = pBuffer;
+                                              if (pBox && pBox != pSelBox)
+                                                {
+                                                  /* update the split box */
+                                                  pBox->BxBuffer = pBuffer;
+                                                  if (pBox->BxNexChild != pSelBox &&
+                                                      pBox->BxNexChild)
+                                                    /* there is an empty box before */
+                                                    pBox->BxNexChild->BxBuffer = pBuffer;
+                                                }
+                                            }
+                                          else if (pSelBox->BxPrevious->BxNChars == 0)
+                                            /* update the previous box */
+                                            pSelBox->BxPrevious->BxBuffer = pBuffer;
+                                        }
+                                      else
                                         pBuffer = DeleteBuffer (pBuffer, frame);
-                                        pSelBox->BxBuffer = pBuffer;
-                                        /* the index will be decremented */
-                                        pSelBox->BxIndChar = pBuffer->BuLength + 1;
-                                        if (pSelBox->BxFirstChar == 1)
-                                          {
-                                            pAb->AbText = pBuffer;
-                                            if (pBox && pBox != pSelBox)
-                                              {
-                                                /* update the split box */
-                                                pBox->BxBuffer = pBuffer;
-                                                if (pBox->BxNexChild != pSelBox &&
-                                                    pBox->BxNexChild)
-                                                  /* there is an empty box before */
-                                                  pBox->BxNexChild->BxBuffer = pBuffer;
-                                              }
-                                          }
-                                        else if (pSelBox->BxPrevious->BxNChars == 0)
-                                          /* update the previous box */
-                                          pSelBox->BxPrevious->BxBuffer = pBuffer;
-                                      }
-                                    else
+                                    }
+                                  else if (pBuffer->BuNext)
+                                    {
+                                      if (pAb->AbText == pBuffer && pBox != pAb->AbBox)
+                                        {
+                                          pAb->AbText = pBuffer->BuNext;
+                                          pAb->AbBox->BxBuffer = pBuffer->BuNext;
+                                        }
                                       pBuffer = DeleteBuffer (pBuffer, frame);
-                                  }
+                                      pBox->BxBuffer = NULL;
+                                    }
+                                }
 
                               if (c == SPACE && pBuffer && pBuffer->BuLength)
                                 {

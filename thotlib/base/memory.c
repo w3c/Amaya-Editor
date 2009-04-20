@@ -2073,6 +2073,7 @@ PtrBox FreeBox (PtrBox pBox)
 #endif
       /* Don't use BxNext field because it's used when removing break lines */
       pBox->BxNexChild = PtFree_Box;
+      pBox->BxAbstractBox = NULL;
       pBox->BxType = BoComplete;
       PtFree_Box = pBox;
       NbFree_Box++;
