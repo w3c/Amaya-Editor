@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -834,6 +834,7 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
   switch (unit)
     {
     case UnRelative:
+    case UnXHeight:
       if (pAb == NULL || pAb->AbBox == NULL ||
           pAb->AbBox->BxFont == NULL)
         dist = 0;
@@ -843,21 +844,10 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
             h = GetCurrentFontHeight (pAb->AbSize, pAb->AbSizeUnit, zoom);
           else
             h = BoxFontHeight (pAb->AbBox->BxFont, EOS);
-          dist = (val * h + 5) / 10;
-        }
-      break;
-    case UnXHeight:
-      if (pAb == NULL || pAb->AbBox == NULL ||
-          pAb->AbBox->BxFont == NULL)
-        dist = 0;
-      else
-        {
-          dist = BoxCharacterWidth ('m', 1, pAb->AbBox->BxFont);
-          // XFontAscent (pAb->AbBox->BxFont);
-          if (dist > 0)
-            dist = dist * val / 10;
+          if (unit == UnRelative)
+            dist = (val * h + 5) / 10;
           else
-            dist = val / 10;
+            dist = (val * h + 5) / 20;
         }
       break;
     case UnPoint:
@@ -919,6 +909,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
   switch (unit)
     {
     case UnRelative:
+    case UnXHeight:
       if (pAb == NULL || pAb->AbBox == NULL || 
           pAb->AbBox->BxFont == NULL)
         dist = 0;
@@ -928,21 +919,10 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
             h = GetCurrentFontHeight (pAb->AbSize, pAb->AbSizeUnit, zoom);
           else
             h = BoxFontHeight (pAb->AbBox->BxFont, EOS);
-          dist = val * 10 / h;
-        }
-      break;
-    case UnXHeight:
-      if (pAb == NULL || pAb->AbBox == NULL || 
-          pAb->AbBox->BxFont == NULL)
-        dist = 0;
-      else
-        {
-          dist =  BoxCharacterWidth ('m', 1, pAb->AbBox->BxFont);
-          // XFontAscent (pAb->AbBox->BxFont);
-          if (dist > 0)
-            dist = dist * 10 / dist;
+          if (unit == UnRelative)
+            dist = val * 10 / h;
           else
-            dist = val * 10;
+            dist = val * 20 / h;
         }
       break;
     case UnPoint:
