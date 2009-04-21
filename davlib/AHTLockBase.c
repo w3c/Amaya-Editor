@@ -521,10 +521,11 @@ PUBLIC HTList *processLockFile (const char *filename, const char *reqUri)
  * ----------------------------------------------------------- */
 PUBLIC HTList * searchLockBase ( char * filename,  char * reqUri) 
 {
-    LockLine * info;
-    HTList * list, *if_list = NULL;
-    time_t itime, now,tout;
-    char * ptr;
+    LockLine          *info;
+    HTList            *list, *if_list = NULL;
+    time_t             now;
+    unsigned long int  itime, tout;
+    char              *ptr;
     
     /* process filename - returns a list of LockLine that matches */
     if ( (list = processLockFile(filename,reqUri)) == NULL ||
@@ -552,11 +553,11 @@ PUBLIC HTList * searchLockBase ( char * filename,  char * reqUri)
         else if (HTStrCaseStr(info->timeout, (char*)"Second-")!=NULL) 
          {
             ptr = strchr(info->timeout,'-') + 1;
-            tout = (time_t) atol(ptr);
+            tout = (unsigned long int) atol(ptr);
          }
 	else tout = 0; /*a unknown timeout notation*/
 
-        if ((itime+tout) < now)  
+        if ((itime+tout) < (unsigned long int)now)  
          {
 #ifdef DEBUG_LOCK_BASE		
             fprintf (stderr,"- expired\n");
@@ -737,10 +738,10 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
 PUBLIC LockLine * processLockInfo (char *relative, AwTree *xmlbody, HTAssocList *headers) 
 {
     LockLine *me = NULL;
-    char *depth, *timeout, *lock;
-    time_t itime;
-    HTAssoc *h = NULL;
-    char *ptr = NULL;
+    char     *depth, *timeout, *lock;
+    time_t    itime;
+    HTAssoc  *h = NULL;
+    char     *ptr = NULL;
 
     if (relative && *relative && xmlbody && headers) 
      {
