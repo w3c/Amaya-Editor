@@ -4303,6 +4303,8 @@ void TtcDeleteSelection (Document doc, View view)
     /* table formatting is not loked, lock it now */
     TtaLockTableFormatting ();
    
+  /* close the current text insertion */
+  CloseTextInsertion ();
   ContentEditing (TEXT_DEL);
    
   if (!lock)
