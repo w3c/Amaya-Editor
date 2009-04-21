@@ -3236,8 +3236,9 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                                           pAb->AbText = pBuffer->BuNext;
                                           pAb->AbBox->BxBuffer = pBuffer->BuNext;
                                         }
+                                      if (pSelBox->BxBuffer == pBuffer)
+                                        pSelBox->BxBuffer = NULL;
                                       pBuffer = DeleteBuffer (pBuffer, frame);
-                                      pBox->BxBuffer = NULL;
                                     }
                                 }
 
