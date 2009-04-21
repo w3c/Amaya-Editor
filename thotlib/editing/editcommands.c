@@ -3081,7 +3081,8 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
                       pFrame->FrReady = FALSE;
                       variant = pAb->AbFontVariant;
                       /* initialise l'insertion */
-                      if (!TextInserting)
+                      if (!TextInserting || pBuffer == NULL ||
+                          ind < pBuffer->BuLength)
                         {
                         if (!StartTextInsertion (pAb, frame, pSelBox,
                                                 pBuffer, ind,
