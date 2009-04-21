@@ -996,7 +996,7 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   Attribute            attr;
   char                 *val, buffer[50];
   int                  x, y, length, w, h, i;
-  float                scaleX, scaleY;
+  float                scaleX, scaleY, vBX, vBY, vBWidth, vBHeight;
   double               angle;
   PresentationContext  context = NULL;
   PresentationValue    presValue;
@@ -1011,7 +1011,7 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   copy = TtaNewTranscludedElement (doc, marker);
   /* mark the new Coordinate System */
   TtaSetElCoordinateSystem (copy);
-   /* remove the id attribute from the copy */
+  /* remove the id attribute from the copy */
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = SVG_ATTR_id;
   attr = TtaGetAttribute (copy, attrType);
@@ -1068,49 +1068,6 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
   if (angle != 0)
     TtaAppendTransform (copy, TtaNewTransformRotate (angle, 0, 0), doc);
 
-  /* add a translate to put the reference point of the marker on the vertex of
-     the host element, using the 'refX' and 'refY' attributes of the marker */
-  attrType.AttrTypeNum = SVG_ATTR_refX;
-  attr = TtaGetAttribute (marker, attrType);
-  if (attr)
-    {
-      i = 50;
-      TtaGiveTextAttributeValue (attr, buffer, &i);
-      sscanf (buffer, "%d", &x);
-    }
-  else
-    x = 0;
-  attrType.AttrTypeNum = SVG_ATTR_refY;
-  attr = TtaGetAttribute (marker, attrType);
-  if (attr)
-    {
-      i = 50;
-      TtaGiveTextAttributeValue (attr, buffer, &i);
-      sscanf (buffer, "%d", &y);
-    }
-  else
-    y = 0;
-
-  attrType.AttrTypeNum = SVG_ATTR_markerWidth;
-  attr = TtaGetAttribute (marker, attrType);
-  if (attr)
-    {
-      i = 50;
-      TtaGiveTextAttributeValue (attr, buffer, &i);
-      sscanf (buffer, "%d", &w);
-    }
-  else
-    w = 3;
-  attrType.AttrTypeNum = SVG_ATTR_markerWidth;
-  attr = TtaGetAttribute (marker, attrType);
-  if (attr)
-    {
-      i = 50;
-      TtaGiveTextAttributeValue (attr, buffer, &i);
-      sscanf (buffer, "%d", &h);
-    }
-  else
-    h = 3;
   /* add a scaling to match the coordinate system indicated by the
      'markerUnits' attribute */
   scaleX = 1;
@@ -1136,7 +1093,76 @@ static void CopyAMarker (Element marker, Element el, Element leaf,
         }
     }
   scaleY = scaleX;
-  // normally we need to know the bounding box of the marker
+  if (scaleX != 1 || scaleY != 1)
+    TtaAppendTransform (copy, TtaNewTransformScale (scaleX, scaleY), doc);
+
+  /* add a translate to put the reference point of the marker on the vertex of
+     the host element, using the 'refX' and 'refY' attributes of the marker */
+  attrType.AttrTypeNum = SVG_ATTR_markerWidth;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    {
+      i = 50;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      sscanf (buffer, "%d", &w);
+    }
+  else
+    w = 3;
+  attrType.AttrTypeNum = SVG_ATTR_markerHeight;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    {
+      i = 50;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      sscanf (buffer, "%d", &h);
+    }
+  else
+    h = 3;
+  /* get the viewBox attribute and its values */
+  attrType.AttrTypeNum = SVG_ATTR_viewBox;
+  attr = TtaGetAttribute (marker, attrType);
+  if (!attr)
+    {
+      scaleX = 1;
+      scaleY = 1;
+    }
+  else
+    {
+      ParseviewBoxAttribute (attr, marker, doc, &vBX, &vBY, &vBWidth, &vBHeight,
+			     FALSE);
+      /* compute scaling with preserveAspectRatio = xMidYMid meet */
+      scaleX = w / vBWidth;
+      scaleY = h / vBHeight;
+      if (scaleX < scaleY)
+	scaleY = scaleX;
+      else
+	scaleX = scaleY;
+    }
+
+  attrType.AttrTypeNum = SVG_ATTR_refX;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    {
+      i = 50;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      sscanf (buffer, "%d", &x);
+    }
+  else
+    x = 0;
+  attrType.AttrTypeNum = SVG_ATTR_refY;
+  attr = TtaGetAttribute (marker, attrType);
+  if (attr)
+    {
+      i = 50;
+      TtaGiveTextAttributeValue (attr, buffer, &i);
+      sscanf (buffer, "%d", &y);
+    }
+  else
+    y = 0;
+  if (x != 0 || y != 0)
+    TtaAppendTransform (copy, TtaNewTransformTranslate (-x*scaleX, -y*scaleY),
+			doc);
+  /* Scale the coordinate system to set the coordinate system to viewBox units*/
   if (scaleX != 1 || scaleY != 1)
     TtaAppendTransform (copy, TtaNewTransformScale (scaleX, scaleY), doc);
 
@@ -1228,7 +1254,7 @@ static ThotBool CopyMarkers (Element el, Document doc, char *attrVal, int att)
 
 /*----------------------------------------------------------------------
   ProcessMarkers
-  If element el has some marker-start, marker-end, or marker-mid
+  If element el has some marker-start, marker-end or marker-mid
   attributes, get the referred marker elements and insert them as
   transclusions in the element.
   ----------------------------------------------------------------------*/
@@ -1243,10 +1269,10 @@ void ProcessMarkers (Element el, Document doc)
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  /* check the three marker-* attributes */
+  /* check the marker-* attributes */
   for (i = 1; i <= 3; i++)
     {
-      /* choose one of the three possible attributes */
+      /* choose one of the four possible attributes */
       if (i == 1)
         attrType.AttrTypeNum = SVG_ATTR_marker_start;
       else if (i == 2)
@@ -1820,7 +1846,7 @@ void CreateCSSRules (Element el, Document doc)
 
 /*----------------------------------------------------------------------
   ParsePreserveAspectRatioAttribute
-  Parse the value of a viewbox attribute
+  Parse the value of a preserveAspectRatio attribute
   ----------------------------------------------------------------------*/
 static void ParsePreserveAspectRatioAttribute (Attribute attr, Element el,
                                             Document doc, int* align,
@@ -2294,13 +2320,14 @@ char *ConvertLineAttributesToPath (Element el)
   ----------------------------------------------------------------------*/
 void GraphicLeafComplete(Document doc, Element el)
 {
-  Element leaf;
-  ThotBool             shape_recognition;
+  Element              leaf;
   ElementType	       elType;
-  int w, h, rx = 0,ry = 0;
+  AttributeType        attrType;
+  int                  w, h, rx = 0,ry = 0;
   PresentationContext  ctxt;
   PresentationValue    pval;
   ThotBool	       closedShape;
+  ThotBool             shape_recognition;
   PRule		       fillPatternRule, newPRule;
 
   leaf = CreateGraphicLeaf (el, doc, &closedShape);
@@ -2318,8 +2345,29 @@ void GraphicLeafComplete(Document doc, Element el)
 
   if (!TtaGetEnvBoolean ("ENABLE_SHAPE_RECOGNITION", &shape_recognition))
     shape_recognition = TRUE;
-
   elType = TtaGetElementType (el);
+
+  if (shape_recognition)
+    /* do not transform a path or a polygon if it uses markers */
+    {
+      /* check the marker-* attributes */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = SVG_ATTR_marker_start;
+      if (TtaGetAttribute (el, attrType))
+	shape_recognition = FALSE;
+      else
+	{
+	  attrType.AttrTypeNum = SVG_ATTR_marker_mid;
+	  if (TtaGetAttribute (el, attrType))
+	    shape_recognition = FALSE;
+	  else
+	    {
+	      attrType.AttrTypeNum = SVG_ATTR_marker_end;
+	      if (TtaGetAttribute (el, attrType))
+		shape_recognition = FALSE;
+	    }
+	}
+    }
 
   /* Check the geometric properties of the leaf */
   if(shape_recognition && (elType.ElTypeNum == SVG_EL_polygon ||
@@ -2615,7 +2663,7 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
           TtaFreeMemory (buffer);
           buffer = NULL;
 	  /* this element may use markers. Check its marker-start, marker-end
-	     and maker-mid attributes and copy the referred marker(s) */
+	     and marker-mid attributes and copy the referred marker(s) */
 	  ProcessMarkers (el, doc);
           break;
 
