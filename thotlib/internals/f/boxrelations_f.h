@@ -33,6 +33,9 @@ extern PtrBox GetHPosRelativeBox ( PtrBox pBox,
                                    PtrBox pPreviousBox );
 extern PtrBox GetVPosRelativeBox ( PtrBox pBox,
                                    PtrBox pPreviousBox );
+extern int GetPercentDim ( PtrAbstractBox pAb,
+                           PtrAbstractBox pParentAb,
+                           ThotBool horizRef );
 extern ThotBool ComputeDimRelation ( PtrAbstractBox pAb,
                                      int frame,
                                      ThotBool horizRef );
@@ -81,6 +84,9 @@ extern PtrBox GetHPosRelativeBox ( PtrBox pBox,
                                      PtrBox pPreviousBox );
 extern PtrBox GetVPosRelativeBox ( PtrBox pBox,
                                      PtrBox pPreviousBox );
+extern int GetPercentDim ( PtrAbstractBox pAb,
+                             PtrAbstractBox pParentAb,
+                             ThotBool horizRef );
 extern ThotBool ComputeDimRelation ( PtrAbstractBox pAb,
                                        int frame,
                                        ThotBool horizRef );

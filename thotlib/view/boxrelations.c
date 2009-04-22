@@ -2186,6 +2186,56 @@ PtrBox GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
     return (NULL);
 }
 
+/*----------------------------------------------------------------------
+  GetPercentDim returns the related dimension used for the percentage
+  ----------------------------------------------------------------------*/
+int GetPercentDim (PtrAbstractBox pAb, PtrAbstractBox pParentAb, ThotBool horizRef)
+{
+  PtrElement          parent;
+  AbDimension        *pDimAb;
+  int                 val = 0;
+
+  if (pAb && pAb->AbEnclosing)
+    {
+      if (horizRef)
+        {
+          val = pParentAb->AbBox->BxW;
+          pDimAb = &pAb->AbWidth;
+        }
+      else
+        {
+          val = pParentAb->AbBox->BxH;
+          pDimAb = &pAb->AbHeight;
+        }
+      parent = pParentAb->AbElement;
+      // check if the precent concerns a SVG box
+      if (pDimAb->DimUnit == UnPercent &&
+          parent && parent->ElStructSchema &&
+          parent->ElStructSchema->SsName &&
+          !strcmp (parent->ElStructSchema->SsName, "SVG"))
+        {
+          // check if there is an enclosing viewbox
+          while (parent &&
+                 (parent->ElTransform == NULL ||
+                  parent->ElTransform->TransType != PtElViewBox))
+            {
+              parent = parent->ElParent;
+              if (parent &&
+                  strcmp (parent->ElStructSchema->SsName, "SVG"))
+                parent = NULL;
+            }
+          if (parent)
+            {
+              if (horizRef)
+                val =  parent->ElTransform->VbWidth;
+              else
+                val =  parent->ElTransform->VbHeight;
+            }
+        }
+    }
+  return val;
+}
+
 
 /*----------------------------------------------------------------------
   ComputeDimRelation applies the vertical/horizontal sizing rule of pAb
@@ -2861,7 +2911,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                             {
                               /* inherited from the parent */
                               if (pParentAb)
-                                i = pParentAb->AbBox->BxW;
+                                i = GetPercentDim (pAb, pParentAb, horizRef);
                               else
                                 GetSizesFrame (frame, &i, &val);
                               if (pDimAb->DimUnit == UnPercent)
@@ -3065,8 +3115,11 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                             pParentAb = pParentAb->AbEnclosing;
                           /* inherited from the parent */
                           if (pParentAb)
-                            val = PixelValue (pDimAb->DimValue, UnPercent, 
-                                              (PtrAbstractBox) (pParentAb->AbBox->BxH), 0);
+                            {
+                              i = GetPercentDim (pAb, pParentAb, horizRef);
+                              val = PixelValue (pDimAb->DimValue, UnPercent, 
+                                                (PtrAbstractBox) i, 0);
+                            }
                           else
                             {
                               GetSizesFrame (frame, &val, &i);

@@ -2397,8 +2397,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                           if (box->BxType == BoCell || box->BxType == BoCellBlock ||
                               (pRefAb->AbWidth.DimUnit == UnPercent && pRefAb->AbWidth.DimValue == 100))
                             {
+                              val = GetPercentDim (pRefAb, pAb, TRUE);
                               // transmit the column width to table cells
-                              val = pBox->BxW - box->BxW;
+                              val -= box->BxW;
                               if (box->BxLMargin > 0)
                                 val -= box->BxLMargin;
                               if (box->BxRMargin > 0)
@@ -2413,7 +2414,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                             {
                               if (pRefAb->AbEnclosing == pAb)
                                 /* refer the inside width */
-                                val = pBox->BxW;
+                                val = GetPercentDim (pRefAb, pAb, TRUE);
                               else
                                 /* refer the outside width */
                                 val = pBox->BxWidth;
@@ -2974,7 +2975,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                     }
                                   else
                                     /* refer the inside height */
-                                    val = pBox->BxH;
+                                    val = GetPercentDim (pRefAb, pAb, FALSE);
                                 }
                               else
                                 /* refer the outside height */

@@ -361,12 +361,12 @@ void InitDrawing (int style, int thick, int fg)
   if (thick)
     {
       glLineWidth (S_thick); 
-      glPointSize (S_thick); 
+      glPointSize (S_thick / 2.); 
     }
   else
     {
       glLineWidth ((GLfloat) 0.5); 
-      glPointSize ((GLfloat) 0.5); 
+      glPointSize ((GLfloat) 0.25); 
     }
   if (style >= 5)
     /* solid */
