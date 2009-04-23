@@ -5526,64 +5526,23 @@ XPointer-ში</message>
 	<message xml:lang="ja">連携(&amp;o)</message>
 	<message xml:lang="nl">&amp;Samenwerken</message>
 </label>
-<label define="BLock">
-	<message xml:lang="en">Lock resource...</message>
-	<message xml:lang="fr">Verrouiller la ressource...</message>
+<label define="TLock">
+	<message xml:lang="en">Lock resource</message>
+	<message xml:lang="fr">Verrouiller la ressource</message>
 	<message xml:lang="pt">Travar o recurso</message>
-	<message xml:lang="de">Resource sperren...</message>
-	<message xml:lang="fi">Lukitse objekti...</message>
-	<message xml:lang="it">Lock resource...</message>
+	<message xml:lang="de">Resource sperren</message>
+	<message xml:lang="fi">Lukitse objekti</message>
+	<message xml:lang="it">Lock resource</message>
 	<message xml:lang="es">Bloquear recurso</message>
-	<message xml:lang="tr">Tekrar okumayı kitle...</message>
-	<message xml:lang="ru">Блокировать ресурс...</message>
-	<message xml:lang="hu">Erőforrás &amp;zárolása...</message>
-	<message xml:lang="ka">რესურსის
-დაბლოკვა...</message>
-	<message xml:lang="cn">锁定资源...</message>
-	<message xml:lang="tw">鎖定資源...</message>
-	<message xml:lang="sk">Uzamknúť zdrojový súbor...</message>
-	<message xml:lang="ja">リソースをロックする...</message>
-	<message xml:lang="nl">Bron vergrendelen...</message>
-</label>
-<label define="BUnlock">
-	<message xml:lang="en">Unlock resource...</message>
-	<message xml:lang="fr">Déverrouiller la ressource...</message>
-	<message xml:lang="pt">Destravar o recurso</message>
-	<message xml:lang="de">Resource entsperren...</message>
-	<message xml:lang="fi">Vapauta objekti...</message>
-	<message xml:lang="it">Unlock resource...</message>
-	<message xml:lang="es">Desbloquear recurso...</message>
-	<message xml:lang="tr">Tekrar okumayı kilidi aç...</message>
-	<message xml:lang="ru">Разблокировать ресурс...</message>
-	<message xml:lang="hu">Erőforrás &amp;felszabadítása...</message>
-	<message xml:lang="ka">დაბლოკვის
-მოხსნა...</message>
-	<message xml:lang="cn">取消锁定资源...</message>
-	<message xml:lang="tw">取消鎖定資源...</message>
-	<message xml:lang="sk">Odomknúť zdrojový súbor...</message>
-	<message xml:lang="ja">リソースのロックを解除...</message>
-	<message xml:lang="nl">Bron ontgrendelen...</message>
-</label>
-<label define="BProp">
-	<message xml:lang="en">View resource properties...</message>
-	<message xml:lang="fr">Visualiser les propriétés de la ressource...</message>
-	<message xml:lang="pt">Exibir as propriedades do recurso</message>
-	<message xml:lang="de">Resourceeigenschaften anzeigen...</message>
-	<message xml:lang="fi">Näytä objektin ominaisuudet...</message>
-	<message xml:lang="it">Informazioni per il lock...</message>
-	<message xml:lang="es">Ver propiedades del recurso...</message>
-	<message xml:lang="tr">Tekrar okuma ayarlarını göster...</message>
-	<message xml:lang="ru">Просмотреть свойства
-ресурса...</message>
-	<message xml:lang="hu">Erőforrás &amp;tulajdonságai...</message>
-	<message xml:lang="ka">რესურსის
-პარამეტრების
-დათვალიერება...</message>
-	<message xml:lang="cn">查看资源属性...</message>
-	<message xml:lang="tw">查看資源屬性...</message>
-	<message xml:lang="sk">Zobraziť vlastnosti zdroja...</message>
-	<message xml:lang="ja">リソースのプロパティを表示...</message>
-	<message xml:lang="nl">Eigenschappen van bron bekijken...</message>
+	<message xml:lang="tr">Tekrar okumayı kitle</message>
+	<message xml:lang="ru">Блокировать ресурс</message>
+	<message xml:lang="hu">Erőforrás &amp;zárolása</message>
+	<message xml:lang="ka">რესურსის დაბლოკვა</message>
+	<message xml:lang="cn">锁定资源</message>
+	<message xml:lang="tw">鎖定資源</message>
+	<message xml:lang="sk">Uzamknúť zdrojový súbor</message>
+	<message xml:lang="ja">リソースをロックする</message>
+	<message xml:lang="nl">Bron vergrendelen</message>
 </label>
 <label define="BCopyLock">
 	<message xml:lang="en">Copy lock information...</message>
@@ -5604,24 +5563,6 @@ XPointer-ში</message>
 	<message xml:lang="sk">Kopírovať informácie o uzamknutí...</message>
 	<message xml:lang="ja">ロック情報をコピー...</message>
 	<message xml:lang="nl">Informatie over vergrendeling kopiëren...</message>
-</label>
-<label define="BLockIndicator">
-	<message xml:lang="en">Locked?</message>
-	<message xml:lang="fr">Verrouillé ?</message>
-	<message xml:lang="pt">Travado?</message>
-	<message xml:lang="de">Gesperrt?</message>
-	<message xml:lang="fi">Lukittu?</message>
-	<message xml:lang="it">Lock?</message>
-	<message xml:lang="es">¿Bloqueado?</message>
-	<message xml:lang="tr">kitli mi?</message>
-	<message xml:lang="ru">Заблокировано ?</message>
-	<message xml:lang="hu">&amp;Zárolt?</message>
-	<message xml:lang="ka">დაბლოკილია?</message>
-	<message xml:lang="cn">锁定了吗?</message>
-	<message xml:lang="tw">鎖定了嗎?</message>
-	<message xml:lang="sk">Zamknutý?</message>
-	<message xml:lang="ja">ロックしますか?</message>
-	<message xml:lang="nl">Vergrendeling controleren</message>
 </label>
 <label define="Templates_">
 	<message xml:lang="en">Templates</message>

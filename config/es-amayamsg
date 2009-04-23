@@ -299,216 +299,214 @@
 297 exclusivo
 298 compartido
 299 Conocimiento:
-300 Conocimiento general
-301 Conocimiento al salir
-302 Animación
-303 Biblioteca SVG
-304 Copiar opción
-305 Copiar selección
-306 Remitir a selección
-307 Añadir nuevo modelo a la bibloteca
-308 URL del nuevo archivo SVG...
-309 Título de la bibloteca
-310 URL de la biblioteca
-311 Crear biblioteca
-312 Ojear la biblioteca
-313 Crear o buscar en la biblioteca
-314 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
-315 El título de la biblioteca es obligatorio
-316 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
-317 Posición clave definida. Desplace el marcador para definir la duración de la animación...
-318 Seleccione el color inicial del elemento...
-319 Color inicial definido. Desplace el marcador para definir la duración de la animación...
-320 Seleccione color final...
-321 Animación definida.
-322 Atributo animado
-323 Elemento sin atributo id
-324 Crear atributos id
-325 Borrar atributos id
-326 Crear/Borrar atributos id
-327 Aplicar operación
-328 Escribe un nombre de elemento
-329 Aplicar hojas de estilo
-330 Tipo de pantalla actual
-331 Nuevo Tema
-332 Propiedades de marcador
-333 Propiedades de tema
-334 Jerarquía de temas:
-335 Título:
-336 Enlace al recurso:
-337 Autor:
-338 Creado:
-339 Última modificación:
-340 Descripción:
-341 Por favor, seleccione un elemento
-342 Todos las hojas de estilo
-343 Reglas de estilo aplicadas al elemento <%s>\n
-344 Cada línea de código es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
-345 Cargar objetos (object, embed, iframe)
-346 No hay regla de estilo para este elemento
-347 El punto de inserción no está definido. Por favor, seleccionelo antes.
-348 Propiedades del documento
-349 Tipo de documento:
-350 Tipo MIME:
-351 Charset
-352 Longitud del contenido:
-353 Ubicación del contenido:
-354 Preferencias
-355 Carácter (&xxx;)
-356 Crear Objeto
-357 Carpeta
-358 Archivo
-359 Reemplazar actual
-360 En nueva ventana
-361 Anti-aliasing
-362 Formato de fecha ISO
-363 Ubicación de nuevos documentos
-364 Abrir localización
-365 Avisar cuando se cierren mútiples pestañas
-366 Número máximo de URLs en el historial
-367 Borrar historial
-368 Mostrar todos los atajos
-369 Longitud de línea (0 = valor predeterminado)
-370 Plantilla
-371 Guardar como...
-372 No se encuentra la plantilla
-373 Mostrar cajas de plantilla
-374 Aplicar cierra el diálogo
-375 No permitido
-376 Elemento protegido
-377 La selección no debe cruzar un elemento de este tipo
-378 No hay encabezado
-379 Guardar de todas formas
-380 Servidor no encontrado
-381 El documento ha sido modificado (412)
-382 Conflicto con el estado actual del recurso
-383 Selección invalida
-384 Elemento desconocido
-385 %d elementos actualizados
-386 El título es obligatorio
-387 Modelos
-388 Número de ocurrencias
-389 Número máximo de ocurrencias alcanzado
-390 Número mínimo de ocurrencias alcanzado
-391 Verificar los IDs duplicados
-392 Agregar la hoja xsl para los elementos MathML
-393 Insertar operador
-394 Seleccionar la manera cuya el operador debe ser visualizado
-395 Insertar una integral
-396 Seleccionar el tipo de integral
-397 Atributos del fence
-398 Seleccionar los símbolos arbriendos, separadores y cerrandos
-399 Número de símbolos operadores
-400 Número de coordenadas
-401 Largo del N-
-402 Número de elementos
-403 Número de variables
-404 Grado
-405 Grado de la variable %d
-406 Docucompuesto
-407 Copiar recursos (estilos y scripts)
-408 Ubicación de recursos
-409 Ubicación de imágenes
-410 Documento
-411 Imágenes, estilos y scripts
-412 Correo
-413 Parámetros comunes envío correos:
-414 Dirección servidor SMTP:
-415 Puerto servidor:
-416 (25 predeterminado)
-417 Remitente (campo De):
-418 A:
-419 Enviar por correo
-420 Asunto:
-421 Enviar como:
-422 Mensaje
-423 Adjuntar
-424 Archivo zip
-425 No enviar
-426 Enviar
-427 Establecer dirección y puerto del servidor en menú Preferencias
-428 Texto:
-429 Texto alternativo:
-430 Servidor no encontrado o no responde
-431 El servidor ha rechazado la conexión
-432 Dirección del remitente incorrecta
-433 Dirección de destino incorrecta
-434 Texto del mensaje incorrecto
-435 Correo no enviado
-436 Correo enviado
-437 Contraseñas
-438 ¿Desea que Amaya recuerde esta contraseña?
-439 Recordar contraseñas de los sitios
-440 Sitios
-441 Eliminar todo
-442 Espacios de nombres XML generados para nuevos documentos HTML+RDFa
-443 Seleccionar un espacio de nombres de la lista o añadir uno nuevos (sintaxis prefijo="uri")
-444 Ocurrió un error durante la construcción de los objetos JavaScript/DOM
-445 Un script se está ejecutando todavía, pero se abortará lo antes posible.
-446 No se puede activar JavaScript/DOM en esta vista
-447 Escriba un comando JavaScript:
-448 El comando devolvió el valor: %s
-449 El comando no devolvió ningún valor
-450 SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s
-451 Nuevo
-452 Personalizable
-453 Crear
-454 Crear el enlace haciendo clic en el destino
-455 Borrar ancla
-456 Guardar sin plantilla
-457 Con tema ...
-458 Ancho 100%
-459 Con leyenda
-460 Tamaño
-461 Posición
-462 Modo de edición XML
-463 Lista de hojas de estilo
-464 Añadir hoja de estilo ...
-465 Eliminar hojas de estilo seleccionadas
-466 Activar hojas de estilo seleccionadas
-467 Desactivar hojas de estilo seleccionadas
-468 Abrir hojas de estilo selecc
-469 Perfil de Amaya:
-470 Mostrar "Sugerencia del día" al iniciar el programa
-471 Elija Fuente y tamaño:
-472 La plantilla tiene errores, no se utilizará:
-473 Cerrar
-474 El componente '%s' tiene múltiples definiciones
-475 La biblioteca '%s' no puede cargarse.
-476 No se puede convertir el documento en plantilla
-477 El documento ya es una plantilla
-478 Error en la creación de la plantilla
-479 Área de texto
-480 Etiqueta de elemento:
-481 Zona multi elementos
-482 Repetir elemento
-483 Nuevo componente
-484 Conponente en uso, no se puede borrar
-485 en la esquina superior izquierda
-486 en la esquina inferior izquierda
-487 en la izquierda
-488 en la esquina superior derecha
-489 en la esquina inferior derecha
-490 en la derecha
-491 arriba
-492 abajo
-493 al centro
-494 a la izquierda y arriba
-495 a la izquierda y abajo
-496 a la izquierda
-497 a la derecha y arriba
-498 a la derecha y abajo
-499 a la derecha
-500 arriba
-501 abajo
-502 delante de
-503 Hay %d objetos:
-504 Nuevo uso
-505 uso opcional
-506 Color del código fuente
-507 Título de la repetición:
-508 Nueva unión
-509 Unión
-510 Nombre de la unión:
-511 **Use elements
-512 **Label
+300 Animación
+301 Biblioteca SVG
+302 Copiar opción
+303 Copiar selección
+304 Remitir a selección
+305 Añadir nuevo modelo a la bibloteca
+306 URL del nuevo archivo SVG...
+307 Título de la bibloteca
+308 URL de la biblioteca
+309 Crear biblioteca
+310 Ojear la biblioteca
+311 Crear o buscar en la biblioteca
+312 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
+313 El título de la biblioteca es obligatorio
+314 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
+315 Posición clave definida. Desplace el marcador para definir la duración de la animación...
+316 Seleccione el color inicial del elemento...
+317 Color inicial definido. Desplace el marcador para definir la duración de la animación...
+318 Seleccione color final...
+319 Animación definida.
+320 Atributo animado
+321 Elemento sin atributo id
+322 Crear atributos id
+323 Borrar atributos id
+324 Crear/Borrar atributos id
+325 Aplicar operación
+326 Escribe un nombre de elemento
+327 Aplicar hojas de estilo
+328 Tipo de pantalla actual
+329 Nuevo Tema
+330 Propiedades de marcador
+331 Propiedades de tema
+332 Jerarquía de temas:
+333 Título:
+334 Enlace al recurso:
+335 Autor:
+336 Creado:
+337 Última modificación:
+338 Descripción:
+339 Por favor, seleccione un elemento
+340 Todos las hojas de estilo
+341 Reglas de estilo aplicadas al elemento <%s>\n
+342 Cada línea de código es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
+343 Cargar objetos (object, embed, iframe)
+344 No hay regla de estilo para este elemento
+345 El punto de inserción no está definido. Por favor, seleccionelo antes.
+346 Propiedades del documento
+347 Tipo de documento:
+348 Tipo MIME:
+349 Charset
+350 Longitud del contenido:
+351 Ubicación del contenido:
+352 Preferencias
+353 Carácter (&xxx;)
+354 Crear Objeto
+355 Carpeta
+356 Archivo
+357 Reemplazar actual
+358 En nueva ventana
+359 Anti-aliasing
+360 Formato de fecha ISO
+361 Ubicación de nuevos documentos
+362 Abrir localización
+363 Avisar cuando se cierren mútiples pestañas
+364 Número máximo de URLs en el historial
+365 Borrar historial
+366 Mostrar todos los atajos
+367 Longitud de línea (0 = valor predeterminado)
+368 Plantilla
+369 Guardar como...
+370 No se encuentra la plantilla
+371 Mostrar cajas de plantilla
+372 Aplicar cierra el diálogo
+373 No permitido
+374 Elemento protegido
+375 La selección no debe cruzar un elemento de este tipo
+376 No hay encabezado
+377 Guardar de todas formas
+378 Servidor no encontrado
+379 El documento ha sido modificado (412)
+380 Conflicto con el estado actual del recurso
+381 Selección invalida
+382 Elemento desconocido
+383 %d elementos actualizados
+384 El título es obligatorio
+385 Modelos
+386 Número de ocurrencias
+387 Número máximo de ocurrencias alcanzado
+388 Número mínimo de ocurrencias alcanzado
+389 Verificar los IDs duplicados
+390 Agregar la hoja xsl para los elementos MathML
+391 Insertar operador
+392 Seleccionar la manera cuya el operador debe ser visualizado
+393 Insertar una integral
+394 Seleccionar el tipo de integral
+395 Atributos del fence
+396 Seleccionar los símbolos arbriendos, separadores y cerrandos
+397 Número de símbolos operadores
+398 Número de coordenadas
+399 Largo del N-
+400 Número de elementos
+401 Número de variables
+402 Grado
+403 Grado de la variable %d
+404 Docucompuesto
+405 Copiar recursos (estilos y scripts)
+406 Ubicación de recursos
+407 Ubicación de imágenes
+408 Documento
+409 Imágenes, estilos y scripts
+410 Correo
+411 Parámetros comunes envío correos:
+412 Dirección servidor SMTP:
+413 Puerto servidor:
+414 (25 predeterminado)
+415 Remitente (campo De):
+416 A:
+417 Enviar por correo
+418 Asunto:
+419 Enviar como:
+420 Mensaje
+421 Adjuntar
+422 Archivo zip
+423 No enviar
+424 Enviar
+425 Establecer dirección y puerto del servidor en menú Preferencias
+426 Texto:
+427 Texto alternativo:
+428 Servidor no encontrado o no responde
+429 El servidor ha rechazado la conexión
+430 Dirección del remitente incorrecta
+431 Dirección de destino incorrecta
+432 Texto del mensaje incorrecto
+433 Correo no enviado
+434 Correo enviado
+435 Contraseñas
+436 ¿Desea que Amaya recuerde esta contraseña?
+437 Recordar contraseñas de los sitios
+438 Sitios
+439 Eliminar todo
+440 Espacios de nombres XML generados para nuevos documentos HTML+RDFa
+441 Seleccionar un espacio de nombres de la lista o añadir uno nuevos (sintaxis prefijo="uri")
+442 Ocurrió un error durante la construcción de los objetos JavaScript/DOM
+443 Un script se está ejecutando todavía, pero se abortará lo antes posible.
+444 No se puede activar JavaScript/DOM en esta vista
+445 Escriba un comando JavaScript:
+446 El comando devolvió el valor: %s
+447 El comando no devolvió ningún valor
+448 SpiderMonkey devolvió el error siguiente:\n\nArchivo: %s\nLínea: %d\n\n%s
+449 Nuevo
+450 Personalizable
+451 Crear
+452 Crear el enlace haciendo clic en el destino
+453 Borrar ancla
+454 Guardar sin plantilla
+455 Con tema ...
+456 Ancho 100%
+457 Con leyenda
+458 Tamaño
+459 Posición
+460 Modo de edición XML
+461 Lista de hojas de estilo
+462 Añadir hoja de estilo ...
+463 Eliminar hojas de estilo seleccionadas
+464 Activar hojas de estilo seleccionadas
+465 Desactivar hojas de estilo seleccionadas
+466 Abrir hojas de estilo selecc
+467 Perfil de Amaya:
+468 Mostrar "Sugerencia del día" al iniciar el programa
+469 Elija Fuente y tamaño:
+470 La plantilla tiene errores, no se utilizará:
+471 Cerrar
+472 El componente '%s' tiene múltiples definiciones
+473 La biblioteca '%s' no puede cargarse.
+474 No se puede convertir el documento en plantilla
+475 El documento ya es una plantilla
+476 Error en la creación de la plantilla
+477 Área de texto
+478 Etiqueta de elemento:
+479 Zona multi elementos
+480 Repetir elemento
+481 Nuevo componente
+482 Conponente en uso, no se puede borrar
+483 en la esquina superior izquierda
+484 en la esquina inferior izquierda
+485 en la izquierda
+486 en la esquina superior derecha
+487 en la esquina inferior derecha
+488 en la derecha
+489 arriba
+490 abajo
+491 al centro
+492 a la izquierda y arriba
+493 a la izquierda y abajo
+494 a la izquierda
+495 a la derecha y arriba
+496 a la derecha y abajo
+497 a la derecha
+498 arriba
+499 abajo
+500 delante de
+501 Hay %d objetos:
+502 Nuevo uso
+503 uso opcional
+504 Color del código fuente
+505 Título de la repetición:
+506 Nueva unión
+507 Unión
+508 Nombre de la unión:
+509 **Use elements
+510 **Label

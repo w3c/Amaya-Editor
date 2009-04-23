@@ -284,7 +284,7 @@ static svg_constructs list_of_constructs[] =
        {"2-way_rounded_arrow", TMSG_SVG_2_Way_Rounded_Arrow, NULL, TRUE},
 
        {"split_arrow", TMSG_SVG_Split_Arrow, NULL, TRUE},
-       {"pentagon", TMSG_SVG_Pentagon, NULL, TRUE},
+       {"pentagon", TMSG_SVG_Pentagon_Arrow, NULL, TRUE},
        {"chevron", TMSG_SVG_Chevron, NULL, TRUE},
        {"striped_arrow", TMSG_SVG_Striped_Arrow, NULL, TRUE},
        {"notched_arrow", TMSG_SVG_Notched_Arrow, NULL, TRUE}

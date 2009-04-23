@@ -270,16 +270,10 @@ extern void ViewBookmarks ( Document doc,
                             View view );
 extern void MoveItem ( Document doc,
                        View view );
-extern void LockDocument ( Document doc,
-                           View view );
-extern void UnlockDocument ( Document doc,
-                             View view );
-extern void PropDocument ( Document doc,
-                           View view );
 extern void CopyLockInformation ( Document doc,
                                   View view );
-extern void LockIndicator ( Document doc,
-                            View view );
+extern void LockUnlock ( Document doc,
+                         View view );
 extern void SelectAll ( Document doc,
                         View view );
 
@@ -549,16 +543,10 @@ extern void ViewBookmarks ( Document doc,
                               View view );
 extern void MoveItem ( Document doc,
                          View view );
-extern void LockDocument ( Document doc,
-                             View view );
-extern void UnlockDocument ( Document doc,
-                               View view );
-extern void PropDocument ( Document doc,
-                             View view );
 extern void CopyLockInformation ( Document doc,
                                     View view );
-extern void LockIndicator ( Document doc,
-                              View view );
+extern void LockUnlock ( Document doc,
+                           View view );
 extern void SelectAll ( Document doc,
                           View view );
 

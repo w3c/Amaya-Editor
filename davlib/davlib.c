@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 /*  --------------------------------------------------------
  ** 
  ** File: davlib.c - WebDAV module
@@ -14,7 +21,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.18  2008-05-07 13:49:07  kia
+ ** Revision 1.19  2009-04-23 14:51:36  vatton
+ ** Improving the WebDAV interface
+ ** Irene
+ **
+ ** Revision 1.18  2008/05/07 13:49:07  kia
  ** char* => const char*
  ** (Regis patches + many many others)
  **
@@ -230,36 +241,8 @@ void InitDAV (void)
 
     
     /************* DAVAwareness, DAVAwarenessOnExit ************ */
-    /* getting general option about awareness information */
-    ptr = NULL;
-    DAVAwareness = NO;
-    ptr = TtaGetEnvString (DAV_AWARENESS);
-    if (ptr && (*ptr)) 
-     {
-        if (!strcasecomp (ptr,"yes"))
-            DAVAwareness = YES; 
-     }
-    else 
-     {
-        TtaSetEnvString (DAV_AWARENESS,"no",TRUE);
-        modified = TRUE;
-     }
-    
-    /* getting option about awareness information when exiting a resouce */
-    ptr = NULL;
-    DAVAwarenessExit = NO;
-    ptr = TtaGetEnvString (DAV_AWARENESS_EXIT);
-    if (ptr && (*ptr)) 
-     {
-        if (!strcasecomp (ptr,"yes"))
-            DAVAwarenessExit = YES; 
-     }    
-    else
-     {
-        TtaSetEnvString (DAV_AWARENESS_EXIT,"no",TRUE);
-        modified = TRUE;
-     }
-    
+    DAVAwareness = TRUE;
+    DAVAwarenessExit = TRUE;
     
     /************************** DAVResources ******************** */
     ptr = NULL;
@@ -268,25 +251,21 @@ void InitDAV (void)
         sprintf (DAVResources,ptr);
     else
      { 
-        DAVResources[0]='\0';
+        DAVResources[0] = EOS;
 
         /* save timeout in thot env */
         TtaSetEnvString (DAV_URLS,DAVResources,TRUE);
         /*modified = TRUE;*/
      }
 
-   
-
     /* *********************** SAVING REGISTRY ***************** */
-    if (modified) TtaSaveAppRegistry();
-
+    if (modified)
+      TtaSaveAppRegistry();
     
 #ifdef DEBUG_DAV
     fprintf (stderr,"InitDAV..... WebDAV User's preferences are \n");
     fprintf (stderr,"\tuser url: %s\n\tlock scope: %s\n",DAVUserURL,DAVLockScope); 
     fprintf (stderr,"\tdepth: %s\n\ttimeout: %s\n",DAVDepth,DAVTimeout); 
-    fprintf (stderr,"\tAwareness: %s\n",(DAVAwareness)?"yes":"no"); 
-    fprintf (stderr,"\tAwareness on exit: %s\n",(DAVAwarenessExit)?"yes":"no"); 
     fprintf (stderr,"\tResources: %s\n",DAVResources); 
 
     /*HTSetTraceMessageMask("pl");*/
@@ -303,12 +282,7 @@ void InitDAV (void)
     HTNet_addAfter (FilterMultiStatus_handler,"http://*", NULL, 
                                            HT_MULTI_STATUS,HT_FILTER_MIDDLE);
 
-
-    /* *********************** SETING MENUS ***************** */
-    /* set lock indicatior toggle. initial state: FALSE */
-    DAVLockIndicatorState = FALSE; 
-    DAVSetLockIndicator(CurrentDocument);
-    
+    DAVSetLockIndicator(CurrentDocument, FALSE);
 }
 
 
@@ -403,18 +377,6 @@ void DAVSaveRegistry (void)
     TtaSetEnvString (DAV_DEPTH,DAVDepth,TRUE);
     TtaSetEnvString (DAV_TIMEOUT,DAVTimeout,TRUE);
     
-    /************* DAVAwareness, DAVAwarenessOnExit ************ */
-    if (DAVAwareness == YES) 
-        TtaSetEnvString (DAV_AWARENESS, "yes",TRUE);
-    else 
-        TtaSetEnvString (DAV_AWARENESS, "no",TRUE);
-    
-    if (DAVAwarenessExit == YES)
-        TtaSetEnvString (DAV_AWARENESS_EXIT, "yes",TRUE);
-    else
-        TtaSetEnvString (DAV_AWARENESS_EXIT, "no",TRUE);
-    
-    
     /************************** DAVResources ******************** */
     TtaSetEnvString (DAV_URLS,DAVResources,TRUE);
 
@@ -427,8 +389,6 @@ void DAVSaveRegistry (void)
     fprintf (stderr,"DAVSaveRegistry..... WebDAV User's preferences are \n");
     fprintf (stderr,"\tuser url: %s\n\tlock scope: %s\n",DAVUserURL,DAVLockScope); 
     fprintf (stderr,"\tdepth: %s\n\ttimeout: %s\n",DAVDepth,DAVTimeout); 
-    fprintf (stderr,"\tAwareness: %s\n",(DAVAwareness)?"yes":"no"); 
-    fprintf (stderr,"\tAwareness on exit: %s\n",(DAVAwarenessExit)?"yes":"no"); 
     fprintf (stderr,"\tResources: %s\n",DAVResources); 
 #endif
 
@@ -463,6 +423,7 @@ void DAVLockDocument (Document document, View view)
      {            
         DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
                            DocumentURLs[document]);
+        DAVSetLockIndicator (document, FALSE);
      }
     else 
      {
@@ -510,64 +471,15 @@ void DAVUnlockDocument (Document document, View view)
         fprintf (stderr,"\tdepth: %s\n",HTDAV_DepthHeader(davctx->davheaders));
         fprintf (stderr,"\tlock-token: %s\n",HTDAV_LockTokenHeader(davctx->davheaders));
 #endif 
-        
         /* do the request */       
         if (!DoUnlockRequest (document,davctx)) 
             DAVDisplayMessage (TtaGetMessage (AMAYA, AM_UNLOCK_FAILED), NULL);
-        
-        
      }
     else 
      {
         /* *** Should we give to the user the option to unlock a document anyway? YES *** */
         ForceUnlockRequest (document);
      }
-}
-
-
-
-/*----------------------------------------------------------------------
-   DAVProfindDocument - do a Propfind request in the document URL 
-   
-  ----------------------------------------------------------------------*/
-void DAVProfindDocument (Document document, View view) 
-{
-    AHTDAVContext *davctx= NULL;
-
-    if (!DAVLibEnable)
-      return;
-
-#ifdef DEBUG_DAV
-    fprintf (stderr,"DAVPropfindDocument.... Profind document %s\n",DocumentURLs[document]);
-    fprintf (stderr,"DAVPropfindDocument..... creating the dav context object\n");    
-#endif    
-    
-    davctx = GetPropfindInfo(document);
-    if (davctx) 
-     {
-#ifdef DEBUG_DAV
-        fprintf (stderr,"DAVPropfindDocument..... DAV context object:\n");
-        fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
-        fprintf (stderr,"\tdepth: %s\n",HTDAV_DepthHeader(davctx->davheaders));
-        fprintf (stderr,"\txml body: %s\n",(davctx->xmlbody));    
-#endif
-        
-        /* YES, show the results*/
-        davctx->showIt = YES;
-
-        if (!DoPropfindRequest (document,davctx,FilterPropfind_handler,NULL)) 
-            DAVDisplayMessage (TtaGetMessage (AMAYA,AM_PROPFIND_FAILED), NULL);
-                
-     }
-    else 
-     {
-#ifndef _WINGUI            
-        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
-                           DocumentURLs[document]);                        
-#endif
-        DAVLockIndicatorState = FALSE;
-     }   
-
 }
 
 
@@ -605,19 +517,12 @@ void DAVCopyLockInfo (Document document, View view)
         if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) 
             ok = DoPropfindRequest (document,davctx,FilterCopyLockInfo_handler,NULL);
         
-        
         if (!ok)
             DAVDisplayMessage (TtaGetMessage (AMAYA,AM_PROPFIND_FAILED), NULL);
         
      }
     else
-     {
-#ifndef _WINGUI            
-        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
-                           DocumentURLs[document]);                        
-#endif
-        DAVLockIndicatorState = FALSE;
-     }        
+      DAVSetLockIndicator (document, FALSE);
 }
 
 
@@ -625,27 +530,16 @@ void DAVCopyLockInfo (Document document, View view)
 /*----------------------------------------------------------------------
    DAVLockIndicator: Manipulates Lock indicator
   ----------------------------------------------------------------------*/
-void DAVLockIndicator (Document document, View view) 
+void DAVLockIndicator (Document doc, View view) 
 {
         
     /* if lock indicator is TRUE, unlock the document
      * if it's FALSE, lock the document */
-    if (DAVLockIndicatorState) 
-        DAVUnlockDocument (document,view);    
-    else  
-        DAVLockDocument (document,view);    
-
-}
-
-
-
-/*----------------------------------------------------------------------
-   DAVPreferences: shows a dialogue with WebDAV user's preferences
-  ----------------------------------------------------------------------*/
-void DAVPreferences (Document document, View view) 
-{
-    if (!DAVLibEnable)
-      return;
-
-    DAVShowPreferencesDlg (document);
+  if (DocumentMeta[doc])
+    {
+      if (DocumentMeta[doc]->lockIndicatorState) 
+        DAVUnlockDocument (doc, view);    
+      else
+        DAVLockDocument (doc, view);    
+    }
 }

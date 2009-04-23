@@ -299,216 +299,214 @@
 297 kizárólagos
 298 megosztott
 299 Tudomás
-300 Általános tudomás
-301 Tudomás kilépéskor
-302 Animáció
-303 SVG könyvtár
-304 Copy option
-305 Kijelölés másolása
-306 Hivatkozás a kijelölésre
-307 Új model hozzáadása a könyvtárhoz
-308 Az új SVG fájl URL-je...
-309 Könyvtár címe
-310 Könyvtár URL-je
-311 Könyvtár létrehozása
-312 Könyvtár tallózása
-313 Könyvtár létrehozása vagy keresése
-314 A kijelölésben nincs SVG elem.
-315 A könyvtár cím kötelező
-316 Helyezze el az egérmutatót a szerkesztett dokumentumban az új kulcs megadásához...
-317 A kulcshelyzet megadva. Mozgassa a csúszkát az animáció hosszának megadásához...
-318 Jelölje ki az elem kezdőszínét...
-319 A kezdőszín megadva. Mozgassa a csúszkát az animáció hosszának megadásához...
-320 Jelölje ki az elem zárószínét...
-321 Az animáció megadva.
-322 Animált attribútum
-323 ID nélküli elem
-324 ID hozzáadása
-325 ID eltávolítása
-326 ID-k hozzáadása/eltávolítása
-327 A művelet alkalmazása
-328 Adja meg az elem nevét
-329 CSS alkalmazása
-330 Jelenlegi képernyőtípus
-331 Új téma
-332 Könyvjelző tulajdonságai
-333 Téma tulajdonságai
-334 Téma szerkezete:
-335 Cím:
-336 Recalls:
-337 Szerző:
-338 Kelt:
-339 Utolsó módosítás:
-340 Leírás:
-341 Adjon meg egy elemet
-342 Minden CSS
-343 CSS stílus szabályok alkalmazása a(z) <%s> elemre\n
-344 A kék sorok dupla (vagy egyszeres) kattintással aktiválható kapcsok\n
-345 Objektumok betöltése (object, embed, iframe)
-346 Ehhez az elemhez nem tartokzik stílus szabály
-347 Nincs beillesztési hely megadva. Jelöljn ki egyet
-348 Dokumentum adatai
-349 Dokumentum típus
-350 MIME típus
-351 karakterkészlet
-352 Tartalom hossza
-353 Tartalom helye
-354 Beállítások
-355 Karakter (&xxx;)
-356 Objektum létrehozása
-357 Mappa
-358 Fájl
-359 Jelenlegi cseréje
-360 Új ablakban
-361 Élsimítás
-362 Dátum ISO formátuma
-363 Dokumentumok új helye
-364 Hely megnyitása
-365 Több lap bezárásakor figyelmeztetés
-366 URL-ek legnagyobb száma az előzménylistában
-367 URL lista törlése
-368 Minden gyorsbillentyű mutatása
-369 Rögzített sorhossz (0 = alapérték)
-370 Sablon
-371 Dokumentum mentése másként...
-372 A sablon nem található
-373 A sablon dobozainak mutatása
-374 Az Alkalmaz gomb bezárja a párbeszédablakot
-375 Nem engedélyezett
-376 Védett elem
-377 A kijelölés nem érinthet ilyen típusú elemet
-378 No heading found
-379 Mentés így is
-380 Az állomás nem található
-381 A dokumentum megváltozott (412)
-382 Ellentmondás az erőforrás jelenlegi állapotával
-383 Érvénytelen kijelölés
-384 Ismeretlen elem
-385 %d frissített elem
-386 A cím kötelező
-387 Sablonok
-388 Előfordulások száma
-389 Elértük az előfordulások legnagyobb számát
-390 Elértük az előfordulások legkisebb számát
-391 Többszörös azonosító ellenőrzése
-392 Adja hozzá az xsl stíluslapot a MathML elemekhez
-393 Műveleti jel beillesztése
-394 Válassza ki a műveleti jel megjelenítési módját
-395 Integrál beillesztése
-396 Válassza ki az integrál típusát
-397 Szögletes zárójel attribútumai
-398 Válassza ki a nyitó, elválasztó és záró jeleket
-399 Műveleti jelek száma
-400 Coordináták száma
-401 N-esek hossza
-402 Elemek száma
-403 Változók száma
-404 Rend
-405 A változó rendje (%d)
-406 Összetett dokumentum
-407 Erőforrások másolása (stílusok és szkriptek)
-408 Hova mentsük az erőforrásokat
-409 Hova mentsük a képeket
-410 Dokumentum
-411 Képek, stílusok és szkriptek
-412 Elektronikus levél
-413 Elektronikus levélküldés általános paraméterei:
-414 SMTP kiszolgáló címe:
-415 Kiszolgáló kapu:
-416 (alapértelmezett: 25 )
-417 Feladó címe (From mező):
-418 Címzett:
-419 Küldés elektronikus levélben
-420 Tárgy:
-421 Küldi:
-422 Üzenet szövege
-423 Melléklet
-424 Zip
-425 Ne küldje
-426 Küldés
-427 A kiszolgáló címét és kapuját a Beállításoknál kell megadni
-428 Üzenet:
-429 Másik szövegüzenet:
-430 A kiszolgáló elérhetetlen vagy nem válaszol
-431 A kiszolgáló elutasítja a kérést
-432 A küldő címének formátuma érvénytelen
-433 A címzett címének formátuma érvénytelen
-434 Az üzenet tartalma érvénytelen formátumú
-435 Üzenet nincs elküldve
-436 Üzenet elküldve
-437 Jelszavak
-438 Jegyezze meg az Amaya a jelszót?
-439 Jegyezze meg a weblapok jelszavait
-440 Weblapok
-441 Mind törlése
-442 **XML namespaces generated for new XHTML+RDFa documents
-443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
-444 Hiba a javascript/DOM objektum felépítése közben
-445 A szkript még fut, de amint lehet, megszakítjuk. Próbálja később.
-446 A javascript/DOM nem engedélyezhető ebben a nézetben.
-447 Adjon meg egy javascript parancsot:
-448 A parancs a következő értéket adta vissza: %s
-449 A parancs nem adott vissza értéket
-450 A SpiderMonkey a következő hibát adta vissza:\n\nFájl: %s\nSor: %d\n\n%s
-451 Új
-452 Egyedi
-453 Létrehozása
-454 Kapocs létrehozása kattintással
-455 Horgony törlése
-456 Mentés sablon nélkül
-457 Témával ...
-458 Teljes szélesség
-459 Felirattal
-460 Méret
-461 Helyzet
-462 XML szerkesztési mód
-463 Stíluslapok listája
-464 Stíluslap hozzáadása...
-465 Kijelölt stíluslapok eltávolítása
-466 Kijelölt stíluslapok aktiválása
-467 Kijelölt stíluslapok deaktiválása
-468 Kijelölt stíluslapok megnyitása
-469 Amaya profile:
-470 A nap tippje" induláskor
-471 Válasszon betűkészletet és -méretet
-472 **Template has error(s), it will not be used:
-473 **Close
-474 **Component '%s' has multiple definition.
-475 **Library '%s' can not be loaded.
-476 **Can not convert an instance document to template.
-477 **The document is already a template
-478 **Template creation fails
-479 **Text area
-480 **Element label:
-481 **Bag area
-482 **Repeat element
-483 **New component
-484 **Component is used, you can not remove it.
-485 **at the top left corner
-486 **at the bottom left corner
-487 **on the left
-488 **at the top right corner
-489 **at the bottom right corner
-490 **on the right
-491 **at the top
-492 **at the bottom
-493 **in the center
-494 **to the left and above
-495 **to the left and below
-496 **to the left of
-497 **to the right and above
-498 **to the right and below
-499 **to the right of
-500 **above
-501 **below
-502 **in front of
-503 **There are %d objects: 
-504 **New use
-505 **Optional use
-506 **Color source code
-507 **Repeat label:
-508 **New union
-509 **Union
-510 **Union name:
-511 **Use elements
-512 **Label
+300 Animáció
+301 SVG könyvtár
+302 Copy option
+303 Kijelölés másolása
+304 Hivatkozás a kijelölésre
+305 Új model hozzáadása a könyvtárhoz
+306 Az új SVG fájl URL-je...
+307 Könyvtár címe
+308 Könyvtár URL-je
+309 Könyvtár létrehozása
+310 Könyvtár tallózása
+311 Könyvtár létrehozása vagy keresése
+312 A kijelölésben nincs SVG elem.
+313 A könyvtár cím kötelező
+314 Helyezze el az egérmutatót a szerkesztett dokumentumban az új kulcs megadásához...
+315 A kulcshelyzet megadva. Mozgassa a csúszkát az animáció hosszának megadásához...
+316 Jelölje ki az elem kezdőszínét...
+317 A kezdőszín megadva. Mozgassa a csúszkát az animáció hosszának megadásához...
+318 Jelölje ki az elem zárószínét...
+319 Az animáció megadva.
+320 Animált attribútum
+321 ID nélküli elem
+322 ID hozzáadása
+323 ID eltávolítása
+324 ID-k hozzáadása/eltávolítása
+325 A művelet alkalmazása
+326 Adja meg az elem nevét
+327 CSS alkalmazása
+328 Jelenlegi képernyőtípus
+329 Új téma
+330 Könyvjelző tulajdonságai
+331 Téma tulajdonságai
+332 Téma szerkezete:
+333 Cím:
+334 Recalls:
+335 Szerző:
+336 Kelt:
+337 Utolsó módosítás:
+338 Leírás:
+339 Adjon meg egy elemet
+340 Minden CSS
+341 CSS stílus szabályok alkalmazása a(z) <%s> elemre\n
+342 A kék sorok dupla (vagy egyszeres) kattintással aktiválható kapcsok\n
+343 Objektumok betöltése (object, embed, iframe)
+344 Ehhez az elemhez nem tartokzik stílus szabály
+345 Nincs beillesztési hely megadva. Jelöljn ki egyet
+346 Dokumentum adatai
+347 Dokumentum típus
+348 MIME típus
+349 karakterkészlet
+350 Tartalom hossza
+351 Tartalom helye
+352 Beállítások
+353 Karakter (&xxx;)
+354 Objektum létrehozása
+355 Mappa
+356 Fájl
+357 Jelenlegi cseréje
+358 Új ablakban
+359 Élsimítás
+360 Dátum ISO formátuma
+361 Dokumentumok új helye
+362 Hely megnyitása
+363 Több lap bezárásakor figyelmeztetés
+364 URL-ek legnagyobb száma az előzménylistában
+365 URL lista törlése
+366 Minden gyorsbillentyű mutatása
+367 Rögzített sorhossz (0 = alapérték)
+368 Sablon
+369 Dokumentum mentése másként...
+370 A sablon nem található
+371 A sablon dobozainak mutatása
+372 Az Alkalmaz gomb bezárja a párbeszédablakot
+373 Nem engedélyezett
+374 Védett elem
+375 A kijelölés nem érinthet ilyen típusú elemet
+376 No heading found
+377 Mentés így is
+378 Az állomás nem található
+379 A dokumentum megváltozott (412)
+380 Ellentmondás az erőforrás jelenlegi állapotával
+381 Érvénytelen kijelölés
+382 Ismeretlen elem
+383 %d frissített elem
+384 A cím kötelező
+385 Sablonok
+386 Előfordulások száma
+387 Elértük az előfordulások legnagyobb számát
+388 Elértük az előfordulások legkisebb számát
+389 Többszörös azonosító ellenőrzése
+390 Adja hozzá az xsl stíluslapot a MathML elemekhez
+391 Műveleti jel beillesztése
+392 Válassza ki a műveleti jel megjelenítési módját
+393 Integrál beillesztése
+394 Válassza ki az integrál típusát
+395 Szögletes zárójel attribútumai
+396 Válassza ki a nyitó, elválasztó és záró jeleket
+397 Műveleti jelek száma
+398 Coordináták száma
+399 N-esek hossza
+400 Elemek száma
+401 Változók száma
+402 Rend
+403 A változó rendje (%d)
+404 Összetett dokumentum
+405 Erőforrások másolása (stílusok és szkriptek)
+406 Hova mentsük az erőforrásokat
+407 Hova mentsük a képeket
+408 Dokumentum
+409 Képek, stílusok és szkriptek
+410 Elektronikus levél
+411 Elektronikus levélküldés általános paraméterei:
+412 SMTP kiszolgáló címe:
+413 Kiszolgáló kapu:
+414 (alapértelmezett: 25 )
+415 Feladó címe (From mező):
+416 Címzett:
+417 Küldés elektronikus levélben
+418 Tárgy:
+419 Küldi:
+420 Üzenet szövege
+421 Melléklet
+422 Zip
+423 Ne küldje
+424 Küldés
+425 A kiszolgáló címét és kapuját a Beállításoknál kell megadni
+426 Üzenet:
+427 Másik szövegüzenet:
+428 A kiszolgáló elérhetetlen vagy nem válaszol
+429 A kiszolgáló elutasítja a kérést
+430 A küldő címének formátuma érvénytelen
+431 A címzett címének formátuma érvénytelen
+432 Az üzenet tartalma érvénytelen formátumú
+433 Üzenet nincs elküldve
+434 Üzenet elküldve
+435 Jelszavak
+436 Jegyezze meg az Amaya a jelszót?
+437 Jegyezze meg a weblapok jelszavait
+438 Weblapok
+439 Mind törlése
+440 **XML namespaces generated for new XHTML+RDFa documents
+441 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+442 Hiba a javascript/DOM objektum felépítése közben
+443 A szkript még fut, de amint lehet, megszakítjuk. Próbálja később.
+444 A javascript/DOM nem engedélyezhető ebben a nézetben.
+445 Adjon meg egy javascript parancsot:
+446 A parancs a következő értéket adta vissza: %s
+447 A parancs nem adott vissza értéket
+448 A SpiderMonkey a következő hibát adta vissza:\n\nFájl: %s\nSor: %d\n\n%s
+449 Új
+450 Egyedi
+451 Létrehozása
+452 Kapocs létrehozása kattintással
+453 Horgony törlése
+454 Mentés sablon nélkül
+455 Témával ...
+456 Teljes szélesség
+457 Felirattal
+458 Méret
+459 Helyzet
+460 XML szerkesztési mód
+461 Stíluslapok listája
+462 Stíluslap hozzáadása...
+463 Kijelölt stíluslapok eltávolítása
+464 Kijelölt stíluslapok aktiválása
+465 Kijelölt stíluslapok deaktiválása
+466 Kijelölt stíluslapok megnyitása
+467 Amaya profile:
+468 A nap tippje" induláskor
+469 Válasszon betűkészletet és -méretet
+470 **Template has error(s), it will not be used:
+471 **Close
+472 **Component '%s' has multiple definition.
+473 **Library '%s' can not be loaded.
+474 **Can not convert an instance document to template.
+475 **The document is already a template
+476 **Template creation fails
+477 **Text area
+478 **Element label:
+479 **Bag area
+480 **Repeat element
+481 **New component
+482 **Component is used, you can not remove it.
+483 **at the top left corner
+484 **at the bottom left corner
+485 **on the left
+486 **at the top right corner
+487 **at the bottom right corner
+488 **on the right
+489 **at the top
+490 **at the bottom
+491 **in the center
+492 **to the left and above
+493 **to the left and below
+494 **to the left of
+495 **to the right and above
+496 **to the right and below
+497 **to the right of
+498 **above
+499 **below
+500 **in front of
+501 **There are %d objects: 
+502 **New use
+503 **Optional use
+504 **Color source code
+505 **Repeat label:
+506 **New union
+507 **Union
+508 **Union name:
+509 **Use elements
+510 **Label

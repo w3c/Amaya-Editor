@@ -6114,6 +6114,15 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="de">Verboten</message>
 	<message xml:lang="it">Proibito</message>
 </label>
+<label define="TMSG_SVG_Pentagon_Arrow">
+	<message xml:lang="en">Pentagon</message>
+	<message xml:lang="fr">Pentagone</message>
+	<message xml:lang="cn">五边形</message>
+	<message xml:lang="tw">五邊形</message>
+	<message xml:lang="es">Pentágono</message>
+	<message xml:lang="de">Fünfeck</message>
+	<message xml:lang="it">Pentagono</message>
+</label>
 <label define="TMSG_SVG_2_Way_Rounded_Arrow">
 	<message xml:lang="en">2-Way Rounded Arrow</message>
 	<message xml:lang="fr">Flèche courbe dans deux directions</message>

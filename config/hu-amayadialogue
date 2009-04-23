@@ -331,27 +331,24 @@
 329 &Lekérdezés testreszabása...
 330 &Helyi szűrő...
 331 &Együttműködés
-332 Erőforrás &zárolása...
-333 Erőforrás &felszabadítása...
-334 Erőforrás &tulajdonságai...
-335 Zárolási adatok &másolása...
-336 &Zárolt?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
-345 **Create a new types union
-346 &Javascript/DOM
-347 Engedélyezés/tiltás
-348 Parancs végrehajtása
-349 Külső szkript végrehajtása
-350 Külső szkript hozzáadása
-351 Szkript beillesztése
-352 **Check for update
-353 Súgó...
-354 A nap tippje
-355 Amaya &névjegye
+332 Erőforrás &zárolása
+333 Zárolási adatok &másolása...
+334 **Templates
+335 **Create template from current document
+336 **Create a text area
+337 **Use a component or an element
+338 **Create and use a component
+339 **Repeat the current use
+340 **Create and repeat a component
+341 **Create a free editing box
+342 **Create a new types union
+343 &Javascript/DOM
+344 Engedélyezés/tiltás
+345 Parancs végrehajtása
+346 Külső szkript végrehajtása
+347 Külső szkript hozzáadása
+348 Szkript beillesztése
+349 **Check for update
+350 Súgó...
+351 A nap tippje
+352 Amaya &névjegye

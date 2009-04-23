@@ -128,6 +128,7 @@ HelpAtW3C
 +bdi-text-module
 +clientside-module
 +attr-style
++davbase
 +forms
 +hypertext-module
 +image-module
@@ -155,6 +156,7 @@ HelpAtW3C
 +bdi-text-module
 +clientside-module
 +attr-style
++davbase
 +edit-module
 +forms
 +hypertext-module
@@ -178,6 +180,7 @@ HelpAtW3C
 {XHTML Basic}
 +basic-form-module
 +basic-table-module
++davbase
 +hypertext-module
 +image-module
 +list-module
@@ -193,6 +196,7 @@ HelpAtW3C
 +bdi-text-module
 +clientside-module
 +attr-style
++davbase
 +edit-module
 +forms
 +hypertext-module
@@ -217,6 +221,7 @@ HelpAtW3C
 ################# MathML
 {MathML}
 +basic-style
++davbase
 +hypertext-module
 +maths
 +css-style
@@ -224,6 +229,7 @@ HelpAtW3C
 ################# SVG
 {SVG}
 +basic-style
++davbase
 +hypertext-module
 +maths
 +svg
@@ -262,12 +268,8 @@ HelpAtW3C
 ################# AMAYA FUNCTIONS
 ######### DAV MODULES
 [davbase]
-LockDocument
-UnlockDocument
-PropDocument
+LockUnlock
 CopyLockInformation
-LockIndicator
-DAVLockDocument
 
 ######### BROWSING_Lite
 [browsing_lite]

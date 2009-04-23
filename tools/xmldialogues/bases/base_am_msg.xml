@@ -5495,7 +5495,7 @@ MIME 型を使用してください</message>
 	<message xml:lang="nl">Tekstcodering voor nieuwe documenten:</message>
 </label>
 <label define="AM_LOCK_SUCCEED">
-	<message xml:lang="en">Lock succeed!</message>
+	<message xml:lang="en">Lock succeeded!</message>
 	<message xml:lang="fr">Verrou réussit!</message>
 	<message xml:lang="pt">Documento foi travado com sucesso!</message>
 	<message xml:lang="de">Sperrung erfolgreich</message>
@@ -5660,7 +5660,7 @@ dokumentumot...</message>
 	<message xml:lang="nl">Probeer het document te ontgrendelen...</message>
 </label>
 <label define="AM_UNLOCK_SUCCEED">
-	<message xml:lang="en">Unlock succeed!</message>
+	<message xml:lang="en">Unlock succeeded!</message>
 	<message xml:lang="fr">Déverrouillage a réussit!</message>
 	<message xml:lang="pt">Documento foi destravado com sucesso!</message>
 	<message xml:lang="de">Entsperrung erfolgreich</message>
@@ -6267,44 +6267,6 @@ URL)</message>
 	<message xml:lang="sk">Upozornenia</message>
 	<message xml:lang="ja">認識</message>
 	<message xml:lang="nl">Informeren</message>
-</label>
-<label define="AM_DAV_AWARENESS_GENERAL">
-	<message xml:lang="en">General awareness</message>
-	<message xml:lang="fr">Notification général</message>
-	<message xml:lang="pt">Percepção geral</message>
-	<message xml:lang="de">Immer benachrichtigen</message>
-	<message xml:lang="fi">Yleinen valvetila</message>
-	<message xml:lang="it">General awareness</message>
-	<message xml:lang="es">Conocimiento general</message>
-	<message xml:lang="tr">Genel bildiri</message>
-	<message xml:lang="ru">Оповещать всех</message>
-	<message xml:lang="hu">Általános tudomás</message>
-	<message xml:lang="ka">ზოგადი
-გაცნობიერება</message>
-	<message xml:lang="cn">一般感知</message>
-	<message xml:lang="tw">一般感知</message>
-	<message xml:lang="sk">Základné upozornenia</message>
-	<message xml:lang="ja">一般的な認識</message>
-	<message xml:lang="nl">Informeren bij openen</message>
-</label>
-<label define="AM_DAV_AWARENESS_ONEXIT">
-	<message xml:lang="en">Awareness on exit</message>
-	<message xml:lang="fr">Notification à la sortie</message>
-	<message xml:lang="pt">Percepção ao sair</message>
-	<message xml:lang="de">Am Ende benachrichtigen</message>
-	<message xml:lang="fi">Valvetila poistuttaessa</message>
-	<message xml:lang="it">Awareness on exit</message>
-	<message xml:lang="es">Conocimiento al salir</message>
-	<message xml:lang="tr">çıkış bildirisi</message>
-	<message xml:lang="ru">Оповещать при выходе</message>
-	<message xml:lang="hu">Tudomás kilépéskor</message>
-	<message xml:lang="ka">გაცნობიერება
-გამოსვლისას</message>
-	<message xml:lang="cn">退出时感知</message>
-	<message xml:lang="tw">退出時感知</message>
-	<message xml:lang="sk">Upozorňovať pri skončení</message>
-	<message xml:lang="ja">終了の認識</message>
-	<message xml:lang="nl">Informeren bij verlaten</message>
 </label>
 <label define="AM_BUTTON_ANIM">
 	<message xml:lang="en">Animation</message>

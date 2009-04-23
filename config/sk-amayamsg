@@ -299,216 +299,214 @@
 297 výhradné
 298 zdielané
 299 Upozornenia
-300 Základné upozornenia
-301 Upozorňovať pri skončení
-302 Animácia
-303 Knižnica SVG
-304 Kopírovať voľbu
-305 Kopírovať výber
-306 Odkázať na výber
-307 Pridať nový model do knižnice
-308 URL Nového SVG súboru ...
-309 Názov knižnice
-310 URL Knižnice
-311 Vytvoriť knižnicu
-312 Nalistovať knižnicu
-313 Vytvoriť alebo vyhľadať knižnicu
-314 Výber neobsahuje prvky SVG. Urobte nový výber
-315 Názov knižnive je povinný
-316 Presuňte pozíciu kurzora na miesto vdokumente, kde sa má vytvoriť nová kľučová pozícia...
-317 Kľučová pozícia definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...
-318 Vyberte počiatočnú farbu prvku...
-319 Počiatočná farba definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...
-320 Vyberte koncovú farbu...
-321 Animacia definovaná.
-322 Animovaný atribút
-323 Prvok bez ID
-324 Pridať ID
-325 Odstrániť ID
-326 Pridať/odstrániť ID
-327 Aplikovať operáciu
-328 Zadajte meno prvku
-329 Aplikovať CSS
-330 Súčasný typ obrazovky
-331 Nová téma
-332 Vlastnosti záložky
-333 Vlastnosti témy
-334 Hierarchia tém:
-335 Názov:
-336 Zmeny:
-337 Autor:
-338 Vytvorené:
-339 Posledná zmena:
-340 Popis:
-341 Vyberte prvok
-342 Všetky CSS pravidlá
-343 CSS pravidlá aplikované na <%s> prvok\n
-344 Modré riadky sú prepojenia aktivovateľné dvojitým (alebo jednoduchým) kliknutím\n
-345 Načítať objekty (object, embed, iframe)
-346 Pre tento prvok nie sú definované CSS pravidlá
-347 Najskôr vyberte miesto pre aplikovanie voľby
-348 Informácie o dokumente
-349 Typ dokumentu
-350 MIME typ
-351 Znaková sada
-352 Dĺžka dokumentu
-353 Umiestnenie obsahu
-354 Možnosti
-355 Znak (&xxx;)
-356 Vytvoriť objekt
-357 Priečinok
-358 Súbor
-359 Nahradiť súčasný obsah
-360 V novom okne
-361 Anti-aliasing
-362 Použiť ISO formát pre dátum
-363 Nové umiestnenie dokumentu
-364 Odkazy otvárať
-365 Varovať pri zatváraní viacerých kariet
-366 Maximálny počet zapamätaných url adries
-367 Vymazať zoznam url
-368 Zobrazovať všetky prepojenia
-369 Pevná dĺžka riadkov (0 = predvolená hodnota)
-370 Šablóna
-371 Uložiť dokument ako...
-372 Šablóna nebola nájdená
-373 Zobraziť bloky šablón
-374 Zatvoriť diálóg pos stlačení tlačidla Aplikuj
-375 Nie je dovolené
-376 Chránený prvok
-377 Výber nemôže byť krížený prvkom tohto typu
-378 Nebol nájdený nadpis
-379 Napriek tomu uložiť
-380 Neviem lokalizovať hostiteľa
-381 Dokument sa zmenil (412)
-382 Konflikt so súčasným stavom zdroja
-383 Neplatný výber
-384 Neznámy prvok
-385 Počet aktualizovaných prvkov: %d 
-386 Je potrebné zadať názov
-387 Šablóny
-388 Počet výskytov
-389 Maximálny počet dosiahnutých výskytov
-390 Manimálny počet dosiahnutých výskytov
-391 Kontrolovať duplicitné ID
-392 Pridať XSL štýly pre prvky jazyka MathML
-393 Vložiť operátor
-394 Vyberte spôsob akým budú operátory zobrazené
-395 Vložiť integrál
-396 Vyberte typ integrálu
-397 Atribúty ohraničenia
-398 Vyberte otvoriť, oddelovače a ukončenie symbolov
-399 Počet sybolov operátorov
-400 Počet koordinátov
-401 Dĺžka N-tuplov
-402 Počet prvkov
-403 Počet premenných
-404 Stupeň voľnosti
-405 Počet stupňov voľnosti premenných %d
-406 Zložený dokument
-407 Skopírovať zdroje (štýly a skripty)
-408 Umiestnenie zdrojov
-409 Umiestnenie obrázkov
-410 Dokument
-411 Obrázky, štýly a skripty
-412 Mail
-413 Spoločné parametre pre odosielanie mailov:
-414 Adresa SMTP servera:
-415 Port:
-416 (štandardný je 25)
-417 Adresa odosielateľa (Od koho)
-418 Komu:
-419 Odoslať mailom
-420 Predmet :
-421 Odoslať ako:
-422 Text správy
-423 Príloha
-424 **Zip archive
-425 Neodosielať
-426 Odoslať
-427 Adresa servera a port musia byť nastavené v nastaveniach.
-428 Správa:
-429 Alternatívna textová správa:
-430 Server je nedostupný alebo neodpovedá
-431 Server prerušil spojenie
-432 Adredsa odosielateľa má nesprávny tvar
-433 Adresa príjemcu má nesprávny tvar
-434 Obsah mail má nesprávny tvar
-435 Správa nebola odoslaná
-436 Správa bola odoslaná
-437 Heslá
-438 Chcete aby si program Amaya zapamätal toto heslo
-439 **Remember passwords for sites
-440 Umiestnenia
-441 Odstrániť všetky
-442 **XML namespaces generated for new XHTML+RDFa documents
-443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
-444 **An error occured during the building of the javascript/DOM objects
-445 **A script is still running but will be aborted as soon as possible. Please try later.
-446 **Javascript/DOM can not be enabled in this view.
-447 **Enter a javascript command:
-448 **The command returned the value: %s
-449 **The command returned no value
-450 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-451 Nový
-452 **Customizable
-453 **Create
-454 **Create the link by click
-455 Odstrániť odkaz
-456 **Save without template
-457 **With theme ...
-458 **Full width
-459 **With caption
-460 **Size
-461 **Position
-462 **XML editing mode
-463 **List of style sheets
-464 **Add a style sheet...
-465 **Remove selected style sheets
-466 **Activate selected style sheets
-467 **Desactivate selected style sheets
-468 **Open selected style sheets
-469 Profil Amaya:
-470 **Show "Tip of the day" at startup
-471 **Choose font family and size:
-472 **Template has error(s), it will not be used:
-473 **Close
-474 **Component '%s' has multiple definition.
-475 **Library '%s' can not be loaded.
-476 **Can not convert an instance document to template.
-477 **The document is already a template
-478 **Template creation fails
-479 **Text area
-480 **Element label:
-481 **Bag area
-482 **Repeat element
-483 **New component
-484 **Component is used, you can not remove it.
-485 **at the top left corner
-486 **at the bottom left corner
-487 **on the left
-488 **at the top right corner
-489 **at the bottom right corner
-490 **on the right
-491 **at the top
-492 **at the bottom
-493 **in the center
-494 **to the left and above
-495 **to the left and below
-496 **to the left of
-497 **to the right and above
-498 **to the right and below
-499 **to the right of
-500 **above
-501 **below
-502 **in front of
-503 **There are %d objects: 
-504 **New use
-505 **Optional use
-506 **Color source code
-507 **Repeat label:
-508 **New union
-509 **Union
-510 **Union name:
-511 **Use elements
-512 **Label
+300 Animácia
+301 Knižnica SVG
+302 Kopírovať voľbu
+303 Kopírovať výber
+304 Odkázať na výber
+305 Pridať nový model do knižnice
+306 URL Nového SVG súboru ...
+307 Názov knižnice
+308 URL Knižnice
+309 Vytvoriť knižnicu
+310 Nalistovať knižnicu
+311 Vytvoriť alebo vyhľadať knižnicu
+312 Výber neobsahuje prvky SVG. Urobte nový výber
+313 Názov knižnive je povinný
+314 Presuňte pozíciu kurzora na miesto vdokumente, kde sa má vytvoriť nová kľučová pozícia...
+315 Kľučová pozícia definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...
+316 Vyberte počiatočnú farbu prvku...
+317 Počiatočná farba definovaná. Ťahaním posuvníka nastavte dĺžku trvania animácie...
+318 Vyberte koncovú farbu...
+319 Animacia definovaná.
+320 Animovaný atribút
+321 Prvok bez ID
+322 Pridať ID
+323 Odstrániť ID
+324 Pridať/odstrániť ID
+325 Aplikovať operáciu
+326 Zadajte meno prvku
+327 Aplikovať CSS
+328 Súčasný typ obrazovky
+329 Nová téma
+330 Vlastnosti záložky
+331 Vlastnosti témy
+332 Hierarchia tém:
+333 Názov:
+334 Zmeny:
+335 Autor:
+336 Vytvorené:
+337 Posledná zmena:
+338 Popis:
+339 Vyberte prvok
+340 Všetky CSS pravidlá
+341 CSS pravidlá aplikované na <%s> prvok\n
+342 Modré riadky sú prepojenia aktivovateľné dvojitým (alebo jednoduchým) kliknutím\n
+343 Načítať objekty (object, embed, iframe)
+344 Pre tento prvok nie sú definované CSS pravidlá
+345 Najskôr vyberte miesto pre aplikovanie voľby
+346 Informácie o dokumente
+347 Typ dokumentu
+348 MIME typ
+349 Znaková sada
+350 Dĺžka dokumentu
+351 Umiestnenie obsahu
+352 Možnosti
+353 Znak (&xxx;)
+354 Vytvoriť objekt
+355 Priečinok
+356 Súbor
+357 Nahradiť súčasný obsah
+358 V novom okne
+359 Anti-aliasing
+360 Použiť ISO formát pre dátum
+361 Nové umiestnenie dokumentu
+362 Odkazy otvárať
+363 Varovať pri zatváraní viacerých kariet
+364 Maximálny počet zapamätaných url adries
+365 Vymazať zoznam url
+366 Zobrazovať všetky prepojenia
+367 Pevná dĺžka riadkov (0 = predvolená hodnota)
+368 Šablóna
+369 Uložiť dokument ako...
+370 Šablóna nebola nájdená
+371 Zobraziť bloky šablón
+372 Zatvoriť diálóg pos stlačení tlačidla Aplikuj
+373 Nie je dovolené
+374 Chránený prvok
+375 Výber nemôže byť krížený prvkom tohto typu
+376 Nebol nájdený nadpis
+377 Napriek tomu uložiť
+378 Neviem lokalizovať hostiteľa
+379 Dokument sa zmenil (412)
+380 Konflikt so súčasným stavom zdroja
+381 Neplatný výber
+382 Neznámy prvok
+383 Počet aktualizovaných prvkov: %d 
+384 Je potrebné zadať názov
+385 Šablóny
+386 Počet výskytov
+387 Maximálny počet dosiahnutých výskytov
+388 Manimálny počet dosiahnutých výskytov
+389 Kontrolovať duplicitné ID
+390 Pridať XSL štýly pre prvky jazyka MathML
+391 Vložiť operátor
+392 Vyberte spôsob akým budú operátory zobrazené
+393 Vložiť integrál
+394 Vyberte typ integrálu
+395 Atribúty ohraničenia
+396 Vyberte otvoriť, oddelovače a ukončenie symbolov
+397 Počet sybolov operátorov
+398 Počet koordinátov
+399 Dĺžka N-tuplov
+400 Počet prvkov
+401 Počet premenných
+402 Stupeň voľnosti
+403 Počet stupňov voľnosti premenných %d
+404 Zložený dokument
+405 Skopírovať zdroje (štýly a skripty)
+406 Umiestnenie zdrojov
+407 Umiestnenie obrázkov
+408 Dokument
+409 Obrázky, štýly a skripty
+410 Mail
+411 Spoločné parametre pre odosielanie mailov:
+412 Adresa SMTP servera:
+413 Port:
+414 (štandardný je 25)
+415 Adresa odosielateľa (Od koho)
+416 Komu:
+417 Odoslať mailom
+418 Predmet :
+419 Odoslať ako:
+420 Text správy
+421 Príloha
+422 **Zip archive
+423 Neodosielať
+424 Odoslať
+425 Adresa servera a port musia byť nastavené v nastaveniach.
+426 Správa:
+427 Alternatívna textová správa:
+428 Server je nedostupný alebo neodpovedá
+429 Server prerušil spojenie
+430 Adredsa odosielateľa má nesprávny tvar
+431 Adresa príjemcu má nesprávny tvar
+432 Obsah mail má nesprávny tvar
+433 Správa nebola odoslaná
+434 Správa bola odoslaná
+435 Heslá
+436 Chcete aby si program Amaya zapamätal toto heslo
+437 **Remember passwords for sites
+438 Umiestnenia
+439 Odstrániť všetky
+440 **XML namespaces generated for new XHTML+RDFa documents
+441 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+442 **An error occured during the building of the javascript/DOM objects
+443 **A script is still running but will be aborted as soon as possible. Please try later.
+444 **Javascript/DOM can not be enabled in this view.
+445 **Enter a javascript command:
+446 **The command returned the value: %s
+447 **The command returned no value
+448 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+449 Nový
+450 **Customizable
+451 **Create
+452 **Create the link by click
+453 Odstrániť odkaz
+454 **Save without template
+455 **With theme ...
+456 **Full width
+457 **With caption
+458 **Size
+459 **Position
+460 **XML editing mode
+461 **List of style sheets
+462 **Add a style sheet...
+463 **Remove selected style sheets
+464 **Activate selected style sheets
+465 **Desactivate selected style sheets
+466 **Open selected style sheets
+467 Profil Amaya:
+468 **Show "Tip of the day" at startup
+469 **Choose font family and size:
+470 **Template has error(s), it will not be used:
+471 **Close
+472 **Component '%s' has multiple definition.
+473 **Library '%s' can not be loaded.
+474 **Can not convert an instance document to template.
+475 **The document is already a template
+476 **Template creation fails
+477 **Text area
+478 **Element label:
+479 **Bag area
+480 **Repeat element
+481 **New component
+482 **Component is used, you can not remove it.
+483 **at the top left corner
+484 **at the bottom left corner
+485 **on the left
+486 **at the top right corner
+487 **at the bottom right corner
+488 **on the right
+489 **at the top
+490 **at the bottom
+491 **in the center
+492 **to the left and above
+493 **to the left and below
+494 **to the left of
+495 **to the right and above
+496 **to the right and below
+497 **to the right of
+498 **above
+499 **below
+500 **in front of
+501 **There are %d objects: 
+502 **New use
+503 **Optional use
+504 **Color source code
+505 **Repeat label:
+506 **New union
+507 **Union
+508 **Union name:
+509 **Use elements
+510 **Label

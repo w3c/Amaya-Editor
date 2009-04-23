@@ -5850,42 +5850,6 @@ void MoveItem (Document doc, View view)
 
 
 /*----------------------------------------------------------------------
-  LockDocument
-  Lock document using WebDAV protocol
-  ----------------------------------------------------------------------*/
-void LockDocument (Document doc, View view)
-{
-#ifdef DAV
-  DAVLockDocument (doc, view);
-#endif /* DAV */
-}
-
-
-/*----------------------------------------------------------------------
-  UnlockDocument
-  Unlock document using WebDAV protocol
-  ----------------------------------------------------------------------*/
-void UnlockDocument (Document doc, View view)
-{
-#ifdef DAV 
-  DAVUnlockDocument (doc, view);
-#endif /* DAV */
-}
-
-
-/*----------------------------------------------------------------------
-  PropDocument
-  Get the document properties using WebDAV protocol
-  ----------------------------------------------------------------------*/
-void PropDocument (Document doc, View view)
-{
-#ifdef DAV
-  DAVProfindDocument (doc, view);
-#endif /* DAV */
-}
-
-
-/*----------------------------------------------------------------------
   CopyLockInformation
   Get the lock information of the document 
   ----------------------------------------------------------------------*/
@@ -5897,10 +5861,10 @@ void CopyLockInformation (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  LockIndicator
+  LockUnlock
   A toggle that indicates whether the document is locked.
   ----------------------------------------------------------------------*/
-void LockIndicator (Document doc, View view) 
+void LockUnlock (Document doc, View view) 
 {
 #ifdef DAV
   DAVLockIndicator (doc, view);

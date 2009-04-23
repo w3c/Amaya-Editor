@@ -331,27 +331,24 @@
 329 Zadefinovať požiadavku...
 330 Filtrovať komentáre...
 331 Sp&olupráca
-332 Uzamknúť zdrojový súbor...
-333 Odomknúť zdrojový súbor...
-334 Zobraziť vlastnosti zdroja...
-335 Kopírovať informácie o uzamknutí...
-336 Zamknutý?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
-345 **Create a new types union
-346 &Javascript/DOM
-347 **Enable/Disable
-348 **Execute a command
-349 **Execute an external script
-350 **Add an external script
-351 **Insert a script
-352 **Check for update
-353 Pomocník Amaya...
-354 **Tip of the day...
-355 O programe Amaya
+332 Uzamknúť zdrojový súbor
+333 Kopírovať informácie o uzamknutí...
+334 **Templates
+335 **Create template from current document
+336 **Create a text area
+337 **Use a component or an element
+338 **Create and use a component
+339 **Repeat the current use
+340 **Create and repeat a component
+341 **Create a free editing box
+342 **Create a new types union
+343 &Javascript/DOM
+344 **Enable/Disable
+345 **Execute a command
+346 **Execute an external script
+347 **Add an external script
+348 **Insert a script
+349 **Check for update
+350 Pomocník Amaya...
+351 **Tip of the day...
+352 O programe Amaya

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1155,9 +1155,6 @@ void PreferenceDlgWX::SetupLabelDialog_DAV()
   XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_TIMEOUT)) );
   XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_TIMEOUT_INFINITE)) );
   XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_TIMEOUT_OTHER)) );
-
-  XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_AWARENESS_GENERAL)) );
-  XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_AWARENESS_ONEXIT)) );
 }
 
 /*----------------------------------------------------------------------
@@ -1191,9 +1188,6 @@ void PreferenceDlgWX::SetupDialog_DAV( const Prop_DAV & prop)
     XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSpinCtrl)->SetValue( 300 );
   else
     XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSpinCtrl)->SetValue( prop.numberTimeout );
-
-  XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->SetValue( prop.toggleAwareness1 );
-  XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->SetValue( prop.toggleAwareness2 );
 }
 
 /*----------------------------------------------------------------------
@@ -1231,10 +1225,6 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
     strcpy (prop.radioTimeout, "Infinite");
 
   prop.numberTimeout = XRCCTRL(*this, "wxID_TIMEOUT_VALUE",  wxSpinCtrl)->GetValue();
-
-  prop.toggleAwareness1 = XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->GetValue();
-  prop.toggleAwareness2 = XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->GetValue();
-
   return prop;
 }
 #endif /* DAV */

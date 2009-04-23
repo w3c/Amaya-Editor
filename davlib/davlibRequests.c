@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 /*  --------------------------------------------------------
  ** 
  ** File: davlibRequests.c - Request functions for WebDAV module
@@ -15,7 +22,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.17  2009-04-10 14:22:18  vatton
+ ** Revision 1.18  2009-04-23 14:51:36  vatton
+ ** Improving the WebDAV interface
+ ** Irene
+ **
+ ** Revision 1.17  2009/04/10 14:22:18  vatton
  ** Fix several WebDAV bugs
  ** Irene
  **
@@ -64,7 +75,6 @@
  ** Revision 1.6  2002/06/06 17:10:46  kirschpi
  ** Breaking the user messages in three lines
  ** Fixing some code format problems
- ** Fixing DAVLockIndicator, when Lock discovery is disabled.
  ** Fixing unecessary memory allocations in FilterMultiStatus_handler
  ** and FilterLocked_handler.
  ** Manuele
@@ -131,11 +141,8 @@ int FilterFailedDependency_handler (HTRequest * request, HTResponse * response,
 #else
     InitInfo (" ",TtaGetMessage (AMAYA, AM_FAILED_DEPENDENCY));
 #endif  
-
     return HT_OK;
 }
-
-
 
 
 /* ----------------------------------------------------------------------
@@ -429,25 +436,21 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
 }
 
 
-
-
-
 /*----------------------------------------------------------------------
  * terminate callback - presents the request results to the user
   ----------------------------------------------------------------------*/
 void DAVTerminate_callback (int doc, int status, char *urlName,char *outputfile,
 			    char *proxyName, AHTHeaders *http_headers,
 			    void * context)
-{
-                                              
+{                                          
     AHTDAVContext *davctx = (context)? 
                             (AHTDAVContext*)((AHTReqContext*)context)->dav_context
                             :NULL;
-        
     if (davctx) 
      {
         /*show results to the user*/
-        if (davctx->showIt) DAVShowInfo ((AHTReqContext*)context);            
+        if (davctx->showIt)
+          DAVShowInfo ((AHTReqContext*)context);            
 
 #ifdef DEBUG_DAV        
         fprintf (stderr, "DAVTerminate_callback.... starting for %s\n",  
@@ -464,8 +467,6 @@ void DAVTerminate_callback (int doc, int status, char *urlName,char *outputfile,
 
      } 
 }
-
-
 
 
 /* ********************************************************************* *
@@ -951,11 +952,9 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
              }
          
             if (saveLockBase (davctx->absoluteURI,davctx->relativeURI, out, headers)!=YES) 
-             { 
-                DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
-             }
+              DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
             
-            DAVLockIndicatorState = TRUE;
+            DAVSetLockIndicator (context->docid, TRUE);
          }
          else if (status == HT_MULTI_STATUS && out) 
           {
@@ -1213,7 +1212,6 @@ int FilterUnlock_handler (HTRequest * request, HTResponse * response,
      {
         out = (davctx->output)?HTChunk_data (davctx->output):NULL;
         deb = (davctx->debug)?HTChunk_data (davctx->debug):NULL;
-
 #ifdef DEBUG_DAV
         fprintf (stderr,"FilterUnlock_handler.... status %d\n",status);    
         fprintf (stderr,"FilterUnlock_handler.... Response format %s\n", 
@@ -1226,13 +1224,10 @@ int FilterUnlock_handler (HTRequest * request, HTResponse * response,
         else 
             fprintf (stderr,"FilterUnlock_handler.... no content\n");
 #endif
-
         /*set AHTReqContext object */
         context->anchor = HTRequest_anchor(request);
-
         /*set AHTDAVContext - status*/
         davctx->status = status;
-
         
         /*remove lock info from base
          * status 204 No content = sucess condition, lock info should be removed
@@ -1256,7 +1251,7 @@ int FilterUnlock_handler (HTRequest * request, HTResponse * response,
                 saved = NO;
              }
 
-            DAVLockIndicatorState = FALSE;
+            DAVSetLockIndicator (context->docid, FALSE);
          }
         else if (status == HT_MULTI_STATUS && out) 
          {
@@ -1502,13 +1497,12 @@ void DAVLockDiscovery (Document document)
 
    if (!DAVAllowResource (DAVResources,DocumentURLs[document])) 
     {           
-       DAVLockIndicatorState = FALSE;
+       DAVSetLockIndicator (document, FALSE);
        return;
     }
    
    /*basic info for the request*/
    davctx = GetPropfindInfo (document);
-   
    if (davctx) 
     {
       davctx->showIt = NO; 
@@ -1516,9 +1510,6 @@ void DAVLockDiscovery (Document document)
       if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) 
           DoPropfindRequest (document,davctx,FilterFindLock_handler,NULL);      
     }
-   
-   /*if request is successful, FilterFindLock_handler will set it correctly */
-   DAVLockIndicatorState = FALSE;
 }
 
 
@@ -1562,7 +1553,6 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
         
         /*set AHTDAVContext - status*/
         davctx->status = status; 
-      
         /* if succed (status 207), set AHTDAVContext - response body tree */ 
         if (status == HT_MULTI_STATUS && out) 
             davctx->tree = AwParser_umountMessage(out);
@@ -1570,7 +1560,6 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
         /*find lockdiscovery element*/
         if (davctx->tree)
             lockdiscovery = AwParser_searchInTree (davctx->tree, "lockdiscovery");
-
         
         /* there is a lockdiscovery element in XML response, 
          * the resource is locked*/  
@@ -1579,7 +1568,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
             matches = NULL;
             saved = NO;
             
-            DAVLockIndicatorState = TRUE;
+            DAVSetLockIndicator (context->docid, TRUE);
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterFindLock_handler.... found %s, "
                             "resource is locked\n",lockdiscovery);
@@ -1629,26 +1618,20 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
          else
           { /* the resource is unlocked */ 
             line = LockLine_newObject (davctx->relativeURI, (char*)" ", DAVDepth, DAVTimeout,time(NULL));
-            
 #ifdef DEBUG_DAV
-            fprintf (stderr,"FilterFindLock_handler.... not found, "
-                            "resource is unlocked\n");
+            fprintf (stderr,"FilterFindLock_handler.... not found, " "resource is unlocked\n");
 #endif            
             /* use this information to clean the lock base from 
              * expired locks */ 
-            DAVLockIndicatorState = FALSE;
-            if (davctx->status>0) 
+            DAVSetLockIndicator (context->docid, FALSE);
+            if (davctx->status > 0) 
              {
                 removeFromBase (davctx->absoluteURI,line);
-
 #ifdef DEBUG_DAV
                 fprintf (stderr,"FilterFindLock_handler.... base cleaned\n");
 #endif            
              }
          }
-
-         DAVSetLockIndicator(context->docid);
-
         /* we finished? reset stop button 
          * We need this reset here to avoid problems due the pipelining */
         ResetStop (context->docid);
@@ -1838,7 +1821,6 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
         /*find lockdiscovery element*/
         if (davctx->tree)
             lockinfo = DAVGetLockFromTree (davctx->tree,owner);
-
         
         /* there is a lockdiscovery element in XML response, 
          * the resource is locked*/  
@@ -1848,7 +1830,7 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
             fprintf (stderr,"FilterCopyLockInfo_handler.... found lock, "
                             "resource is locked to %s\n",owner);
 #endif            
-            DAVLockIndicatorState = TRUE;
+            DAVSetLockIndicator(context->docid, TRUE);
             
             /* add this url to the DAV Resources list */
             if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
@@ -1872,13 +1854,8 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
 #endif      
             DAVDisplayMessage (TtaGetMessage (AMAYA, AM_UNLOCKED), davctx->relativeURI);      
             davctx->showIt = NO;
-
-            DAVLockIndicatorState = FALSE;
-            
+            DAVSetLockIndicator(context->docid, FALSE);
          }
-
-        DAVSetLockIndicator(context->docid);
-
         
         /* we finished? reset stop button 
          * We need this reset here to avoid problems due the pipelining */

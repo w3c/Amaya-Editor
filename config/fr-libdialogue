@@ -391,33 +391,34 @@
 389 Coeur
 390 Fleur
 391 Interdit
-392 Flèche courbe dans deux directions
-393 Légende avec flèche dans 3 directions
-394 Flèche dans 3 directions
-395 Légende avec flèche dans 4 directions
-396 Flèche dans 4 directions
-397 Chevron
-398 Flèche en arc
-399 Flèche en angle
-400 Légende avec flèche double en angle
-401 Flèche double en angle
-402 Légende avec flèche double
-403 Flèche double
-404 Flèche avec entailles
-405 Flèche courbe
-406 Légende avec flèche simple
-407 Flèche simple
-408 Flèche en fourche
-409 Flèche en S
-410 Flèche avec bandes
-411 Créer un modèle depuis le document courant
-412 Créer une zone de texte
-413 Utiliser un composant ou un élément
-414 Créer et utiliser un composant
-415 Répéter l'utilisation courante
-416 Créer et répéter un composant
-417 Créer une zone d'édition libre
-418 Créer une nouvelle union de types
-419 Bouton relaché pour terminer
-420 Double clic pour terminer
-421 Cliquer pour terminer
+392 Pentagone
+393 Flèche courbe dans deux directions
+394 Légende avec flèche dans 3 directions
+395 Flèche dans 3 directions
+396 Légende avec flèche dans 4 directions
+397 Flèche dans 4 directions
+398 Chevron
+399 Flèche en arc
+400 Flèche en angle
+401 Légende avec flèche double en angle
+402 Flèche double en angle
+403 Légende avec flèche double
+404 Flèche double
+405 Flèche avec entailles
+406 Flèche courbe
+407 Légende avec flèche simple
+408 Flèche simple
+409 Flèche en fourche
+410 Flèche en S
+411 Flèche avec bandes
+412 Créer un modèle depuis le document courant
+413 Créer une zone de texte
+414 Utiliser un composant ou un élément
+415 Créer et utiliser un composant
+416 Répéter l'utilisation courante
+417 Créer et répéter un composant
+418 Créer une zone d'édition libre
+419 Créer une nouvelle union de types
+420 Bouton relaché pour terminer
+421 Double clic pour terminer
+422 Cliquer pour terminer

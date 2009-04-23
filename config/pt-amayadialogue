@@ -332,26 +332,23 @@
 330 Filtro local...
 331 &Cooperação
 332 Travar o recurso
-333 Destravar o recurso
-334 Exibir as propriedades do recurso
-335 Copiar a informação da trava...
-336 Travado?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
-345 **Create a new types union
-346 &Javascript/DOM
-347 **Enable/Disable
-348 **Execute a command
-349 **Execute an external script
-350 **Add an external script
-351 **Insert a script
-352 Sobre Amaya no W3C
-353 Ajuda Amaya...
-354 **Tip of the day...
-355 Sobre Amaya
+333 Copiar a informação da trava...
+334 **Templates
+335 **Create template from current document
+336 **Create a text area
+337 **Use a component or an element
+338 **Create and use a component
+339 **Repeat the current use
+340 **Create and repeat a component
+341 **Create a free editing box
+342 **Create a new types union
+343 &Javascript/DOM
+344 **Enable/Disable
+345 **Execute a command
+346 **Execute an external script
+347 **Add an external script
+348 **Insert a script
+349 Sobre Amaya no W3C
+350 Ajuda Amaya...
+351 **Tip of the day...
+352 Sobre Amaya

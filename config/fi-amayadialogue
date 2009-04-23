@@ -331,27 +331,24 @@
 329 Mukauta tiedustelu...
 330 Paikalliset rajoitukset...
 331 Yht&eistyö
-332 Lukitse objekti...
-333 Vapauta objekti...
-334 Näytä objektin ominaisuudet...
-335 Kopioi lukitustiedot...
-336 Lukittu?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
-345 **Create a new types union
-346 &Javascript/DOM
-347 **Enable/Disable
-348 **Execute a command
-349 **Execute an external script
-350 **Add an external script
-351 **Insert a script
-352 Lisätietoa Amayasta W3C:ssä
-353 Ohje Amaya...
-354 **Tip of the day...
-355 Tietoja Amayasta
+332 Lukitse objekti
+333 Kopioi lukitustiedot...
+334 **Templates
+335 **Create template from current document
+336 **Create a text area
+337 **Use a component or an element
+338 **Create and use a component
+339 **Repeat the current use
+340 **Create and repeat a component
+341 **Create a free editing box
+342 **Create a new types union
+343 &Javascript/DOM
+344 **Enable/Disable
+345 **Execute a command
+346 **Execute an external script
+347 **Add an external script
+348 **Insert a script
+349 Lisätietoa Amayasta W3C:ssä
+350 Ohje Amaya...
+351 **Tip of the day...
+352 Tietoja Amayasta

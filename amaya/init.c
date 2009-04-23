@@ -4077,7 +4077,7 @@ void Reload_callback (int doc, int status, char *urlName, char *outputfile,
   if (W3Loading == 0 && res> 0) 
     {
       DAVLockDiscovery (newdoc);
-      DAVSetLockIndicator(newdoc);
+      //DAVSetLockIndicator(newdoc, FALSE);
     }
 #endif /* DAV */
 
@@ -4965,7 +4965,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   if (W3Loading == 0) 
     {
       DAVLockDiscovery (newdoc);
-      DAVSetLockIndicator(newdoc);
+      //DAVSetLockIndicator(newdoc, FALSE);
     }
 #endif /* DAV */  
   TtaFreeMemory (target);

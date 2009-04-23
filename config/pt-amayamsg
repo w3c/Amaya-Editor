@@ -299,216 +299,214 @@
 297 exclusivo
 298 compartilhado
 299 Percepção
-300 Percepção geral
-301 Percepção ao sair
-302 **Animation
-303 **SVG Library
-304 **Copy option
-305 **Copy selection
-306 **Refer to selection
-307 **Add new model into library
-308 **URL of the new SVG ...
-309 **Library title
-310 **Library URL
-311 **Create library
-312 **Browse library
-313 **Create or search library
-314 **The selection includes no SVG elements. Please reselect
-315 **The library title is mandatory
-316 **Move the position cursor in edited document to define a new key position...
-317 **Key position defined. Move the slider to define animation duration...
-318 **Select starting color of element...
-319 **Starting color defined. Move the slider to define animation duration...
-320 **Select ending color...
-321 **Animation defined.
-322 **Animated attribute
-323 **Element without ID
-324 **Add ID
-325 **Remove ID
-326 **Add/Remove IDs
-327 **Apply operation
-328 **Enter an element name
-329 **Apply CSS
-330 **Current screen type
-331 **New Topic
-332 **Bookmark Properties
-333 **Topic Properties
-334 **Topic hierarchy:
-335 Título:
-336 **Recalls:
-337 Autor:
-338 **Created:
-339 **Last modified:
-340 **Description:
-341 **Please select an element
-342 **All CSS
-343 **CSS style rules applied to the <%s> element\n
-344 As linhas coloridas são ligações ativadas (ou um único) por um clique dobro\n
-345 **Load objects (object, embed, iframe)
-346 **No style rule for this element
-347 **No insert position defined. Please select first
-348 **Document information
-349 **Document Type
-350 **MIME Type
-351 **Charset
-352 **Content Length
-353 **Content Location
-354 Preferências
-355 Carácter (&xxx;)
-356 **Create Object
-357 **Directory
-358 **File
-359 **Replace current
-360 **In new Window
-361 Anti-aliasing
-362 **ISO format for date
-363 **New documents location
-364 **Opening location
-365 **Warn when closing multiple tabs
-366 **Max url number in history
-367 **Clear url list
-368 **Display all shortcuts
-369 **Fixed line length (0 = default value)
-370 **Template
-371 **Save the document as...
-372 **Template not found
-373 **Show template's boxes
-374 **Apply closes the dialogue
-375 **Not allowed
-376 **Protected element
-377 **The selection should not cross an element of this type
-378 **No heading found
-379 **Save anyway
-380 **Cannot locate host
-381 **Document has changed (412)
-382 **Conflict with the current state of the resource
-383 **Invalid selection
-384 **Unknown element
-385 **%d updated elements
-386 **The title is mandatory
-387 **Templates
-388 **Number of occurrences
-389 **Maximum number of occurrences reached
-390 **Minimum number of occurrences reached
-391 **Check duplicated IDs
-392 **Add the xsl stylesheet for MathML elements
-393 **Insert operator
-394 **Select the way the operator has to be displayed
-395 **Insert an integral
-396 **Select the type of integral
-397 **Attributes of the fence
-398 **Select open, separator and close symbols
-399 **Number of operator symbols
-400 **Number of coordinates
-401 **Length of the N-tuples
-402 **Number of elements
-403 **Number of variables
-404 **Degree
-405 **Degree of the variable number %d
-406 **Compound document
-407 **Copy resources (styles and scripts)
-408 **Where to save resources
-409 **Where to save images
-410 **Document
-411 **Images, Styles and Scripts
-412 **Mail
-413 **Common parameters for sending mails:
-414 **SMTP server address:
-415 **Server port:
-416 **(25 by default)
-417 **Sending address (From field):
-418 **To:
-419 **Send by mail
-420 **Subject:
-421 **Send as:
-422 **Message body
-423 **Attachment
-424 **Zip archive
-425 **Don't send
-426 **Send
-427 **The server address and port must be set in Preferences
-428 **Message:
-429 **Alternate textual message:
-430 **The server is unreachable or does not respond
-431 **The server has reject you
-432 **The sender address is misformatted
-433 **A recipient address is misformatted
-434 **The mail content is misformatted
-435 **Mail not sent
-436 **Mail sent
-437 **Passwords
-438 **Do you want Amaya to remember this password?
-439 **Remember passwords for sites
-440 **Sites
-441 **Remove all
-442 **XML namespaces generated for new XHTML+RDFa documents
-443 **Select a namespace in the list below or add a new one (syntax prefix="uri")
-444 **An error occured during the building of the javascript/DOM objects
-445 **A script is still running but will be aborted as soon as possible. Please try later.
-446 **Javascript/DOM can not be enabled in this view.
-447 **Enter a javascript command:
-448 **The command returned the value: %s
-449 **The command returned no value
-450 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-451 Novo
-452 **Customizable
-453 Create
-454 **Create the link by click
-455 Apagar âncora
-456 **Save without template
-457 **With theme ...
-458 **Full width
-459 **With caption
-460 **Size
-461 **Position
-462 **XML editing mode
-463 **List of style sheets
-464 **Add a style sheet...
-465 **Remove selected style sheets
-466 **Activate selected style sheets
-467 **Desactivate selected style sheets
-468 **Open selected style sheets
-469 Perfil del Amaya:
-470 **Show "Tip of the day" at startup
-471 **Choose font family and size:
-472 **Template has error(s), it will not be used:
-473 **Close
-474 **Component '%s' has multiple definition.
-475 **Library '%s' can not be loaded.
-476 **Can not convert an instance document to template.
-477 **The document is already a template
-478 **Template creation fails
-479 **Text area
-480 **Element label:
-481 **Bag area
-482 **Repeat element
-483 **New component
-484 **Component is used, you can not remove it.
-485 **at the top left corner
-486 **at the bottom left corner
-487 **on the left
-488 **at the top right corner
-489 **at the bottom right corner
-490 **on the right
-491 **at the top
-492 **at the bottom
-493 **in the center
-494 **to the left and above
-495 **to the left and below
-496 **to the left of
-497 **to the right and above
-498 **to the right and below
-499 **to the right of
-500 **above
-501 **below
-502 **in front of
-503 **There are %d objects: 
-504 **New use
-505 **Optional use
-506 **Color source code
-507 **Repeat label:
-508 **New union
-509 **Union
-510 **Union name:
-511 **Use elements
-512 **Label
+300 **Animation
+301 **SVG Library
+302 **Copy option
+303 **Copy selection
+304 **Refer to selection
+305 **Add new model into library
+306 **URL of the new SVG ...
+307 **Library title
+308 **Library URL
+309 **Create library
+310 **Browse library
+311 **Create or search library
+312 **The selection includes no SVG elements. Please reselect
+313 **The library title is mandatory
+314 **Move the position cursor in edited document to define a new key position...
+315 **Key position defined. Move the slider to define animation duration...
+316 **Select starting color of element...
+317 **Starting color defined. Move the slider to define animation duration...
+318 **Select ending color...
+319 **Animation defined.
+320 **Animated attribute
+321 **Element without ID
+322 **Add ID
+323 **Remove ID
+324 **Add/Remove IDs
+325 **Apply operation
+326 **Enter an element name
+327 **Apply CSS
+328 **Current screen type
+329 **New Topic
+330 **Bookmark Properties
+331 **Topic Properties
+332 **Topic hierarchy:
+333 Título:
+334 **Recalls:
+335 Autor:
+336 **Created:
+337 **Last modified:
+338 **Description:
+339 **Please select an element
+340 **All CSS
+341 **CSS style rules applied to the <%s> element\n
+342 As linhas coloridas são ligações ativadas (ou um único) por um clique dobro\n
+343 **Load objects (object, embed, iframe)
+344 **No style rule for this element
+345 **No insert position defined. Please select first
+346 **Document information
+347 **Document Type
+348 **MIME Type
+349 **Charset
+350 **Content Length
+351 **Content Location
+352 Preferências
+353 Carácter (&xxx;)
+354 **Create Object
+355 **Directory
+356 **File
+357 **Replace current
+358 **In new Window
+359 Anti-aliasing
+360 **ISO format for date
+361 **New documents location
+362 **Opening location
+363 **Warn when closing multiple tabs
+364 **Max url number in history
+365 **Clear url list
+366 **Display all shortcuts
+367 **Fixed line length (0 = default value)
+368 **Template
+369 **Save the document as...
+370 **Template not found
+371 **Show template's boxes
+372 **Apply closes the dialogue
+373 **Not allowed
+374 **Protected element
+375 **The selection should not cross an element of this type
+376 **No heading found
+377 **Save anyway
+378 **Cannot locate host
+379 **Document has changed (412)
+380 **Conflict with the current state of the resource
+381 **Invalid selection
+382 **Unknown element
+383 **%d updated elements
+384 **The title is mandatory
+385 **Templates
+386 **Number of occurrences
+387 **Maximum number of occurrences reached
+388 **Minimum number of occurrences reached
+389 **Check duplicated IDs
+390 **Add the xsl stylesheet for MathML elements
+391 **Insert operator
+392 **Select the way the operator has to be displayed
+393 **Insert an integral
+394 **Select the type of integral
+395 **Attributes of the fence
+396 **Select open, separator and close symbols
+397 **Number of operator symbols
+398 **Number of coordinates
+399 **Length of the N-tuples
+400 **Number of elements
+401 **Number of variables
+402 **Degree
+403 **Degree of the variable number %d
+404 **Compound document
+405 **Copy resources (styles and scripts)
+406 **Where to save resources
+407 **Where to save images
+408 **Document
+409 **Images, Styles and Scripts
+410 **Mail
+411 **Common parameters for sending mails:
+412 **SMTP server address:
+413 **Server port:
+414 **(25 by default)
+415 **Sending address (From field):
+416 **To:
+417 **Send by mail
+418 **Subject:
+419 **Send as:
+420 **Message body
+421 **Attachment
+422 **Zip archive
+423 **Don't send
+424 **Send
+425 **The server address and port must be set in Preferences
+426 **Message:
+427 **Alternate textual message:
+428 **The server is unreachable or does not respond
+429 **The server has reject you
+430 **The sender address is misformatted
+431 **A recipient address is misformatted
+432 **The mail content is misformatted
+433 **Mail not sent
+434 **Mail sent
+435 **Passwords
+436 **Do you want Amaya to remember this password?
+437 **Remember passwords for sites
+438 **Sites
+439 **Remove all
+440 **XML namespaces generated for new XHTML+RDFa documents
+441 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+442 **An error occured during the building of the javascript/DOM objects
+443 **A script is still running but will be aborted as soon as possible. Please try later.
+444 **Javascript/DOM can not be enabled in this view.
+445 **Enter a javascript command:
+446 **The command returned the value: %s
+447 **The command returned no value
+448 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+449 Novo
+450 **Customizable
+451 Create
+452 **Create the link by click
+453 Apagar âncora
+454 **Save without template
+455 **With theme ...
+456 **Full width
+457 **With caption
+458 **Size
+459 **Position
+460 **XML editing mode
+461 **List of style sheets
+462 **Add a style sheet...
+463 **Remove selected style sheets
+464 **Activate selected style sheets
+465 **Desactivate selected style sheets
+466 **Open selected style sheets
+467 Perfil del Amaya:
+468 **Show "Tip of the day" at startup
+469 **Choose font family and size:
+470 **Template has error(s), it will not be used:
+471 **Close
+472 **Component '%s' has multiple definition.
+473 **Library '%s' can not be loaded.
+474 **Can not convert an instance document to template.
+475 **The document is already a template
+476 **Template creation fails
+477 **Text area
+478 **Element label:
+479 **Bag area
+480 **Repeat element
+481 **New component
+482 **Component is used, you can not remove it.
+483 **at the top left corner
+484 **at the bottom left corner
+485 **on the left
+486 **at the top right corner
+487 **at the bottom right corner
+488 **on the right
+489 **at the top
+490 **at the bottom
+491 **in the center
+492 **to the left and above
+493 **to the left and below
+494 **to the left of
+495 **to the right and above
+496 **to the right and below
+497 **to the right of
+498 **above
+499 **below
+500 **in front of
+501 **There are %d objects: 
+502 **New use
+503 **Optional use
+504 **Color source code
+505 **Repeat label:
+506 **New union
+507 **Union
+508 **Union name:
+509 **Use elements
+510 **Label

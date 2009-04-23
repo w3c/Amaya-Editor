@@ -331,27 +331,24 @@
 329 Personalizza la richiesta
 330 Filtro locale...
 331 &Cooperazione
-332 Lock resource...
-333 Unlock resource...
-334 Informazioni per il lock...
-335 Copia delle informazioni per il lock...
-336 Lock?
-337 Schemi
-338 Crea uno schema dal documento corrente
-339 Crea area di testo
-340 Usa un componente o un elemento
-341 Crea e usa un componente
-342 Ripeti uso corrente
-343 Crea e ripeti un componente
-344 Crea un box da editare
-345 Crea una nuona unione di tipi
-346 &Javascript/DOM
-347 Attiva/Disattiva
-348 Esegui un comando
-349 Esegui un comando
-350 Aggiungi uno script esterno
-351 Inserisci uno script
-352 Controlla per aggiornare
-353 Aiuto Amaya...
-354 Suggerimenti del giorno...
-355 Informazioni su Amaya
+332 Lock resource
+333 Copia delle informazioni per il lock...
+334 Schemi
+335 Crea uno schema dal documento corrente
+336 Crea area di testo
+337 Usa un componente o un elemento
+338 Crea e usa un componente
+339 Ripeti uso corrente
+340 Crea e ripeti un componente
+341 Crea un box da editare
+342 Crea una nuona unione di tipi
+343 &Javascript/DOM
+344 Attiva/Disattiva
+345 Esegui un comando
+346 Esegui un comando
+347 Aggiungi uno script esterno
+348 Inserisci uno script
+349 Controlla per aggiornare
+350 Aiuto Amaya...
+351 Suggerimenti del giorno...
+352 Informazioni su Amaya

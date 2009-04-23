@@ -331,27 +331,24 @@
 329 Kişisel ayarlama...
 330 Sabit filitre...
 331 &Birlikte çalışmak
-332 Tekrar okumayı kitle...
-333 Tekrar okumayı kilidi aç...
-334 Tekrar okuma ayarlarını göster...
-335 kilitli bilgileri kopyala...
-336 kitli mi?
-337 **Templates
-338 **Create template from current document
-339 **Create a text area
-340 **Use a component or an element
-341 **Create and use a component
-342 **Repeat the current use
-343 **Create and repeat a component
-344 **Create a free editing box
-345 **Create a new types union
-346 &Javascript/DOM
-347 **Enable/Disable
-348 **Execute a command
-349 **Execute an external script
-350 **Add an external script
-351 **Insert a script
-352 W3C deki Amaya hakkında
-353 Amaya Yardım...
-354 **Tip of the day...
-355 Amaya hakkında
+332 Tekrar okumayı kitle
+333 kilitli bilgileri kopyala...
+334 **Templates
+335 **Create template from current document
+336 **Create a text area
+337 **Use a component or an element
+338 **Create and use a component
+339 **Repeat the current use
+340 **Create and repeat a component
+341 **Create a free editing box
+342 **Create a new types union
+343 &Javascript/DOM
+344 **Enable/Disable
+345 **Execute a command
+346 **Execute an external script
+347 **Add an external script
+348 **Insert a script
+349 W3C deki Amaya hakkında
+350 Amaya Yardım...
+351 **Tip of the day...
+352 Amaya hakkında

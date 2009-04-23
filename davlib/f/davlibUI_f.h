@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void DAVSetLockIndicator ( Document docid );
+extern void DAVSetLockIndicator ( Document docid,
+                                  ThotBool val );
 extern void DAVDisplayMessage ( const char *msg,
                                 const char *arg );
 extern void DAVDisplayMultiLineMessage ( Document docid,
@@ -22,11 +23,6 @@ extern void DAVPropertiesVerticalDialog ( Document docid,
                                           const char *rheader,
                                           const char *lheader,
                                           AwList *list );
-extern void DAVHorizontalDialog ( Document docid,
-                                  char *title,
-                                  char *rheader,
-                                  char *lheader,
-                                  AwList *list );
 extern void DAVShowInfo ( AHTReqContext *context );
 extern void DAVShowPropfindInfo ( AHTReqContext *context );
 extern AwList * GetPropfindInfoFromNode ( AwNode *propnode );
@@ -37,11 +33,11 @@ extern void DAVPreferencesDlg_callback ( int ref,
                                          int typedata,
                                          char *data );
 extern void InitDAVPreferences ( void );
-extern void DAVShowPreferencesDlg ( Document document );
 
 #else /* __STDC__ */
 
-extern void DAVSetLockIndicator ( Document docid );
+extern void DAVSetLockIndicator ( Document docid,
+                                    ThotBool val );
 extern void DAVDisplayMessage ( const char *msg,
                                   const char *arg );
 extern void DAVDisplayMultiLineMessage ( Document docid,
@@ -57,11 +53,6 @@ extern void DAVPropertiesVerticalDialog ( Document docid,
                                             const char *rheader,
                                             const char *lheader,
                                             AwList *list );
-extern void DAVHorizontalDialog ( Document docid,
-                                    char *title,
-                                    char *rheader,
-                                    char *lheader,
-                                    AwList *list );
 extern void DAVShowInfo ( AHTReqContext *context );
 extern void DAVShowPropfindInfo ( AHTReqContext *context );
 extern AwList * GetPropfindInfoFromNode ( AwNode *propnode );
@@ -72,7 +63,6 @@ extern void DAVPreferencesDlg_callback ( int ref,
                                            int typedata,
                                            char *data );
 extern void InitDAVPreferences ( void );
-extern void DAVShowPreferencesDlg ( Document document );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

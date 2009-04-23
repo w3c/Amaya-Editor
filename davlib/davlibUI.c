@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 /*  --------------------------------------------------------
 ** 
 ** File: davlib.c - WebDAV module _ user interface functions
@@ -15,7 +22,11 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.30  2009-02-03 15:26:19  carcone
+** Revision 1.31  2009-04-23 14:51:36  vatton
+** Improving the WebDAV interface
+** Irene
+**
+** Revision 1.30  2009/02/03 15:26:19  carcone
 ** Change the prototype of the function 'TtaShowDialogue'
 ** to avoid to move a dialogue in some cases.
 ** Laurent
@@ -129,7 +140,6 @@
 ** Revision 1.6  2002/06/06 17:10:46  kirschpi
 ** Breaking the user messages in three lines
 ** Fixing some code format problems
-** Fixing DAVLockIndicator, when Lock discovery is disabled.
 ** Fixing unecessary memory allocations in FilterMultiStatus_handler
 ** and FilterLocked_handler.
 ** Manuele
@@ -189,10 +199,14 @@ static HWND     DAVDlg;
 /*----------------------------------------------------------------------
   DAVSetLockIndicator: set the Lock indicator button.
   ---------------------------------------------------------------------- */
-void DAVSetLockIndicator (Document docid) 
+void DAVSetLockIndicator (Document doc, ThotBool val) 
 {
-  /* updates Lock indicator*/ 
-  TtaSetToggleItem (docid, DAV_VIEW,Cooperation_, BLockIndicator, DAVLockIndicatorState);  
+  /* updates Lock indicator*/
+  if (DocumentMeta[doc])
+    {
+      DocumentMeta[doc]->lockIndicatorState = val;
+      TtaSetToggleItem (doc, DAV_VIEW, Tools, TLock, val);
+    }
 }
 
 
@@ -254,157 +268,15 @@ BOOL DAVConfirmDialog (Document docid, char *msg1, char *msg2, char *msg3)
 void DAVPropertiesVerticalDialog (Document docid, const char *title,
     const char *rheader, const char *lheader, AwList *list) 
 {
-#ifdef _GTK
-  char   *name, *value;
-  char    label[MAX_LENGTH];
-  char   *ns = NULL;
-  int     i = MAX_REF+1, form = MAX_REF;
-#endif /* _GTK */
   int     lines = 0;
 
   if (docid > 0 && list) 
     {
       lines = AwList_size(list)/2;
-#ifdef _GTK
-      /* Main form */
-      TtaNewSheet (BaseDialog + form, 
-                   TtaGetViewFrame (docid, DAV_VIEW), 
-                   (title)?title:(char *)" ", 0, NULL, FALSE, 
-                   (rheader && lheader)?lines+3:lines+1, 'L', D_DONE);
-      
-      if (rheader || lheader) 
-        {
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                       (lheader)?lheader:(char *)" ");
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                       (char *)"----------------");
-        }
-      
-      /* properties: names */ 
-      while ( list && (name=(char *)AwList_next(list)) 
-              && (value=(char *)AwList_next(list)) ) 
-        {
-          /* ignore 'namespace:' in property name */
-          if ((ns = strchr (name,':'))) 
-            sprintf (label,"%s : ",(++ns));
-          else
-            sprintf (label,"%s : ",name);
-          /* property name */
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form, label);
-        }               
-            
-      AwList_reset (list);
-      TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                   (char *)"              ");
-
-      if (rheader || lheader) 
-        {
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                       (rheader)?rheader:(char *)" ");
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                       (char *)"------------------------------");
-        }
-            
-      /* properties: values */ 
-      while ( list && (name=(char *)AwList_next(list)) 
-              && (value=(char *)AwList_next(list)) ) 
-        {
-          ns = NULL; 
-          /* for some properties, the value has namespace. ignore it */ 
-          if ( ( HTStrCaseStr (name,"lockscope") ||
-                 HTStrCaseStr (name,"locktype")) && \
-               (ns = strchr (value,':'))!=NULL ) 
-            sprintf (label, "%s ",(++ns));
-          else 
-            sprintf (label, "%s ",value);
-          /* property value */
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form, label);
-          HT_FREE (name);
-          HT_FREE (value);               
-        }
-
-      AwList_delete (list);
-      TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                   (char *)"              ");
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + form, TRUE, TRUE);            
-#else /* _GTK */
       /* function not implemented yet */
       InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
-#endif /* _GTK */
     }
 }
-
-
-/*----------------------------------------------------------------------
-  DAVHorizontalDialog: display a "Confirm" horizontal dialog
-  Parameters : 
-  Document docid : document
-  char * title : window title
-  char * rheader : a header message for the rigth column
-  char * lheader : a header message for the left column
-  AwList * list : a list with name and value strings
-
-  THE LIST AND ITS COMPONENTES ARE DESTROYED INSIDE THIS FUNCTION!!!!
-  ---------------------------------------------------------------------- */
-void DAVHorizontalDialog (Document docid, char *title, char *rheader, 
-                          char *lheader, AwList *list) 
-{
-#ifdef _GTK
-  char   *name, *value;    
-  char    label[MAX_LENGTH];
-  int     i = MAX_REF+1, form = MAX_REF;
-#endif /* _GTK */
-
-  if (docid > 0 && list) 
-    {
-#ifdef _GTK
-      /* Main form */
-      TtaNewSheet (BaseDialog + form, 
-                   TtaGetViewFrame (docid, DAV_VIEW), 
-                   (title)?title:(char *)" ", 0, NULL, TRUE, 
-                   2, 'L', D_DONE);
-      
-      if (rheader || lheader) 
-        {
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                       (lheader)?lheader:(char *)" ");
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                       (rheader)?rheader:(char *)" ");
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                       (char *)"----------------");
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                       (char *)"---------------------------");
-        }
-
-      /* names  values */ 
-      while ( list && (name = (char *)AwList_next (list)) 
-              && (value = (char *)AwList_next (list)) ) 
-        {
-          /* name  */
-          sprintf (label, "%s ", name);
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form, label);
-          sprintf (label, "%s ", value);
-          TtaNewLabel (BaseDialog + (i++), BaseDialog + form, label);
-          HT_FREE (name);
-          HT_FREE (value);               
-        }
-
-      AwList_delete (list);
-      TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                   "              ");
-      TtaNewLabel (BaseDialog + (i++), BaseDialog + form,
-                   "              ");
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (BaseDialog + form, TRUE, TRUE);   
-#else /* _GTK */
-      /* function not implemented yet */
-      InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
-#endif /* _GTK */
-    }
-}
-
-
 
 
 /*----------------------------------------------------------------------
@@ -424,18 +296,14 @@ void DAVShowInfo (AHTReqContext *context)
       if (davctx) 
         {
           /* it's a WebDAV request */
-          switch (context->method) 
+          switch (context->method)
             {
-	      
               /* **** LOCK requests **** */
             case METHOD_LOCK:      
               /* Normal results */
               if (davctx->status > 0 && davctx->status != HT_MULTI_STATUS) 
-                {                            
-                  /* lock succeed */                                               
-                  DAVDisplayMessage (TtaGetMessage (AMAYA, AM_LOCK_SUCCEED),NULL);
-		  
-                  /*set the status line */
+                {
+                  /* lock succeed */                         
                   status_msg = TtaGetMessage (AMAYA, AM_LOCK_SUCCEED);
                 }
               /* 207 Multi-Status - Error! */
@@ -477,11 +345,8 @@ void DAVShowInfo (AHTReqContext *context)
               /* Normal results */
               if (davctx->status > 0 && davctx->status != HT_MULTI_STATUS) 
                 {
-                  DAVDisplayMessage (TtaGetMessage (AMAYA, AM_UNLOCK_SUCCEED), NULL);
-		  
-                  /*set the status line */
+                   /*set the status line */
                   status_msg = TtaGetMessage (AMAYA, AM_UNLOCK_SUCCEED);
-		  
                 }
               /*405 Method not allowed*/
               else if (davctx->status == DAV_METHOD_NOT_ALLOWED) 
@@ -549,8 +414,10 @@ void DAVShowInfo (AHTReqContext *context)
         } /* if (davctx) */
     } /* if (context) */
   
-  /* updates Lock indicator*/ 
-  DAVSetLockIndicator (context->docid); 
+  /* updates Lock indicator*/
+  //if (DocumentMeta[context->docid])
+  //  DAVSetLockIndicator (context->docid,
+  //                       DocumentMeta[context->docid]->lockIndicatorState); 
 }
 
 
@@ -893,11 +760,6 @@ void SetDAVConf (void)
       if (GProp_DAV.numberTimeout < 300) GProp_DAV.numberTimeout = 300;
       sprintf (DAVTimeout, "%s%d", GProp_DAV.radioTimeout, GProp_DAV.numberTimeout);
     }
-
-  /* ***** Awareness values - DAVAwareness, DAVAwarenessExit  **** */
-  DAVAwareness = (GProp_DAV.toggleAwareness1)?YES:NO;
-  DAVAwarenessExit = (GProp_DAV.toggleAwareness2)?YES:NO;
-
   /* ***** save registry ***** */
   DAVSaveRegistry ();
 }
@@ -939,211 +801,9 @@ void GetDAVConf (void)
       else 
         GProp_DAV.numberTimeout = 300; /* 300s = 5min */
     }
-
-  /* awareness toggle */
-  GProp_DAV.toggleAwareness1 = (DAVAwareness)?TRUE:FALSE;
-  GProp_DAV.toggleAwareness2 = (DAVAwarenessExit)?TRUE:FALSE;
-
-#ifdef _WINGUI
-  SetWindowText (GetDlgItem (DAVDlg, IDC_DAVUSER), GProp_DAV.textUserReference);
-  SetWindowText (GetDlgItem (DAVDlg, IDC_DAVRESOURCES), GProp_DAV.textUserResources);
-  if (!strcmp (GProp_DAV.radioDepth, "0"))
-    CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH, IDC_ZERO_DAVDEPTH);
-  else
-    CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH,
-                      IDC_INFINITE_DAVDEPTH);
-  if (!strcmp (GProp_DAV.radioLockScope, "exclusive"))
-    CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
-                      IDC_EXCLUSIVE_DAVSCOPE);
-  else
-    CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
-                      IDC_SHARED_DAVSCOPE);
-  if (!strcmp (GProp_DAV.radioTimeout, "Infinite"))
-    CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
-                      IDC_INFINITE_DAVTIMEOUT);
-  else
-    CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
-                      IDC_OTHER_DAVTIMEOUT);
-
-  SetDlgItemInt (DAVDlg, IDC_TIMEOUT_VALUE, GProp_DAV.numberTimeout, FALSE);
-
-  CheckDlgButton (DAVDlg, IDC_GENERAL_DAVAWARENESS, (GProp_DAV.toggleAwareness1) 
-                  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (DAVDlg, IDC_EXIT_DAVAWARENESS, (GProp_DAV.toggleAwareness2) 
-                  ? BST_CHECKED : BST_UNCHECKED);
-#endif /* _WINGUI */
-#ifdef _WX
-#endif /* _WX */
-#ifdef _GTK
-  TtaSetTextForm (DAVBase + DAVtextUserReference,
-                  GProp_DAV.textUserReference);
-  TtaSetTextForm (DAVBase + DAVtextUserResources,
-                  GProp_DAV.textUserResources);
-  if (!strcmp (GProp_DAV.radioDepth, "infinity")) 
-    TtaSetMenuForm (DAVBase + DAVradioDepth, 1);
-  else 
-    TtaSetMenuForm (DAVBase + DAVradioDepth, 0);
-  if (!strcmp (GProp_DAV.radioLockScope, "shared")) 
-    TtaSetMenuForm (DAVBase + DAVradioLockScope, 1);
-  else 
-    TtaSetMenuForm (DAVBase + DAVradioLockScope, 0);
-  if (!strcmp (GProp_DAV.radioTimeout, "Infinite"))
-    TtaSetMenuForm (DAVBase + DAVradioTimeout, 0);
-  else
-    TtaSetMenuForm (DAVBase + DAVradioTimeout, 1);
-  TtaSetNumberForm (DAVBase + DAVnumberTimeout,
-                    GProp_DAV.numberTimeout);
-  TtaSetToggleMenu (DAVBase + DAVtoggleAwareness, 0,
-                    GProp_DAV.toggleAwareness1);
-  TtaSetToggleMenu (DAVBase + DAVtoggleAwareness, 1,
-                    GProp_DAV.toggleAwareness2);
-#endif /* _GTK */    
 }
 
 
-#ifdef _WINGUI
-/*----------------------------------------------------------------------
-  WIN_AnnotDlgProc
-  Windows callback for the annot menu
-  ----------------------------------------------------------------------*/
-LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
-                                        LPARAM lParam)
-{
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-      /* initialize the menu text */
-      DAVDlg = hwnDlg;
-      SetWindowText (GetDlgItem (hwnDlg, ID_APPLY),
-                     TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-      SetWindowText (GetDlgItem (hwnDlg, ID_DEFAULTS),
-                     TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));	    
-      SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
-                     TtaGetMessage (LIB, TMSG_DONE));
-
-      SetWindowText (GetDlgItem (hwnDlg, IDC_TXT_DAVUSER),
-                     TtaGetMessage (AMAYA, AM_DAV_USER_URL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_TXT_DAVRESOURCES),
-                     TtaGetMessage (AMAYA, AM_DAV_USER_RESOURCES));
-
-      SetWindowText (GetDlgItem (hwnDlg, IDC_DAVDEPTH),
-                     TtaGetMessage (AMAYA, AM_DAV_DEPTH));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_ZERO_DAVDEPTH), "0");
-      SetWindowText (GetDlgItem (hwnDlg, IDC_INFINITE_DAVDEPTH),
-                     TtaGetMessage (AMAYA, AM_DAV_DEPTH_INFINITY));
-
-      SetWindowText (GetDlgItem (hwnDlg, IDC_DAVSCOPE),
-                     TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_EXCLUSIVE_DAVSCOPE),
-                     TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_EXCLUSIVE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_SHARED_DAVSCOPE),
-                     TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_SHARED));
-
-      SetWindowText (GetDlgItem (hwnDlg, IDC_DAVTIMEOUT),
-                     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_INFINITE_DAVTIMEOUT),
-                     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_INFINITE));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_OTHER_DAVTIMEOUT),
-                     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_OTHER));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_TIMEOUT_SECOND), "");
-
-      SetWindowText (GetDlgItem (hwnDlg, IDC_DAVAWARENESS),
-                     TtaGetMessage (AMAYA, AM_DAV_AWARENESS));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_GENERAL_DAVAWARENESS),
-                     TtaGetMessage (AMAYA, AM_DAV_AWARENESS_GENERAL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_EXIT_DAVAWARENESS),
-                     TtaGetMessage (AMAYA, AM_DAV_AWARENESS_ONEXIT));
-      GetDAVConf();
-      break;
-      
-    case WM_CLOSE:
-    case WM_DESTROY:
-      /* reset the status flag */
-      DAVDlg = NULL;
-      EndDialog (hwnDlg, ID_DONE);
-      break;
-
-    case WM_COMMAND:
-      if (HIWORD (wParam) == EN_UPDATE)
-        {
-          switch (LOWORD (wParam))
-            {
-            case IDC_DAVUSER:
-              GetDlgItemText (hwnDlg, IDC_DAVUSER, GProp_DAV.textUserReference,
-                              MAX_LENGTH - 1);
-              break;
-            case IDC_DAVRESOURCES:
-              GetDlgItemText (hwnDlg, IDC_DAVRESOURCES, GProp_DAV.textUserResources,
-                              MAX_LENGTH - 1);
-              break;
-            case IDC_TIMEOUT_VALUE:
-              GProp_DAV.numberTimeout = GetDlgItemInt (hwnDlg, IDC_TIMEOUT_VALUE,
-                                                       FALSE, FALSE);
-              break;
-            }
-        }
-      switch (LOWORD (wParam))
-        {
-          /* toggle buttons */
-        case IDC_ZERO_DAVDEPTH:
-          strcpy (GProp_DAV.radioDepth, "0");
-          CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH,
-                            IDC_ZERO_DAVDEPTH);
-          break;
-        case IDC_INFINITE_DAVDEPTH:
-          strcpy (GProp_DAV.radioDepth, "infinity");
-          CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH,
-                            IDC_INFINITE_DAVDEPTH);
-          break;
-        case IDC_EXCLUSIVE_DAVSCOPE:
-          strcpy (GProp_DAV.radioLockScope, "exclusive");
-          CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
-                            IDC_EXCLUSIVE_DAVSCOPE);
-          break;
-        case IDC_SHARED_DAVSCOPE:
-          strcpy (GProp_DAV.radioLockScope, "shared");
-          CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
-                            IDC_SHARED_DAVSCOPE);
-          break;
-        case IDC_INFINITE_DAVTIMEOUT:
-          strcpy (GProp_DAV.radioTimeout, "Infinite");
-          CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
-                            IDC_INFINITE_DAVTIMEOUT);
-          break;
-        case IDC_OTHER_DAVTIMEOUT:
-          strcpy (GProp_DAV.radioTimeout, "Second-");
-          CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
-                            IDC_OTHER_DAVTIMEOUT);
-          break;
-        case IDC_GENERAL_DAVAWARENESS:
-          GProp_DAV.toggleAwareness1 = !(GProp_DAV.toggleAwareness1);
-          break;
-        case IDC_EXIT_DAVAWARENESS:
-          GProp_DAV.toggleAwareness2 = !(GProp_DAV.toggleAwareness2);
-          break;
-
-          /* action buttons */
-        case ID_APPLY:
-          SetDAVConf();
-          /* reset the status flag */
-          EndDialog (hwnDlg, ID_DONE);
-          break;
-        case ID_DONE:
-        case IDCANCEL:
-          /* reset the status flag */
-          DAVDlg = NULL;
-          EndDialog (hwnDlg, ID_DONE);
-          break;
-        case ID_DEFAULTS:
-          GetDAVConf();
-          break;
-        }
-      break;	     
-    default: return FALSE;
-    }
-  return TRUE;
-}
-#else /* _WINGUI */
 /*----------------------------------------------------------------------
   DAVPreferencesDlg_callback : callback for the DAV preferences dialog
   ---------------------------------------------------------------------- */
@@ -1162,9 +822,6 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
             case 1:
               SetDAVConf();
             case 0:
-#ifndef _WX
-              TtaDestroyDialogue (DAVBase + DAVPreferencesDlg);
-#endif /* _WX */
               break;
             case 2:
               /*reset to old values */
@@ -1220,22 +877,9 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
               break;
             }
           break;
-	  
-        case DAVtoggleAwareness :
-          switch ((long int)data) 
-            {
-            case 0:
-              GProp_DAV.toggleAwareness1 = !GProp_DAV.toggleAwareness1;
-              break;
-            case 1:
-              GProp_DAV.toggleAwareness2 = !GProp_DAV.toggleAwareness2;
-              break;
-            }
-          break;
         }
     }
 }
-#endif /* _WINGUI */
 
 
 /*----------------------------------------------------------------------
@@ -1243,88 +887,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
   ---------------------------------------------------------------------- */
 void InitDAVPreferences ()
 {
-#ifndef _WINGUI
   DAVBase = TtaSetCallback ((Proc)DAVPreferencesDlg_callback,
                             MAX_DAVPREF_DLG);
-#endif /* _WINGUI */
 }
 
-/*----------------------------------------------------------------------
-  DAVShowPreferencesDlg: shows the DAV preferences dialog
-  ---------------------------------------------------------------------- */
-void DAVShowPreferencesDlg (Document document)
-{
-#ifdef _GTK
-  char buf[MAX_LENGTH];
-    
-  sprintf (buf,"%s%c%s%c",TtaGetMessage (AMAYA, AM_APPLY_BUTTON),EOS,
-           TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON),EOS);
-  TtaNewSheet (DAVBase + DAVPreferencesDlg, 
-               TtaGetViewFrame (document, DAV_VIEW),
-               TtaGetMessage (AMAYA, AM_DAV_PREFERENCES),
-               2, buf, TRUE, 3, 'L', D_DONE);
-    
-  /* first line */
-  TtaNewTextForm (DAVBase + DAVtextUserReference,
-                  DAVBase + DAVPreferencesDlg,
-                  TtaGetMessage (AMAYA, AM_DAV_USER_URL),
-                  40, 1, FALSE);
-  TtaNewLabel (DAVBase + DAVlabelEmpty1,DAVBase + DAVPreferencesDlg, " ");
-  TtaNewLabel (DAVBase + DAVlabelEmpty2,DAVBase + DAVPreferencesDlg, " ");
-  
-  /* second line */
-  sprintf (buf, "B0%cB%s%c", EOS,TtaGetMessage (AMAYA, AM_DAV_DEPTH_INFINITY), EOS);
-  TtaNewSubmenu (DAVBase + DAVradioDepth,
-                 DAVBase + DAVPreferencesDlg,
-                 0, TtaGetMessage (AMAYA, AM_DAV_DEPTH), 2, buf, NULL, 0, FALSE);
-  sprintf (buf, "B%s%cB%s%c",TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_INFINITE),EOS,
-           TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_OTHER), EOS);
-  TtaNewSubmenu (DAVBase + DAVradioTimeout,
-                 DAVBase + DAVPreferencesDlg,
-                 0,TtaGetMessage (AMAYA, AM_DAV_TIMEOUT), 2, buf, NULL, 0,FALSE);
-  TtaNewNumberForm (DAVBase + DAVnumberTimeout,
-                    DAVBase + DAVPreferencesDlg,
-                    "", 300,9999, FALSE);  
-  
-  /* third line */
-  sprintf (buf, "B%s%cB%s%c",TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_EXCLUSIVE), EOS, 
-           TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_SHARED), EOS);
-  TtaNewSubmenu (DAVBase + DAVradioLockScope,
-                 DAVBase + DAVPreferencesDlg,
-                 0, TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE), 2, buf, NULL, 0, FALSE);
-  TtaNewLabel (DAVBase + DAVlabelEmpty3,DAVBase + DAVPreferencesDlg, " ");
-  TtaNewLabel (DAVBase + DAVlabelEmpty4,DAVBase + DAVPreferencesDlg, " ");
-  
-  /* fourth line */
-  sprintf (buf, "B%s%cB%s%c", TtaGetMessage (AMAYA, AM_DAV_AWARENESS_GENERAL), EOS, 
-           TtaGetMessage (AMAYA, AM_DAV_AWARENESS_ONEXIT), EOS);
-  TtaNewToggleMenu (DAVBase + DAVtoggleAwareness,
-                    DAVBase + DAVPreferencesDlg,
-                    TtaGetMessage (AMAYA, AM_DAV_AWARENESS), 2, buf, NULL, TRUE);
-  TtaNewLabel (DAVBase + DAVlabelEmpty5,DAVBase + DAVPreferencesDlg, "    ");
-  TtaNewLabel (DAVBase + DAVlabelEmpty6,DAVBase + DAVPreferencesDlg, "    ");
-  
-  /* fifth line */
-  TtaNewTextForm (DAVBase + DAVtextUserResources,
-                  DAVBase + DAVPreferencesDlg,
-                  TtaGetMessage (AMAYA, AM_DAV_USER_RESOURCES),
-                  40, 1, FALSE);
-  
-  /* get the active values and set the dialogue variables */
-  GetDAVConf();
-  
-  /* show the dialogue */
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (DAVBase + DAVPreferencesDlg, TRUE, TRUE);
-#endif /* _GTK */
-#ifdef _WINGUI
-  if (!DAVDlg)
-    /* only activate the menu if it isn't active already */
-    DialogBox (hInstance, MAKEINTRESOURCE (DAVCONFMENU), NULL,
-               (DLGPROC) WIN_DAVPreferencesDlg);
-  else
-    SetFocus (DAVDlg);
-#endif /* _WINGUI */
-#ifdef _WX
-#endif /* _WX */
-}

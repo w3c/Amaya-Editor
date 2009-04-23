@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1999-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1999-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -204,8 +204,6 @@ typedef struct Prop_DAV_t
   char radioTimeout[MAX_LENGTH];
   int  numberTimeout;
   char radioLockScope[MAX_LENGTH];
-  ThotBool toggleAwareness1;
-  ThotBool toggleAwareness2;
 } Prop_DAV;
 
 typedef struct Prop_Templates_Path_t {

@@ -272,152 +272,153 @@
 270 Gebruik het pijltje helemaal rechts ter hoogte van de tabbladen om eenvoudig een ander document te selecteren.
 271 Als u Doelen selecteert in het menu Beeld, worden doelen voor koppelingen duidelijk gemarkeerd in het venster met opgemaakte tekst. Dit is handig als u een nieuwe koppeling wilt maken: u kunt het doel eenvoudig aangeven door erop te klikken.
 272 Als u een SVG-object roteert, wordt het middelpunt ervan met een kruis aangegeven. U kunt het met de muis verplaatsen.
-273 Elementaire SVG-vormen kunt u met handgrepen bewerken. Een blauwe driehoek of groen vierkant geeft aan dat u de afmetingen kunt wijzigen. Een rode cirkel bij een <rect/>-element geeft aan dat u de straal van afgeronde hoeken kunt aanpassen.
-274 Als u in SVG lijnen trekt en daarbij Shift ingedrukt houdt, worden de lijnen geplaatst onder vaste hoeken van telkens 15°. Dit is handig als u zeker wilt zijn dat de lijnen recht zijn.
-275 Houd Shift ingedrukt als u de afmeting van een afbeelding of SVG-object wilt veranderen zonder de beeldverhoudingen te wijzigen.
-276 U kunt de taal voor menu's in Amaya instellen in het menu Bewerken > Voorkeuren > Menutaal.
-277 Klassiek
-278 Modern
-279 Geen thema
-280 Titel of beschrijving
-281 Maak een beschrijving
-282 Vierkant
-283 Afgerond vierkant
-284 Rechthoek
-285 Afgeronde rechthoek
-286 Ruit
-287 Parallellogram
-288 Trapezium
-289 Gelijkbenige driehoek
-290 Gelijkzijdige driehoek
-291 Rechthoekige driehoek
-292 Cirkel
-293 Ellips
-294 Lijn
-295 Pijl
-296 Dubbele pijl
-297 Zigzag
-298 Groeperen
-299 Groepering opheffen
-300 Naar voren
-301 Naar achteren
-302 Een laag omhoog
-303 Een laag omlaag
-304 90° linksom
-305 90° rechtsom
-306 Roteren
-307 Verticaal spiegelen
-308 Horizontaal spiegelen
-309 Afmetingen aanpassen
-310 Hellen
-311 Verplaatsen
-312 Onder uitlijnen
-313 Centrum uitlijnen
-314 Links uitlijnen
-315 Midden uitlijnen
-316 Rechts uitlijnen
-317 Boven uitlijnen
-318 Onder spreiden
-319 Centrum spreiden
-320 Links spreiden
-321 Midden spreiden
-322 Rechts spreiden
-323 Boven spreiden
-324 Verticale tussenruimte spreiden
-325 Horizontale tussenruimte spreiden
-326 Gesloten Bézierkromme
-327 Bézierkromme
-328 Gebroken lijn
-329 Veelhoek
-330 Extern object
-331 Afbeelding
-332 SVG-canvas
-333 Tekst
-334 Kegel
-335 Kubus
-336 Cilinder
-337 Octaëder
-338 Parallellepipedum
-339 Piramide
-340 Bekerglas
-341 Trechter
-342 Bunsenbrander
-343 Afzuigerlenmeyer
-344 Rondbodemkolf
-345 Buret
-346 Erlenmeyer
-347 Reageerbuis
-348 Pipet
-349 Rechthoekige toelichting
-350 Toelichting in afgeronde rechthoek
-351 Ovale toelichting
-352 Schreeuw
-353 Gedachte
-354 Condensator
-355 Stroombron
-356 Diode
-357 Aarde
-358 Spoel
-359 Led
-360 Operationele versterker (opamp)
-361 Weerstand
-362 Schakelaar
-363 Transistor
-364 Spanningsbron
-365 Zenerdiode
-366 Regelmatige vijfhoek
-367 Regelmatige zeshoek
-368 Regelmatige zevenhoek
-369 Regelmatige achthoek
-370 Ster met vier punten
-371 Ster met vijf punten
-372 Ster met zes punten
-373 AND
-374 NAND
-375 OR
-376 NOR
-377 XOR
-378 XNOR
-379 NOT
-380 Kruis
-381 Kader
-382 Ring
-383 Wolk
-384 Rol
-385 Zon
-386 Bliksem
-387 Maan
-388 Smiley (lachend)
-389 Hart
-390 Bloem
-391 Verboden
-392 Gebogen Y-pijl in twee richtingen
-393 Toelichting met pijl in drie richtingen
-394 Pijl in drie richtingen
-395 Toelichting met pijl in vier richtingen
-396 Pijl in vier richtingen
-397 Ingekeepte balkpijl
-398 Gekromde pijl
-399 Hoekpijl
-400 Toelichting met hoekpijl in twee richtingen
-401 Hoekpijl in twee richtingen
-402 Toelichting met pijl in twee richtingen
-403 Pijl in twee richtingen
-404 Ingekeepte pijl
-405 Gebogen pijl
-406 Toelichting met pijl
-407 Pijl
-408 Y-pijl in twee richtingen
-409 S-pijl
-410 Gestreepte pijl
-411 Sjabloon maken van huidige document
-412 Tekstveld maken
-413 Component of element gebruiken
-414 Component maken en gebruiken
-415 Huidige gebruik herhalen
-416 Component maken en herhalen
-417 Verzamelveld maken
-418 Nieuwe typenverbinding maken
-419 Knop omhoog om te sluiten
-420 Dubbelklikken om te sluiten
-421 Klikken om te sluiten
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
+274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
+275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
+277 **Classic
+278 **Modern
+279 **No theme
+280 **Title/Description
+281 **Generate a description
+282 **Square
+283 **Rounded Square
+284 **Rectangle
+285 **Rounded rectangle
+286 **Diamond
+287 **Parallelogram
+288 **Trapezium
+289 **Equilateral triangle
+290 **Isosceles triangle
+291 **Right triangle
+292 **Circle
+293 **Ellipse
+294 **Line
+295 **Arrow
+296 **Double Arrow
+297 **Zigzag
+298 **Group
+299 **Ungroup
+300 **Bring to front
+301 **Send to back
+302 **One level up
+303 **One level down
+304 **90° left
+305 **90° right
+306 **Rotate
+307 **Vertical symmetry
+308 **Horizontal symmetry
+309 **Scale
+310 **Skew
+311 **Move
+312 **Align bottom
+313 **Align center
+314 **Align left
+315 **Align middle
+316 **Align right
+317 **Align top
+318 **Distribute bottom
+319 **Distribute center
+320 **Distribute left
+321 **Distribute middle
+322 **Distribute right
+323 **Distribute top
+324 **Distribute vertical spacing
+325 **Distribute horizontal spacing
+326 **Closed Bezier curve
+327 **Bezier curve
+328 **Polyline
+329 **Polygon
+330 **Foreign Object
+331 **Image
+332 **SVG Canvas
+333 **Text
+334 **Cone
+335 **Cube
+336 **Cylinder
+337 **Octahedron
+338 **Parallelepiped
+339 **Pyramid
+340 **Beaker
+341 **Funnel
+342 **Bunsen burner
+343 **Buchner flask
+344 **Boiling flask
+345 **Burette
+346 **Erlenmeyer flask
+347 **Test tube
+348 **Pipette
+349 **Rectangular
+350 **Rounded rectangular
+351 **Round
+352 **Scream
+353 **Thought
+354 **Capacitor
+355 **Power source
+356 **Diode
+357 **Ground Point
+358 **Inductor
+359 **LED
+360 **Op-amp
+361 **Resistor
+362 **Switch
+363 **Transistor
+364 **Voltage source
+365 **Zener diode
+366 **Pentagon
+367 **Hexagon
+368 **Heptagon
+369 **Octogon
+370 **Star (4 branches)
+371 **Star (5 branches)
+372 **Star (6 branches)
+373 **AND
+374 **NAND
+375 **OR
+376 **NOR
+377 **XOR
+378 **XNOR
+379 **NOT
+380 **Cross
+381 **Frame
+382 **Ring
+383 **Cloud
+384 **Scroll
+385 **Sun
+386 **Lightning_Bolt
+387 **Moon
+388 **Smiley
+389 **Heart
+390 **Flower
+391 **Prohibited
+392 **Pentagon
+393 **2-Way Rounded Arrow
+394 **3-Way Arrow Callout
+395 **3-Way Arrow
+396 **4-Way_Arrow_Callout
+397 **4-Way Arrow
+398 **Chevron
+399 **Circular Arrow
+400 **Corner Arrow
+401 **Corner Double Arrow Callout
+402 **Corner Double Arrow
+403 **Double Arrow Callout
+404 **Double Arrow
+405 **Notched Arrow
+406 **Rounded Arrow
+407 **Simple Arrow Callout
+408 **Simple Arrow
+409 **Split Arrow
+410 **S-Shape Arrow
+411 **Striped Arrow
+412 **Create template from current document
+413 **Create a text area
+414 **Use a component or an element
+415 **Create and use a component
+416 **Repeat the current use
+417 **Create and repeat a component
+418 **Create a free editing box
+419 **Create a new types union
+420 **Button up to close
+421 **Double click to close
+422 **Click to close

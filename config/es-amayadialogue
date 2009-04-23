@@ -332,26 +332,23 @@
 330 &Filtro local...
 331 &Cooperación
 332 Bloquear recurso
-333 Desbloquear recurso...
-334 Ver propiedades del recurso...
-335 Copiar información de bloqueo
-336 ¿Bloqueado?
-337 Plantillas
-338 Crear plantilla a partir de documento actual
-339 Crear área de texto
-340 Usar componente o elemento
-341 Crear y usar componente
-342 Repetir uso actual
-343 Crear y repetir componente
-344 Crear caja de edición libre
-345 Crear nueva unión de tipos
-346 &Javascript/DOM
-347 Activar/Desactivar
-348 Ejecutar un comando
-349 Ejecutar un script externo
-350 Añadir un script externo
-351 Insertar un script
-352 Buscar actualizaciones
-353 Ayuda Amaya...
-354 Sugerencia del día...
-355 Acerca de Amaya
+333 Copiar información de bloqueo
+334 Plantillas
+335 Crear plantilla a partir de documento actual
+336 Crear área de texto
+337 Usar componente o elemento
+338 Crear y usar componente
+339 Repetir uso actual
+340 Crear y repetir componente
+341 Crear caja de edición libre
+342 Crear nueva unión de tipos
+343 &Javascript/DOM
+344 Activar/Desactivar
+345 Ejecutar un comando
+346 Ejecutar un script externo
+347 Añadir un script externo
+348 Insertar un script
+349 Buscar actualizaciones
+350 Ayuda Amaya...
+351 Sugerencia del día...
+352 Acerca de Amaya
