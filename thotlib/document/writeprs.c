@@ -89,6 +89,19 @@ static void WriteBoolean (ThotBool b)
 }
 
 /*----------------------------------------------------------------------
+  WriteValueType							
+  ----------------------------------------------------------------------*/
+static void WriteValueType (PrValType t)
+{
+  if (t == PrConstStringValue)
+    TtaWriteByte (outfile, 'C');
+  else if (t == PrAttrValue)
+    TtaWriteByte (outfile, 'A');
+  else
+    TtaWriteByte (outfile, 'N');
+}
+
+/*----------------------------------------------------------------------
   WriteUnit ecrit une unite dans le fichier sur un octet          
   ----------------------------------------------------------------------*/
 static void WriteUnit (TypeUnit unit)
@@ -1074,7 +1087,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
             case PtStrokeOpacity:
             case PtStopOpacity:
             case PtListStyleImage:
-              WriteBoolean (currentRule->PrAttrValue);
+              WriteValueType (currentRule->PrValueType);
               WriteSignedShort (currentRule->PrIntValue);
               break;
             case PtFont:

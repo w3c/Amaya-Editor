@@ -1714,7 +1714,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       FrameTable[frame].FrView == 1)
     {
       bgbox = pAb->AbForeground;
-      fgbox = pAb->AbBackground;
+      if (pAb->AbGradientBackground)
+	/* this chunk of text should be painted with a gradient */
+	/* this is not yet implemented. Just paint it in black */
+	fgbox = 1;
+      else
+	fgbox = pAb->AbBackground;
     }
   else
     {

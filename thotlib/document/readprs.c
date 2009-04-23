@@ -1093,6 +1093,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
   DimensionRule      *pDim;
   Name                name;
   int                 i;
+  unsigned char       c;
 
   if (*pPRule != NULL && !error)
     /* pointeur sur la premiere regle qui va etre lue */
@@ -1234,7 +1235,13 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
                   case PtBorderBottomColor:
                   case PtBorderLeftColor:
                   case PtListStyleImage:
-                    TtaReadBool (file, &pPR->PrAttrValue);
+                    TtaReadByte (file, &c);
+		    if (c == 'C')
+		      pPR->PrValueType = PrConstStringValue;
+		    if (c == 'A')
+		      pPR->PrValueType = PrAttrValue;
+		    else
+		      pPR->PrValueType = PrNumValue;
                     TtaReadSignedShort (file, &pPR->PrIntValue);
                     break;
                   case PtFont:

@@ -128,7 +128,8 @@
 #define KWD_IsMarker 	1207
 #define KWD_IsGhost 	1208
 #define KWD_ColColRef 	1209
-#define KWD_Root 	1210
+#define KWD_UsePaintServer 	1210
+#define KWD_Root 	1211
 
 /*  RULES  */
 

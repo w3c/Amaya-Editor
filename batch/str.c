@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2008
+ *  (c) COPYRIGHT INRIA 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1763,6 +1763,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
         break;
       case KWD_IsMarker:
         ExceptionNum (ExcIsMarker, True, False, False, wi);
+        break;
+      case KWD_UsePaintServer:
+        ExceptionNum (ExcUsePaintServer, True, False, False, wi);
         break;
       case KWD_IsGhost:
         ExceptionNum (ExcIsGhost, True, False, False, wi);

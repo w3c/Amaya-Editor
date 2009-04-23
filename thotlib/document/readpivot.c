@@ -1760,7 +1760,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
           case PtStrokeOpacity:
           case PtStopOpacity:
           case PtListStyleImage:
-            pPRule->PrAttrValue = FALSE;
+            pPRule->PrValueType = PrNumValue;
             pPRule->PrIntValue = val;
             break;
           case PtBackground:
@@ -1771,7 +1771,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
           case PtBorderRightColor:
           case PtBorderBottomColor:
           case PtBorderLeftColor:
-            pPRule->PrAttrValue = FALSE;
+            pPRule->PrValueType = PrNumValue;
             /* convertit les couleurs des anciennes versions */
             if (pDoc->DocPivotVersion < 4)
               val = newColor[val];

@@ -2477,16 +2477,16 @@ EXCEPT
    defs:          NoMove, NoResize, NoShowBox, NoCreate;
    linearGradient:NoMove, NoResize, NoShowBox, NoCreate;
    stop:                NoMove, NoResize, NoShowBox, NoCreate;
-   rect:          MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   circle_:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   ellipse:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   rect:          MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
+   circle_:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
+   ellipse:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
    line_:         MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   polyline:      MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   polygon:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   path:                MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   polyline:      MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
+   polygon:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
+   path:                MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
    text_:         MoveResize, NoResize, NoShowBox, ReturnCreateWithin,
-                        NoCreate;
-   tspan:                NoShowBox; 
+                        NoCreate, UsePaintServer;
+   tspan:                NoShowBox, UsePaintServer; 
    use_:                NoMove, NoResize, HighlightChildren, NoShowBox,
                         NoCreate, IsGroup, EmptyGraphic;
    tref:                EmptyGraphic;

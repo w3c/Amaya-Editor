@@ -462,6 +462,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
   pAb->AbLineSpacing = 10;
   pAb->AbFillPattern = 0;
   pAb->AbBackground = DefaultBColor;	/* white */
+  pAb->AbGradientBackground = FALSE;
   pAb->AbForeground = DefaultFColor;	/* black */
   pAb->AbColor = DefaultFColor;         /* black */
   pAb->AbOpacity = 1000;       /* Full opaque*/
@@ -2527,7 +2528,8 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
           if (view == viewSch)
             {
               /* c'est la regle de la vue traitee */
-              vis = IntegerRule (pR, pEl, viewNb, &ok, &unit, NULL, NULL);
+              vis = IntegerRule (pR, pEl, viewNb, &ok, &unit, NULL, NULL,
+				 pSchP, pDoc);
               /* si la regle de visibilite n'a pas pu etre appliquee, */
               /* on prend la visibilite du pave de l'element createur */
               if (!ok)
@@ -4556,10 +4558,10 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
       pAttr = pAttr->AeNext;	/* next attribute for the element */
     }
 
-
   // apply the selected rule
   if (PriorRuleV)
-    *vis = IntegerRule (PriorRuleV, pEl, viewNb, &ok, &unit, PriorattrOfRuleV, NULL);
+    *vis = IntegerRule (PriorRuleV, pEl, viewNb, &ok, &unit, PriorattrOfRuleV,
+			NULL, NULL, pDoc);
   if (PriorRuleD)
     {
       val = CharRule (PriorRuleD, pEl, viewNb, &ok);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 2003-2007
+ *  (c) COPYRIGHT INRIA, 2003-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -355,7 +355,8 @@ static void ApplyFillColorToAllBoxes (PtrAbstractBox pAb, int result)
   while (pAb)
     {      
       pAb->AbBox->VisibleModification = TRUE;
-      pAb->AbBackground = result; 
+      pAb->AbBackground = result;
+      pAb->AbGradientBackground = FALSE;
       ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }

@@ -126,6 +126,7 @@ typedef int        *PRule;
 #define VALUE_AUTO      12      /* not a unit: value = auto     */
 #define VALUE_INHERIT   13      /* not a unit: value = inherit  */
 #define VALUE_CURRENT   14      /* not a unit: value = currentColor  */
+#define VALUE_URL       15      /* not a unit: value = url(...)  */
 
 /* values for rules PRBorderStyle */
 #define BorderStyleNone 1

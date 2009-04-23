@@ -218,25 +218,6 @@ static float ParseFloatAttribute (Attribute attr)
 }
 
 /*----------------------------------------------------------------------
-  SVGhandleFillUrl
-  ----------------------------------------------------------------------*/
-void SVGhandleFillUrl (Element el, Document doc, char *text)
-{
-  Element            refElement;
-
-  /* look for an element with an id attribute with the same value as
-     the uri in the fill attribute value */
-  refElement = GetElementFromUri (el, doc, text);
-  if (!refElement)
-    /* the referred element was not found. It may be a forward reference
-       to an element that has not been parsed yet. We should retry when
-       the document is complete. */
-    SetAttributeOnRoot (el, SVG_ATTR_UnresolvedRef, doc);
-  else
-    TtaLinkGradient (refElement, el);
-}
-
-/*----------------------------------------------------------------------
   ParseCSSequivAttribute
   Create or update a specific presentation rule for element el that reflects
   the value of attribute attr, which is equivalent to a CSS property (fill,

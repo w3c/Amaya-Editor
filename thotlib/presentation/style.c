@@ -1276,7 +1276,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrInhUnit = UnRelative;
       return;
     }
-  if (val.typed_data.unit == VALUE_CURRENT)
+  else if (val.typed_data.unit == VALUE_CURRENT)
     /* the CSS value is "currentColor". Create an equivalent PRule */
     {
       rule->PrPresMode = PresCurrentColor;
@@ -1383,7 +1383,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtVisibility:
     case PtDepth:
     case PtFillPattern:
-    case PtBackground:
     case PtForeground:
     case PtColor:
     case PtStopColor:
@@ -1395,10 +1394,17 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtStrokeOpacity:
     case PtFillOpacity:
     case PtStopOpacity:
-      rule->PrAttrValue = FALSE;
+      rule->PrValueType = PrNumValue;
       rule->PrIntValue = value;
       break;
-   case PtVis:
+    case PtBackground:
+      if (unit == VALUE_URL)
+	rule->PrValueType = PrConstStringValue;
+      else
+	rule->PrValueType = PrNumValue;
+      rule->PrIntValue = value;
+      break;
+    case PtVis:
       switch (value)
         {
         case VsHidden:
@@ -3126,12 +3132,19 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
               if (type == PRBackgroundPicture ||
                   (type == PRListStyleImage &&
                    v.typed_data.value != 0 &&
-                   v.typed_data.unit != VALUE_INHERIT))
+                   v.typed_data.unit != VALUE_INHERIT) ||
+		  (type == PRBackground && v.typed_data.unit == VALUE_URL))
                 {
                   if (!generic)
-                    tsch = (PSchema) PresentationSchema (((PtrElement)el)->ElStructSchema, LoadedDocument[doc - 1]);
-                  cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
-                  v.typed_data.unit = UNIT_REL;
+                    tsch = (PSchema) PresentationSchema
+                    (((PtrElement)el)->ElStructSchema, LoadedDocument[doc - 1]);
+		  if (type == PRBackground)
+		    cst = PresConstInsert (tsch, (char *)v.pointer, CharString);
+		  else
+		    {
+		      cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
+		      v.typed_data.unit = UNIT_REL;
+		    }
                   v.typed_data.value = cst;
                   v.typed_data.real = FALSE;
                   v.typed_data.mainValue = TRUE;

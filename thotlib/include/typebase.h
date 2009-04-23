@@ -31,6 +31,7 @@ typedef enum
      UnPixel,
      UnPercent,
      UnAuto,
+     UnGradient,
      UnUndefined
   }
 TypeUnit;

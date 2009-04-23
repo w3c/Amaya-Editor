@@ -110,21 +110,20 @@ Except =	 ExceptType ':' ExValList .
 ExceptType =	 BasicType / [ 'EXTERN' ] [ FirstSec ] ElemName / AttrName / ConstName .
 ExValList =	 ExceptVal < ',' ExceptVal > .
 ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
-     'NoHMove' / 'NoVMove' / 'NoMove' /
-		 'NoHResize' / 'NoVResize' / 'NoResize' /
-     'MoveResize' /
+                 'NoHMove' / 'NoVMove' / 'NoMove' /
+		 'NoHResize' / 'NoVResize' / 'NoResize' / 'MoveResize' /
 		 'NewWidth' / 'NewHeight' / 'NewPercentWidth' /
 		 'NewHPos' / 'NewVPos' /
-     'Invisible' / 'Hidden' /
-	   'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
-	   'PageBreakRepetition' / 'PageBreakRepBefore' /
-     'NoPaginate' / 'NoSpellCheck' /
+                 'Invisible' / 'Hidden' /
+	         'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
+	         'PageBreakRepetition' / 'PageBreakRepBefore' /
+                 'NoPaginate' / 'NoSpellCheck' /
 		 'ActiveRef' /  'NoSelect' /
-     'HighlightChildren' / 'ExtendedSelection' /
-     'SelectParent' / 'ClickableSurface' /
+                 'HighlightChildren' / 'ExtendedSelection' /
+                 'SelectParent' / 'ClickableSurface' /
 		 'ParagraphBreak' / 'IsBreak' / 'ListItemBreak' /
 		 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
-     'ImportLine' / 'ImportParagraph' /
+                 'ImportLine' / 'ImportParagraph' /
 		 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
 		 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' / 'IsCaption' /
 		 'ColRef' / 'ColSpan' / 'RowSpan' /
@@ -133,9 +132,9 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 		 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
 		 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
-     'IsImg' / 'IsMap' / 'DuplicateAttr' / 'PseudoParag' /
-     'GiveName' / 'NewRoot' / 'GiveTypes' / 'IsMarker' / 'IsGhost' /
-		 'ColColRef' / ExceptNum .
+                 'IsImg' / 'IsMap' / 'DuplicateAttr' / 'PseudoParag' /
+                 'GiveName' / 'NewRoot' / 'GiveTypes' / 'IsMarker' / 'IsGhost' /
+		 'ColColRef' / 'UsePaintServer' / ExceptNum .
 ExceptNum =	 NUMBER .
 
 ExtensList =     Extens ';' < Extens ';' > .

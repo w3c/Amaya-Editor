@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -74,7 +74,7 @@
 #define ExcCheckAllChars 48
 #define ExcListItemBreak 49
 
-/* Draw exceptions */
+/* SVG exceptions */
 #define ExcIsMarker 309
 #define ExcSelectParent 310
 #define ExcHighlightChildren 311
@@ -112,11 +112,12 @@
 #define ExcIsGroup 346
 #define ExcSpacePreserve 347
 #define ExcNewRoot 348
+#define ExcUsePaintServer 349
 
 /* Template exceptions */
-#define ExcGiveName  349
-#define ExcGiveTypes 350
-#define ExcIsGhost 351
+#define ExcGiveName  370
+#define ExcGiveTypes 371
+#define ExcIsGhost 372
 
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400

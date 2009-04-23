@@ -1390,7 +1390,7 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
         case PtDepth:
           ((PtrPRule) pRule)->PrPresMode = PresImmediate;
           ((PtrPRule) pRule)->PrIntValue = value;
-          ((PtrPRule) pRule)->PrAttrValue = FALSE;
+          ((PtrPRule) pRule)->PrValueType = PrNumValue;
           break;
         case PtVisibility:
         case PtFillPattern:
@@ -1408,7 +1408,7 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
             {
               ((PtrPRule) pRule)->PrPresMode = PresImmediate;
               ((PtrPRule) pRule)->PrIntValue = value;
-              ((PtrPRule) pRule)->PrAttrValue = FALSE;
+              ((PtrPRule) pRule)->PrValueType = PrNumValue;
             }
           break;
         case PtVis:
@@ -1446,7 +1446,7 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
             {
               ((PtrPRule) pRule)->PrPresMode = PresImmediate;
               ((PtrPRule) pRule)->PrIntValue = value;
-              ((PtrPRule) pRule)->PrAttrValue = FALSE;
+              ((PtrPRule) pRule)->PrValueType = PrNumValue;
             }
           break;
 
@@ -3660,7 +3660,7 @@ int TtaSamePRules (PRule pRule1, PRule pRule2)
                     case PtBorderRightColor:
                     case PtBorderBottomColor:
                     case PtBorderLeftColor:
-                      if (pR1->PrAttrValue == pR2->PrAttrValue)
+                      if (pR1->PrValueType == pR2->PrValueType)
                         if (pR1->PrIntValue == pR2->PrIntValue)
                           result = 1;
                       break;

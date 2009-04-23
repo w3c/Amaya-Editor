@@ -584,7 +584,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
               switch (pAttr1->AttrType)
                 {
                 case AtNumAttr:
-                  fprintf (fileDescriptor, "%d", pAttr->AeAttrValue);
+                  fprintf (fileDescriptor, "%d", (int)pAttr->AeAttrValue);
                   break;
                 case AtTextAttr:
                   if (pAttr->AeAttrText)
@@ -1156,7 +1156,10 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
       for (j = 1; j <= Indent + 6; j++)
         fprintf (fileDescriptor, " ");
       fprintf (fileDescriptor, "Pattern:%d", pAb->AbFillPattern);
-      fprintf (fileDescriptor, " Background:%d", pAb->AbBackground);
+      if (pAb->AbGradientBackground)
+	fprintf (fileDescriptor, " Gradient: Const%d", pAb->AbBackground);
+      else
+	fprintf (fileDescriptor, " Background:%d", pAb->AbBackground);
       fprintf (fileDescriptor, " Foreground:%d", pAb->AbForeground);
       fprintf (fileDescriptor, " Color:%d", pAb->AbColor);
       fprintf (fileDescriptor, " StopColor:%d", pAb->AbStopColor);
@@ -2942,10 +2945,15 @@ static void wrnbherit (PtrPRule pR, FILE *fileDescriptor)
   else if (pR->PrPresMode == PresCurrentColor)
     fprintf (fileDescriptor, "currentColor");
   else if (pR->PrPresMode == PresImmediate)
-    if (pR->PrAttrValue)
+    if (pR->PrValueType == PrAttrValue)
       wrattrname (pR->PrIntValue, fileDescriptor);
-    else
+    else if (pR->PrValueType == PrNumValue)
       wrnumber (pR->PrIntValue, fileDescriptor);
+    else if (pR->PrValueType == PrConstStringValue)
+      {
+	fprintf (fileDescriptor, "Cste");
+	wrnumber (pR->PrIntValue, fileDescriptor);
+      }
   else
     fprintf (fileDescriptor, "??????");
   fprintf (fileDescriptor, ";");
@@ -3589,7 +3597,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
         case PtBorderTopColor:
           fprintf (fileDescriptor, "BorderTopColor: ");
           if (RP->PrPresMode == PresImmediate &&
-              !RP->PrAttrValue && RP->PrIntValue == -2)
+              RP->PrValueType == PrNumValue && RP->PrIntValue == -2)
             fprintf (fileDescriptor, "transparent");
           else
             wrnbherit (RP, fileDescriptor);
@@ -3597,7 +3605,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
         case PtBorderRightColor:
           fprintf (fileDescriptor, "BorderRightColor: ");
           if (RP->PrPresMode == PresImmediate &&
-              !RP->PrAttrValue && RP->PrIntValue == -2)
+              RP->PrValueType == PrNumValue && RP->PrIntValue == -2)
             fprintf (fileDescriptor, "transparent");
           else
             wrnbherit (RP, fileDescriptor);
@@ -3605,7 +3613,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
         case PtBorderBottomColor:
           fprintf (fileDescriptor, "BorderBottomColor: ");
           if (RP->PrPresMode == PresImmediate &&
-              !RP->PrAttrValue && RP->PrIntValue == -2)
+              RP->PrValueType == PrNumValue && RP->PrIntValue == -2)
             fprintf (fileDescriptor, "transparent");
           else
             wrnbherit (RP, fileDescriptor);
@@ -3613,7 +3621,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
         case PtBorderLeftColor:
           fprintf (fileDescriptor, "BorderLeftColor: ");
           if (RP->PrPresMode == PresImmediate &&
-              !RP->PrAttrValue && RP->PrIntValue == -2)
+              RP->PrValueType == PrNumValue && RP->PrIntValue == -2)
             fprintf (fileDescriptor, "transparent");
           else
             wrnbherit (RP, fileDescriptor);
@@ -3805,7 +3813,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
               }
           else if (RP->PrPresMode == PresImmediate)
            {
-            if (RP->PrAttrValue)
+            if (RP->PrValueType != PrNumValue)
               fprintf (fileDescriptor, "??");
             else
               if (RP->PrIntValue == 0)

@@ -602,10 +602,15 @@ static void         wrnbherit (PtrPRule pR)
           }
       }
   else if (pR->PrPresMode == PresImmediate)
-    if (pR->PrAttrValue)
+    if (pR->PrValueType == PrAttrValue)
       wrnomattr (pR->PrIntValue);
-    else
+    else if (pR->PrValueType == PrNumValue)
       wrnb (pR->PrIntValue);
+    else if (pR->PrValueType == PrConstStringValue)
+      {
+	printf ("Cste");
+	wrnb (pR->PrIntValue);
+      }
   else
     printf ("??????");
   printf (";");
@@ -1240,10 +1245,10 @@ static void         wrsuiteregles (PtrPRule RP)
         case PtBorderTopColor:
           printf ("BorderTopColor: ");
           if (RP->PrPresMode == PresImmediate &&
-              !RP->PrAttrValue && RP->PrIntValue == -2)
+              RP->PrValueType == PrNumValue && RP->PrIntValue == -2)
             printf ("transparent;");
           else if (RP->PrPresMode == PresImmediate &&
-                   !RP->PrAttrValue && RP->PrIntValue == -1)
+                   RP->PrValueType == PrNumValue && RP->PrIntValue == -1)
             printf ("foreground;");
           else
             wrnbherit (RP);
@@ -1251,10 +1256,10 @@ static void         wrsuiteregles (PtrPRule RP)
         case PtBorderRightColor:
           printf ("BorderRightColor: ");
           if (RP->PrPresMode == PresImmediate &&
-              !RP->PrAttrValue && RP->PrIntValue == -2)
+              RP->PrValueType == PrNumValue && RP->PrIntValue == -2)
             printf ("transparent;");
           else if (RP->PrPresMode == PresImmediate &&
-                   !RP->PrAttrValue && RP->PrIntValue == -1)
+                   RP->PrValueType == PrNumValue && RP->PrIntValue == -1)
             printf ("foreground;");
           else
             wrnbherit (RP);
@@ -1262,10 +1267,10 @@ static void         wrsuiteregles (PtrPRule RP)
         case PtBorderBottomColor:
           printf ("BorderBottomColor: ");
           if (RP->PrPresMode == PresImmediate &&
-              !RP->PrAttrValue && RP->PrIntValue == -2)
+              RP->PrValueType == PrNumValue && RP->PrIntValue == -2)
             printf ("transparent;");
           else if (RP->PrPresMode == PresImmediate &&
-                   !RP->PrAttrValue && RP->PrIntValue == -1)
+                   RP->PrValueType == PrNumValue && RP->PrIntValue == -1)
             printf ("foreground;");
           else
             wrnbherit (RP);
@@ -1273,10 +1278,10 @@ static void         wrsuiteregles (PtrPRule RP)
         case PtBorderLeftColor:
           printf ("BorderLeftColor: ");
           if (RP->PrPresMode == PresImmediate &&
-              !RP->PrAttrValue && RP->PrIntValue == -2)
+              RP->PrValueType == PrNumValue && RP->PrIntValue == -2)
             printf ("transparent;");
           else if (RP->PrPresMode == PresImmediate &&
-                   !RP->PrAttrValue && RP->PrIntValue == -1)
+                   RP->PrValueType == PrNumValue && RP->PrIntValue == -1)
             printf ("foreground;");
           else
             wrnbherit (RP);

@@ -4812,6 +4812,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
   PresentationValue     best;
   char                  *url;
 
+  url = NULL;
   best.typed_data.unit = UNIT_INVALID;
   best.typed_data.real = FALSE;
   if (!strncasecmp (cssRule, "none", 4))
@@ -4837,17 +4838,10 @@ static char *ParseSVGFill (Element element, PSchema tsch,
     {  
       cssRule += 3;
       cssRule = ParseCSSUrl (cssRule, &url);
-      SVGhandleFillUrl (element, context->doc, url);
-      TtaFreeMemory (url);
-      if (DoApply)
-	{
-	  best.typed_data.value = PATTERN_BACKGROUND;
-	  best.typed_data.unit = UNIT_REL;
-	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
-	  /* **** caution: another color value may follow the uri (in case
-	     the uri could ne be dereferenced) *** */
-	}
-      return (cssRule);
+      best.typed_data.unit = VALUE_URL;
+      best.pointer = url;
+      /* @@@@ caution: another color value may follow the uri (in case
+	 the uri could not be dereferenced) @@@@ */
     }
   else
     cssRule = ParseCSSColor (cssRule, &best);
@@ -4856,6 +4850,8 @@ static char *ParseSVGFill (Element element, PSchema tsch,
     {
       /* install the new presentation. */
       TtaSetStylePresentation (PRBackground, element, tsch, context, best);
+      if (url)
+	TtaFreeMemory (url);
       /* thot specificity: need to set fill pattern for background color */
       best.typed_data.value = PATTERN_BACKGROUND;
       best.typed_data.unit = UNIT_REL;

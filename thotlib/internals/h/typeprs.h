@@ -430,6 +430,11 @@ typedef enum
   BtElement, BtBefore, BtAfter
 } GenBoxType;
 
+typedef enum
+{
+  PrNumValue, PrAttrValue, PrConstStringValue
+} PrValType;
+
 /* The presentation rules relative to an object are linked by means of
    the pointer PrNextPRule. This way the presentation rules of a type
    defined in the structure schema are linked, as well as the presentation
@@ -510,7 +515,7 @@ typedef struct _PresRule
 		   PtBorderBottomColor, PtBorderLeftColor,
 		   PtOpacity, PtFillOpacity, PtStrokeOpacity, PtStopOpacity */
 	{
-	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
+	  PrValType _PrValueType_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 
 	  int  _PrIntValue_;   /* Border colors: -2 means Transparent and
 				  -1 means "same color as foreground" */
@@ -576,7 +581,7 @@ typedef struct _PresRule
 #define PrNPresBoxes u.s1._PrNPresBoxes_
 #define PrPresBox u.s1._PrPresBox_
 #define PrPresBoxName u.s1._PrPresBoxName_
-#define PrAttrValue u.s2.u.s0._PrAttrValue_
+#define PrValueType u.s2.u.s0._PrValueType_
 #define PrIntValue u.s2.u.s0._PrIntValue_
 #define PrChrValue u.s2.u.s1._PrChrValue_
 #define PrMinUnit u.s2.u.s2._PrMinUnit_

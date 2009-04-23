@@ -2677,19 +2677,6 @@ void TtaSetGradientStopOpacity (float opacity, Element el)
 }
 
 /*----------------------------------------------------------------------
-  TtaLinkGradient
-  ----------------------------------------------------------------------*/
-void TtaLinkGradient (Element gradient, Element el)
-{
-#ifdef _GL
-  if (!el || !gradient)
-    return;
-  ((PtrElement)el)->ElGradient = ((PtrElement)gradient)->ElGradient;
-  ((PtrElement)el)->ElGradientDef = FALSE;
-#endif /* _GL */
-}
-
-/*----------------------------------------------------------------------
   TtaCopyGradientUse
   If the parent of element el refers to a gradient, move this reference
   to element el itself.

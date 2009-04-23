@@ -3867,7 +3867,8 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
                           /* the abstract box doesn't exist and it's a Visibility
                              rule */
                           if (typeRule == PtVisibility)
-                            val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr, NULL);
+                            val = IntegerRule (pR, pEl, view, &appl, &unit,
+					       pAttr, NULL, pSchP, pDoc);
                           else if (typeRule == PtDisplay)
                             {
                               if (CharRule (pR, pEl, view, &appl) == 'N')

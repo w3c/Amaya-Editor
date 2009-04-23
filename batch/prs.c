@@ -371,14 +371,14 @@ static void         CreatePRule (PRuleType t, indLine wi)
     case PtBorderRightColor:
     case PtBorderBottomColor:
     case PtBorderLeftColor:
-      CurRule->PrAttrValue = False;
+      CurRule->PrValueType = PrNumValue;
       CurRule->PrIntValue = 0;
       break;
     case PtOpacity:
     case PtStrokeOpacity:
     case PtFillOpacity:
     case PtStopOpacity:
-      CurRule->PrAttrValue = False;
+      CurRule->PrValueType = PrNumValue;
       CurRule->PrIntValue = 1000;
     case PtListStyleType:
       CurRule->PrChrValue = 'N';       /* None par defaut */
@@ -2233,7 +2233,7 @@ static void         CheckDefaultRules ()
       CreateDefaultRule ();
       CurRule->PrType = PtDepth;
       CurRule->PrPresMode = PresImmediate;
-      CurRule->PrAttrValue = False;
+      CurRule->PrValueType = PrNumValue;
       CurRule->PrIntValue = 0;
     }
   if (GetTypedRule (PtAdjust, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -2308,7 +2308,7 @@ static void         CheckDefaultRules ()
     {
       CreateDefaultRule ();
       CurRule->PrType = PtOpacity;
-      CurRule->PrAttrValue = FALSE;
+      CurRule->PrValueType = PrNumValue;
       InheritRule (InheritParent);
     }
   if (GetTypedRule (PtFillOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -2333,7 +2333,7 @@ static void         CheckDefaultRules ()
     {
       CreateDefaultRule ();
       CurRule->PrType = PtOpacity;
-      CurRule->PrAttrValue = FALSE;
+      CurRule->PrValueType = PrNumValue;
       CurRule->PrIntValue = 1000;
     }
   if (GetTypedRule (PtBackground, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -2367,7 +2367,7 @@ static void         CheckDefaultRules ()
       CreateDefaultRule ();
       CurRule->PrType = PtStopColor;
       CurRule->PrPresMode = PresImmediate;
-      CurRule->PrAttrValue = False;
+      CurRule->PrValueType = PrNumValue;
       CurRule->PrIntValue = 1;
     }
   if (GetTypedRule (PtHyphenate, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -3433,7 +3433,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       else if (gCode == RULE_BorderColor)
         {
           CurRule->PrPresMode = PresImmediate;
-          CurRule->PrAttrValue = False;
+          CurRule->PrValueType = PrNumValue;
           CurRule->PrIntValue = -1;   /* -1 means Foreground color */
         }
       break;
@@ -3568,7 +3568,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       break;
     case KWD_Transparent:
       CurRule->PrPresMode = PresImmediate;
-      CurRule->PrAttrValue = False;
+      CurRule->PrValueType = PrNumValue;
       CurRule->PrIntValue = -2;   /* -2 means Transparent */
       break;
     case KWD_None:
@@ -3588,7 +3588,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
         /* list style image = none */
         {
           CurRule->PrPresMode = PresImmediate;
-          CurRule->PrAttrValue = False;
+          CurRule->PrValueType = PrNumValue;
           CurRule->PrIntValue = 0;
         }
       else
@@ -4419,7 +4419,7 @@ static void IntAttribute (int attr, SyntacticCode prevRule, indLine wi)
       case RULE_OpacityInherit:
         /* Integer or OpacityInherit */
         CurRule->PrIntValue = attr;
-        CurRule->PrAttrValue = True;
+        CurRule->PrValueType = PrAttrValue;
         break;
       case RULE_DimRatioA:
         /* DimRatioA */
@@ -4512,7 +4512,7 @@ static void     ColorName (indLine wi, indLine wl)
     CompilerMessage (wi, PRS, FATAL, MISSING_COLOR, inputLine, LineNum);
   else
     {
-      CurRule->PrAttrValue = False;
+      CurRule->PrValueType = PrNumValue;
       CurRule->PrIntValue = i;
     }
 }
@@ -5494,7 +5494,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
           else
             /* on met le rang du pattern dans la regle */
             {
-              CurRule->PrAttrValue = False;
+              CurRule->PrValueType = PrNumValue;;
               CurRule->PrIntValue = i;
             }
         }
@@ -5676,7 +5676,7 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
     case RULE_Integer:
       /* Integer */
       CurRule->PrIntValue = n;
-      CurRule->PrAttrValue = False;
+      CurRule->PrValueType = PrNumValue;
       break;
     case RULE_OpPercent:
       /* OpPercent */
@@ -5688,7 +5688,7 @@ static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
       else
         {
           CurRule->PrIntValue = n * 10;
-          CurRule->PrAttrValue = False;
+          CurRule->PrValueType = PrNumValue;
         }
       break;
     case RULE_Size:
@@ -5900,7 +5900,7 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
         if (gCode == RULE_ListStyleImageURI)
           {
             NewConst (wi);
-            CurRule->PrAttrValue = False;
+            CurRule->PrValueType = PrNumValue;
             CurRule->PrIntValue = pPSchema->PsNConstants;
           }
         pPresConst = &pPSchema->PsConstant[pPSchema->PsNConstants - 1];

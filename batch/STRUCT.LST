@@ -116,21 +116,20 @@ number
    49	ExceptType =	 BasicType / [ 'EXTERN' ] [ FirstSec ] ElemName / AttrName / ConstName .
    50	ExValList =	 ExceptVal < ',' ExceptVal > .
    51	ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
-	     'NoHMove' / 'NoVMove' / 'NoMove' /
-			 'NoHResize' / 'NoVResize' / 'NoResize' /
-	     'MoveResize' /
+	                 'NoHMove' / 'NoVMove' / 'NoMove' /
+			 'NoHResize' / 'NoVResize' / 'NoResize' / 'MoveResize' /
 			 'NewWidth' / 'NewHeight' / 'NewPercentWidth' /
 			 'NewHPos' / 'NewVPos' /
-	     'Invisible' / 'Hidden' /
-		   'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
-		   'PageBreakRepetition' / 'PageBreakRepBefore' /
-	     'NoPaginate' / 'NoSpellCheck' /
+	                 'Invisible' / 'Hidden' /
+		         'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
+		         'PageBreakRepetition' / 'PageBreakRepBefore' /
+	                 'NoPaginate' / 'NoSpellCheck' /
 			 'ActiveRef' /  'NoSelect' /
-	     'HighlightChildren' / 'ExtendedSelection' /
-	     'SelectParent' / 'ClickableSurface' /
+	                 'HighlightChildren' / 'ExtendedSelection' /
+	                 'SelectParent' / 'ClickableSurface' /
 			 'ParagraphBreak' / 'IsBreak' / 'ListItemBreak' /
 			 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
-	     'ImportLine' / 'ImportParagraph' /
+	                 'ImportLine' / 'ImportParagraph' /
 			 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
 			 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' / 'IsCaption' /
 			 'ColRef' / 'ColSpan' / 'RowSpan' /
@@ -139,9 +138,9 @@ number
 			 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 			 'IsPlaceholder' / 'StartCounter' / 'SetCounter' /
 			 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
-	     'IsImg' / 'IsMap' / 'DuplicateAttr' / 'PseudoParag' /
-	     'GiveName' / 'NewRoot' / 'GiveTypes' / 'IsMarker' / 'IsGhost' /
-			 'ColColRef' / ExceptNum .
+	                 'IsImg' / 'IsMap' / 'DuplicateAttr' / 'PseudoParag' /
+	                 'GiveName' / 'NewRoot' / 'GiveTypes' / 'IsMarker' / 'IsGhost' /
+			 'ColColRef' / 'UsePaintServer' / ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
     7	ExtensList =     Extens ';' < Extens ';' > .
@@ -288,7 +287,8 @@ code  key-word      numbers of rules using the key-word
 1207  IsMarker             51
 1208  IsGhost              51
 1209  ColColRef            51
-1210  Root                 54
+1210  UsePaintServer       51
+1211  Root                 54
 
 
 

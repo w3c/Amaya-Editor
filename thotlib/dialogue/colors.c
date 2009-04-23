@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -312,8 +312,8 @@ void ThotGetSelectedElementColor()
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
   if (!selectionOK)
     return;
-  
-  BgColor = pFirstSel->ElAbstractBox[0]->AbBackground;
+  if (!pFirstSel->ElAbstractBox[0]->AbGradientBackground)
+     BgColor = pFirstSel->ElAbstractBox[0]->AbBackground;
   FgColor = pFirstSel->ElAbstractBox[0]->AbForeground;
   
   ThotSelectPalette (BgColor, FgColor);  

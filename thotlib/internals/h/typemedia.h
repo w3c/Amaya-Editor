@@ -501,6 +501,9 @@ typedef struct _AbstractBox
   int             AbLineSpacing;   /* Linespacing */
   int             AbFillPattern;   /* Fill pattern */	
   int             AbBackground;    /* Background color */
+  ThotBool        AbGradientBackground; /* Abbackground is the number of a
+				      constant string that contains the URL of
+				      a gradient (SVG) */
   int             AbForeground;    /* Drawing color */
   int             AbColor;         /* color, in SVG sense */
   int             AbStopColor;     /* stop-color, in SVG sense */
