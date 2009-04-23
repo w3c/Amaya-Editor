@@ -225,7 +225,6 @@ cd - > /dev/null
 
 $ECHO "--> Installing data in $PREFIX/$AMAYA_INSTALLDIR/doc/..."
 $CP -r $AMAYA_SOURCEBINDIR/../../doc/images $PREFIX/$AMAYA_INSTALLDIR/doc/
-$CP -r $AMAYA_SOURCEBINDIR/../../doc/html $PREFIX/$AMAYA_INSTALLDIR/doc/
 $CP -r $AMAYA_SOURCEBINDIR/../../doc/WX $PREFIX/$AMAYA_INSTALLDIR/doc/
 
 
