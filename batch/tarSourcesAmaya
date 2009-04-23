@@ -204,6 +204,7 @@ ${AMAYADIR}/amaya/*.T \
 ${AMAYADIR}/amaya/amaya.css \
 ${AMAYADIR}/amaya*.spec \
 ${AMAYADIR}/amaya/*.c \
+${AMAYADIR}/amaya/*.cpp \
 ${AMAYADIR}/amaya/*.conf \
 ${AMAYADIR}/amaya/*.en \
 ${AMAYADIR}/amaya/*.h \
@@ -216,7 +217,9 @@ ${AMAYADIR}/amaya/*.ico \
 ${AMAYADIR}/amaya/*.cur \
 ${AMAYADIR}/amaya/mathedit/*.c \
 ${AMAYADIR}/amaya/mathedit/*.l \
-${AMAYADIR}/amaya/mathedit/*.y \
+${AMAYADIR}/amaya/mathedit/*.ypp \
+${AMAYADIR}/amaya/mathedit/*.cpp \
+${AMAYADIR}/amaya/mathedit/*.sh \
 ${AMAYADIR}/amaya/wxdialog/*.h \
 ${AMAYADIR}/amaya/wxdialog/*.cpp \
 ${AMAYADIR}/amaya/wxdialog/*.rc \
