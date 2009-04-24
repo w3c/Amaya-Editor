@@ -245,18 +245,24 @@ Returns the first descendant element which is modifiable.
 ----------------------------------------------------------------------*/
 Element GetFirstEditableElement (Element el)
 {
-  Element res = NULL;
-  Element current = TtaGetFirstChild(el);
+  ElementType     elType;
+  Element         res = NULL, current;
 
+  current = TtaGetFirstChild(el);
   while (!res && current)
-  {
-    res = GetFirstEditableElement(current);
-    TtaNextSibling(&current);
-  }
-
+    {
+      // skip col colgroup 
+      elType = TtaGetElementType (current);
+      if ((elType.ElSSchema &&
+           strcmp (TtaGetSSchemaName(elType.ElSSchema), "HTML")) ||
+          (elType.ElTypeNum != HTML_EL_ColStruct &&
+           elType.ElTypeNum != HTML_EL_Table_head &&
+           elType.ElTypeNum != HTML_EL_Comment_))
+        res = GetFirstEditableElement (current);
+      TtaNextSibling(&current);
+    }
   if (!res && !TtaIsReadOnly(el))
     res = el;
-
   return res;
 }
 
