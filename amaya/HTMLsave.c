@@ -2352,22 +2352,17 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   char              msg[MAX_LENGTH];
   char              tempfile[MAX_LENGTH]; /* File name used to refetch */
   char              tempURL[MAX_LENGTH];  /* May be redirected */
-  const char       *verify_publish;
   int               res;
   int               mode = 0;
 #ifdef AMAYA_DEBUG
   unsigned long     file_size = 0;
 #endif
+  ThotBool          verify_publish, lost_update_check;
 
   res = SaveWikiFile (doc, localfile, remotefile, content_type,use_preconditions);
   if (res != 2)
     return res;
-
-  verify_publish = TtaGetEnvString("VERIFY_PUBLISH");
-  /* verify the PUT by default */
-  if (verify_publish == NULL)
-    verify_publish = "yes";
-
+  TtaGetEnvBoolean ("VERIFY_PUBLISH", &verify_publish);
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "Save %s to %s type=%s", localfile, remotefile, content_type);
   AM_GetFileSize (localfile, &file_size);
@@ -2378,16 +2373,16 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   /* JK: SYNC requests assume that the remotefile name is a static array */
   strcpy (tempfile, remotefile);
   mode = AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST;
-  mode = mode | ((use_preconditions) ? AMAYA_USE_PRECONDITIONS : 0);
-
+  TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &lost_update_check);
+  if (lost_update_check || use_preconditions)
+  mode = mode | AMAYA_USE_PRECONDITIONS;
   res = PutObjectWWW (doc, localfile, tempfile, content_type, NULL,
                       mode, NULL, NULL);
   if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);
-
   /* does the user want to verify the PUT? */
-  if (!verify_publish || !*verify_publish || strcmp (verify_publish, "yes"))
+  if (!verify_publish)
     return (0);
 
   /* Refetch */
@@ -3168,9 +3163,9 @@ void SaveDocument (Document doc, View view)
           else
             ptr = DocumentURLs[doc];
           if (TextFormat)
-            ok = SaveObjectThroughNet (doc, view, ptr, FALSE, TRUE);
+            ok = SaveObjectThroughNet (doc, view, ptr, FALSE, FALSE);
           else
-            ok = SaveDocumentThroughNet (doc, view, ptr, TRUE, TRUE, TRUE);
+            ok = SaveDocumentThroughNet (doc, view, ptr, TRUE, TRUE, FALSE);
         }
     }
   else
@@ -4590,7 +4585,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
             /* now save the file as through the normal process of saving */
             /* to a remote URL. */
             ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE,
-                                         CopyImages, FALSE);
+                                         CopyImages, TRUE);
         }
 
       /* restore original display mode */

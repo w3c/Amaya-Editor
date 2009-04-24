@@ -3231,24 +3231,15 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   char               *resource_name, *localfilename;
   char               *tmp2;
   char                file_name[MAX_LENGTH];
-  ThotBool            lost_update_check = TRUE;
 
   if (mode & AMAYA_SIMPLE_PUT)
     {
-      lost_update_check = FALSE;
       UsePreconditions = FALSE;
       if (!outputfile)
         return HT_ERROR;
     }
   else
-    {
-      /* should we protect the PUT against lost updates? */
-      const char *tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
-      if (tmp && *tmp && strcasecmp (tmp, "yes"))
-        lost_update_check = FALSE;
-
-      UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
-    }
+    UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
 
   AmayaLastHTTPErrorMsg [0] = EOS;
   if (urlName == NULL || docid == 0 || fileName == NULL 
@@ -3435,15 +3426,11 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
     HTRequest_setFlush(me->request, YES);
    
   /* Should we use preconditions? */
-  if (lost_update_check)
+  if (UsePreconditions)
     {
-      if (UsePreconditions) 
-        etag = HTAnchor_etag (HTAnchor_parent (me->dest));
-       
-      if (etag) 
-        {
+      etag = HTAnchor_etag (HTAnchor_parent (me->dest));
+      if (etag)
           HTRequest_setPreconditions(me->request, HT_MATCH_THIS);
-        }
       else
         {
           HTRequest_setPreconditions(me->request, HT_NO_MATCH);
@@ -3460,10 +3447,8 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
         }
     }
   else
-    {
-      /* don't use preconditions */
-      HTRequest_setPreconditions(me->request, HT_NO_MATCH);
-    }
+    /* don't use preconditions */
+    HTRequest_setPreconditions(me->request, HT_NO_MATCH);
    
   /* don't use the cache while saving a document */
   HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
@@ -3481,13 +3466,13 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 #ifdef DAV
   /* MKP: for a PUT request, try to add an "If" header (lock information)
    * for a HEAD request, leave this for check_handler */
-  if ( !(lost_update_check && (!UsePreconditions || !etag)) )
+  if (UsePreconditions && etag)
     DAVAddIfHeader (me,HTAnchor_address(me->dest));   
 #endif /* DAV */
 
    
   /* make the request */
-  if (lost_update_check && (!UsePreconditions || !etag))
+  if (UsePreconditions && !etag)
     status = HTHeadAnchor (me->dest, me->request);
   else
     status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
@@ -3502,7 +3487,6 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
     AHTReqContext_delete (me);
    
   TtaHandlePendingEvents ();
-
   return (status == YES ? 0 : -1);
 }
 
