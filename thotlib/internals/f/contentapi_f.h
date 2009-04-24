@@ -162,8 +162,6 @@ extern void TtaSetGradientStopColor ( unsigned short red,
                                       Element el );
 extern void TtaSetGradientStopOpacity ( float opacity,
                                         Element el );
-extern void TtaLinkGradient ( Element gradient,
-                              Element el );
 extern void TtaCopyGradientUse ( Element el );
 extern ThotBool TtaDeletePointInCurve ( Document doc,
                                         Element el,
@@ -460,8 +458,6 @@ extern void TtaSetGradientStopColor ( unsigned short red,
                                         Element el );
 extern void TtaSetGradientStopOpacity ( float opacity,
                                           Element el );
-extern void TtaLinkGradient ( Element gradient,
-                                Element el );
 extern void TtaCopyGradientUse ( Element el );
 extern ThotBool TtaDeletePointInCurve ( Document doc,
                                           Element el,

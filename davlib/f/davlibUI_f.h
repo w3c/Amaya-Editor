@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void DAVSetLockIndicator ( Document docid,
+extern void DAVSetLockIndicator ( Document doc,
                                   ThotBool val );
 extern void DAVDisplayMessage ( const char *msg,
                                 const char *arg );
@@ -36,7 +36,7 @@ extern void InitDAVPreferences ( void );
 
 #else /* __STDC__ */
 
-extern void DAVSetLockIndicator ( Document docid,
+extern void DAVSetLockIndicator ( Document doc,
                                     ThotBool val );
 extern void DAVDisplayMessage ( const char *msg,
                                   const char *arg );

@@ -23,9 +23,6 @@ extern void SVGEntityCreated ( unsigned char *entityValue,
                                Language lang,
                                char *entityName,
                                Document doc );
-extern void SVGhandleFillUrl ( Element el,
-                               Document doc,
-                               char *text );
 extern void ParseCSSequivAttribute ( int attrType,
                                      Attribute attr,
                                      Element el,
@@ -148,9 +145,6 @@ extern void SVGEntityCreated ( unsigned char *entityValue,
                                  Language lang,
                                  char *entityName,
                                  Document doc );
-extern void SVGhandleFillUrl ( Element el,
-                                 Document doc,
-                                 char *text );
 extern void ParseCSSequivAttribute ( int attrType,
                                        Attribute attr,
                                        Element el,

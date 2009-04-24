@@ -3466,13 +3466,13 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 #ifdef DAV
   /* MKP: for a PUT request, try to add an "If" header (lock information)
    * for a HEAD request, leave this for check_handler */
-  if (UsePreconditions && etag)
-    DAVAddIfHeader (me,HTAnchor_address(me->dest));   
+  //if (!UsePreconditions)
+  DAVAddIfHeader (me,HTAnchor_address(me->dest));   
 #endif /* DAV */
 
    
   /* make the request */
-  if (UsePreconditions && !etag)
+  if (UsePreconditions)
     status = HTHeadAnchor (me->dest, me->request);
   else
     status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);

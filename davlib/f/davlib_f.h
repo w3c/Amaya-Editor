@@ -13,8 +13,6 @@ extern void DAVLockDocument ( Document document,
                               View view );
 extern void DAVUnlockDocument ( Document document,
                                 View view );
-extern void DAVProfindDocument ( Document document,
-                                 View view );
 extern void DAVCopyLockInfo ( Document document,
                               View view );
 extern void DAVLockIndicator ( Document doc,
@@ -29,8 +27,6 @@ extern void DAVLockDocument ( Document document,
                                 View view );
 extern void DAVUnlockDocument ( Document document,
                                   View view );
-extern void DAVProfindDocument ( Document document,
-                                   View view );
 extern void DAVCopyLockInfo ( Document document,
                                 View view );
 extern void DAVLockIndicator ( Document doc,

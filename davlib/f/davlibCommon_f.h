@@ -22,8 +22,8 @@ extern char * DAVFindLockToken ( char *hostname,
                                  char *relative );
 extern LockLine * DAVGetLockFromTree ( AwTree * tree,
                                        char *owner );
-extern void DAVAddIfHeader ( AHTReqContext *context,
-                             char *url );
+extern ThotBool DAVAddIfHeader ( AHTReqContext *context,
+                                 char *url );
 extern void DAVRemoveIfHeader ( AHTReqContext *context );
 extern AHTDAVContext * AHTDAVContext_new ( const char *DocURL );
 extern void AHTDAVContext_delete ( AHTDAVContext * me );
@@ -55,8 +55,8 @@ extern char * DAVFindLockToken ( char *hostname,
                                    char *relative );
 extern LockLine * DAVGetLockFromTree ( AwTree * tree,
                                          char *owner );
-extern void DAVAddIfHeader ( AHTReqContext *context,
-                               char *url );
+extern ThotBool DAVAddIfHeader ( AHTReqContext *context,
+                                   char *url );
 extern void DAVRemoveIfHeader ( AHTReqContext *context );
 extern AHTDAVContext * AHTDAVContext_new ( const char *DocURL );
 extern void AHTDAVContext_delete ( AHTDAVContext * me );

@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ * 
+ */
+ 
 /*  --------------------------------------------------------
  ** 
  ** File: davlibCommon.c - WebDAV module _ common functions
@@ -15,7 +22,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.15  2009-04-10 14:22:18  vatton
+ ** Revision 1.16  2009-04-24 14:29:53  vatton
+ ** Check webdav locks even if precondition is requested
+ ** Irene
+ **
+ ** Revision 1.15  2009/04/10 14:22:18  vatton
  ** Fix several WebDAV bugs
  ** Irene
  **
@@ -570,44 +581,48 @@ LockLine * DAVGetLockFromTree (AwTree * tree, char *owner)
  * Parameters: 
  *        AHTReqContext *context: Request context object
  *        char *url: destiny URL
- * 
+ * Return TRUE if a hthead is requested
   ----------------------------------------------------------------------*/
-void DAVAddIfHeader (AHTReqContext *context, char *url) 
+ThotBool DAVAddIfHeader (AHTReqContext *context, char *url) 
 {
-    AHTDAVContext *davctx = NULL;
-    HTList * matches = NULL;
-    char *ifHeader = NULL;
+  AHTDAVContext *davctx = NULL;
+  HTList * matches = NULL;
+  char *ifHeader = NULL;
+  
+  if (!DAVLibEnable)
+    return FALSE;
 
-    if (!DAVLibEnable)
-      return;
-    
-    if (context && url && (*url) && (context->request)) 
-     {
-        /*create DAV context*/
-        davctx =  AHTDAVContext_new (url);
-        
-        if (davctx) 
-         {
-            ifHeader = NULL;
-            matches = searchLockBase (davctx->absoluteURI, davctx->relativeURI);
+  if (context && url && (*url) && (context->request)) 
+    {
+      /*create DAV context*/
+      davctx =  AHTDAVContext_new (url);
+      if (davctx) 
+        {
+          ifHeader = NULL;
+          matches = searchLockBase (davctx->absoluteURI, davctx->relativeURI);
 #ifdef DEBUG_DAV            
-            fprintf (stderr,"DAVAddIfHeader..... seaching for %s\n",url);
-            fprintf (stderr,"DAVAddIfHeader..... matches? %s\n",
-                            (matches && !HTList_isEmpty(matches))?"YES":"NO");
+          fprintf (stderr,"DAVAddIfHeader..... seaching for %s\n",url);
+          fprintf (stderr,"DAVAddIfHeader..... matches? %s\n",
+                   (matches && !HTList_isEmpty(matches))?"YES":"NO");
 #endif         
-            /*search in lock base: if found something creates the header */
-            if (matches && !HTList_isEmpty(matches))
-                ifHeader = mountIfHeader (matches);
-
+          /*search in lock base: if found something creates the header */
+          if (matches && !HTList_isEmpty(matches))
+            ifHeader = mountIfHeader (matches);
+          
 #ifdef DEBUG_DAV
-            fprintf (stderr,"DAVAddIfHeader..... if header %s\n",
-                            (ifHeader)?ifHeader:"none");
+          fprintf (stderr,"DAVAddIfHeader..... if header %s\n",
+                   (ifHeader)?ifHeader:"none");
 #endif    
-            if (ifHeader) /*add If header */
-                HTRequest_addExtraHeader (context->request, (char*)"If", ifHeader);
-
-         }
-     }
+          if (ifHeader)
+            {
+              /*add If header */
+              HTRequest_addExtraHeader (context->request, (char*)"If", ifHeader);
+              return TRUE;
+            }
+          else
+            return FALSE;
+        }
+    }
 }
 
 
