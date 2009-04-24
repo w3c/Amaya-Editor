@@ -3472,7 +3472,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 
    
   /* make the request */
-  if (UsePreconditions)
+  if (UsePreconditions && !etag)
     status = HTHeadAnchor (me->dest, me->request);
   else
     status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
