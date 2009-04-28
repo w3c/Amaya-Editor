@@ -4013,11 +4013,14 @@ void SelectionChanged (NotifyElement *event)
           if (!TtaIsTextInserting ())
             // no current text insertion
             CheckPromptIndicator (el, doc);
+          if (!IsTemplateDocument (doc))
 #endif /* TEMPLATES */
-          elType = TtaGetElementType (child);
-          s = TtaGetSSchemaName (elType.ElSSchema);
-          if (!strcmp (s, "HTML"))
-            TtaRaiseDoctypePanels (WXAMAYA_DOCTYPE_XHTML);
+            {
+              elType = TtaGetElementType (child);
+              s = TtaGetSSchemaName (elType.ElSSchema);
+              if (!strcmp (s, "HTML"))
+                TtaRaiseDoctypePanels (WXAMAYA_DOCTYPE_XHTML);
+            }
         }
 #ifdef _WX
       else

@@ -33,7 +33,6 @@
 #include "SVG.h"
 #endif /* _SVG */
 #include "document.h"
-
 #include "mathedit.h"
 
 /* Global variables for dialogues */
@@ -69,6 +68,8 @@ static Document DocMathElementSelected = 0;
 #endif /* _WINDOWS */
 #include "XLinkedit_f.h"
 #include "templateUtils_f.h"
+#include "templates.h"
+#include "templates_f.h"
 
 int CurrentMathEditMode = DEFAULT_MODE;
 
@@ -1203,7 +1204,10 @@ void MathSelectionChanged (NotifyElement *event)
     }
   UpdateXmlElementListTool (event->element,event->document);
   TtaSetStatusSelectedElement (event->document, 1, event->element);
-  TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_MATHML);
+#ifdef TEMPLATES
+  if (!IsTemplateDocument (event->document))
+#endif /* TEMPLATES */
+    TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_MATHML);
 }
 
 /*----------------------------------------------------------------------

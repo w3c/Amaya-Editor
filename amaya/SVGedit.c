@@ -40,6 +40,8 @@
 #include "SVGedit_f.h"
 #include "UIcss_f.h"
 #include "templateUtils_f.h"
+#include "templates.h"
+#include "templates_f.h"
 
 #include "EDITimage_f.h"
 #include "fetchXMLname_f.h"
@@ -531,7 +533,10 @@ void GraphicsSelectionChanged (NotifyElement * event)
 
   //UpdateXmlElementListTool(event->element,event->document);
   TtaSetStatusSelectedElement(event->document, 1, event->element);
-  TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_SVG);
+#ifdef TEMPLATES
+  if (!IsTemplateDocument (event->document))
+#endif /* TEMPLATES */
+    TtaRaiseDoctypePanels(WXAMAYA_DOCTYPE_SVG);
 }
 
 /*----------------------------------------------------------------------
