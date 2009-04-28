@@ -1018,8 +1018,10 @@ void Template_FixAccessRight (XTigerTemplate t, Element el, Document doc)
                         TtaSetAccessRight (el, ReadWrite, doc);
                         return;
                       case ComponentNat:
-                        Component_FixAccessRight (el, doc);
-                        return;
+                        TtaSetAccessRight (el, ReadOnly, doc);
+                         break;
+                        //Component_FixAccessRight (el, doc);
+                        //return;
                       case XmlElementNat:
                         if (TtaIsSetReadOnly (el))
                           break;
