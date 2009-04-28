@@ -5,28 +5,26 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Coopérer</title>
-  <meta name="generator" content="amaya 8.7.2, see http://www.w3.org/Amaya/"
-  />
+  <meta name="generator" content="amaya 8.7.2, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Publishing.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Printing.html.fr" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Printing.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="WebDAV" class="PageBody">
 <h2 id="Coop">Coopérer</h2>
 
-<h3 id="L49">À propos de WebDAV</h3>
+<h3 id="L49">A propos de WebDAV</h3>
 
 <p><a href="http://www.webdav.org/" xml:lang="en" lang="en">WebDAV (WWW
 Distributed Authoring and Versioning)</a> est un ensemble d'extensions du
@@ -35,20 +33,24 @@ ressources partagées sur un serveur web distant.</p>
 
 <p>Le <em>mécanisme de verrou</em> défini dans WebDAV a été conçu pour éviter
 qu'une ressource soit utilisée en écriture par plusieurs utilisateurs
-simultanément et que les modifications des uns écrasent celles des autres. Un
-verrou contrôle l'accès en écriture à une ressource en restreignant les
-opérations d'écriture du protocole HTTP telles que <span xml:lang="en"
-lang="en">PUT, POST</span> et <span xml:lang="en" lang="en">DELETE</span>.
-Seul un utilisateur qui connaît le verrou associé à une ressource est
-habilité à exécuter ces opérations.</p>
+simultanément et que les modifications des uns écrasent celles des autres. </p>
 
-<p>Le protocole WebDAV concerne aussi la <em>porté des verrous</em> : il
-existe des verrous <em>exclusifs</em> et <em>partagés</em>. Un verrou
-exclusif garantit qu'une personne possède le verrou et que personne d'autre
-ne peut verrouiller la ressource (ceci ne concerne pas l'accès en lecture à
-cette ressource). Un verrou partagé permet à un groupe d'utilisateurs de
-créer leurs verrous pour une ressource, mais ils doivent se faire confiance
-pour prévenir les problèmes d'accès.</p>
+<p>Un verrou contrôle l'accès en écriture à une ressource en restreignant les
+opérations d'écriture du protocole HTTP telles que <span xml:lang="en"
+lang="en">PUT, POST</span> et <span xml:lang="en" lang="en">DELETE</span>. Seul
+un utilisateur qui connaît le verrou associé à une ressource est habilité à
+exécuter ces opérations.</p>
+
+<p>Le protocole WebDAV concerne aussi la <em>porté des verrous</em> : il existe
+des verrous <em>exclusifs</em> et <em>partagés</em>. </p>
+<ul>
+  <li>Un verrou exclusif garantit qu'une personne possède le verrou et que
+    personne d'autre ne peut verrouiller la ressource (ceci ne concerne pas
+    l'accès en lecture à cette ressource). </li>
+  <li>Un verrou partagé permet à un groupe d'utilisateurs de créer leurs
+    verrous pour une ressource, mais ils doivent se faire confiance pour
+    prévenir les problèmes d'accès.</li>
+</ul>
 
 <p>Vous trouverez des informations détaillées à propos de WebDAV dans la <a
 href="http://andrew2.andrew.cmu.edu/rfc/rfc2518.html">RFC 2518</a> et sur le
@@ -59,130 +61,66 @@ site <a href="http://www.webdav.org/">WebDAV.org</a>.</p>
 <p></p>
 
 <p>Amaya offre un support limité de WebDAV. Cela inclut le verrouillage et
-déverrouillage de ressources, l'affichage des propriétés WebDAV d'une
-ressource, et la possibilité de découvrir les verrous. Il y a aussi des
-fonctions de notification qui informent automatiquement les utilisateurs sur
-les ressources verrouillées.</p>
+déverrouillage de ressources, un indicateur de verrou, et la possibilité de
+récuperer l'information du verrou. </p>
+
+<p>Il y a aussi des fonctions de notification qui informent automatiquement les
+utilisateurs sur les ressources verrouillées.</p>
 
 <h3 id="Partager">Partager des documents</h3>
 
-<p>Le support de WebDAV présent dans Amaya aide de petits groupes
-d'utilisateurs à éditer des pages web de façon collaborative. Par exemple,
-supposons que vous ayez un serveur WebDAV dont l'adresse est
+<p>Le support de WebDAV dans Amaya aide de petits groupes d'utilisateurs à
+éditer des pages web de façon collaborative. </p>
+
+<p>Par exemple, supposons que vous ayez un serveur WebDAV dont l'adresse est
 <code>davserver.mycompany.com</code> et que vous vouliez travailler avec
 quelques collègues sur des documents qui sont dans le dossier WebDAV
 <code>/shared/</code> (les dossiers WebDAV sont appelés des
 <em>collections</em>). Dans ce dossier, vous devez modifier le document
-<code>http://davserver.mycompany.com/shared/Doc1.html</code>. Vous ouvrez ce
-document dans votre éditeur Amaya. Vous pouvez alors le verrouiller avec la
-commande <strong>Outils / Coopération / Verrouiller la ressource</strong>.
-Une fois le document verrouillé, si l'un de vos collègues essaie de sauver
-une version modifiée du document, il sera informé de la présence de votre
-verrou et ses changements ne seront pas perdus. Ainsi, lorsque le document
-est verrouillé, vous pouvez le modifier en toute sécurité. Lorsque vous avez
-terminé et sauvé le document, vous pouvez le déverrouiller, permettant ainsi
-à d'autres de le verrouiller à leur tour et de faire des modifications.</p>
+<code>http://davserver.mycompany.com/shared/Doc1.html</code>. </p>
+<ul>
+  <li>Vous ouvrez ce document dans votre éditeur Amaya. Vous pouvez alors le
+    verrouiller avec la commande <strong>Outils / Coopération / Verrouiller la
+    ressource</strong> . </li>
+  <li>Une fois le document verrouillé, si l'un de vos collègues essaie de
+    sauver une version modifiée du document, il sera informé de la présence de
+    votre verrou et ses changements ne seront pas perdus. </li>
+  <li>Ainsi, lorsque le document est verrouillé, vous pouvez le modifier en
+    toute sécurité. Lorsque vous avez terminé et sauvé le document, vous pouvez
+    le déverrouiller, permettant ainsi à d'autres de le verrouiller à leur tour
+    et de faire des modifications.</li>
+</ul>
 
-<p>Si vous voulez savoir savoir, avant de commencer à travailler sur un
-document, si quelqu'un d'autre l'a verrouillé, utilisez la commande
-<strong>Outils / Coopération / Visualiser les propriétés de la
-ressource</strong> pour voir toutes les propriétés du document. Vous pouvez
-aussi configurer Amaya pour être informé automatiquement si une page est
-verrouillée. Pour celà, ouvrez la boîte de dialogue <strong>Préférences /
-WebDAV</strong>, sélectionnez l'option <strong>Notification général</strong>
-et mettez le nom de votre dossier partagé dans la <strong>Liste des
-ressources de l'utilisateur</strong>
-(<code>http://davserver.mycompany.com/shared/</code> dans notre exemple). Une
-fois celà fait, quand vous chargerez une page verrouillée par un autre
-utilisateur dans ce dossier, Amaya vous en informera.</p>
+<p>Quand une page est chargée depuis un serveur WebDAV, Amaya informe
+automatiquement l'utilisateur sur le statut verrouillé ou non de la page.</p>
 
 <h3 id="Options">Options WebDAV</h3>
 
 <p>Les options suivantes peuvent être choisies avec la boîte de dialogue
-<strong>Préférences / WebDAV</strong>. Elles sont également disponibles dans
-le registre d'Amaya :</p>
+<strong>Préférences / WebDAV</strong>.</p>
 <dl>
   <dt>Références personnelles de l'utilisateur (URL)</dt>
     <dd>Une URL qui vous identifie en tant qu'utilisateur, par exemple:
       <code>mailto:myself@myhost.com</code> ou
-      <code>http://www.myhost.com/myhomepage.html</code> 
-      <p>Registre: <code>DAV_USER_URL= [ URL ]</code></p>
-    </dd>
+      <code>http://www.myhost.com/myhomepage.html</code> </dd>
   <dt>Profondeur du verrou</dt>
-    <dd>Une profondeur infinie affecte tous les composants d'une collection
-      (un dossier) verrouillée. Sinon, le verrou n'affecte que la collection
-      elle-même, empêchant un utilisateur qui ne connaît pas le verrou de
-      créer ou d'enlever des composants.
-      <p>Registre: <code>DAV_DEPTH= [ infinity | <strong>0</strong>
-      ]</code></p>
-    </dd>
+    <dd>Une profondeur infinie affecte tous les composants d'une collection (un
+      dossier) verrouillée. Sinon, le verrou n'affecte que la collection
+      elle-même, empêchant un utilisateur qui ne connaît pas le verrou de créer
+      ou d'enlever des composants. </dd>
   <dt>Type du verrou</dt>
-    <dd>Verrou exclusif ou partagé.. 
-      <p>Registre: <code>DAV_LOCK_SCOPE= [ <strong>exclusive</strong> |
-      shared ]</code></p>
-    </dd>
+    <dd>Verrou exclusif ou partagé. </dd>
   <dt>Expiration du verrou</dt>
-    <dd>Durée souhaitée pour le verrou. <strong>Infini</strong> signifie
-      qu'il n'y a pas de délai d'expiration du verrou : il doit être retiré
+    <dd>Durée souhaitée pour le verrou. <strong>Infini</strong> signifie qu'il
+      n'y a pas de délai d'expiration du verrou : il doit être retiré
       explicitement. <strong>Autre (secondes)</strong> permet de choisir une
-      durée d'expiration du verrou, qui doit être spécifiée en secondes dans
-      le champ suivant de la boîte de dialogue.<br />
-      Registre: <code>DAV_TIMEOUT= [ <strong>Infinite</strong> | Second-XXXX
-      ]</code></dd>
-  <dt>Notification général</dt>
-    <dd>Indique si vous souhaitez une notification à propos des ressources
-      verrouillées 
-      <p>Registre: <code>DAV_AWARENESS= [ yes | <strong>no</strong>
-      ]</code></p>
-    </dd>
-  <dt>Notification à la sortie</dt>
-    <dd>Indique si vous voulez être informé sur l'état de vos verrous quand
-      vous quittez une ressources 
-      <p>Registre: <code>DAV_AWARENESS_ONEXIT=[ yes | <strong>no</strong>
-      ]</code></p>
+      durée d'expiration du verrou, qui doit être spécifiée en secondes dans le
+      champ suivant de la boîte de dialogue.<br />
     </dd>
   <dt>Liste des ressources de l'utilisateur (URL URL)</dt>
-    <dd>Une liste des URL des ressources que vous utilisez comme des
-      ressources WebDAV. 
-      <p>Registre: <code>DAV_URLS= [ URL URL URL ... ]</code></p>
-    </dd>
+    <dd>Une liste des URL des ressources que vous utilisez comme des ressources
+      WebDAV. </dd>
 </dl>
-
-<h3 id="Compiler">Compiler Amaya avec WebDAV</h3>
-
-<p>Le support WebDAV est optionnel dans Amaya. Pour compiler Amaya avec
-WebDAV, vous devez avoir :</p>
-<ul>
-  <li>Libwww avec support WebDAV</li>
-  <li>L'option --with-dav dans le configure d'Amaya</li>
-  <li>Un serveur WebDAV. <a href="http://www.w3.org/Jigsaw/">Jigsaw</a> et <a
-    href="http://httpd.apache.org/">Apache</a>, par exemple, sont des
-    serveurs qui supportent WebDAV.</li>
-</ul>
-
-<p>Lorsque vous avez fait le <em>check-out</em> de <a
-href="http://www.w3.org/Library/">Libwww avec support WebDAV</a> et obtenu
-les <a href="http://www.w3.org/Amaya/User/cvs.html">sources d'Amaya</a>,
-suivez les instructions suivantes (pour les environnements Linux/Unix - pour
-Windows, réferez-vous aux pages <a href="http://www.w3.org/Amaya/">Amaya</a>
-et <a href="http://www.w3.org/Library/">Libwww</a>) :</p>
-
-<h4 id="libwww">Dans le répertoire libwww :</h4>
-<ul>
-  <li>libtoolize -c -f</li>
-  <li>perl config/winConfigure.pl</li>
-  <li>aclocal; autoheader; automake; autoconf</li>
-</ul>
-
-<h4 id="Amaya">Dans le répertoire Amaya :</h4>
-<ul>
-  <li>autoconf</li>
-  <li>mkdir LINUX-ELF (ou GTK, ou obj)</li>
-  <li>cd LINUX-ELF</li>
-  <li>../configure <strong>--with-dav</strong> ... (et toutes les autres
-    options que vous souhaitez)</li>
-  <li>make</li>
-</ul>
 </div>
 </body>
 </html>

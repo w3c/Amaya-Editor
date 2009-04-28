@@ -5,21 +5,19 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Cooperating through WebDAV</title>
-  <meta name="generator" content="amaya 8.7.2, see http://www.w3.org/Amaya/"
-  />
+  <meta name="generator" content="amaya 8.7.2, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Publishing.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Printing.html" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Printing.html" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
@@ -29,155 +27,98 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <h3 id="About">About WebDAV</h3>
 
 <p><a href="http://www.webdav.org/">WebDAV (WWW Distributed Authoring and
-Versioning)</a> is a set of extensions to the HTTP protocol, which allows
-users to collaboratively edit and manage web resources on remote servers. It
-aims to extend the HTTP protocol to develop new distributed authoring tools
-in the web, specially emphasizing the collaborative authoring of web
-pages.</p>
+Versioning)</a> is a set of extensions to the HTTP protocol, which allows users
+to collaboratively edit and manage web resources on remote servers. It aims to
+extend the HTTP protocol to develop new distributed authoring tools in the web,
+specially emphasizing the collaborative authoring of web pages.</p>
 
-<p>The <em>lock mechanism</em> defined in WebDAV has been design to prevent
-the resources overwriting (that is, to prevent the lost update problem) using
-the operations lock and unlock. A lock controls the write access to a
-resource by limiting HTTP writing operations, like PUT, POST and DELETE. This
-means that only somebody who knows the lock will be able to execute those
-operations. The WebDAV protocol also defines two <strong>lock
-scopes</strong>: <em>an </em><em>exclusive and a shared lock</em>. An
-exclusive lock guarantees that one person possess the lock, and no one else
-will be able to lock the resource (it does not affect the resource reading).
-A shared lock allows a group of users to create their locks over a resource,
-but they must trust each other to prevent access problems. Besides, each lock
-has a timeout, but the user cannot forget that locks may disappear in the
-server due to exceptions in the server.</p>
+<p>The <em>lock mechanism</em> defined in WebDAV has been design to prevent the
+resources overwriting (that is, to prevent the lost update problem) using the
+operations lock and unlock. </p>
+
+<p>A lock controls the write access to a resource by limiting HTTP writing
+operations, like PUT, POST and DELETE. This means that only somebody who knows
+the lock will be able to execute those operations. </p>
+
+<p>The WebDAV protocol also defines two <strong>lock scopes</strong>: <em>an
+</em><em>exclusive and a shared lock</em>. </p>
+<ul>
+  <li>An exclusive lock guarantees that one person possess the lock, and no one
+    else will be able to lock the resource (it does not affect the resource
+    reading). </li>
+  <li>A shared lock allows a group of users to create their locks over a
+    resource, but they must trust each other to prevent access problems.
+    Besides, each lock has a timeout, but the user cannot forget that locks may
+    disappear in the server due to exceptions in the server.</li>
+</ul>
 
 <p>You can find more informations about WebDAV in <a
-href="http://andrew2.andrew.cmu.edu/rfc/rfc2518.html">RFC 2518</a> and also
-at the <a href="http://www.webdav.org/">WebDAV.org</a> website.</p>
+href="http://andrew2.andrew.cmu.edu/rfc/rfc2518.html">RFC 2518</a> and also at
+the <a href="http://www.webdav.org/">WebDAV.org</a> website.</p>
 
 <h3 id="WebDAV">WebDAV support in Amaya</h3>
 
-<p>Amaya has an optional and limited support for WebDAV. This includes the
-following operations: lock/unlock a WebDAV compilant resource, view the
-WebDAV properties of a resource, and lock discovery capabilities. Besides, it
-also includes some awareness functions, that can automatically inform users
-about locked resources.</p>
+<p>Amaya has a limited support for WebDAV. This includes the following
+operations: lock/unlock a WebDAV resource, a toggle that shows when there is a
+lock, and a function to get the current lock information. </p>
+
+<p>Besides, it also includes some awareness functions, that can automatically
+inform users about locked resources.</p>
 
 <h3 id="Sharing">Sharing documents</h3>
 
-<p>The WebDAV support present in Amaya intents to help small groups of users
-to edit collaboratively their web pages. To illustrate how it works, here is
-an example: supose that you have a WebDAV server (indeed, you
-<strong>must</strong> have a Web server that supports WebDAV to work with it)
-named <code>davserver.mycompany.com</code>, and you and your colleagues want
-to edit collaboratively some documents that are in the WebDAV folder
-<code>/shared/</code> (WebDAV folders are called collections).</p>
+<p>The WebDAV support in Amaya intents to help small groups of users to edit
+collaboratively their web pages. </p>
+
+<p>To illustrate how it works, suppose that you have a WebDAV servehave a
+WebDAV server (indeed, you <strong>must</strong> have a Web server that
+supports WebDAV to work with it) named <code>davserver.mycompany.com</code>,
+and you and your colleagues want to edit collaboratively some documents that
+are in the WebDAV folder <code>/shared/</code> (WebDAV folders are called
+collections).</p>
 
 <p>So, imagine that you need to change the document
-<code>http://davserver.mycompany.com/shared/Doc1.html</code>. To do so, you
-load the document in your Amaya editor, and then you can <em>lock</em> this
-document (<strong>Lock resource</strong> entry in
-<strong>Tools/Cooperation</strong> menu. Once you locked the document, if one
-of your colleagues tries to save some change in this document, s/he will be
-warned about your lock, and updates will not be lost automatically. Thus,
-while the document is locked, you can safely modify it, and when you have
-finished your work and saved the document, you can <em>unlock</em> it,
-allowing you colleague to lock the document and do his/her modifications.</p>
+<code>http://davserver.mycompany.com/shared/Doc1.html</code>. </p>
+<ul>
+  <li>You load the document in your Amaya editor, and then you can
+    <em>lock</em> this document (<strong>Lock resource</strong> entry in
+    <strong>Tools/Cooperation</strong> menu. </li>
+  <li>Once you locked the document, if one of your colleagues tries to save
+    some change in this document, s/he will be warned about your lock, and
+    updates will not be lost automatically. </li>
+  <li>Thus, while the document is locked, you can safely modify it, and when
+    you have finished your work and saved the document, you can <em>unlock</em>
+    it, allowing you colleague to lock the document and do his/her
+    modifications.</li>
+</ul>
 
-<p>If you want to be aware whether a colleague has locked a Web page, you can
-use the <strong>View resource properties</strong> entry in the <strong>Tools
-/ Cooperation</strong> menu to see all the properties of the page, or you can
-configure Amaya to automatically inform you if the page is locked. To do so,
-you will need to open the <strong>Preferences / WebDAV</strong> dialog box,
-mark the <strong>General Awareness</strong> option and put your shared folder
-name in the <strong>User's WedDAV Resource List</strong> field
-(<code>http://davserver.mycompany.com/shared/</code>, in our example). Once
-you did this, when loading a page locked by a colleague under
-<code>http://davserver.mycompany.com/shared/</code> folder, you will be
-notified by Amaya about this.</p>
+<p>When loading a page from a WebDAV server, Amaya automatically informs about
+the lock/unlock status of the page.</p>
 
 <h3 id="WebDAV1">WebDAV options</h3>
 
 <p>The following options can be set with the <strong>Preferences /
-WebDAV</strong> dialog box. They are also available in the Amaya registry:</p>
+WebDAV</strong> dialog box.</p>
 <dl>
   <dt>User's personal reference (URL)</dt>
     <dd>An URL that identifies the user. Example:
       <code>mailto:myself@myhost.com</code> or
-      <code>http://myhost.com/myhomepage.html</code> 
-      <p>Registry: <code>DAV_USER_URL= [ URL ]</code></p>
-    </dd>
+      <code>http://myhost.com/myhomepage.html</code> </dd>
   <dt>Lock Depth</dt>
-    <dd>If depth is infinite, a lock over a collection (folder) will affect
-      all components. Otherwise, the lock will affect only the collection,
+    <dd>If depth is infinite, a lock over a collection (folder) will affect all
+      components. Otherwise, the lock will affect only the collection,
       preventing an user that does not know the lock to create or remove
-      components. 
-      <p>Registry: <code>DAV_DEPTH= [ infinity | <strong>0</strong>
-      ]</code></p>
-    </dd>
+      components. </dd>
   <dt>Lock Scope</dt>
-    <dd>The lock scope: exclusive or shared. 
-      <p>Registry: <code>DAV_LOCK_SCOPE= [ <strong>exclusive</strong> |
-      shared ]</code></p>
-    </dd>
+    <dd>The lock scope: exclusive or shared. </dd>
   <dt>Lock Timeout</dt>
     <dd>The desired timeout for the lock. "Infinite" means that there is no
       timeout value, and "Other (Seconds)" will try to get a timeout value of
       <em>x</em> seconds (value <em>x</em> specified by the next field).<br />
-      Registry: <code>DAV_TIMEOUT= [ <strong>Infinite</strong> | Second-XXXX
-      ]</code></dd>
-  <dt>General Awareness</dt>
-    <dd>Indicates if you want basic awareness information about locked
-      resources 
-      <p>Registry: <code>DAV_AWARENESS= [ yes | <strong>no</strong>
-      ]</code></p>
-    </dd>
-  <dt>Awareness on exit</dt>
-    <dd>Indicates if you want to receive information about your own locks,
-      when you leave a resource. 
-      <p>Registry: <code>DAV_AWARENESS_ONEXIT=[ yes | <strong>no</strong>
-      ]</code></p>
     </dd>
   <dt>User's WebDAV Resource List (URL URL)</dt>
-    <dd>A list of the URLs of the resources you use as WebDAV resources. 
-      <p>Registry: <code>DAV_URLS= [ URL URL URL ... ]</code></p>
-    </dd>
+    <dd>A list of the URLs of the resources you use as WebDAV resources. </dd>
 </dl>
-
-<h3 id="Compiling">Compiling Amaya with WebDAV</h3>
-
-<p>WebDAV support is an optional feature of Amaya. To compile and use it, you
-need the following:</p>
-<ul>
-  <li>Libwww with WebDAV support</li>
-  <li>Amaya's configure option</li>
-  <li>A WebDAV server to use this functions... <a
-    href="http://www.w3.org/Jigsaw/">Jigsaw</a> and <a
-    href="http://httpd.apache.org/">Apache</a> are examples of web servers
-    that support WebDAV.</li>
-</ul>
-
-<p>Once you made the <em>cvs check-out</em> of <a
-href="http://www.w3.org/Library/">Libwww with WebDAV</a> support and get <a
-href="http://www.w3.org/Amaya/User/cvs.html">Amaya sources</a>, you should
-follow this bootstrap instructions (under Linux/Unix environments - for
-windows environments, see <a href="http://www.w3.org/Amaya/">Amaya</a> and <a
-href="http://www.w3.org/Library/">Libwww</a> homepage):</p>
-
-<h4 id="libwww">At libwww folder:</h4>
-<ul>
-  <li>libtoolize -c -f</li>
-  <li>perl config/winConfigure.pl</li>
-  <li>aclocal; autoheader; automake; autoconf</li>
-</ul>
-
-<h4 id="Amaya">At Amaya folder:</h4>
-<ul>
-  <li>autoconf</li>
-  <li>mkdir LINUX-ELF (or GTK, or obj)</li>
-  <li>cd LINUX-ELF</li>
-  <li>../configure <strong>--with-dav</strong> ... (and all other options
-    that you need)</li>
-  <li>make</li>
-</ul>
 </div>
 </body>
 </html>
