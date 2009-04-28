@@ -7227,6 +7227,7 @@ void OpenNewDocFromArgv( char * url )
               }
           /* start with the local document */
           LastURLName[0] = EOS;
+          NewFile = FALSE;
           CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
         }
     }
