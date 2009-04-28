@@ -82,8 +82,15 @@ ThotBool IsTemplateDocument (Document doc)
 {
 #ifdef TEMPLATES
   XTigerTemplate t = GetXTigerDocTemplate(doc);
+  if (DocumentMeta[doc])
+    {
+    if (DocumentMeta[doc]->method == CE_INSTANCE)
+      return FALSE;
+    else if (DocumentMeta[doc]->method == CE_TEMPLATE)
+      return TRUE;
+    }
   if (t)
-    return ((t->state & templTemplate) != 0);
+    return ((t->state & templInstance) == 0);
   else
     return FALSE;
 #endif /* TEMPLATES */
@@ -1355,9 +1362,9 @@ void Template_FillFromDocument (Document doc)
           TtaUpdateAccessRightInViews (doc, root);
         }
 #ifdef TEMPLATE_DEBUG
-      else if (t->state&templLibraryFlag)
+      else if (t->state & templLibraryFlag)
         printf("  > library\n");
-      else if (t->state&templTemplate)
+      else if (t->state & templTemplate)
         printf("  > template\n");
 #endif
       // Mark loaded
