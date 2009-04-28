@@ -1642,6 +1642,9 @@ void TtcCreateElement (Document doc, View view)
     }
 
   xmlmode = IsXMLEditMode ();
+  if (!xmlmode && firstSel == lastSel && firstSel->ElStructSchema &&
+      !strcmp (firstSel->ElStructSchema->SsName, "Template"))
+    xmlmode = TRUE;
   if (!xmlmode)
     /* We should perhaps do the following whatever the editing mode,
        AmayaLite or not ... */
