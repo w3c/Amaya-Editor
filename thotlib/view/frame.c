@@ -2205,7 +2205,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
   int                 y, tVol, bVol, h, l;
   int                 top, bottom;
   int                 xmin, xmax, ymin, ymax;
-  int                 delta, t, b, plane = 0;
+  int                 delta, t, b, plane, nextplane;
   ThotBool            toadd;  
 
   /* are new abstract boxes needed */
@@ -2245,19 +2245,42 @@ ThotBool RedrawFrameTop (int frame, int scroll)
               DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
                               &xmin, &ymin, &xmax, &ymax, 1);
 	  
-              if (pFrame->FrAbstractBox)
-                plane = pFrame->FrAbstractBox->AbDepth;
-              topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
-                                        &tVol, &bVol);
-              /* now display extra flows */
               pFlow = pFrame->FrFlow;
-              while (pFlow)
+              if (pFlow)
                 {
-                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
-                  pFlow = pFlow->FlNext;
+                  plane = 65536;
+                  nextplane = plane - 1;
+                  while (plane != nextplane)
+                    {
+                      plane = nextplane;
+                      if (pFrame->FrAbstractBox->AbDepth == plane)
+                        // display the normal flow
+                        topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
+                                                  &tVol, &bVol);
+                      else if (pFrame->FrAbstractBox->AbDepth < plane &&
+                               (plane == nextplane ||
+                                pFrame->FrAbstractBox->AbDepth > nextplane))
+                        /* keep the lowest value for plane depth */
+                        nextplane = pFrame->FrAbstractBox->AbDepth;
+                      pFlow = pFrame->FrFlow;
+                      while (pFlow && pFlow->FlRootBox)
+                        {
+                          if (pFlow->FlRootBox->AbDepth == plane)
+                            DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
+                          else if (pFlow->FlRootBox->AbDepth < plane &&
+                                   (plane == nextplane ||
+                                    pFlow->FlRootBox->AbDepth > nextplane))
+                            /* keep the lowest value for plane depth */
+                            nextplane = pFlow->FlRootBox->AbDepth;
+                          pFlow = pFlow->FlNext;
+                        }
+                    }
                 }
+              else
+                // display the normal flow
+                topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
+                                          &tVol, &bVol);
             }
-	  
           /* The updated area is redrawn */
           DefClip (frame, 0, 0, 0, 0);
           RemoveClipping (frame);
@@ -2367,7 +2390,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   int                 y, tVol, bVol, h, l;
   int                 top, bottom, org;
   int                 xmin, xmax, view;
-  int                 ymin, ymax, plane = 0;
+  int                 ymin, ymax, plane, nextplane;
   ThotBool            toadd;
 
   /* are new abstract boxes needed */
@@ -2381,8 +2404,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   if (pFrame->FrAbstractBox && 
       pFrame->FrAbstractBox->AbElement == NULL)
     pFrame->FrAbstractBox = NULL;
-  if (!pFrame->FrReady || 
-      pFrame->FrAbstractBox == NULL)
+  if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
     return toadd;
   else if (xmin < xmax &&
            ymin < ymax &&
@@ -2416,17 +2438,42 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
               DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
                               &xmin, &ymin, &xmax, &ymax, 1);
 	      
-              if (pFrame->FrAbstractBox)
-                plane = pFrame->FrAbstractBox->AbDepth;
-              topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
-                                        &tVol, &bVol);
-              /* now display extra flows */
               pFlow = pFrame->FrFlow;
-              while (pFlow)
+              if (pFlow)
                 {
-                  DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
-                  pFlow = pFlow->FlNext;
+                  plane = 65536;
+                  nextplane = plane - 1;
+                  while (plane != nextplane)
+                    {
+                      plane = nextplane;
+                      if (pFrame->FrAbstractBox->AbDepth == plane)
+                        // display the normal flow
+                        topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
+                                                  &tVol, &bVol);
+                      else if (pFrame->FrAbstractBox->AbDepth < plane &&
+                               (plane == nextplane ||
+                                pFrame->FrAbstractBox->AbDepth > nextplane))
+                        /* keep the lowest value for plane depth */
+                        nextplane = pFrame->FrAbstractBox->AbDepth;
+                      pFlow = pFrame->FrFlow;
+                      while (pFlow && pFlow->FlRootBox)
+                        {
+                          if (pFlow->FlRootBox->AbDepth == plane)
+                            DisplayAllBoxes (frame, pFlow, xmin, xmax, ymin, ymax, &t, &b);
+                          else if (pFlow->FlRootBox->AbDepth < plane &&
+                                   (plane == nextplane ||
+                                    pFlow->FlRootBox->AbDepth > nextplane))
+                            /* keep the lowest value for plane depth */
+                            nextplane = pFlow->FlRootBox->AbDepth;
+                          pFlow = pFlow->FlNext;
+                        }
+                    }
                 }
+              else
+                // display the normal flow
+                topBox = DisplayAllBoxes (frame, NULL, xmin, xmax, ymin, ymax,
+                                          &tVol, &bVol);
+
               /* The updated area is redrawn */
               DefClip (frame, 0, 0, 0, 0);
               RemoveClipping (frame);
