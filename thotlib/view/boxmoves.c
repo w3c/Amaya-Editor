@@ -1139,7 +1139,6 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #ifdef _GL
           pBox->VisibleModification = TRUE;
 #endif /* _GL */
-
           /* stretched box not already handled */
           if (pBox->BxHorizFlex &&
               (pAb->AbLeafType != LtCompound || pBox->BxPacking == 0))
