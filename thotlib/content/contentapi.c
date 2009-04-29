@@ -2977,40 +2977,28 @@ ThotBool TtaInsertPointInCurve (Document doc, Element el,
   transform: the transformation info to be appended.
   document: the document containing the element.
   ----------------------------------------------------------------------*/
-void TtaAppendTransform (Element element, void *transform, 
-                         Document document)
+void TtaAppendTransform (Element element, void *transform)
 {
   PtrTransform       pPa, pPrevPa;
      
   UserErrorCode = 0;
-  if (element == NULL)
+  if (element == NULL || transform == NULL)
     TtaError (ERR_invalid_parameter);
   else
-    /* verifies the parameter document */
-    if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-    else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-    else
-      /* parameter document is correct */
-      {
-        if (element && transform)
-          {
-            pPa = ((PtrElement) element)->ElTransform;
-            pPrevPa = NULL;
-            while (pPa)
-              {
-                pPrevPa = pPa;
-                pPa = pPa->Next;
-              }
-            if (pPrevPa == NULL)
-              ((PtrElement) element)->ElTransform = (PtrTransform) transform;
-            else
-              pPrevPa->Next = (PtrTransform) transform;
-          }
-      }
+    {
+      pPa = ((PtrElement) element)->ElTransform;
+      pPrevPa = NULL;
+      while (pPa)
+	{
+	  pPrevPa = pPa;
+	  pPa = pPa->Next;
+	}
+      if (pPrevPa == NULL)
+	((PtrElement) element)->ElTransform = (PtrTransform) transform;
+      else
+	pPrevPa->Next = (PtrTransform) transform;
+    }
 }
-
 
 /*----------------------------------------------------------------------
   TransformAddition
@@ -3552,10 +3540,7 @@ extern void TtaAppendMatrixTransform (Document document, Element element,
       /* parameter document is correct */
       {
         /* Add a new transform */
-        TtaAppendTransform (element,
-                            TtaNewTransformMatrix (a, b, c, d, e, f),
-                            document);
-
+        TtaAppendTransform (element, TtaNewTransformMatrix (a, b, c, d, e, f));
         /* Simplify the transform matrix */
         transform = (PtrTransform)
           TtaSimplifyTransformMatrix(((PtrElement) element)->ElTransform);
@@ -3567,8 +3552,6 @@ extern void TtaAppendMatrixTransform (Document document, Element element,
           }
       }
 }
-
-
 
 /*----------------------------------------------------------------------
   TtaDecomposeTransform
@@ -4835,7 +4818,7 @@ int TtaGetPolylineLength (Element element)
   else if (((PtrElement) element)->ElLeafType != LtPolyLine)
     TtaError (ERR_invalid_element_type);
   else
-    /* one ignore the boundary point limite, considered in ElNPoints */
+    /* one ignore the boundary point limit, considered in ElNPoints */
     return ((PtrElement) element)->ElNPoints - 1;
   return (0);
 }
@@ -6036,24 +6019,19 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
           d = (y4 - y1)/h;
           e = x1;
           f = y1;
-
           if(shape == SQUARE)
             TtaSetGraphicsShape (leaf, 7, doc);
           else
             TtaSetGraphicsShape (leaf, 8, doc);
-
           break;
         }
 
       if(shape != -1)
         {
           TtaAppendTransform (TtaGetParent(leaf),
-                              TtaNewTransformMatrix((float)a, (float)b, (float)c, (float)d, (float)e, (float)f),
-                              doc);
-      
+                              TtaNewTransformMatrix((float)a, (float)b, (float)c, (float)d, (float)e, (float)f));
           *width = (int)(w);
           *height = (int)(h);
-
           return TRUE;
         }
     }

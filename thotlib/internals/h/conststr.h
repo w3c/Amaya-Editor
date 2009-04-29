@@ -113,6 +113,7 @@
 #define ExcSpacePreserve 347
 #define ExcNewRoot 348
 #define ExcUsePaintServer 349
+#define ExcUseMarkers 350
 
 /* Template exceptions */
 #define ExcGiveName  370

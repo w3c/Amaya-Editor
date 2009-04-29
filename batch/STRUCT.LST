@@ -140,7 +140,7 @@ number
 			 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
 	                 'IsImg' / 'IsMap' / 'DuplicateAttr' / 'PseudoParag' /
 	                 'GiveName' / 'NewRoot' / 'GiveTypes' / 'IsMarker' / 'IsGhost' /
-			 'ColColRef' / 'UsePaintServer' / ExceptNum .
+			 'ColColRef' / 'UsePaintServer' / 'UseMarkers' / ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
     7	ExtensList =     Extens ';' < Extens ';' > .
@@ -288,7 +288,8 @@ code  key-word      numbers of rules using the key-word
 1208  IsGhost              51
 1209  ColColRef            51
 1210  UsePaintServer       51
-1211  Root                 54
+1211  UseMarkers           51
+1212  Root                 54
 
 
 

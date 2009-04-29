@@ -171,8 +171,7 @@ extern ThotBool TtaInsertPointInCurve ( Document doc,
                                         ThotBool before,
                                         int *point_number );
 extern void TtaAppendTransform ( Element element,
-                                 void *transform,
-                                 Document document );
+                                 void *transform );
 extern void TtaAddTransform ( Element element,
                               void *transform,
                               Document document );
@@ -467,8 +466,7 @@ extern ThotBool TtaInsertPointInCurve ( Document doc,
                                           ThotBool before,
                                           int *point_number );
 extern void TtaAppendTransform ( Element element,
-                                   void *transform,
-                                   Document document );
+                                   void *transform );
 extern void TtaAddTransform ( Element element,
                                 void *transform,
                                 Document document );

@@ -458,6 +458,8 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         rType == PtFillPattern || rType == PtOpacity || 
         rType == PtFillOpacity || rType == PtStrokeOpacity ||
         rType == PtStopOpacity || rType == PtFillRule ||
+	rType == PtMarker || rType == PtMarkerStart ||
+	rType == PtMarkerMid || rType == PtMarkerEnd ||
         rType == PtBackground || rType == PtForeground ||
 	rType == PtColor || rType == PtStopColor ||
         rType == PtHyphenate ||
@@ -685,6 +687,18 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtStopOpacity:
           TtaWriteByte (pivFile, C_PR_STOPOPACITY);
           break;
+        case PtMarker:
+          TtaWriteByte (pivFile, C_PR_MARKER);
+          break;
+        case PtMarkerStart:
+          TtaWriteByte (pivFile, C_PR_MARKERSTART);
+          break;
+        case PtMarkerMid:
+          TtaWriteByte (pivFile, C_PR_MARKERMID);
+          break;
+        case PtMarkerEnd:
+          TtaWriteByte (pivFile, C_PR_MARKEREND);
+          break;
         case PtFillRule:
           TtaWriteByte (pivFile, C_PR_FILL_RULE);
           break;
@@ -812,6 +826,10 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
         case PtStopOpacity:
         case PtFillPattern:
         case PtListStyleImage:
+	case PtMarker:
+	case PtMarkerStart:
+	case PtMarkerMid:
+	case PtMarkerEnd:
           PutShort (pivFile, pPRule->PrIntValue);
           break;
         case PtBackground:

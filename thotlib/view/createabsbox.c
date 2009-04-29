@@ -465,9 +465,15 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
   pAb->AbGradientBackground = FALSE;
   pAb->AbForeground = DefaultFColor;	/* black */
   pAb->AbColor = DefaultFColor;         /* black */
+  pAb->AbStopColor = DefaultFColor;
+  pAb->AbStopOpacity = 1000;   /* Full opaque*/
   pAb->AbOpacity = 1000;       /* Full opaque*/
   pAb->AbFillOpacity = 1000;   /* Full opaque*/
   pAb->AbStrokeOpacity = 1000; /* Full opaque*/
+  pAb->AbMarker = NULL;        /* none */
+  pAb->AbMarkerStart = NULL;   /* none */
+  pAb->AbMarkerMid = NULL;     /* none */
+  pAb->AbMarkerEnd = NULL;     /* none */
   pAb->AbFillRule = 'n';       /* fill-rule: nonzero */
   pAb->AbTopBColor = -1;
   pAb->AbRightBColor = -1;

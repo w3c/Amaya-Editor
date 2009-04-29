@@ -2370,6 +2370,48 @@ static void         CheckDefaultRules ()
       CurRule->PrValueType = PrNumValue;
       CurRule->PrIntValue = 1;
     }
+  if (GetTypedRule (PtStopOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
+    /* pas de regle StopOpacity par defaut, on en cree une : */
+    /* StopOpacity: 100%; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtStopOpacity;
+      CurRule->PrPresMode = PresImmediate;
+      CurRule->PrValueType = PrNumValue;
+      CurRule->PrIntValue = 1000;
+    }
+  if (GetTypedRule (PtMarker, pPSchema->PsFirstDefaultPRule) == NULL)
+    /* pas de regle Marker par defaut, on en cree une : */
+    /* Marker: Enclosing =; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtMarker;
+      InheritRule (InheritParent);
+    }
+  if (GetTypedRule (PtMarkerStart, pPSchema->PsFirstDefaultPRule) == NULL)
+    /* pas de regle MarkerStart par defaut, on en cree une : */
+    /* MarkerStart: Enclosing =; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtMarkerStart;
+      InheritRule (InheritParent);
+    }
+  if (GetTypedRule (PtMarkerMid, pPSchema->PsFirstDefaultPRule) == NULL)
+    /* pas de regle MarkerMid par defaut, on en cree une : */
+    /* MarkerMid: Enclosing =; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtMarkerMid;
+      InheritRule (InheritParent);
+    }
+  if (GetTypedRule (PtMarkerEnd, pPSchema->PsFirstDefaultPRule) == NULL)
+    /* pas de regle MarkerEnd par defaut, on en cree une : */
+    /* MarkerEnd: Enclosing =; */
+    {
+      CreateDefaultRule ();
+      CurRule->PrType = PtMarkerEnd;
+      InheritRule (InheritParent);
+    }
   if (GetTypedRule (PtHyphenate, pPSchema->PsFirstDefaultPRule) == NULL)
     /* pas de regle Hyphenate par defaut, on en cree une : */
     /* Hyphenate: Enclosing =; */

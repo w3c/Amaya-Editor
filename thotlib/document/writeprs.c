@@ -296,6 +296,18 @@ void                WritePRuleType (PRuleType ruleType)
     case PtStopOpacity:
       TtaWriteByte (outfile, C_PR_STOPOPACITY);
       break;
+    case PtMarker:
+      TtaWriteByte (outfile, C_PR_MARKER);
+      break;
+    case PtMarkerStart:
+      TtaWriteByte (outfile, C_PR_MARKERSTART);
+      break;
+    case PtMarkerMid:
+      TtaWriteByte (outfile, C_PR_MARKERMID);
+      break;
+    case PtMarkerEnd:
+      TtaWriteByte (outfile, C_PR_MARKEREND);
+      break;
     case PtFillRule:
       TtaWriteByte (outfile, C_PR_FILL_RULE);
       break;
@@ -1086,6 +1098,10 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
             case PtFillOpacity:
             case PtStrokeOpacity:
             case PtStopOpacity:
+            case PtMarker:
+            case PtMarkerStart:
+            case PtMarkerMid:
+            case PtMarkerEnd:
             case PtListStyleImage:
               WriteValueType (currentRule->PrValueType);
               WriteSignedShort (currentRule->PrIntValue);

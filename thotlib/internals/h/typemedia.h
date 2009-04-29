@@ -499,6 +499,10 @@ typedef struct _AbstractBox
   int             AbSize;	   /* Character logical/real size */
   int             AbLineWeight;    /* Line thickness */
   int             AbLineSpacing;   /* Linespacing */
+  PtrElement      AbMarker;        /* 0 (none) or marker element */
+  PtrElement      AbMarkerStart;   /* 0 (none) or marker element */
+  PtrElement      AbMarkerMid;     /* 0 (none) or marker element */
+  PtrElement      AbMarkerEnd;     /* 0 (none) or marker element */
   int             AbFillPattern;   /* Fill pattern */	
   int             AbBackground;    /* Background color */
   ThotBool        AbGradientBackground; /* Abbackground is the number of a
@@ -507,9 +511,9 @@ typedef struct _AbstractBox
   int             AbForeground;    /* Drawing color */
   int             AbColor;         /* color, in SVG sense */
   int             AbStopColor;     /* stop-color, in SVG sense */
+  int             AbStopOpacity;   /* SVG stop-opacity */
   int             AbFillOpacity;   /* opacity of the fill part of element*/
   int             AbStrokeOpacity; /* opacity of the stroke part element*/
-  int             AbStopOpacity;   /* SVG stop-opacity */
   int             AbOpacity;       /* opacity of all the element*/
   int             AbTopBColor;     /* Border Top color */
   int             AbRightBColor;   /* Border Right color */

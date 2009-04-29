@@ -372,8 +372,7 @@ extern void TtaInsertTransform (Element element, void *transform,
 extern void TtaReplaceTransform (Element element, void *transform, 
 				 Document document);
 extern void TtaRemoveTransform (Document document, Element element);
-extern void TtaAppendTransform (Element element, void *transform, 
-				Document document);
+extern void TtaAppendTransform (Element element, void *transform);
 
 extern void *TtaNewTransformScale (float x_scale, float y_scale);
 extern void *TtaNewTransformTranslate (float x, float y);
@@ -390,10 +389,7 @@ extern void TtaSetElCoordinateSystem (Element element);
 
 extern void TtaPlay (Document doc, View view);
 extern void TtaNoPlay (int frame);
-/*----------------------------------------------------------------------
-   TtaAppendTransform
-   Copy a Linked List of transform into another struct
-  ----------------------------------------------------------------------*/
+
 void *TtaCopyTransform (void *pPa);
 void *TtaNewTransformAnimTranslate (float x, float y);
 void *TtaNewTransformAnimRotate (float angle, float x_scale, 

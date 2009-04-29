@@ -641,3 +641,17 @@ char *SVGhandleStopColor (Element el, char *color)
   return NULL;
 }
 
+/*----------------------------------------------------------------------
+  GenerateMarkers
+  Apply a CSS rule marker* to element el in document doc.
+  Parameter marker is the marker element to be used.
+  Parameter position indicates where the marker has to be put on element pEl:
+    0: all vertices
+    1: start vertex
+    2: mid vertices
+    3: end vertex
+  ----------------------------------------------------------------------*/
+void GenerateMarkers (Element el, Document doc, Element marker, int position)
+{
+}
+

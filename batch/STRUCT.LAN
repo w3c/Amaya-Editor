@@ -134,7 +134,7 @@ ExceptVal =	 'NoCut' / 'CanCut' / 'NoCreate' / 'NoReplicate' /
 		 'MarkupPreserve' / 'NotAnElementNode' / 'CheckAllChars' /
                  'IsImg' / 'IsMap' / 'DuplicateAttr' / 'PseudoParag' /
                  'GiveName' / 'NewRoot' / 'GiveTypes' / 'IsMarker' / 'IsGhost' /
-		 'ColColRef' / 'UsePaintServer' / ExceptNum .
+		 'ColColRef' / 'UsePaintServer' / 'UseMarkers' / ExceptNum .
 ExceptNum =	 NUMBER .
 
 ExtensList =     Extens ';' < Extens ';' > .

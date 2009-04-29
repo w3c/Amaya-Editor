@@ -9,7 +9,7 @@
  * This module is part of the Thot library.
  * 
  */
- 
+
 /*
  * gestion des regles de presentation de l'image abstraite.
  * Ce module applique les regles de presentation aux paves.     
@@ -32,8 +32,10 @@
 #include "frame_tv.h"
 #include "edit_tv.h"
 
+#include "applicationapi_f.h"
 #include "tree_f.h"
 #include "structcreation_f.h"
+#include "content.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
 #include "appdialogue_f.h"
@@ -54,6 +56,10 @@
 #include "presvariables_f.h"
 #include "font_f.h"
 #include "units_f.h"
+
+/* function GenerateMarkers is defined in the SVG parser (module SVGbuilder.c) */
+extern void GenerateMarkers (Element pEl, Document doc, Element marker,
+			     int position);
 
 /*----------------------------------------------------------------------
   AttrValue retourne la valeur que prend l'attribut numerique	
@@ -609,6 +615,50 @@ static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber,
 }
 
 /*----------------------------------------------------------------------
+  GetElementByUrl
+  ----------------------------------------------------------------------*/
+static PtrElement GetElementByUrl (PtrElement pEl, PtrDocument pDoc, char* Url)
+{
+  PtrElement     referred;
+  PtrElement     pElAttr;
+  PtrAttribute   pAttr;
+  int            attrType;
+
+  referred = NULL;
+  if (Url[0] == '#') /* handles only internal links */
+    {
+      /* start from the document root and search forward an element with an id
+         attribute */
+      pElAttr = pDoc->DocDocElement;
+      attrType = GetAttrWithException (ExcCssId, pEl->ElStructSchema);
+      do
+	{
+	  pElAttr = FwdSearch2Attributes (pElAttr, 0, NULL, attrType, 0,
+					  pEl->ElStructSchema, NULL);
+	  if (pElAttr)
+	    /* this element has an id attribute */
+	    {
+	      /* get this attribute */
+	      pAttr = pElAttr->ElFirstAttr;
+	      if (pAttr)
+		do
+		  if (pAttr->AeAttrNum == attrType &&
+		      !strcmp (pAttr->AeAttrSSchema->SsName,
+			       pEl->ElStructSchema->SsName) &&
+		      StringAndTextEqual (&Url[1], pAttr->AeAttrText))
+		    /* the expected attribute */
+		    referred = pElAttr;
+		  else
+		    pAttr = pAttr->AeNext;
+		while (pAttr && !referred);
+	    }
+	}
+      while (!referred && pElAttr);
+    }
+  return referred;
+}
+
+/*----------------------------------------------------------------------
   ApplyFillUrl
   Apply a CSS rule "fill: url(...)" to element pEl in document pDoc.
   Url contains the url of the paint server to be applied.
@@ -618,79 +668,25 @@ static PtrElement ApplyFillUrl (PtrElement pEl, PtrDocument pDoc, char* Url)
 {
   PtrElement     paintServer = NULL;
 #ifdef _GL
-  PtrElement     pElAttr;
-  PtrAttribute   pAttr;
-  int            attrType;
-  ThotBool       found;
 
   /* look in document pDoc for an element with an id attribute with the same
      value as Url */
-  if (!pEl || !Url)
+  if (!pEl || !Url || !pDoc)
     return NULL;
-  if (Url[0] == '#') /* handles only internal links */
+  paintServer = GetElementByUrl (pEl, pDoc, Url);
+  if (paintServer)
+    /* the referred paint server has been found */
     {
-      attrType = GetAttrWithException (ExcCssId, pEl->ElStructSchema);
-      pElAttr = pEl;
-      do
+      if (paintServer->ElGradient && paintServer->ElGradientDef)
+	/* it's a gradient paint server */
 	{
-	  pElAttr = BackSearch2Attributes (pElAttr, 0, NULL, attrType, 0,
-					   pEl->ElStructSchema, NULL);
-	  if (pElAttr)
-	    {
-	      pAttr = pElAttr->ElFirstAttr;
-	      if (pAttr)
-		do
-		  if (pAttr->AeAttrNum == attrType &&
-		      !strcmp (pAttr->AeAttrSSchema->SsName,
-			       pEl->ElStructSchema->SsName) &&
-		      StringAndTextEqual (&Url[1], pAttr->AeAttrText))
-		    /* the expected attribute */
-		    paintServer = pElAttr;
-		  else
-		    pAttr = pAttr->AeNext;
-		while (pAttr && !paintServer);
-	    }
+	  /* make a reference from element pEl to the paint server */
+	  pEl->ElGradient = paintServer->ElGradient;
+	  pEl->ElGradientDef = FALSE;
 	}
-      while (!paintServer && pElAttr);
-
-      if (!paintServer)
-	{
-	  pElAttr = pEl;
-	  do
-	    {
-	      pElAttr = FwdSearch2Attributes (pElAttr, 0, NULL, attrType, 0,
-					      pEl->ElStructSchema, NULL);
-	      if (pElAttr)
-		{
-		  pAttr = pElAttr->ElFirstAttr;
-		  if (pAttr)
-		    do
-		      if (pAttr->AeAttrNum == attrType &&
-			  !strcmp (pAttr->AeAttrSSchema->SsName,
-				   pEl->ElStructSchema->SsName) &&
-			  StringAndTextEqual (&Url[1], pAttr->AeAttrText))
-			/* the expected attribute */
-			paintServer = pElAttr;
-		      else
-			pAttr = pAttr->AeNext;
-		    while (pAttr && !paintServer);
-		}
-	    }
-	  while (!paintServer && pElAttr);
-	}
-
-      if (paintServer)
-	/* the referred paint server has been found */
-	{
-	  if (paintServer->ElGradient && paintServer->ElGradientDef)
-	    {
-	      pEl->ElGradient = paintServer->ElGradient;
-	      pEl->ElGradientDef = FALSE;
-	    }
-	  else
-	    /* only gradients are handled in this version @@@@ */
-	    paintServer = NULL;
-	}
+      else
+	/* only gradients are handled in this version @@@@ */
+	paintServer = NULL;
     }
 #endif /* _GL */
   return paintServer;
@@ -716,7 +712,6 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 {
   PtrAbstractBox      pAbb;
   PtrElement          pElInherit;
-  PresConstant	     *pConst;
   int                 val, i, sign;
 
   val = 0;
@@ -1304,6 +1299,73 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
         }
     }
   return val;
+}
+
+/*----------------------------------------------------------------------
+  MarkerRule
+  Applies a marker* presentation rule.
+  Returns the marker element to be associated with element pEl when applying
+  rule pPRule from presentation schema pSchP.
+  ----------------------------------------------------------------------*/
+static PtrElement MarkerRule (PtrPRule pPRule, PtrElement pEl,
+			      DocViewNumber view, ThotBool *ok,
+			      PtrPSchema pSchP, PtrDocument pDoc)
+{
+  PtrElement        marker;
+  PtrAbstractBox    pAbb;
+  PresConstant	    *pConst;
+
+  marker = NULL;
+  *ok = TRUE;
+  if (pPRule && pEl)
+    /* do not associate a marker with a copy of a marker */
+    if (!TypeHasException (ExcIsMarker, pEl->ElTypeNumber, pEl->ElStructSchema))
+      {
+	if (pPRule->PrPresMode == PresInherit)
+	  {
+	    pAbb = AbsBoxInherit (pPRule, pEl, view);
+	    if (pAbb == NULL)
+	      *ok = FALSE;
+	    else
+	      switch (pPRule->PrType)
+		{
+                case PtMarker:
+                  marker = pAbb->AbMarker;
+		  break;
+                case PtMarkerStart:
+                  marker = pAbb->AbMarkerStart;
+		  break;
+                case PtMarkerMid:
+                  marker = pAbb->AbMarkerMid;
+		  break;
+                case PtMarkerEnd:
+                  marker = pAbb->AbMarkerEnd;
+		  break;
+	        default:
+		  marker = NULL;
+		  break;
+		}
+	  }
+	else if (pPRule->PrPresMode == PresImmediate)
+	  {
+	    if (pPRule->PrValueType == PrNumValue && pPRule->PrIntValue == 0)
+	      marker = NULL;
+	    else if (pPRule->PrValueType == PrConstStringValue)
+	      /* the rule contains the number of the constant (in the
+		 presentation schema) that contains the url of the
+		 marker element to be used */
+	      {
+		pConst = &pSchP->PsConstant[pPRule->PrIntValue - 1];
+		if (pConst->PdString && pConst->PdString[0] != EOS)
+		  marker = GetElementByUrl (pEl, pDoc, pConst->PdString);
+	      }
+	    else
+	      *ok = FALSE;
+	  }
+	else
+	  *ok = FALSE;
+      }
+  return marker;
 }
 
 /*----------------------------------------------------------------------
@@ -3475,6 +3537,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   unsigned char       c;
   int                 viewSch, i;
   GradientStop       *gstop;
+  Document            doc;
   unsigned short      red, green, blue;
   ThotBool            appl;
   ThotBool            insidePage, afterPageBreak;
@@ -4301,6 +4364,90 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
           if (!appl && pEl->ElParent == NULL)
             {
               pAb->AbFillRule = 'n';
+              appl = TRUE;
+            }
+          break;
+        case PtMarker:
+          pAb->AbMarker = MarkerRule (pPRule, pEl, pAb->AbDocView, &appl,
+				      pSchP, pDoc);
+	  if (appl && pAb->AbMarker)
+	    {
+	      if (TypeHasException (ExcUseMarkers, pEl->ElTypeNumber,
+				    pEl->ElStructSchema))
+		/* This element uses markers */
+		{
+		  doc = (Document) IdentDocument (pDoc);
+		  GenerateMarkers ((Element)pEl, doc,
+				   (Element)pAb->AbMarker, 0);
+		}
+	    }
+          if (!appl && pEl->ElParent == NULL)
+            /* No rule for the root, use the default value */
+            {
+              pAb->AbMarker = NULL;
+              appl = TRUE;
+            }
+          break;
+        case PtMarkerStart:
+          pAb->AbMarkerStart = MarkerRule (pPRule, pEl, pAb->AbDocView, &appl,
+					   pSchP, pDoc);
+	  if (appl && pAb->AbMarkerStart)
+	    {
+	      if (TypeHasException (ExcUseMarkers, pEl->ElTypeNumber,
+				    pEl->ElStructSchema))
+		/* This element uses markers */
+		{
+		  doc = (Document) IdentDocument (pDoc);
+		  GenerateMarkers ((Element)pEl, doc,
+				   (Element)pAb->AbMarkerStart, 1);
+		}
+	    }
+          if (!appl && pEl->ElParent == NULL)
+            /* No rule for the root, use the default value */
+            {
+              pAb->AbMarkerStart = NULL;
+              appl = TRUE;
+            }
+          break;
+        case PtMarkerMid:
+          pAb->AbMarkerMid = MarkerRule (pPRule, pEl, pAb->AbDocView, &appl,
+					 pSchP, pDoc);
+	  if (appl && pAb->AbMarkerMid)
+	    {
+	      if (TypeHasException (ExcUseMarkers, pEl->ElTypeNumber,
+				    pEl->ElStructSchema))
+		/* This element uses markers */
+		{
+		  doc = (Document) IdentDocument (pDoc);
+		  GenerateMarkers ((Element)pEl, doc,
+				   (Element)pAb->AbMarkerMid, 2);
+		}
+	    }
+          if (!appl && pEl->ElParent == NULL)
+            /* No rule for the root, use the default value */
+            {
+              pAb->AbMarkerMid = NULL;
+              appl = TRUE;
+            }
+          break;
+        case PtMarkerEnd:
+          pAb->AbMarkerEnd = MarkerRule (pPRule, pEl, pAb->AbDocView, &appl,
+					 pSchP, pDoc);
+	  if (appl && pAb->AbMarkerEnd)
+	    {
+	      if (TypeHasException (ExcUseMarkers, pEl->ElTypeNumber,
+				    pEl->ElStructSchema))
+		/* This element uses markers */
+		{
+		  doc = (Document) IdentDocument (pDoc);
+		  GenerateMarkers ((Element)pEl, doc,
+				   (Element)pAb->AbMarkerEnd, 3);
+		}
+	    }
+          if (!appl && pEl->ElParent == NULL)
+            /* No rule for the root, use the default value */
+            {
+              pAb->AbMarkerEnd = NULL;
               appl = TRUE;
             }
           break;

@@ -37,7 +37,8 @@ extern void TtaApplyAllSpecificSettings ( Element el,
 extern void TtaPToCss ( PresentationSetting settings,
                         char *buffer,
                         int len,
-                        Element el );
+                        Element el,
+                        void* pSchP );
 
 #else /* __STDC__ */
 
@@ -72,7 +73,8 @@ extern void TtaApplyAllSpecificSettings ( Element el,
 extern void TtaPToCss ( PresentationSetting settings,
                           char *buffer,
                           int len,
-                          Element el );
+                          Element el,
+                          void* pSchP );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

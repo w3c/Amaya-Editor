@@ -227,7 +227,7 @@ typedef enum
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, PtColor,
   PtStopColor, PtStopOpacity, PtOpacity, PtFillOpacity, PtStrokeOpacity,
-  PtFillRule,
+  PtFillRule, PtMarker, PtMarkerEnd, PtMarkerMid, PtMarkerStart,
   PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
   PtXRadius, PtYRadius,
   PtPosition, PtTop, PtRight, PtBottom, PtLeft, PtFloat, PtClear,
@@ -513,7 +513,8 @@ typedef struct _PresRule
                    PtStopColor,
 		   PtBorderTopColor, PtBorderRightColor,
 		   PtBorderBottomColor, PtBorderLeftColor,
-		   PtOpacity, PtFillOpacity, PtStrokeOpacity, PtStopOpacity */
+		   PtOpacity, PtFillOpacity, PtStrokeOpacity, PtStopOpacity,
+		   PtMarker, PtMarkerEnd, PtMarkerMid, PtMarkerStart */
 	{
 	  PrValType _PrValueType_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 

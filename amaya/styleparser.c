@@ -4891,6 +4891,119 @@ static char *ParseSVGStopColor (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
+  ParseCSSColor: parse a CSS color attribute string    
+  we expect the input string describing the attribute to be     
+  either a color name, a 3 tuple or an hexadecimal encoding.    
+  The color used will be approximed from the current color      
+  table                                                         
+  ----------------------------------------------------------------------*/
+static char *ParseSVGMarkerValue (char *cssRule, PresentationValue *val, char *url)
+{
+  url = NULL;
+  val->typed_data.unit = UNIT_INVALID;
+  val->typed_data.real = FALSE;
+  if (!strncasecmp (cssRule, "none", 4))
+    {
+      val->typed_data.unit = UNIT_REL;
+      val->typed_data.value = 0;
+      cssRule += 4;
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      val->typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
+  else if (!strncasecmp (cssRule, "url", 3))
+    {  
+      cssRule += 3;
+      cssRule = ParseCSSUrl (cssRule, &url);
+      val->typed_data.unit = VALUE_URL;
+      val->pointer = url;
+    }
+  return cssRule;
+}
+
+/*----------------------------------------------------------------------
+  ParseSVGMarker: parse a SVG marker property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGMarker (Element element, PSchema tsch,
+			     PresentationContext context, char *cssRule,
+			     CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     marker;
+  char                  *url;
+
+  url = NULL;
+  cssRule = ParseSVGMarkerValue (cssRule, &marker, url);
+  if (marker.typed_data.unit != UNIT_INVALID && DoApply)
+    /* install the new presentation. */
+    TtaSetStylePresentation (PRMarker, element, tsch, context, marker);
+  if (url)
+    TtaFreeMemory (url);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseSVGMarkerEnd: parse a SVG marker-end property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGMarkerEnd (Element element, PSchema tsch,
+				PresentationContext context, char *cssRule,
+				CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     marker;
+  char                  *url;
+
+  url = NULL;
+  cssRule = ParseSVGMarkerValue (cssRule, &marker, url);
+  if (marker.typed_data.unit != UNIT_INVALID && DoApply)
+    /* install the new presentation. */
+    TtaSetStylePresentation (PRMarkerEnd, element, tsch, context, marker);
+  if (url)
+    TtaFreeMemory (url);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseSVGMarkerMid: parse a SVG marker-mid property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGMarkerMid (Element element, PSchema tsch,
+				PresentationContext context, char *cssRule,
+				CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     marker;
+  char                  *url;
+
+  url = NULL;
+  cssRule = ParseSVGMarkerValue (cssRule, &marker, url);
+  if (marker.typed_data.unit != UNIT_INVALID && DoApply)
+    /* install the new presentation. */
+    TtaSetStylePresentation (PRMarkerMid, element, tsch, context, marker);
+  if (url)
+    TtaFreeMemory (url);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseSVGMarkerStart: parse a SVG marker-start property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGMarkerStart (Element element, PSchema tsch,
+				  PresentationContext context, char *cssRule,
+				  CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     marker;
+  char                  *url;
+
+  url = NULL;
+  cssRule = ParseSVGMarkerValue (cssRule, &marker, url);
+  if (marker.typed_data.unit != UNIT_INVALID && DoApply)
+    /* install the new presentation. */
+    TtaSetStylePresentation (PRMarkerStart, element, tsch, context, marker);
+  if (url)
+    TtaFreeMemory (url);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
   ParseSVGStopOpacity: parse a SVG opacity property
   ----------------------------------------------------------------------*/
 static char *ParseSVGStopOpacity (Element element, PSchema tsch,
@@ -6244,6 +6357,10 @@ static CSSProperty CSSProperties[] =
     {"fill-opacity", ParseSVGFillOpacity},
     {"fill-rule", ParseSVGFillRule},
     {"fill", ParseSVGFill},
+    {"marker-end", ParseSVGMarkerEnd},
+    {"marker-mid", ParseSVGMarkerMid},
+    {"marker-start", ParseSVGMarkerStart},
+    {"marker", ParseSVGMarker},
     {"opacity", ParseSVGOpacity},
     {"stop-color", ParseSVGStopColor},
     {"stop-opacity", ParseSVGStopOpacity},

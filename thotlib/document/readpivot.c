@@ -1364,6 +1364,18 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_STOPOPACITY:
       TypeRP = PtStopOpacity;
       break;
+    case C_PR_MARKER:
+      TypeRP = PtMarker;
+      break;
+    case C_PR_MARKERSTART:
+      TypeRP = PtMarkerStart;
+      break;
+    case C_PR_MARKERMID:
+      TypeRP = PtMarkerMid;
+      break;
+    case C_PR_MARKEREND:
+      TypeRP = PtMarkerEnd;
+      break;
     case C_PR_FILL_RULE:
       TypeRP = PtFillRule;
       break;
@@ -1517,6 +1529,10 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtStopOpacity:
       case PtDepth:
       case PtListStyleImage:
+      case PtMarker:
+      case PtMarkerStart:
+      case PtMarkerMid:
+      case PtMarkerEnd:
         TtaReadShort (pivFile, &val);
         break;
       case PtBackground:
@@ -1763,6 +1779,22 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
             pPRule->PrValueType = PrNumValue;
             pPRule->PrIntValue = val;
             break;
+	  case PtMarker:
+	  case PtMarkerStart:
+	  case PtMarkerMid:
+	  case PtMarkerEnd:
+	    if (val == 0)
+	      {
+		pPRule->PrValueType = PrNumValue;
+		pPRule->PrIntValue = 0;
+	      }
+	    else
+	      {
+		pPRule->PrValueType = PrConstStringValue;
+		pPRule->PrIntValue = val;
+	      }
+            break;
+
           case PtBackground:
           case PtForeground:
           case PtColor:

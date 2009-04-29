@@ -103,7 +103,11 @@ typedef int        *PRule;
 #define PRContentURL 87
 #define PRContentAttr 88
 #define PRFillRule 89
-#define LAST_PRES_RULE_TYPE 90
+#define PRMarker 90
+#define PRMarkerEnd 91
+#define PRMarkerMid 92
+#define PRMarkerStart 93
+#define LAST_PRES_RULE_TYPE 94
 
 /*
  * A bunch of constants describing the most common values for presentation

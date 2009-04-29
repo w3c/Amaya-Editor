@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1146,11 +1146,11 @@ static void SpecificSettingsToCSS (Element el, Document doc,
       else
         ptr = MakeRelativeURL ((char *)settings->value.pointer, DocumentURLs[doc]);
       settings->value.pointer = ptr;
-      TtaPToCss (settings, string, sizeof(string), el);
+      TtaPToCss (settings, string, sizeof(string), el, NULL);
       TtaFreeMemory (ptr);
     }
   else
-    TtaPToCss (settings, string, sizeof(string), el);
+    TtaPToCss (settings, string, sizeof(string), el, NULL);
 
   if (string[0] != EOS && *css_rules != EOS)
     strcat (css_rules, "; ");

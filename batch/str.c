@@ -1767,6 +1767,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
       case KWD_UsePaintServer:
         ExceptionNum (ExcUsePaintServer, True, False, False, wi);
         break;
+      case KWD_UseMarkers:
+        ExceptionNum (ExcUseMarkers, True, False, False, wi);
+        break;
       case KWD_IsGhost:
         ExceptionNum (ExcIsGhost, True, False, False, wi);
         break;

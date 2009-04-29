@@ -1398,6 +1398,10 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrIntValue = value;
       break;
     case PtBackground:
+    case PtMarker:
+    case PtMarkerStart:
+    case PtMarkerMid:
+    case PtMarkerEnd:
       if (unit == VALUE_URL)
 	rule->PrValueType = PrConstStringValue;
       else
@@ -2143,6 +2147,10 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtBorderRightColor:
     case PtBorderBottomColor:
     case PtBorderLeftColor:
+    case PtMarker:
+    case PtMarkerStart:
+    case PtMarkerMid:
+    case PtMarkerEnd:
       value = rule->PrIntValue;
       break;
     case PtVis:
@@ -2886,6 +2894,18 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRStopOpacity:
       *intRule = PtStopOpacity;
       break;
+    case PRMarker:
+      *intRule = PtMarker;
+      break;
+    case PRMarkerStart:
+      *intRule = PtMarkerStart;
+      break;
+    case PRMarkerMid:
+      *intRule = PtMarkerMid;
+      break;
+    case PRMarkerEnd:
+      *intRule = PtMarkerEnd;
+      break;
     case PRFillRule:
       *intRule = PtFillRule;
       break;
@@ -3133,12 +3153,17 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
                   (type == PRListStyleImage &&
                    v.typed_data.value != 0 &&
                    v.typed_data.unit != VALUE_INHERIT) ||
-		  (type == PRBackground && v.typed_data.unit == VALUE_URL))
+		  ((type == PRBackground ||
+		    type == PRMarker || type == PRMarkerStart ||
+		    type == PRMarkerMid || type == PRMarkerEnd) &&
+		   v.typed_data.unit == VALUE_URL))
                 {
                   if (!generic)
                     tsch = (PSchema) PresentationSchema
                     (((PtrElement)el)->ElStructSchema, LoadedDocument[doc - 1]);
-		  if (type == PRBackground)
+		  if (type == PRBackground ||
+		      type == PRMarker || type == PRMarkerStart ||
+		      type == PRMarkerMid || type == PRMarkerEnd)
 		    cst = PresConstInsert (tsch, (char *)v.pointer, CharString);
 		  else
 		    {
@@ -3263,6 +3288,18 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       break;
     case PtStopOpacity:
       setting->type = PRStopOpacity;
+      break;
+    case PtMarker:
+      setting->type = PRMarker;
+      break;
+    case PtMarkerStart:
+      setting->type = PRMarkerStart;
+      break;
+    case PtMarkerMid:
+      setting->type = PRMarkerMid;
+      break;
+    case PtMarkerEnd:
+      setting->type = PRMarkerEnd;
       break;
     case PtFillRule:
       setting->type = PRFillRule;
@@ -3623,7 +3660,7 @@ static void AddBorderStyleValue (char *buffer, int value)
   described in thotlib/include/presentation.h
   -----------------------------------------------------------------------*/
 void TtaPToCss (PresentationSetting settings, char *buffer, int len,
-                Element el)
+                Element el, void* pSchP)
 {
   ElementType         elType;
   float               fval = 0;
@@ -3631,6 +3668,7 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
   int                 add_unit = 0, val;
   unsigned int        unit, i;
   ThotBool            real = FALSE;
+  PresConstant	      *pConst;
 
   buffer[0] = EOS;
   if (len < 40)
@@ -4181,6 +4219,54 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
       break;
     case PRStopOpacity:
       sprintf (buffer, "stop-opacity: %g", fval);
+      break;
+    case PRMarker:
+      if (settings->value.typed_data.unit == VALUE_INHERIT)
+        sprintf (buffer, "marker: inherit");
+      else if (settings->value.typed_data.value == 0)
+        sprintf (buffer, "marker: none");
+      else
+	{
+	  pConst = &((PtrPSchema)pSchP)->PsConstant[settings->value.typed_data.value-1];
+	  if (pConst->PdString)
+	    sprintf (buffer, "marker: url(%s)", pConst->PdString);
+	}
+      break;
+    case PRMarkerStart:
+      if (settings->value.typed_data.unit == VALUE_INHERIT)
+        sprintf (buffer, "marker-start: inherit");
+      else if (settings->value.typed_data.value == 0)
+        sprintf (buffer, "marker-start: none");
+      else
+	{
+	  pConst = &((PtrPSchema)pSchP)->PsConstant[settings->value.typed_data.value-1];
+	  if (pConst->PdString)
+	    sprintf (buffer, "marker-start: url(%s)", pConst->PdString);
+	}
+      break;
+    case PRMarkerMid:
+      if (settings->value.typed_data.unit == VALUE_INHERIT)
+        sprintf (buffer, "marker-mid: inherit");
+      else if (settings->value.typed_data.value == 0)
+        sprintf (buffer, "marker-mid: none");
+      else
+	{
+	  pConst = &((PtrPSchema)pSchP)->PsConstant[settings->value.typed_data.value-1];
+	  if (pConst->PdString)
+	    sprintf (buffer, "marker-mid: url(%s)", pConst->PdString);
+	}
+      break;
+    case PRMarkerEnd:
+      if (settings->value.typed_data.unit == VALUE_INHERIT)
+        sprintf (buffer, "marker-end: inherit");
+      else if (settings->value.typed_data.value == 0)
+        sprintf (buffer, "marker-end: none");
+      else
+	{
+	  pConst = &((PtrPSchema)pSchP)->PsConstant[settings->value.typed_data.value-1];
+	  if (pConst->PdString)
+	    sprintf (buffer, "marker-end: url(%s)", pConst->PdString);
+	}
       break;
     case PRFillRule:
       if (settings->value.typed_data.unit == VALUE_INHERIT)

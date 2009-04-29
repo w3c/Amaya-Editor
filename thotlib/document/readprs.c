@@ -200,6 +200,18 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
     case C_PR_STOPOPACITY:
       return PtStopOpacity;
       break;
+    case C_PR_MARKER:
+      return PtMarker;
+      break;
+    case C_PR_MARKERSTART:
+      return PtMarkerStart;
+      break;
+    case C_PR_MARKERMID:
+      return PtMarkerMid;
+      break;
+    case C_PR_MARKEREND:
+      return PtMarkerEnd;
+      break;
     case C_PR_FILL_RULE:
       return PtFillRule;
       break;
@@ -1226,6 +1238,10 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
                   case PtFillOpacity:
                   case PtStrokeOpacity:
                   case PtStopOpacity:
+                  case PtMarker:
+                  case PtMarkerStart:
+                  case PtMarkerMid:
+                  case PtMarkerEnd:
                   case PtBackground:
                   case PtForeground:
                   case PtColor:

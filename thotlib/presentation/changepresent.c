@@ -594,6 +594,18 @@ int          NumTypePRuleAPI (PtrPRule pRule)
     case PtStopOpacity:
       return PRStopOpacity;
       break;
+    case PtMarker:
+      return PRMarker;
+      break;
+    case PtMarkerStart:
+      return PRMarkerStart;
+      break;
+    case PtMarkerMid:
+      return PRMarkerMid;
+      break;
+    case PtMarkerEnd:
+      return PRMarkerEnd;
+      break;
     case PtFillRule:
       return PRFillRule;
       break;

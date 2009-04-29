@@ -3362,6 +3362,10 @@ void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
     case PtFillOpacity:
     case PtStrokeOpacity:
     case PtStopOpacity:
+    case PtMarker:
+    case PtMarkerStart:
+    case PtMarkerMid:
+    case PtMarkerEnd:
     case PtBackground:
     case PtForeground:
     case PtColor:
@@ -3450,6 +3454,10 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
       || typeRule == PtStrokeOpacity
       || typeRule == PtFillOpacity
       || typeRule == PtStopOpacity
+      || typeRule == PtMarker
+      || typeRule == PtMarkerStart
+      || typeRule == PtMarkerMid
+      || typeRule == PtMarkerEnd
       || typeRule == PtFillRule
       || typeRule == PtBackground
       || typeRule == PtForeground

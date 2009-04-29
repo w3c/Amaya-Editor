@@ -206,6 +206,10 @@ extern void SVGhandleFillUrl ( Element el,
                                char *text );
 extern char *SVGhandleStopColor ( Element el,
                                   char *color );
+extern void GenerateMarkers ( Element el,
+                              Document doc,
+                              Element marker,
+                              int position );
 
 #else /* __STDC__ */
 
@@ -409,6 +413,10 @@ extern void SVGhandleFillUrl ( Element el,
                                  char *text );
 extern char *SVGhandleStopColor ( Element el,
                                     char *color );
+extern void GenerateMarkers ( Element el,
+                                Document doc,
+                                Element marker,
+                                int position );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

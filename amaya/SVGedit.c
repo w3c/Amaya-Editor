@@ -4298,9 +4298,9 @@ void UpdateMarkers (Element el, Document doc, ThotBool Clear, ThotBool Rebuild)
 	}
     }
 
-  if(Rebuild)
-    /* Rebuild the markers */
-    ProcessMarkers (el, doc);
+  /* Rebuild the markers */
+  // if(Rebuild)
+  //   ProcessMarkers (el, doc);
 
   TtaSetStructureChecking (oldStructureChecking, doc);
   if (dispMode == DisplayImmediately)

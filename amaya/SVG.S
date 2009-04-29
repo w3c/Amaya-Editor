@@ -2480,10 +2480,10 @@ EXCEPT
    rect:          MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
    circle_:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
    ellipse:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
-   line_:         MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   polyline:      MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
-   polygon:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
-   path:                MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer;
+   line_:         MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UseMarkers;
+   polyline:      MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer, UseMarkers;
+   polygon:       MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer, UseMarkers;
+   path:                MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic, UsePaintServer, UseMarkers;
    text_:         MoveResize, NoResize, NoShowBox, ReturnCreateWithin,
                         NoCreate, UsePaintServer;
    tspan:                NoShowBox, UsePaintServer; 

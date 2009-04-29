@@ -1411,6 +1411,17 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
               ((PtrPRule) pRule)->PrValueType = PrNumValue;
             }
           break;
+	case PtMarker:
+	case PtMarkerStart:
+	case PtMarkerMid:
+	case PtMarkerEnd:
+          if (value == 0)
+	    ((PtrPRule) pRule)->PrValueType = PrNumValue;
+          else
+	    ((PtrPRule) pRule)->PrValueType = PrConstStringValue;
+	  ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	  ((PtrPRule) pRule)->PrIntValue = value;
+	  break;
         case PtVis:
           ((PtrPRule) pRule)->PrPresMode = PresImmediate;
           switch (value)
@@ -3055,6 +3066,10 @@ int TtaGetPRuleValue (PRule pRule)
       case PtFillOpacity:
       case PtStrokeOpacity:
       case PtStopOpacity:
+      case PtMarker:
+      case PtMarkerStart:
+      case PtMarkerMid:
+      case PtMarkerEnd:
       case PtBackground:
       case PtForeground:
       case PtColor:
@@ -3652,6 +3667,10 @@ int TtaSamePRules (PRule pRule1, PRule pRule2)
                     case PtStrokeOpacity:
                     case PtFillOpacity:
                     case PtStopOpacity:
+		    case PtMarker:
+		    case PtMarkerStart:
+		    case PtMarkerMid:
+		    case PtMarkerEnd:
                     case PtBackground:
                     case PtForeground:
                     case PtColor:

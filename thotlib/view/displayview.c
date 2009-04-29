@@ -630,6 +630,8 @@ static void RebuildImage (PtrDocument pDoc)
   PtrAbstractBox      pAbbRoot;
   ViewFrame          *pFrame;
   int                 frame, h, w;
+  DisplayMode         dispMode;
+  int                 doc;
   ThotBool            complete;
 
   for (view = 1; view <= MAX_VIEW_DOC; view++)
@@ -639,7 +641,11 @@ static void RebuildImage (PtrDocument pDoc)
         pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
         pAbbRoot = pDoc->DocViewRootAb[view - 1];
         frame = pDoc->DocViewFrame[view - 1];
+	doc = IdentDocument (pDoc);
+	dispMode = documentDisplayMode[doc - 1];
+	documentDisplayMode[doc - 1] = NoComputedDisplay;
         AbsBoxesCreate (pElRoot, pDoc, view, TRUE, TRUE, &complete);
+	documentDisplayMode[doc - 1] = dispMode;
         if (pAbbRoot == NULL)
           pAbbRoot = pDoc->DocViewRootAb[view - 1] = pElRoot->ElAbstractBox[view - 1];
         h = 0;
@@ -1043,8 +1049,7 @@ void TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
             /* d'image au mode  d'affichage immediat */
             {
               /* on met a jour le mode d'affichage */
-              documentDisplayMode[doc - 1] = newDisplayMode;
-	      
+              documentDisplayMode[doc - 1] = newDisplayMode;     
               if (oldDisplayMode == NoComputedDisplay)
                 /* il faut recalculer l'image */
                 RebuildImage (pDoc);

@@ -745,10 +745,13 @@ static void ReadBlocks (BinFile file, PtrTRuleBlock *pBlock, PtrTRule *pNextTRul
                           pCond->TcAttr == PtLineWeight ||
                           pCond->TcAttr == PtFillPattern ||
                           pCond->TcAttr == PtOpacity ||
-                          pCond->TcAttr == PtStopOpacity ||
                           pCond->TcAttr == PtFillOpacity ||
                           pCond->TcAttr == PtStrokeOpacity ||
                           pCond->TcAttr == PtStopOpacity ||
+                          pCond->TcAttr == PtMarker ||
+                          pCond->TcAttr == PtMarkerStart ||
+                          pCond->TcAttr == PtMarkerMid ||
+                          pCond->TcAttr == PtMarkerEnd ||
                           pCond->TcAttr == PtBackground ||
                           pCond->TcAttr == PtForeground ||
 			  pCond->TcAttr == PtColor ||

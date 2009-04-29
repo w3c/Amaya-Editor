@@ -3423,6 +3423,10 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
               case PtStrokeOpacity:
               case PtOpacity:
               case PtStopOpacity:
+              case PtMarker:
+              case PtMarkerStart:
+              case PtMarkerMid:
+              case PtMarkerEnd:
                 PutInt (pRPres->PrIntValue, fnum,  NULL, doc, *lineBreak);
                 break;
               case PtBackground:

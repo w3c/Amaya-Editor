@@ -192,7 +192,7 @@ extern char *TtaGetStyledAttributeValues (PSchema tsch, int attrType);
   described in thotlib/include/presentation.h
  -----------------------------------------------------------------------*/
 extern void TtaPToCss (PresentationSetting settings, char *buffer, int len,
-		       Element el);
+		       Element el, void* pSchP);
 
 /*----------------------------------------------------------------------
    TtaListStyleSchemas

@@ -38,6 +38,10 @@
 #define C_PIV_DOC_END 28	/* document ending mark */
 
 /* specific presentation rule type codes */
+#define C_PR_MARKER '&'
+#define C_PR_MARKERSTART 39
+#define C_PR_MARKERMID '('
+#define C_PR_MARKEREND ')'
 #define C_PR_VIS '*'
 #define C_PR_COLOR '+'
 #define C_PR_STOPCOLOR ','
