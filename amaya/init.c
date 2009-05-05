@@ -5820,16 +5820,17 @@ void CallbackDialogue (int ref, int typedata, char *data)
 
     case FormAnswer:
       /* *********Get an answer********* */
-      if (val == 0)
+      if (val == 0 || val == 2)
         {
           /* no answer */
           Answer_text[0] = EOS;
           Answer_name[0] = EOS;
           Answer_password[0] = EOS;
-          UserAnswer = 0;
+          UserAnswer = FALSE;
+          ExtraChoice = (val == 2);
         }
       else
-        UserAnswer = 1;
+        UserAnswer = TRUE;
       TtaDestroyDialogue (BaseDialog + FormAnswer);
       break;
 

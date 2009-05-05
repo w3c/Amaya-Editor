@@ -9233,6 +9233,14 @@ cancellarlo.</message>
 	<message xml:lang="fr">Label</message>
 	<message xml:lang="nl">Bijschrift</message>
 </label>
+<label define="AM_SAVE_UPLOAD">
+	<message xml:lang="en">Local copy</message>
+	<message xml:lang="fr">Copie locale</message>
+</label>
+<label define="AM_SAVE_UPLOAD_TIP">
+	<message xml:lang="en">Save a copy to upload later</message>
+	<message xml:lang="fr">Sauver une copie pour poster plus tard</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

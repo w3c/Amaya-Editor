@@ -1,3 +1,10 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
 #ifdef _WX
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"
@@ -748,17 +755,17 @@ ThotBool CreateSaveObject (int ref, ThotWindow parent, char* objectname)
   ----------------------------------------------------------------------*/
 ThotBool CreateAuthentDlgWX (int ref, ThotWindow parent,
                              char *auth_realm, char *server,
-			     char *name, char *pwd)
+                             char *name, char *pwd)
 {
 #ifdef _WX
   /* check if the dialog is alredy open */
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
-  AuthentDlgWX * p_dlg = new AuthentDlgWX( ref,
-					   parent,
-					   auth_realm, server,
-					   name, pwd);
+  AuthentDlgWX * p_dlg = new AuthentDlgWX (ref,
+                                           parent,
+                                           auth_realm, server,
+                                           name, pwd);
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
       /* the dialog has been sucesfully registred */
       return TRUE;

@@ -343,7 +343,7 @@ BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op,
         me->reqStatus = old_reqStatus;
 
       /* handle the user's answers back to the library */
-      if (UserAnswer)
+      if (UserAnswer && !ExtraChoice)
         {
           /* set the user name */
           HTAlert_setReplyMessage (reply, Answer_name);
@@ -351,23 +351,18 @@ BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op,
           HTAlert_setReplySecret (reply, Answer_password);
 	  /* Add the new password in the password table if asked */
           if (Answer_save_password)
-	      NewPasswordTable ((char *)realm, server, Answer_name,
-		    	         Answer_password, i_auth, TRUE);
-	  if (server)
-	    TtaFreeMemory (server);
+            NewPasswordTable ((char *)realm, server, Answer_name,
+                              Answer_password, i_auth, TRUE);
+          if (server)
+            TtaFreeMemory (server);
           return YES;
         }
       else
-	{
-	  if (server)
-	    TtaFreeMemory (server);
-	  return NO;
-	}
-
-      /* free allocated memory */
-      if (server)
-        TtaFreeMemory (server);
-
+        {
+          if (server)
+            TtaFreeMemory (server);
+          return NO;
+        }
     }
   return NO;
 }

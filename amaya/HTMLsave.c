@@ -33,7 +33,7 @@
 #include "message_wx.h"
 #include "wxdialogapi_f.h"
 #include "archives.h"
-
+#include "registry_wx.h"
 #include "email.h"
 #include "wxdialog/SendByMailDlgWX.h"
 
@@ -1980,7 +1980,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
   strcat (tempname, DIR_STR);
   strcat (tempname, documentName);
   ok = FALSE;
-  if (SaveAsText) 
+  if (SaveAsText)
     {
       /* the document will be exported without line numbers */
       SetInternalLinks (doc);
@@ -2504,6 +2504,68 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
 }
 
 /*----------------------------------------------------------------------
+  SaveLocalCopy
+  ----------------------------------------------------------------------*/
+static ThotBool SaveLocalCopy (Document doc, View view, char *url, char *tempname)
+{
+  LoadedImageDesc    *pImage;
+  char                pathname[MAX_LENGTH], *ptr, *last = NULL;
+  char                msg[MAX_LENGTH];
+  wxString            homedir = TtaGetHomeDir();
+  ThotBool            res = FALSE;
+
+  if (url && !strncmp (url, "http://", 7))
+    {
+      ptr = strstr (url, "?");
+      if (ptr == NULL)
+        ptr = strstr (url, "#");
+      if (ptr == NULL)
+        {
+          sprintf (pathname, "%s%c%s", (const char *)(homedir.mb_str(wxConvUTF8)), DIR_SEP, &url[7]);
+          ptr = strstr (pathname, "/");
+          while (ptr)
+            {
+              last = ptr;
+              ptr = strstr (&last[1], "/");              
+#ifdef _WINDOWS
+              *last = DIR_SEP;
+#endif /* _WINDOWS */
+            }
+          InitConfirm3L (doc, 1, TtaGetMessage (AMAYA, AM_SAVE_UPLOAD_TIP), pathname,
+                         NULL, TRUE);
+          res =  UserAnswer;
+
+          // create the subdirectory if needed
+          if (res && last)
+            {
+              *last = EOS;
+              res = TtaCheckMakeDirectory (pathname, TRUE);
+              *last = DIR_SEP;
+            }
+          // save a copy of the document file
+          if (res)
+            res = TtaFileCopy (tempname, pathname);
+          if (res)
+            {
+              /* switch Amaya buttons and menus */
+              DocStatusUpdate (doc, FALSE);
+              TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), pathname);
+              /* Notify the document as modified */
+              TtaSetDocumentModified (doc);
+              pImage = ImageURLs;
+            }
+          else
+            {
+              sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), pathname);
+              InitInfo (NULL, msg);
+              res = FALSE;
+            }
+        }
+    }
+  return res;
+}
+
+/*----------------------------------------------------------------------
   SaveDocumentThroughNet
   Save a document and the included images to a remote network location.
   confirm = TRUE form SAVE_AS and FALSE from SAVE
@@ -2519,7 +2581,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   int              remainder = 10000;
   int              index = 0, len, nb = 0;
   int              i, res;
-  ThotBool*imgToSave = NULL;
+  ThotBool        *imgToSave = NULL, savecopy = FALSE;
 
   msg = (char *)TtaGetMemory (remainder);
   if (msg == NULL)
@@ -2640,16 +2702,23 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       res = SafeSaveFileThroughNet (doc, tempname, url, content_type, use_preconditions);
       if (res != 0)
         {
-          DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
           ResetStop (doc);
-          if (AmayaLastHTTPErrorMsg[0] == EOS)
-              sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
-                       DocumentURLs[doc]);
-          InitInfo ("", AmayaLastHTTPErrorMsg);
-          res = -1;
+          savecopy = ExtraChoice;
+          if (savecopy)
+            // save a local copy
+            res = SaveLocalCopy (doc, view, url, tempname);
+          else
+            {
+              DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
+              if (AmayaLastHTTPErrorMsg[0] == EOS)
+                sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
+                         DocumentURLs[doc]);
+              InitInfo ("", AmayaLastHTTPErrorMsg);
+              res = -1;
+            }
         }
 
-      if (res == 0)
+      if (res == 0 && !savecopy)
         {
           i = 0;
           while (pImage)
@@ -3396,7 +3465,7 @@ void BackUpDocs ()
   AutoSaveDocument
   Entry point called when the auto-save procedure is triggered
   ----------------------------------------------------------------------*/
-static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
+static ThotBool AutoSaveDocument (Document doc, View view, char *local_url)
 {
   char                tempname[MAX_LENGTH];
   ThotBool            ok;
