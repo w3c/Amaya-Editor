@@ -2310,9 +2310,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           GetLeftRightMargins (floatR, pBlock, &ml, &mr);
           pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg - orgX;
           if (ml < 0)
-            pLine->LiXMax -= ml;
+            pLine->LiXMax += ml;
           if (mr < 0)
-            pLine->LiXMax -= mr;
+            pLine->LiXMax += mr;
           bottomR = by + bh - orgY;
         }
       else if (floatR && pfloatR)
@@ -2344,10 +2344,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       if (floatR == NULL)
         {
           /* line extended to the right edge of the block */
-          GetLeftRightMargins (floatR, pBlock, &ml, &mr);
-          pLine->LiXMax = pBlock->BxW - pLine->LiXOrg + ml;
-          if (pBlock->BxLeftFloat || pBlock->BxRightFloat)
-            pLine->LiXMax += left;
+          pLine->LiXMax = pBlock->BxW;
+          //if (pBlock->BxLeftFloat || pBlock->BxRightFloat)
+          //  pLine->LiXMax += left;
           bottomR = pLine->LiYOrg;
         }
       else
@@ -4259,9 +4258,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
                                &full, &toAdjust, &breakLine, &newblock, frame,
                                indent, top, bottom, left, right,
                                &floatL, &floatR);
+          // update the min width of the block
           if (pBox->BxMinWidth < minWidth)
             pBox->BxMinWidth = minWidth;
-
           // check if there is an enclosing ghost block
           pRefBlock = GetEnclosingBlock (pNextBox->BxAbstractBox, pAb);
           if (prevLine)
@@ -4329,7 +4328,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             }
           if (breakLine || !full)
             {
-              if (noWrappedWidth > pBox->BxMaxWidth)
+              if (noWrappedWidth > pBox->BxMaxWidth || pLine == pBox->BxFirstLine)
                 pBox->BxMaxWidth = noWrappedWidth;
               noWrappedWidth = 0;
             }
@@ -4456,6 +4455,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   if (extensibleBox || pBox->BxShrink)
     pBox->BxW = pBox->BxMaxWidth;
   pBox->BxMinWidth += left + right;
+  // check if the block incluses only one line
   pBox->BxMaxWidth += left + right;
   UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
 
