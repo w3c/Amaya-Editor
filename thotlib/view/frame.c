@@ -411,29 +411,32 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
     {
       pAb = pBox->BxAbstractBox;
 #ifdef _GL
-      formatted = (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
-                   pAb->AbPSchema->PsStructName &&
-                   strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
-      if (formatted)
-        {
-          /* clip on the enclosing box that changes the System origin */
-          pClipAb = pAb;
-          while (pAb)
-            {
-              if (pAb->AbElement &&
-                  pAb->AbBox &&
-                  pAb->AbElement->ElSystemOrigin)
-                pClipAb = pAb;
-              pAb = pAb->AbEnclosing;
-            }
-          if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
-            {
-              /* clip the enclosing limits */
-              dx = dy = dw = dh = 0;
-              pBox = pClipAb->AbBox;
-              cpoints = EXTRA_GRAPH;
-            }
-        }
+      if (pAb)
+	{
+	  formatted = (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
+		       pAb->AbPSchema->PsStructName &&
+		       strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
+	  if (formatted)
+	    {
+	      /* clip on the enclosing box that changes the System origin */
+	      pClipAb = pAb;
+	      while (pAb)
+		{
+		  if (pAb->AbElement &&
+		      pAb->AbBox &&
+		      pAb->AbElement->ElSystemOrigin)
+		    pClipAb = pAb;
+		  pAb = pAb->AbEnclosing;
+		}
+	      if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
+		{
+		  /* clip the enclosing limits */
+		  dx = dy = dw = dh = 0;
+		  pBox = pClipAb->AbBox;
+		  cpoints = EXTRA_GRAPH;
+		}
+	    }
+	}
 #endif /* _GL */
       if (pAb)
         pEl = pAb->AbElement;
