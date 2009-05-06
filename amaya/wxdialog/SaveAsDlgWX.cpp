@@ -151,11 +151,11 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
       XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BCOPY_IMAGES) ));
       XRCCTRL(*this, "wxID_CPY_CSS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BCOPY_CSS) ));
       XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BTRANSFORM_URL) ));
-      CopyImages = FALSE;
+      CopyImages = saveImgs;
       XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetValue(CopyImages);
-      CopyCss = FALSE;
+      TtaGetEnvBoolean ("COPY_CSS", &CopyCss);
       XRCCTRL(*this, "wxID_CPY_CSS_CHK", wxCheckBox)->SetValue(CopyCss);
-      UpdateURLs = TRUE;
+      TtaGetEnvBoolean ("TRANSFORM_URL", &UpdateURLs);
       XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetValue(UpdateURLs);
       RemoveTemplate = FALSE;
       // Image directory
@@ -576,6 +576,7 @@ void SaveAsDlgWX::OnDocFormatBox ( wxCommandEvent& event )
 void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
 {
   CopyImages = XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->GetValue();
+  TtaSetEnvBoolean ("COPY_IMAGES", CopyImages, TRUE);
   if (CopyImages)
     {
       // update the image path
@@ -605,6 +606,7 @@ void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
 void SaveAsDlgWX::OnCssChkBox ( wxCommandEvent& event )
 {
   CopyCss = XRCCTRL(*this, "wxID_CPY_CSS_CHK", wxCheckBox)->GetValue();
+  TtaSetEnvBoolean ("COPY_CSS", CopyCss, TRUE);
   if (CopyCss)
     {
       // update the image path
@@ -642,6 +644,7 @@ void SaveAsDlgWX::OnTemplateChkBox ( wxCommandEvent& event )
 void SaveAsDlgWX::OnUrlsChkBox ( wxCommandEvent& event )
 {
   UpdateURLs = XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->GetValue();
+  TtaSetEnvBoolean ("TRANSFORM_URL", UpdateURLs, TRUE);
 }
 
 /*---------------------------------------------------------------

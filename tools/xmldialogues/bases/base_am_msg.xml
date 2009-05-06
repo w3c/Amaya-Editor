@@ -878,8 +878,8 @@ később</message>
 	<message xml:lang="nl">%s wordt opgeslagen</message>
 </label>
 <label define="AM_CANNOT_SAVE">
-	<message xml:lang="en">Cannot save in: %s</message>
-	<message xml:lang="fr">Impossible d'enregistrer dans : %s</message>
+	<message xml:lang="en">%s not saved</message>
+	<message xml:lang="fr">%s non enregistré </message>
 	<message xml:lang="de">Kann nicht speichern unter %s</message>
 	<message xml:lang="it">Non posso salvare su %s</message>
 	<message xml:lang="tr">%s kaydedilemedi</message>

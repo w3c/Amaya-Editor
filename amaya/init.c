@@ -6938,6 +6938,10 @@ void InitAmaya (NotifyEvent * event)
   TtaSetEnvInt ("TABLE_BORDER", 1, FALSE);
   TtaSetEnvBoolean ("TABLE_EXTEND_WIDTH", TRUE, FALSE);
   TtaSetEnvBoolean ("TABLE_CAPTION", TRUE, FALSE);
+  // SaveAs options
+  TtaSetEnvBoolean ("TRANSFORM_URL", TRUE, FALSE);
+  TtaSetEnvBoolean ("COPY_IMAGES", FALSE, FALSE);
+  TtaSetEnvBoolean ("COPY_CSS", FALSE, FALSE);
 
   /* Initialize environment variables if they are not defined */
   TtaSetEnvString ("DOCUMENT_CHARSET", "iso-8859-1", FALSE);
@@ -8231,7 +8235,7 @@ char* CreateTempDirectory (const char* name)
   while (i < 10000)
     {
       sprintf(buff, "%s%s%04d", temppath, name, i);
-      if(!TtaCheckDirectory(buff))
+      if (!TtaCheckDirectory(buff))
         {
           if(TtaCheckMakeDirectory(buff, TRUE))
             return TtaStrdup(buff);

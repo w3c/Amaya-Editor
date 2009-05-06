@@ -840,8 +840,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
       SaveAsXML = FALSE;
       SaveAsText = FALSE;
     }
-  
-  saveImgs = FALSE;
+  TtaGetEnvBoolean ("SAVE_IMAGES", &saveImgs);
   if (IsW3Path (pathname))
     {
       // check idf some images must be saved
@@ -2357,7 +2356,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
 #ifdef AMAYA_DEBUG
   unsigned long     file_size = 0;
 #endif
-  ThotBool          verify_publish, lost_update_check;
+  ThotBool          verify_publish;
 
   res = SaveWikiFile (doc, localfile, remotefile, content_type,use_preconditions);
   if (res != 2)
@@ -2373,8 +2372,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   /* JK: SYNC requests assume that the remotefile name is a static array */
   strcpy (tempfile, remotefile);
   mode = AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST;
-  TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &lost_update_check);
-  if (lost_update_check || use_preconditions)
+  if (use_preconditions)
   mode = mode | AMAYA_USE_PRECONDITIONS;
   res = PutObjectWWW (doc, localfile, tempfile, content_type, NULL,
                       mode, NULL, NULL);
@@ -2522,7 +2520,7 @@ static ThotBool SaveLocalCopy (Document doc, View view, char *url, char *tempnam
       if (ptr == NULL)
         {
           docdir = TtaGetDocumentsDir ();
-          sprintf (pathname, "%s%c%s", docdir, &url[7]);
+          sprintf (pathname, "%s%c%s", docdir, DIR_SEP,&url[7]);
           ptr = strstr (pathname, "/");
           while (ptr)
             {
@@ -2710,11 +2708,12 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
             res = SaveLocalCopy (doc, view, url, tempname);
           else
             {
+              char err_msg[MAX_LENGTH];
               DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-              if (AmayaLastHTTPErrorMsg[0] == EOS)
-                sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
-                         DocumentURLs[doc]);
-              InitInfo ("", AmayaLastHTTPErrorMsg);
+              sprintf (err_msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+              ConfirmError3L (doc, 1, err_msg,
+                              NULL,
+                              AmayaLastHTTPErrorMsg, NULL, FALSE);
               res = -1;
             }
         }

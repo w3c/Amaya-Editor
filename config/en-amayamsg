@@ -44,7 +44,7 @@
 42 %s is not available at the moment. Please retry later
 43 %s loaded
 44 Saving %s
-45 Cannot save in: %s
+45 %s not saved
 46 English system errors messages
 47 An anchor cannot contain these elements
 48 Cannot create an anchor within an anchor

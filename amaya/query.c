@@ -3220,17 +3220,18 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 {
   AHTReqContext      *me;
   CHARSET             charset;
+  HTParentAnchor     *dest_anc_parent;
   int                 status;
   unsigned long       file_size = 0;
   char               *fileURL;
   char               *etag = NULL;
-  HTParentAnchor     *dest_anc_parent;
   char               *esc_url;
   int                 UsePreconditions;
   char                url_name[MAX_LENGTH];
   char               *resource_name, *localfilename;
   char               *tmp2;
   char                file_name[MAX_LENGTH];
+  ThotBool            lost_update_check = FALSE;
 
   if (mode & AMAYA_SIMPLE_PUT)
     {
@@ -3428,27 +3429,29 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   /* Should we use preconditions? */
   if (UsePreconditions)
     {
-      etag = HTAnchor_etag (HTAnchor_parent (me->dest));
-      if (etag)
-          HTRequest_setPreconditions(me->request, HT_MATCH_THIS);
-      else
-        {
-          HTRequest_setPreconditions(me->request, HT_NO_MATCH);
-          HTRequest_addAfter(me->request, check_handler, NULL, NULL, HT_ALL,
-                             HT_FILTER_MIDDLE, YES);
-          HTRequest_addAfter (me->request, HTAuthFilter, "http://*", NULL, 
-                              HT_NO_ACCESS, HT_FILTER_MIDDLE, YES);
-          HTRequest_addAfter (me->request, HTAuthFilter, "http://*", NULL,
-                              HT_REAUTH, HT_FILTER_MIDDLE, YES);
-          HTRequest_addAfter (me->request, HTAuthInfoFilter, "http://*", NULL,
-                              HT_ALL, HT_FILTER_MIDDLE, YES);
-          HTRequest_addAfter (me->request, HTUseProxyFilter, "http://*", NULL,
-                              HT_USE_PROXY, HT_FILTER_MIDDLE, YES);
-        }
+      HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+      HTRequest_addAfter(me->request, check_handler, NULL, NULL, HT_ALL,
+                         HT_FILTER_MIDDLE, YES);
+      HTRequest_addAfter (me->request, HTAuthFilter, "http://*", NULL, 
+                          HT_NO_ACCESS, HT_FILTER_MIDDLE, YES);
+      HTRequest_addAfter (me->request, HTAuthFilter, "http://*", NULL,
+                          HT_REAUTH, HT_FILTER_MIDDLE, YES);
+      HTRequest_addAfter (me->request, HTAuthInfoFilter, "http://*", NULL,
+                          HT_ALL, HT_FILTER_MIDDLE, YES);
+      HTRequest_addAfter (me->request, HTUseProxyFilter, "http://*", NULL,
+                          HT_USE_PROXY, HT_FILTER_MIDDLE, YES);
     }
   else
-    /* don't use preconditions */
-    HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+    {
+      //TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &lost_update_check);
+      if (lost_update_check)
+        etag = HTAnchor_etag (HTAnchor_parent (me->dest));
+      if (etag)
+        HTRequest_setPreconditions(me->request, HT_MATCH_THIS);
+      else
+        /* don't use preconditions */
+        HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+    }
    
   /* don't use the cache while saving a document */
   HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
@@ -3472,7 +3475,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
 
    
   /* make the request */
-  if (UsePreconditions && !etag)
+  if (UsePreconditions)
     status = HTHeadAnchor (me->dest, me->request);
   else
     status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
