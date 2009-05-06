@@ -980,7 +980,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
         }
       else
         {
-          bg = pAb->AbBackground;
+	  bg = pAb->AbBackground;
           fg = pAb->AbForeground;
           pat = pAb->AbFillPattern;
         }

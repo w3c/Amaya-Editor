@@ -4818,18 +4818,18 @@ static char *ParseSVGFill (Element element, PSchema tsch,
 {
   PresentationValue     fill, color;
   char                  *url;
+  int                   pattern;
 
   url = NULL;
   fill.typed_data.unit = UNIT_INVALID;
   fill.typed_data.real = FALSE;
+  pattern = PATTERN_BACKGROUND;
   if (!strncasecmp (cssRule, "none", 4))
     {
-      fill.typed_data.value = PATTERN_NONE;
+      pattern = PATTERN_NONE;
+      fill.typed_data.value = -2;
       fill.typed_data.unit = UNIT_REL;
-      if (DoApply)
-        TtaSetStylePresentation (PRFillPattern, element, tsch, context, fill);
       cssRule = SkipWord (cssRule);
-      return (cssRule);
     }
   else if (!strncasecmp (cssRule, "currentColor", 12))
     {
@@ -4867,7 +4867,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
       if (url)
 	TtaFreeMemory (url);
       /* thot specificity: need to set fill pattern for background color */
-      fill.typed_data.value = PATTERN_BACKGROUND;
+      fill.typed_data.value = pattern;
       fill.typed_data.unit = UNIT_REL;
       TtaSetStylePresentation (PRFillPattern, element, tsch, context, fill);
     }

@@ -930,7 +930,7 @@ void CopyAMarker (Element marker, Element el, Element leaf, int vertex,
 		  Document doc)
 {
   ElementType          elType;
-  Element              copy, child;
+  Element              copy, child, ascend;
   AttributeType        attrType;
   Attribute            attr;
   char                 *val, buffer[50];
@@ -1021,15 +1021,25 @@ void CopyAMarker (Element marker, Element el, Element leaf, int vertex,
     }
   if (strokeWidth)
     {
-      if (TtaGetStylePresentation (PRLineWeight, el, NULL, context, &presValue) == 0)
-        {
-          if (presValue.typed_data.real)
-            scaleX = presValue.typed_data.value / 1000;
-          else
-            scaleX = presValue.typed_data.value;
-          if (presValue.typed_data.unit == UNIT_REL)
-            scaleX = scaleX / 10;
-        }
+      strokeWidth = FALSE;
+      ascend = el;
+      do
+	{
+	  if (TtaGetStylePresentation (PRLineWeight, ascend, NULL, context,
+				       &presValue) == 0)
+	    {
+	      strokeWidth = TRUE;
+	      if (presValue.typed_data.real)
+		scaleX = presValue.typed_data.value / 1000;
+	      else
+		scaleX = presValue.typed_data.value;
+	      if (presValue.typed_data.unit == UNIT_REL)
+		scaleX = scaleX / 10;
+	    }
+	  else
+	    ascend = TtaGetParent (ascend);
+	}
+      while (!strokeWidth && ascend);
     }
   scaleY = scaleX;
   if (scaleX != 1 || scaleY != 1)

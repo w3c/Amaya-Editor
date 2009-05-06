@@ -1236,11 +1236,10 @@ static void DoDrawMesh (int frame, int thick, int style, void *mesh,
                         int fg, int bg, int pattern, int mode)
 {
   /* Fill in the polygon */
-  if (pattern == 2) 
+  if (pattern == 2 && bg >= 0) 
     {
-      if (bg >= 0)
-	/*  InitDrawing (style, thick, bg); */
-	GL_SetForeground (bg, TRUE);
+      /*  InitDrawing (style, thick, bg); */
+      GL_SetForeground (bg, TRUE);
       // by default mode NONZERO
       MakeMesh (mesh, mode);
     }
