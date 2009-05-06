@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -20,6 +20,7 @@
 #include "appdialogue_wx.h"
 #include "message_wx.h"
 #include "file_filters.h"
+#include "registry_wx.h"
 #include "AHTURLTools_f.h"
 
 
@@ -492,7 +493,7 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
   path = path.Trim(TRUE).Trim(FALSE);
   if (path.StartsWith(_T("http")) ||
       path.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
-    p_dlg->SetDirectory(wxGetHomeDir());
+    p_dlg->SetDirectory(TtaConvMessageToWX(TtaGetDocumentsDir()));
   else
 	 {
         file_value = path.AfterLast (DIR_SEP);

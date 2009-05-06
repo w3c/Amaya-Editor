@@ -6,7 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern char *TtaGetDocumentsDir ( void );
+
 #else /* __STDC__ */
+
+extern char *TtaGetDocumentsDir ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

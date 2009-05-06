@@ -1,11 +1,11 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-#if defined(_WX)
 
+#if defined(_WX)
 #include "wx/wx.h"
 #include "wx/string.h"
 #include "wx/strconv.h"
@@ -18,6 +18,7 @@
 #include "typemedia.h"
 #include "registry.h"
 #include "registry_wx.h"
+#include "fileaccess.h"
 
 /*----------------------------------------------------------------------
   TtaGetResourcesPathWX - 
@@ -154,3 +155,34 @@ wxString TtaGetHomeDir()
   return wx_win_homedir;
 }
 #endif /* _WX */
+
+
+/*----------------------------------------------------------------------
+  TtaGetDocumentDir - 
+  this function returns the default user document directory
+  on windows something like : C:\Doc... adn.. settings\username\documents
+  on unix something like : /home/username/documents
+  ----------------------------------------------------------------------*/
+char *TtaGetDocumentsDir()
+{
+  char               path[MAX_LENGTH], *s;
+  wxString            homedir;
+
+  s = TtaGetEnvString ("DOCUMENTS_PATH");
+  if (s == NULL || s[0] == EOS)
+    {
+      homedir = TtaGetHomeDir();
+#ifdef _WINDOWS
+      strcpy (path, (const char *)(homedir.mb_str(wxConvUTF8)));
+#else /* _WINDOWS */
+      sprintf (path, "%s%cDocuments", (const char *)(homedir.mb_str(wxConvUTF8)), DIR_SEP);
+#endif /* _WINDOWS */
+      TtaSetEnvString ("DOCUMENTS_PATH", path, TRUE);
+      s = TtaGetEnvString ("DOCUMENTS_PATH");
+    }
+
+  // check if the directory exists
+  if (!TtaCheckDirectory(s))
+    TtaCheckMakeDirectory(s, TRUE);
+  return s;
+}

@@ -2511,7 +2511,7 @@ static ThotBool SaveLocalCopy (Document doc, View view, char *url, char *tempnam
   LoadedImageDesc    *pImage;
   char                pathname[MAX_LENGTH], *ptr, *last = NULL;
   char                msg[MAX_LENGTH];
-  wxString            homedir = TtaGetHomeDir();
+  char               *docdir;
   ThotBool            res = FALSE;
 
   if (url && !strncmp (url, "http://", 7))
@@ -2521,7 +2521,8 @@ static ThotBool SaveLocalCopy (Document doc, View view, char *url, char *tempnam
         ptr = strstr (url, "#");
       if (ptr == NULL)
         {
-          sprintf (pathname, "%s%c%s", (const char *)(homedir.mb_str(wxConvUTF8)), DIR_SEP, &url[7]);
+          docdir = TtaGetDocumentsDir ();
+          sprintf (pathname, "%s%c%s", docdir, &url[7]);
           ptr = strstr (pathname, "/");
           while (ptr)
             {

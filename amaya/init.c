@@ -1934,9 +1934,8 @@ static void InitOpenDocForm (Document doc, View view, const char *name, const ch
                              DocumentType docType)
 {
   char              s[MAX_LENGTH];
-  char             *thotdir;
+  char             *thotdir, *docdir;
   ThotBool          remote;
-  wxString          homedir;
   ThotBool          created;
 
   CurrentDocument = doc;
@@ -1978,8 +1977,8 @@ static void InitOpenDocForm (Document doc, View view, const char *name, const ch
           // Avoid to create new documents into Amaya space
           if (!strncmp (s, thotdir, strlen (thotdir)))
             {
-              homedir = TtaGetHomeDir();
-              strcpy (s, (const char *)homedir.mb_str(wxConvUTF8));
+              docdir = TtaGetDocumentsDir();
+              strcpy (s, docdir);
             }
           strcpy (DirectoryName, s);
           strcpy (DocumentName, name);

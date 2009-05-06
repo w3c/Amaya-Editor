@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -304,7 +304,7 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
   // set an initial path
   if (url.StartsWith(_T("http")) ||
       url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
-    p_dlg->SetPath(wxGetHomeDir());
+    p_dlg->SetPath(TtaConvMessageToWX(TtaGetDocumentsDir()));
   else
     p_dlg->SetPath(dir_value);
 
@@ -360,7 +360,7 @@ void OpenDocDlgWX::OnFilenameButton( wxCommandEvent& event )
  // set an initial path
  if (url.StartsWith(_T("http")) ||
      url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
-   p_dlg->SetDirectory(wxGetHomeDir());
+   p_dlg->SetDirectory(TtaConvMessageToWX(TtaGetDocumentsDir()));
   else
     {
       file_value = url.AfterLast (DIR_SEP);
