@@ -4763,7 +4763,7 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
                              PresentationContext context, char *cssRule,
                              CSSInfoPtr css, ThotBool isHTML)
 {
-  PresentationValue     best;
+  PresentationValue     best, color;
   char                  *url;
 
   best.typed_data.unit = UNIT_INVALID;
@@ -4790,8 +4790,15 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
       cssRule = ParseCSSUrl (cssRule, &url);
       /* **** do something with the url ***** */;
       TtaFreeMemory (url);
-      /* **** caution: another color value may follow the uri (in case
-         the uri could ne be dereferenced) *** */
+      /* a color property may follow the url */
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS &&
+	  *cssRule != ',')
+	/* we expect a color property here */
+	{
+	  cssRule = ParseCSSColor (cssRule, &color);
+	  /* ***** do something with the color we have just parsed */
+	}
     }
   else
     cssRule = ParseCSSColor (cssRule, &best);
@@ -4809,53 +4816,60 @@ static char *ParseSVGFill (Element element, PSchema tsch,
                            PresentationContext context, char *cssRule,
                            CSSInfoPtr css, ThotBool isHTML)
 {
-  PresentationValue     best;
+  PresentationValue     fill, color;
   char                  *url;
 
   url = NULL;
-  best.typed_data.unit = UNIT_INVALID;
-  best.typed_data.real = FALSE;
+  fill.typed_data.unit = UNIT_INVALID;
+  fill.typed_data.real = FALSE;
   if (!strncasecmp (cssRule, "none", 4))
     {
-      best.typed_data.value = PATTERN_NONE;
-      best.typed_data.unit = UNIT_REL;
+      fill.typed_data.value = PATTERN_NONE;
+      fill.typed_data.unit = UNIT_REL;
       if (DoApply)
-        TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
+        TtaSetStylePresentation (PRFillPattern, element, tsch, context, fill);
       cssRule = SkipWord (cssRule);
       return (cssRule);
     }
-  else if (!strncasecmp (cssRule, "inherit", 7))
-    {
-      best.typed_data.unit = VALUE_INHERIT;
-      cssRule = SkipWord (cssRule);
-    }
   else if (!strncasecmp (cssRule, "currentColor", 12))
     {
-      best.typed_data.unit = VALUE_CURRENT;
+      fill.typed_data.unit = VALUE_CURRENT;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
       cssRule = ParseCSSUrl (cssRule, &url);
-      best.typed_data.unit = VALUE_URL;
-      best.pointer = url;
-      /* @@@@ caution: another color value may follow the uri (in case
-	 the uri could not be dereferenced) @@@@ */
+      fill.typed_data.unit = VALUE_URL;
+      fill.pointer = url;
+      /* a color property may follow the url */
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS &&
+	  *cssRule != ',')
+	/* we expect a color property here */
+	{
+	  cssRule = ParseCSSColor (cssRule, &color);
+	  /* @@@@@@ do something with the color we have just parsed */
+	}
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      fill.typed_data.unit = VALUE_INHERIT;
+      cssRule = SkipWord (cssRule);
     }
   else
-    cssRule = ParseCSSColor (cssRule, &best);
+    cssRule = ParseCSSColor (cssRule, &fill);
 
-  if (best.typed_data.unit != UNIT_INVALID && DoApply)
+  if (fill.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* install the new presentation. */
-      TtaSetStylePresentation (PRBackground, element, tsch, context, best);
+      TtaSetStylePresentation (PRBackground, element, tsch, context, fill);
       if (url)
 	TtaFreeMemory (url);
       /* thot specificity: need to set fill pattern for background color */
-      best.typed_data.value = PATTERN_BACKGROUND;
-      best.typed_data.unit = UNIT_REL;
-      TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
+      fill.typed_data.value = PATTERN_BACKGROUND;
+      fill.typed_data.unit = UNIT_REL;
+      TtaSetStylePresentation (PRFillPattern, element, tsch, context, fill);
     }
   return (cssRule);
 }
