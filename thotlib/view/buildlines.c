@@ -2310,9 +2310,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           GetLeftRightMargins (floatR, pBlock, &ml, &mr);
           pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg - orgX;
           if (ml < 0)
-            pLine->LiXMax += ml;
+            pLine->LiXMax -= ml;
           if (mr < 0)
-            pLine->LiXMax += mr;
+            pLine->LiXMax -= mr;
           bottomR = by + bh - orgY;
         }
       else if (floatR && pfloatR)
@@ -2344,7 +2344,10 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
       if (floatR == NULL)
         {
           /* line extended to the right edge of the block */
-          pLine->LiXMax = pBlock->BxW;
+          if (floatL)
+            pLine->LiXMax = pBlock->BxW - pLine->LiXOrg + left;
+            else
+              pLine->LiXMax = pBlock->BxW;
           //if (pBlock->BxLeftFloat || pBlock->BxRightFloat)
           //  pLine->LiXMax += left;
           bottomR = pLine->LiYOrg;
