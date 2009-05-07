@@ -2124,8 +2124,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                   pAb->AbWidth.DimUnit == UnPercent)
                 LoadPicture (frame, pBox, (ThotPictInfo *) (pAb->AbPictBackground));
             }
-          //else if (pBox->BxMaxWidth < pBox->BxWidth)
-          //  pBox->BxMaxWidth = pBox->BxWidth;
 
           /* Moving sibling boxes and the parent? */
           pPosRel = pBox->BxPosRelations;
@@ -2695,7 +2693,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                pAb->AbFillBox || pAb->AbPictBackground ||
                pBox->BxTBorder ||  pBox->BxBBorder ||  pBox->BxLBorder ||  pBox->BxBBorder))
             /* update the clipping region */
-            UpdateBoxRegion (frame, pBox, 0, orgTrans, 0, delta);
+            UpdateBoxRegion (frame, pBox, 0, orgTrans, 0, delta + diff);
 
           /* inside height */
           pBox->BxH += delta;

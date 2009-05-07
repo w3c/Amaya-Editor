@@ -3418,7 +3418,7 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
           box = pAb->AbBox;
           if (box->BxType == BoFloatGhost || box->BxType == BoBlock ||
               box->BxType == BoFloatBlock || box->BxType == BoCellBlock ||
-              box->BxType == BoTable ||
+              box->BxType == BoTable || box->BxType == BoCell ||
               (pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimUnit != UnPercent))
             // don't change the min and max width of that box
             pAb = NULL;
