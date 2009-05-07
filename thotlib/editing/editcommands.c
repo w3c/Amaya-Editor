@@ -382,16 +382,13 @@ static void GiveInsertPoint (PtrAbstractBox pAb, char script, int frame,
 static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
 {
   PtrElement          pEl;
-  PtrBox              pBox;
-  PtrBox              pSelBox;
-  PtrTextBuffer       pBuffer;
-  PtrTextBuffer       pbuff;
+  PtrBox              pBox, pSelBox;
+  PtrAbstractBox      pCell = NULL, table;
+  PtrTextBuffer       pBuffer, pbuff;
   ViewFrame          *pFrame;
-  ViewSelection      *pViewSel;
-  ViewSelection      *pViewSelEnd;
+  ViewSelection      *pViewSel, *pViewSelEnd;
   int                 nChars;
-  int                 i, j;
-  int                 ind;
+  int                 i, j, ind;
   int                 frame, docview;
   ThotBool            notified, presentBox;
 
@@ -555,6 +552,14 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
             {
               /* end of text insertion */
               pEl = LastInsertElText;
+              // check if the table must be reformatted
+              pCell = GetParentCell (pViewSel->VsBox);
+              if (pCell)
+                {
+                  table = SearchEnclosingType (pCell, BoTable, BoTable, BoTable);
+                  if (table)
+                    SetTableWidths (table, frame);
+                }
               LastInsertElText = NULL;
               LastInsertAttr = NULL;
               LastInsertAttrElem = NULL;
@@ -566,6 +571,7 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
                 }
               if (SelectedDocument)
                 CloseHistorySequence (SelectedDocument);
+              // check if a table must be reformatted
             }
           else if (LastInsertAttr)
             {

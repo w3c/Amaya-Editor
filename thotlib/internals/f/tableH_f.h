@@ -16,6 +16,8 @@ extern void GetCellSpans ( PtrElement cell,
                            int *colspan,
                            int *rowspan,
                            PtrAttribute *colspanAttr );
+extern ThotBool SetTableWidths ( PtrAbstractBox table,
+                                 int frame );
 extern void TtaUpdateTableWidths ( Element table,
                                    Document doc );
 extern void UpdateCellHeight ( PtrAbstractBox cell,
@@ -47,6 +49,8 @@ extern void GetCellSpans ( PtrElement cell,
                              int *colspan,
                              int *rowspan,
                              PtrAttribute *colspanAttr );
+extern ThotBool SetTableWidths ( PtrAbstractBox table,
+                                   int frame );
 extern void TtaUpdateTableWidths ( Element table,
                                      Document doc );
 extern void UpdateCellHeight ( PtrAbstractBox cell,
