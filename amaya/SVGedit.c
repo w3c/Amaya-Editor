@@ -1772,7 +1772,6 @@ ThotBool SetElementData (Document doc, Element el,
       if(elType.ElSSchema == sschema && 
          elType.ElTypeNum == el_type_num)
         break;
-     
       TtaNextSibling(&child);
     }
 
@@ -1780,8 +1779,8 @@ ThotBool SetElementData (Document doc, Element el,
 
   if(child == NULL)
     {
-      /* Nothing to remove */
       if(remove)
+	/* Nothing to remove */
         return TRUE;
 
       /* No element found, insert one */
@@ -1789,12 +1788,11 @@ ThotBool SetElementData (Document doc, Element el,
       elType.ElTypeNum = el_type_num;
       child = TtaNewElement (doc, elType);
       TtaInsertFirstChild(&child, el, doc);
-      TtaRegisterElementCreate (child, doc);
 
       elType.ElTypeNum = SVG_EL_TEXT_UNIT;
       text_unit = TtaNewElement (doc, elType);
       TtaInsertFirstChild(&text_unit, child, doc);
-      TtaRegisterElementCreate (text_unit, doc);
+      TtaRegisterElementCreate (child, doc);
     }
   else
     {
@@ -1809,6 +1807,7 @@ ThotBool SetElementData (Document doc, Element el,
       elType = TtaGetElementType (text_unit);
       if(elType.ElTypeNum != SVG_EL_TEXT_UNIT)
         return FALSE;
+      TtaRegisterElementReplace (text_unit, doc);
     }
 
   TtaSetTextContent(text_unit, (unsigned char *)value,
@@ -3170,7 +3169,7 @@ void EditGraphicElement (Document doc, View view, int entry)
     {
       parent = TtaGetParent (first);
       if (TtaIsReadOnly (parent))
-        /* do modify read-only element */
+        /* do not modify read-only element */
         {
           TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_EL_RO);
           return;
@@ -3204,7 +3203,7 @@ void EditGraphicElement (Document doc, View view, int entry)
       else
         *title = EOS;
 
-      /* Get the current title */
+      /* Get the current descriptor */
       desc_ = GetElementData(doc, first, svgSchema, SVG_EL_desc);
       if(desc_)
         {
@@ -3220,8 +3219,8 @@ void EditGraphicElement (Document doc, View view, int entry)
                                        desc, MAX_LENGTH);
       if(done)
         {
-          SetElementData(doc, first, svgSchema, SVG_EL_title, title);
           SetElementData(doc, first, svgSchema, SVG_EL_desc, desc);
+          SetElementData(doc, first, svgSchema, SVG_EL_title, title);
         }
 
       break;
