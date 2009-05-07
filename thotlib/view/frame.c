@@ -407,37 +407,35 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
   int                 x1, x2, y1, y2, cpoints, caret;
 
   cpoints = 0;
-  if (pBox)
+  if (pBox && pBox->BxAbstractBox)
     {
       pAb = pBox->BxAbstractBox;
 #ifdef _GL
-      if (pAb)
-	{
-	  formatted = (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
-		       pAb->AbPSchema->PsStructName &&
-		       strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
-	  if (formatted)
-	    {
-	      /* clip on the enclosing box that changes the System origin */
-	      pClipAb = pAb;
-	      while (pAb)
-		{
-		  if (pAb->AbElement &&
-		      pAb->AbBox &&
-		      pAb->AbElement->ElSystemOrigin)
-		    pClipAb = pAb;
-		  pAb = pAb->AbEnclosing;
-		}
-	      if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
-		{
-		  /* clip the enclosing limits */
-		  dx = dy = dw = dh = 0;
-		  pBox = pClipAb->AbBox;
-		  cpoints = EXTRA_GRAPH;
-		}
-	    }
-	}
+      formatted = (FrameTable[frame].FrView == 1 && pAb->AbPSchema &&
+                   pAb->AbPSchema->PsStructName &&
+                   strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
+      if (formatted)
+        {
+          /* clip on the enclosing box that changes the System origin */
+          pClipAb = pAb;
+          while (pAb)
+            {
+              if (pAb->AbElement &&
+                  pAb->AbBox &&
+                  pAb->AbElement->ElSystemOrigin)
+                pClipAb = pAb;
+              pAb = pAb->AbEnclosing;
+            }
+          if (pClipAb != pBox->BxAbstractBox && pClipAb->AbBox)
+            {
+              /* clip the enclosing limits */
+              dx = dy = dw = dh = 0;
+              pBox = pClipAb->AbBox;
+              cpoints = EXTRA_GRAPH;
+            }
+        }
 #endif /* _GL */
+
       if (pAb)
         pEl = pAb->AbElement;
       pFrame = &ViewFrameTable[frame - 1];
@@ -470,6 +468,8 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
       y1 = pBox->BxYOrg;
       if (pFlow)
         y1 += pFlow->FlYStart;
+      if (pBox->BxTMargin < 0)
+        y1 += pBox->BxTMargin;
       y2 = y1 + pBox->BxHeight;
       if (dx >= 0)
         x2 += dx; /* the box will be moved to the right */
@@ -481,7 +481,7 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
         y1 += dy; /* the box will be moved to the top */
       if (dw > 0)
         x2 += dw;
-      if (dy > 0)
+      if (dh > 0)
         y2 += dh;
 #ifdef CLIP_TRACE
       printf ("UpdateBoxRegion dx=%d dy=%d dw=%d dh=%d\n", dx, dy, dw, dh);
