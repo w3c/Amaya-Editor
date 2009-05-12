@@ -92,6 +92,7 @@ static ThotBool           NewInsert;
 #include "ustring_f.h"
 #include "units_f.h"
 #include "undo_f.h"
+#include "undoapi_f.h"
 #include "unstructchange_f.h"
 #include "viewapi_f.h"
 #include "views_f.h"
@@ -106,6 +107,10 @@ static ThotBool           NewInsert;
 #endif /*_GL*/
 
 extern int SelectedPointInPolyline;
+
+/* function GenerateMarkers is defined in the SVG parser (module SVGbuilder.c) */
+extern void GenerateMarkers (Element pEl, Document doc, Element marker,
+			     int position);
 
 /*----------------------------------------------------------------------
   TtaIsTextInserting returns the TextInserting status
@@ -2087,13 +2092,15 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
 ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
 {
   Element        svgCanvas = NULL, svgAncestor = NULL, el2;
+  PtrElement     pEl = (PtrElement) el;
   PtrAbstractBox pAb;
   PtrBox         pBox, svgBox;
   ViewFrame     *pFrame;
   PtrTransform   CTM, inverse;
+  DisplayMode    dispMode; 
   int            frame;
   int            ancestorX, ancestorY;
-  ThotBool       transformApplied;
+  ThotBool       transformApplied, usemarkers;
 
   frame = ActiveFrame;
   if(frame <= 0)
@@ -2110,7 +2117,7 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
        transforming it is forbidden. */
     return FALSE;
 
-  if (ElementIsReadOnly ((PtrElement) el))
+  if (ElementIsReadOnly (pEl))
     return FALSE;
 
   /* Get the current transform matrix */
@@ -2148,7 +2155,9 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
   /* Clear the markers before the edition of the element */
-  UpdateMarkers(el, doc, TRUE, FALSE);
+  usemarkers = TypeHasException (ExcUseMarkers, pEl->ElTypeNumber, pEl->ElStructSchema);
+  if (usemarkers)
+    UpdateMarkers(el, doc, TRUE, FALSE);
 
   /* Call the interactive module */
   transformApplied = PathEdit (frame, doc,  inverse, svgBox,
@@ -2161,8 +2170,23 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   if(transformApplied)
     UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
 
-  UpdateMarkers(el, doc, FALSE, TRUE);
-
+  if (usemarkers)
+    {
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
+      pAb = pEl->ElAbstractBox[0];
+      if (pAb->AbMarker)
+        GenerateMarkers (el, doc, (Element)pAb->AbMarker, 0);
+      if (pAb->AbMarkerStart)
+        GenerateMarkers (el, doc, (Element)pAb->AbMarkerStart, 1);
+      if (pAb->AbMarkerMid)
+        GenerateMarkers (el, doc, (Element)pAb->AbMarkerMid, 2);
+      if (pAb->AbMarkerEnd)
+        GenerateMarkers (el, doc, (Element)pAb->AbMarkerEnd, 3);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
+    }
   return transformApplied;
 }
 
@@ -2180,7 +2204,7 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
   char           shape;
   int            frame, x, y, w, h, rx, ry;
   int            ancestorX, ancestorY;
-  ThotBool       hasBeenEdited;
+  ThotBool       hasBeenEdited, open;
 
   frame = ActiveFrame;
   if(frame <= 0)
@@ -2231,6 +2255,13 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
   pFrame = &ViewFrameTable[frame - 1];
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
+
+  // lock the undo sequence
+  open = TtaHasUndoSequence (doc);
+  if (!open)
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  // keep the history open until the button is up
+  TtaLockHistory (TRUE);
 
   /* Call the interactive module */
   hasBeenEdited = ShapeEdit (frame, doc, inverse, svgBox,
@@ -2284,6 +2315,10 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
             }
         }
     }
+  // close the history now
+  TtaLockHistory (FALSE);
+  if (!open)
+    TtaCloseUndoSequence (doc);
   return hasBeenEdited;
 }
 
