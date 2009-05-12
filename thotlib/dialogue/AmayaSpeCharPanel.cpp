@@ -590,16 +590,16 @@ AmayaSpeChar filtre_relations_binaires_negation[] =
 
 AmayaSpeChar filtre_divers[] =
   {
+    {0x00A0, "no-break space"},
     {0x00BF, "inverted question mark"},
-    {0x00A1, "inverted exclamation mark"},
     {0x2018, "left single quotation mark"},
     {0x2019, "right single quotation mark"},
     {0x201C, "left double quotation mark"},
     {0x201D, "right double quotation mark"},
     {0x00AB, "left guillemet"}, /* << */
     {0x00BB, "right guillemet"}, /* >> */
+    {0x00A1, "inverted exclamation mark"},
     {0x2030, "per mille sign"},
-    {0x2234, "therefore"},
     {0x00B0, "degree sign"},
     {0x00B6, "paragraph sign"},
     {0x0152, "oe"},
@@ -621,7 +621,7 @@ AmayaSpeChar filtre_divers[] =
     {0x00A9, "copyright"},
     {0x00AE, "registered"},
     {0x2122, "trade mark"},
-    {0x2460, "circled 1"},
+    {0x2234, "therefore"},
     {0x2605, "black star"},
     {0x2606, "white star"},
     {0x2663, "black club suit"},
@@ -647,6 +647,7 @@ AmayaSpeChar filtre_divers[] =
     {0x25B1, "white parallelogram"},
     {0x2720, "maltese cross"},
     {0x260E, "black telephone"},
+    {0x2460, "circled 1"},
     {-1, ""}
   };
 
