@@ -433,13 +433,13 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   BoxCanvas = NULL;
 
   /* Create the handler */
-  canvasWidth = svgBox->BxW;
-  canvasHeight = svgBox->BxH;
+  canvasWidth = svgBox->BxClipW;
+  canvasHeight = svgBox->BxClipH;
   if (svgBox)
     {
       // MBP apply to the leaf box and not control points
       ancestorX += svgBox->BxLMargin + svgBox->BxLBorder + svgBox->BxLPadding;
-      ancestorY +=  svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
+      ancestorY += svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
     }
   p_frame = FrameTable[frame].WdFrame;
   // 
@@ -471,6 +471,23 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
       BoxCanvas = NULL;
       return FALSE;
     }
+
+  /* Compute the position of point (2) and (3) */
+  *x2 = *x4;
+  *y2 = *y1;
+  *x3 = *x1;
+  *y3 = *y4;
+  /* Convert the coordinates x1,y1 x2,y2 x3,y3 x4,y4 */
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, NULL, x1, y1, FALSE);
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, NULL, x2, y2, FALSE);
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, NULL, x3, y3, FALSE);
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, NULL, x4, y4, FALSE);
+  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
+                        inverseCTM, TRUE, NULL, lx, ly, FALSE);
 
   /* Size of the construct */
   *lx = abs(*x4 - *x1);
@@ -549,20 +566,6 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
       BoxCanvas = NULL;
       return FALSE;
     }
-  /* Compute the position of point (2) and (3) */
-  *x2 = *x4;
-  *y2 = *y1;
-  *x3 = *x1;
-  *y3 = *y4;
-  /* Convert the coordinates x1,y1 x2,y2 x3,y3 x4,y4 */
-  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
-                        inverseCTM, TRUE, NULL, x1, y1, FALSE);
-  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
-                        inverseCTM, TRUE, NULL, x2, y2, FALSE);
-  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
-                        inverseCTM, TRUE, NULL, x3, y3, FALSE);
-  MouseCoordinatesToSVG(doc, p_frame, ancestorX, ancestorY, canvasWidth, canvasHeight,
-                        inverseCTM, TRUE, NULL, x4, y4, FALSE);
   TtaSetStatus (doc, 1, "", NULL);
   BoxCanvas = NULL;
   return TRUE;
@@ -707,7 +710,7 @@ ThotBool PathCreation (int frame, Document doc,  void *inverse, PtrBox svgBox,
     {
       // MBP apply to the leaf box and not control points
       ancestorX += svgBox->BxLMargin + svgBox->BxLBorder + svgBox->BxLPadding;
-      ancestorY +=  svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
+      ancestorY += svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
     }
   p_frame = FrameTable[frame].WdFrame;
   p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame, doc, inverse,

@@ -41,11 +41,11 @@
 
 #include "logdebug.h"
 
-
 #include "AmayaFrame.h"
 #include "AmayaCanvas.h"
 #include "AmayaEditShapeEvtHandler.h"
 #include "svgedit.h"
+ThotBool Angle_ratio = FALSE;
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
@@ -204,6 +204,8 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler (AmayaFrame * p_frame,
 
   box = ab->AbBox;
   shape = ab->AbShape;
+  // should rx and ry be updated with the same ratio
+  Angle_ratio = (point == 10 && box->BxRx <= 2 && box->BxRy <= 2);
   if (!(box->BxXOrg == 0 && box->BxYOrg == 0))
     {
       /* Move the origin */
@@ -301,10 +303,9 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 #define RATIO_EQUILATERAL sqrt((float)3)/2.
 
   ThotBool same_size;
-  int rx,ry,lx,ly, x, y;
-  int x1, y1, x2, y2;
-  int dx, dy;
-  float ratio = 0.;
+  int      rx,ry,lx,ly, x, y;
+  int      x1, y1, x2, y2, dx, dy;
+  float    ratio = 0.;
 
   if (IsFinish())
     return;
@@ -469,7 +470,7 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
               if (shape == 1 || shape == 'C')
                 {
                   ry += dy;
-                  if (same_size)rx=ry;
+                  if (same_size || Angle_ratio)rx=ry;
                 }
               else if (shape == 2)
                 rx -= dx;

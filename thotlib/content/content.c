@@ -36,6 +36,151 @@
 #include "changeabsbox_f.h"
 #include "thotmsg_f.h"
 
+/*----------------------------------------------------------------------
+  GetViewBoxTransformation
+  ----------------------------------------------------------------------*/
+void GetViewBoxTransformation (PtrTransform Trans, int Width, int Height,
+                               float *xtrans,  float *ytrans,
+                               double *xscale, double *yscale,
+                               ThotBool *istranslated, ThotBool *isscaled)
+{
+  float     x_trans, y_trans, s_width, s_height;
+  double    x_scale, y_scale; 
+  ThotBool  is_translated, is_scaled, is_x_clipped, is_y_clipped;
+
+  x_trans = y_trans = 0;
+  x_scale = y_scale = 1;
+  is_translated = is_scaled = is_x_clipped = is_y_clipped = FALSE;
+  while (Trans)
+    {
+      if (Trans->TransType == PtElViewBox)
+        {
+          /* if it's an image with only a preserveAspectRatio attribute and no
+             viewBox attribute, Trans->VbWidth and Trans->VbHeight are negative
+             and the real size of the image should be used instead (TODO) */
+          if (Trans->VbWidth > 0)
+            x_scale = (double) (Width / Trans->VbWidth);
+          if (Trans->VbHeight > 0)
+            y_scale = (double) (Height / Trans->VbHeight);
+          if (Trans->VbAspectRatio == ArNone)
+            /* Do not force uniform scaling: the element's bounding box exactly
+               matches the viewport rectangle */
+            {
+              /* done */;
+            }
+          else
+            /* Force uniform scaling (preserve aspect ratio) */
+            {
+              if (Trans->VbMeetOrSlice == MsMeet)
+                if (x_scale > y_scale)
+                  x_scale = y_scale;
+                else
+                  y_scale = x_scale;
+              else if (Trans->VbMeetOrSlice == MsSlice)
+                if (x_scale > y_scale)
+                  {
+                    y_scale = x_scale;
+                    is_y_clipped = TRUE;
+                  }
+                else
+                  {
+                    x_scale = y_scale;
+                    is_x_clipped = TRUE;
+                  }
+
+              if (Trans->VbAspectRatio == ArXMinYMin)
+                {
+                  x_trans = 0;
+                  y_trans = 0;
+                }
+              else if (Trans->VbAspectRatio == ArXMidYMin)
+                {
+                  y_trans = 0;
+                  s_width = Trans->VbWidth * x_scale;
+                  if (Width != s_width)
+                    x_trans = (Width - s_width) / 2;
+                }
+              else if (Trans->VbAspectRatio == ArXMaxYMin)
+                {
+                  y_trans = 0;
+                  s_width = Trans->VbWidth * x_scale;
+                  if (Width != s_width)
+                    x_trans = (Width - s_width);
+                }
+              else if (Trans->VbAspectRatio == ArXMinYMid)
+                {
+                  x_trans = 0;
+                  s_height = Trans->VbHeight * y_scale;
+                  if (Height != s_height)
+                    y_trans = (Height - s_height) / 2;
+                }
+              else if (Trans->VbAspectRatio == ArXMidYMid)
+                /* align the middle of the element's
+                   viewBox with the middle of the viewport */
+                {
+                  s_height = Trans->VbHeight * y_scale;
+                  s_width = Trans->VbWidth * x_scale;
+                  if (Width != s_width)
+                    x_trans = (Width - s_width) / 2;
+                  if (Height != s_height)
+                    y_trans = (Height - s_height) / 2;
+                }
+              else if (Trans->VbAspectRatio == ArXMaxYMid)
+                {
+                  s_height = Trans->VbHeight * y_scale;
+                  s_width = Trans->VbWidth * x_scale;
+                  if (Width != s_width)
+                    x_trans = (Width - s_width);
+                  if (Height != s_height)
+                    y_trans = (Height - s_height) / 2;                  
+                }
+              else if (Trans->VbAspectRatio == ArXMinYMax)
+                {
+                  x_trans = 0;
+                  s_height = Trans->VbHeight * y_scale;
+                  if (Height != s_height)
+                    y_trans = (Height - s_height);                  
+                }
+              else if (Trans->VbAspectRatio == ArXMidYMax)
+                {
+                  s_height = Trans->VbHeight * y_scale;
+                  s_width = Trans->VbWidth * x_scale;
+                  if (Width != s_width)
+                    x_trans = (Width - s_width) / 2;
+                  if (Height != s_height)
+                    y_trans = (Height - s_height);
+                }
+              else if (Trans->VbAspectRatio == ArXMaxYMax)
+                {
+                  s_height = Trans->VbHeight * y_scale;
+                  s_width = Trans->VbWidth * x_scale;
+                  if (Width != s_width)
+                    x_trans = (Width - s_width);
+                  if (Height != s_height)
+                    y_trans = (Height - s_height);
+                }
+            }
+
+          if (x_scale != 1 || y_scale != 1)
+            is_scaled = TRUE;
+
+          x_trans -= Trans->VbXTranslate * x_scale;  
+          y_trans -= Trans->VbYTranslate * y_scale;
+          if (x_trans != 0 || y_trans != 0)
+            is_translated = TRUE;
+        }
+      Trans = Trans->Next;
+    }
+
+  // return values
+  *xtrans =  x_trans;
+  *ytrans = y_trans;
+  *xscale = x_scale;
+  *yscale = y_scale;
+  *istranslated = is_translated;
+  *isscaled = is_scaled;
+}
+
 
 /*----------------------------------------------------------------------
   NewTextBuffer acquiert un nouveau buffer de texte, l'initialise	

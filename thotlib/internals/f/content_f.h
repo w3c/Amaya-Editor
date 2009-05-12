@@ -6,6 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void GetViewBoxTransformation ( PtrTransform Trans,
+                                       int Width,
+                                       int Height,
+                                       float *xtrans,
+                                       float *ytrans,
+                                       double *xscale,
+                                       double *yscale,
+                                       ThotBool *istranslated,
+                                       ThotBool *isscaled );
 extern PtrTextBuffer NewTextBuffer ( PtrTextBuffer pBuf );
 extern void CreateTextBuffer ( PtrElement pEl );
 extern void DeleteTextBuffer ( PtrTextBuffer *pBuf );
@@ -96,6 +105,15 @@ extern void *TtaNewTransformMatrix ( float a,
 
 #else /* __STDC__ */
 
+extern void GetViewBoxTransformation ( PtrTransform Trans,
+                                         int Width,
+                                         int Height,
+                                         float *xtrans,
+                                         float *ytrans,
+                                         double *xscale,
+                                         double *yscale,
+                                         ThotBool *istranslated,
+                                         ThotBool *isscaled );
 extern PtrTextBuffer NewTextBuffer ( PtrTextBuffer pBuf );
 extern void CreateTextBuffer ( PtrElement pEl );
 extern void DeleteTextBuffer ( PtrTextBuffer *pBuf );

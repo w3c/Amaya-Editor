@@ -3183,8 +3183,7 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
   result->Next = NULL;
 
   while (pPa)
-    {      
-
+    {
       switch (pPa->TransType)
         {
         case PtElTranslate:
@@ -3323,32 +3322,57 @@ extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
 {
   PtrTransform CTM = NULL, transform;
+  PtrElement   pEl, pAncestor;
+  float        x_trans, y_trans;
+  double       x_scale, y_scale; 
+  ThotBool     is_translated, is_scaled;
 
+  pEl = (PtrElement) el;
+  pAncestor = (PtrElement) ancestor;
   /* Concatenate all simplified transform matrix */
-  while(el && el != ancestor)
+  while (pEl && pEl != pAncestor)
     {
-      transform = (PtrTransform)
-        TtaSimplifyTransformMatrix(((PtrElement) el)->ElTransform);
-
-      if(transform != NULL)
+      transform = (PtrTransform) TtaSimplifyTransformMatrix(pEl->ElTransform);
+      if (transform)
         {
-          transform -> Next = CTM;
+          transform->Next = CTM;
           CTM = transform;
         }
-      el = TtaGetParent(el);
+      pEl = pEl->ElParent;
+    }
+  if (pEl == pAncestor && pEl->ElTransform &&
+      pEl->ElTransform->TransType == PtElViewBox && pEl->ElAbstractBox[0] &&
+      pEl->ElAbstractBox[0]->AbBox)
+    {
+      GetViewBoxTransformation (pEl->ElTransform,
+                                pEl->ElAbstractBox[0]->AbBox->BxW,
+                                pEl->ElAbstractBox[0]->AbBox->BxH,
+                                &x_trans, &y_trans,
+                                &x_scale, &y_scale,
+                                &is_translated, &is_scaled);
+      if (is_translated || is_scaled)
+        {
+          transform = ((PtrTransform)(TtaNewTransformMatrix(1, 0, 0, 1, 0, 0)));
+          transform->Next = CTM;
+          transform->EMatrix = transform->AMatrix * x_trans +
+            transform->CMatrix * y_trans;
+          transform->FMatrix = transform->BMatrix * x_trans +
+            transform->DMatrix * y_trans;
+          transform->AMatrix *= x_scale;
+          transform->CMatrix *= y_scale;
+          transform->BMatrix *= x_scale;
+          transform->DMatrix *= y_scale;
+          CTM = transform;
+        }
     }
 
-
   /* Simplify the product */
-  if(CTM)
+  if (CTM)
     {
-      transform = (PtrTransform)
-        TtaSimplifyTransformMatrix(CTM);
-
+      transform = (PtrTransform) TtaSimplifyTransformMatrix(CTM);
       TtaFreeTransform(CTM);
       CTM = transform;
     }
- 
   return CTM;
 }
 
@@ -3374,19 +3398,19 @@ extern void *TtaInverseTransform (void *transform)
         case PtElTranslate:
         case PtElAnimTranslate:
           /* Check whether the scale matrix is inversible */
-          if(pPa -> XScale == 0 || pPa -> YScale == 0)
+          if(pPa->XScale == 0 || pPa->YScale == 0)
             {
               TtaFreeTransform (result);
               return NULL;
             }
 
           /* Multiply by the inverse of scale(XScale, YScale) */
-          result->AMatrix /= pPa -> XScale;
-          result->CMatrix /= pPa -> XScale;
-          result->EMatrix /= pPa -> XScale;
-          result->BMatrix /= pPa -> YScale;
-          result->DMatrix /= pPa -> YScale;
-          result->FMatrix /= pPa -> YScale;
+          result->AMatrix /= pPa->XScale;
+          result->CMatrix /= pPa->XScale;
+          result->EMatrix /= pPa->XScale;
+          result->BMatrix /= pPa->YScale;
+          result->DMatrix /= pPa->YScale;
+          result->FMatrix /= pPa->YScale;
           break;
         case PtElViewBox:
           /* TODO: inverse matrix of a ViewBox ??? */
@@ -3394,8 +3418,8 @@ extern void *TtaInverseTransform (void *transform)
         case PtElRotate:
         case PtElAnimRotate:
           /* Multiply result by the inverse of translate(-XRotate,-YRotate) */
-          result->EMatrix -= pPa -> XRotate;
-          result->FMatrix -= pPa -> YRotate;
+          result->EMatrix -= pPa->XRotate;
+          result->FMatrix -= pPa->YRotate;
 
           /* Multiply result by the inverse of rotate(TrAngle,0,0) */
           cosA = cos(pPa->TrAngle);
@@ -3416,8 +3440,8 @@ extern void *TtaInverseTransform (void *transform)
           result->FMatrix = (float)f;
 
           /* Multiply result by the inverse of translate(+XRotate,+YRotate) */
-          result->EMatrix += pPa -> XRotate;
-          result->FMatrix += pPa -> YRotate;
+          result->EMatrix += pPa->XRotate;
+          result->FMatrix += pPa->YRotate;
           break;  
         case PtElMatrix:
           /* Check whether the matrix is inversible */
@@ -3621,7 +3645,7 @@ extern void *TtaDecomposeTransform(void *transform)
 
       /* Add the scale if it is not the identity */
       if(!(a == 1 && d == 1))
-        cursor -> Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
+        cursor->Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
     }
   else if(a == 0 && d == 0)
     {
@@ -3639,12 +3663,12 @@ extern void *TtaDecomposeTransform(void *transform)
       RemoveTranslate = TRUE;
       e/=2;
       f/=2;
-      cursor -> Next = (PtrTransform)TtaNewTransformRotate(90,(float)(e-f),(float)(e+f));
-      cursor = cursor -> Next;
+      cursor->Next = (PtrTransform)TtaNewTransformRotate(90,(float)(e-f),(float)(e+f));
+      cursor = cursor->Next;
 
       /* Add the scale if it is not the identity */
       if(!(b == 1 && -c == 1))
-        cursor -> Next = (PtrTransform)TtaNewTransformScale((float)b,(float)(-c));
+        cursor->Next = (PtrTransform)TtaNewTransformScale((float)b,(float)(-c));
     }
   else if(a == d && b == -c)
     {
@@ -3678,15 +3702,15 @@ extern void *TtaDecomposeTransform(void *transform)
           theta1 *= (180 / M_PI);
           e/=2;
           f/=2;
-          cursor -> Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
+          cursor->Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
                                                                (float)(e - k*f),
                                                                (float)(k*e + f));
-          cursor = cursor -> Next;
+          cursor = cursor->Next;
         }
 
       /* Add the scale if it is not the identity */
       if(coeff != 1)
-        cursor -> Next = (PtrTransform)TtaNewTransformScale((float)coeff, (float)coeff);
+        cursor->Next = (PtrTransform)TtaNewTransformScale((float)coeff, (float)coeff);
     }
   else if(a*b + c*d == 0 && ((b!=0 && c!=0) || (a!=0 && d!=0)))
     {
@@ -3727,8 +3751,8 @@ extern void *TtaDecomposeTransform(void *transform)
       /* case coeff1 == coeff2 == 1
          has already been treated in II/
          so the following scale is never useless */
-      cursor -> Next = (PtrTransform)TtaNewTransformScale((float)coeff1, (float)coeff2);
-      cursor = cursor -> Next;
+      cursor->Next = (PtrTransform)TtaNewTransformScale((float)coeff1, (float)coeff2);
+      cursor = cursor->Next;
 
       /* Group the rotate with the translate if it is possible */
       if(theta1 != 0)
@@ -3745,7 +3769,7 @@ extern void *TtaDecomposeTransform(void *transform)
           theta1 *= (180 / M_PI);
           e/=2;
           f/=2;
-          cursor -> Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
+          cursor->Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
                                                                (float)(e - k*f),
                                                                (float)(k*e + f));
         }
@@ -3794,17 +3818,17 @@ extern void *TtaDecomposeTransform(void *transform)
           theta1 *= (180 / M_PI);
           e/=2;
           f/=2;
-          cursor -> Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
+          cursor->Next = (PtrTransform)TtaNewTransformRotate((float)theta1,
                                                                (float)(e - k*f),
                                                                (float)(k*e + f));
-          cursor = cursor -> Next;
+          cursor = cursor->Next;
         }
 
 
       /* case coeff1 == coeff2 == 1
          has already been treated in III/
          so the following scale is never useless */
-      cursor -> Next = (PtrTransform)TtaNewTransformScale((float)coeff1,(float)coeff2);
+      cursor->Next = (PtrTransform)TtaNewTransformScale((float)coeff1,(float)coeff2);
     }
   else if(a != 0)
     {
@@ -3821,20 +3845,20 @@ extern void *TtaDecomposeTransform(void *transform)
       /* Add the skew if it is not the identity */
       if(theta1 != 0)
         {
-          cursor -> Next = (PtrTransform)TtaNewTransformSkewY((float)theta1);
-          cursor = cursor -> Next;
+          cursor->Next = (PtrTransform)TtaNewTransformSkewY((float)theta1);
+          cursor = cursor->Next;
         }
       
       /* Add the scale if it is not the identity */
       if(!(a == 1 && d == 1))
         {
-          cursor -> Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
-          cursor = cursor -> Next;
+          cursor->Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
+          cursor = cursor->Next;
         }
       
       /* Add the skew if it is not the identity */
       if(theta2 != 0)
-        cursor -> Next = (PtrTransform)TtaNewTransformSkewX((float)theta2);
+        cursor->Next = (PtrTransform)TtaNewTransformSkewX((float)theta2);
     }
   else if(d != 0)
     {
@@ -3851,27 +3875,27 @@ extern void *TtaDecomposeTransform(void *transform)
       /* Add the skew if it is not the identity */
       if(theta1 != 0)
         {
-          cursor -> Next = (PtrTransform)TtaNewTransformSkewX((float)theta1);
-          cursor = cursor -> Next;
+          cursor->Next = (PtrTransform)TtaNewTransformSkewX((float)theta1);
+          cursor = cursor->Next;
         }
 
       /* Add the scale if it is not the identity */
       if(!(a == 1 && d == 1))
         {
-          cursor -> Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
-          cursor = cursor -> Next;
+          cursor->Next = (PtrTransform)TtaNewTransformScale((float)a, (float)d);
+          cursor = cursor->Next;
         }
 
       /* Add the skew if it is not the identity */
       if(theta2 != 0)
-        cursor -> Next = (PtrTransform)TtaNewTransformSkewY((float)theta2);
+        cursor->Next = (PtrTransform)TtaNewTransformSkewY((float)theta2);
     }
     
   if(RemoveTranslate || (e == 0 && f == 0))
     {
       /* Remove the initial translation */
-      cursor = result -> Next;
-      result -> Next = NULL;
+      cursor = result->Next;
+      result->Next = NULL;
       TtaFreeTransform(result);
       result = cursor;
     }
@@ -3983,7 +4007,7 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
         }
 	   
       if(add)strcat(buffer, buffer2);
-      pPa = pPa -> Next;
+      pPa = pPa->Next;
     }
   
   TtaFreeTransform(transform);
