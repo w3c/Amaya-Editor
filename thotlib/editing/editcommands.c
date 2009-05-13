@@ -2151,7 +2151,7 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   PtrTransform   CTM, inverse;
   int            frame;
   int            ancestorX, ancestorY;
-  ThotBool       transformApplied, usemarkers;
+  ThotBool       transformApplied, usemarkers, open;
 
   frame = ActiveFrame;
   if(frame <= 0)
@@ -2209,16 +2209,28 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   if (usemarkers)
     TtaUpdateMarkers(el, doc, TRUE, FALSE);
 
+  open = !TtaHasUndoSequence (doc);
+  if (open)
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+
+  // register current
+  UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
   /* Call the interactive module */
   transformApplied = PathEdit (frame, doc,  inverse, svgBox,
                                ancestorX, ancestorY, el, point);
   /* Free the transform matrix */
-  if(inverse)
+  if (inverse)
     TtaFreeTransform(inverse);
 
   /* Update the attribute */
-  if(transformApplied)
-    UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
+  if (transformApplied)
+    {
+      UpdatePointsOrPathAttribute(doc, el, 0, 0, FALSE);
+      if (open)
+        TtaCloseUndoSequence (doc);
+    }
+  else
+    TtaCancelLastRegisteredSequence (doc);
 
   /* Restore the markers */
   if (usemarkers)

@@ -2933,9 +2933,9 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 
 
   elType = TtaGetElementType (el);
-  //if (elType.ElTypeNum == SVG_EL_line_ &&
-  //    !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-  //  return;
+/*   if (elType.ElTypeNum == SVG_EL_line_ && */
+/*       !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG")) */
+/*     return; */
 
   length = TtaGetTextAttributeLength (attr) + 2;
   text = (char *)TtaGetMemory (length);

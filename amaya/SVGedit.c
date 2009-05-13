@@ -4305,7 +4305,7 @@ void UpdatePointsOrPathAttribute (Document doc, Element el, int w, int h,
 
   /* Get the attribute value from the GRAPHICS leaf */
   leaf = GetGraphicsUnit(el);
-  if(isPath)
+  if (isPath)
     buffer = TtaGetPathAttributeValue (leaf, w, h);
   else
     buffer = TtaGetPointsAttributeValue (leaf, w, h);
@@ -4328,11 +4328,15 @@ void UpdatePointsOrPathAttribute (Document doc, Element el, int w, int h,
       if (attr && !isLine)
         {
           /* Remove the current path attribute */
-          TtaRegisterAttributeDelete (attr, el, doc);
+          if (withUndo)
+            TtaRegisterAttributeDelete (attr, el, doc);
           TtaRemoveAttribute (el, attr, doc);
         }
       return;
     }
+  if (withUndo)
+    TtaRegisterElementReplace (el, doc);
+  withUndo = FALSE;
 
   if (isLine)
     {
@@ -4349,11 +4353,11 @@ void UpdatePointsOrPathAttribute (Document doc, Element el, int w, int h,
               attr = TtaNewAttribute (attrType);
               TtaAttachAttribute (el, attr, doc);
             }
-          else
+          else if (withUndo)
             TtaRegisterAttributeReplace (attr, el, doc);
           
           TtaSetAttributeText (attr, value, el, doc);
-          if (new_)
+          if (withUndo && new_)
             TtaRegisterAttributeCreate (attr, el, doc);
           if (attrType.AttrTypeNum == SVG_ATTR_x1)
             attrType.AttrTypeNum = SVG_ATTR_y1;
@@ -4379,10 +4383,10 @@ void UpdatePointsOrPathAttribute (Document doc, Element el, int w, int h,
           attr = TtaNewAttribute (attrType);
           TtaAttachAttribute (el, attr, doc);
         }
-      else
+      else if (withUndo)
         TtaRegisterAttributeReplace (attr, el, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
-      if (new_)
+      if (withUndo && new_)
         TtaRegisterAttributeCreate (attr, el, doc);
     }
  
