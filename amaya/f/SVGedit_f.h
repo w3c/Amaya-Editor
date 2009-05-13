@@ -41,10 +41,6 @@ extern void UpdateSVGElement ( Document doc,
                                int dy,
                                int dw,
                                int dh );
-extern void UpdateMarkers ( Element el,
-                            Document doc,
-                            ThotBool Clear,
-                            ThotBool Rebuild );
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                           Element el,
                                           int w,
@@ -242,10 +238,6 @@ extern void UpdateSVGElement ( Document doc,
                                  int dy,
                                  int dw,
                                  int dh );
-extern void UpdateMarkers ( Element el,
-                              Document doc,
-                              ThotBool Clear,
-                              ThotBool Rebuild );
 extern void UpdatePointsOrPathAttribute ( Document doc,
                                             Element el,
                                             int w,

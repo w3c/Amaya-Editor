@@ -2933,9 +2933,9 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 
 
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == SVG_EL_line_ &&
-      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-    return;
+  //if (elType.ElTypeNum == SVG_EL_line_ &&
+  //    !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+  //  return;
 
   length = TtaGetTextAttributeLength (attr) + 2;
   text = (char *)TtaGetMemory (length);
@@ -4186,29 +4186,29 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
         TtaSetLinearGradientx1 (ParseNumberPercentAttribute (attr), el);
-      else
-        ParseCoordAttribute (attr, el, doc);
+      //else
+      //  ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_y1:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
         TtaSetLinearGradienty1 (ParseNumberPercentAttribute (attr), el);
-      else
-        ParseCoordAttribute (attr, el, doc);
+      //else
+      //  ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_x2:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
         TtaSetLinearGradientx2 (ParseNumberPercentAttribute (attr), el);
-       else
-        ParseCoordAttribute (attr, el, doc);
+      //else
+      //  ParseCoordAttribute (attr, el, doc);
       break;
     case SVG_ATTR_y2:
       elType = TtaGetElementType (el);
       if (elType.ElTypeNum == SVG_EL_linearGradient)
         TtaSetLinearGradienty2 (ParseNumberPercentAttribute (attr), el);
-      else
-        ParseCoordAttribute (attr, el, doc);
+      //else
+      //  ParseCoordAttribute (attr, el, doc);
       break;
 	
     case SVG_ATTR_rx:

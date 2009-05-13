@@ -22,6 +22,7 @@
 #include "css.h"
 #ifdef _SVG
 #include "SVG.h"
+#include "svgedit.h"
 #endif /* _SVG */
 #ifdef _WX
 #include "wxdialogapi_f.h"
@@ -1528,10 +1529,9 @@ void DoStyleSVG (Document doc, View view, int current_value, int type)
 
           GenerateStyle (buffer, TRUE, TRUE);
 
-	  /* SVG stroke width has changed: so does the size of markers */
-	  if(type == PRLineWeight)
-	     UpdateMarkers(el, doc, TRUE, TRUE);
-
+          /* SVG stroke width has changed: so does the size of markers */
+          if (type == PRLineWeight)
+            TtaUpdateMarkers(el, doc, TRUE, TRUE);
           TtaSetDisplayMode (doc, dispMode);
           
           if (open)

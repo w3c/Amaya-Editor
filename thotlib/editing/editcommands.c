@@ -108,10 +108,6 @@ static ThotBool           NewInsert;
 
 extern int SelectedPointInPolyline;
 
-/* function GenerateMarkers is defined in the SVG parser (module SVGbuilder.c) */
-extern void GenerateMarkers (Element pEl, Document doc, Element marker,
-			     int position);
-
 /*----------------------------------------------------------------------
   TtaIsTextInserting returns the TextInserting status
   ----------------------------------------------------------------------*/
@@ -2087,6 +2083,62 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
 }
 
 /*----------------------------------------------------------------------
+  TtaUpdateMarkers
+  Remove all the markers attached to an element and rebuild them.
+  ----------------------------------------------------------------------*/
+void TtaUpdateMarkers (Element el, Document doc, ThotBool clear, ThotBool rebuild)
+{
+  PtrElement     pEl = (PtrElement) el, child, next;
+  PtrAbstractBox pAb;
+  SSchema        svgSchema;
+  DisplayMode    dispMode = TtaGetDisplayMode (doc);
+  ThotBool       oldStructureChecking = TtaGetStructureChecking (doc);
+
+  if (pEl == NULL)
+    return;
+  // Prepare the update
+  if (oldStructureChecking)
+    TtaSetStructureChecking (FALSE, doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+  svgSchema = TtaGetSSchema ("SVG", doc);
+
+  if (clear)
+    {
+      /* Clear all the markers */
+      child = pEl->ElFirstChild;
+      while (child)
+        {
+          next = child->ElNext;
+          if (TypeHasException (ExcIsMarker, child->ElTypeNumber, child->ElStructSchema))
+            {
+              TtaRegisterElementDelete ((Element)child, doc);
+              TtaDeleteTree((Element)child, doc);
+            }
+          child = next;
+        }
+    }
+
+  /* Rebuild the markers */
+  if (rebuild)
+    {
+      pAb = pEl->ElAbstractBox[0];
+      if (pAb->AbMarker)
+        GenerateMarkers (el, doc, (Element)pAb->AbMarker, 0);
+      if (pAb->AbMarkerStart)
+        GenerateMarkers (el, doc, (Element)pAb->AbMarkerStart, 1);
+      if (pAb->AbMarkerMid)
+        GenerateMarkers (el, doc, (Element)pAb->AbMarkerMid, 2);
+      if (pAb->AbMarkerEnd)
+        GenerateMarkers (el, doc, (Element)pAb->AbMarkerEnd, 3);
+    }
+
+  TtaSetStructureChecking (oldStructureChecking, doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
+}
+
+/*----------------------------------------------------------------------
   AskPathEdit
   --------------------------------------------------------------------*/
 ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
@@ -2097,7 +2149,6 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   PtrBox         pBox, svgBox;
   ViewFrame     *pFrame;
   PtrTransform   CTM, inverse;
-  DisplayMode    dispMode; 
   int            frame;
   int            ancestorX, ancestorY;
   ThotBool       transformApplied, usemarkers;
@@ -2108,7 +2159,6 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
 
   /* Get the ancestor and svg canvas */
   el2 = el;
-
   if (!GetAncestorCanvasAndObject (doc, &el, &svgAncestor, &svgCanvas))
     return FALSE;
 
@@ -2157,7 +2207,7 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   /* Clear the markers before the edition of the element */
   usemarkers = TypeHasException (ExcUseMarkers, pEl->ElTypeNumber, pEl->ElStructSchema);
   if (usemarkers)
-    UpdateMarkers(el, doc, TRUE, FALSE);
+    TtaUpdateMarkers(el, doc, TRUE, FALSE);
 
   /* Call the interactive module */
   transformApplied = PathEdit (frame, doc,  inverse, svgBox,
@@ -2170,23 +2220,10 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
   if(transformApplied)
     UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
 
+  /* Restore the markers */
   if (usemarkers)
-    {
-      dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
-        TtaSetDisplayMode (doc, DeferredDisplay);
-      pAb = pEl->ElAbstractBox[0];
-      if (pAb->AbMarker)
-        GenerateMarkers (el, doc, (Element)pAb->AbMarker, 0);
-      if (pAb->AbMarkerStart)
-        GenerateMarkers (el, doc, (Element)pAb->AbMarkerStart, 1);
-      if (pAb->AbMarkerMid)
-        GenerateMarkers (el, doc, (Element)pAb->AbMarkerMid, 2);
-      if (pAb->AbMarkerEnd)
-        GenerateMarkers (el, doc, (Element)pAb->AbMarkerEnd, 3);
-      if (dispMode == DisplayImmediately)
-        TtaSetDisplayMode (doc, dispMode);
-    }
+    TtaUpdateMarkers(el, doc, FALSE, TRUE);
+
   return transformApplied;
 }
 
@@ -2468,7 +2505,7 @@ ThotBool ContentEditing (int editType)
 			    {
 			      Element el = TtaGetParent((Element)FirstSelectedElement);
 			      UpdatePointsOrPathAttribute(doc, el, 0, 0, TRUE);
-			      UpdateMarkers(el, doc, TRUE, TRUE);
+			      TtaUpdateMarkers(el, doc, TRUE, TRUE);
 			      TtaSetDocumentModified(doc);
 			    }
 		    }

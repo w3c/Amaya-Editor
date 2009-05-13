@@ -25,6 +25,7 @@
 #include "fileaccess.h"
 #include "picture.h"
 #include "appdialogue.h"
+#include "svgedit.h"
 
 #define THOT_EXPORT extern
 #include "platform_tv.h"
@@ -56,10 +57,6 @@
 #include "presvariables_f.h"
 #include "font_f.h"
 #include "units_f.h"
-
-/* function GenerateMarkers is defined in the SVG parser (module SVGbuilder.c) */
-extern void GenerateMarkers (Element pEl, Document doc, Element marker,
-			     int position);
 
 /*----------------------------------------------------------------------
   AttrValue retourne la valeur que prend l'attribut numerique	

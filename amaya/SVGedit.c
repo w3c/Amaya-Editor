@@ -645,7 +645,8 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
   -----------------------------------------------------------------------*/
 void AttrCoordChanged (NotifyAttribute *event)
 {
-  ParseCoordAttribute (event->attribute, event->element, event->document);
+  if (event->info == 1)
+    ParseCoordAttribute (event->attribute, event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -4257,53 +4258,6 @@ printf ("------------->UpdateSVGElement\nold=\"%s\"\nnew=\"%s\"\n",value,text);
         shape = 'g';
       UpdateShapeElement (doc, el, shape, x + dx, y + dy, dw, dh, -1, -1);
     }
-}
-
-/*----------------------------------------------------------------------
-  UpdateMarkers
-  Remove all the markers attached to an element and rebuild them.
-  ----------------------------------------------------------------------*/
-void UpdateMarkers (Element el, Document doc, ThotBool Clear, ThotBool Rebuild)
-{
-  Element child, next;
-  ElementType      elType;
-  SSchema      svgSchema = GetSVGSSchema (doc);
-
-  ThotBool oldStructureChecking = TtaGetStructureChecking (doc);
-  DisplayMode  dispMode = TtaGetDisplayMode (doc); 
-
-  if (oldStructureChecking)
-    TtaSetStructureChecking (FALSE, doc);
-
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
-
-  if(Clear)
-    {
-      /* Clear all the markers */
-      child = TtaGetFirstChild (el);
-      while (child)
-	{
-	  next = child;
-	  TtaNextSibling(&next);
-	  elType = TtaGetElementType(child);
-	  if (elType.ElSSchema == svgSchema &&
-	      elType.ElTypeNum == SVG_EL_marker)
-	    {
-	      TtaRegisterElementDelete (child, doc);
-	      TtaDeleteTree(child, doc);
-	    }
-	  child = next;
-	}
-    }
-
-  /* Rebuild the markers */
-  // if(Rebuild)
-  //   ProcessMarkers (el, doc);
-
-  TtaSetStructureChecking (oldStructureChecking, doc);
-  if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------

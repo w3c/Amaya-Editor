@@ -38,6 +38,10 @@ extern ThotBool AskTransform ( Document doc,
                                Element svgCanvas,
                                int transform_type,
                                Element el );
+extern void TtaUpdateMarkers ( Element el,
+                               Document doc,
+                               ThotBool clear,
+                               ThotBool rebuild );
 extern ThotBool AskPathEdit ( Document doc,
                               int edit_type,
                               Element el,
@@ -110,6 +114,10 @@ extern ThotBool AskTransform ( Document doc,
                                  Element svgCanvas,
                                  int transform_type,
                                  Element el );
+extern void TtaUpdateMarkers ( Element el,
+                                 Document doc,
+                                 ThotBool clear,
+                                 ThotBool rebuild );
 extern ThotBool AskPathEdit ( Document doc,
                                 int edit_type,
                                 Element el,
