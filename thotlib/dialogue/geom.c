@@ -433,8 +433,8 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   BoxCanvas = NULL;
 
   /* Create the handler */
-  canvasWidth = svgBox->BxClipW;
-  canvasHeight = svgBox->BxClipH;
+  canvasWidth = svgBox->BxW;
+  canvasHeight = svgBox->BxH;
   if (svgBox)
     {
       // MBP apply to the leaf box and not control points
