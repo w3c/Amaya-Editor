@@ -1394,8 +1394,13 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected,
                      (C_points *) pBox->BxPictInfo);
           break;
         case 'p':	/* polygon */
-          DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
-                       pBox->BxNChars, fg, bg, pat, mode);
+          if (SVGCreating)
+            // draw only lines
+            DrawSegments (frame, i, style, xd, yd, pBox->BxBuffer,
+                          pBox->BxNChars, fg, 0, bg, pat);
+          else
+            DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
+                         pBox->BxNChars, fg, bg, pat, mode);
           break;
         case 's':	/* closed spline */
           /* compute control points */

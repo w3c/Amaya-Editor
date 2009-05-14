@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -19,6 +19,7 @@ THOT_EXPORT PtrBox 	PackBoxRoot;	/* Root box to repack */
 THOT_EXPORT PtrDimRelations DifferedPackBlocks;/* Differed packing */
 THOT_EXPORT ThotBool    PackRows;       /* Pack ROW elements when it's TRUE */
 THOT_EXPORT ThotBool    AnyWidthUpdate;
+THOT_EXPORT ThotBool    SVGCreating; /* TRUE during the creation of a SVG shape */
 
 
 /* paragraphe to be reformatted after insertion */

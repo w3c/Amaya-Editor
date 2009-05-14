@@ -298,14 +298,7 @@ void AmayaCreatePathEvtHandler::OnMouseWheel( wxMouseEvent& event )
 /*----------------------------------------------------------------------
   DrawLine
   draw a line from (x2,y2) to (x3,y3)
-
-  (x3,y3)
-  .
-  .
-  .
-  (x2,y2)
-
-  *----------------------------------------------------------------------*/
+ *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::DrawLine (int x2, int y2, int x3,
                                           int y3, ThotBool specialColor)
 {
@@ -332,7 +325,6 @@ void AmayaCreatePathEvtHandler::DrawLine (int x2, int y2, int x3,
   DrawQuadraticBezier
   draw a quadratic Bezier Curve from (x1,y1) to (x3,y3),
   using (x2,y2) as the control points.
-
   *----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::DrawQuadraticBezier (int x1, int y1,
                                                      int x2, int y2,
@@ -415,7 +407,6 @@ void AmayaCreatePathEvtHandler::DrawCubicBezier (int x1, int y1,
 
 /*----------------------------------------------------------------------
   UpdateSymetricPoint
-
   * Update the value of the current symetric point.
   *
   * (current)
@@ -423,7 +414,6 @@ void AmayaCreatePathEvtHandler::DrawCubicBezier (int x1, int y1,
   *          -----(last)-----
   *                          ----
   *                              (sym)
-
   ----------------------------------------------------------------------*/
 void AmayaCreatePathEvtHandler::UpdateSymetricPoint()
 {
@@ -466,7 +456,6 @@ void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
                                                  ThotBool specialColor)
 {
   InitDrawing (5, 1, 0);
-
   switch(shape)
     {
     case 0:
@@ -475,7 +464,6 @@ void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
       if (state == 1)
         DrawLine (lastX1, lastY1, currentX, currentY, specialColor);
       break;
-
     case 7:
     case 8:
       switch(state)
@@ -533,7 +521,6 @@ void AmayaCreatePathEvtHandler::DrawPathFragment(int shape,
           break;
         }
       break;
-
     default:
       break;
     }

@@ -431,6 +431,7 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
 
   // register the current svg canvas
   BoxCanvas = NULL;
+  SVGCreating = TRUE;
 
   /* Create the handler */
   canvasWidth = svgBox->BxW;
@@ -465,6 +466,7 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
   while(!p_CreateShapeEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
+  SVGCreating = FALSE;
   delete p_CreateShapeEvtHandler;
   if (!created)
     {
@@ -512,20 +514,20 @@ ThotBool ShapeCreation (int frame, Document doc,  void *inverseCTM,
     {
       /* selection, svg, template (a bounding box is expected) */
       if(*x4 < *x1)
-	{
-	  *x1 = *x4;
-	  *x4 = *x1 + *lx;
-	}
+        {
+          *x1 = *x4;
+          *x4 = *x1 + *lx;
+        }
 
       if(*y4 < *y1)
-	{
-	  *y1 = *y4;
-	  *y4 = *y1 + *ly;
-	}
+        {
+          *y1 = *y4;
+          *y4 = *y1 + *ly;
+        }
 
       created = TRUE;
     }
-  else if (shape != 0 && shape < 12 && shape > 14)
+  else if (shape != 0 && (shape < 12 || shape > 14))
     {
       /* Shape */
       if (shape == 20)
@@ -703,6 +705,7 @@ ThotBool PathCreation (int frame, Document doc,  void *inverse, PtrBox svgBox,
 
   // register the current svg canvas
   BoxCanvas = NULL;
+  SVGCreating = TRUE;
 
   canvasWidth = svgBox->BxW;
   canvasHeight = svgBox->BxH;
@@ -720,6 +723,7 @@ ThotBool PathCreation (int frame, Document doc,  void *inverse, PtrBox svgBox,
   while(!p_CreatePathEvtHandler->IsFinish())
     TtaHandleOneEvent (&ev);
   
+  SVGCreating = FALSE;
   delete p_CreatePathEvtHandler;
   BoxCanvas = NULL;
   return created;

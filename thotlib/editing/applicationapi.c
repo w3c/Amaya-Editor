@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -54,6 +54,7 @@ int WX_SearchResult = 0;
 #include "thotcolor_tv.h"
 //#include "thotpalette_tv.h"
 #include "frame_tv.h"
+#include "boxes_tv.h"
 #include "appdialogue_tv.h"
 
 #include "appdialogue_f.h"
@@ -315,6 +316,7 @@ void TtaInitialize (char *applicationName)
   /* Initializes patterns */
   NbPatterns = sizeof (Name_patterns) / sizeof (char *);
   Patterns = Name_patterns;
+  SVGCreating = FALSE;
 #endif /* NODISPLAY */
   /* load the message table of the Thot Library */
   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);

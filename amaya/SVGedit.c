@@ -2066,13 +2066,13 @@ void CreateGraphicElement (Document doc, View view, int entry)
   float             valx, valy;
   _ParserData       context;
   char              buffer[500], buffer2[200];
+  /* Move this elsewhere when markers are used more */
+  const char       *Arrow1Mend_id = "Arrow1Mend";
+  const char       *Arrow1Mstart_id = "Arrow1Mstart";
   ThotBool	        found, newSVG = FALSE, replaceGraph = FALSE;
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
-  ThotBool          isFilled = LastSVGelementIsFilled, isFormattedView, closed;   
-  /* Move this elsewhere when markers are used more */
-  const char *Arrow1Mend_id = "Arrow1Mend";
-  const char *Arrow1Mstart_id = "Arrow1Mstart";
+  ThotBool          isFormattedView, closed;   
 
   /* Check that a document is selected */
   if (doc == 0 || !TtaGetDocumentAccessMode (doc))
@@ -2986,7 +2986,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
       TtaSetDisplayMode (doc, dispMode);
     }
 
-
   /* create attributes fill and stroke */
   if (entry != -1 && created && 
       (newType.ElTypeNum == SVG_EL_g ||
@@ -2998,14 +2997,15 @@ void CreateGraphicElement (Document doc, View view, int entry)
        newType.ElTypeNum == SVG_EL_polygon ||
        newType.ElTypeNum == SVG_EL_path))
     {
-
+      // force the fill of known shapes
       *buffer = EOS;
       if (entry == 0 || (entry >= 12 && entry <= 14) || (entry >= 5 && entry <= 8))
         {
-          /* Add a temporary style */
-          strcpy (buffer2, "stroke:black; fill:none;");
+          /* don't fill during the creation */
+          strcpy (buffer2, "stroke:black; fill:none");
           ParseHTMLSpecificStyle (newEl, buffer2, doc, 0, FALSE);
-          /* Ask the points of the polyline/curve */
+
+          /* Use a different shape to ask points of the polyline/curve */
           if (entry >= 12 && entry <= 14)
             shape = 0;
           else
@@ -3013,6 +3013,11 @@ void CreateGraphicElement (Document doc, View view, int entry)
           created = AskShapePoints (doc, svgAncestor, svgCanvas, shape, newEl);
           if (created)
             {
+              if (LastSVGelementIsFilled)
+                {
+                  strcpy (buffer2, "fill:#9dc2de");
+                  ParseHTMLSpecificStyle (newEl, buffer2, doc, 0, FALSE);
+                }
               if (entry == 12 || entry == 14)
                 AttachMarker (doc, newEl, SVG_ATTR_marker_start, Arrow1Mstart_id,
                               svgCanvas, svgSchema);
@@ -3035,11 +3040,11 @@ void CreateGraphicElement (Document doc, View view, int entry)
       
       if (created)
         {
-          sprintf (buffer,  "stroke: black; stroke-opacity: 1; stroke-width: 1;");
-          if (isFilled)
+          sprintf (buffer,  "stroke: black; stroke-opacity: 1; stroke-width: 1; ");
+          if (LastSVGelementIsFilled)
             strcat (buffer, "fill: #9dc2de");
           else if(entry != 0)
-            strcat (buffer, "fill:none;");
+            strcat (buffer, "fill:none");
           
           ParseHTMLSpecificStyle (newEl, buffer, doc, 0, FALSE);
           attrType.AttrTypeNum = SVG_ATTR_style_;
