@@ -1075,13 +1075,13 @@ void ANNOT_PrepareAnnotView (Document document)
 
     /* annotations */
 #ifdef ANNOT_ON_ANNOT
-    TtaSetItemOn (document, view, Annotations_, BAnnotateSelection);
-    TtaSetItemOn (document, view, Annotations_, BAnnotateDocument);
-    TtaSetItemOn (document, view, Annotations_, BReplyToAnnotation);
+    TtaSetItemOn (document, view, Tools, BAnnotateSelection);
+    TtaSetItemOn (document, view, Tools, BAnnotateDocument);
+    TtaSetItemOn (document, view, Tools, BReplyToAnnotation);
 #else
-    TtaSetItemOff (document, view, Annotations_, BAnnotateSelection);
-    TtaSetItemOff (document, view, Annotations_, BAnnotateDocument);
-    TtaSetItemOff (document, view, Annotations_, BReplyToAnnotation);
+    TtaSetItemOff (document, view, Tools, BAnnotateSelection);
+    TtaSetItemOff (document, view, Tools, BAnnotateDocument);
+    TtaSetItemOff (document, view, Tools, BReplyToAnnotation);
 #endif /* ANNOT_ON_ANNOT */
   }
   TtaRaiseView (document, view);

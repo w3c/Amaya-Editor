@@ -3357,6 +3357,25 @@ void UpdateContextSensitiveMenus (Document doc, View view)
       SelectionInBDO = newSelInElem;
       TtaSetToggleItem (doc, 1, Types, TBDO, newSelInElem);
     }
+
+  // Is it an annotation ?
+  if (firstSel)
+    {
+      elType = TtaGetElementType (firstSel);
+      if ((!strcmp (TtaGetSSchemaName (elType.ElSSchema), "XLink")) &&
+	  (elType.ElTypeNum == HTML_EL_PICTURE_UNIT))
+	{
+          TtaSetItemOn (doc, 1, Tools, BDeleteAnnot);
+          TtaSetItemOn (doc, 1, Tools, BReplyToAnnotation);
+          TtaSetItemOn (doc, 1, Tools, BPostAnnot);
+	}
+      else
+	{
+          TtaSetItemOff (doc, 1, Tools, BDeleteAnnot);
+          TtaSetItemOff (doc, 1, Tools, BReplyToAnnotation);
+          TtaSetItemOff (doc, 1, Tools, BPostAnnot);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

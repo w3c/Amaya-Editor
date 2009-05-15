@@ -1139,7 +1139,22 @@ void UpdateEditorMenus (Document doc)
     /* Update the javascript menus */
     UpdateJavascriptMenus ();
 #endif /* _JAVA */
-  TtaRefreshTopMenuStats (doc, -1);
+    
+    // Is it an annotation ?
+    if (DocumentTypes[doc] == docAnnot)
+      {
+	TtaSetItemOn (doc, 1, Tools, BDeleteAnnot);
+	TtaSetItemOn (doc, 1, Tools, BReplyToAnnotation);
+	TtaSetItemOn (doc, 1, Tools, BPostAnnot);
+      }
+    else
+      {
+	TtaSetItemOff (doc, 1, Tools, BDeleteAnnot);
+	TtaSetItemOff (doc, 1, Tools, BReplyToAnnotation);
+	TtaSetItemOff (doc, 1, Tools, BPostAnnot);
+      }
+
+    TtaRefreshTopMenuStats (doc, -1);
 }
 
 /*----------------------------------------------------------------------
