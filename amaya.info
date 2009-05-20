@@ -1,12 +1,12 @@
 Package: 	amaya
-Version:	8.8.1
-Revision:	4
-Maintainer:	Stephane GULLY <stephane.gully@inrialpes.fr>
-Depends:	glib-shlibs, imlib-shlibs (>= 1.9.14-2), gtk+-shlibs, gettext, libjpeg-shlibs, libpng3-shlibs
-BuildDepends:   glib, gtk+, imlib (>= 1.9.14-2), libjpeg, libpng3, gettext-bin, gettext-dev, autoconf2.5
+Version:	11
+Revision:	2
+Maintainer:	 Irène Vatton <Irene.vatton@inrialpes.fr>
+Depends:	glib-shlibs, imlib-shlibs (>= 1.9.14-2), gtk+-shlibs, gettext, libjpeg-shlibs, libpng3-shlibs, libraptor
+BuildDepends:   glib, gtk2, imlib (>= 1.9.14-2), libjpeg, libpng, libtool, autoconf, libraptor
 Conflicts:	amaya-gtk
 Replaces:	amaya-gtk
-Source:		mirror:custom:amaya-fullsrc-9.2.1.tgz
+Source:		mirror:custom:amaya-fullsrc-11.2.tgz
 CustomMirror: <<
 	Primary:  http://www.w3.org/Amaya/Distribution
 	ftp-US:   ftp://ftp.w3.org/pub/amaya
@@ -17,13 +17,12 @@ GCC: 3.3
 PatchScript:    cd .. && sed 's|@FINK@|%p|g' < %a/%n.patch | patch -p0
 CompileScript: <<
 	mkdir Darwin
-	cd 'Darwin' && ../configure --with-gtk --enable-bookmarks --prefix=%p/share --bindir=%p/bin && make
+	cd 'Darwin' && ../configure --enable-system-raptor --prefix=%p/share --bindir=%p/bin && make
 <<
 InstallScript: <<
-	cd 'Darwin' && make install prefix=%i/share bindir=%i/bin
-	cd %i/bin && ln -sf ../share/Amaya-%v/gtk/bin/amaya amaya
+	cd 'Darwin' && script_install 
 <<
-DocFiles:	README README.amaya amaya/COPYRIGHT
+DocFiles:	README amaya/COPYRIGHT
 Description:	W3C's Editor/Browser
 DescDetail: <<
 	Amaya is a complete web browsing and authoring 
@@ -31,17 +30,12 @@ DescDetail: <<
 	of interface, similar to that of the most popular commercial 
 	browsers. With such an interface, users can easily generate
 	HTML and XHTML pages, as well as CSS style sheets, MathML
-	expressions, and SVG drawings (full support of SVG is not yet
-	available, though).
+	expressions, and SVG drawings.
 	Amaya includes a collaborative annotation application based
 	on Resource Description Framework (RDF), XLink, and
 	XPointer.
 <<
 DescPackaging: <<
-	Slight hack to make Amaya install in %p/share/Amaya-%v with
-	link from %p/bin/amaya to the amaya executable. (Default would
-	have %p/Amaya, which isn't pretty).
 <<
 License:	OSI-Approved
 Homepage:	http://www.w3.org/Amaya/
-Source-MD5:	7941bbbae65619f16b41f431210b7e39

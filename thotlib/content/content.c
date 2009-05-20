@@ -39,7 +39,7 @@
 /*----------------------------------------------------------------------
   GetViewBoxTransformation
   ----------------------------------------------------------------------*/
-void GetViewBoxTransformation (PtrTransform Trans, int Width, int Height,
+void GetViewBoxTransformation (PtrTransform Trans, int width, int height,
                                float *xtrans,  float *ytrans,
                                double *xscale, double *yscale,
                                ThotBool *istranslated, ThotBool *isscaled)
@@ -59,9 +59,9 @@ void GetViewBoxTransformation (PtrTransform Trans, int Width, int Height,
              viewBox attribute, Trans->VbWidth and Trans->VbHeight are negative
              and the real size of the image should be used instead (TODO) */
           if (Trans->VbWidth > 0)
-            x_scale = (double) (Width / Trans->VbWidth);
+            x_scale = (double) (width / Trans->VbWidth);
           if (Trans->VbHeight > 0)
-            y_scale = (double) (Height / Trans->VbHeight);
+            y_scale = (double) (height / Trans->VbHeight);
           if (Trans->VbAspectRatio == ArNone)
             /* Do not force uniform scaling: the element's bounding box exactly
                matches the viewport rectangle */
@@ -97,22 +97,22 @@ void GetViewBoxTransformation (PtrTransform Trans, int Width, int Height,
                 {
                   y_trans = 0;
                   s_width = Trans->VbWidth * x_scale;
-                  if (Width != s_width)
-                    x_trans = (Width - s_width) / 2;
+                  if (width != s_width)
+                    x_trans = (width - s_width) / 2;
                 }
               else if (Trans->VbAspectRatio == ArXMaxYMin)
                 {
                   y_trans = 0;
                   s_width = Trans->VbWidth * x_scale;
-                  if (Width != s_width)
-                    x_trans = (Width - s_width);
+                  if (width != s_width)
+                    x_trans = (width - s_width);
                 }
               else if (Trans->VbAspectRatio == ArXMinYMid)
                 {
                   x_trans = 0;
                   s_height = Trans->VbHeight * y_scale;
-                  if (Height != s_height)
-                    y_trans = (Height - s_height) / 2;
+                  if (height != s_height)
+                    y_trans = (height - s_height) / 2;
                 }
               else if (Trans->VbAspectRatio == ArXMidYMid)
                 /* align the middle of the element's
@@ -120,44 +120,44 @@ void GetViewBoxTransformation (PtrTransform Trans, int Width, int Height,
                 {
                   s_height = Trans->VbHeight * y_scale;
                   s_width = Trans->VbWidth * x_scale;
-                  if (Width != s_width)
-                    x_trans = (Width - s_width) / 2;
-                  if (Height != s_height)
-                    y_trans = (Height - s_height) / 2;
+                  if (width != s_width)
+                    x_trans = (width - s_width) / 2;
+                  if (height != s_height)
+                    y_trans = (height - s_height) / 2;
                 }
               else if (Trans->VbAspectRatio == ArXMaxYMid)
                 {
                   s_height = Trans->VbHeight * y_scale;
                   s_width = Trans->VbWidth * x_scale;
-                  if (Width != s_width)
-                    x_trans = (Width - s_width);
-                  if (Height != s_height)
-                    y_trans = (Height - s_height) / 2;                  
+                  if (width != s_width)
+                    x_trans = (width - s_width);
+                  if (height != s_height)
+                    y_trans = (height - s_height) / 2;                  
                 }
               else if (Trans->VbAspectRatio == ArXMinYMax)
                 {
                   x_trans = 0;
                   s_height = Trans->VbHeight * y_scale;
-                  if (Height != s_height)
-                    y_trans = (Height - s_height);                  
+                  if (height != s_height)
+                    y_trans = (height - s_height);                  
                 }
               else if (Trans->VbAspectRatio == ArXMidYMax)
                 {
                   s_height = Trans->VbHeight * y_scale;
                   s_width = Trans->VbWidth * x_scale;
-                  if (Width != s_width)
-                    x_trans = (Width - s_width) / 2;
-                  if (Height != s_height)
-                    y_trans = (Height - s_height);
+                  if (width != s_width)
+                    x_trans = (width - s_width) / 2;
+                  if (height != s_height)
+                    y_trans = (height - s_height);
                 }
               else if (Trans->VbAspectRatio == ArXMaxYMax)
                 {
                   s_height = Trans->VbHeight * y_scale;
                   s_width = Trans->VbWidth * x_scale;
-                  if (Width != s_width)
-                    x_trans = (Width - s_width);
-                  if (Height != s_height)
-                    y_trans = (Height - s_height);
+                  if (width != s_width)
+                    x_trans = (width - s_width);
+                  if (height != s_height)
+                    y_trans = (height - s_height);
                 }
             }
 

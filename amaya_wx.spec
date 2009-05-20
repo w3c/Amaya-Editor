@@ -42,6 +42,8 @@ Authors:
     Vincent.Quint@inria.fr, Laurent.Carcone@w3.org
 
 %changelog
+* Fri Jan 30 2009 Irene Vatton <Irene.Vatton@inrialpes.fr>
+  The application uses now libraptor.so.1
 * Wed Nov 20 2008 Irene Vatton <Irene.Vatton@inrialpes.fr>
   Possiblity to use system libraries and force flags
 * Mon Feb 26 2007 Irene Vatton <Irene.Vatton@inrialpes.fr>

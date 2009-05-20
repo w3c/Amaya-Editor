@@ -3365,7 +3365,6 @@ extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
           CTM = transform;
         }
     }
-
   /* Simplify the product */
   if (CTM)
     {

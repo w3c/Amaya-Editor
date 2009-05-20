@@ -2391,9 +2391,9 @@ void CreateGraphicElement (Document doc, View view, int entry)
       break;
     }
 
+  dispMode = TtaGetDisplayMode (doc);
   if (newType.ElTypeNum > 0 && (entry != -1 || !newSVG))
     {
-      dispMode = TtaGetDisplayMode (doc);
       /* ask Thot to stop displaying changes made in the document */
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, DeferredDisplay);
@@ -2977,13 +2977,12 @@ void CreateGraphicElement (Document doc, View view, int entry)
         {
           /* Creation of a MathML Foreign object: go back to the Mathedit
              module */
+          /* ask Thot to display changes made in the document */
+          TtaSetDisplayMode (doc, dispMode);
           TtaSelectElement (doc, foreignObj);
           TtaCloseUndoSequence (doc);
           return;
         }
-
-      /* ask Thot to display changes made in the document */
-      TtaSetDisplayMode (doc, dispMode);
     }
 
   /* create attributes fill and stroke */
@@ -3055,6 +3054,8 @@ void CreateGraphicElement (Document doc, View view, int entry)
           UpdateStylePanelSVG (doc, 1, newEl);
         }
     }
+  /* ask Thot to display changes made in the document */
+  TtaSetDisplayMode (doc, dispMode);
 
   if (selEl != NULL)
     /* select the right element */
