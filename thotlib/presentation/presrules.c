@@ -4309,13 +4309,13 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
             }
           break;
         case PtFillOpacity:
-	  if (pPRule->PrPresMode != PresInherit &&
-	      strcmp (pEl->ElStructSchema->SsName, "SVG"))
-	    {
-	      pAb->AbFillOpacity = IntegerRule (pPRule, pEl,
-						pAb->AbDocView, &appl, &unit,
-						pAttr, pAb, pSchP, pDoc);
-	    }
+	  if (strcmp (pEl->ElStructSchema->SsName, "SVG"))
+	      /* not an SVG element */
+	    appl = TRUE;
+	  else
+	    pAb->AbFillOpacity = IntegerRule (pPRule, pEl,
+					      pAb->AbDocView, &appl, &unit,
+					      pAttr, pAb, pSchP, pDoc);
 	  if (!appl && pEl->ElParent == NULL)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
@@ -4324,13 +4324,13 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    }
           break;
         case PtStrokeOpacity:
-	  if (pPRule->PrPresMode != PresInherit &&
-	      strcmp (pEl->ElStructSchema->SsName, "SVG"))
-	    {
-	      pAb->AbStrokeOpacity = IntegerRule (pPRule, pEl,
-						  pAb->AbDocView, &appl, &unit,
-						  pAttr, pAb, pSchP, pDoc);
-	    }
+	  if (strcmp (pEl->ElStructSchema->SsName, "SVG"))
+	      /* not an SVG element */
+	    appl = TRUE;
+	  else
+	    pAb->AbStrokeOpacity = IntegerRule (pPRule, pEl,
+						pAb->AbDocView, &appl, &unit,
+						pAttr, pAb, pSchP, pDoc);
           if (!appl && pEl->ElParent == NULL)
             /* Pas de regle pour la racine, on met la valeur par defaut */
             {
