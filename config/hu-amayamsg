@@ -111,7 +111,7 @@
 109 Ez a mód tiltott
 110 Kérjük, hitelesítsen: %s
 111 Ellenőrzés ...
-112 A mentés (%s) sikertelen, Mentsük lemezre?
+112 **Do you want to keep a local copy?
 113 A mentés (%s) hibásnak mutatkozik, hagyjuk figyelmen kívül?
 114 Az URL (%s) átirányítva ide: %s, hagyjuk figyelmen kívül?
 115 A(z) %s újratültése sikertelen, hagyjuk figyelmen kívül?
@@ -510,5 +510,3 @@
 508 **Union name:
 509 **Use elements
 510 **Label
-511 **Local copy
-512 **Save a copy to upload later

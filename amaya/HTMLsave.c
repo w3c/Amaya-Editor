@@ -2127,8 +2127,8 @@ ThotBool HasSavingName (Document doc, View view, char *url, ThotBool *with_suffi
           if (ok)
             {
               // check isf there is a suffix
-	      strcpy (documentname, DocumentMeta[doc]->content_location);
-	      TtaExtractSuffix (documentname, suffix);
+              strcpy (documentname, DocumentMeta[doc]->content_location);
+              TtaExtractSuffix (documentname, suffix);
               *with_suffix = (suffix[0] != EOS);
             }
           else
@@ -2503,14 +2503,15 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
 
 /*----------------------------------------------------------------------
   SaveLocalCopy
+  Return 0 if okay, -1 otherwise
   ----------------------------------------------------------------------*/
-static ThotBool SaveLocalCopy (Document doc, View view, char *url, char *tempname)
+static int SaveLocalCopy (Document doc, View view, char *url, char *tempname)
 {
   LoadedImageDesc    *pImage;
   char                pathname[MAX_LENGTH], *ptr, *last = NULL;
   char                msg[MAX_LENGTH];
   char               *docdir;
-  ThotBool            res = FALSE;
+  int                 res = -1;
 
   if (url && !strncmp (url, "http://", 7))
     {
@@ -2520,7 +2521,12 @@ static ThotBool SaveLocalCopy (Document doc, View view, char *url, char *tempnam
       if (ptr == NULL)
         {
           docdir = TtaGetDocumentsDir ();
-          sprintf (pathname, "%s%c%s", docdir, DIR_SEP,&url[7]);
+          if (DocumentMeta[doc] && DocumentMeta[doc]->full_content_location)
+            // use the full name
+          sprintf (pathname, "%s%c%s", docdir, DIR_SEP,
+                   &(DocumentMeta[doc]->full_content_location[7]));
+          else
+            sprintf (pathname, "%s%c%s", docdir, DIR_SEP,&url[7]);
           ptr = strstr (pathname, "/");
           while (ptr)
             {
@@ -2530,21 +2536,23 @@ static ThotBool SaveLocalCopy (Document doc, View view, char *url, char *tempnam
               *last = DIR_SEP;
 #endif /* _WINDOWS */
             }
-          InitConfirm3L (doc, 1, TtaGetMessage (AMAYA, AM_SAVE_UPLOAD_TIP), pathname,
-                         NULL, TRUE);
-          res =  UserAnswer;
-
+          if (last[1] == EOS && DocumentMeta[doc] &&
+              DocumentMeta[doc]->content_location)
+              // add the default name
+            strcat (pathname, DocumentMeta[doc]->content_location);
+          sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+          InitConfirm3L (doc, 1, msg, TtaGetMessage (AMAYA, AM_SAVING_FAILED),
+                         pathname, TRUE);
           // create the subdirectory if needed
-          if (res && last)
+          if (UserAnswer && last)
             {
               *last = EOS;
-              res = TtaCheckMakeDirectory (pathname, TRUE);
+              if (TtaCheckMakeDirectory (pathname, TRUE))
+                res = 0;
               *last = DIR_SEP;
             }
           // save a copy of the document file
-          if (res)
-            res = TtaFileCopy (tempname, pathname);
-          if (res)
+          if (res == 0 && TtaFileCopy (tempname, pathname))
             {
               /* switch Amaya buttons and menus */
               DocStatusUpdate (doc, FALSE);
@@ -2552,12 +2560,6 @@ static ThotBool SaveLocalCopy (Document doc, View view, char *url, char *tempnam
               /* Notify the document as modified */
               TtaSetDocumentModified (doc);
               pImage = ImageURLs;
-            }
-          else
-            {
-              sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), pathname);
-              InitInfo (NULL, msg);
-              res = FALSE;
             }
         }
     }
@@ -2702,7 +2704,8 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       if (res != 0)
         {
           ResetStop (doc);
-          savecopy = ExtraChoice;
+          TtaHandlePendingEvents ();
+          savecopy = TRUE;// ExtraChoice;
           if (savecopy)
             // save a local copy
             res = SaveLocalCopy (doc, view, url, tempname);

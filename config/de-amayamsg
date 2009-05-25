@@ -111,7 +111,7 @@
 109 Diese Methode ist nicht erlaubt
 110 Bitte für den Zugriff auf %s einloggen
 111 Überprüfe ...
-112 Speichern unter %s fehlerhaft, Speichern auf Festplatte?
+112 **Do you want to keep a local copy?
 113 Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?
 114 URI %s nach %s weitergeleitet, ignorieren?
 115 Aktualisierung von %s fehlerhaft, ignorieren?
@@ -510,5 +510,3 @@
 508 Vereinigungsname:
 509 **Use elements
 510 **Label
-511 **Local copy
-512 **Save a copy to upload later

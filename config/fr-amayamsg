@@ -111,7 +111,7 @@
 109 Cette opération n'est pas permise
 110 L'accès à %s requiert votre authentification
 111 Vérification ...
-112 L'enregistrement distante de %s a échouée, enregistrer sur disque ?
+112 Voulez-vous garder une copie locale ?
 113 La sauvegarde distante de %s semble corrompue, ignorer ?
 114 URL %s redirigée sur %s, ignorer ?
 115 Le relecture de %s a échouée, ignorer ?
@@ -510,5 +510,3 @@
 508 Nom de l'union :
 509 Utiliser les éléments
 510 Label
-511 Copie locale
-512 Sauver une copie pour poster plus tard

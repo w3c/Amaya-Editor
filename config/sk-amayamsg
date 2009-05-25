@@ -111,7 +111,7 @@
 109 Táto metóda nie je dovolená
 110 Autentifikujte sa pre prístup k %s
 111 Overovanie ...
-112 Ukladanie do %s zlyhalo. Uložiť na disk?
+112 **Do you want to keep a local copy?
 113 Ukladanie do %s sa zdá narušené. Ignorovať?
 114 URL %s presmerovaná do %s. Ignorovať?
 115 Aktualizovanie %s zlyhalo. Ignorovať?
@@ -510,5 +510,3 @@
 508 **Union name:
 509 **Use elements
 510 **Label
-511 **Local copy
-512 **Save a copy to upload later

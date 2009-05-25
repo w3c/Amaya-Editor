@@ -111,7 +111,7 @@
 109 此方法被禁止
 110 Please authenticate to access %s
 111 正在驗證 ...
-112 保存到 %s 失敗, 保存到磁盤嗎?
+112 **Do you want to keep a local copy?
 113 保存到 %s 似乎不正確, 忽略嗎?
 114 URL %s 重定向到 %s, 忽略嗎?
 115 重新載入 %s 失敗, 忽略嗎?
@@ -510,5 +510,3 @@
 508 **Union name:
 509 **Use elements
 510 **Label
-511 **Local copy
-512 **Save a copy to upload later

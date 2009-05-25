@@ -111,7 +111,7 @@
 109 Questo metodo non è consentito
 110 Identificazione richiesta per accedere a %s
 111 Verifica in corso ...
-112 Il salvataggio su %s è fallito, salvo su disco?
+112 **Do you want to keep a local copy?
 113 Il salvataggio su %s sembra non funzionare, ignora?
 114 L'URL %s è rediretto su %s, ignora ?
 115 Ricaricamento di %s fallito, ignora ?
@@ -511,5 +511,3 @@
 508 Nome di l'unione:
 509 **Use elements
 510 **Label
-511 **Local copy
-512 **Save a copy to upload later

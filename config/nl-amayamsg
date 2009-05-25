@@ -111,7 +111,7 @@
 109 Deze methode is niet toegestaan
 110 Identificeer u voor toegang tot %s
 111 Bezig met verifiëren...
-112 Opslaan naar %s mislukt. Opslaan op schijf?
+112 **Do you want to keep a local copy?
 113 Bij het opslaan naar %s worden wellicht gegevens beschadigd. Wilt u dit negeren?
 114 URL %s is omgeleid naar %s. Wilt u dit negeren?
 115 Opnieuw laden van %s is mislukt. Wilt u dit negeren?
@@ -510,5 +510,3 @@
 508 Naam verbinding:
 509 Elementen gebruiken
 510 Bijschrift
-511 **Local copy
-512 **Save a copy to upload later

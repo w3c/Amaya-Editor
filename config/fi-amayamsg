@@ -111,7 +111,7 @@
 109 T‰m‰ menettely on kielletty
 110 Tunnistus vaaditaan %s k‰sittelyyn
 111 Tarkistetaan ...
-112 Tallennus %s ep‰onnistui, Tallenetaanko levylle?
+112 **Do you want to keep a local copy?
 113 Tallenne %s vaikuttaa virheelliselt‰, ohita?
 114 URL %s v‰litet‰‰n edelleen %s, ohita?
 115 %s p‰ivitys ep‰onnistui, ohita?
@@ -510,5 +510,3 @@
 508 **Union name:
 509 **Use elements
 510 **Label
-511 **Local copy
-512 **Save a copy to upload later

@@ -111,7 +111,7 @@
 109 Bu yöntem %s için kullanılamaz
 110 %s erişimi için lütfen kendinizi tanıtın
 111 Doğrulanıyor...
-112 %s\'e kaydedilemedi, Diske kaydedeyim mi?
+112 **Do you want to keep a local copy?
 113 %s bozuk görünüyor, devam edeyim mi?
 114 URL %s %s e yönlendirilmiş, devam edeyim mi?
 115 %s yeniden yüklenemedi, devam edeyim mi?
@@ -510,5 +510,3 @@
 508 **Union name:
 509 **Use elements
 510 **Label
-511 **Local copy
-512 **Save a copy to upload later

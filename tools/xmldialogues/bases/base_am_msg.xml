@@ -2309,30 +2309,8 @@ odpoveď</message>
 	<message xml:lang="nl">Bezig met verifiëren...</message>
 </label>
 <label define="AM_SAVING_FAILED">
-	<message xml:lang="en">Saving to %s failed, Save to disk?</message>
-	<message xml:lang="fr">L'enregistrement distante de %s a échouée,
-enregistrer sur disque ?</message>
-	<message xml:lang="de">Speichern unter %s fehlerhaft, Speichern auf
-Festplatte?</message>
-	<message xml:lang="it">Il salvataggio su %s è fallito, salvo su
-disco?</message>
-	<message xml:lang="tr">%s\'e kaydedilemedi, Diske kaydedeyim mi?</message>
-	<message xml:lang="es">El guardado en %s ha fallado, ¿Guardar en
-disco?</message>
-	<message xml:lang="pt">A salvação em %s falhou. Salvar no disco?</message>
-	<message xml:lang="fi">Tallennus %s epäonnistui, Tallenetaanko
-levylle?</message>
-	<message xml:lang="ru">Неудачная попытка сохранения
-в %s. Сохранить на диск?</message>
-	<message xml:lang="hu">A mentés (%s) sikertelen, Mentsük lemezre?</message>
-	<message xml:lang="ka">შენახვა აქ %s შეწყდა,
-შევინახო დისკზე?</message>
-	<message xml:lang="cn">保存到 %s 失败, 保存到磁盘吗?</message>
-	<message xml:lang="tw">保存到 %s 失敗, 保存到磁盤嗎?</message>
-	<message xml:lang="sk">Ukladanie do %s zlyhalo. Uložiť na disk?</message>
-	<message xml:lang="ja">%s
-への保存に失敗しました。ディスクに保存しますか？</message>
-	<message xml:lang="nl">Opslaan naar %s mislukt. Opslaan op schijf?</message>
+	<message xml:lang="en">Do you want to keep a local copy?</message>
+	<message xml:lang="fr">Voulez-vous garder une copie locale ?</message>
 </label>
 <label define="AM_SAVE_COMPARE_FAILED">
 	<message xml:lang="en">Saving to %s seems corrupted, ignore?</message>
@@ -9232,14 +9210,6 @@ cancellarlo.</message>
 	<message xml:lang="en">Label</message>
 	<message xml:lang="fr">Label</message>
 	<message xml:lang="nl">Bijschrift</message>
-</label>
-<label define="AM_SAVE_UPLOAD">
-	<message xml:lang="en">Local copy</message>
-	<message xml:lang="fr">Copie locale</message>
-</label>
-<label define="AM_SAVE_UPLOAD_TIP">
-	<message xml:lang="en">Save a copy to upload later</message>
-	<message xml:lang="fr">Sauver une copie pour poster plus tard</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
