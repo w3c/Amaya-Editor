@@ -1823,10 +1823,6 @@ void GetDifferedRule (PtrDelayedPRule * pRR)
   if (pNewRR)
     {
       memset (*pRR, 0, sizeof (DelayedPRule));
-      pNewRR->DpPRule = NULL;
-      pNewRR->DpPSchema = NULL;
-      pNewRR->DpAbsBox = NULL;
-      pNewRR->DpNext = NULL;
       NbUsed_DelayR++;
     }
 }

@@ -882,6 +882,71 @@ void GetDelayedRule (PtrPRule *pR, PtrPSchema *pSP, PtrAbstractBox *pAbb,
 }
 
 /*----------------------------------------------------------------------
+  ApplyDelayedRules applies delayed rules of type ruleType (any
+  type if ruleType is -1) attached to the current pAb abstact box.
+  ----------------------------------------------------------------------*/
+ThotBool ApplyDelayedRules (int ruleType, PtrAbstractBox pAb, PtrDocument pDoc)
+{
+  PtrDelayedPRule     pDelR, prev = NULL, next;
+  ThotBool            stop;
+  PtrElement          pEl;
+
+  if (pAb)
+    {
+      /* cherche le pave de l'element dans cette vue */
+      /* saute les paves de presentation */
+      stop = FALSE;
+      pEl = pAb->AbElement;
+      do
+        if (pAb == NULL)
+          stop = TRUE;
+        else if (pAb->AbElement != pEl)
+          {
+            stop = TRUE;
+            pAb = NULL;
+          }
+        else if (!pAb->AbPresentationBox)
+          stop = TRUE;
+        else
+          pAb = pAb->AbNext;
+      while (!stop);
+
+      if (pAb && pAb->AbDelayedPRule)
+        {
+          pDelR = pAb->AbDelayedPRule;
+          while (pDelR)
+            {
+              next = pDelR->DpNext;
+              if (pDelR->DpPRule &&
+                  (ruleType != -1 || pDelR->DpPRule->PrType == ruleType))
+                {
+                  // try to apply that rule
+                  if (ApplyRule (pDelR->DpPRule,
+                                 pDelR->DpPSchema,
+                                 pDelR->DpAbsBox, pDoc,
+                                 pDelR->DpAttribute, pAb))
+                    {
+                      // that rule is now applied
+                      if (prev)
+                        prev->DpNext = pDelR->DpNext;
+                      else
+                        pAb->AbDelayedPRule = pDelR->DpNext;
+                      FreeDifferedRule (pDelR);
+                    }
+                  else
+                    prev = pDelR;
+                }
+              else
+                prev = pDelR;
+              // next delayed rule
+              pDelR = next;
+            }
+        }
+    }
+}
+
+
+/*----------------------------------------------------------------------
   ApplDelayedRule applique les regles retardees conservees pour  
   les paves de l'element El du document pDoc.             
   ----------------------------------------------------------------------*/
@@ -918,28 +983,8 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
                 if (pRule &&
                     ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr, pAb))
                   if (pAbb->AbElement != pEl && !pAbb->AbNew)
-                    switch (pRule->PrType)
-                      {
-                      case PtWidth:
-                        pAbb->AbWidthChange = TRUE;
-                        break;
-                      case PtHeight:
-                        pAbb->AbHeightChange = TRUE;
-                        break;
-                      case PtHorizPos:
-                        pAbb->AbHorizPosChange = TRUE;
-                        break;
-                      case PtVertPos:
-                        pAbb->AbVertPosChange = TRUE;
-                        break;
-                      case PtHorizRef:
-                        pAbb->AbHorizRefChange = TRUE;
-                        break;
-                      case PtVertRef:
-                        pAbb->AbVertRefChange = TRUE;
-                        break;
-                      default: break;
-                      }
+                    SetChange (pAbb, pDoc, pRule->PrType,
+                               (FunctionType)pRule->PrPresFunction);
               }
             while (pRule);
           }
@@ -2354,8 +2399,6 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   PtrAbstractBox      pAb, pAbb1, pAbbNext;
   PtrAbstractBox      pAbbCreated;
   PtrElement          pE, pER, pElSibling;
-  PtrPSchema          pSP;
-  PtrAttribute        pSelAttr;
   PtrPresentationBox  pBox;
   FunctionType        funct;
   TypeUnit            unit;
@@ -2881,7 +2924,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 
           if (pAbbCreated != NULL)
             {
-              if (pER != NULL)
+              if (pER)
                 /* change le pointeur de pave de l'element englobant les */
                 /* elements associes a mettre dans la boite */
                 {
@@ -2948,7 +2991,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                           }
                       }
                 }
-              while (pR != NULL);
+              while (pR);
 
               pAbbCreated->AbPresentationBox = TRUE;
               /* met le contenu dans le pave cree */
@@ -2996,17 +3039,11 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                       break;
                     }
                 }
-              while (pR != NULL);
-              do		/* applique les regles retardees */
-                {
-                  pAbb1 = pAbbCreated;
-                  GetDelayedRule (&pR, &pSP, &pAbb1, &pSelAttr);
-                  if (pR != NULL)
-                    if (!ApplyRule (pR, pSP, pAbb1, pDoc, pSelAttr,
-                                    pAbbCreated))
-                      Delay (pR, pSP, pAbb1, pSelAttr, pAbbCreated);
-                }
-              while (pR != NULL);
+              while (pR);
+
+              /* apply delayed rules */
+              ApplyDelayedRules (-1, pAbbCreated, pDoc);
+
               /* retablit AbPresentationBox qui a ete modifie' pour les boites de */
               /* haut ou de bas de page qui regroupent des elements associes */
               pAbbCreated->AbPresentationBox = TRUE;
@@ -5678,7 +5715,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
   PtrPRule            pRule = NULL, pRDef, pRSpec;
   PtrElement          pElChild, pElParent, pAsc;
   PtrAbstractBox      pAbChild, pNewAbbox, pAbReturn, pAbPres;
-  PtrAbstractBox      pPRP, pAb, pAbParent;
+  PtrAbstractBox      pAb, pAbParent;
   PtrSSchema          pSchS, savePSS;
   PtrAttribute        pAttr;
   RuleQueue           queue;
@@ -6410,18 +6447,9 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                 else
                   pAb = pAb->AbNext;
               while (!stop);
-              do
-                {
-                  pPRP = pAb;
-                  GetDelayedRule (&pRule, &pSPres, &pPRP, &pAttr);
-                  if (pRule != NULL)
-                    if (!ApplyRule (pRule, pSPres, pPRP, pDoc, pAttr, pAb))
-                      /* cette regle n'a pas pu etre appliquee. C'est  */
-                      /* une regle correspondant a un attribut, on */
-                      /* l'appliquera lorsque l'englobant sera complete */
-                      Delay (pRule, pSPres, pPRP, pAttr, pAb);
-                }
-              while (pRule != NULL);
+
+              /* apply delayed rules */
+              ApplyDelayedRules (-1, pAb, pDoc);
             }
         }
       /* fin de !ignoreDescent */

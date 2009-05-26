@@ -171,8 +171,8 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 {
   PtrElement          pEl;
   int                 view;
-  PtrAbstractBox      pAbCur, pPRP;
-  PtrPRule            pRule = NULL, checkedRule;
+  PtrAbstractBox      pAbCur;
+  PtrPRule            pRule = NULL;
   PtrPSchema          pSchP;
   PtrAttribute        pAttr;
 
@@ -238,28 +238,7 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
       if (pAbCur)
         {
           /* apply delayed rules */
-          checkedRule = NULL;
-          do
-            {
-              pPRP = pAbCur;
-              if (pAbCur->AbDelayedPRule &&
-                  pAbCur->AbDelayedPRule->DpPRule == checkedRule)
-                pRule = NULL;
-              else
-                {
-                  GetDelayedRule (&pRule, &pSchP, &pPRP, &pAttr);
-                  if (pRule && !ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr, NULL))
-                    {
-                      /* this rule cannot be applied yet */
-                      Delay (pRule, pSchP, pPRP, pAttr, pAbCur->AbFirstEnclosed);
-                      if (checkedRule == NULL)
-                        /* first rule already checked and re-inserted
-                           in the delay list */
-                        checkedRule = pRule;
-                    }
-                }
-            }
-          while (pRule);
+          ApplyDelayedRules (ruleType, pAbCur, pDoc);
 
           /* il y a un element ascendant dont le pave pAbCur pourrait
              heriter de pAb */
@@ -401,7 +380,7 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-int          NumTypePRuleAPI (PtrPRule pRule)
+int NumTypePRuleAPI (PtrPRule pRule)
 {
   switch (pRule->PrType)
     {
@@ -1513,7 +1492,7 @@ void    TtaRemovePRule (Element element, PRule pRule, Document document)
   pRule: the next presentation rule, or NULL if
   pRule is the last rule of the element.
   ----------------------------------------------------------------------*/
-void                TtaNextPRule (Element element, PRule * pRule)
+void TtaNextPRule (Element element, PRule * pRule)
 {
   PtrPRule            nextPRule;
 

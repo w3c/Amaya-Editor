@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void GetViewBoxTransformation ( PtrTransform Trans,
-                                       int Width,
-                                       int Height,
+                                       int width,
+                                       int height,
                                        float *xtrans,
                                        float *ytrans,
                                        double *xscale,
@@ -106,8 +106,8 @@ extern void *TtaNewTransformMatrix ( float a,
 #else /* __STDC__ */
 
 extern void GetViewBoxTransformation ( PtrTransform Trans,
-                                         int Width,
-                                         int Height,
+                                         int width,
+                                         int height,
                                          float *xtrans,
                                          float *ytrans,
                                          double *xscale,

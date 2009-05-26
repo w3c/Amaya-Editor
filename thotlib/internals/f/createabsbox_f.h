@@ -46,6 +46,9 @@ extern void GetDelayedRule ( PtrPRule *pR,
                              PtrPSchema *pSP,
                              PtrAbstractBox *pAbb,
                              PtrAttribute * pAttr );
+extern ThotBool ApplyDelayedRules ( int ruleType,
+                                    PtrAbstractBox pAb,
+                                    PtrDocument pDoc );
 extern void ApplDelayedRule ( PtrElement pEl,
                               PtrDocument pDoc );
 extern ThotBool ElemDoesNotCount ( PtrElement pEl,
@@ -169,6 +172,9 @@ extern void GetDelayedRule ( PtrPRule *pR,
                                PtrPSchema *pSP,
                                PtrAbstractBox *pAbb,
                                PtrAttribute * pAttr );
+extern ThotBool ApplyDelayedRules ( int ruleType,
+                                      PtrAbstractBox pAb,
+                                      PtrDocument pDoc );
 extern void ApplDelayedRule ( PtrElement pEl,
                                 PtrDocument pDoc );
 extern ThotBool ElemDoesNotCount ( PtrElement pEl,

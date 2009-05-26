@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -641,11 +641,11 @@ static void RebuildImage (PtrDocument pDoc)
         pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
         pAbbRoot = pDoc->DocViewRootAb[view - 1];
         frame = pDoc->DocViewFrame[view - 1];
-	doc = IdentDocument (pDoc);
-	dispMode = documentDisplayMode[doc - 1];
-	documentDisplayMode[doc - 1] = NoComputedDisplay;
+        doc = IdentDocument (pDoc);
+        dispMode = documentDisplayMode[doc - 1];
+        documentDisplayMode[doc - 1] = NoComputedDisplay;
         AbsBoxesCreate (pElRoot, pDoc, view, TRUE, TRUE, &complete);
-	documentDisplayMode[doc - 1] = dispMode;
+        documentDisplayMode[doc - 1] = dispMode;
         if (pAbbRoot == NULL)
           pAbbRoot = pDoc->DocViewRootAb[view - 1] = pElRoot->ElAbstractBox[view - 1];
         h = 0;
