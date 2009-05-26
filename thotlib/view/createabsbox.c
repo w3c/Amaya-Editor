@@ -783,23 +783,27 @@ int AppliedView (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
   Si l'englobant est un pave page ou un pave duplique,    
   on met la regle en attente au niveau de la racine.      
   ----------------------------------------------------------------------*/
-void Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb,
-            PtrAttribute pAttr, PtrAbstractBox pPRP)
+static void Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb,
+                   PtrAttribute pAttr)
 {
   PtrDelayedPRule     pDelR;
   PtrDelayedPRule     NpDelR;
   PtrAbstractBox      pAb;
 
   pAb = NULL;
-  if (pPRP->AbEnclosing != NULL)
+  if (pAbb->AbEnclosing)
     {
-      pAb = pPRP->AbEnclosing;
+      pAb = pAbb->AbEnclosing;
       /* si ce pave est un pave de presentation cree par la regle */
       /* FnCreateEnclosing, on met la regle en attente sur le pave englobant */
-      if (pAb->AbEnclosing != NULL)
-        if (pAb->AbPresentationBox &&
-            pAb->AbElement == pPRP->AbElement)
-          pAb = pAb->AbEnclosing;
+      if (pAb->AbEnclosing &&
+          (pAb->AbPresentationBox &&
+           pAb->AbElement == pAbb->AbElement))
+        pAb = pAb->AbEnclosing;
+      else if (pR->PrPresMode == PresInherit &&
+               pR->PrInheritMode == InheritGrandFather &&
+               pAb->AbEnclosing)
+        pAb = pAb->AbEnclosing;
     }
 
   if (pAb)
@@ -918,7 +922,7 @@ ThotBool ApplyDelayedRules (int ruleType, PtrAbstractBox pAb, PtrDocument pDoc)
             {
               next = pDelR->DpNext;
               if (pDelR->DpPRule &&
-                  (ruleType != -1 || pDelR->DpPRule->PrType == ruleType))
+                  (ruleType == -1 || pDelR->DpPRule->PrType == ruleType))
                 {
                   // try to apply that rule
                   if (ApplyRule (pDelR->DpPRule,
@@ -2981,13 +2985,13 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                               /* pas encore ete appliquees au pave */
                               /* et le pave cree herite du createur, on */
                               /* differe l'application de la regle */
-                              Delay (pRV, pSchP, pAbbCreated, NULL, pAbbCreated);
+                              Delay (pRV, pSchP, pAbbCreated, NULL);
                             else if (!ApplyRule (pRV, pSchP, pAbbCreated, pDoc,
                                                  NULL, pAbbCreated))
                               /* on n'a pas pu appliquer la regle, on */
                               /* l'appliquera lorsque le pave pere */
                               /* sera  termine' */
-                              Delay (pRV, pSchP, pAbbCreated, NULL, pAbbCreated);
+                              Delay (pRV, pSchP, pAbbCreated, NULL);
                           }
                       }
                 }
@@ -6425,7 +6429,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                     if (!crAbsBox)
                       /* ce n'est pas une regle de creation */
                       if (!ApplyRule (pRule, pSPres, pAb, pDoc, pAttr, pAb))
-                        Delay (pRule, pSPres, pAb, pAttr, pAb);
+                        Delay (pRule, pSPres, pAb, pAttr);
                   }
               }
             while (pRule);

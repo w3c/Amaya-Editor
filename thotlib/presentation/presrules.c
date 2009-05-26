@@ -1455,7 +1455,7 @@ static void VerifyAbsBox (ThotBool *found, PtrPSchema pSP, RefKind refKind,
             {
               /* C'est une regle AnyBox, on accepte la premiere boite de */
               /* presentation trouvee */
-              if (pAb->AbPresentationBox)
+              //if (pAb->AbPresentationBox)
                 *found = TRUE;
             }
           else if (refKind == RkPresBox)
@@ -2571,11 +2571,12 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
                 PPos->PosDistance = 0;
                 PPos->PosDistDelta = 0;
               }
-            /* on pourra reessayer d'appliquer la regle plus tard : */
-            /* le precedent existera peut etre, alors */
+
             if (pRefAb == pAbb1->AbEnclosing)
+              // it's a delayed rule that cannot apply
               *appl = TRUE;
             else
+              // it will be retried later 
               *appl = FALSE;
             PPos->PosUnit = pPosRule->PoDistUnit;
             PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
@@ -2595,7 +2596,12 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
             PPos->PosDeltaUnit = pPosRule->PoDeltaUnit;
             PPos->PosAbRef = NULL;
             PPos->PosUserSpecified = FALSE;
-            *appl = FALSE;
+            if (pRefAb == pAbb1->AbEnclosing)
+              // it's a delayed rule that cannot apply
+              *appl = TRUE;
+            else
+              // it will be retried later 
+              *appl = FALSE;
           }
     }
 }
@@ -3541,6 +3547,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   ThotBool            ignorefix = FALSE;
 
   appl = FALSE;
+if (pPRule && pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritGrandFather)
+  printf ("Apply InheritGrandFather %d\n",pPRule->PrType);
   if (pPRule && pAb && pAb->AbElement)
     {
       pEl = pAb->AbElement;
