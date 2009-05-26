@@ -1455,7 +1455,7 @@ static void VerifyAbsBox (ThotBool *found, PtrPSchema pSP, RefKind refKind,
             {
               /* C'est une regle AnyBox, on accepte la premiere boite de */
               /* presentation trouvee */
-              //if (pAb->AbPresentationBox)
+              if (pAb->AbPresentationBox)
                 *found = TRUE;
             }
           else if (refKind == RkPresBox)
