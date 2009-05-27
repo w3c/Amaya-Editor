@@ -590,7 +590,7 @@ AmayaSpeChar filtre_relations_binaires_negation[] =
 
 AmayaSpeChar filtre_divers[] =
   {
-    {0x00A0, "no-break space"},
+    {0x00A0, "non-breaking space"},
     {0x00BF, "inverted question mark"},
     {0x2018, "left single quotation mark"},
     {0x2019, "right single quotation mark"},
@@ -602,8 +602,8 @@ AmayaSpeChar filtre_divers[] =
     {0x2030, "per mille sign"},
     {0x00B0, "degree sign"},
     {0x00B6, "paragraph sign"},
-    {0x0152, "oe"},
-    {0x0153, "OE"},
+    {0x0153, "oe"},
+    {0x0152, "OE"},
     {0x00E6, "ae"},
     {0x00C6, "AE"},
     {0x20AC, "euro"},
