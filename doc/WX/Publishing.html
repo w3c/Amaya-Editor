@@ -14,74 +14,75 @@
 <body xml:lang="en" lang="en">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="SpellChecking.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="WebDAV.html" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="WebDAV.html" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body" class="PageBody">
 <h2 id="Saving2">Saving and publishing documents</h2>
 
-<p>You can save (X)HTML documents either in <span
-class="Link0">(X)HTML</span> or as plain <span class="Link0">text</span>.
-Other documents (SVG, MathML, XML or CSS) are saved according to their
-original format. You can save both remote and local documents with three
-different commands, <span class="Link0"><strong>Save</strong></span>, <span
-class="Link0"><strong>Save as</strong></span>, and <strong>Save
-all</strong>.</p>
+<p>You can save (X)HTML documents either in <span class="Link0">(X)HTML</span>
+or as plain <span class="Link0">text</span>. Other documents (SVG, MathML, XML
+or CSS) are saved according to their original format. You can save both remote
+and local documents with three different commands, <span
+class="Link0"><strong>Save</strong></span>, <span class="Link0"><strong>Save
+as</strong></span>, and <strong>Save all</strong>.</p>
 
 <p>In addition, you can change a number of publishing options using the
-<strong><a href="Configure.html#Publishing">Publishing
-Preferences</a></strong> dialog. Open this dialog by choosing <span
-class="Link0"><strong>Preferences / Publishing</strong></span> from the
-<strong>Edit</strong> menu (or <strong>amaya / Preferences</strong> on Mac OS
-X).</p>
+<strong><a href="Configure.html#Publishing">Publishing Preferences</a></strong>
+dialog. Open this dialog by choosing <span class="Link0"><strong>Preferences /
+Publishing</strong></span> from the <strong>Edit</strong> menu (or
+<strong>amaya / Preferences</strong> on Mac OS X).</p>
 
 <p>Amaya does not provide any global view of a set of pages installed on a
 server. However, you can save files from a remote server in the same way you
-save local files, using the <span class="link"><strong>Save
-as</strong></span> commands. During these operations, Amaya can also save the
-resources you have associated with the document (images, style sheets,
-scripts).</p>
+save local files, using the <strong>Save</strong> or  <span
+class="link"><strong>Save as</strong></span> commands. During these operations,
+Amaya is also able to save the resources you have associated with the document
+(images, style sheets, scripts).</p>
 
-<h3 id="Save">The save command</h3>
+<h3 id="Save">The Save command</h3>
 
-<p>The <strong>Save</strong> command saves the current document to its
-original location, be it local or remote. You can access the
-<strong>Save</strong> command by choosing <strong>Save</strong> from the
-<strong>File</strong> menu, clicking the <strong>Save</strong> button <img
-alt="floppy" src="../../resources/icons/22x22/save.png" /> on the button bar,
-or by using keyboard shortcuts <kbd>Ctrl-s</kbd>. Newly added images are
-saved in the same directory automatically; confirmation is only requested
-when the document was downloaded from a web server and its name is
-unknown.</p>
+<p>The <strong>Save</strong> command saves the current document to its original
+location, be it local or remote. You can access the <strong>Save</strong>
+command by choosing <strong>Save</strong> from the <strong>File</strong> menu
+(<kbd>Ctrl-s</kbd>) or clicking the <strong>Save</strong> button <img
+alt="floppy" src="../../resources/icons/22x22/save.png" />.</p>
 
-<p>You can also fetch a document from web servers by specifying only the
-server directory name, but not the file name. This may be useful when
-browsing, but a file name is required by the HTTP Put method. In this case,
-Amaya detects that the document name is missing and asks you either to use a
-default name or to provide one.</p>
+<p>You can fetch a web document by specifying only a server directory name. The
+default file name is omitted (index.html or Overview.html). This may be useful
+when browsing, but the file name is required for publishing. </p>
 
-<p class="Note"><strong>Note</strong>: Use the <strong>Save As</strong>
-command to save your document to a different location.</p>
+<p>Usually Amaya uses the HTTP <code>Content-Location</code> provided by the
+server when the document is loaded. If the file name is not provided in the
+HTTP header, Amaya asks you to provide one when saving.</p>
 
-<h3 id="SaveAll">The save all command</h3>
+<p class="Note">When you edit a remote document, the server may not allow you
+to publish directly. In that case, the <strong>Save</strong> command fails but
+it proposes to keep a local copy of the edited document that you will be able
+to copy to the server later with another method (ftp or upload). </p>
 
-<p>The <strong>Save all</strong> command allows you to save all documents
-open in Amaya that have been modified and not saved yet. It works exactly
-like the <strong>Save</strong> command, but for all the modified documents,
-not only the current one.</p>
+<p>Newly added images are saved in the same directory automatically. If you
+want to save new added images into another directory, you have to use the
+<strong>Save as</strong> command.</p>
+
+<h3 id="SaveAll">The Save all command</h3>
+
+<p>The <strong>Save all</strong> command allows you to save all documents open
+in Amaya that have been modified and not saved yet. It works exactly like the
+<strong>Save</strong> command, but for all the modified documents, not only the
+current one.</p>
 
 <p>This command may be called from the <strong>File</strong> menu or by
 clicking the <img alt="floppy" src="../../resources/icons/22x22/save_all.png"
 />button on the button bar.</p>
 
-<h3 id="Save1">The save as command</h3>
+<h3 id="Save1">The Save as command</h3>
 
 <p>Choosing <strong>Save As</strong> (<kbd>Ctrl-Shift-s</kbd>) from the
 <strong>File</strong> menu opens the <strong>Save As</strong> dialog, which
@@ -97,27 +98,26 @@ different location.</p>
   <li>embedded style (including imported style sheets and images) and scripts
     can be saved into the same directory as the document or to a different
     location;</li>
-  <li>all URIs used in the document can be updated to take into account the
-    new location of the document and its associated resources.</li>
+  <li>all URIs used in the document can be updated to take into account the new
+    location of the document and its associated resources.</li>
 </ul>
 
-<p>The dialog box contains two tabs and two buttons. The first tab is about
-the document itself. The second tab is about its associated resources
-(images, styles sheets, scripts).</p>
+<p>The dialog box contains two tabs and two buttons. The first tab is about the
+document itself. The second tab is about its associated resources (images,
+styles sheets, scripts).</p>
 
 <p>The <strong>Document</strong> tab contains:</p>
 <ul>
-  <li>The <strong>Document location</strong> field indicates where the
-    document file has to be written. This can be in the local file system
-    (for example, <code>/pub/html/welcome.html</code>) or a remote URI (for
-    example, <code>http://www.w3.org/pub/WWW/Welcome.html</code>). 
+  <li>The <strong>Document location</strong> field indicates where the document
+    file has to be written. This can be in the local file system (for example,
+    <code>/pub/html/welcome.html</code>) or a remote URI (for example,
+    <code>http://www.w3.org/pub/WWW/Welcome.html</code>). 
     <p class="Note"><strong>Note:   </strong><span xml:lang="EN" lang="EN"
     style="font-weight:normal">Use</span><strong><span></span></strong>a
     complete path for the URI. You should also make sure that you have the
-    rights to do a <code>PUT</code> method if it is a remote location. Refer
-    to the page on <a
-    href="http://www.w3.org/Amaya/User/Put.html">configuring your server to
-    accept the PUT method</a> or ask your Web administrator.</p>
+    rights to do a <code>PUT</code> method if it is a remote location. Refer to
+    the page on <a href="http://www.w3.org/Amaya/User/Put.html">configuring
+    your server to accept the PUT method</a> or ask your Web administrator.</p>
   </li>
 </ul>
 <ul>
@@ -134,27 +134,27 @@ the document itself. The second tab is about its associated resources
       <li>The <strong>Transform URLs</strong> toggle transforms all current
         URIs into relative URIs when possible. Of course, if the document is
         saved in a local file and URIs point to remote files, URIs will be
-        absolute. This ensures that all the links in the document are
-        preserved by the copy. 
+        absolute. This ensures that all the links in the document are preserved
+        by the copy. 
         <p class="Note">If you save the document locally to publish it by ftp
-        just because your provider or your Webmaster does not allow you to
-        use the HTTP Put method, you must disable this option to not alterate
-        links computed when the document was on the http server.</p>
+        just because your provider or your Webmaster does not allow you to use
+        the HTTP Put method, you must disable this option to not alterate links
+        computed when the document was on the http server.</p>
         <p></p>
       </li>
-      <li>The <strong>Copy Images</strong> toggle indicates whether the
-        images and objects embedded in the current document must be copied
-        along with the document to a new location. You have to keep this
-        switch on when you want to generate a complete copy of the document. 
-        <p>When images and objects are copied, Amaya updates automatically
-        all <strong>src</strong> and <strong>data</strong> attributes to
-        point new locations. New locations are relative URIs.</p>
+      <li>The <strong>Copy Images</strong> toggle indicates whether the images
+        and objects embedded in the current document must be copied along with
+        the document to a new location. You have to keep this switch on when
+        you want to generate a complete copy of the document. 
+        <p>When images and objects are copied, Amaya updates automatically all
+        <strong>src</strong> and <strong>data</strong> attributes to point new
+        locations. New locations are relative URIs.</p>
       </li>
       <li>The <strong>Copy resources (styles and scripts)</strong> toggle
         indicates whether style sheets (including imported style sheets and
         images) and scripts embedded in the current document must be copied
-        along with the document to a new location. You have to keep this
-        switch on when you want to generate a complete copy of the document. 
+        along with the document to a new location. You have to keep this switch
+        on when you want to generate a complete copy of the document. 
         <p>When these resources are copied, Amaya updates automatically all
         links and processing instructions to point to these new resource
         locations. New locations are relative URIs.<br />
@@ -165,36 +165,35 @@ the document itself. The second tab is about its associated resources
 </ul>
 <ul>
   <li>The <strong>Charset</strong> field allows you to choose the charset of
-    the document. This option only works with documents that support the
-    notion of charset, such as HTML and XML documents, but it is not proposed
-    when saving from the source view. This option is available when saving
-    both remote and local documents. 
+    the document. This option only works with documents that support the notion
+    of charset, such as HTML and XML documents, but it is not proposed when
+    saving from the source view. This option is available when saving both
+    remote and local documents. 
     <p class="Note">Very often the charset of Web documents is controlled by
     the server. It depends either on the document suffix (html, xml, xhtml,
-    svg, mml), or on instructions given in the <code>.htaccess</code>
-    file.</p>
+    svg, mml), or on instructions given in the <code>.htaccess</code> file.</p>
   </li>
 </ul>
 <ul>
   <li>The <strong>Mime Type</strong> field allows you to select the MIME type
     of the document. If the MIME type you are looking for is not listed, you
-    can type it in yourself. This menu is only active when saving a document
-    to a remote web server (local file systems do not store the MIME metadata
+    can type it in yourself. This menu is only active when saving a document to
+    a remote web server (local file systems do not store the MIME metadata
     information).</li>
 </ul>
 
 <p>The <strong>Images, Styles and Scripts</strong> tab contains:</p>
 <ul>
-  <li>The field <strong>Where to save images</strong> allows you to specify
-    the directory where images and objects have to be saved. This may be a
+  <li>The field <strong>Where to save images</strong> allows you to specify the
+    directory where images and objects have to be saved. This may be a
     directory on a remote web server. When the <strong>Copy Images</strong>
     button is selected, this field is initialized with the directory of the
     saved document.</li>
-  <li>The field <strong>Where to save resources</strong> allows you to
-    specify the directory where style sheets and scripts have to be saved.
-    This may be a directory on a remote web server. When the <strong>Copy
-    resources (styles and scripts)</strong> button is selected, this field is
-    initialized with the name of the saved document directory.</li>
+  <li>The field <strong>Where to save resources</strong> allows you to specify
+    the directory where style sheets and scripts have to be saved. This may be
+    a directory on a remote web server. When the <strong>Copy resources (styles
+    and scripts)</strong> button is selected, this field is initialized with
+    the name of the saved document directory.</li>
 </ul>
 
 <p>Two buttons complete this dialog:</p>
@@ -203,9 +202,9 @@ the document itself. The second tab is about its associated resources
     document. If you have chose to save associated resources too, a list of
     these resources is displayed and you can choose to remove some resources
     from the list: they will not be saved. 
-    <p class="Note">When saving to a remote location, check that the
-    http_proxy is not set, or that the proxy server and the target server are
-    configured to work with the HTTP Put method.</p>
+    <p class="Note">When saving to a remote location, check that the http_proxy
+    is not set, or that the proxy server and the target server are configured
+    to work with the HTTP Put method.</p>
     <p></p>
   </li>
   <li>The <strong>Cancel</strong> button terminates the command without doing
@@ -222,21 +221,20 @@ the document itself. The second tab is about its associated resources
     characters as <code>us-ascii</code>, at the same positions, plus 95
     additional printable characters, commonly used in various European
     languages.</li>
-  <li><code>utf-8</code> is a variable length encoding scheme for the
-    Universal Character Set - UCS (ISO10646 aka Unicode). UCS represents
-    thousands of characters. Note that the 96 first characters have the same
-    positions in UCS as in <code>us-ascii</code> (and then as in
-    <code>iso-8859-1</code>).</li>
+  <li><code>utf-8</code> is a variable length encoding scheme for the Universal
+    Character Set - UCS (ISO10646 aka Unicode). UCS represents thousands of
+    characters. Note that the 96 first characters have the same positions in
+    UCS as in <code>us-ascii</code> (and then as in
+  <code>iso-8859-1</code>).</li>
 </ul>
 
-<p>If an XML or HTML document contains a character that is not available in
-the character set (charset) available with the encoding, a special
-representation is required. XML offers two such representations of
-characters:</p>
+<p>If an XML or HTML document contains a character that is not available in the
+character set (charset) available with the encoding, a special representation
+is required. XML offers two such representations of characters:</p>
 <ol>
   <li>Character references represent the position (in decimal or hexadecimal)
-    of the character in the UCS. For example, the greek letter &alpha;
-    (alpha) is represented as <code>&amp;#x3b1;</code> (hexadecimal) or
+    of the character in the UCS. For example, the greek letter &alpha; (alpha)
+    is represented as <code>&amp;#x3b1;</code> (hexadecimal) or
     <code>&amp;#945;</code> (decimal)</li>
   <li>Entity references use a name to represent a content (in that case a
     character). For example the greek letter &alpha; is represented as
@@ -244,8 +242,8 @@ characters:</p>
 </ol>
 
 <p>Character references may be used in any XML or HTML document, but entity
-references are allowed only if the document itself contains a means to
-resolve the name.</p>
+references are allowed only if the document itself contains a means to resolve
+the name.</p>
 
 <p>Entity name resolution is provided by the Document type definition which
 refers to the DTD where names and their associated contents are defined.
@@ -258,29 +256,29 @@ the encoding that was associated with the document at loading time. You can
 check this encoding with command <strong>Views/Document info</strong>
 (<strong>Charset</strong> field). The <strong>Save</strong> and <strong>Save
 all</strong> commands save the document with that encoding, while the
-<strong>Save As</strong> command allows you to choose another encoding
-(Charset field).</p>
+<strong>Save As</strong> command allows you to choose another encoding (Charset
+field).</p>
 
-<p>When saving a document (<strong>Save</strong>, <strong>Save all</strong>,
-or <strong>Save As</strong> commands), all characters that are available in
-the charset of the encoding are just written using the encoding. Only the
-other characters are written using character or entity references. The choice
-between these two options is made according to the <code>doctype</code>. If
-there is a <code>doctype</code> that refers to a DTD that defines a name for
-the character, an entity reference is used (i.e. a name), otherwise Amaya
-generates a character reference in hexadecimal.</p>
+<p>When saving a document (<strong>Save</strong>, <strong>Save all</strong>, or
+<strong>Save As</strong> commands), all characters that are available in the
+charset of the encoding are just written using the encoding. Only the other
+characters are written using character or entity references. The choice between
+these two options is made according to the <code>doctype</code>. If there is a
+<code>doctype</code> that refers to a DTD that defines a name for the
+character, an entity reference is used (i.e. a name), otherwise Amaya generates
+a character reference in hexadecimal.</p>
 
-<p class="Note">Note: command <strong>Tools/Change doctype</strong> allows
-you to associate, to change or to remove the <code>doctype</code> of a
-document at any time. This allows you to make Amaya generate either character
-references or entity references.</p>
+<p class="Note">Note: command <strong>Tools/Change doctype</strong> allows you
+to associate, to change or to remove the <code>doctype</code> of a document at
+any time. This allows you to make Amaya generate either character references or
+entity references.</p>
 
 <h3 id="Saving1">Saving documents as text</h3>
 
-<p>You can save your document as plain text using the <strong>Save
-as</strong> command from the <strong>File</strong> menu. HTML mark-up is
-replaced by spaces, new lines, and so on. A list of all URIs used in the
-document is appended to the file.</p>
+<p>You can save your document as plain text using the <strong>Save as</strong>
+command from the <strong>File</strong> menu. HTML mark-up is replaced by
+spaces, new lines, and so on. A list of all URIs used in the document is
+appended to the file.</p>
 
 <p class="ProcedureCaption">To save your document as text:</p>
 <ol>
