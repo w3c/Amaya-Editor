@@ -693,8 +693,8 @@ ThotBool PathEdit (int frame, Document doc,  void *inverse, PtrBox svgBox,
 /*----------------------------------------------------------------------
   PathCreation
   ----------------------------------------------------------------------*/
-ThotBool PathCreation (int frame, Document doc,  void *inverse, PtrBox svgBox,
-                       int ancestorX, int ancestorY,
+ThotBool PathCreation (int frame, Document doc,  void *inverseCTM,
+                       PtrBox svgBox, int ancestorX, int ancestorY,
                        int shape, Element el)
 {
   AmayaFrame                *p_frame;
@@ -716,7 +716,7 @@ ThotBool PathCreation (int frame, Document doc,  void *inverse, PtrBox svgBox,
       ancestorY += svgBox->BxTMargin + svgBox->BxTBorder + svgBox->BxTPadding;
     }
   p_frame = FrameTable[frame].WdFrame;
-  p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame, doc, inverse,
+  p_CreatePathEvtHandler = new AmayaCreatePathEvtHandler(p_frame, doc, inverseCTM,
                                                           ancestorX, ancestorY,
                                                          canvasWidth, canvasHeight,
                                                          shape, el, &created);

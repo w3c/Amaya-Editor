@@ -1905,7 +1905,7 @@ ThotBool AskShapePoints (Document doc, Element svgAncestor, Element svgCanvas,
     return FALSE;
 
   /* Get the current transform matrix */
-  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
+  CTM = (PtrTransform)TtaGetCurrentTransformMatrix (svgCanvas, svgAncestor);
   if(CTM == NULL)
     inverse = NULL;
   else
@@ -1968,7 +1968,7 @@ ThotBool AskSurroundingBox (Document doc, Element svgAncestor,
 
   *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = *x4 = *y4 = *lx = * ly = 0;
   /* Get the current transform matrix */
-  CTM = (PtrTransform)TtaGetCurrentTransformMatrix(svgCanvas, svgAncestor);
+  CTM = (PtrTransform)TtaGetCurrentTransformMatrix (svgCanvas, svgAncestor);
   if (CTM == NULL)
     inverse = NULL;
   else
@@ -2072,13 +2072,13 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
                                    ancestorX, ancestorY, transform_type, el);
 
   /* Free the transform matrix */
-  if(CTM)TtaFreeTransform(CTM);
-  if(inverse)TtaFreeTransform(inverse);
-
+  if (CTM)
+    TtaFreeTransform(CTM);
+  if (inverse)
+    TtaFreeTransform(inverse);
   /* Update the transform */
   if(transformApplied)
     UpdateTransformMatrix(doc, el);
-
   return transformApplied;
 }
 
@@ -2253,7 +2253,7 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
   char           shape;
   int            frame, x, y, w, h, rx, ry;
   int            ancestorX, ancestorY;
-  ThotBool       hasBeenEdited, open;
+  ThotBool       hasBeenEdited = FALSE, open;
 
   frame = ActiveFrame;
   if(frame <= 0)
@@ -2312,60 +2312,83 @@ ThotBool AskShapeEdit (Document doc, Element el, int point)
   // keep the history open until the button is up
   TtaLockHistory (TRUE);
 
-  /* Call the interactive module */
-  hasBeenEdited = ShapeEdit (frame, doc, inverse, svgBox,
-                             ancestorX, ancestorY, el, point);
+  leaf =  TtaGetLastChild(el);
+  if (leaf && 
+      ((PtrElement)leaf)->ElAbstractBox[0])
+    {
+      pAb = ((PtrElement)leaf)->ElAbstractBox[0];
+      pBox = pAb->AbBox;
+      shape = pAb->AbShape;          
+      if (shape == 1 || shape == 'C')
+        {
+          rx = pBox->BxRx;
+          ry = pBox->BxRy;
+        }
+      else
+        {
+          rx = -1;
+          ry = -1;
+        }
+      x = pBox->BxXOrg;
+      y = pBox->BxYOrg;
+      w = pBox->BxW;
+      h = pBox->BxH;
+    
+      /* Call the interactive module */
+      hasBeenEdited = ShapeEdit (frame, doc, inverse, svgBox,
+                                 ancestorX, ancestorY, el, point);
+    }
 
   /* Free the transform matrix */
   if (inverse)
     TtaFreeTransform(inverse);
 
+  TtaLockHistory (FALSE);
   /* Update the attribute */
-  if (hasBeenEdited)
+  if (hasBeenEdited && pBox)
     {
-      leaf =  TtaGetLastChild(el);
-      if (leaf && 
-          ((PtrElement)leaf)->ElAbstractBox[0])
+      if ((shape == 1 || shape == 'C') &&
+          (rx != pBox->BxRx || ry != pBox->BxRy))
         {
-          pAb = ((PtrElement)leaf)->ElAbstractBox[0];
-          pBox = pAb->AbBox;
-          shape = pAb->AbShape;          
-          if (pBox)
+          rx = pBox->BxRx;
+          ry = pBox->BxRy;
+          UpdateShapeElement(doc, el, shape, -1, -1, -1, -1, rx, ry);
+        }
+      else
+        {
+          if (x != pBox->BxXOrg)
+            x = pBox->BxXOrg;
+          else if (shape != 'g' || w == pBox->BxW)
+            x = -1;
+          if (y != pBox->BxYOrg)
+            y = pBox->BxYOrg;
+          else if (shape != 'g' || h == pBox->BxH)
+            y = -1;
+          if (w != pBox->BxW)
+            w = pBox->BxW;
+          else if (shape != 'g' || x == -1)
+            w = -1;
+          if (h != pBox->BxH)
+            h = pBox->BxH;
+          else if (shape != 'g' || y == -1)
+            h = -1;
+          if (shape == 'g')
             {
-              if (shape == 1 || shape == 'C')
-                {
-                  rx = pBox->BxRx;
-                  ry = pBox->BxRy;
-                }
+              if ((pAb->AbEnclosing->AbHorizPos.PosEdge == Left &&
+                   pAb->AbEnclosing->AbVertPos.PosEdge == Top) ||
+                  (pAb->AbEnclosing->AbHorizPos.PosEdge == Right &&
+                   pAb->AbEnclosing->AbVertPos.PosEdge == Bottom))
+                /* draw a \ */
+                UpdateShapeElement(doc, el, shape, x, y, x+w, y+h, -1, -1);
               else
-                {
-                  rx = 0;
-                  ry = 0;
-                }
-
-              x = pBox->BxXOrg;
-              y = pBox->BxYOrg;
-              w = pBox->BxW;
-              h = pBox->BxH;
-              if (shape == 'g')
-                {
-                  if ((pAb->AbEnclosing->AbHorizPos.PosEdge == Left
-                      && pAb->AbEnclosing->AbVertPos.PosEdge == Top) ||
-                     (pAb->AbEnclosing->AbHorizPos.PosEdge == Right
-                      && pAb->AbEnclosing->AbVertPos.PosEdge == Bottom))
-                    /* draw a \ */
-                    UpdateShapeElement(doc, el, shape, x,y,x+w,y+h, 0, 0);
-                  else
-                    /* draw a / */
-                    UpdateShapeElement(doc, el, shape, x+w,y,x,y+h, 0, 0);
-                }
-              else
-                UpdateShapeElement(doc, el, shape, x,y,w,h, rx, ry);
+                /* draw a / */
+                UpdateShapeElement(doc, el, shape, x+w, y, x, y+h, -1, -1);
             }
+          else
+            UpdateShapeElement(doc, el, shape, x, y, w, h, -1, -1);
         }
     }
   // close the history now
-  TtaLockHistory (FALSE);
   if (!open)
     TtaCloseUndoSequence (doc);
   return hasBeenEdited;
@@ -4030,6 +4053,12 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 
       if (pDoc && pViewSel->VsBox)
         {
+          if (firstEl == lastEl &&
+              firstEl->ElTypeNumber != 1 &&
+              firstEl->ElStructSchema &&
+              !strcmp (firstEl->ElStructSchema->SsName, "SVG"))
+            // only SVG text can be edited
+            return;
           /* avoid to redisplay step by step */
           dispMode = TtaGetDisplayMode (doc);
           if (dispMode == DisplayImmediately)

@@ -61,7 +61,7 @@ class AmayaCreatePathEvtHandler : public wxEvtHandler
   AmayaFrame * pFrame;
   int frameId;
   int document;
-  void *inverse;
+  void *transform;
   int x0, y0, width,height;
   int shape;
   PtrBox box;

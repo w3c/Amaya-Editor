@@ -180,7 +180,6 @@ extern void TtaInsertTransform ( Element element,
                                  Document document );
 extern void TtaRemoveTransform ( Document document,
                                  Element element );
-extern void *TtaSimplifyTransformMatrix ( void *transform );
 extern void TtaCoordinatesInParentSpace ( Element el,
                                           float *x,
                                           float *y );
@@ -475,7 +474,6 @@ extern void TtaInsertTransform ( Element element,
                                    Document document );
 extern void TtaRemoveTransform ( Document document,
                                    Element element );
-extern void *TtaSimplifyTransformMatrix ( void *transform );
 extern void TtaCoordinatesInParentSpace ( Element el,
                                             float *x,
                                             float *y );

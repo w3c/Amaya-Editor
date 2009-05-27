@@ -3158,30 +3158,32 @@ void TtaRemoveTransform (Document document, Element element)
 }
 
 /*----------------------------------------------------------------------
-  TtaSimplifyTransformMatrix
-
+  SimplifyTransformMatrix
   Return a new transform of type PtElMatrix which represents the
   composition of all the elements of the list "transform".
   ---------------------------------------------------------------------- */
-extern void *TtaSimplifyTransformMatrix(void *transform)
+static PtrTransform SimplifyTransformMatrix (Element el, PtrTransform pPa)
 {
-  PtrTransform result, pPa;
-  double T, cosT,sinT, tanT, a, b, c, d, e, f;
+  PtrTransform result;
+  PtrElement   pEl = (PtrElement) el;
+  float        xtrans,  ytrans;
+  double       xscale, yscale;
+  double       T, cosT,sinT, tanT, a, b, c, d, e, f;
+  ThotBool     istranslated, isscaled;
 
-  if(transform == NULL)
+  if ((pEl == NULL || pEl->ElTransform == NULL) && pPa == NULL)
     /* Nothing to do */
     return NULL;
 
-  pPa = (PtrTransform)(transform);
-
-  if(pPa->TransType == PtElMatrix && pPa->Next == NULL)
+  if (pPa == NULL)
+    pPa = pEl->ElTransform;
+  if (pPa->TransType == PtElMatrix && pPa->Next == NULL)
     /* The matrix is already simplified, return a copy */
-    return TtaCopyTransform(transform);
+    return (PtrTransform) TtaCopyTransform (pPa);
 
   /* result = Identity */
-  result = ((PtrTransform)(TtaNewTransformMatrix(1, 0, 0, 1, 0, 0)));
+  result = (PtrTransform) TtaNewTransformMatrix (1, 0, 0, 1, 0, 0);
   result->Next = NULL;
-
   while (pPa)
     {
       switch (pPa->TransType)
@@ -3193,18 +3195,33 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
           result->FMatrix += result->BMatrix*pPa->XScale +
             result->DMatrix*pPa->YScale;
           break;
-
         case PtElScale:
           result->AMatrix *= pPa->XScale;
           result->CMatrix *= pPa->YScale;
           result->BMatrix *= pPa->XScale;
           result->DMatrix *= pPa->YScale;
           break;
-
         case PtElViewBox:
           /* TODO */
+          GetViewBoxTransformation (pEl->ElTransform,
+                                    pEl->ElAbstractBox[0]->AbBox->BxW,
+                                    pEl->ElAbstractBox[0]->AbBox->BxH,
+                                    &xtrans, &ytrans,
+                                    &xscale, &yscale,
+                                    &istranslated, &isscaled);
+          if (istranslated || isscaled)
+            {
+              //printf ("xtrans=%f ytrans=%f xscale=%f yscale=%f\n",xtrans,  ytrans, xscale, yscale);
+              result->EMatrix = result->AMatrix * xtrans +
+              result->CMatrix * ytrans;
+              result->FMatrix = result->BMatrix * xtrans +
+                result->DMatrix * ytrans;
+              result->AMatrix *= xscale;
+              result->CMatrix *= yscale;
+              result->BMatrix *= xscale;
+              result->DMatrix *= yscale;
+            }
           break;
-
         case PtElRotate:
         case PtElAnimRotate:
           /* tranlate(XRotate,YRotate) */
@@ -3224,7 +3241,6 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
           d = result->DMatrix;
           e = result->EMatrix;
           f = result->FMatrix;
-
           result->AMatrix = (float)(a*cosT + c*sinT);
           result->CMatrix = (float)(-a*sinT + c*cosT);
           result->BMatrix = (float)(b*cosT + d*sinT);
@@ -3236,7 +3252,6 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
           result->FMatrix -= result->BMatrix*pPa->XRotate +
             result->DMatrix*pPa->YRotate;
           break;  
-
         case PtElMatrix:
           a = result->AMatrix;
           b = result->BMatrix;
@@ -3244,7 +3259,6 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
           d = result->DMatrix;
           e = result->EMatrix;
           f = result->FMatrix;
-
           result->AMatrix = (float)(a*pPa->AMatrix + c*pPa->BMatrix);
           result->CMatrix = (float)(a*pPa->CMatrix + c*pPa->DMatrix);
           result->BMatrix = (float)(b*pPa->AMatrix + d*pPa->BMatrix);
@@ -3252,27 +3266,21 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
           result->EMatrix += (float)(a*pPa->EMatrix + c*pPa->FMatrix);
           result->FMatrix += (float)(b*pPa->EMatrix + d*pPa->FMatrix);
           break;	  
-
         case PtElSkewX:
           T = pPa->TrAngle * M_PI / 180;
           tanT = tan(T);
-
           result->CMatrix += (float)(tanT*result->AMatrix);
           result->DMatrix += (float)(tanT*result->BMatrix);
           break;
-
         case PtElSkewY:
           T = pPa->TrAngle * M_PI / 180;
           tanT = tan(T);
-
           result->AMatrix += (float)(tanT*result->CMatrix);
           result->BMatrix += (float)(tanT*result->DMatrix);
           break;	  
-
         default:
           break;
-        }	       
- 
+        }
       pPa = pPa->Next;
     }
 
@@ -3285,13 +3293,13 @@ extern void *TtaSimplifyTransformMatrix(void *transform)
   Convert the coordinates (x,y) of a point inside the space of the element
   el into coordinates in its parent space.
   ---------------------------------------------------------------------- */
-extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
+void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
 {
-  float newx,newy;
-  PtrTransform transform = (PtrTransform)
-    TtaSimplifyTransformMatrix(((PtrElement) el)->ElTransform);
+  PtrTransform transform;
+  float        newx, newy;
 
-  if(transform)
+  transform = SimplifyTransformMatrix (el, NULL);
+  if (transform)
     {
       newx = transform->AMatrix * *x +
         transform->CMatrix * *y +
@@ -3300,10 +3308,8 @@ extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
       newy = transform->BMatrix * *x +
         transform->DMatrix * *y +
         transform->FMatrix;
-
       *x = newx;
       *y = newy;
-
       TtaFreeTransform (transform);
     }
 }
@@ -3319,7 +3325,7 @@ extern void TtaCoordinatesInParentSpace(Element el, float *x, float *y)
   (          1          )         (        1      )
 
   ---------------------------------------------------------------------- */
-extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
+void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
 {
   PtrTransform CTM = NULL, transform;
   PtrElement   pEl, pAncestor;
@@ -3332,7 +3338,7 @@ extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
   /* Concatenate all simplified transform matrix */
   while (pEl && pEl != pAncestor)
     {
-      transform = (PtrTransform) TtaSimplifyTransformMatrix(pEl->ElTransform);
+      transform = SimplifyTransformMatrix(el, NULL);
       if (transform)
         {
           transform->Next = CTM;
@@ -3368,8 +3374,8 @@ extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
   /* Simplify the product */
   if (CTM)
     {
-      transform = (PtrTransform) TtaSimplifyTransformMatrix(CTM);
-      TtaFreeTransform(CTM);
+      transform = (PtrTransform) SimplifyTransformMatrix (NULL, CTM);
+      TtaFreeTransform (CTM);
       CTM = transform;
     }
   return CTM;
@@ -3381,7 +3387,7 @@ extern void *TtaGetCurrentTransformMatrix(Element el, Element ancestor)
   Return the matrix representing the inverse of a transform. If the
   transform is not inversible, then return NULL.
   ----------------------------------------------------------------------*/
-extern void *TtaInverseTransform (void *transform)
+void *TtaInverseTransform (void *transform)
 {
   PtrTransform result, pPa;
   double a,b,c,d,e,f,a2,b2,c2,d2,e2,f2, cosA, sinA, tanA, det;
@@ -3503,9 +3509,9 @@ extern void *TtaInverseTransform (void *transform)
   Apply a transform matrix to an element and simplify its transformation
   matrix.
   ---------------------------------------------------------------------- */
-extern void TtaApplyMatrixTransform (Document document, Element element,
-                                     float a, float b, float c, float d, float e,
-                                     float f)
+void TtaApplyMatrixTransform (Document document, Element element,
+                              float a, float b, float c, float d, float e,
+                              float f)
 {
   PtrTransform       transform;
 
@@ -3527,9 +3533,7 @@ extern void TtaApplyMatrixTransform (Document document, Element element,
                             document);
 
         /* Simplify the transform matrix */
-        transform = (PtrTransform)
-          TtaSimplifyTransformMatrix(((PtrElement) element)->ElTransform);
-
+        transform = SimplifyTransformMatrix (element, NULL);
         if(transform)
           {
             TtaFreeTransform (((PtrElement) element)->ElTransform);
@@ -3544,9 +3548,9 @@ extern void TtaApplyMatrixTransform (Document document, Element element,
   Apply a transform matrix to an element and simplify its transformation
   matrix.
   ---------------------------------------------------------------------- */
-extern void TtaAppendMatrixTransform (Document document, Element element,
-                                      float a, float b, float c, float d, float e,
-                                      float f)
+void TtaAppendMatrixTransform (Document document, Element element,
+                               float a, float b, float c, float d, float e,
+                               float f)
 {
   PtrTransform       transform;
 
@@ -3565,8 +3569,7 @@ extern void TtaAppendMatrixTransform (Document document, Element element,
         /* Add a new transform */
         TtaAppendTransform (element, TtaNewTransformMatrix (a, b, c, d, e, f));
         /* Simplify the transform matrix */
-        transform = (PtrTransform)
-          TtaSimplifyTransformMatrix(((PtrElement) element)->ElTransform);
+        transform = SimplifyTransformMatrix (element, NULL);
 
         if(transform)
           {
@@ -3589,22 +3592,21 @@ extern void TtaAppendMatrixTransform (Document document, Element element,
 
   Each kind of transform is used at most once.
   ---------------------------------------------------------------------- */
-extern void *TtaDecomposeTransform(void *transform)
+void *TtaDecomposeTransform (void *transform)
 {
   PtrTransform result = NULL, cursor;
-  PtrTransform matrix = (PtrTransform)TtaSimplifyTransformMatrix(transform);
-  double coeff,coeff1, coeff2, theta1, theta2;
-  double a,b,c,d,e,f,k;
-  ThotBool RemoveTranslate = FALSE;
-  ThotBool decompose;
+  PtrTransform matrix = SimplifyTransformMatrix (NULL, (PtrTransform) transform);
+  double       coeff, coeff1, coeff2, theta1, theta2;
+  double       a, b, c, d, e, f, k;
+  ThotBool     RemoveTranslate = FALSE, decompose;
   
-  if(matrix == NULL)return NULL;
-
-  if(!TtaGetEnvBoolean ("ENABLE_DECOMPOSE_TRANSFORM", &decompose))
+  if (matrix == NULL)
+    return NULL;
+  if (!TtaGetEnvBoolean ("ENABLE_DECOMPOSE_TRANSFORM", &decompose))
     decompose = TRUE;
-
   /* Environnement variable set to false, simply return one matrix */
-  if(!decompose)return matrix;
+  if (!decompose)
+    return matrix;
 
   a = matrix->AMatrix;
   b = matrix->BMatrix;
@@ -3612,8 +3614,7 @@ extern void *TtaDecomposeTransform(void *transform)
   d = matrix->DMatrix;
   e = matrix->EMatrix;
   f = matrix->FMatrix;
-  
-  TtaFreeTransform(matrix);
+  TtaFreeTransform (matrix);
 
   /* Recall that the transform matrix is
    * 
@@ -3909,7 +3910,7 @@ extern void *TtaDecomposeTransform(void *transform)
   using a reduced form (i.e. using only rotate, scale, translate and skew)
 
   ---------------------------------------------------------------------- */
-extern char *TtaGetTransformAttributeValue(Document document, Element el)
+char *TtaGetTransformAttributeValue (Document document, Element el)
 {
   char buffer[500], buffer2[100], *result;
 
@@ -4030,29 +4031,22 @@ extern char *TtaGetTransformAttributeValue(Document document, Element el)
   ( 0  0  1 )
 
   ---------------------------------------------------------------------- */
-extern void TtaGetMatrixTransform(Document document, Element el,
-                                  float *a,
-                                  float *b,
-                                  float *c,
-                                  float *d,
-                                  float *e,			    
-                                  float *f
-                                  )
+void TtaGetMatrixTransform (Document document, Element el,
+                            float *a, float *b, float *c,
+                            float *d, float *e, float *f)
 {
   PtrTransform transform;
 
-  if(!el)return;
-  transform = (PtrTransform)TtaSimplifyTransformMatrix(((PtrElement) el)->ElTransform);
-
-
+  if (!el)
+    return;
+  transform = SimplifyTransformMatrix (el, NULL);
   *a = transform->AMatrix;
   *b = transform->BMatrix;
   *c = transform->CMatrix;
   *d = transform->DMatrix;
   *e = transform->EMatrix;
   *f = transform->FMatrix;
-
-  TtaFreeTransform(transform);
+  TtaFreeTransform (transform);
 }
 
 /*----------------------------------------------------------------------

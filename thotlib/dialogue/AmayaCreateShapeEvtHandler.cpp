@@ -74,7 +74,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaCreateShapeEvtHandler, wxEvtHandler)
 /*----------------------------------------------------------------------
  *----------------------------------------------------------------------*/
 AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler (AmayaFrame * p_frame,
-                                                        Document doc, void *transform_f,
+                                                        Document doc, void *inverseCTM,
                                                         int ancestorX,
                                                         int ancestorY,
                                                         int canvasWidth,
@@ -101,7 +101,7 @@ AmayaCreateShapeEvtHandler::AmayaCreateShapeEvtHandler (AmayaFrame * p_frame,
   nb_points = 0;
   width = canvasWidth;
   height = canvasHeight;
-  transform = transform_f;
+  transform = inverseCTM;
   if (pFrame)
     {
       /* attach this handler to the canvas */
@@ -246,7 +246,7 @@ void AmayaCreateShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
     {
       if (shape == 0 || shape == 12 || shape == 13)
         /* It's a line or an arrow and the shift button is pressed */
-        ApproximateAngleOfLine(15, *px1, *py1, &x, &y);
+        ApproximateAngleOfLine (15, *px1, *py1, &x, &y);
       else
         {
           if (x - *px2 >= y - *py2)

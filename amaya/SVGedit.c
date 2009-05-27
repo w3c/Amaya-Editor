@@ -948,6 +948,7 @@ static void UpdatePositionAttribute (Element el, Document doc, int pos,
   -----------------------------------------------------------------------*/
 void AttrWidthHeightChanged (NotifyAttribute *event)
 {
+  //ThotBool withundo = (event->info != 1);
   ParseWidthHeightAttribute (event->attribute, event->element,
                              event->document, FALSE);
 }
@@ -3407,23 +3408,19 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
           TtaRegisterElementCreate (selected[i], doc);
         }
-
       TtaSelectElement (doc, group);
       break;
-
     case 26:	/* Ungroup */
       for (i = 0; i < nb_selected; i++)
         {
           Ungroup (doc, selected[i]);
         }
       break;
-      
     case 27:   /* Flip Vertically */
     case 28:   /* Flip Horizontally */
       for (i = 0; i < nb_selected; i++)
         FlipElementInParentSpace(doc, selected[i], entry == 28);
       break;
-
     case 29:   /* BringToFront */
       for (i = 0, sibling = TtaGetLastChild(svgCanvas); i < nb_selected; i++)
         {
@@ -3438,7 +3435,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
             }
         }
       break;
-
     case 30:   /* BringForward */
       for(i = nb_selected - 1, sibling2 = NULL; i >= 0; i--)
         {
@@ -3453,11 +3449,9 @@ void TransformGraphicElement (Document doc, View view, int entry)
               TtaInsertSibling(child, sibling, FALSE, doc);
               TtaRegisterElementCreate (child, doc);
             }
-
           sibling2 = child;
         }
       break;
-
     case 31:   /* SendBackward */
       for(i = 0, sibling2 = NULL; i < nb_selected; i++)
         {
@@ -3472,13 +3466,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
               TtaInsertSibling(child, sibling, TRUE, doc);
               TtaRegisterElementCreate (child, doc);
             }
-
           sibling2 = child;
         }
       break;
-
     case 32:   /* SendToBack */
-      for(i = 0, sibling = TtaGetFirstChild(svgCanvas); i < nb_selected; i++)
+      for (i = 0, sibling = TtaGetFirstChild(svgCanvas); i < nb_selected; i++)
         {
           child = selected[i];
           if (child != sibling)
@@ -3491,13 +3483,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
             }
         }
       break;
-
     case 33:   /* RotateAntiClockWise */
     case 34:   /* RotateClockWise */
-      for(i = 0; i < nb_selected; i++)
+      for (i = 0; i < nb_selected; i++)
         RotateElementInParentSpace(doc, selected[i], entry == 33 ? 90 : -90);
       break;
-
     case 35:   /* AlignLeft */
     case 36:   /* AlignCenter */
     case 37:   /* AlignRight */
@@ -3512,29 +3502,23 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
           GetPositionAndSizeInParentSpace(doc, selected[0],
                                           &x, &y, &width, &height);
-
           switch(entry)
             {
             case 35:   /* AlignLeft */
               MoveElementInParentSpace(doc, selected[0], 0, y);
               break;
-
             case 36:   /* AlignCenter */
               MoveElementInParentSpace(doc, selected[0], ((float)(xmax-width))/2, y);
               break;
-
             case 37:   /* AlignRight */
               MoveElementInParentSpace(doc, selected[0], xmax-width, y);
               break;
-
             case 38:   /* AlignTop */
               MoveElementInParentSpace(doc, selected[0], x, 0);
               break;
-
             case 39:   /* AlignMiddle */
               MoveElementInParentSpace(doc, selected[0], x, ((float)(ymax-height))/2);
               break;
-
             case 40:   /* AlignBottom */
               MoveElementInParentSpace(doc, selected[0], x, ymax-height);
               break;
@@ -3549,7 +3533,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
           xmin = x; xmax = x + width;
           ymin = y; ymax = y + height;
 
-          for(i = 1; i < nb_selected; i++)
+          for (i = 1; i < nb_selected; i++)
             {
               GetPositionAndSizeInParentSpace(doc, selected[i],
                                               &x, &y, &width, &height);
@@ -3561,8 +3545,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 
           xcenter = (xmin+xmax)/2;
           ycenter = (ymin+ymax)/2;
-
-          for(i = 0; i < nb_selected; i++)
+          for (i = 0; i < nb_selected; i++)
             {
               GetPositionAndSizeInParentSpace(doc, selected[i],
                                               &x, &y, &width, &height);
@@ -3571,25 +3554,20 @@ void TransformGraphicElement (Document doc, View view, int entry)
                 case 35:   /* AlignLeft */
                   MoveElementInParentSpace(doc, selected[i], xmin, y);
                   break;
-
                 case 36:   /* AlignCenter */
                   MoveElementInParentSpace(doc, selected[i],
                                            xcenter - ((float)width)/2, y);
                   break;
-
                 case 37:   /* AlignRight */
                   MoveElementInParentSpace(doc, selected[i], xmax - width, y);
                   break;
-
                 case 38:   /* AlignTop */
                   MoveElementInParentSpace(doc, selected[i], x, ymin);
                   break;
-
                 case 39:   /* AlignMiddle */
                   MoveElementInParentSpace(doc, selected[i], x,
                                            ycenter - ((float)height)/2);
                   break;
-
                 case 40:   /* AlignBottom */
                   MoveElementInParentSpace(doc, selected[i], x, ymax - height);
                   break;
@@ -3597,27 +3575,22 @@ void TransformGraphicElement (Document doc, View view, int entry)
             }
         }
       break;
-
     case 41:   /* Rotate */
       if (isFormattedView)
         done = AskTransform(doc, svgAncestor, svgCanvas, 2, selected[0]);
       break;
-
     case 43:   /* Skew */
       if (isFormattedView)
         done = AskTransform(doc, svgAncestor, svgCanvas, 4, selected[0]);
       break;
-
     case 44:   /* Scale */
       if (isFormattedView)
         done = AskTransform(doc, svgAncestor, svgCanvas, 1, selected[0]);
       break;
-
     case 45: /* Translate */
       if (isFormattedView)
         done = AskTransform(doc, svgAncestor, svgCanvas, 17, selected[0]);
       break;
-
     case 46:   /* DistributeLeft */
     case 47:   /* DistributeCenter */
     case 48:   /* DistributeRight */
@@ -3626,7 +3599,6 @@ void TransformGraphicElement (Document doc, View view, int entry)
     case 51:   /* DistributeBottom */
     case 52:   /* DistributeHorizontalSpacing */
     case 53:   /* DistributeVerticalSpacing */
-
       /* Get positions of selected elements and sort them */
       for(i = 0; i < nb_selected; i++)
         {
@@ -3641,20 +3613,16 @@ void TransformGraphicElement (Document doc, View view, int entry)
             case 52:
               position[i] = (int)(x+width/2);
               break;
-
             case 48:   /* DistributeRight */
               position[i] = (int)(x+width);
               break;
-
             case 49:   /* DistributeTop */
               position[i] = (int)y;
               break;
-
             case 50:   /* DistributeMiddle */
             case 53:
               position[i] = (int)(y+height/2);
               break;
-
             case 51:   /* DistributeBottom */
               position[i] = (int)(y+height);
               break;
@@ -3683,14 +3651,11 @@ void TransformGraphicElement (Document doc, View view, int entry)
         }
 
       /* Now we can distribute the elements
-
       We are going to compute:
       j = left side
       k = (n-1)*delta
-
       Where delta is the distance we want to be constant.
       */
-
       if(entry == 52 || entry == 53)
         {
           /* It's a distribution according to space */
@@ -3724,12 +3689,10 @@ void TransformGraphicElement (Document doc, View view, int entry)
           k = position[nb_selected - 1] - j;
         }
 
-
       for(i = 0; i < nb_selected; i++)
         {
           GetPositionAndSizeInParentSpace(doc, selected[i],
                                           &x, &y, &width, &height);
-
           switch(entry)
             {
             case 52:   /* DistributeHorizontalSpacing */
@@ -3744,28 +3707,24 @@ void TransformGraphicElement (Document doc, View view, int entry)
                                        - ((float)width)/2,
                                        y);
               break;
-
             case 48:   /* DistributeRight */
               MoveElementInParentSpace(doc, selected[i],
                                        j + ((float)(i*k))/(nb_selected-1)
                                        - width,
                                        y);
               break;
-
             case 53: /* DistributeVerticalSpacing */
             case 49:   /* DistributeTop */
               MoveElementInParentSpace(doc, selected[i],
                                        x,
                                        j + ((float)(i*k))/(nb_selected-1));
               break;
-
             case 50:   /* DistributeMiddle */
               MoveElementInParentSpace(doc, selected[i],
                                        x,
                                        j + ((float)(i*k))/(nb_selected-1)
                                        - ((float)height/2));
               break;
-
             case 51:   /* DistributeBottom */
               MoveElementInParentSpace(doc, selected[i],
                                        x,
@@ -3777,12 +3736,8 @@ void TransformGraphicElement (Document doc, View view, int entry)
           /* For distribution according to space, update the origin */
           if(entry == 52)j+=(int)width;
           else if(entry == 53)j+=(int)height;
-
         }
-      
       break;
-
-
     }
   
   TtaFreeMemory(selected);
@@ -3802,7 +3757,7 @@ void TransformGraphicElement (Document doc, View view, int entry)
 /*----------------------------------------------------------------------
   UpdateTransformMatrix
   ----------------------------------------------------------------------*/
-void UpdateTransformMatrix(Document doc, Element el)
+void UpdateTransformMatrix (Document doc, Element el)
 {
   char         *buffer;
   Attribute     attr;
@@ -4408,12 +4363,12 @@ void UpdatePointsOrPathAttribute (Document doc, Element el, int w, int h,
 }
 
 /*----------------------------------------------------------------------
-  UpdateShapeElement
+  UpdateShapeElement updates one or several shape parameters.
+  A negative value is not updated
   ----------------------------------------------------------------------*/
-void UpdateShapeElement(Document doc, Element el,
-                        char shape,
-                        int x, int y, int width, int height,
-                        int rx, int ry)
+void UpdateShapeElement (Document doc, Element el, char shape,
+                         int x, int y, int width, int height,
+                         int rx, int ry)
 {
   SSchema       svgSchema = GetSVGSSchema (doc);
   AttributeType attrType;
@@ -4430,51 +4385,53 @@ void UpdateShapeElement(Document doc, Element el,
   open = !TtaHasUndoSequence (doc);
   if (open)
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-  /* Apply the translate */
-  UpdateTransformMatrix(doc, el);
-
-  switch (shape)
+  if (rx >= 0)
     {
-    case 'g':
-      UpdateWidthHeightAttribute (el, doc, width, TRUE);
-      UpdateWidthHeightAttribute (el, doc, height, FALSE);
-      UpdatePositionAttribute (el, doc, x, TRUE);
-      UpdatePositionAttribute (el, doc, y, FALSE);
-      break;
+      attrType.AttrTypeNum = SVG_ATTR_rx;
+      UpdateAttrText (el, doc,  attrType, rx, FALSE, TRUE);
+    }
+  if (ry >= 0)
+    {
+      attrType.AttrTypeNum = SVG_ATTR_ry;
+      UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
+    }
 
-    case 'a': /* circle */
-    case 'c': /* ellipse */
-      x += (width/2);
-      y += (height/2);
-      UpdateWidthHeightAttribute (el, doc, width, TRUE);
-      UpdateWidthHeightAttribute (el, doc, height, FALSE);
-      UpdatePositionAttribute (el, doc, x, TRUE);
-      UpdatePositionAttribute (el, doc, y, FALSE);
-      break;
-
-    case 1:
-    case 'C':
-      UpdateWidthHeightAttribute (el, doc, width, TRUE);
-      UpdateWidthHeightAttribute (el, doc, height, FALSE);
-      UpdatePositionAttribute (el, doc, x, TRUE);
-      UpdatePositionAttribute (el, doc, y, FALSE);
-      if (rx != -1)
+    {
+      /* Apply the translate */
+      //UpdateTransformMatrix(doc, el);      
+      switch (shape)
         {
-          attrType.AttrTypeNum = SVG_ATTR_rx;
-          UpdateAttrText (el, doc,  attrType, rx, FALSE, TRUE);
+        case 'g':
+        case 1:
+        case 'C':
+          if (width >= 0)
+            UpdateWidthHeightAttribute (el, doc, width, TRUE);
+          if (height >= 0)
+            UpdateWidthHeightAttribute (el, doc, height, FALSE);
+          if (x >= 0)
+            UpdatePositionAttribute (el, doc, x, TRUE);
+          if (y >= 0)
+            UpdatePositionAttribute (el, doc, y, FALSE);
+          break;
+        case 'c': /* ellipse */
+          if (width >= 0)
+            {
+              x += (width/2);
+              UpdateWidthHeightAttribute (el, doc, width, TRUE);
+              UpdatePositionAttribute (el, doc, x, TRUE);
+            }
+          if (height >= 0)
+            {
+              y += (height/2);
+              UpdateWidthHeightAttribute (el, doc, height, FALSE);
+              UpdatePositionAttribute (el, doc, y, FALSE);
+            }
+          break;
+        default:
+          if (width >= 0 && height >= 0)
+            UpdatePointsOrPathAttribute(doc, el, width, height, TRUE);
+          break;
         }
-
-      if (ry != -1)
-        {
-          attrType.AttrTypeNum = SVG_ATTR_ry;
-          UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
-        }
-      break;
-
-    default:
-      if (width && height)
-        UpdatePointsOrPathAttribute(doc, el, width, height, TRUE);
-      break;
     }
 
   if (open)

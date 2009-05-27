@@ -1662,7 +1662,7 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                             pAb->AbElement->ElTypeNumber,
                                             pAb->AbElement->ElStructSchema) )
                         {
-                          /* Draw the slection on a group */
+                          /* Draw the selection on a group */
                           glPushMatrix ();
                           glLoadIdentity();
                           DrawRectangle (frame, 0, 5,
@@ -1775,10 +1775,8 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                                 pAb->AbElement->ElStructSchema))
                             selected = FALSE;
                           if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
-                            {
-                              /* this is a new box */
-                              pBox->BxNew = 0;
-                            }
+                            /* this is a new box */
+                            pBox->BxNew = 0;
                         }
                       else
                         {
@@ -1886,8 +1884,13 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
               not_g_opacity_displayed &&
 #endif /* _GL */
               (pAb == root || !IsFlow (pAb->AbBox, frame)))
+            {
+            if (pAb->AbSelected)
+              // close the selected sequence
+              selected = FALSE;
             // go down
             pAb = pAb->AbFirstEnclosed;
+            }
           else
             {
               // go next or up
