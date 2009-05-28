@@ -282,10 +282,11 @@ Manuel d'utilisation d'Amaya</div>
   <li><a href="Publishing.html.fr#Sauver2">Enregistrer et publier des
     documents</a> 
     <ul>
-      <li><a href="Publishing.html.fr#commande">La commande enregistrer</a></li>
-      <li><a href="Publishing.html.fr#SaveAll">La commande enregistrer
+      <li><a href="Publishing.html.fr#commande">La commande Enregistrer</a></li>
+      <li><a href="Publishing.html.fr#Mise">Mise à jour d'un site web</a></li>
+      <li><a href="Publishing.html.fr#SaveAll">La commande Enregistrer
       tout</a></li>
-      <li><a href="Publishing.html.fr#commande1">La commande enregistrer
+      <li><a href="Publishing.html.fr#commande1">La commande Enregistrer
         sous</a></li>
       <li><a href="Publishing.html.fr#Saving1">Enregistrement et encodage de
         caractères (charset)</a></li>

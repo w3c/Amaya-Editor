@@ -38,11 +38,12 @@ changer par l'intermédiaire du <a href="Configure.html.fr#Publishing">menu de
 configuration</a>.</p>
 
 <p><strong><b>Amaya</b></strong> ne fournit pas de vue d'ensemble de pages
-installées sur un serveur. Cependant il est possible d'enregistrer des fichiers
-d'un serveur comme des fichiers locaux avec les commandes
-<strong>Enregistrer</strong> et <strong>Enregistrer sous</strong>. Pendant ces
-opérations, Amaya peut aussi enregistrer les ressources associées au document
-(images, feuilles de style, scripts).</p>
+installées sur un serveur. Cependant il est possible d'enregistrer les fichiers
+d'un serveur comme si vous enregistriez des fichiers locaux, en utilisant les
+commandes <strong>Enregistrer</strong> et <strong>Enregistrer sous</strong>.</p>
+
+<p>Pendant ces opérations, Amaya peut aussi enregistrer les ressources
+associées au document (images, feuilles de style, scripts).</p>
 
 <h3 id="commande">La commande Enregistrer</h3>
 
@@ -61,16 +62,26 @@ fournie par le serveur lors du chargement du document. Si le nom du fichier
 n'est pas fourni dans l'en-tête HTTP, Amaya demande de lui en fournir un lors
 de la sauvegarde.</p>
 
-<p class="Note">Quand vous éditez un document distant, il se peut que le
-serveur ne vous autorise pas l'accès en écriture. Dans ce cas, la commande
-<strong>Enregistrer</strong> échoue mais elle propose de garder une copie
-locale du document édité que vous pourrez recopier plus tard sur le serveur par
-un autre moyen (ftp ou téléchargement).</p>
-
 <p>Les images nouvellement ajoutées sont sauvées dans le même répertoire que
 celui du document. Si vous voulez enregistrer des images nouvellement ajoutées
 dans un autre endroit que le document lui-même, utilisez la commande
 <strong>Enregistrer sous</strong>.</p>
+
+<h3 id="Mise">Mise à jour d'un site web</h3>
+
+<p>Vous pouvez utiliser Amaya pour mettre à jour votre site web, même si le
+serveur ne supporte pas les méthodes HTTP Put et WebDAV. Quand l'édition du
+document distant est finie, vous utilisez la commande usuelle
+<strong>Enregistrer</strong>.</p>
+
+<p>Quand la commande échoue, Amaya propose de garder une copie locale du
+document édité avec la même hiérarchie que celle du serveur. Si plusieurs
+documents du même site sont édités, ils seront enregistrés avec les même
+positions relatives.</p>
+
+<p>Une fois l'édition Amaya terminée, vous pouvez mettre à jour votre site web
+en transférant les copies locales, telles quelles, sur le serveur avec votre
+méthode habituelle (ftp ou téléchargement).</p>
 
 <h3 id="SaveAll">La commande Enregistrer tout</h3>
 

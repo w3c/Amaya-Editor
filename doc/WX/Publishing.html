@@ -40,11 +40,12 @@ Publishing</strong></span> from the <strong>Edit</strong> menu (or
 <strong>amaya / Preferences</strong> on Mac OS X).</p>
 
 <p>Amaya does not provide any global view of a set of pages installed on a
-server. However, you can save files from a remote server in the same way you
-save local files, using the <strong>Save</strong> or  <span
-class="link"><strong>Save as</strong></span> commands. During these operations,
-Amaya is also able to save the resources you have associated with the document
-(images, style sheets, scripts).</p>
+server. However, you can save the server files in the same way you save local
+files, using <strong>Save</strong> and <span class="link"><strong>Save
+as</strong></span> commands.</p>
+
+<p>During these operations, Amaya is also able to save the resources you have
+associated with the document (images, style sheets, scripts).</p>
 
 <h3 id="Save">The Save command</h3>
 
@@ -62,14 +63,23 @@ when browsing, but the file name is required for publishing. </p>
 server when the document is loaded. If the file name is not provided in the
 HTTP header, Amaya asks you to provide one when saving.</p>
 
-<p class="Note">When you edit a remote document, the server may not allow you
-to publish directly. In that case, the <strong>Save</strong> command fails but
-it proposes to keep a local copy of the edited document that you will be able
-to copy to the server later with another method (ftp or upload). </p>
-
 <p>Newly added images are saved in the same directory automatically. If you
 want to save new added images into another directory, you have to use the
 <strong>Save as</strong> command.</p>
+
+<h3 id="site">Web site update</h3>
+
+<p>You can use Amaya to update your web site, even if the server doesn't
+support HTTP Put or WebDAV methods. When the editing of a remote document is
+done, you use the usual <strong>Save</strong> command.</p>
+
+<p>When the command fails, Amaya proposes to keep a local copy of the edited
+document with the same server hierarchy. If several documents of the same site
+are edited, they are saved with the same relative positions.</p>
+
+<p>Once the Amaya edit is done, you can update your web site by transferring
+local copies, as they are, to the server with your usual method (ftp or
+upload).</p>
 
 <h3 id="SaveAll">The Save all command</h3>
 
