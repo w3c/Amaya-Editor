@@ -856,9 +856,17 @@ void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement last
   editOp->EoNextOp = NULL;
   editOp->EoType = EtDelimiter;
   editOp->EoFirstSelectedEl = firstSel;
-  editOp->EoFirstSelectedChar = firstSelChar;
+  if (TtaIsGraphics ((Element)firstSel))
+    // don't register the specific point
+    editOp->EoFirstSelectedChar = 0;
+  else
+    editOp->EoFirstSelectedChar = firstSelChar;
   editOp->EoLastSelectedEl = lastSel;
-  editOp->EoLastSelectedChar = lastSelChar;
+  if (TtaIsGraphics ((Element)lastSel))
+    // don't register the specific point
+    editOp->EoLastSelectedChar = 0;
+  else
+    editOp->EoLastSelectedChar = lastSelChar;
   editOp->EoColumnSelected = WholeColumnSelected;
   if (attr)
     {
@@ -1362,11 +1370,11 @@ static void MoveEditToUndoQueue (PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 static void OpenRedoSequence (Document doc)
 {
-  PtrDocument		pDoc;
+  PtrDocument		    pDoc;
   PtrEditOperation	editOp;
-  Element		firstSel, lastSel;
-  PtrAttribute          pAttr;
-  int			firstSelChar, lastSelChar, i;
+  Element		        firstSel, lastSel;
+  PtrAttribute      pAttr;
+  int			          firstSelChar, lastSelChar, i;
 
   pDoc = LoadedDocument [doc - 1];
   /* create a new operation descriptor, a Delimiter */
@@ -1397,9 +1405,17 @@ static void OpenRedoSequence (Document doc)
       TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
       TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
       editOp->EoFirstSelectedEl = (PtrElement)firstSel;
-      editOp->EoFirstSelectedChar = firstSelChar;
+      if (TtaIsGraphics (firstSel))
+        // don't register the specific point
+        editOp->EoFirstSelectedChar = 0;
+      else
+        editOp->EoFirstSelectedChar = firstSelChar;
       editOp->EoLastSelectedEl = (PtrElement)lastSel;
-      editOp->EoLastSelectedChar = lastSelChar;
+      if (TtaIsGraphics (lastSel))
+        // don't register the specific point
+        editOp->EoLastSelectedChar = 0;
+      else
+        editOp->EoLastSelectedChar = lastSelChar;
       editOp->EoColumnSelected = WholeColumnSelected;
     }
   editOp->EoInitialSequence = !pDoc->DocModified;

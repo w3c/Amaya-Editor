@@ -1771,8 +1771,10 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                            xmin, xmax, ymin, ymax,
                                            selected, TRUE, TRUE, show_bgimage);
                           if (pAb->AbSelected && pAb->AbDocView == 1 &&
-                              TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
-                                                pAb->AbElement->ElStructSchema))
+                              (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
+                                                pAb->AbElement->ElStructSchema) ||
+                               TypeHasException (ExcIsDraw, pAb->AbElement->ElTypeNumber,
+                                                pAb->AbElement->ElStructSchema)))
                             selected = FALSE;
                           if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
                             /* this is a new box */
@@ -1884,13 +1886,8 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
               not_g_opacity_displayed &&
 #endif /* _GL */
               (pAb == root || !IsFlow (pAb->AbBox, frame)))
-            {
-            if (pAb->AbSelected)
-              // close the selected sequence
-              selected = FALSE;
             // go down
             pAb = pAb->AbFirstEnclosed;
-            }
           else
             {
               // go next or up

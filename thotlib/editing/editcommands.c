@@ -2230,7 +2230,11 @@ ThotBool AskPathEdit (Document doc, int edit_type, Element el, int point)
         TtaCloseUndoSequence (doc);
     }
   else
-    TtaCancelLastRegisteredSequence (doc);
+    {
+      if (open)
+        TtaCloseUndoSequence (doc);
+      TtaCancelLastRegisteredSequence (doc);
+    }
 
   /* Restore the markers */
   if (usemarkers)

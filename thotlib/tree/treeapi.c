@@ -2575,6 +2575,32 @@ int TtaIsCopy (Element element)
 }
 
 /* ----------------------------------------------------------------------
+   TtaIsGaphics
+   Tests whether a given element is a graphics.
+   Parameter:
+   element: the element to be tested.
+   Return Value:
+   1 if the element is a graphics, 0 if not.
+
+   ---------------------------------------------------------------------- */
+int TtaIsGraphics (Element element)
+{
+  PtrElement  pEl = (PtrElement)element;
+  int         result;
+
+  UserErrorCode = 0;
+  result = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (pEl->ElTerminal &&
+           (pEl->ElLeafType == LtPolyLine ||
+            pEl->ElLeafType == LtGraphics ||
+            pEl->ElLeafType == LtPath))
+    result = 1;
+  return result;
+}
+
+/* ----------------------------------------------------------------------
    TtaIsInAnInclusion
    Tests whether a given element is (in) an included element. An included element
    is a "live" copy of another element.

@@ -787,7 +787,7 @@ extern int TtaIsConstant (ElementType elementType);
    Return value:
    1 if the type is a leaf, 0 if the type is not a leaf.
    ---------------------------------------------------------------------- */
-extern ThotBool          TtaIsLeaf (ElementType elementType);
+extern ThotBool TtaIsLeaf (ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaGetConstructOfType
@@ -928,9 +928,20 @@ extern int TtaIsHidden (Element element);
    element: the element to be tested.
    Return Value:
    1 if the element is a copy, 0 if not.
-
    ---------------------------------------------------------------------- */
 extern int TtaIsCopy (Element element);
+
+
+/* ----------------------------------------------------------------------
+   TtaIsGaphics
+   Tests whether a given element is a graphics.
+   Parameter:
+   element: the element to be tested.
+   Return Value:
+   1 if the element is a graphics, 0 if not.
+
+   ---------------------------------------------------------------------- */
+extern int TtaIsGraphics (Element element);
 
 /* ----------------------------------------------------------------------
    TtaIsInAnInclusion
