@@ -1,11 +1,11 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-#ifdef _WX
 
+#ifdef _WX
 #include "wx/wx.h"
 #include "wx/string.h"
 
@@ -24,8 +24,7 @@ wxString TtaConvMessageToWX( const char * p_message )
   /* For the moment p_message is supposed to be UTF-8.
    * If needed it's possible to add a conditionnal variable to choose the p_message encoding.
    * See TtaGetMessageTable to understand how MessageTable are filled (in which encoding) */
-  //  return wxString( wxConvUTF8.cMB2WC(p_message), *wxConvCurrent );
-  if(p_message==NULL)
+  if (p_message == NULL)
     return wxString(wxT(""));
   else
     return wxString( p_message, wxConvUTF8 );

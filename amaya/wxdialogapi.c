@@ -150,12 +150,16 @@ wxArrayString BuildWX_URL_List( const char * url_list )
   /* Create the url list array */
   /* will stop on double EOS */
   wxArrayString wx_items;
-  int index = 0;
-  while (url_list[index] != EOS)
-    {
-      wx_items.Add( TtaConvMessageToWX( &url_list[index] ) );
-      index += strlen (&url_list[index]) + 1; /* one entry length */
-    }
+  int           index = 0;
+
+  if (url_list == NULL)
+    wx_items.Add( TtaConvMessageToWX("") );
+  else
+    while (url_list[index] != EOS)
+      {
+        wx_items.Add( TtaConvMessageToWX( &url_list[index] ) );
+        index += strlen (&url_list[index]) + 1; /* one entry length */
+      }
   return wx_items;
 }
 #endif /* _WX */
