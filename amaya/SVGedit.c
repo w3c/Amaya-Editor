@@ -3777,7 +3777,6 @@ void UpdateTransformMatrix (Document doc, Element el)
   open = !TtaHasUndoSequence (doc);
   if (open)
     TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
   if (buffer == NULL)
     {
       if (attr)
@@ -3786,25 +3785,25 @@ void UpdateTransformMatrix (Document doc, Element el)
           TtaRegisterAttributeDelete (attr, el, doc);
           TtaRemoveAttribute (el, attr, doc);
         }
-      return;
-    }
-    
-  new_ = (attr == NULL);
-  if (new_)
-    {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
     }
   else
-    TtaRegisterAttributeReplace (attr, el, doc);
-  TtaSetAttributeText (attr, buffer, el, doc);
-  if (new_)
-    TtaRegisterAttributeCreate (attr, el, doc);
-  TtaFreeMemory(buffer);
- 
+    { 
+      new_ = (attr == NULL);
+      if (new_)
+        {
+          attr = TtaNewAttribute (attrType);
+          TtaAttachAttribute (el, attr, doc);
+        }
+      else
+        TtaRegisterAttributeReplace (attr, el, doc);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      if (new_)
+        TtaRegisterAttributeCreate (attr, el, doc);
+      TtaFreeMemory(buffer);
+    }
+
   /* Update the attribute menu */
   TtaUpdateAttrMenu(doc);
-
   if (open)
     TtaCloseUndoSequence (doc);
 }
@@ -4384,7 +4383,7 @@ void UpdateShapeElement (Document doc, Element el, char shape,
   /* check if the undo sequence is open */
   open = !TtaHasUndoSequence (doc);
   if (open)
-  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   if (rx >= 0)
     {
       attrType.AttrTypeNum = SVG_ATTR_rx;
@@ -4396,42 +4395,38 @@ void UpdateShapeElement (Document doc, Element el, char shape,
       UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
     }
 
+  switch (shape)
     {
-      /* Apply the translate */
-      //UpdateTransformMatrix(doc, el);      
-      switch (shape)
+    case 'g':
+    case 1:
+    case 'C':
+      if (width >= 0)
+        UpdateWidthHeightAttribute (el, doc, width, TRUE);
+      if (height >= 0)
+        UpdateWidthHeightAttribute (el, doc, height, FALSE);
+      if (x >= 0)
+        UpdatePositionAttribute (el, doc, x, TRUE);
+      if (y >= 0)
+        UpdatePositionAttribute (el, doc, y, FALSE);
+      break;
+    case 'c': /* ellipse */
+      if (width >= 0)
         {
-        case 'g':
-        case 1:
-        case 'C':
-          if (width >= 0)
-            UpdateWidthHeightAttribute (el, doc, width, TRUE);
-          if (height >= 0)
-            UpdateWidthHeightAttribute (el, doc, height, FALSE);
-          if (x >= 0)
-            UpdatePositionAttribute (el, doc, x, TRUE);
-          if (y >= 0)
-            UpdatePositionAttribute (el, doc, y, FALSE);
-          break;
-        case 'c': /* ellipse */
-          if (width >= 0)
-            {
-              x += (width/2);
-              UpdateWidthHeightAttribute (el, doc, width, TRUE);
-              UpdatePositionAttribute (el, doc, x, TRUE);
-            }
-          if (height >= 0)
-            {
-              y += (height/2);
-              UpdateWidthHeightAttribute (el, doc, height, FALSE);
-              UpdatePositionAttribute (el, doc, y, FALSE);
-            }
-          break;
-        default:
-          if (width >= 0 && height >= 0)
-            UpdatePointsOrPathAttribute(doc, el, width, height, TRUE);
-          break;
+          x += (width/2);
+          UpdateWidthHeightAttribute (el, doc, width, TRUE);
+          UpdatePositionAttribute (el, doc, x, TRUE);
         }
+      if (height >= 0)
+        {
+          y += (height/2);
+          UpdateWidthHeightAttribute (el, doc, height, FALSE);
+          UpdatePositionAttribute (el, doc, y, FALSE);
+        }
+      break;
+    default:
+      if (width >= 0 && height >= 0)
+        UpdatePointsOrPathAttribute(doc, el, width, height, TRUE);
+      break;
     }
 
   if (open)

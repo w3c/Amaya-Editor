@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -177,11 +177,11 @@ static ThotBool CallAction (NotifyEvent * notifyEvent, APPevent event,
 }
 
 /*----------------------------------------------------------------------
-  CallEventAttribute notifies the possible application that     
-  an attribute has been created, deleted, modified, read  
-  or saved.                                               
-  It returns TRUE if it executed an action,               
-  else it returns FALSE.                                  
+  CallEventAttribute notifies the possible application that
+  an attribute has been created, deleted, modified, read
+  or saved.
+  It returns TRUE if the event action takes place of the editor action
+  else it returns FALSE.
   ----------------------------------------------------------------------*/
 ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 {

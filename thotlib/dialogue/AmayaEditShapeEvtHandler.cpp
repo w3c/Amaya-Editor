@@ -206,7 +206,7 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler (AmayaFrame * p_frame,
   shape = ab->AbShape;
   // should rx and ry be updated with the same ratio
   Angle_ratio = (point == 10 && box->BxRx <= 2 && box->BxRy <= 2);
-  if (!(box->BxXOrg == 0 && box->BxYOrg == 0))
+  if (point != 9 && point != 10 && (box->BxXOrg || box->BxYOrg))
     {
       /* Move the origin */
       x_org = box->BxXOrg;
@@ -214,11 +214,7 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler (AmayaFrame * p_frame,
       box->BxXOrg = 0;
       box->BxYOrg = 0;
       TtaAppendMatrixTransform (document, el, 1, 0, 0, 1, x_org, y_org);
-
-#ifndef NODISPLAY
       RedisplayLeaf ((PtrElement) leaf, document, 0);
-#endif
-
       DefBoxRegion (frameId, box, -1, -1, -1, -1);
       RedrawFrameBottom (frameId, 0, NULL);
       pFrame->GetCanvas()->Refresh();
@@ -303,7 +299,7 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 #define RATIO_EQUILATERAL sqrt((float)3)/2.
 
   ThotBool same_size;
-  int      rx,ry,lx,ly, x, y;
+  int      rx, ry, lx, ly, x, y;
   int      x1, y1, x2, y2, dx, dy;
   float    ratio = 0.;
 
@@ -391,8 +387,10 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
               /* square and rectangle with rounded corner */
               rx = box->BxRx;
               ry = box->BxRy;
-              if (ry == -1)ry = rx;
-              else if (rx == -1)rx = ry;
+              if (ry == -1)
+                ry = rx;
+              else if (rx == -1)
+                rx = ry;
             }
           else if (shape == 2)
             /* parallelogram */
@@ -457,20 +455,24 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
               break;
 	      
             case 9:
+              // change the arc size
               if (shape == 1 || shape == 'C')
                 {
                   rx -= dx;
-                  if (same_size)ry=rx;
+                  if (same_size)
+                    ry = rx;
                 }
               else if (shape == 2)
                 rx += dx;
               break;
 	      
             case 10:
+              // change the arc size
               if (shape == 1 || shape == 'C')
                 {
                   ry += dy;
-                  if (same_size || Angle_ratio)rx=ry;
+                  if (same_size || Angle_ratio)
+                    rx = ry;
                 }
               else if (shape == 2)
                 rx -= dx;
@@ -479,16 +481,19 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	  
           if (lx < 0){lx = 0; x = x_org;}
           if (ly < 0){ly = 0; y = y_org;}
-	  
           if (shape == 1 || shape == 'C')
             {
               if (rx < 0)rx = 0;
               if (ry < 0)ry = 0;
-              if (rx > lx/2)rx = lx/2;
-              if (ry > ly/2)ry = ly/2;
+              if (rx > lx/2)
+                rx = lx/2;
+              if (ry > ly/2)
+                ry = ly/2;
 	      
-              if (box->BxRx != -1)box->BxRx = rx;
-              if (box->BxRy != -1)box->BxRy = ry;
+              if (box->BxRx != -1)
+                box->BxRx = rx;
+              if (box->BxRy != -1)
+                box->BxRy = ry;
             }
           else if (shape == 2)
             {
@@ -519,34 +524,22 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
       /*NewDimension (ab, lx, ly, frameId, TRUE);
         NewPosition (ab, x, 0, y, 0, frameId, TRUE);*/
 
-      TtaAppendMatrixTransform (document, el, 1, 0, 0, 1, x - x_org, y - y_org);
-      x_org = x;
-      y_org = y;
-
+      if (point != 9 && point != 10)
+        {
+          TtaAppendMatrixTransform (document, el, 1, 0, 0, 1, x - x_org, y - y_org);
+          x_org = x;
+          y_org = y;
+        }
       box->BxW = lx;
       box->BxH = ly;
       box->BxWidth = lx;
       box->BxHeight = ly;
-      
-      /*ab->AbWidthChange = TRUE;
-        ab->AbHeightChange = TRUE;
-        ab->AbHorizPosChange = TRUE;
-        ab->AbVertPosChange = TRUE;*/
-
       e_box->BxW = lx;
       e_box->BxH = ly;
       e_box->BxWidth = lx;
       e_box->BxHeight = ly;
-
-      /*e_ab->AbWidthChange = TRUE;
-        e_ab->AbHeightChange = TRUE;
-        e_ab->AbHorizPosChange = TRUE;
-        e_ab->AbVertRefChange = TRUE;*/
-
-#ifndef NODISPLAY
       /* Redisplay the GRAPHICS leaf */
       RedisplayLeaf ((PtrElement) leaf, document, 0);
-#endif
 
       /* Update the previous mouse coordinates */
       lastX = mouse_x;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1998-2008
+ *  (c) COPYRIGHT INRIA 1998-2009
  *  Please read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1012,9 +1012,9 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
   AttributeType         attrType;
   NotifyElement	        notifyEl;
   NotifyOnValue         notifyGraph;
-  NotifyAttribute	notifyAttr;
-  int			i, nSiblings, newType;
-  ThotBool              replacePoly;
+  NotifyAttribute	      notifyAttr;
+  int			              i, nSiblings, newType;
+  ThotBool              replacePoly, status = FALSE;
 
   newParent = NULL;
   newPreviousSibling = NULL;
@@ -1147,7 +1147,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
           notifyAttr.attribute = (Attribute) (editOp->EoCreatedAttribute);
           notifyAttr.attributeType.AttrSSchema = (SSchema) (editOp->EoCreatedAttribute->AeAttrSSchema);
           notifyAttr.attributeType.AttrTypeNum = editOp->EoCreatedAttribute->AeAttrNum;
-          CallEventAttribute (&notifyAttr, TRUE);
+          status = CallEventAttribute (&notifyAttr, TRUE);
           if (reverse)
             {
               editOp->EoSavedAttribute = AddAttrToElem (NULL, editOp->EoCreatedAttribute, NULL);

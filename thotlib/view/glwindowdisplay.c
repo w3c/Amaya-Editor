@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -857,7 +857,8 @@ void DisplayBoxTransformation (void *v_trans, int x, int y)
         }
       Trans = Trans->Next;
     }
-  glTranslatef (- ((float) x), - ((float) y), 0);
+  if (x || y)
+    glTranslatef (- ((float) x), - ((float) y), 0);
 }
 
 /*----------------------------------------------------------------------
