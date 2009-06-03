@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<base version="53">
+<base version="54">
 <control>
 	<language encoding="latin1">en</language>
- 	<language encoding="latin1">fr</language>
- 	<language encoding="latin1">de</language>
- 	<language encoding="latin1">it</language>
- 	<language encoding="utf8">tr</language>
- 	<language encoding="latin1">es</language>
- 	<language encoding="latin1">pt</language>
- 	<language encoding="latin1">fi</language>
- 	<language encoding="utf8">ru</language>
- 	<language encoding="utf8">hu</language>
- 	<language encoding="utf8">hu</language>
- 	<language encoding="utf8">ka</language>
- 	<language encoding="utf8">cn</language>
- 	<language encoding="utf8">tw</language>
- 	<language encoding="utf8">sk</language>
- 	<language encoding="utf8">jp</language>
- 	<language encoding="utf8">ja</language>
- 	<language encoding="latin1">nl</language>
+ 		<language encoding="latin1">fr</language>
+ 		<language encoding="latin1">de</language>
+ 		<language encoding="latin1">it</language>
+ 		<language encoding="utf8">tr</language>
+ 		<language encoding="latin1">es</language>
+ 		<language encoding="latin1">pt</language>
+ 		<language encoding="latin1">fi</language>
+ 		<language encoding="utf8">ru</language>
+ 		<language encoding="utf8">hu</language>
+ 		<language encoding="utf8">hu</language>
+ 		<language encoding="utf8">ka</language>
+ 		<language encoding="utf8">cn</language>
+ 		<language encoding="utf8">tw</language>
+ 		<language encoding="utf8">sk</language>
+ 		<language encoding="utf8">jp</language>
+ 		<language encoding="utf8">ja</language>
+ 		<language encoding="latin1">nl</language>
 </control>
  <messages>
 <label define="TMSG_LIB_X11_ERR">
@@ -116,8 +116,7 @@ precedente</message>
 	<message xml:lang="cn">不兼容的 schemas. 重新编译 %s</message>
 	<message xml:lang="tw">不兼容的 schemas. 重新編譯 %s</message>
 	<message xml:lang="sk">Nekompatibilná schéma. Prekompilujte %s</message>
-	<message xml:lang="ja">スキーマに互換性がありません。 %s
-をリコンパイルします。</message>
+	<message xml:lang="ja">スキーマに互換性がありません。 %s をリコンパイルします。</message>
 	<message xml:lang="nl">Incompatibele schema's. %s opnieuw compileren.</message>
 </label>
 <label define="TMSG_MISSING_FONT">
@@ -138,8 +137,7 @@ található</message>
 	<message xml:lang="cn">致命错误: 字体未找到</message>
 	<message xml:lang="tw">致命錯誤: 字體未找到</message>
 	<message xml:lang="sk">Kritická chyba: fonty neboli nájdené</message>
-	<message xml:lang="ja">致命的なエラー:
-フォントが見つかりません</message>
+	<message xml:lang="ja">致命的なエラー: フォントが見つかりません</message>
 	<message xml:lang="nl">Kritieke fout: kan fonts niet vinden.</message>
 </label>
 <label define="TMSG_NO_MEMORY">
@@ -180,8 +178,7 @@ X-თან დაკავშირება ვერ
 	<message xml:lang="cn">致命错误: 无法连接 X 服务器</message>
 	<message xml:lang="tw">致命錯誤: 無法連接 X 服務器</message>
 	<message xml:lang="sk">Nedá sa pripojiť k X</message>
-	<message xml:lang="ja">致命的なエラー: X
-に接続できません</message>
+	<message xml:lang="ja">致命的なエラー: X に接続できません</message>
 	<message xml:lang="nl">Kritieke fout: kan geen verbinding maken met X</message>
 </label>
 <label define="TMSG_VIEW_MODIFIED_BEFORE_CREATION">
@@ -406,8 +403,7 @@ değiştirildi</message>
 	<message xml:lang="cn">*** Amaya: 无法修复的错误 ***</message>
 	<message xml:lang="tw">*** Amaya: 無法修復的錯誤 ***</message>
 	<message xml:lang="sk">*** Amaya: Neopraviteľná chyba ***</message>
-	<message xml:lang="ja">*** Amaya: 回復できないエラーです
-***</message>
+	<message xml:lang="ja">*** Amaya: 回復できないエラーです ***</message>
 	<message xml:lang="nl">*** Amaya: onherstelbare fout ***</message>
 </label>
 <label define="TMSG_DEBUG_SAV_FILES">
@@ -469,8 +465,7 @@ uložené</message>
 	<message xml:lang="cn">%s is not a valid sibling for %s (%s)</message>
 	<message xml:lang="tw">%s is not a valid sibling for %s (%s)</message>
 	<message xml:lang="sk">%s nie je platným súrodencom pre %s (%s)</message>
-	<message xml:lang="ja">%s は %s (%s)
-と正当な兄弟関係ではありません</message>
+	<message xml:lang="ja">%s は %s (%s) と正当な兄弟関係ではありません</message>
 	<message xml:lang="nl">%s is geen geldig element op hetzelfde niveau voor %s (%s)</message>
 </label>
 <label define="TMSG_INVALID_CHILD">
@@ -491,8 +486,7 @@ uložené</message>
 	<message xml:lang="cn">%s 不是有效的 %s 子节点 (%s)</message>
 	<message xml:lang="tw">%s 不是有效的 %s 子節點 (%s)</message>
 	<message xml:lang="sk">%s nie je platným rodičom pre %s (%s)</message>
-	<message xml:lang="ja">%s は %s (%s)
-と正当な子関係ではありません</message>
+	<message xml:lang="ja">%s は %s (%s) と正当な子関係ではありません</message>
 	<message xml:lang="nl">%s is geen geldig onderliggend element voor %s (%s)</message>
 </label>
 <label define="TMSG_PAGE">
@@ -897,8 +891,7 @@ dele?</message>
 	<message xml:lang="cn">%s 文档已存在，确认要覆盖吗?</message>
 	<message xml:lang="tw">%s 文檔已存在，確認要覆蓋嗎?</message>
 	<message xml:lang="sk">Dokument %s už existuje. Chcete ho nahradiť?</message>
-	<message xml:lang="ja">このドキュメント %s
-はすでに存在します。上書きしますか？</message>
+	<message xml:lang="ja">このドキュメント %s はすでに存在します。上書きしますか？</message>
 	<message xml:lang="nl">Document %s bestaat al. Wilt u het overschrijven?</message>
 </label>
 <label define="TMSG_BUTTON_1">
@@ -2475,7 +2468,7 @@ zurückgewiesen</message>
 	<message xml:lang="tw">命令被拒絕 &quot;%s&quot;</message>
 	<message xml:lang="sk">Príkaz odmietnutý tlačiarňou
 &quot;%s&quot;</message>
-	<message xml:lang="ja">スプーラ&quot;%s&quot;によってコマンドが拒否されました</message>
+	<message xml:lang="ja">スプーラ"%s"によってコマンドが拒否されました</message>
 	<message xml:lang="nl">Opdracht geweigerd door spooler "%s"</message>
 </label>
 <label define="TMSG_CANNOT_CREATE_PS">
@@ -2494,7 +2487,7 @@ zurückgewiesen</message>
 	<message xml:lang="cn">无法创建 &quot;%s&quot;</message>
 	<message xml:lang="tw">無法創建 &quot;%s&quot;</message>
 	<message xml:lang="sk">Nedá sa vytvoriť &quot;%s&quot;</message>
-	<message xml:lang="ja">&quot;%s&quot;を作成できません</message>
+	<message xml:lang="ja">"%s"を作成できません</message>
 	<message xml:lang="nl">"%s" kan niet gemaakt worden</message>
 </label>
 <label define="TMSG_OVERLINE">
@@ -2915,8 +2908,7 @@ szótár</message>
 已被本字典拒絕</message>
 	<message xml:lang="sk">Nesprávne slovo &quot;%s&quot; bolo zamietnuté v
 tomto slovníku</message>
-	<message xml:lang="ja">不正な単語 &quot;%s&quot;
-がこのディクショナリに拒否されました</message>
+	<message xml:lang="ja">不正な単語 "%s" がこのディクショナリに拒否されました</message>
 	<message xml:lang="nl">Onjuist woord "%s" kon niet worden opgenomen in deze woordenlijst</message>
 </label>
 <label define="TMSG_ADD_WORD">
@@ -2946,8 +2938,7 @@ sanastoon</message>
 	<message xml:lang="tw">詞語 &quot;%s&quot; 已加入字典</message>
 	<message xml:lang="sk">Slovo &quot;%s&quot; bolo pridané do
 slovníka</message>
-	<message xml:lang="ja">単語 &quot;%s&quot;
-がドキュメントディクショナリに追加されました</message>
+	<message xml:lang="ja">単語 "%s" がドキュメントディクショナリに追加されました</message>
 	<message xml:lang="nl">Woord "%s" is toegevoegd aan de woordenlijst van dit document</message>
 </label>
 <label define="TMSG_END_CHECK">
@@ -3026,8 +3017,7 @@ slovníka</message>
 	<message xml:lang="cn">文档字典已保存: %s</message>
 	<message xml:lang="tw">文檔字典已保存: %s</message>
 	<message xml:lang="sk">Slovník bol uložený</message>
-	<message xml:lang="ja">ドキュメント辞書を保存しました:
-%s</message>
+	<message xml:lang="ja">ドキュメント辞書を保存しました: %s</message>
 	<message xml:lang="nl">De woordenlijst van document is opgeslagen: %s</message>
 </label>
 <label define="TMSG_NOT_AVAILABLE">
@@ -3291,7 +3281,7 @@ odstránený</message>
 	<message xml:lang="cn">二元关系</message>
 	<message xml:lang="tw">二元關系</message>
 	<message xml:lang="sk">Relačné operátory</message>
-	<message xml:lang="ja">バイナリー関係</message>
+	<message xml:lang="ja">二項関係</message>
 	<message xml:lang="nl">Binaire relaties</message>
 </label>
 <label define="TMSG_BINARY_REL_NEG">
@@ -3307,7 +3297,7 @@ odstránený</message>
 	<message xml:lang="cn">负二元关系</message>
 	<message xml:lang="tw">負二元關系</message>
 	<message xml:lang="sk">Negované relačné operátory</message>
-	<message xml:lang="ja">バイナリー否定の関係</message>
+	<message xml:lang="ja">否定二項関係</message>
 	<message xml:lang="nl">Binaire niet-relaties</message>
 </label>
 <label define="TMSG_OPERATOR">
@@ -3322,7 +3312,7 @@ odstránený</message>
 	<message xml:lang="cn">算符</message>
 	<message xml:lang="tw">算符</message>
 	<message xml:lang="sk">Operátory</message>
-	<message xml:lang="ja">オペレータ</message>
+	<message xml:lang="ja">演算子</message>
 	<message xml:lang="nl">Operators</message>
 </label>
 <label define="TMSG_GREEK_CAP">
@@ -3855,8 +3845,7 @@ kívánja?</message>
 	<message xml:lang="tw">正要關閉%d個標簽頁,確定要這么做嗎?</message>
 	<message xml:lang="sk">Chystáte sa zatoriť niekoľko otvorených kariet
 (%d). Chcete naozaj pokračovať?</message>
-	<message xml:lang="ja">このウィンドウでは %d
-個のタブが開かれています。すべてのタブを閉じてよろしいですか？</message>
+	<message xml:lang="ja">このウィンドウでは %d 個のタブが開かれています。すべてのタブを閉じてよろしいですか？</message>
 	<message xml:lang="nl">%d geopende tabbladen worden gesloten. Wilt u doorgaan?</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_CHECK">
@@ -4634,6 +4623,7 @@ Konstante</message>
 	<message xml:lang="tw">上一個技巧</message>
 	<message xml:lang="it">Suggerimento precedente</message>
 	<message xml:lang="nl">Vorige tip</message>
+	<message xml:lang="ja">前のTips</message>
 </label>
 <label define="TIP_DIALOG_NEXT_TIP">
 	<message xml:lang="en">Next tip</message>
@@ -4694,8 +4684,7 @@ profile 供选择。</message>
 	<message xml:lang="hu">Az Amaya testreszabható: öt különböző profilban
 különböző menü- készletek és panelkészlet áll rendelkezésére. Lásd
 a Beállításokban.</message>
-	<message xml:lang="ja">Amaya
-はあなたの要求に適応できます：5つのパラメータがメニューとパネルの異なる組み合わせで実現できます。詳しくは「編集」→「設定」→「一般」を参照してください。</message>
+	<message xml:lang="ja">Amaya はあなたの要求に適応できます：5つのパラメータがメニューとパネルの異なる組み合わせで実現できます。詳しくは「編集」→「設定」→「一般」を参照してください。</message>
 	<message xml:lang="nl">Hebt u al een profiel ingesteld? Amaya is voorzien van vijf profielen. In elk profiel worden alleen functies en menu's weergegeven die voor dat profiel relevant zijn. U kunt uw profiel instellen in het menu Voorkeuren > Algemeen.</message>
 </label>
 <label define="TIP_PANEL_MODES">
@@ -4827,8 +4816,7 @@ cliccando sul corrispondente pulsante nella barra di stato.</message>
 	<message xml:lang="hu">A szerkesztési mód (Szöveg/XML) váltása az
 állapotsorban lévő hasonló feliratú gombra kattintva is
 lehetséges.</message>
-	<message xml:lang="ja">右下のボタンをクリックして編集モードをテキストかXML
-か変えられます</message>
+	<message xml:lang="ja">右下のボタンをクリックして、編集モードをテキストまたはXMLに変えられます</message>
 	<message xml:lang="nl">Klik op de knop rechtsonder in het venster om over te schakelen tussen de tekstbewerkingsmodus Tekst en XML.</message>
 </label>
 <label define="TIP_ERROR_BUTTON">
@@ -4919,6 +4907,7 @@ ausgewählt werden </message>
 è utile per la creazione di collegamenti: un obiettivo può essere scelto
 cliccandoci sopra. </message>
 	<message xml:lang="nl">Als u Doelen selecteert in het menu Beeld, worden doelen voor koppelingen duidelijk gemarkeerd in het venster met opgemaakte tekst. Dit is handig als u een nieuwe koppeling wilt maken: u kunt het doel eenvoudig aangeven door erop te klikken.</message>
+	<message xml:lang="ja">*もしあなたが「表示」メニューで「リンクを表示」を使用可能にするなら、リンクがフォーマットされた表示で示される。 これはリンクの作成のために都合が良い：それをクリックすることによって、リンク先を選択することができる。</message>
 </label>
 <label define="TIP_SVG_ROTATE">
 	<message xml:lang="en">When you rotate an SVG object, the center is indicated
@@ -4936,6 +4925,7 @@ durch ein Kreuz angezeigt. Sie können die Maus zum Bewegen verwenden.</message>
 indicato con una croce. Si puo' usare il mouse per
 muoverlo.</message>
 	<message xml:lang="nl">Als u een SVG-object roteert, wordt het middelpunt ervan met een kruis aangegeven. U kunt het met de muis verplaatsen.</message>
+	<message xml:lang="ja">*あなたが SVG オブジェクトを回転させるとき、中心は十字によって指し示される。 あなたはマウスをつかってオブジェクトを動かすことができる。</message>
 </label>
 <label define="TIP_SVG_SHAPE_EDIT">
 	<message xml:lang="en">Basic SVG shapes have handles that can be used to edit
@@ -4963,6 +4953,7 @@ essere usate per modificarle. Si puo' cambiare la gradezza deI triangoli blu e
 dei quadrati verdi. Per l'elemento &lt;rect&gt;
 e per i cerchi rossi give il controllo è dato dal raggio degli angoli
 arrotondati.</message>
+	<message xml:lang="ja">*基本的な SVG シェイプでは、それらを編集するために使うことができるハンドルを持っている。 青い三角形あるいは緑の正方形で、それらのサイズ変更できる。 &lt;rect />エレメントのために、赤い円が丸い角の半径の上にコントロールを与える。</message>
 </label>
 <label define="TIP_SVG_LINES">
 	<message xml:lang="en">For SVG drawing, lines are created with a precision of
@@ -4982,6 +4973,7 @@ Sie gerade Linien zeichnen wollen.</message>
 	<message xml:lang="it">Nel disegno SVG , le linee sono crete con una
 precisione di 15º se si tiene premuto il tasto shift.
 Questo è utile quando si vogliono disegnare linee diritte.</message>
+	<message xml:lang="ja">*SVG 描画のために、もしあなたがシフトボタンを押すなら、直線を１５°毎の精度で作られる。 あなたが直線を描くことを望むとき、それは有用である。</message>
 </label>
 <label define="TIP_SVG_ASPECT_RATIO">
 	<message xml:lang="en">When you resize an image or an SVG object, pressing the
@@ -5000,6 +4992,7 @@ Seitenverhältnisse</message>
 	<message xml:lang="it">Quando si ridimensiona un'immagine o un oggetto SVG,
 tenendo premuto il tasto shift si memorizza il
 cambiamento.</message>
+	<message xml:lang="ja">*あなたが画像あるいは SVG オブジェクトのサイズを変えるとき、シフトボタンを押すと縦横比を維持することができる。</message>
 </label>
 <label define="TIP_LANGUAGES">
 	<message xml:lang="en">Use Edit&gt;Preferences&gt;Dialogue Language to choose
@@ -5015,6 +5008,7 @@ de diálogo para elegir el idioma del interfaz de usuario.</message>
 zur Auswahl der Sprache</message>
 	<message xml:lang="it">Usa Edita&gt;Preferenze&gt;Lingua delle finestre di
 dialogo per scegliere la lingua dell'interfaccia utente.</message>
+	<message xml:lang="ja">*メニュ「編集 → 設定 → ダイアログの言語」をつかって、ユーザ・インタフェースの言語を選択することができる。</message>
 </label>
 <label define="Classic">
 	<message xml:lang="en">Classic</message>
@@ -5058,6 +5052,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">标题／描述</message>
 	<message xml:lang="tw">標題／描述</message>
 	<message xml:lang="it">Titolo/Descrizione</message>
+	<message xml:lang="ja">*タイトル/ディスクリプション</message>
 </label>
 <label define="TMSG_SVG_GenerateDescription">
 	<message xml:lang="en">Generate a description</message>
@@ -5067,6 +5062,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">生成描述</message>
 	<message xml:lang="de">Erstelle eine Beschreibung</message>
 	<message xml:lang="it">Produrre una descrizione</message>
+	<message xml:lang="ja">*ディスクリプションを生成</message>
 </label>
 <label define="TMSG_SVG_Square">
 	<message xml:lang="en">Square</message>
@@ -5076,6 +5072,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">正方形</message>
 	<message xml:lang="de">Quadrat</message>
 	<message xml:lang="it">Quadrato</message>
+	<message xml:lang="ja">*正方形</message>
 </label>
 <label define="TMSG_SVG_RoundedSquare">
 	<message xml:lang="en">Rounded Square</message>
@@ -5085,6 +5082,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Cuadrado redondeado</message>
 	<message xml:lang="de">Quadrat mit abgerundeten Ecken</message>
 	<message xml:lang="it">Quadrato arrotondato</message>
+	<message xml:lang="ja">*角の丸まった正方形</message>
 </label>
 <label define="TMSG_SVG_Rectangle">
 	<message xml:lang="en">Rectangle</message>
@@ -5094,6 +5092,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">长方形</message>
 	<message xml:lang="tw">長方形</message>
 	<message xml:lang="it">Rettangolo</message>
+	<message xml:lang="ja">*方形</message>
 </label>
 <label define="TMSG_SVG_RoundedRectangle">
 	<message xml:lang="en">Rounded rectangle</message>
@@ -5103,6 +5102,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">圓角長方形</message>
 	<message xml:lang="de">Rechteck mit abgerundeten Ecken</message>
 	<message xml:lang="it">Rettangolo arrotondato</message>
+	<message xml:lang="ja">*角の丸まった方形</message>
 </label>
 <label define="TMSG_SVG_Diamond">
 	<message xml:lang="en">Diamond</message>
@@ -5112,6 +5112,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">菱形</message>
 	<message xml:lang="tw">菱形</message>
 	<message xml:lang="it">Rombo</message>
+	<message xml:lang="ja">*ひし形</message>
 </label>
 <label define="TMSG_SVG_Parallelogram">
 	<message xml:lang="en">Parallelogram</message>
@@ -5121,6 +5122,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">平行四邊形</message>
 	<message xml:lang="de">Parallelogramm</message>
 	<message xml:lang="it">Parallelogramma</message>
+	<message xml:lang="ja">*平行四辺形(Parallelogram)</message>
 </label>
 <label define="TMSG_SVG_Trapezium">
 	<message xml:lang="en">Trapezium</message>
@@ -5130,6 +5132,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">不規則四邊形</message>
 	<message xml:lang="de">Trapezoid</message>
 	<message xml:lang="it">Trapezio</message>
+	<message xml:lang="ja">*不等辺四辺形(Trapezium)</message>
 </label>
 <label define="TMSG_SVG_EquilateralTriangle">
 	<message xml:lang="en">Equilateral triangle</message>
@@ -5139,6 +5142,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Triángulo</message>
 	<message xml:lang="de">Gleichseitiges Dreieck</message>
 	<message xml:lang="it">Triangolo equilatero</message>
+	<message xml:lang="ja">*正三角形(Equilateral triangle)</message>
 </label>
 <label define="TMSG_SVG_IsoscelesTriangle">
 	<message xml:lang="en">Isosceles triangle</message>
@@ -5148,6 +5152,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">等腰三角形</message>
 	<message xml:lang="de">Gleichschenkeliges Dreieck</message>
 	<message xml:lang="it">Triangolo isoscele</message>
+	<message xml:lang="ja">*二等辺三角形(Isosceles triangle)</message>
 </label>
 <label define="TMSG_SVG_RightTriangle">
 	<message xml:lang="en">Right triangle</message>
@@ -5157,6 +5162,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">直角三角形</message>
 	<message xml:lang="de">Rechtwinkeliges Dreieck</message>
 	<message xml:lang="it">Triangolo rettangolo</message>
+	<message xml:lang="ja">*直角三角形(Right triangle)</message>
 </label>
 <label define="TMSG_SVG_Circle">
 	<message xml:lang="en">Circle</message>
@@ -5166,6 +5172,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">圆形</message>
 	<message xml:lang="tw">圓形</message>
 	<message xml:lang="it">Cerchio</message>
+	<message xml:lang="ja">*円 (Circle)</message>
 </label>
 <label define="TMSG_SVG_Ellipse">
 	<message xml:lang="en">Ellipse</message>
@@ -5175,6 +5182,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Elipse</message>
 	<message xml:lang="de">Elipse</message>
 	<message xml:lang="it">Ellisse</message>
+	<message xml:lang="ja">*楕円 (Ellipse)</message>
 </label>
 <label define="TMSG_SVG_Line">
 	<message xml:lang="en">Line</message>
@@ -5184,6 +5192,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Linea</message>
 	<message xml:lang="de">Linie</message>
 	<message xml:lang="it">Linea</message>
+	<message xml:lang="ja">*線 (Line)</message>
 </label>
 <label define="TMSG_SVG_SimpleArrow">
 	<message xml:lang="en">Arrow</message>
@@ -5193,6 +5202,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha</message>
 	<message xml:lang="de">Pfeil</message>
 	<message xml:lang="it">Freccia</message>
+	<message xml:lang="ja">*矢印 (Arrow)</message>
 </label>
 <label define="TMSG_SVG_DoubleArrow">
 	<message xml:lang="en">Double Arrow</message>
@@ -5202,6 +5212,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha</message>
 	<message xml:lang="de">Doppelpfeil</message>
 	<message xml:lang="it">Freccia doppia</message>
+	<message xml:lang="ja">*二方向の矢印 (Double Arrow)</message>
 </label>
 <label define="TMSG_SVG_Zigzag">
 	<message xml:lang="en">Zigzag</message>
@@ -5211,6 +5222,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">鋸齒形</message>
 	<message xml:lang="de">Zickzack</message>
 	<message xml:lang="it">Zigzag</message>
+	<message xml:lang="ja">*ジグザグ</message>
 </label>
 <label define="TMSG_SVG_Group">
 	<message xml:lang="en">Group</message>
@@ -5220,6 +5232,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">群組</message>
 	<message xml:lang="de">Gruppe</message>
 	<message xml:lang="it">Gruppo</message>
+	<message xml:lang="ja">*グループ化</message>
 </label>
 <label define="TMSG_SVG_Ungroup">
 	<message xml:lang="en">Ungroup</message>
@@ -5229,6 +5242,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">取消群組</message>
 	<message xml:lang="de">Untergruppe</message>
 	<message xml:lang="it">NoGruppo</message>
+	<message xml:lang="ja">*グループ解除</message>
 </label>
 <label define="TMSG_SVG_BringToFront">
 	<message xml:lang="en">Bring to front</message>
@@ -5238,6 +5252,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">移到最前</message>
 	<message xml:lang="de">Ganz nach vorn</message>
 	<message xml:lang="it">Porta in primo piano</message>
+	<message xml:lang="ja">*前面へ持ってくる (Bring to front)</message>
 </label>
 <label define="TMSG_SVG_SendToBack">
 	<message xml:lang="en">Send to back</message>
@@ -5247,6 +5262,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">移到最后</message>
 	<message xml:lang="tw">移到最後</message>
 	<message xml:lang="it">Porta in fondo</message>
+	<message xml:lang="ja">*背面へ送る　(Send to back)</message>
 </label>
 <label define="TMSG_SVG_BringForward">
 	<message xml:lang="en">One level up</message>
@@ -5256,6 +5272,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">向前一层</message>
 	<message xml:lang="tw">向前一層</message>
 	<message xml:lang="it">Sopra di un livello</message>
+	<message xml:lang="ja">*１つ階層を上げる (One level up)</message>
 </label>
 <label define="TMSG_SVG_SendBackward">
 	<message xml:lang="en">One level down</message>
@@ -5265,6 +5282,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">向後一層</message>
 	<message xml:lang="de">Eine Ebene tiefer</message>
 	<message xml:lang="it">Sotto di un livello</message>
+	<message xml:lang="ja">*１つ階層を下げる (One level down)</message>
 </label>
 <label define="TMSG_SVG_RotateAntiClockwise">
 	<message xml:lang="en">90° left</message>
@@ -5274,6 +5292,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">90º izquierda</message>
 	<message xml:lang="de">90° links herum</message>
 	<message xml:lang="it">90 gradi a sinistra</message>
+	<message xml:lang="ja">*左へ９０°回転</message>
 </label>
 <label define="TMSG_SVG_RotateClockwise">
 	<message xml:lang="en">90° right</message>
@@ -5283,6 +5302,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">右轉90º</message>
 	<message xml:lang="de">90° rechts herum</message>
 	<message xml:lang="it">90 gradi a destra</message>
+	<message xml:lang="ja">*右へ９０°回転</message>
 </label>
 <label define="TMSG_SVG_Rotate">
 	<message xml:lang="en">Rotate</message>
@@ -5292,6 +5312,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">旋转</message>
 	<message xml:lang="tw">旋轉</message>
 	<message xml:lang="it">Ruotare</message>
+	<message xml:lang="ja">*回転 (Rotate)</message>
 </label>
 <label define="TMSG_SVG_FlipVertically">
 	<message xml:lang="en">Vertical symmetry</message>
@@ -5301,6 +5322,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">垂直翻轉</message>
 	<message xml:lang="de">Vertikal Spiegeln</message>
 	<message xml:lang="it">Simmetria verticale</message>
+	<message xml:lang="ja">*垂直に反転 (Vertical symmetry)</message>
 </label>
 <label define="TMSG_SVG_FlipHorizontally">
 	<message xml:lang="en">Horizontal symmetry</message>
@@ -5310,6 +5332,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">水平翻转</message>
 	<message xml:lang="tw">水平翻轉</message>
 	<message xml:lang="it">Simmetria orizzontale</message>
+	<message xml:lang="ja">*水平に反転 (Horizontal symmetry)</message>
 </label>
 <label define="TMSG_SVG_Scale">
 	<message xml:lang="en">Scale</message>
@@ -5319,6 +5342,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">縮放</message>
 	<message xml:lang="de">Skalieren</message>
 	<message xml:lang="it">Scala</message>
+	<message xml:lang="ja">*拡大縮小</message>
 </label>
 <label define="TMSG_SVG_Skew">
 	<message xml:lang="en">Skew</message>
@@ -5328,6 +5352,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">倾斜</message>
 	<message xml:lang="tw">傾斜</message>
 	<message xml:lang="it">Inclina</message>
+	<message xml:lang="ja">*変形</message>
 </label>
 <label define="TMSG_SVG_Translate">
 	<message xml:lang="en">Move</message>
@@ -5337,6 +5362,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">移動</message>
 	<message xml:lang="de">Verschieben</message>
 	<message xml:lang="it">Muovi</message>
+	<message xml:lang="ja">*移動</message>
 </label>
 <label define="TMSG_SVG_AlignBottom">
 	<message xml:lang="en">Align bottom</message>
@@ -5346,6 +5372,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">底對齊</message>
 	<message xml:lang="de">Am unteren Rand ausrichten</message>
 	<message xml:lang="it">Allinea in basso</message>
+	<message xml:lang="ja">*下端で整列 (Align bottom)</message>
 </label>
 <label define="TMSG_SVG_AlignCenter">
 	<message xml:lang="en">Align center</message>
@@ -5355,6 +5382,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">垂直居中</message>
 	<message xml:lang="tw">垂直居中</message>
 	<message xml:lang="it">Allinea al centro</message>
+	<message xml:lang="ja">*中心を垂直に整列 (Align center)</message>
 </label>
 <label define="TMSG_SVG_AlignLeft">
 	<message xml:lang="en">Align left</message>
@@ -5364,6 +5392,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">左对齐</message>
 	<message xml:lang="tw">左對齊</message>
 	<message xml:lang="it">Allinea a sinistra</message>
+	<message xml:lang="ja">*左端で整列 (Align left)</message>
 </label>
 <label define="TMSG_SVG_AlignMiddle">
 	<message xml:lang="en">Align middle</message>
@@ -5373,6 +5402,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">水平居中</message>
 	<message xml:lang="de">Mittig ausrichten</message>
 	<message xml:lang="it">Allinea nel mezzo</message>
+	<message xml:lang="ja">*中心を水平に整列 (Align middle)</message>
 </label>
 <label define="TMSG_SVG_AlignRight">
 	<message xml:lang="en">Align right</message>
@@ -5382,6 +5412,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Alinear a la derecha</message>
 	<message xml:lang="de">Am rechten Rand ausrichten</message>
 	<message xml:lang="it">Allinea a destra</message>
+	<message xml:lang="ja">*右端で整列 (Align right)</message>
 </label>
 <label define="TMSG_SVG_AlignTop">
 	<message xml:lang="en">Align top</message>
@@ -5391,6 +5422,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">頂對齊</message>
 	<message xml:lang="es">Alinear arriba</message>
 	<message xml:lang="it">Allinea in alto</message>
+	<message xml:lang="ja">*上端で整列 (Align top)</message>
 </label>
 <label define="TMSG_SVG_DistributeBottom">
 	<message xml:lang="en">Distribute bottom</message>
@@ -5400,6 +5432,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">底散佈</message>
 	<message xml:lang="de">Verteilen Sie Unterseite</message>
 	<message xml:lang="it">Distribuisci in basso</message>
+	<message xml:lang="ja">*下端の垂直間隔を等しく配置 (Distribute bottom)</message>
 </label>
 <label define="TMSG_SVG_DistributeCenter">
 	<message xml:lang="en">Distribute center</message>
@@ -5409,6 +5442,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Distribuir al centro</message>
 	<message xml:lang="de">Verteilen Sie Mitte</message>
 	<message xml:lang="it">Distribuisci al centro</message>
+	<message xml:lang="ja">*中心の垂直間隔を等しく配置 (Distribute center)</message>
 </label>
 <label define="TMSG_SVG_DistributeLeft">
 	<message xml:lang="en">Distribute left</message>
@@ -5418,6 +5452,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Distribuir a la izquierda</message>
 	<message xml:lang="de">Verteilen Sie sich nach links</message>
 	<message xml:lang="it">Distribuisci a sinistra</message>
+	<message xml:lang="ja">*左端の間隔を等しく配置 (Distribute left)</message>
 </label>
 <label define="TMSG_SVG_DistributeMiddle">
 	<message xml:lang="en">Distribute middle</message>
@@ -5427,6 +5462,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">垂直居中散布</message>
 	<message xml:lang="tw">垂直居中散佈</message>
 	<message xml:lang="it">Distribuisci in mezzo</message>
+	<message xml:lang="ja">*中心の水平間隔を等しく配置 (Distribute middle)</message>
 </label>
 <label define="TMSG_SVG_DistributeRight">
 	<message xml:lang="en">Distribute right</message>
@@ -5436,6 +5472,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">右散佈</message>
 	<message xml:lang="de">Verteilen Sie sich nach rechts</message>
 	<message xml:lang="it">Distribuisci a destra</message>
+	<message xml:lang="ja">*右端の間隔を等しく配置 (Distribute right)</message>
 </label>
 <label define="TMSG_SVG_DistributeTop">
 	<message xml:lang="en">Distribute top</message>
@@ -5445,6 +5482,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">頂散佈</message>
 	<message xml:lang="de">Verteilen Sie Oberseite</message>
 	<message xml:lang="it">Distribuisci in alto</message>
+	<message xml:lang="ja">*上端の垂直間隔を等しく配置 (Distribute top)</message>
 </label>
 <label define="TMSG_SVG_DistributeVSpacing">
 	<message xml:lang="en">Distribute vertical spacing</message>
@@ -5454,6 +5492,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Distribuir espacio vertical</message>
 	<message xml:lang="de">Verteilen Sie Zeilenvorschub</message>
 	<message xml:lang="it">Distribuisci gli spazi verticali</message>
+	<message xml:lang="ja">*垂直の間隔を等しく配置 (Distribute vertical spacing)</message>
 </label>
 <label define="TMSG_SVG_DistributeHSpacing">
 	<message xml:lang="en">Distribute horizontal spacing</message>
@@ -5463,6 +5502,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Distribuir espacio horizontal</message>
 	<message xml:lang="de">Verteilen Sie horizontalen Zeichenabstand</message>
 	<message xml:lang="it">Distribuisci gli spazi orizzontali</message>
+	<message xml:lang="ja">*水平の間隔を等しく配置 (Distribute horizontal spacing)</message>
 </label>
 <label define="TMSG_SVG_ClosedBezier">
 	<message xml:lang="en">Closed Bezier curve</message>
@@ -5472,6 +5512,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">閉合貝賽爾曲線</message>
 	<message xml:lang="de">Geschlossene Bezierkurve</message>
 	<message xml:lang="it">Curve Bezier chiuse</message>
+	<message xml:lang="ja">*ベジェ閉曲線</message>
 </label>
 <label define="TMSG_SVG_Bezier">
 	<message xml:lang="en">Bezier curve</message>
@@ -5481,6 +5522,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">贝赛尔曲线</message>
 	<message xml:lang="tw">貝賽爾曲線</message>
 	<message xml:lang="it">Curve Bezier</message>
+	<message xml:lang="ja">*ベジェ曲線</message>
 </label>
 <label define="TMSG_SVG_Polyline">
 	<message xml:lang="en">Polyline</message>
@@ -5490,6 +5532,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">多叉线</message>
 	<message xml:lang="tw">多叉線</message>
 	<message xml:lang="it">PiuLinee</message>
+	<message xml:lang="ja">*ポリライン (Polyline)</message>
 </label>
 <label define="TMSG_SVG_Polygon">
 	<message xml:lang="en">Polygon</message>
@@ -5499,6 +5542,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Bild</message>
 	<message xml:lang="de">Vieleck</message>
 	<message xml:lang="it">Poligono</message>
+	<message xml:lang="ja">*ポリゴン</message>
 </label>
 <label define="TMSG_SVG_ForeigObject">
 	<message xml:lang="en">Foreign Object</message>
@@ -5508,6 +5552,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">外來對象</message>
 	<message xml:lang="de">fremdes Objekt</message>
 	<message xml:lang="it">Oggetto esterno</message>
+	<message xml:lang="ja">*異質のオブジェクト (Foreign Object)</message>
 </label>
 <label define="TMSG_SVG_Image">
 	<message xml:lang="en">Image</message>
@@ -5517,6 +5562,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">圖像</message>
 	<message xml:lang="de">Bild</message>
 	<message xml:lang="it">Immagine</message>
+	<message xml:lang="ja">*画像 (Image)</message>
 </label>
 <label define="TMSG_SVG_SvgCanvas">
 	<message xml:lang="en">SVG Canvas</message>
@@ -5526,6 +5572,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">SVG 画布</message>
 	<message xml:lang="tw">SVG 畫布</message>
 	<message xml:lang="it">SVG Canvas</message>
+	<message xml:lang="ja">*SVGキャンバス</message>
 </label>
 <label define="TMSG_SVG_Text">
 	<message xml:lang="en">Text</message>
@@ -5535,6 +5582,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">文本</message>
 	<message xml:lang="tw">文本</message>
 	<message xml:lang="it">Testo</message>
+	<message xml:lang="ja">*テキスト</message>
 </label>
 <label define="TMSG_SVG_Cone">
 	<message xml:lang="en">Cone</message>
@@ -5544,6 +5592,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">锥体</message>
 	<message xml:lang="tw">錐體</message>
 	<message xml:lang="it">Cono</message>
+	<message xml:lang="ja">*円錐形 (Cone)</message>
 </label>
 <label define="TMSG_SVG_Cube">
 	<message xml:lang="en">Cube</message>
@@ -5553,6 +5602,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Cubo</message>
 	<message xml:lang="de">Würfel</message>
 	<message xml:lang="it">Cubo</message>
+	<message xml:lang="ja">*立方体 (Cube)</message>
 </label>
 <label define="TMSG_SVG_Cylinder">
 	<message xml:lang="en">Cylinder</message>
@@ -5562,6 +5612,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Cilindro</message>
 	<message xml:lang="de">Zylinder</message>
 	<message xml:lang="it">Cilindro</message>
+	<message xml:lang="ja">*シリンダー (Cylinder)</message>
 </label>
 <label define="TMSG_SVG_Octahedron">
 	<message xml:lang="en">Octahedron</message>
@@ -5571,6 +5622,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">八面體</message>
 	<message xml:lang="de">Oktaeder</message>
 	<message xml:lang="it">Ottaedro</message>
+	<message xml:lang="ja">*八面体 (Octahedron)</message>
 </label>
 <label define="TMSG_SVG_Parallelepiped">
 	<message xml:lang="en">Parallelepiped</message>
@@ -5580,6 +5632,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">平行六面體</message>
 	<message xml:lang="de">Spat</message>
 	<message xml:lang="it">Parallelepipedo</message>
+	<message xml:lang="ja">*平行六面体 (Parallelepiped)</message>
 </label>
 <label define="TMSG_SVG_Pyramid">
 	<message xml:lang="en">Pyramid</message>
@@ -5589,6 +5642,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">角錐體</message>
 	<message xml:lang="de">Pyramide</message>
 	<message xml:lang="it">Piramide</message>
+	<message xml:lang="ja">*角柱 (Pyramid)</message>
 </label>
 <label define="TMSG_SVG_Beaker">
 	<message xml:lang="en">Beaker</message>
@@ -5598,6 +5652,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">烧杯</message>
 	<message xml:lang="tw">燒杯</message>
 	<message xml:lang="it">Beaker</message>
+	<message xml:lang="ja">ビーカー</message>
 </label>
 <label define="TMSG_SVG_Funnel">
 	<message xml:lang="en">Funnel</message>
@@ -5607,6 +5662,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">漏斗</message>
 	<message xml:lang="de">Trichter</message>
 	<message xml:lang="it">Imbuto</message>
+	<message xml:lang="ja">漏斗</message>
 </label>
 <label define="TMSG_SVG_Bunsen_burner">
 	<message xml:lang="en">Bunsen burner</message>
@@ -5616,6 +5672,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">噴燈</message>
 	<message xml:lang="de">Bunsenbrenner</message>
 	<message xml:lang="it">Becco di Bunsen</message>
+	<message xml:lang="ja">ブンゼン・バーナー</message>
 </label>
 <label define="TMSG_SVG_Buchner_flask">
 	<message xml:lang="en">Buchner flask</message>
@@ -5625,6 +5682,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">布氏玻璃瓶</message>
 	<message xml:lang="de">Büchnerflasche</message>
 	<message xml:lang="it">Filtro Buchner</message>
+	<message xml:lang="ja">ビュヒナー・フラスコ</message>
 </label>
 <label define="TMSG_SVG_Boiling_flask">
 	<message xml:lang="en">Boiling flask</message>
@@ -5634,6 +5692,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Matraz de ebullición</message>
 	<message xml:lang="de">Kochkolben</message>
 	<message xml:lang="it">Boccetta d'ebollizione</message>
+	<message xml:lang="ja">丸型フラスコ</message>
 </label>
 <label define="TMSG_SVG_Burette">
 	<message xml:lang="en">Burette</message>
@@ -5643,6 +5702,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Bureta</message>
 	<message xml:lang="de">Bürette</message>
 	<message xml:lang="it">Buretta</message>
+	<message xml:lang="ja">ビュレット</message>
 </label>
 <label define="TMSG_SVG_Erlenmeyer_flask">
 	<message xml:lang="en">Erlenmeyer flask</message>
@@ -5652,6 +5712,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Matraz de Erlenmeyer</message>
 	<message xml:lang="de">Erlenmeyer Kolben</message>
 	<message xml:lang="it">Beuta</message>
+	<message xml:lang="ja">三角フラスコ</message>
 </label>
 <label define="TMSG_SVG_Test_tube">
 	<message xml:lang="en">Test tube</message>
@@ -5661,6 +5722,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Tubo de ensayo</message>
 	<message xml:lang="de">Reagenzglas</message>
 	<message xml:lang="it">Provetta</message>
+	<message xml:lang="ja">試験管</message>
 </label>
 <label define="TMSG_SVG_Pipette">
 	<message xml:lang="en">Pipette</message>
@@ -5670,6 +5732,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Pipeta</message>
 	<message xml:lang="de">Pipette</message>
 	<message xml:lang="it">Pipetta</message>
+	<message xml:lang="ja">ピペット</message>
 </label>
 <label define="TMSG_SVG_Rectangular">
 	<message xml:lang="en">Rectangular</message>
@@ -5679,6 +5742,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Rectangular</message>
 	<message xml:lang="de">Rechteck</message>
 	<message xml:lang="it">Rettangolo</message>
+	<message xml:lang="ja">*四角い噴出し</message>
 </label>
 <label define="TMSG_SVG_Rounded_rectangular">
 	<message xml:lang="en">Rounded rectangular</message>
@@ -5688,6 +5752,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">圆角矩形</message>
 	<message xml:lang="tw">圓角矩形</message>
 	<message xml:lang="it">Rettangolo arrotondato</message>
+	<message xml:lang="ja">*丸まった長方形の噴出し</message>
 </label>
 <label define="TMSG_SVG_Round">
 	<message xml:lang="en">Round</message>
@@ -5697,6 +5762,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">圓形</message>
 	<message xml:lang="de">Rund</message>
 	<message xml:lang="it">Tondo</message>
+	<message xml:lang="ja">*丸い噴出し</message>
 </label>
 <label define="TMSG_SVG_Scream">
 	<message xml:lang="en">Scream</message>
@@ -5706,6 +5772,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">尖叫</message>
 	<message xml:lang="de">Schrei</message>
 	<message xml:lang="it">Grido</message>
+	<message xml:lang="ja">*絶叫の噴出し</message>
 </label>
 <label define="TMSG_SVG_Thought">
 	<message xml:lang="en">Thought</message>
@@ -5715,6 +5782,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">思考</message>
 	<message xml:lang="de">Gedanke</message>
 	<message xml:lang="it">Pensiero</message>
+	<message xml:lang="ja">*思考の噴出し</message>
 </label>
 <label define="TMSG_SVG_Capacitor">
 	<message xml:lang="en">Capacitor</message>
@@ -5724,6 +5792,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">电容</message>
 	<message xml:lang="tw">電容</message>
 	<message xml:lang="it">Condensatore</message>
+	<message xml:lang="ja">キャパシタ</message>
 </label>
 <label define="TMSG_SVG_Current_source">
 	<message xml:lang="en">Power source</message>
@@ -5733,6 +5802,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">電源</message>
 	<message xml:lang="de">Stromquelle</message>
 	<message xml:lang="it">Fonte di energia</message>
+	<message xml:lang="ja">電源</message>
 </label>
 <label define="TMSG_SVG_Diode">
 	<message xml:lang="en">Diode</message>
@@ -5742,6 +5812,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Diodo</message>
 	<message xml:lang="de">Diode</message>
 	<message xml:lang="it">Diodo</message>
+	<message xml:lang="ja">ダイオード</message>
 </label>
 <label define="TMSG_SVG_Ground_point">
 	<message xml:lang="en">Ground Point</message>
@@ -5751,6 +5822,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">接地</message>
 	<message xml:lang="de">Masse</message>
 	<message xml:lang="it">Messa a terra</message>
+	<message xml:lang="ja">接地点</message>
 </label>
 <label define="TMSG_SVG_Inductor">
 	<message xml:lang="en">Inductor</message>
@@ -5760,6 +5832,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">电感线圈</message>
 	<message xml:lang="tw">電感線圈</message>
 	<message xml:lang="it">Induttore</message>
+	<message xml:lang="ja">インダクタ</message>
 </label>
 <label define="TMSG_SVG_Led">
 	<message xml:lang="en">LED</message>
@@ -5769,6 +5842,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">LED</message>
 	<message xml:lang="de">LED</message>
 	<message xml:lang="it">LED</message>
+	<message xml:lang="ja">LED</message>
 </label>
 <label define="TMSG_SVG_Op_amp">
 	<message xml:lang="en">Op-amp</message>
@@ -5778,6 +5852,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">運算放大器</message>
 	<message xml:lang="de">Operationsverstärker</message>
 	<message xml:lang="it">Op-amp</message>
+	<message xml:lang="ja">OPアンプ</message>
 </label>
 <label define="TMSG_SVG_Resistor">
 	<message xml:lang="en">Resistor</message>
@@ -5787,6 +5862,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">電阻</message>
 	<message xml:lang="de">Widerstand</message>
 	<message xml:lang="it">Resistore</message>
+	<message xml:lang="ja">抵抗器</message>
 </label>
 <label define="TMSG_SVG_Switch">
 	<message xml:lang="en">Switch</message>
@@ -5796,6 +5872,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Interruptor</message>
 	<message xml:lang="de">Schalter</message>
 	<message xml:lang="it">Interruttore</message>
+	<message xml:lang="ja">開閉器</message>
 </label>
 <label define="TMSG_SVG_Transistor">
 	<message xml:lang="en">Transistor</message>
@@ -5805,6 +5882,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Transistor</message>
 	<message xml:lang="de">Transistor</message>
 	<message xml:lang="it">Transistor</message>
+	<message xml:lang="ja">トランジスタ</message>
 </label>
 <label define="TMSG_SVG_Voltage_source">
 	<message xml:lang="en">Voltage source</message>
@@ -5814,6 +5892,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">電壓源</message>
 	<message xml:lang="de">Spannungsquelle</message>
 	<message xml:lang="it">Generatore di tensione</message>
+	<message xml:lang="ja">電圧源</message>
 </label>
 <label define="TMSG_SVG_Zener_diode">
 	<message xml:lang="en">Zener diode</message>
@@ -5823,6 +5902,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Diodo Zener</message>
 	<message xml:lang="de">Zener-Diode</message>
 	<message xml:lang="it">Diodo zener</message>
+	<message xml:lang="ja">ツェナダイオード</message>
 </label>
 <label define="TMSG_SVG_Pentagon">
 	<message xml:lang="en">Pentagon</message>
@@ -5832,6 +5912,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Pentágono</message>
 	<message xml:lang="de">Fünfeck</message>
 	<message xml:lang="it">Pentagono</message>
+	<message xml:lang="ja">五角形</message>
 </label>
 <label define="TMSG_SVG_Hexagon">
 	<message xml:lang="en">Hexagon</message>
@@ -5841,6 +5922,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">六邊形</message>
 	<message xml:lang="de">Sechseck</message>
 	<message xml:lang="it">Esagono</message>
+	<message xml:lang="ja">六角形</message>
 </label>
 <label define="TMSG_SVG_Heptagon">
 	<message xml:lang="en">Heptagon</message>
@@ -5850,6 +5932,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Heptágono</message>
 	<message xml:lang="de">Siebeneck</message>
 	<message xml:lang="it">Eptagono</message>
+	<message xml:lang="ja">七角形</message>
 </label>
 <label define="TMSG_SVG_Octogon">
 	<message xml:lang="en">Octogon</message>
@@ -5859,6 +5942,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">八边形</message>
 	<message xml:lang="de">Achteck</message>
 	<message xml:lang="it">Ottagono</message>
+	<message xml:lang="ja">八角形</message>
 </label>
 <label define="TMSG_SVG_Star4">
 	<message xml:lang="en">Star (4 branches)</message>
@@ -5868,6 +5952,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">四角星</message>
 	<message xml:lang="de">Stern (4 Zacken)</message>
 	<message xml:lang="it">Stella (4 punte)</message>
+	<message xml:lang="ja">*星型（４分岐）</message>
 </label>
 <label define="TMSG_SVG_Star5">
 	<message xml:lang="en">Star (5 branches)</message>
@@ -5877,6 +5962,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">五角星</message>
 	<message xml:lang="de">Stern (5 Zacken)</message>
 	<message xml:lang="it">Stella (5 punte)</message>
+	<message xml:lang="ja">*星型（５分岐）</message>
 </label>
 <label define="TMSG_SVG_Star6">
 	<message xml:lang="en">Star (6 branches)</message>
@@ -5886,6 +5972,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">六角星</message>
 	<message xml:lang="de">Stern (6 Zacken)</message>
 	<message xml:lang="it">Stella (6 punte)</message>
+	<message xml:lang="ja">*星型（６分岐）</message>
 </label>
 <label define="TMSG_SVG_AND">
 	<message xml:lang="en">AND</message>
@@ -5902,7 +5989,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">AND</message>
 	<message xml:lang="tw">AND</message>
 	<message xml:lang="sk">AND</message>
-	<message xml:lang="ja">AND</message>
+	<message xml:lang="ja">論理積 (AND)</message>
 </label>
 <label define="TMSG_SVG_NAND">
 	<message xml:lang="en">NAND</message>
@@ -5919,7 +6006,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">NAND</message>
 	<message xml:lang="tw">NAND</message>
 	<message xml:lang="sk">NAND</message>
-	<message xml:lang="ja">NAND</message>
+	<message xml:lang="ja">否定論理積 (NAND)</message>
 </label>
 <label define="TMSG_SVG_OR">
 	<message xml:lang="en">OR</message>
@@ -5936,7 +6023,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">OR</message>
 	<message xml:lang="tw">OR</message>
 	<message xml:lang="sk">OR</message>
-	<message xml:lang="ja">OR</message>
+	<message xml:lang="ja">論理和 (OR)</message>
 </label>
 <label define="TMSG_SVG_NOR">
 	<message xml:lang="en">NOR</message>
@@ -5953,7 +6040,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">NOR</message>
 	<message xml:lang="tw">NOR</message>
 	<message xml:lang="sk">NOR</message>
-	<message xml:lang="ja">NOR</message>
+	<message xml:lang="ja">否定論理和 (NOR)</message>
 </label>
 <label define="TMSG_SVG_XOR">
 	<message xml:lang="en">XOR</message>
@@ -5970,7 +6057,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">XOR</message>
 	<message xml:lang="tw">XOR</message>
 	<message xml:lang="sk">XOR</message>
-	<message xml:lang="ja">XOR</message>
+	<message xml:lang="ja">排他的論理和 (XOR)</message>
 </label>
 <label define="TMSG_SVG_XNOR">
 	<message xml:lang="en">XNOR</message>
@@ -5987,7 +6074,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">XNOR</message>
 	<message xml:lang="tw">XNOR</message>
 	<message xml:lang="sk">XNOR</message>
-	<message xml:lang="ja">XNOR</message>
+	<message xml:lang="ja">排他的否定論理和 (XNOR)</message>
 </label>
 <label define="TMSG_SVG_NOT">
 	<message xml:lang="en">NOT</message>
@@ -6004,7 +6091,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">NOT</message>
 	<message xml:lang="tw">NOT</message>
 	<message xml:lang="sk">NOT</message>
-	<message xml:lang="ja">NOT</message>
+	<message xml:lang="ja">否定論理 (NOT)</message>
 </label>
 <label define="TMSG_SVG_Cross">
 	<message xml:lang="en">Cross</message>
@@ -6014,6 +6101,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">十字形</message>
 	<message xml:lang="de">Kreuz</message>
 	<message xml:lang="it">Croce</message>
+	<message xml:lang="ja">*十字</message>
 </label>
 <label define="TMSG_SVG_Frame">
 	<message xml:lang="en">Frame</message>
@@ -6023,6 +6111,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="it">Quadro</message>
 	<message xml:lang="cn">框架</message>
 	<message xml:lang="tw">框架</message>
+	<message xml:lang="ja">*縁取り(Frame)</message>
 </label>
 <label define="TMSG_SVG_Ring">
 	<message xml:lang="en">Ring</message>
@@ -6032,6 +6121,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">環形</message>
 	<message xml:lang="de">Ring</message>
 	<message xml:lang="it">Anello</message>
+	<message xml:lang="ja">*輪</message>
 </label>
 <label define="TMSG_SVG_Cloud">
 	<message xml:lang="en">Cloud</message>
@@ -6041,6 +6131,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">雲</message>
 	<message xml:lang="de">Wolke</message>
 	<message xml:lang="it">Nuvola</message>
+	<message xml:lang="ja">*雲形</message>
 </label>
 <label define="TMSG_SVG_Scroll">
 	<message xml:lang="en">Scroll</message>
@@ -6050,6 +6141,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">捲軸</message>
 	<message xml:lang="de">Papierrolle</message>
 	<message xml:lang="it">Pergamena</message>
+	<message xml:lang="ja">*巻物</message>
 </label>
 <label define="TMSG_SVG_Sun">
 	<message xml:lang="en">Sun</message>
@@ -6059,6 +6151,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">太阳</message>
 	<message xml:lang="de">Sonne</message>
 	<message xml:lang="it">Sole</message>
+	<message xml:lang="ja">*太陽</message>
 </label>
 <label define="TMSG_SVG_Lightning_Bolt">
 	<message xml:lang="en">Lightning_Bolt</message>
@@ -6068,6 +6161,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Rayo</message>
 	<message xml:lang="de">Blitz</message>
 	<message xml:lang="it">Fulmine</message>
+	<message xml:lang="ja">*稲光・電光</message>
 </label>
 <label define="TMSG_SVG_Moon">
 	<message xml:lang="en">Moon</message>
@@ -6077,6 +6171,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">月亮</message>
 	<message xml:lang="de">Mond</message>
 	<message xml:lang="it">Luna</message>
+	<message xml:lang="ja">*月</message>
 </label>
 <label define="TMSG_SVG_Smiley">
 	<message xml:lang="en">Smiley</message>
@@ -6086,6 +6181,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">微笑</message>
 	<message xml:lang="tw">微笑</message>
 	<message xml:lang="it">Smiley</message>
+	<message xml:lang="ja">*笑顔</message>
 </label>
 <label define="TMSG_SVG_Heart">
 	<message xml:lang="en">Heart</message>
@@ -6095,6 +6191,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">心形</message>
 	<message xml:lang="de">Herz</message>
 	<message xml:lang="it">Cuore</message>
+	<message xml:lang="ja">*ハート</message>
 </label>
 <label define="TMSG_SVG_Flower">
 	<message xml:lang="en">Flower</message>
@@ -6104,6 +6201,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">花</message>
 	<message xml:lang="de">Blume</message>
 	<message xml:lang="it">Fiore</message>
+	<message xml:lang="ja">*花形模様</message>
 </label>
 <label define="TMSG_SVG_Prohibited">
 	<message xml:lang="en">Prohibited</message>
@@ -6113,6 +6211,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">禁止</message>
 	<message xml:lang="de">Verboten</message>
 	<message xml:lang="it">Proibito</message>
+	<message xml:lang="ja">*禁止標識</message>
 </label>
 <label define="TMSG_SVG_Pentagon_Arrow">
 	<message xml:lang="en">Pentagon</message>
@@ -6122,6 +6221,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Pentágono</message>
 	<message xml:lang="de">Fünfeck</message>
 	<message xml:lang="it">Pentagono</message>
+	<message xml:lang="ja">*五角形の矢印</message>
 </label>
 <label define="TMSG_SVG_2_Way_Rounded_Arrow">
 	<message xml:lang="en">2-Way Rounded Arrow</message>
@@ -6131,6 +6231,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">兩路圓角箭頭</message>
 	<message xml:lang="de">gerundeter Doppelpfeil</message>
 	<message xml:lang="it">2-Frecce arrotondate</message>
+	<message xml:lang="ja">*２方向に円く曲がった矢印*2-Way Rounded Arrow</message>
 </label>
 <label define="TMSG_SVG_3_Way_Arrow_Callout">
 	<message xml:lang="en">3-Way Arrow Callout</message>
@@ -6140,6 +6241,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha de flujo de 3 direcciones</message>
 	<message xml:lang="de">Hinweispfeil in 3 Richtungen</message>
 	<message xml:lang="it">3-Frecce legenda</message>
+	<message xml:lang="ja">*３方向を指す標識の矢印*3-Way Arrow Callout</message>
 </label>
 <label define="TMSG_SVG_3_Way_Arrow">
 	<message xml:lang="en">3-Way Arrow</message>
@@ -6149,6 +6251,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha de 3 direcciones</message>
 	<message xml:lang="de">Pfeil in 3 Richtungen</message>
 	<message xml:lang="it">3-Frecce</message>
+	<message xml:lang="ja">*３方向の矢印*3-Way Arrow</message>
 </label>
 <label define="TMSG_SVG_4_Way_Arrow_Callout">
 	<message xml:lang="en">4-Way_Arrow_Callout</message>
@@ -6158,6 +6261,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha de flujo de 4 direcciones</message>
 	<message xml:lang="de">Hinweispfeil in 4 Richtungen</message>
 	<message xml:lang="it">4-Frecce_legenda</message>
+	<message xml:lang="ja">*４方向を指す標識の矢印*4-Way_Arrow_Callout</message>
 </label>
 <label define="TMSG_SVG_4_Way_Arrow">
 	<message xml:lang="en">4-Way Arrow</message>
@@ -6167,6 +6271,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha de 4 direcciones</message>
 	<message xml:lang="de">Pfeil in 4 Richtungen</message>
 	<message xml:lang="it">4-Frecce </message>
+	<message xml:lang="ja">*４方向の矢印*4-Way Arrow</message>
 </label>
 <label define="TMSG_SVG_Chevron">
 	<message xml:lang="en">Chevron</message>
@@ -6176,6 +6281,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Cabrio</message>
 	<message xml:lang="de">Winkel</message>
 	<message xml:lang="it">Chevron</message>
+	<message xml:lang="ja">*山形紋の矢印*Chevron</message>
 </label>
 <label define="TMSG_SVG_Circular_Arrow">
 	<message xml:lang="en">Circular Arrow</message>
@@ -6185,6 +6291,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">回绕箭头</message>
 	<message xml:lang="tw">迴繞箭頭</message>
 	<message xml:lang="it">Freccia circolare</message>
+	<message xml:lang="ja">*回転の矢印*Circular Arrow</message>
 </label>
 <label define="TMSG_SVG_Corner_Arrow">
 	<message xml:lang="en">Corner Arrow</message>
@@ -6194,6 +6301,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">直角箭頭</message>
 	<message xml:lang="de">Winkelpfeil</message>
 	<message xml:lang="it">Freccia in angolo</message>
+	<message xml:lang="ja">*曲がり角の矢印*Corner Arrow</message>
 </label>
 <label define="TMSG_SVG_Corner_Double_Arrow_Callout">
 	<message xml:lang="en">Corner Double Arrow Callout</message>
@@ -6203,6 +6311,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha de flujo doble de esquina</message>
 	<message xml:lang="de">Hinweispfeil über Eck</message>
 	<message xml:lang="it">Doppia freccia legenda in angolo</message>
+	<message xml:lang="ja">*２方向を指す標識の矢印*Corner Double Arrow Callout</message>
 </label>
 <label define="TMSG_SVG_Corner_Double_Arrow">
 	<message xml:lang="en">Corner Double Arrow</message>
@@ -6212,6 +6321,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">直角雙箭頭</message>
 	<message xml:lang="de">Pfeil über Eck</message>
 	<message xml:lang="it">Doppia freccia in angolo</message>
+	<message xml:lang="ja">*曲がり角の二方向の矢印*Corner Double Arrow</message>
 </label>
 <label define="TMSG_SVG_Double_Arrow_Callout">
 	<message xml:lang="en">Double Arrow Callout</message>
@@ -6221,6 +6331,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">雙箭頭方框</message>
 	<message xml:lang="de">Hinweisdoppelpfeil</message>
 	<message xml:lang="it">Doppia freccia legenda</message>
+	<message xml:lang="ja">*２方向を指す標識の矢印*Double Arrow Callout</message>
 </label>
 <label define="TMSG_SVG_Double_Arrow">
 	<message xml:lang="en">Double Arrow</message>
@@ -6230,6 +6341,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha doble</message>
 	<message xml:lang="de">Doppelpfeil</message>
 	<message xml:lang="it">Doppia freccia</message>
+	<message xml:lang="ja">*２方向の矢印*Double Arrow</message>
 </label>
 <label define="TMSG_SVG_Notched_Arrow">
 	<message xml:lang="en">Notched Arrow</message>
@@ -6239,6 +6351,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">切口箭頭</message>
 	<message xml:lang="de">Eingekerbter Pfeil</message>
 	<message xml:lang="it">Freccia dentellata</message>
+	<message xml:lang="ja">*刻み目の矢印*Notched Arrow</message>
 </label>
 <label define="TMSG_SVG_Rounded_Arrow">
 	<message xml:lang="en">Rounded Arrow</message>
@@ -6248,6 +6361,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="cn">圆角箭头</message>
 	<message xml:lang="tw">圓角箭頭</message>
 	<message xml:lang="it">Freccia arrotondata</message>
+	<message xml:lang="ja">*円く曲がった矢印*Rounded Arrow</message>
 </label>
 <label define="TMSG_SVG_Simple_Arrow_Callout">
 	<message xml:lang="en">Simple Arrow Callout</message>
@@ -6257,6 +6371,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">單箭頭方框</message>
 	<message xml:lang="de">Einfacher Hinweispfeil</message>
 	<message xml:lang="it">Freccia semplice legenda</message>
+	<message xml:lang="ja">*単方向を指す標識の矢印*Simple Arrow Callout</message>
 </label>
 <label define="TMSG_SVG_Simple_Arrow">
 	<message xml:lang="en">Simple Arrow</message>
@@ -6266,6 +6381,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">單箭頭</message>
 	<message xml:lang="de">Einfacher Pfeil</message>
 	<message xml:lang="it">Freccia semplice</message>
+	<message xml:lang="ja">*単純な矢印*Simple Arrow</message>
 </label>
 <label define="TMSG_SVG_Split_Arrow">
 	<message xml:lang="en">Split Arrow</message>
@@ -6275,6 +6391,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">分裂箭頭</message>
 	<message xml:lang="de">Aufgesplitteter Pfeil</message>
 	<message xml:lang="it">Freccia divisa</message>
+	<message xml:lang="ja">*分岐の矢印*Split Arrow</message>
 </label>
 <label define="TMSG_SVG_S_Shape_Arrow">
 	<message xml:lang="en">S-Shape Arrow</message>
@@ -6284,6 +6401,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha en S</message>
 	<message xml:lang="de">S-förmiger Pfeil</message>
 	<message xml:lang="it">Freccia forma-S </message>
+	<message xml:lang="ja">*S字型の矢印*S-Shape Arrow</message>
 </label>
 <label define="TMSG_SVG_Striped_Arrow">
 	<message xml:lang="en">Striped Arrow</message>
@@ -6293,6 +6411,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Flecha rayada</message>
 	<message xml:lang="de">Gestreifter Pfeil</message>
 	<message xml:lang="it">Freccia striata </message>
+	<message xml:lang="ja">*縞のある矢印*Striped Arrow</message>
 </label>
 <label define="TemplateFromDocument">
 	<message xml:lang="en">Create template from current document</message>
@@ -6303,6 +6422,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="de">Eine Vorlage aus dem aktuellen Dokument
 erstellen</message>
 	<message xml:lang="it">Crea lo schema dal documento corrente</message>
+	<message xml:lang="ja">*現在のドキュメントからテンプレートを作成*Create template from current document</message>
 </label>
 <label define="TemplateTextBox">
 	<message xml:lang="en">Create a text area</message>
@@ -6312,6 +6432,7 @@ erstellen</message>
 	<message xml:lang="cn">创建文本区</message>
 	<message xml:lang="tw">創建文本區</message>
 	<message xml:lang="it">Crea area di testo</message>
+	<message xml:lang="ja">*テキスト領域を作成</message>
 </label>
 <label define="TemplateUseBox">
 	<message xml:lang="en">Use a component or an element</message>
@@ -6321,6 +6442,7 @@ erstellen</message>
 	<message xml:lang="es">Usar componente o elemento</message>
 	<message xml:lang="de">Eine Komponente oder Element verwenden</message>
 	<message xml:lang="it">Usa un componente o un elemento</message>
+	<message xml:lang="ja">*部品または要素を使う*Use a component or an element</message>
 </label>
 <label define="TemplateUseCompBox">
 	<message xml:lang="en">Create and use a component</message>
@@ -6330,6 +6452,7 @@ erstellen</message>
 	<message xml:lang="es">Crear y usar componente</message>
 	<message xml:lang="de">Erstellen und Verwenden einer Komponente</message>
 	<message xml:lang="it">Crea e usa un component</message>
+	<message xml:lang="ja">*部品を作って使う*Create and use a component</message>
 </label>
 <label define="TemplateRepeat">
 	<message xml:lang="en">Repeat the current use</message>
@@ -6339,6 +6462,7 @@ erstellen</message>
 	<message xml:lang="tw">重複當前應用</message>
 	<message xml:lang="de">Aktuelle Anwendung wiederholen</message>
 	<message xml:lang="it">Ripeti uso corrente </message>
+	<message xml:lang="ja">*現在の利用を繰り返す*Repeat the current use</message>
 </label>
 <label define="TemplateRepeatComp">
 	<message xml:lang="en">Create and repeat a component</message>
@@ -6349,6 +6473,7 @@ Komponente</message>
 	<message xml:lang="cn">创建并重复组件</message>
 	<message xml:lang="tw">創建並重複組件</message>
 	<message xml:lang="it">Crea e ripeti un componente</message>
+	<message xml:lang="ja">*部品を作って繰り返す*Create and repeat a component</message>
 </label>
 <label define="TemplateFreeBox">
 	<message xml:lang="en">Create a free editing box</message>
@@ -6358,6 +6483,7 @@ Komponente</message>
 	<message xml:lang="tw">創建一個自由編輯框</message>
 	<message xml:lang="de">Eine freie Editierbox erstellen</message>
 	<message xml:lang="it">Crea un box da editare</message>
+	<message xml:lang="ja">*ボックスを作って自由に編集*Create a free editing box</message>
 </label>
 <label define="TemplateUnion">
 	<message xml:lang="en">Create a new types union</message>
@@ -6367,6 +6493,7 @@ Komponente</message>
 	<message xml:lang="es">Crear nueva unión de tipos</message>
 	<message xml:lang="de">Verursachen Sie neue Typen Anschluss</message>
 	<message xml:lang="it">Crea una nuova unione di tipi</message>
+	<message xml:lang="ja">*新しい共用体の型を作る*Create a new types union</message>
 </label>
 <label define="BUTTON_UP">
 	<message xml:lang="en">Button up to close</message>
@@ -6376,6 +6503,7 @@ Komponente</message>
 	<message xml:lang="tw">釋放按鈕以關閉</message>
 	<message xml:lang="de">Knopf bis zum Abschluss</message>
 	<message xml:lang="it">Tasto fino alla fine</message>
+	<message xml:lang="ja">*ボタンを離して閉じる*Button up to close</message>
 </label>
 <label define="TMSG_DOUBLECLICK">
 	<message xml:lang="en">Double click to close</message>
@@ -6385,6 +6513,7 @@ Komponente</message>
 	<message xml:lang="es">Tecleo doble a cerrarse</message>
 	<message xml:lang="de">Doppeltes Klicken zum zu schließen</message>
 	<message xml:lang="it">Doppio scatto da chiudersi</message>
+	<message xml:lang="ja">*ダブルクリックで閉じる*Double click to close</message>
 </label>
 <label define="TMSG_SIMPLECLICK">
 	<message xml:lang="en">Click to close</message>
@@ -6394,6 +6523,7 @@ Komponente</message>
 	<message xml:lang="tw">點擊以關閉</message>
 	<message xml:lang="de">Klicken zum zu schließen</message>
 	<message xml:lang="it">Scatto da chiudersi</message>
+	<message xml:lang="ja">*クリックで閉じる*Click to close</message>
 </label>
 <!--
 End of SVG panel --><label define="TMSG_LIB_MSG_MAX">

@@ -176,9 +176,9 @@
 174 破棄
 175 数式 / Math
 176 その他
-177 バイナリー関係
-178 バイナリー否定の関係
-179 オペレータ
+177 二項関係
+178 否定二項関係
+179 演算子
 180 ギリシャ文字 (大文字)
 181 矢印
 182 特殊文字
@@ -256,7 +256,7 @@
 254 右に列を挿入
 255 今日のTips
 256 スタートアップ時にTips を表示
-257 **Previous tip
+257 前のTips
 258 次のTips
 259 知っていますか...
 260 閉じる
@@ -266,159 +266,159 @@
 264 表示されている文書の左右に文書タブをドラッグすることで、２つの文書を並べて表示することができます
 265 カスタムモードでは、ドラッグすることでパネルの順番を変えたりフローティング状態にできます
 266 カスタムモードでは、ドラッグするだけでパネルをウィンドウの両サイドに移動できます
-267 右下のボタンをクリックして編集モードをテキストかXML か変えられます
+267 右下のボタンをクリックして、編集モードをテキストまたはXMLに変えられます
 268 右下に赤いボタンがあるなら、クリックすることでエラーが見れます
 269 ウィンドウの下部に表示されているパスコントロールを使うことで、現在の要素の親要素を選ぶことができます。
 270 文書タブ右にあるボタンで、表示されているメニューの異なるタブへ移動することができます
-271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
-272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
-274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
-275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
+271 *もしあなたが「表示」メニューで「リンクを表示」を使用可能にするなら、リンクがフォーマットされた表示で示される。 これはリンクの作成のために都合が良い：それをクリックすることによって、リンク先を選択することができる。
+272 *あなたが SVG オブジェクトを回転させるとき、中心は十字によって指し示される。 あなたはマウスをつかってオブジェクトを動かすことができる。
+273 *基本的な SVG シェイプでは、それらを編集するために使うことができるハンドルを持っている。 青い三角形あるいは緑の正方形で、それらのサイズ変更できる。 <rect />エレメントのために、赤い円が丸い角の半径の上にコントロールを与える。
+274 *SVG 描画のために、もしあなたがシフトボタンを押すなら、直線を１５°毎の精度で作られる。 あなたが直線を描くことを望むとき、それは有用である。
+275 *あなたが画像あるいは SVG オブジェクトのサイズを変えるとき、シフトボタンを押すと縦横比を維持することができる。
+276 *メニュ「編集 → 設定 → ダイアログの言語」をつかって、ユーザ・インタフェースの言語を選択することができる。
 277 クラシック
 278 モダン
 279 テーマなし
-280 **Title/Description
-281 **Generate a description
-282 **Square
-283 **Rounded Square
-284 **Rectangle
-285 **Rounded rectangle
-286 **Diamond
-287 **Parallelogram
-288 **Trapezium
-289 **Equilateral triangle
-290 **Isosceles triangle
-291 **Right triangle
-292 **Circle
-293 **Ellipse
-294 **Line
-295 **Arrow
-296 **Double Arrow
-297 **Zigzag
-298 **Group
-299 **Ungroup
-300 **Bring to front
-301 **Send to back
-302 **One level up
-303 **One level down
-304 **90� left
-305 **90� right
-306 **Rotate
-307 **Vertical symmetry
-308 **Horizontal symmetry
-309 **Scale
-310 **Skew
-311 **Move
-312 **Align bottom
-313 **Align center
-314 **Align left
-315 **Align middle
-316 **Align right
-317 **Align top
-318 **Distribute bottom
-319 **Distribute center
-320 **Distribute left
-321 **Distribute middle
-322 **Distribute right
-323 **Distribute top
-324 **Distribute vertical spacing
-325 **Distribute horizontal spacing
-326 **Closed Bezier curve
-327 **Bezier curve
-328 **Polyline
-329 **Polygon
-330 **Foreign Object
-331 **Image
-332 **SVG Canvas
-333 **Text
-334 **Cone
-335 **Cube
-336 **Cylinder
-337 **Octahedron
-338 **Parallelepiped
-339 **Pyramid
-340 **Beaker
-341 **Funnel
-342 **Bunsen burner
-343 **Buchner flask
-344 **Boiling flask
-345 **Burette
-346 **Erlenmeyer flask
-347 **Test tube
-348 **Pipette
-349 **Rectangular
-350 **Rounded rectangular
-351 **Round
-352 **Scream
-353 **Thought
-354 **Capacitor
-355 **Power source
-356 **Diode
-357 **Ground Point
-358 **Inductor
-359 **LED
-360 **Op-amp
-361 **Resistor
-362 **Switch
-363 **Transistor
-364 **Voltage source
-365 **Zener diode
-366 **Pentagon
-367 **Hexagon
-368 **Heptagon
-369 **Octogon
-370 **Star (4 branches)
-371 **Star (5 branches)
-372 **Star (6 branches)
-373 AND
-374 NAND
-375 OR
-376 NOR
-377 XOR
-378 XNOR
-379 NOT
-380 **Cross
-381 **Frame
-382 **Ring
-383 **Cloud
-384 **Scroll
-385 **Sun
-386 **Lightning_Bolt
-387 **Moon
-388 **Smiley
-389 **Heart
-390 **Flower
-391 **Prohibited
-392 **Pentagon
-393 **2-Way Rounded Arrow
-394 **3-Way Arrow Callout
-395 **3-Way Arrow
-396 **4-Way_Arrow_Callout
-397 **4-Way Arrow
-398 **Chevron
-399 **Circular Arrow
-400 **Corner Arrow
-401 **Corner Double Arrow Callout
-402 **Corner Double Arrow
-403 **Double Arrow Callout
-404 **Double Arrow
-405 **Notched Arrow
-406 **Rounded Arrow
-407 **Simple Arrow Callout
-408 **Simple Arrow
-409 **Split Arrow
-410 **S-Shape Arrow
-411 **Striped Arrow
-412 **Create template from current document
-413 **Create a text area
-414 **Use a component or an element
-415 **Create and use a component
-416 **Repeat the current use
-417 **Create and repeat a component
-418 **Create a free editing box
-419 **Create a new types union
-420 **Button up to close
-421 **Double click to close
-422 **Click to close
+280 *タイトル/ディスクリプション
+281 *ディスクリプションを生成
+282 *正方形
+283 *角の丸まった正方形
+284 *方形
+285 *角の丸まった方形
+286 *ひし形
+287 *平行四辺形(Parallelogram)
+288 *不等辺四辺形(Trapezium)
+289 *正三角形(Equilateral triangle)
+290 *二等辺三角形(Isosceles triangle)
+291 *直角三角形(Right triangle)
+292 *円 (Circle)
+293 *楕円 (Ellipse)
+294 *線 (Line)
+295 *矢印 (Arrow)
+296 *二方向の矢印 (Double Arrow)
+297 *ジグザグ
+298 *グループ化
+299 *グループ解除
+300 *前面へ持ってくる (Bring to front)
+301 *背面へ送る　(Send to back)
+302 *１つ階層を上げる (One level up)
+303 *１つ階層を下げる (One level down)
+304 *左へ９０°回転
+305 *右へ９０°回転
+306 *回転 (Rotate)
+307 *垂直に反転 (Vertical symmetry)
+308 *水平に反転 (Horizontal symmetry)
+309 *拡大縮小
+310 *変形
+311 *移動
+312 *下端で整列 (Align bottom)
+313 *中心を垂直に整列 (Align center)
+314 *左端で整列 (Align left)
+315 *中心を水平に整列 (Align middle)
+316 *右端で整列 (Align right)
+317 *上端で整列 (Align top)
+318 *下端の垂直間隔を等しく配置 (Distribute bottom)
+319 *中心の垂直間隔を等しく配置 (Distribute center)
+320 *左端の間隔を等しく配置 (Distribute left)
+321 *中心の水平間隔を等しく配置 (Distribute middle)
+322 *右端の間隔を等しく配置 (Distribute right)
+323 *上端の垂直間隔を等しく配置 (Distribute top)
+324 *垂直の間隔を等しく配置 (Distribute vertical spacing)
+325 *水平の間隔を等しく配置 (Distribute horizontal spacing)
+326 *ベジェ閉曲線
+327 *ベジェ曲線
+328 *ポリライン (Polyline)
+329 *ポリゴン
+330 *異質のオブジェクト (Foreign Object)
+331 *画像 (Image)
+332 *SVGキャンバス
+333 *テキスト
+334 *円錐形 (Cone)
+335 *立方体 (Cube)
+336 *シリンダー (Cylinder)
+337 *八面体 (Octahedron)
+338 *平行六面体 (Parallelepiped)
+339 *角柱 (Pyramid)
+340 ビーカー
+341 漏斗
+342 ブンゼン・バーナー
+343 ビュヒナー・フラスコ
+344 丸型フラスコ
+345 ビュレット
+346 三角フラスコ
+347 試験管
+348 ピペット
+349 *四角い噴出し
+350 *丸まった長方形の噴出し
+351 *丸い噴出し
+352 *絶叫の噴出し
+353 *思考の噴出し
+354 キャパシタ
+355 電源
+356 ダイオード
+357 接地点
+358 インダクタ
+359 LED
+360 OPアンプ
+361 抵抗器
+362 開閉器
+363 トランジスタ
+364 電圧源
+365 ツェナダイオード
+366 五角形
+367 六角形
+368 七角形
+369 八角形
+370 *星型（４分岐）
+371 *星型（５分岐）
+372 *星型（６分岐）
+373 論理積 (AND)
+374 否定論理積 (NAND)
+375 論理和 (OR)
+376 否定論理和 (NOR)
+377 排他的論理和 (XOR)
+378 排他的否定論理和 (XNOR)
+379 否定論理 (NOT)
+380 *十字
+381 *縁取り(Frame)
+382 *輪
+383 *雲形
+384 *巻物
+385 *太陽
+386 *稲光・電光
+387 *月
+388 *笑顔
+389 *ハート
+390 *花形模様
+391 *禁止標識
+392 *五角形の矢印
+393 *２方向に円く曲がった矢印*2-Way Rounded Arrow
+394 *３方向を指す標識の矢印*3-Way Arrow Callout
+395 *３方向の矢印*3-Way Arrow
+396 *４方向を指す標識の矢印*4-Way_Arrow_Callout
+397 *４方向の矢印*4-Way Arrow
+398 *山形紋の矢印*Chevron
+399 *回転の矢印*Circular Arrow
+400 *曲がり角の矢印*Corner Arrow
+401 *２方向を指す標識の矢印*Corner Double Arrow Callout
+402 *曲がり角の二方向の矢印*Corner Double Arrow
+403 *２方向を指す標識の矢印*Double Arrow Callout
+404 *２方向の矢印*Double Arrow
+405 *刻み目の矢印*Notched Arrow
+406 *円く曲がった矢印*Rounded Arrow
+407 *単方向を指す標識の矢印*Simple Arrow Callout
+408 *単純な矢印*Simple Arrow
+409 *分岐の矢印*Split Arrow
+410 *S字型の矢印*S-Shape Arrow
+411 *縞のある矢印*Striped Arrow
+412 *現在のドキュメントからテンプレートを作成*Create template from current document
+413 *テキスト領域を作成
+414 *部品または要素を使う*Use a component or an element
+415 *部品を作って使う*Create and use a component
+416 *現在の利用を繰り返す*Repeat the current use
+417 *部品を作って繰り返す*Create and repeat a component
+418 *ボックスを作って自由に編集*Create a free editing box
+419 *新しい共用体の型を作る*Create a new types union
+420 *ボタンを離して閉じる*Button up to close
+421 *ダブルクリックで閉じる*Double click to close
+422 *クリックで閉じる*Click to close

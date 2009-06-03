@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<base version="91">
+<base version="92">
 <control>
 	<language encoding="latin1">en</language>
- 	<language encoding="latin1">fr</language>
- 	<language encoding="latin1">de</language>
- 	<language encoding="latin1">it</language>
- 	<language encoding="utf8">tr</language>
- 	<language encoding="latin1">es</language>
- 	<language encoding="latin1">pt</language>
- 	<language encoding="latin1">fi</language>
- 	<language encoding="utf8">ru</language>
- 	<language encoding="utf8">hu</language>
- 	<language encoding="utf8">ka</language>
- 	<language encoding="utf8">cn</language>
- 	<language encoding="utf8">tw</language>
- 	<language encoding="utf8">sk</language>
- 	<language encoding="utf8">jp</language>
- 	<language encoding="utf8">ja</language>
- 	<language encoding="latin1">nl</language>
+ 		<language encoding="latin1">fr</language>
+ 		<language encoding="latin1">de</language>
+ 		<language encoding="latin1">it</language>
+ 		<language encoding="utf8">tr</language>
+ 		<language encoding="latin1">es</language>
+ 		<language encoding="latin1">pt</language>
+ 		<language encoding="latin1">fi</language>
+ 		<language encoding="utf8">ru</language>
+ 		<language encoding="utf8">hu</language>
+ 		<language encoding="utf8">ka</language>
+ 		<language encoding="utf8">cn</language>
+ 		<language encoding="utf8">tw</language>
+ 		<language encoding="utf8">sk</language>
+ 		<language encoding="utf8">jp</language>
+ 		<language encoding="utf8">ja</language>
+ 		<language encoding="latin1">nl</language>
 </control>
 <messages>
 <label define="AM_FILES">
@@ -111,8 +111,7 @@
 	<message xml:lang="cn">新建 CSS 样式表</message>
 	<message xml:lang="tw">新建 CSS 樣式表</message>
 	<message xml:lang="sk">Nový súbor s CSS pravidlami</message>
-	<message xml:lang="ja">新規 CSS
-スタイルシートの作成</message>
+	<message xml:lang="ja">新規 CSS スタイルシートの作成</message>
 	<message xml:lang="nl">Nieuw CSS-opmaakmodel</message>
 </label>
 <label define="AM_NEW_TEMPLATE">
@@ -513,8 +512,7 @@ menteni?</message>
 	<message xml:lang="cn">Redirection fetching of %s</message>
 	<message xml:lang="tw">Redirection fetching of %s</message>
 	<message xml:lang="sk">Presmerovanie spojenia %s</message>
-	<message xml:lang="ja">%s
-のメモリ呼び出しをリダイレクト</message>
+	<message xml:lang="ja">%s のメモリ呼び出しをリダイレクト</message>
 	<message xml:lang="nl">Het ophalen van %s is omgeleid</message>
 </label>
 <label define="AM_REDIRECTIONS_LIMIT">
@@ -554,8 +552,7 @@ menteni?</message>
 	<message xml:lang="cn">无法创建本地文件 %s</message>
 	<message xml:lang="tw">無法創建本地文件 %s</message>
 	<message xml:lang="sk">Súbor %s sa nedá vytvoriť</message>
-	<message xml:lang="ja">ローカルファイル%s
-を作成できません</message>
+	<message xml:lang="ja">ローカルファイル%s を作成できません</message>
 	<message xml:lang="nl">Kan het lokale bestand %s niet maken</message>
 </label>
 <label define="AM_CANNOT_CREATE_DIRECTORY">
@@ -575,8 +572,7 @@ menteni?</message>
 	<message xml:lang="cn">无法创建目录 %s</message>
 	<message xml:lang="tw">無法創建目錄 %s</message>
 	<message xml:lang="sk">Priečinok %s sa nedá vytvoriť</message>
-	<message xml:lang="ja">ディレクトリ%s
-を作成できません</message>
+	<message xml:lang="ja">ディレクトリ%s を作成できません</message>
 	<message xml:lang="nl">Kan de map %s niet maken</message>
 </label>
 <label define="AM_WAITING_FOR_SOCKET">
@@ -786,8 +782,7 @@ menteni?</message>
 	<message xml:lang="cn">%s 已加载，但无法获取数据</message>
 	<message xml:lang="tw">%s 已加載，但無法獲取數據</message>
 	<message xml:lang="sk">%s nahhraný ale dáta nie sú prístupné</message>
-	<message xml:lang="ja">%s
-は読み込まれましたが、利用可能なデータがありません</message>
+	<message xml:lang="ja">%s は読み込まれましたが、利用可能なデータがありません</message>
 	<message xml:lang="nl">%s is geladen maar er zijn geen gegevens beschikbaar</message>
 </label>
 <label define="AM_LOAD_ABORT">
@@ -837,8 +832,7 @@ később</message>
 	<message xml:lang="cn">%s 现在不可用, 请稍候重试</message>
 	<message xml:lang="tw">%s 現在不可用, 請稍候重試</message>
 	<message xml:lang="sk">%s nie je práve dostupné. Skúste neskôr.</message>
-	<message xml:lang="ja">%s
-は現在利用できません。後でやり直してください。</message>
+	<message xml:lang="ja">%s は現在利用できません。後でやり直してください。</message>
 	<message xml:lang="nl">%s is op dit moment niet beschikbaar. Probeer het later opnieuw.</message>
 </label>
 <label define="AM_ELEMENT_LOADED">
@@ -893,8 +887,7 @@ később</message>
 	<message xml:lang="cn">无法保存: %s</message>
 	<message xml:lang="tw">無法保存: %s</message>
 	<message xml:lang="sk">Nedá sa uložiť do %s</message>
-	<message xml:lang="ja">%s
-は保存できませんでした。</message>
+	<message xml:lang="ja">%s は保存できませんでした。</message>
 	<message xml:lang="nl">Kan niet opslaan in: %s</message>
 </label>
 <label define="AM_SYSTEM_ERROR">
@@ -993,8 +986,7 @@ tipo: %s</message>
 	<message xml:lang="tw">對不起, 此類URL不支持 GET 方法: %s</message>
 	<message xml:lang="sk">Metóda GET nie je podporováná URL tohto typu:
 %s</message>
-	<message xml:lang="ja">この種類のURLではGETはサポートされていません:
-%s</message>
+	<message xml:lang="ja">この種類のURLではGETはサポートされていません: %s</message>
 	<message xml:lang="nl">GET wordt nog niet ondersteund voor dit type URL: %s</message>
 </label>
 <label define="AM_PUT_UNSUPPORTED_PROTOCOL">
@@ -1023,8 +1015,7 @@ tipo: %s</message>
 	<message xml:lang="tw">對不起, 此類URL不支持 PUT 方法: %s</message>
 	<message xml:lang="sk">Metóda PUT nie je podporováná URL tohto typu:
 %s</message>
-	<message xml:lang="ja">この種類のURLではPUTはサポートされていません:
-%s</message>
+	<message xml:lang="ja">この種類のURLではPUTはサポートされていません: %s</message>
 	<message xml:lang="nl">PUT wordt nog niet ondersteund voor dit type URL: %s</message>
 </label>
 <label define="AM_UNSUPPORTED_FEATURE">
@@ -1054,8 +1045,7 @@ ominaisuutta</message>
 	<message xml:lang="tw">此版本 Amaya 尚不支持此特性</message>
 	<message xml:lang="sk">Táto verzia programu Amaya nepodporuje túto
 funkciu</message>
-	<message xml:lang="ja">このバージョンの Amaya
-にこの機能はついていません</message>
+	<message xml:lang="ja">このバージョンの Amaya にこの機能はついていません</message>
 	<message xml:lang="nl">Deze functie is niet beschikbaar in de versie van Amaya die u gebruikt</message>
 </label>
 <label define="AM_WROTE_OBJECT">
@@ -1120,8 +1110,7 @@ temporários %s</message>
 	<message xml:lang="tw">無法創建臨時文件夾 %s</message>
 	<message xml:lang="sk">Nedá sa vytvoriť priečinok pre dočasný súbor
 %s</message>
-	<message xml:lang="ja">テンポラリファイルディレクトリ %s
-を作成できません</message>
+	<message xml:lang="ja">テンポラリファイルディレクトリ %s を作成できません</message>
 	<message xml:lang="nl">Kon geen tijdelijke map maken voor bestand %s</message>
 </label>
 <label define="AM_NO_TRANS">
@@ -1193,8 +1182,7 @@ HTML.trans, строка %s</message>
 	<message xml:lang="tw">HTML語法錯誤 %s</message>
 	<message xml:lang="sk">syntaktická chyba v súbore HTML.trans riadok
 %s</message>
-	<message xml:lang="ja">HTML.trans ライン %s
-における構文エラー</message>
+	<message xml:lang="ja">HTML.trans ライン %s における構文エラー</message>
 	<message xml:lang="nl">Er is een syntaxisfout in het bestand HTML.trans regel %s</message>
 </label>
 <label define="AM_BUTTON_MATH">
@@ -1359,8 +1347,7 @@ válaszolt</message>
 	<message xml:lang="tw">請求超市 - 服務器無響應</message>
 	<message xml:lang="sk">Časový limit požiadavky uplynul - server
 neodpovedá</message>
-	<message xml:lang="ja">タイムアウト -
-サーバが応答しません</message>
+	<message xml:lang="ja">タイムアウト - サーバが応答しません</message>
 	<message xml:lang="nl">Aanvraagtime-out, de server heeft niet geantwoord</message>
 </label>
 <label define="AM_OVERWRITE_CHECK">
@@ -1380,8 +1367,7 @@ neodpovedá</message>
 	<message xml:lang="cn">%s 已存在, 覆盖吗?</message>
 	<message xml:lang="tw">%s 已存在, 覆蓋嗎?</message>
 	<message xml:lang="sk">%s už existuje. Chcete ho prepísať?</message>
-	<message xml:lang="ja">%s
-は既に存在します。上書きしますか？</message>
+	<message xml:lang="ja">%s は既に存在します。上書きしますか？</message>
 	<message xml:lang="nl">%s bestaat al. Wilt u het overschrijven?</message>
 </label>
 <label define="AM_ETAG_CHANGED">
@@ -1401,8 +1387,7 @@ neodpovedá</message>
 	<message xml:lang="cn">%s 已改变, 覆盖吗?</message>
 	<message xml:lang="tw">%s 已改變, 覆蓋嗎?</message>
 	<message xml:lang="sk">%s sa zmenil. Chcete ho prepísať?</message>
-	<message xml:lang="ja">%s
-は変更されました。上書きしますか？</message>
+	<message xml:lang="ja">%s は変更されました。上書きしますか？</message>
 	<message xml:lang="nl">%s is gewijzigd. Wilt u het overschrijven?</message>
 </label>
 <label define="AM_BACKGROUND_IMAGE">
@@ -1724,8 +1709,7 @@ guardar?</message>
 	<message xml:lang="cn">W3C的网页编辑器/浏览器</message>
 	<message xml:lang="tw">W3C的網頁編輯器/瀏覽器</message>
 	<message xml:lang="sk">Editor/prehliadač webu od W3C</message>
-	<message xml:lang="ja">webのための W3C's
-エディタ/ブラウザ</message>
+	<message xml:lang="ja">webのための W3C's エディタ/ブラウザ</message>
 	<message xml:lang="nl">De webeditor and -browser van het W3C</message>
 </label>
 <label define="AM_ABOUT2">
@@ -1747,8 +1731,7 @@ címre)</message>
 	<message xml:lang="cn">(mail issues to www-amaya@w3.org)</message>
 	<message xml:lang="tw">(mail issues to www-amaya@w3.org)</message>
 	<message xml:lang="sk">(problémy posielať na www-amaya@w3.org)</message>
-	<message xml:lang="ja">(問題をメールで送る→
-www-amaya@w3.org)</message>
+	<message xml:lang="ja">(問題をメールで送る→ www-amaya@w3.org)</message>
 	<message xml:lang="nl">(neem bij problemen contact op met www-amaya@w3.org)</message>
 </label>
 <label define="AM_ABOUT_COPYRIGHT">
@@ -1782,8 +1765,7 @@ Keio)</message>
 Keio)</message>
 	<message xml:lang="sk">Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM,
 Keio)</message>
-	<message xml:lang="ja">Copyright 1994-%s INRIA and W3C (MIT, ERCIM, Keio), All
-Rights Reserved.</message>
+	<message xml:lang="ja">Copyright 1994-%s INRIA and W3C (MIT, ERCIM, Keio), All Rights Reserved.</message>
 	<message xml:lang="nl">Copyright © 1994-%s INRIA en W3C® (MIT, ERCIM, Keio). Alle rechten voorbehouden.</message>
 </label>
 <label define="AM_ABOUT_WEBSITE">
@@ -1832,8 +1814,7 @@ kezelhetők</message>
 	<message xml:lang="tw">無法提交超過 %s 個字符的 URL</message>
 	<message xml:lang="sk">Nedá sa spracovať URL odkaz, ktorý má viac ako %s
 znakov</message>
-	<message xml:lang="ja">%s
-以上の文字をもつURLを扱うことはできません</message>
+	<message xml:lang="ja">%s 以上の文字をもつURLを扱うことはできません</message>
 	<message xml:lang="nl">URL's met meer dan %s tekens kunnen niet gebruikt worden</message>
 </label>
 <label define="AM_INVALID_TYPE">
@@ -1875,8 +1856,7 @@ fatto</message>
 	<message xml:lang="tw">鏈接更新: %s% 已完成</message>
 	<message xml:lang="sk">Aktualizovanie prepojení: %s%% bolo
 ukončené</message>
-	<message xml:lang="ja">リンクの更新: %s%%
-は完了しました</message>
+	<message xml:lang="ja">リンクの更新: %s%% は完了しました</message>
 	<message xml:lang="nl">Links bijwerken: %s%% is voltooid</message>
 </label>
 <label define="AM_NOTHING_TO_SAVE">
@@ -1953,8 +1933,7 @@ ukončené</message>
 	<message xml:lang="cn">%d outstanding requests</message>
 	<message xml:lang="tw">%d outstanding requests</message>
 	<message xml:lang="sk">%d nevybavené požiadavky</message>
-	<message xml:lang="ja">%d
-は未解決のリクエストです</message>
+	<message xml:lang="ja">%d は未解決のリクエストです</message>
 	<message xml:lang="nl">%d openstaande aanvragen</message>
 </label>
 <label define="AM_NO_CSS">
@@ -2030,8 +2009,7 @@ néven:</message>
 	<message xml:lang="cn">文档尚未命名, 保存至:</message>
 	<message xml:lang="tw">文檔尚未命名, 保存至:</message>
 	<message xml:lang="sk">Dokument nemá meno. Ukladanie do:</message>
-	<message xml:lang="ja">ドキュメントに名前がありません. Saving
-to:</message>
+	<message xml:lang="ja">ドキュメントに名前がありません. Saving to:</message>
 	<message xml:lang="nl">Het document heeft geen naam. Opslaan naar:</message>
 </label>
 <label define="AM_BUTTON_PLUGIN">
@@ -2071,8 +2049,7 @@ to:</message>
 	<message xml:lang="tw">保存 URL 時發生未知錯誤: %s</message>
 	<message xml:lang="sk">Vyskytla sa neznáma chyba pri ukladaní URL
 %s</message>
-	<message xml:lang="ja">URLを保存した際の未知のエラー
-%s</message>
+	<message xml:lang="ja">URLを保存した際の未知のエラー %s</message>
 	<message xml:lang="nl">Onbekende fout tijdens het opslaan van URL %s</message>
 </label>
 <label define="AM_CANT_CONNECT_TO_HOST">
@@ -2115,8 +2092,7 @@ toimesta</message>
 	<message xml:lang="cn">访问 %s 已被服务器禁止</message>
 	<message xml:lang="tw">訪問 %s 已被服務器禁止</message>
 	<message xml:lang="sk">Prístup do %s je zamietnutý serverom</message>
-	<message xml:lang="ja">%s
-へのアクセスはサーバによって禁止されています</message>
+	<message xml:lang="ja">%s へのアクセスはサーバによって禁止されています</message>
 	<message xml:lang="nl">Toegang tot %s is niet toegestaan op de server</message>
 </label>
 <label define="AM_REQUEST_SUCCEEDED">
@@ -2135,8 +2111,7 @@ toimesta</message>
 	<message xml:lang="cn">操作 %s 已成功</message>
 	<message xml:lang="tw">操作 %s 已成功</message>
 	<message xml:lang="sk">Operácia úspešná pre %s</message>
-	<message xml:lang="ja">%s
-への操作が成功しました。</message>
+	<message xml:lang="ja">%s への操作が成功しました。</message>
 	<message xml:lang="nl">De bewerking is voltooid voor %s</message>
 </label>
 <label define="AM_CREATED_NEW_REMOTE_RESSOURCE">
@@ -2194,8 +2169,7 @@ toimesta</message>
 	<message xml:lang="tw">Operation completed with a %s status code</message>
 	<message xml:lang="sk">Operácia dokončená s návratomcým kódom %s
 </message>
-	<message xml:lang="ja">%s
-ステータスコードと一緒にオペレーションは完了しました</message>
+	<message xml:lang="ja">%s ステータスコードと一緒にオペレーションは完了しました</message>
 	<message xml:lang="nl">De bewerking is voltooid met statuscode %s</message>
 </label>
 <label define="AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX">
@@ -2286,8 +2260,7 @@ odpoveď</message>
 	<message xml:lang="cn">Please authenticate to access %s</message>
 	<message xml:lang="tw">Please authenticate to access %s</message>
 	<message xml:lang="sk">Autentifikujte sa pre prístup k %s</message>
-	<message xml:lang="ja">%s
-へアクセスするため認証してください</message>
+	<message xml:lang="ja">%s へアクセスするため認証してください</message>
 	<message xml:lang="nl">Identificeer u voor toegang tot %s</message>
 </label>
 <label define="AM_VERIFYING">
@@ -2336,8 +2309,7 @@ kívül?</message>
 	<message xml:lang="tw">保存到 %s 似乎不正確, 忽略嗎?</message>
 	<message xml:lang="sk">Ukladanie do %s sa zdá narušené.
 Ignorovať?</message>
-	<message xml:lang="ja">%s の保存に失敗しました,
-無視しますか？?</message>
+	<message xml:lang="ja">%s の保存に失敗しました, 無視しますか？?</message>
 	<message xml:lang="nl">Bij het opslaan naar %s worden wellicht gegevens beschadigd. Wilt u dit negeren?</message>
 </label>
 <label define="AM_SAVE_REDIRECTED">
@@ -2359,8 +2331,7 @@ kívül?</message>
 	<message xml:lang="cn">URL %s 重定向到 %s, 忽略吗?</message>
 	<message xml:lang="tw">URL %s 重定向到 %s, 忽略嗎?</message>
 	<message xml:lang="sk">URL %s presmerovaná do %s. Ignorovať?</message>
-	<message xml:lang="ja">%s というURLが %s
-にリダイレクトしました。無視しますか？</message>
+	<message xml:lang="ja">%s というURLが %s にリダイレクトしました。無視しますか？</message>
 	<message xml:lang="nl">URL %s is omgeleid naar %s. Wilt u dit negeren?</message>
 </label>
 <label define="AM_SAVE_RELOAD_FAILED">
@@ -2381,8 +2352,7 @@ kívül?</message>
 	<message xml:lang="cn">重新载入 %s 失败, 忽略吗?</message>
 	<message xml:lang="tw">重新載入 %s 失敗, 忽略嗎?</message>
 	<message xml:lang="sk">Aktualizovanie %s zlyhalo. Ignorovať?</message>
-	<message xml:lang="ja">%s
-の再読み込みに失敗しました。無視しますか？</message>
+	<message xml:lang="ja">%s の再読み込みに失敗しました。無視しますか？</message>
 	<message xml:lang="nl">Opnieuw laden van %s is mislukt. Wilt u dit negeren?</message>
 </label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_CAUSE">
@@ -2402,8 +2372,7 @@ kívül?</message>
 	<message xml:lang="cn">服务器报告了一个错误: %s</message>
 	<message xml:lang="tw">服務器報告了一個錯誤: %s</message>
 	<message xml:lang="sk">Server oznámil chybu: %s</message>
-	<message xml:lang="ja">サーバからのエラーメッセージ:
-%s</message>
+	<message xml:lang="ja">サーバからのエラーメッセージ: %s</message>
 	<message xml:lang="nl">Server meldt een fout: %s</message>
 </label>
 <label define="AM_SERVER_NOT_IMPLEMENTED_501_ERROR">
@@ -2612,8 +2581,7 @@ Betöltsük a dokumentumok biztonsági mentését?</message>
 希望重新載入備份文檔嗎?</message>
 	<message xml:lang="sk">Predchádzajúce sedenie programu Amaya havarovalo.
 Obnoviť dokument zo zálohy?</message>
-	<message xml:lang="ja">あなたの前のAmaya
-のセッションは失敗しました。バックアップされた文書を再読み込みしますか？</message>
+	<message xml:lang="ja">あなたの前のAmaya のセッションは失敗しました。バックアップされた文書を再読み込みしますか？</message>
 	<message xml:lang="nl">Uw vorige sessie werd niet correct afgesloten. Wilt u back-upbestanden van de documenten laden?</message>
 </label>
 <label define="AM_AUTHENTICATION_CONFIRM">
@@ -2656,8 +2624,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="cn">操作会被重定向, 继续吗?</message>
 	<message xml:lang="tw">操作會被重定向, 繼續嗎?</message>
 	<message xml:lang="sk">Operácia bude presmerovaná. Pokračovať?</message>
-	<message xml:lang="ja">操作は向け直されるでしょう。
-続けますか?</message>
+	<message xml:lang="ja">操作は向け直されるでしょう。 続けますか?</message>
 	<message xml:lang="nl">De bewerking wordt omgeleid. Wilt u doorgaan?</message>
 </label>
 <label define="AM_ROWS">
@@ -2979,8 +2946,7 @@ edin</message>
 	<message xml:lang="cn">缓存入口大小 (Mb)</message>
 	<message xml:lang="tw">緩存入口大小 (Mb)</message>
 	<message xml:lang="sk">Veľkosť jedného záznamu (MB)</message>
-	<message xml:lang="ja">上限キャッシュ登録サイズ
-(Mb)</message>
+	<message xml:lang="ja">上限キャッシュ登録サイズ (Mb)</message>
 	<message xml:lang="nl">Maximale grootte voor item in cache (MB):</message>
 </label>
 <label define="AM_PROXY_MENU">
@@ -3017,8 +2983,7 @@ www.w3.org:1234)</message>
 	<message xml:lang="cn">HTTP 代理 (例如 www.w3.org:1234)</message>
 	<message xml:lang="tw">HTTP 代理 (例如 www.w3.org:1234)</message>
 	<message xml:lang="sk">HTTP proxy (napr.: www.w3.org:1234)</message>
-	<message xml:lang="ja">HTTP プロキシ (例,
-www.w3.org:1234)</message>
+	<message xml:lang="ja">HTTP プロキシ (例, www.w3.org:1234)</message>
 	<message xml:lang="nl">HTTP-proxy (bijvoorbeeld www.w3.org:1234):</message>
 </label>
 <label define="AM_PROXY_DOMAIN">
@@ -3041,8 +3006,7 @@ lists.w3.org)</message>
 	<message xml:lang="cn">代理域名列表 (e.g., lists.w3.org)</message>
 	<message xml:lang="tw">代理域名列表 (e.g., lists.w3.org)</message>
 	<message xml:lang="sk">Zoznam proxy domén (napr.: lists.w3.org)</message>
-	<message xml:lang="ja">プロキシドメイン一覧 (例,
-lists.w3.org)</message>
+	<message xml:lang="ja">プロキシドメイン一覧 (例, lists.w3.org)</message>
 	<message xml:lang="nl">Proxy-domeinlijst (bijvoorbeeld lists.w3.org):</message>
 </label>
 <label define="AM_GENERAL_MENU">
@@ -3434,8 +3398,7 @@ tuşlayın</message>
 	<message xml:lang="cn">为每个PUT验证GET</message>
 	<message xml:lang="tw">為每個PUT驗證GET</message>
 	<message xml:lang="sk">Príkazy PUT overovať príkazmi GET</message>
-	<message xml:lang="ja">PUT 毎に GET
-によって検証する</message>
+	<message xml:lang="ja">PUT 毎に GET によって検証する</message>
 	<message xml:lang="nl">Elke PUT met GET controleren</message>
 </label>
 <label define="AM_DEFAULT_NAME">
@@ -3458,8 +3421,7 @@ URL-ов заканчивающихся символом '/'</message>
 	<message xml:lang="cn">URL默认名称 '/'</message>
 	<message xml:lang="tw">URL默認名稱 '/'</message>
 	<message xml:lang="sk">Predvolené meno URL odkazov končiacich '/'</message>
-	<message xml:lang="ja">URL
-がスラッシュで終わっている場合のデフォルト名</message>
+	<message xml:lang="ja">URL がスラッシュで終わっている場合のデフォルト名</message>
 	<message xml:lang="nl">Standaardnaam voor URL's die eindigen op '/':</message>
 </label>
 <label define="AM_GEOMETRY_MENU">
@@ -3670,8 +3632,7 @@ gyorstárat.</message>
 	<message xml:lang="sk">Nedá sa spustiť Cache. Asi ste zadali neplatný
 priečinok pre dočasné súbory Cache alebo ho uzamkol iný
 používateľ.</message>
-	<message xml:lang="ja">キャッシュをスタートできませんでした。無効なキャッシュディレクトリか、他のAmaya
-が使用しているキャッシュをしている可能性があります。</message>
+	<message xml:lang="ja">キャッシュをスタートできませんでした。無効なキャッシュディレクトリか、他のAmaya が使用しているキャッシュをしている可能性があります。</message>
 	<message xml:lang="nl">Kon de cache niet openen. Controleer of de cachemap geldig is en of de cache niet wordt gebruikt door een andere instantie van Amaya.</message>
 </label>
 <label define="AM_LANG_NEGOTIATION">
@@ -3700,8 +3661,7 @@ fr&quot;:</message>
 	<message xml:lang="tw">語言偏好 (如 &quot;en, fr&quot;):</message>
 	<message xml:lang="sk">Zoznam uprednostňovaných jazykov napr.: &quot;sk, cs,
 en&quot;:</message>
-	<message xml:lang="ja">&quot;en, fr&quot;
-のような優先言語のリスト:</message>
+	<message xml:lang="ja">"en, fr" のような優先言語のリスト:</message>
 	<message xml:lang="nl">Lijst van voorkeurstalen (bv. "nl, en"):</message>
 </label>
 <label define="AM_PROFILE_CHANGE">
@@ -3763,8 +3723,7 @@ ehhez a tartományhoz</message>
 	<message xml:lang="tw">允許以下域的自動實用 PUT 轉向</message>
 	<message xml:lang="sk">Povoliť automatické presmerovanie metódy PUT pre
 tieto domény</message>
-	<message xml:lang="ja">これらのドメインに対する自動的な PUT
-リダイレクトを許可する</message>
+	<message xml:lang="ja">これらのドメインに対する自動的な PUT リダイレクトを許可する</message>
 	<message xml:lang="nl">Automatische omleiding van PUT naar deze domeinen toestaan:</message>
 </label>
 <label define="AM_WITH_CSS">
@@ -3903,7 +3862,7 @@ Amaya</message>
 	<message xml:lang="cn">Amaya 用户目录</message>
 	<message xml:lang="tw">Amaya 用戶目錄</message>
 	<message xml:lang="sk">Užívateľský priečinok</message>
-	<message xml:lang="ja">アマヤユーザディレクトリ</message>
+	<message xml:lang="ja">Amaya ユーザディレクトリ</message>
 	<message xml:lang="nl">Gebruikersmap voor Amaya</message>
 </label>
 <label define="AM_TMP_DIR">
@@ -4269,8 +4228,7 @@ continuare</message>
 možné pokračovať</message>
 	<message xml:lang="ru">Неисправимая ошибка - для
 продолжения исправьте исходный код</message>
-	<message xml:lang="ja">致命的なエラー -
-続行するためにソースコードを修正してください</message>
+	<message xml:lang="ja">致命的なエラー - 続行するためにソースコードを修正してください</message>
 	<message xml:lang="nl">Kritieke fout. Corrigeer de broncode om verder te gaan</message>
 </label>
 <label define="AM_XML_CHARACTER_RETRY">
@@ -4363,8 +4321,7 @@ errors</message>
 errors</message>
 	<message xml:lang="sk">Nájdené chyby - pozri Zobrazenia &gt; Skontrolovať
 chyby</message>
-	<message xml:lang="ja">エラー発見 - ファイルを見る &gt;
-文解析エラー表示</message>
+	<message xml:lang="ja">エラー発見 - ファイルを見る > 文解析エラー表示</message>
 	<message xml:lang="nl">Er zijn fouten aangetroffen. Zie Weergave &gt; Parseerfouten</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
@@ -4830,8 +4787,7 @@ added element</message>
 added element</message>
 	<message xml:lang="sk">Nie je možné napojiť začiatok XPointera na
 vnútorne pridaný prvok</message>
-	<message xml:lang="ja">追加された要素の中には開始XPointer
-を貼り付けられません</message>
+	<message xml:lang="ja">追加された要素の中には開始XPointer を貼り付けられません</message>
 	<message xml:lang="nl">Er kan geen start-XPointer op een intern toegevoegd element worden gemaakt</message>
 </label>
 <label define="AM_NO_EXPOINTER">
@@ -4863,8 +4819,7 @@ added element</message>
 added element</message>
 	<message xml:lang="sk">Nie je možné napojiť koniec XPointera na vnútorne
 pridaný prvok</message>
-	<message xml:lang="ja">追加された要素の中には終了XPointer
-を貼り付けられません</message>
+	<message xml:lang="ja">追加された要素の中には終了XPointer を貼り付けられません</message>
 	<message xml:lang="nl">Er kan geen einde-XPointer op een intern toegevoegd element worden gemaakt</message>
 </label>
 <label define="AM_NO_ANNOT_MOVE">
@@ -4942,8 +4897,7 @@ menüsüne bakın</message>
 	<message xml:lang="tw">未聲明注釋用戶, 請打開 注釋/配置
 菜單</message>
 	<message xml:lang="sk">Nebol vytvorený žiadny uživateľský komentár. Otvorte Možnosti</message>
-	<message xml:lang="ja">アノテーションユーザの宣言がありません。アノテーション/コンフィグ
-メニューを開いてください。</message>
+	<message xml:lang="ja">アノテーションユーザの宣言がありません。アノテーション/コンフィグ メニューを開いてください。</message>
 	<message xml:lang="nl">Er is geen gebruiker ingesteld voor annotaties. U kunt dit doen in het Voorkeuren</message>
 </label>
 <label define="AM_CANNOT_ANNOTATE">
@@ -4970,8 +4924,7 @@ XPointerის შექმნა ვერ ხერხდება</message>
 	<message xml:lang="cn">无法为该注释创建 XPointer</message>
 	<message xml:lang="tw">無法為該注釋創建 XPointer</message>
 	<message xml:lang="sk">Nedá sa vytvoriť Xpointer pre kometár</message>
-	<message xml:lang="ja">このアノテーションについてXpointer
-を構築することはできません</message>
+	<message xml:lang="ja">このアノテーションについてXpointer を構築することはできません</message>
 	<message xml:lang="nl">Kan geen XPointer creëren voor deze annotatie</message>
 </label>
 <label define="AM_NEW_ANNOTATION">
@@ -5237,8 +5190,7 @@ option</message>
 option</message>
 	<message xml:lang="sk">Pre funkčnosť tejto voľby musí byť cieľ typu HTTP
 URL</message>
-	<message xml:lang="ja">このオプションを使用するためにはターゲットがHTTP
-のURL でなくてはいけません</message>
+	<message xml:lang="ja">このオプションを使用するためにはターゲットがHTTP のURL でなくてはいけません</message>
 	<message xml:lang="nl">Het doel moet een HTTP URL zijn voor deze optie</message>
 </label>
 <label define="AM_INVALID_MIMETYPE">
@@ -5305,8 +5257,7 @@ hibák mutatása</message>
 	<message xml:lang="tw">Styles are ignored - see Show parsing errors</message>
 	<message xml:lang="sk">Štýly sú ignorované - pozri Skontrolovať
 chyby</message>
-	<message xml:lang="ja">スタイルが読み込まれませんでした -
-文解析エラー表示を参照してください</message>
+	<message xml:lang="ja">スタイルが読み込まれませんでした - 文解析エラー表示を参照してください</message>
 	<message xml:lang="nl">Opmaak wordt genegeerd. Controleer de parseerfouten</message>
 </label>
 <label define="AM_DOUBLE_LOAD">
@@ -5400,8 +5351,7 @@ elements or attributes</message>
 elements or attributes</message>
 	<message xml:lang="sk">Pridaním alebo zmenou prvku doctype budú odstránené
 niektoré prvky a atribúty</message>
-	<message xml:lang="ja">doctype
-の追加と変更はいくつかの要素や属性を削除する可能性があります</message>
+	<message xml:lang="ja">doctype の追加と変更はいくつかの要素や属性を削除する可能性があります</message>
 	<message xml:lang="nl">Als u het documenttype toevoegt of wijzigt, worden sommige elementen of attributen verwijderd</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE2">
@@ -5450,9 +5400,7 @@ MIME ტიპი XHTML
 類型</message>
 	<message xml:lang="sk">Použiť MIME typ application/xhtml+xml pre XHTML
 dokumenty</message>
-	<message xml:lang="ja">XHTML
-ドキュメントのために、適切なアプリケーションもしくはxhtml+xml
-MIME 型を使用してください</message>
+	<message xml:lang="ja">XHTML ドキュメントのために、適切なアプリケーションもしくはxhtml+xml MIME 型を使用してください</message>
 	<message xml:lang="nl">MIME-type 'application/xhtml+xml' gebruiken voor XHTML-documenten</message>
 </label>
 <label define="AM_DEFAULT_CHARSET">
@@ -5571,8 +5519,7 @@ süresi %s)</message>
 	<message xml:lang="tw">文檔 %s 已被 %s 鎖定 (過期時間 %s)</message>
 	<message xml:lang="sk">Dokument %s je uzapknutý %s (čas uzamknutia
 %s)</message>
-	<message xml:lang="ja">ドキュメント %s は %s
-によってロックされました(timeout %s)</message>
+	<message xml:lang="ja">ドキュメント %s は %s によってロックされました(timeout %s)</message>
 	<message xml:lang="nl">Document %s is vergrendeld door %s (time-out %s)</message>
 </label>
 <label define="AM_LOCK_OVERWRITE">
@@ -5714,8 +5661,7 @@ sucesso!</message>
 	<message xml:lang="cn">文档 %s 已解锁!</message>
 	<message xml:lang="tw">文檔 %s 已解鎖!</message>
 	<message xml:lang="sk">Dokument %s je odomknutý!</message>
-	<message xml:lang="ja">ドキュメント %s
-はロック解除されました!</message>
+	<message xml:lang="ja">ドキュメント %s はロック解除されました!</message>
 	<message xml:lang="nl">Document %s is ontgrendeld</message>
 </label>
 <label define="AM_UNLOCK_DOCUMENT">
@@ -5861,8 +5807,7 @@ támogatás</message>
 %s</message>
 	<message xml:lang="sk">Prepáčte, tento typ URL adries %s nepodporuje funkciu
 WebDAV</message>
-	<message xml:lang="ja">この種類の URLs %s　用の WebDAV
-はサポートされていません</message>
+	<message xml:lang="ja">この種類の URLs %s　用の WebDAV はサポートされていません</message>
 	<message xml:lang="nl">WebDAV wordt niet ondersteund voor URL's van type %s</message>
 </label>
 <label define="AM_SAVE_LOCKBASE_FAILED">
@@ -5945,8 +5890,7 @@ lokálneho zdroja</message>
 	<message xml:lang="tw">Sorry, this operation is not allowed for %s</message>
 	<message xml:lang="sk">Prepáčte, táto operácia nie je dovolená pre
 %s</message>
-	<message xml:lang="ja">残念ですが、このオペレーションは %s
-に許可されていません</message>
+	<message xml:lang="ja">残念ですが、このオペレーションは %s に許可されていません</message>
 	<message xml:lang="nl">Deze bewerking is niet toegestaan voor %s</message>
 </label>
 <label define="AM_FAILED_DEPENDENCY">
@@ -5977,8 +5921,7 @@ függőség</message>
 	<message xml:lang="tw">Request failed! Reason: Failed Dependency</message>
 	<message xml:lang="sk">Požiadavka odmietnutá! Príčina: zlá
 nadväznosť</message>
-	<message xml:lang="ja">要求は失敗しました! 理由:
-依存状態の失敗</message>
+	<message xml:lang="ja">要求は失敗しました! 理由: 依存状態の失敗</message>
 	<message xml:lang="nl">De opvraging is mislukt. Reden: fout in afhankelijkheid</message>
 </label>
 <label define="AM_MULTI_STATUS_FAIL">
@@ -5998,8 +5941,7 @@ nadväznosť</message>
 	<message xml:lang="cn">Request failed! Reason: %s</message>
 	<message xml:lang="tw">Request failed! Reason: %s</message>
 	<message xml:lang="sk">Požiadavka odmietnutá! Príčina: %s</message>
-	<message xml:lang="ja">要求は失敗しました! 理由:
-%s</message>
+	<message xml:lang="ja">要求は失敗しました! 理由: %s</message>
 	<message xml:lang="nl">De opvraging is mislukt. Reden: %s</message>
 </label>
 <label define="AM_DAV_TRY_AGAIN">
@@ -6078,8 +6020,7 @@ URL)</message>
 	<message xml:lang="tw">用戶 WebDAV 資源列表 (URL URL)</message>
 	<message xml:lang="sk">Používateľské WebDAV zoznamy zdrojov (URL
 URL)</message>
-	<message xml:lang="ja">ユーザーのWebDAV リソースリスト(URL
-URL)</message>
+	<message xml:lang="ja">ユーザーのWebDAV リソースリスト(URL URL)</message>
 	<message xml:lang="nl">Lijst van WebDAV-bronnen van gebruiker (URL URL ...):</message>
 </label>
 <label define="AM_DAV_DEPTH">
@@ -6489,8 +6430,7 @@ reselect</message>
 reselect</message>
 	<message xml:lang="sk">Výber neobsahuje prvky SVG. Urobte nový
 výber</message>
-	<message xml:lang="ja">選択内にSVG
-エレメントが含まれていません。もう一度選択してください</message>
+	<message xml:lang="ja">選択内にSVG エレメントが含まれていません。もう一度選択してください</message>
 	<message xml:lang="nl">De selectie bevat geen SVG-elementen. Maak een andere selectie.</message>
 </label>
 <label define="AM_SVGLIB_MISSING_TITLE">
@@ -6577,8 +6517,7 @@ animation duration...</message>
 animation duration...</message>
 	<message xml:lang="sk">Kľučová pozícia definovaná. Ťahaním posuvníka
 nastavte dĺžku trvania animácie...</message>
-	<message xml:lang="ja">定義されたキーポジション。
-スライダーを動かして、アニメーション持続時間を定義してください...</message>
+	<message xml:lang="ja">定義されたキーポジション。 スライダーを動かして、アニメーション持続時間を定義してください...</message>
 	<message xml:lang="nl">De sleutelpositie is bepaald. Verplaats de schuifknop om de duur van de animatie in te stellen...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT1">
@@ -6632,8 +6571,7 @@ animation duration...</message>
 animation duration...</message>
 	<message xml:lang="sk">Počiatočná farba definovaná. Ťahaním posuvníka
 nastavte dĺžku trvania animácie...</message>
-	<message xml:lang="ja">始めの色が定義されました。
-スライダーを動かして、アニメーション持続時間を定義してください...</message>
+	<message xml:lang="ja">始めの色が定義されました。 スライダーを動かして、アニメーション持続時間を定義してください...</message>
 	<message xml:lang="nl">De beginkleur is gedefinieerd. Verplaats de schuifknop om de duur van de animatie in te stellen...</message>
 </label>
 <label define="AM_SVGANIM_COLOR_HINT3">
@@ -7030,8 +6968,7 @@ elemre\n</message>
 	<message xml:lang="tw">CSS樣式被應用于 &lt;%s&gt; 元素\n</message>
 	<message xml:lang="sk">CSS pravidlá aplikované na &lt;%s&gt;
 prvok\n</message>
-	<message xml:lang="ja">CSS スタイルルールが &lt;%s&gt; 要素に
-要素に適適用されました\n</message>
+	<message xml:lang="ja">CSS スタイルルールが &lt;%s> 要素に 要素に適適用されました\n</message>
 	<message xml:lang="nl">CSS-opmaakregels toegepast op element &lt;%s>\n</message>
 </label>
 <label define="AM_LINK_LINE">
@@ -7077,8 +7014,7 @@ iframe)</message>
 	<message xml:lang="cn">载入对象 (object, embed, iframe)</message>
 	<message xml:lang="tw">載入對象 (object, embed, iframe)</message>
 	<message xml:lang="sk">Načítať objekty (object, embed, iframe)</message>
-	<message xml:lang="ja">オブジェクトのロード (object, embed,
-iframe)</message>
+	<message xml:lang="ja">オブジェクトのロード (object, embed, iframe)</message>
 	<message xml:lang="nl">Objecten laden (object, embed, iframe)</message>
 </label>
 <label define="AM_NO_STYLE_FOR_ELEM">
@@ -7487,8 +7423,7 @@ défaut)</message>
 	<message xml:lang="tw">固定行的長度 (0 為默認值)</message>
 	<message xml:lang="sk">Pevná dĺžka riadkov (0 = predvolená
 hodnota)</message>
-	<message xml:lang="ja">行の長さを固定 (0 = default
-value)</message>
+	<message xml:lang="ja">行の長さを固定 (0 = default value)</message>
 	<message xml:lang="nl">Vaste regellengte (standaardwaarde is 0):</message>
 </label>
 <label define="AM_TEMPLATE">
@@ -7679,8 +7614,7 @@ typu</message>
 	<message xml:lang="tw">文檔已被改變 (412)</message>
 	<message xml:lang="sk">Dokument sa zmenil (412)</message>
 	<message xml:lang="ru">Документ изменился (412)</message>
-	<message xml:lang="ja">ドキュメントが変更されています
-(412)</message>
+	<message xml:lang="ja">ドキュメントが変更されています (412)</message>
 	<message xml:lang="nl">Het document is gewijzigd (412)</message>
 </label>
 <label define="AM_CONFLICT">
@@ -7835,8 +7769,7 @@ elemekhez</message>
 MathML</message>
 	<message xml:lang="ru">Добавить каскадную таблицу
 стилей xsl для элементов MathML</message>
-	<message xml:lang="ja">MathML elements のための xsl stylesheet
-を追加してください</message>
+	<message xml:lang="ja">MathML要素のためのXSLスタイルシートを追加してください</message>
 	<message xml:lang="nl">XSL-opmaakmodel voor MathML-elementen toevoegen</message>
 </label>
 <label define="AM_SELECT_OPERATOR_TITLE">
@@ -7903,7 +7836,7 @@ visualizzato</message>
 	<message xml:lang="it">Attributi dei delimitatori</message>
 	<message xml:lang="ru">Атрибуты рамки выделения
 объекта</message>
-	<message xml:lang="ja">&quot;かこい&quot;の属性</message>
+	<message xml:lang="ja">"かこい"の属性</message>
 	<message xml:lang="nl">Attributen van omheining</message>
 </label>
 <label define="AM_SELECT_FENCE_LABEL">
@@ -8085,8 +8018,7 @@ szkriptek)</message>
 сценарии</message>
 	<message xml:lang="de">Bilder, Stile und Skripte</message>
 	<message xml:lang="hu">Képek, stílusok és szkriptek</message>
-	<message xml:lang="ja">イメージ, スタイル,
-スクリプト</message>
+	<message xml:lang="ja">イメージ, スタイル, スクリプト</message>
 	<message xml:lang="nl">Afbeeldingen, opmaak en scripts</message>
 </label>
 <label define="AM_EMAILS">
@@ -8429,8 +8361,7 @@ heslo</message>
 	<message xml:lang="ru">Запомнить пароль</message>
 	<message xml:lang="de">Wollen Sie, dass Amaya das Passwort speichert?</message>
 	<message xml:lang="hu">Jegyezze meg az Amaya a jelszót?</message>
-	<message xml:lang="ja">Amaya
-にこのパスワードを記憶させますか？</message>
+	<message xml:lang="ja">Amaya にこのパスワードを記憶させますか？</message>
 	<message xml:lang="nl">Wilt u dat Amaya dit wachtwoord bewaart?</message>
 </label>
 <label define="AM_PASSWORDS_SAVE_OPTION">
@@ -8481,6 +8412,7 @@ documentos HTML+RDFa</message>
 	<message xml:lang="it">XML namespace generati da nuovi documenti XHTML+RDFa
 </message>
 	<message xml:lang="nl">XML-namespaces gemaakt voor nieuwe XHTML+RDFa documenten</message>
+	<message xml:lang="ja">新しいXHTML+RDFaドキュメントに対するXMLネームスペースを生成する</message>
 </label>
 <label define="AM_RDFa_NEW_LABEL">
 	<message xml:lang="en">Select a namespace in the list below or add a new one
@@ -8494,6 +8426,7 @@ uno nuevos (sintaxis prefijo=&quot;uri&quot;)</message>
 	<message xml:lang="it">Seleziona un namespace nell'elenco sotto o aggiungi uno
 nuovo (syntax prefix=&quot;uri&quot;)</message>
 	<message xml:lang="nl">Selecteer een namespace in de volgende keuzelijst of voeg een nieuwe toe (syntaxis prefix="uri"):</message>
+	<message xml:lang="ja">下のリストでネームスペースを選択するか、あるいは新しいネームスペース（構文 prefix="uri"）を加える</message>
 </label>
 <label define="AM_JAVASCRIPT_CAN_NOT_BUILD">
 	<message xml:lang="en">An error occured during the building of the
@@ -8508,8 +8441,7 @@ Javascript/DOM Objekts</message>
 közben</message>
 	<message xml:lang="it">Si è verificato un errore mentre si caricavano oggetti
 di javascript/DOM</message>
-	<message xml:lang="ja">javascript/DOM
-オブジェクトのビルド中にエラーが発生しました</message>
+	<message xml:lang="ja">javascript/DOM オブジェクトのビルド中にエラーが発生しました</message>
 	<message xml:lang="nl">Er is een fout opgetreden tijdens het maken van de JavaScript/DOM-objecten</message>
 </label>
 <label define="AM_JAVASCRIPT_IS_RUNNING">
@@ -8540,8 +8472,7 @@ aktiviert werden</message>
 nézetben.</message>
 	<message xml:lang="it">Javascript/DOM non è disponibile in questa
 vista.</message>
-	<message xml:lang="ja">Javascript/DOM
-はこのビューで利用できません</message>
+	<message xml:lang="ja">Javascript/DOM はこのビューで利用できません</message>
 	<message xml:lang="nl">JavaScript/DOM is niet beschikbaar in deze weergave.</message>
 </label>
 <label define="AM_JAVASCRIPT_ENTER_A_COMMAND">
@@ -8551,8 +8482,7 @@ vista.</message>
 	<message xml:lang="de">Geben Sie einen Javascript-Befehl ein</message>
 	<message xml:lang="hu">Adjon meg egy javascript parancsot:</message>
 	<message xml:lang="it">Inserisci un comando javascript:</message>
-	<message xml:lang="ja">javascript
-のコマンドを入力してください:</message>
+	<message xml:lang="ja">javascript のコマンドを入力してください:</message>
 	<message xml:lang="nl">Geef een JavaScript-opdracht op:</message>
 </label>
 <label define="AM_JAVASCRIPT_RETURNED_VALUE">
@@ -8563,8 +8493,7 @@ vista.</message>
 	<message xml:lang="hu">A parancs a következő értéket adta vissza:
 %s</message>
 	<message xml:lang="it">Il comando riporta il valore: %s</message>
-	<message xml:lang="ja">コマンドはこの値を返しました:
-%s</message>
+	<message xml:lang="ja">コマンドはこの値を返しました: %s</message>
 	<message xml:lang="nl">De opdracht retourneerde de waarde: %s</message>
 </label>
 <label define="AM_JAVASCRIPT_NO_RETURNED_VALUE">
@@ -8590,9 +8519,7 @@ vista.</message>
 vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="it">SpiderMonkey riporta il seguente errore:\n\nFile:
 %s\nLine: %d\n\n%s</message>
-	<message xml:lang="ja">SpiderMonkey
-は次のエラーを返しました:\n\nファイル: %s\n行:
-%d\n\n%s</message>
+	<message xml:lang="ja">SpiderMonkey は次のエラーを返しました:\n\nファイル: %s\n行: %d\n\n%s</message>
 	<message xml:lang="nl">SpiderMonkey antwoordde met de volgende fout:\n\nBestand: %s\nRegel: %d\n\n%s</message>
 </label>
 <label define="AM_NEW">
@@ -8820,8 +8747,7 @@ programa</message>
 	<message xml:lang="de">&quot;Tip des Tages&quot; bei Programmstart
 anzeigen</message>
 	<message xml:lang="hu">A nap tippje&quot; induláskor</message>
-	<message xml:lang="ja">&quot;今日のTips&quot;
-を起動時に表示する</message>
+	<message xml:lang="ja">"今日のTips" を起動時に表示する</message>
 	<message xml:lang="it">Visualizza &quot;Il suggerimento del
 giorno&quot;</message>
 	<message xml:lang="nl">"Tip van de dag" bij opstarten weergeven</message>
@@ -8840,8 +8766,7 @@ giorno&quot;</message>
 	<message xml:lang="en">Template has error(s), it will not be used:</message>
 	<message xml:lang="fr">Le modèle a des erreurs, il ne sera pas
 utilisé:</message>
-	<message xml:lang="ja">テンプレートがエラーを含んでいます,
-使用できません:</message>
+	<message xml:lang="ja">テンプレートがエラーを含んでいます, 使用できません:</message>
 	<message xml:lang="es">La plantilla tiene errores, no se utilizará:</message>
 	<message xml:lang="de">Die Vorlage hat einen/mehrere Fehler und kann nicht
 verwendet werden:</message>
@@ -8861,8 +8786,7 @@ usato:</message>
 <label define="AM_TEMPLATE_ERR_MULTICOMP">
 	<message xml:lang="en">Component '%s' has multiple definition.</message>
 	<message xml:lang="fr">Le composant '%s' a une définition multiple.</message>
-	<message xml:lang="ja">コンポーネント '%s'
-は複数定義されています</message>
+	<message xml:lang="ja">コンポーネント '%s' は複数定義されています</message>
 	<message xml:lang="es">El componente '%s' tiene múltiples
 definiciones</message>
 	<message xml:lang="de">Die Komponente '%s' ist mehrfach definiert</message>
@@ -8955,6 +8879,7 @@ schema.</message>
 	<message xml:lang="de">Neue Komponente</message>
 	<message xml:lang="it">Nuovo componente</message>
 	<message xml:lang="nl">Nieuwe component</message>
+	<message xml:lang="ja">新しいコンポーネント</message>
 </label>
 <label define="AM_TEMPLATE_USEDCOMP_CANTREMOVE">
 	<message xml:lang="en">Component is used, you can not remove it.</message>
@@ -8965,8 +8890,7 @@ détruire.</message>
 verwendet wird</message>
 	<message xml:lang="it">Il componente è usato, non puoi
 cancellarlo.</message>
-	<message xml:lang="ja">コンポーネントは使用されていています、
-あなたはそれを削除することができません。</message>
+	<message xml:lang="ja">コンポーネントは使用されていています、 あなたはそれを削除することができません。</message>
 	<message xml:lang="nl">De component is in gebruik en kan niet verwijderd worden.</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_TOP_LEFT">
@@ -9057,6 +8981,7 @@ cancellarlo.</message>
 	<message xml:lang="de">nach links oben</message>
 	<message xml:lang="it">sopra a sinistra</message>
 	<message xml:lang="nl">links en boven</message>
+	<message xml:lang="ja">左側上に</message>
 </label>
 <label define="AM_SVG_RELATIVE_LEFT_BELOW">
 	<message xml:lang="en">to the left and below</message>
@@ -9065,6 +8990,7 @@ cancellarlo.</message>
 	<message xml:lang="de">nach links unten</message>
 	<message xml:lang="it">sotto a sinitra</message>
 	<message xml:lang="nl">links en onder</message>
+	<message xml:lang="ja">左側下に</message>
 </label>
 <label define="AM_SVG_RELATIVE_LEFT">
 	<message xml:lang="en">to the left of</message>
