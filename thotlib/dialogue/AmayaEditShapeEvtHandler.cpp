@@ -494,8 +494,6 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
           if (ly < 0){ly = 0; y = y_org;}
           if (shape == 1 || shape == 'C')
             {
-              if (rx < 0)rx = 0;
-              if (ry < 0)ry = 0;
               if (rx > lx/2)
                 rx = lx/2;
               if (ry > ly/2)

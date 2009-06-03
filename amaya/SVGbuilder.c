@@ -3009,11 +3009,12 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
                                     ThotBool delete_)
 {
-  AttributeType	       attrType;
+  AttributeType	       attrType, attrType2;
+  Attribute            attr2;
   ElementType          elType;
   Element              child;
-  int		       length, attrKind, ruleType;
-  char		       *text, *ptr;
+  int		               length, attrKind, ruleType;
+  char		            *text, *ptr;
   PresentationValue    pval;
   PresentationContext  ctxt;
   ThotBool             ret;
@@ -3028,10 +3029,9 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
       if (!text)
         return ret;
     }
-  ctxt = TtaGetSpecificStyleContext (doc);
-  /* the specific presentation is not a CSS rule */
-  ctxt->cssSpecificity = 2000;
-  ctxt->destroy = FALSE;
+  else if (attr == NULL)
+    return ret;
+
   /* decide of the presentation rule to be created or updated */
   TtaGiveAttributeType (attr, &attrType, &attrKind);
   if (attrType.AttrTypeNum == SVG_ATTR_width_)
@@ -3053,31 +3053,37 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
   else
     ruleType = PRWidth;
   if (delete_)
-    /* attribute deleted */
-    if (ruleType != PRXRadius && ruleType != PRYRadius)
-      /* attribute mandatory. Do not delete */
-      ret = TRUE;
-    else
-      {
-        /* that's the radius of a rounded corner. Get the graphics leaf
-           which has the specific presentation rule to be removed */
-        child = TtaGetFirstChild (el);
-        while (child &&
-               TtaGetElementType(child).ElTypeNum != GRAPHICS_UNIT)
-          TtaNextSibling (&child);
-        pval.typed_data.value = 0;
-        pval.typed_data.unit = UNIT_PX;
-        ctxt->destroy = FALSE;
-        TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
-        ctxt->destroy = TRUE;
-        TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
-        ret = FALSE; /* let Thot perform normal operation */
-      }
+    {
+      /* attribute deleted */
+      if (ruleType != PRXRadius && ruleType != PRYRadius)
+        /* attribute mandatory. Do not delete */
+        ret = TRUE;
+      else
+        {
+          attrType2.AttrSSchema =  attrType.AttrSSchema;
+          if (attrType.AttrTypeNum == SVG_ATTR_ry)
+            attrType2.AttrTypeNum = SVG_ATTR_rx;
+          else
+            attrType2.AttrTypeNum = SVG_ATTR_ry;
+          attr2 = TtaGetAttribute (el, attrType2);
+          if (attr2)
+            {
+              length = TtaGetTextAttributeLength (attr) + 2;
+              text = (char *)TtaGetMemory (length);
+              TtaGiveTextAttributeValue (attr2, text, &length); 
+            }
+        }
+    }
   else
     /* attribute created or modified */
+    TtaGiveTextAttributeValue (attr, text, &length);
+
+  if (text)
     {
-      /* get the value of the attribute */
-      TtaGiveTextAttributeValue (attr, text, &length); 
+      ctxt = TtaGetSpecificStyleContext (doc);
+      /* the specific presentation is not a CSS rule */
+      ctxt->cssSpecificity = 2000;
+      ctxt->destroy = FALSE;
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
       ptr = (char*)TtaSkipBlanks (ptr);
@@ -3108,10 +3114,9 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
           if (el)
             TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
         }
-      if (text)
-        TtaFreeMemory (text);
+      TtaFreeMemory (ctxt);
+      TtaFreeMemory (text);
     }
-  TtaFreeMemory (ctxt);
   return ret;
 }
 

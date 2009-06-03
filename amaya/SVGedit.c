@@ -726,23 +726,31 @@ static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
                             int value, ThotBool delta, ThotBool update)
 {
 #define BUFFER_LENGTH 64
-  char		buffer[BUFFER_LENGTH], unit[BUFFER_LENGTH];
-  Attribute     attr;
-  int           v, e;
-  int           pval, pe, i;
+  Attribute            attr;
+  int                  v, e;
+  int                  pval, pe, i;
+  char		             buffer[BUFFER_LENGTH], unit[BUFFER_LENGTH];
+  ThotBool             delete_ = FALSE;
 
   attr = TtaGetAttribute (el, attrType);
-  if (attr == NULL)
+  if (value <= 0 &&
+      (attrType.AttrTypeNum == SVG_ATTR_rx || attrType.AttrTypeNum == SVG_ATTR_ry))
+    {
+      if (attr)
+        {
+          TtaRegisterAttributeDelete (attr, el, doc);
+          TtaRemoveAttribute (el, attr, doc);
+        }
+      delete_ = TRUE;
+    }
+  else if (attr == NULL)
     {
       /* it's a new attribute */
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
 
       /* by default generate pixel values */
-      if (value <= 0)
-        sprintf (buffer, "%d", value);
-      else
-        sprintf (buffer, "%dpx", value);
+      sprintf (buffer, "%dpx", value);
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaRegisterAttributeCreate (attr, el, doc);
     }
@@ -828,8 +836,14 @@ static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
           attrType.AttrTypeNum == SVG_ATTR_dx ||
           attrType.AttrTypeNum == SVG_ATTR_dy)
         ParseCoordAttribute (attr, el, doc);
+      else if (delete_ && attr == NULL)
+        {
+          attr = TtaNewAttribute (attrType);
+          ParseWidthHeightAttribute (attr, el, doc, delete_);
+          TtaRemoveAttribute (NULL, attr, 0);
+        }
       else
-        ParseWidthHeightAttribute (attr, el, doc, FALSE);
+        ParseWidthHeightAttribute (attr, el, doc, delete_);
     }
 }
 
