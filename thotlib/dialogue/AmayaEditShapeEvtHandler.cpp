@@ -381,15 +381,14 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
         case 6: /* Rectangle triangle */
         case 7: /* square */
         case 8: /* rectangle */
-
           if (shape == 1 || shape == 'C')
             {
               /* square and rectangle with rounded corner */
               rx = box->BxRx;
               ry = box->BxRy;
-              if (ry == -1)
+              if (rx != -1 && ry == -1)
                 ry = rx;
-              else if (rx == -1)
+              else if (rx == -1 && ry != -1)
                 rx = ry;
             }
           else if (shape == 2)
@@ -416,8 +415,8 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
           if (shape == 6 && point == 5)
             {
               /* The point is actually the middle of the hypot */
-              dx*=2;
-              dy*=2;
+              dx *= 2;
+              dy *= 2;
             }
 
           switch(point)
@@ -459,8 +458,14 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
               if (shape == 1 || shape == 'C')
                 {
                   rx -= dx;
+                  if (rx > lx/2)
+                    rx = lx/2;
                   if (same_size)
-                    ry = rx;
+                    {
+                      if (rx > ly/2)
+                        rx = ly/2;
+                      ry = rx;
+                    }
                 }
               else if (shape == 2)
                 rx += dx;
@@ -471,8 +476,14 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
               if (shape == 1 || shape == 'C')
                 {
                   ry += dy;
+                  if (ry > ly/2)
+                    ry = ly/2;
                   if (same_size || Angle_ratio)
-                    rx = ry;
+                    {
+                      if (ry > lx/2)
+                        ry = lx/2;
+                      rx = ry;
+                    }
                 }
               else if (shape == 2)
                 rx -= dx;

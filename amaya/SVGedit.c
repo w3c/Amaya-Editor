@@ -739,7 +739,10 @@ static void UpdateAttrText (Element el, Document doc, AttributeType attrType,
       TtaAttachAttribute (el, attr, doc);
 
       /* by default generate pixel values */
-      sprintf (buffer, "%dpx", value);
+      if (value <= 0)
+        sprintf (buffer, "%d", value);
+      else
+        sprintf (buffer, "%dpx", value);
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaRegisterAttributeCreate (attr, el, doc);
     }
@@ -2580,14 +2583,10 @@ void CreateGraphicElement (Document doc, View view, int entry)
             {
               switch(entry)
                 {
-                  /* Square */
-                case 15:
-                  /* Rectangle */
-                case 1:
-                  /* Rounded Square */
-                case 16:
-                  /* Rounded-Rectangle */
-                case 2:
+                case 15: /* Square */
+                case 1: /* Rectangle */
+                case 16: /* Rounded Square */
+                case 2:  /* Rounded-Rectangle */
                   if (svgCanvas == svgAncestor)
                     {
                       if (x4 < x1)x1 = x4;
@@ -2595,30 +2594,25 @@ void CreateGraphicElement (Document doc, View view, int entry)
 
                       attrType.AttrTypeNum = SVG_ATTR_x;
                       UpdateAttrText (newEl, doc, attrType, x1, FALSE, TRUE);
-		  
                       attrType.AttrTypeNum = SVG_ATTR_y;
                       UpdateAttrText (newEl, doc, attrType, y1, FALSE, TRUE);
-		  
                       attrType.AttrTypeNum = SVG_ATTR_width_;
                       UpdateAttrText (newEl, doc, attrType, lx, FALSE, TRUE);
-	      
                       attrType.AttrTypeNum = SVG_ATTR_height_;
                       UpdateAttrText (newEl, doc, attrType, ly, FALSE, TRUE);
-
                       SVGElementComplete (&context, newEl, &error);
-
                       if (entry == 16 || entry == 2)
                         {
                           attrType.AttrTypeNum = SVG_ATTR_rx;
                           attr = TtaNewAttribute (attrType);
                           TtaAttachAttribute (newEl, attr, doc);
-                          sprintf(buffer, "%d", lx/4);
+                          sprintf(buffer, "%dpx", lx/4);
                           TtaSetAttributeText (attr, buffer, newEl, doc);
                           ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
                           attrType.AttrTypeNum = SVG_ATTR_ry;
                           attr = TtaNewAttribute (attrType);
                           TtaAttachAttribute (newEl, attr, doc);
-                          sprintf(buffer, "%d", ly/4);
+                          sprintf(buffer, "%dpx", ly/4);
                           TtaSetAttributeText (attr, buffer, newEl, doc);
                           ParseWidthHeightAttribute (attr, newEl, doc, FALSE);
                           SVGElementComplete (&context, newEl, &error);
@@ -4390,6 +4384,16 @@ void UpdateShapeElement (Document doc, Element el, char shape,
       UpdateAttrText (el, doc,  attrType, rx, FALSE, TRUE);
     }
   if (ry >= 0)
+    {
+      attrType.AttrTypeNum = SVG_ATTR_ry;
+      UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
+    }
+  if (rx == -1 && ry >= 0)
+    {
+      attrType.AttrTypeNum = SVG_ATTR_rx;
+      UpdateAttrText (el, doc,  attrType, rx, FALSE, TRUE);
+    }
+  if (ry == -1 && rx >= 0)
     {
       attrType.AttrTypeNum = SVG_ATTR_ry;
       UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);

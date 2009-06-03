@@ -1030,67 +1030,52 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 
       switch (pAb->AbRealShape)
         {
-#ifdef IV
-        case 'g': /* Line */
-          /* Coords are given by the enclosing box */
-          pAb = pAb->AbEnclosing;
-          if ((pAb->AbHorizPos.PosEdge == Left &&
-               pAb->AbVertPos.PosEdge == Top) ||
-              (pAb->AbHorizPos.PosEdge == Right &&
-               pAb->AbVertPos.PosEdge == Bottom))
-            /* draw a \ */
-            DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
-          else
-            /* draw a / */
-            DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
-          break;
-#endif
-	case 1: /* Square */
-	case 'C': /* Rectangle */
-	case 7: /* Square */
-	case 8: /* Rectangle */
+        case 1: /* Square */
+        case 'C': /* Rectangle */
+        case 7: /* Square */
+        case 8: /* Rectangle */
           if (pBox->BxRx == 0 || pBox->BxRy == 0)
 #ifdef _GL
-	    DrawRectangle2(frame, i, style, xd, yd, width, height, fg, bg, pat);
+            DrawRectangle2(frame, i, style, xd, yd, width, height, fg, bg, pat);
 #else
-	    DrawRectangle(frame, i, style, xd, yd, width, height, fg, bg, pat);
+            DrawRectangle(frame, i, style, xd, yd, width, height, fg, bg, pat);
 #endif /*_GL*/
           else
             DrawOval (frame, i, style, xd, yd, width, height,
-		      (pBox->BxRx == -1 ? pBox->BxRy : pBox->BxRx),
+                      (pBox->BxRx == -1 ? pBox->BxRy : pBox->BxRx),
                       (pBox->BxRy == -1 ? pBox->BxRx : pBox->BxRy),
-		      fg, bg, pat);
+                      fg, bg, pat);
           break;
 
         case 'L': /* Diamond */
           DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
           break;
 
-	case 2: /* Parallelogram */
-	  DrawParallelogram (frame, i, style, xd, yd, width, height, pBox->BxRx,
-			     fg, bg, pat);
-	  break;
+        case 2: /* Parallelogram */
+          DrawParallelogram (frame, i, style, xd, yd, width, height, pBox->BxRx,
+                             fg, bg, pat);
+          break;
 
-	case 3: /* Trapezium */
-	  DrawTrapezium (frame, i, style, xd, yd, width, height,
-			 pBox->BxRx, pBox->BxRy,
-			 fg, bg, pat);
-	    break;
+        case 3: /* Trapezium */
+          DrawTrapezium (frame, i, style, xd, yd, width, height,
+                         pBox->BxRx, pBox->BxRy,
+                         fg, bg, pat);
+          break;
 
-	case 4: /* Equilateral triangle */
-	case 5: /* Isosceles triangle */
-	  DrawTriangle (frame, i, style, fg, bg, pat,
-			xd+width/2,yd,
-			xd,yd+height,
-			xd+width,yd+height);	  
-	  break;
+        case 4: /* Equilateral triangle */
+        case 5: /* Isosceles triangle */
+          DrawTriangle (frame, i, style, fg, bg, pat,
+                        xd+width/2,yd,
+                        xd,yd+height,
+                        xd+width,yd+height);	  
+          break;
 
-	case 6: /* Rectangled triangle */
-	  DrawTriangle (frame, i, style, fg, bg, pat,
-			xd,yd,
-			xd,yd+height,
-			xd+width,yd);
-	  break;
+        case 6: /* Rectangled triangle */
+          DrawTriangle (frame, i, style, fg, bg, pat,
+                        xd,yd,
+                        xd,yd+height,
+                        xd+width,yd);
+          break;
 
         case 'a': /* Circle */
         case 'c': /* Ellipse */
