@@ -3010,7 +3010,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
                                     ThotBool delete_)
 {
   AttributeType	       attrType, attrType2;
-  Attribute            attr2;
+  Attribute            attr2 = NULL;
   ElementType          elType;
   Element              child;
   int		               length, attrKind, ruleType;
@@ -3029,7 +3029,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
       if (!text)
         return ret;
     }
-  else if (attr == NULL)
+  else if (attr == NULL || el == NULL)
     return ret;
 
   /* decide of the presentation rule to be created or updated */
@@ -3052,20 +3052,34 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
       ruleType = PRHeight;
   else
     ruleType = PRWidth;
+
+  if (ruleType == PRXRadius || ruleType == PRYRadius)
+    /* that's the radius of a rounded corner. Get the graphics leaf
+       which will receive the specific presentation rule */
+    {
+      child = TtaGetFirstChild (el);
+      while (child &&
+             TtaGetElementType(child).ElTypeNum != GRAPHICS_UNIT)
+        TtaNextSibling (&child);
+      // When a radius doesn't exist, apply the other radius value
+      attrType2.AttrSSchema =  attrType.AttrSSchema;
+      if (attrType.AttrTypeNum == SVG_ATTR_ry)
+        attrType2.AttrTypeNum = SVG_ATTR_rx;
+      else
+        attrType2.AttrTypeNum = SVG_ATTR_ry;
+      attr2 = TtaGetAttribute (el, attrType2);
+    }
+  else
+    child = el;
+
   if (delete_)
     {
       /* attribute deleted */
       if (ruleType != PRXRadius && ruleType != PRYRadius)
         /* attribute mandatory. Do not delete */
-        ret = TRUE;
+        return TRUE;
       else
         {
-          attrType2.AttrSSchema =  attrType.AttrSSchema;
-          if (attrType.AttrTypeNum == SVG_ATTR_ry)
-            attrType2.AttrTypeNum = SVG_ATTR_rx;
-          else
-            attrType2.AttrTypeNum = SVG_ATTR_ry;
-          attr2 = TtaGetAttribute (el, attrType2);
           if (attr2)
             {
               length = TtaGetTextAttributeLength (attr) + 2;
@@ -3078,44 +3092,58 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
     /* attribute created or modified */
     TtaGiveTextAttributeValue (attr, text, &length);
 
-  if (text)
+  if (child)
     {
       ctxt = TtaGetSpecificStyleContext (doc);
       /* the specific presentation is not a CSS rule */
       ctxt->cssSpecificity = 2000;
-      ctxt->destroy = FALSE;
-      /* parse the attribute value (a number followed by a unit) */
-      ptr = text;
-      ptr = (char*)TtaSkipBlanks (ptr);
-      ptr = ParseCSSUnit (ptr, &pval);
-      if (pval.typed_data.unit == UNIT_BOX)
-        pval.typed_data.unit = UNIT_PX;
-      if (pval.typed_data.unit != UNIT_INVALID)
+      if (text)
         {
-          if ((elType.ElTypeNum == SVG_EL_ellipse ||
-               elType.ElTypeNum == SVG_EL_circle_) &&
-              (attrType.AttrTypeNum == SVG_ATTR_r ||
-               attrType.AttrTypeNum == SVG_ATTR_rx ||
-               attrType.AttrTypeNum == SVG_ATTR_ry))
-            /* that's the radius of a circle or an ellipse,
-               multiply the value by 2 to set the width or height of the box */
-            pval.typed_data.value *= 2;
-          if (ruleType == PRXRadius || ruleType == PRYRadius)
-            /* that's the radius of a rounded corner. Get the graphics leaf
-               which will receive the specific presentation rule */
+          /* parse the attribute value (a number followed by a unit) */
+          ptr = text;
+          ptr = (char*)TtaSkipBlanks (ptr);
+          ptr = ParseCSSUnit (ptr, &pval);
+          if (pval.typed_data.unit == UNIT_BOX)
+            pval.typed_data.unit = UNIT_PX;
+          if (pval.typed_data.unit != UNIT_INVALID)
             {
-              child = TtaGetFirstChild (el);
-              while (child &&
-                     TtaGetElementType(child).ElTypeNum != GRAPHICS_UNIT)
-                TtaNextSibling (&child);
-              el = child;
+              if ((elType.ElTypeNum == SVG_EL_ellipse ||
+                   elType.ElTypeNum == SVG_EL_circle_) &&
+                  (attrType.AttrTypeNum == SVG_ATTR_r ||
+                   attrType.AttrTypeNum == SVG_ATTR_rx ||
+                   attrType.AttrTypeNum == SVG_ATTR_ry))
+                /* that's the radius of a circle or an ellipse,
+                   multiply the value by 2 to set the width or height of the box */
+                pval.typed_data.value *= 2;
             }
           /* set the specific presentation value of the box */
-          if (el)
-            TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+          ctxt->destroy = FALSE;
+          TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
+          // update if necessary the other radius
+          if (attr2 == NULL && ruleType == PRXRadius)
+            TtaSetStylePresentation (PRYRadius, child, NULL, ctxt, pval);
+          else if (attr2 == NULL && ruleType == PRYRadius)
+            TtaSetStylePresentation (PRXRadius, child, NULL, ctxt, pval);
+          TtaFreeMemory (text);
+        }
+      else
+        {
+          pval.typed_data.value = 0;
+          pval.typed_data.unit = UNIT_PX;
+          ctxt->destroy = FALSE;
+          TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
+          ctxt->destroy = TRUE;
+          TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
+          if (ruleType == PRXRadius)
+            ruleType = PRYRadius;
+          else
+            ruleType = PRXRadius;
+          ctxt->destroy = FALSE;
+          TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
+          ctxt->destroy = TRUE;
+          TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
         }
       TtaFreeMemory (ctxt);
-      TtaFreeMemory (text);
     }
   return ret;
 }

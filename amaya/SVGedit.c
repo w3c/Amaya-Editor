@@ -2230,20 +2230,32 @@ void CreateGraphicElement (Document doc, View view, int entry)
               TtaGiveBoxSize (parent, doc, 1, UnPixel, &w, &h);
               sprintf (buffer, "%d", w);
               attrType.AttrTypeNum = SVG_ATTR_width_;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (svgCanvas, attr, doc);
+              attr = TtaGetAttribute (svgCanvas, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (svgCanvas, attr, doc);
+                }
               TtaSetAttributeText (attr, buffer, svgCanvas, doc);
               ParseWidthHeightAttribute (attr, svgCanvas, doc, FALSE);
 
               attrType.AttrTypeNum = SVG_ATTR_height_;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (svgCanvas, attr, doc);
+              attr = TtaGetAttribute (svgCanvas, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (svgCanvas, attr, doc);
+                }
               TtaSetAttributeText (attr, "300", svgCanvas, doc);
               ParseWidthHeightAttribute (attr, svgCanvas, doc, FALSE);
               // center the svg element
               attrType.AttrTypeNum = SVG_ATTR_style_;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (svgCanvas, attr, doc);
+              attr = TtaGetAttribute (svgCanvas, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (svgCanvas, attr, doc);
+                }
               strcpy (buffer, "margin-left: auto; margin-right: auto");
               TtaSetAttributeText (attr, buffer, svgCanvas, doc);
               ParseHTMLSpecificStyle (svgCanvas, buffer, doc, 1000, FALSE);
@@ -4447,6 +4459,8 @@ void UpdateShapeElement (Document doc, Element el, char shape,
       break;
     }
 
+  /* Update the attribute menu */
+  TtaUpdateAttrMenu(doc);
   if (open)
     TtaCloseUndoSequence (doc);
   TtaSetDisplayMode (doc, dispMode);
