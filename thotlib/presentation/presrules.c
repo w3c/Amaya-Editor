@@ -3547,8 +3547,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   ThotBool            ignorefix = FALSE;
 
   appl = FALSE;
-if (pPRule && pPRule->PrPresMode == PresInherit && pPRule->PrInheritMode == InheritGrandFather)
-  printf ("Apply InheritGrandFather %d\n",pPRule->PrType);
   if (pPRule && pAb && pAb->AbElement)
     {
       pEl = pAb->AbElement;
