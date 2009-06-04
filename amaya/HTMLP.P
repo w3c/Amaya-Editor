@@ -4872,7 +4872,6 @@ FIELDSET: BEGIN
         HorizPos: Left = Previous Table_cell . Right;}
         Width: Enclosed . Width{20 px};
         Weight: Bold;
-        Adjust: VMiddle;
         PaddingTop: 1 px;
         PaddingLeft: 1 px;
         PaddingBottom: 1 px;
