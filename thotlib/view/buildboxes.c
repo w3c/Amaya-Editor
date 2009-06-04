@@ -231,6 +231,35 @@ PtrAbstractBox GetParentDraw (PtrBox pBox)
 }
 
 /*----------------------------------------------------------------------
+  GetParentMarker returns the enclosing Marker or NULL.                
+  ----------------------------------------------------------------------*/
+PtrAbstractBox GetParentMarker (PtrBox pBox)
+{
+  PtrAbstractBox      pAb;
+  ThotBool            found;
+
+  if (pBox == NULL)
+    pAb = NULL;
+  else if (pBox->BxAbstractBox == NULL)
+    pAb = NULL;
+  else
+    {
+      /* check parents */
+      found = FALSE;
+      pAb = pBox->BxAbstractBox->AbEnclosing;
+      while (pAb != NULL && !found)
+        {
+          if (TypeHasException (ExcIsMarker, pAb->AbElement->ElTypeNumber,
+                                pAb->AbElement->ElStructSchema))
+            found = TRUE;
+          else
+            pAb = pAb->AbEnclosing;
+        }
+    }
+  return (pAb);
+}
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void SetControlPoints (float x, float y, float l1, float l2,
                               float theta1, float theta2, C_points * cp)
