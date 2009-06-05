@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -211,13 +211,17 @@ AmayaEditShapeEvtHandler::AmayaEditShapeEvtHandler (AmayaFrame * p_frame,
       /* Move the origin */
       x_org = box->BxXOrg;
       y_org = box->BxYOrg;
-      box->BxXOrg = 0;
-      box->BxYOrg = 0;
-      TtaAppendMatrixTransform (document, el, 1, 0, 0, 1, x_org, y_org);
-      RedisplayLeaf ((PtrElement) leaf, document, 0);
-      DefBoxRegion (frameId, box, -1, -1, -1, -1);
-      RedrawFrameBottom (frameId, 0, NULL);
-      pFrame->GetCanvas()->Refresh();
+      if (shape != 1 && shape != 'C' && shape != 'a' &&  shape != 'c' &&
+          shape != 'g' && shape != 7 && shape != 8)
+         {
+          box->BxXOrg = 0;
+          box->BxYOrg = 0;
+          TtaAppendMatrixTransform (document, el, 1, 0, 0, 1, x_org, y_org);
+          RedisplayLeaf ((PtrElement) leaf, document, 0);
+          DefBoxRegion (frameId, box, -1, -1, -1, -1);
+          RedrawFrameBottom (frameId, 0, NULL);
+          pFrame->GetCanvas()->Refresh();
+        }
     }
 }
 
@@ -381,9 +385,8 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
         case 6: /* Rectangle triangle */
         case 7: /* square */
         case 8: /* rectangle */
-          if (shape == 1 || shape == 'C')
+          if (shape == 1 || shape == 'C') /* square and rectangle with rounded corner */
             {
-              /* square and rectangle with rounded corner */
               rx = box->BxRx;
               ry = box->BxRy;
               if (rx != -1 && ry == -1)
@@ -391,12 +394,10 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
               else if (rx == -1 && ry != -1)
                 rx = ry;
             }
-          else if (shape == 2)
-            /* parallelogram */
+          else if (shape == 2) /* parallelogram */
             rx = box->BxRx;
-          else if (shape == 3)
+          else if (shape == 3) /* trapezium */
             {
-              /* trapezium */
               rx = box->BxRx;
               ry = box->BxRy;
             }
@@ -455,7 +456,7 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
 	      
             case 9:
               // change the arc size
-              if (shape == 1 || shape == 'C')
+              if (shape == 1 || shape == 'C') /* Square Rectangle */
                 {
                   rx -= dx;
                   if (rx > lx/2)
@@ -467,13 +468,13 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
                       ry = rx;
                     }
                 }
-              else if (shape == 2)
+              else if (shape == 2) /* Parallelogram */
                 rx += dx;
               break;
 	      
             case 10:
               // change the arc size
-              if (shape == 1 || shape == 'C')
+              if (shape == 1 || shape == 'C') /* Square Rectangle */
                 {
                   ry += dy;
                   if (ry > ly/2)
@@ -485,14 +486,14 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
                       rx = ry;
                     }
                 }
-              else if (shape == 2)
+              else if (shape == 2) /* Parallelogram */
                 rx -= dx;
               break;
             }
 	  
           if (lx < 0){lx = 0; x = x_org;}
           if (ly < 0){ly = 0; y = y_org;}
-          if (shape == 1 || shape == 'C')
+          if (shape == 1 || shape == 'C') /* Square Rectangle */
             {
               if (rx > lx/2)
                 rx = lx/2;
@@ -504,13 +505,13 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
               if (box->BxRy != -1)
                 box->BxRy = ry;
             }
-          else if (shape == 2)
+          else if (shape == 2) /* Parallelogram */
             {
               if (rx < 0)rx = 0;
               if (rx > lx)rx = lx;
               box->BxRx = rx;
             }
-          else if (shape == 3)
+          else if (shape == 3) /* Trapezium */
             {
               if (x+abs(rx) > x+lx-abs(ry))
                 {
@@ -523,22 +524,26 @@ void AmayaEditShapeEvtHandler::OnMouseMove( wxMouseEvent& event )
                   box->BxRy = ry;
                 }
             }
-
           break;
 
         default:
           break;
         }
       
-      /*NewDimension (ab, lx, ly, frameId, TRUE);
-        NewPosition (ab, x, 0, y, 0, frameId, TRUE);*/
-
-      if (point != 9 && point != 10)
+      if (shape != 1 && shape != 'C' && shape != 'a' && shape != 'c' &&
+          shape != 'g' && shape != 7 && shape != 8)
         {
           TtaAppendMatrixTransform (document, el, 1, 0, 0, 1, x - x_org, y - y_org);
-          x_org = x;
-          y_org = y;
+          box->BxXOrg = 0;
+          box->BxYOrg = 0;
         }
+      else if (point != 9 && point != 10)
+        {
+          box->BxXOrg = x;
+          box->BxYOrg = y;
+        }
+      x_org = x;
+      y_org = y;
       box->BxW = lx;
       box->BxH = ly;
       box->BxWidth = lx;

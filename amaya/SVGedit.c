@@ -4414,22 +4414,12 @@ void UpdateShapeElement (Document doc, Element el, char shape,
       attrType.AttrTypeNum = SVG_ATTR_ry;
       UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
     }
-  if (rx == -1 && ry >= 0)
-    {
-      attrType.AttrTypeNum = SVG_ATTR_rx;
-      UpdateAttrText (el, doc,  attrType, rx, FALSE, TRUE);
-    }
-  if (ry == -1 && rx >= 0)
-    {
-      attrType.AttrTypeNum = SVG_ATTR_ry;
-      UpdateAttrText (el, doc,  attrType, ry, FALSE, TRUE);
-    }
-
   switch (shape)
     {
-    case 'g':
     case 1:
     case 'C':
+    case 7:
+    case 8:
       if (width >= 0)
         UpdateWidthHeightAttribute (el, doc, width, TRUE);
       if (height >= 0)
@@ -4439,21 +4429,30 @@ void UpdateShapeElement (Document doc, Element el, char shape,
       if (y >= 0)
         UpdatePositionAttribute (el, doc, y, FALSE);
       break;
+    case 'a': /* circle */
     case 'c': /* ellipse */
       if (width >= 0)
         {
-          x += (width/2);
+          if (x != -1)
+            {
+              x += (width/2);
+              UpdatePositionAttribute (el, doc, x, TRUE);
+            }
           UpdateWidthHeightAttribute (el, doc, width, TRUE);
-          UpdatePositionAttribute (el, doc, x, TRUE);
         }
       if (height >= 0)
         {
-          y += (height/2);
+          if (y != -1)
+            {
+              y += (height/2);
+              UpdatePositionAttribute (el, doc, y, FALSE);
+            }
           UpdateWidthHeightAttribute (el, doc, height, FALSE);
-          UpdatePositionAttribute (el, doc, y, FALSE);
         }
       break;
     default:
+      /* triangles trapezium*/
+      UpdateTransformMatrix (doc, el);
       if (width >= 0 && height >= 0)
         UpdatePointsOrPathAttribute(doc, el, width, height, TRUE);
       break;

@@ -296,7 +296,7 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                         }
                       if (graphicBox)
                         d = 0;
-                      else if (pAb->AbLeafType == LtGraphics && group == NULL)
+                      else if (pAb->AbLeafType == LtGraphics)
                         d = GetBoxDistance (pBox, *pFlow, x, y, ratio, frame, &matchCell) + 2;
                       else
                         /* eliminate this box */
@@ -337,7 +337,7 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                              GetBoxDistance (active->AbBox, *pFlow, x, y, ratio, frame, &matchCell) != 0)
                       active = NULL;
                     }
-                  if (active && sel_active == NULL)
+                  if (active && sel_active == NULL && dist != 0)
                     dist = d + 1;
 
                   if (prevMatch != matchCell && matchCell)
