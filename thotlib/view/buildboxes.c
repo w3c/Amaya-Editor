@@ -231,6 +231,35 @@ PtrAbstractBox GetParentDraw (PtrBox pBox)
 }
 
 /*----------------------------------------------------------------------
+  GetParentGroup returns the enclosing Group or NULL.                
+  ----------------------------------------------------------------------*/
+PtrAbstractBox GetParentGroup (PtrBox pBox)
+{
+  PtrAbstractBox      pAb;
+  ThotBool            found;
+
+  if (pBox == NULL)
+    pAb = NULL;
+  else if (pBox->BxAbstractBox == NULL)
+    pAb = NULL;
+  else
+    {
+      /* check parents */
+      found = FALSE;
+      pAb = pBox->BxAbstractBox->AbEnclosing;
+      while (pAb != NULL && !found)
+        {
+          if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
+                                pAb->AbElement->ElStructSchema))
+            found = TRUE;
+          else
+            pAb = pAb->AbEnclosing;
+        }
+    }
+  return (pAb);
+}
+
+/*----------------------------------------------------------------------
   GetParentMarker returns the enclosing Marker or NULL.                
   ----------------------------------------------------------------------*/
 PtrAbstractBox GetParentMarker (PtrBox pBox)
@@ -3072,11 +3101,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
           if (pAb->AbEnclosing)
             {
               /* the direct parent is the SVG path element */
-              pParent = pAb->AbEnclosing->AbEnclosing;
-              while (pParent &&
-                     TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
-                                       pParent->AbElement->ElStructSchema))
-                pParent = pParent->AbEnclosing;
+              pParent = GetParentGroup (pBox);
+              if (pParent == NULL)
+                pParent = pAb->AbEnclosing->AbEnclosing;
               width = pParent->AbBox->BxWidth;
               height = pParent->AbBox->BxHeight;
               pAb->AbBox->BxWidth = width;

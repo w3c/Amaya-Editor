@@ -480,7 +480,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                     {
                       /* Click on a handle */
                       *drag = FALSE;
-                      if(AskShapeEdit(doc, (Element)(el->ElParent), nChars))
+                      if (AskShapeEdit(doc, (Element)(el->ElParent), nChars))
                         {
                           /* The user has edited an SVG element */
                           TtaSetDocumentModified(doc);

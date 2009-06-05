@@ -12,6 +12,7 @@ extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
 extern PtrAbstractBox GetParentTable ( PtrBox pBox );
 extern PtrAbstractBox GetParentCell ( PtrBox pBox );
 extern PtrAbstractBox GetParentDraw ( PtrBox pBox );
+extern PtrAbstractBox GetParentGroup ( PtrBox pBox );
 extern PtrAbstractBox GetParentMarker ( PtrBox pBox );
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
                                         int nb );
@@ -91,6 +92,7 @@ extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
 extern PtrAbstractBox GetParentTable ( PtrBox pBox );
 extern PtrAbstractBox GetParentCell ( PtrBox pBox );
 extern PtrAbstractBox GetParentDraw ( PtrBox pBox );
+extern PtrAbstractBox GetParentGroup ( PtrBox pBox );
 extern PtrAbstractBox GetParentMarker ( PtrBox pBox );
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
                                           int nb );

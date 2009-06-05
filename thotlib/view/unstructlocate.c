@@ -218,7 +218,7 @@ PtrAbstractBox GetParentWithException (int exceptNum, PtrAbstractBox pAb)
 void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                     int frame, int x, int y, int ratio, int *pointselect)
 {
-  PtrAbstractBox      pAb, active, sel_active, marker;
+  PtrAbstractBox      pAb, active, sel_active, marker, group;
   PtrBox              pSelBox, pBox;
   PtrBox              graphicBox;
   PtrElement          matchCell = NULL, prevMatch = NULL;
@@ -246,7 +246,7 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
       while (pBox && pBox->BxAbstractBox && pBox->BxAbstractBox->AbElement)
         {
           pAb = pBox->BxAbstractBox;
-          marker = NULL;
+          marker = group = NULL;
           if (matchCell)
             // keep in memory the previous found cell
             prevMatch = matchCell;
@@ -281,6 +281,7 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                        pAb->AbEnclosing->AbBox->BxType == BoColumn))
                     {
                       marker = GetParentMarker (pBox);
+                      group = GetParentGroup (pBox);
                       if (pAb->AbLeafType == LtPath ||
                          (bx <= x && bx + pBox->BxClipW >= x &&
                           by <= y && by + pBox->BxClipH >= y))
@@ -295,8 +296,8 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                         }
                       if (graphicBox)
                         d = 0;
-                      else if (pAb->AbLeafType == LtGraphics)
-                        d = GetBoxDistance (pBox, *pFlow, x, y, ratio, frame, &matchCell);
+                      else if (pAb->AbLeafType == LtGraphics && group == NULL)
+                        d = GetBoxDistance (pBox, *pFlow, x, y, ratio, frame, &matchCell) + 2;
                       else
                         /* eliminate this box */
                         d = dist + 1;
