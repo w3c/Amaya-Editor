@@ -22,7 +22,12 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.31  2009-04-23 14:51:36  vatton
+** Revision 1.32  2009-06-08 14:57:00  vatton
+** Addd a new button to lock/unlock WebDAV resources
+** + display only the end of the message when the status bar is too short
+** Irene
+**
+** Revision 1.31  2009/04/23 14:51:36  vatton
 ** Improving the WebDAV interface
 ** Irene
 **
@@ -199,13 +204,15 @@ static HWND     DAVDlg;
 /*----------------------------------------------------------------------
   DAVSetLockIndicator: set the Lock indicator button.
   ---------------------------------------------------------------------- */
-void DAVSetLockIndicator (Document doc, ThotBool val) 
+void DAVSetLockIndicator (Document doc, int status) 
 {
+  ThotBool val = status == 2;
   /* updates Lock indicator*/
   if (DocumentMeta[doc])
     {
       DocumentMeta[doc]->lockIndicatorState = val;
       TtaSetToggleItem (doc, DAV_VIEW, Tools, TLock, val);
+      TtaSetLockButton (doc, status);
     }
 }
 
@@ -413,11 +420,6 @@ void DAVShowInfo (AHTReqContext *context)
             TtaSetStatus (context->docid, DAV_VIEW, status_msg, NULL);
         } /* if (davctx) */
     } /* if (context) */
-  
-  /* updates Lock indicator*/
-  //if (DocumentMeta[context->docid])
-  //  DAVSetLockIndicator (context->docid,
-  //                       DocumentMeta[context->docid]->lockIndicatorState); 
 }
 
 

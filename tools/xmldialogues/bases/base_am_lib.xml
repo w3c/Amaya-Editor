@@ -6525,6 +6525,17 @@ Komponente</message>
 	<message xml:lang="it">Scatto da chiudersi</message>
 	<message xml:lang="ja">*クリックで閉じる*Click to close</message>
 </label>
+<label define="LOCK">
+<message xml:lang="en">Locked resource</message>
+<message xml:lang="fr">Ressource bloquée</message></label>
+<label define="UNLOCK">
+<message xml:lang="en">Unlocked resource</message>
+<message xml:lang="fr">Ressource débloquée</message>
+</label>
+<label define="NO_WEBDAV">
+<message xml:lang="en">Not a WebDAV resource</message>
+<message xml:lang="fr">Ce n'est pas une resource</message>
+</label>
 <!--
 End of SVG panel --><label define="TMSG_LIB_MSG_MAX">
 </label>

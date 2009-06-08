@@ -24,6 +24,8 @@ extern void TtaRefreshMenuItemStats ( int doc_id,
                                       int menu_item_id );
 extern void TtaToggleLogError ( Document doc_id,
                                 ThotBool enable );
+extern void TtaSetLockButton ( Document doc_id,
+                               int status );
 extern int TtaMakeFrame ( const char * schema_name,
                           int schView,
                           Document doc_id,
@@ -121,6 +123,8 @@ extern void TtaRefreshMenuItemStats ( int doc_id,
                                         int menu_item_id );
 extern void TtaToggleLogError ( Document doc_id,
                                   ThotBool enable );
+extern void TtaSetLockButton ( Document doc_id,
+                                 int status );
 extern int TtaMakeFrame ( const char * schema_name,
                             int schView,
                             Document doc_id,

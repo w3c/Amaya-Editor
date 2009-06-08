@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void DAVSetLockIndicator ( Document doc,
-                                  ThotBool val );
+                                  int status );
 extern void DAVDisplayMessage ( const char *msg,
                                 const char *arg );
 extern void DAVDisplayMultiLineMessage ( Document docid,
@@ -37,7 +37,7 @@ extern void InitDAVPreferences ( void );
 #else /* __STDC__ */
 
 extern void DAVSetLockIndicator ( Document doc,
-                                    ThotBool val );
+                                    int status );
 extern void DAVDisplayMessage ( const char *msg,
                                   const char *arg );
 extern void DAVDisplayMultiLineMessage ( Document docid,

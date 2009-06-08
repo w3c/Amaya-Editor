@@ -425,6 +425,9 @@
 #define BUTTON_UP		420
 #define TMSG_DOUBLECLICK		421
 #define TMSG_SIMPLECLICK		422
-#define TMSG_LIB_MSG_MAX		423
+#define LOCK		423
+#define UNLOCK		424
+#define NO_WEBDAV		425
+#define TMSG_LIB_MSG_MAX		426
 
 #endif

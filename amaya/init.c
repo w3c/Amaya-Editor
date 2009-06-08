@@ -4977,11 +4977,12 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
    * able to discovery if the document is locked.  *
    * do a lock discovery, set LockIndicator button */
   if (W3Loading == 0) 
-    {
-      DAVLockDiscovery (newdoc);
-      //DAVSetLockIndicator(newdoc, FALSE);
-    }
-#endif /* DAV */  
+    DAVLockDiscovery (newdoc);
+#else /* DAV */
+  // no lock/unlock allowed
+  TtaSetLockButton (newdoc, 0);
+#endif /* DAV */
+
   TtaFreeMemory (target);
   TtaFreeMemory (documentname);
   TtaFreeMemory (initial_url);

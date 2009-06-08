@@ -422,3 +422,6 @@
 420 *ボタンを離して閉じる*Button up to close
 421 *ダブルクリックで閉じる*Double click to close
 422 *クリックで閉じる*Click to close
+423 **Locked resource
+424 **Unlocked resource
+425 **Not a WebDAV resource

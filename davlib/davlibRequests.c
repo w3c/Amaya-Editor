@@ -22,7 +22,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.18  2009-04-23 14:51:36  vatton
+ ** Revision 1.19  2009-06-08 14:57:00  vatton
+ ** Addd a new button to lock/unlock WebDAV resources
+ ** + display only the end of the message when the status bar is too short
+ ** Irene
+ **
+ ** Revision 1.18  2009/04/23 14:51:36  vatton
  ** Improving the WebDAV interface
  ** Irene
  **
@@ -1497,7 +1502,7 @@ void DAVLockDiscovery (Document document)
 
    if (!DAVAllowResource (DAVResources,DocumentURLs[document])) 
     {           
-       DAVSetLockIndicator (document, FALSE);
+       DAVSetLockIndicator (document, 0);
        return;
     }
    
@@ -1568,7 +1573,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
             matches = NULL;
             saved = NO;
             
-            DAVSetLockIndicator (context->docid, TRUE);
+            DAVSetLockIndicator (context->docid, 2);
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterFindLock_handler.... found %s, "
                             "resource is locked\n",lockdiscovery);
@@ -1623,7 +1628,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
 #endif            
             /* use this information to clean the lock base from 
              * expired locks */ 
-            DAVSetLockIndicator (context->docid, FALSE);
+            DAVSetLockIndicator (context->docid, 1);
             if (davctx->status > 0) 
              {
                 removeFromBase (davctx->absoluteURI,line);
@@ -1830,7 +1835,7 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
             fprintf (stderr,"FilterCopyLockInfo_handler.... found lock, "
                             "resource is locked to %s\n",owner);
 #endif            
-            DAVSetLockIndicator(context->docid, TRUE);
+            DAVSetLockIndicator(context->docid, 2);
             
             /* add this url to the DAV Resources list */
             if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
@@ -1854,7 +1859,7 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
 #endif      
             DAVDisplayMessage (TtaGetMessage (AMAYA, AM_UNLOCKED), davctx->relativeURI);      
             davctx->showIt = NO;
-            DAVSetLockIndicator(context->docid, FALSE);
+            DAVSetLockIndicator(context->docid, 1);
          }
         
         /* we finished? reset stop button 

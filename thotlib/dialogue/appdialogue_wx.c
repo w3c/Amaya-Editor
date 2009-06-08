@@ -712,6 +712,24 @@ void TtaToggleLogError (Document doc_id, ThotBool enable)
 }
 
 /*----------------------------------------------------------------------
+  TtaSetLockButton button
+  ----------------------------------------------------------------------*/
+void TtaSetLockButton (Document doc_id, int status)
+{
+  int             window_id = TtaGetDocumentWindowId( doc_id, -1 );
+  AmayaWindow    *p_window = TtaGetWindowFromId(window_id);
+  AmayaStatusBar *p_sbar = NULL;
+
+  if (p_window)
+    p_sbar = p_window->GetStatusBar();
+  /* do nothing if there is no sbar: it's the case of
+     AmayaSimpleWindow (log, show apply style ...)*/
+  if(!p_sbar)
+    return;
+  p_sbar->EnableLock(status);
+}
+
+/*----------------------------------------------------------------------
   TtaMakeFrame create a frame (view container)
   notice : a frame need to be attached to a window
   params:

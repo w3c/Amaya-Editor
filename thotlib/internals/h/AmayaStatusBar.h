@@ -27,6 +27,7 @@ class AmayaStatusBar : public wxStatusBar
   virtual ~AmayaStatusBar();
 
   void EnableLogError( bool enable );
+  void EnableLock( int status );
 
   virtual void SetStatusText(const wxString& text, int i = 0); 
   void SetSelectedElement(Element elem);
@@ -37,6 +38,7 @@ class AmayaStatusBar : public wxStatusBar
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
   void OnLogErrorButton(wxCommandEvent& event);
+  void OnLockButton(wxCommandEvent& event);
   void OnSize(wxSizeEvent& event);
   void OnUpdateUI(wxUpdateUIEvent& event);
   
@@ -52,15 +54,19 @@ class AmayaStatusBar : public wxStatusBar
       Field_Path,
       Field_Text,
       Field_InsertMode,
+      Field_Lock,
       Field_LogError,
       Field_Max
     };
   
-  wxBitmapButton * m_pLogErrorButton;
-  wxBitmap         m_LogErrorBmp_Green;
-  wxBitmap         m_LogErrorBmp_Red;
-  AmayaPathControl*m_pathCtrl;
-  AmayaStatusText *m_insertMode;
+  wxBitmapButton   *m_pLogErrorButton;
+  wxBitmap          m_LogErrorBmp_Green;
+  wxBitmap          m_LogErrorBmp_Red;
+  wxBitmapButton   *m_pLockButton;
+  wxBitmap          m_Lock_Yes;
+  wxBitmap          m_Lock_No;
+  AmayaPathControl *m_pathCtrl;
+  AmayaStatusText  *m_insertMode;
 };
 
 #endif  // __AMAYASTATUSBAR_H__

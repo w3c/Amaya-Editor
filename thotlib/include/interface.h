@@ -450,6 +450,11 @@ extern void TtaRefreshTopMenuStats(Document doc, int menu_id );
 extern void TtaToggleLogError (Document doc_id, ThotBool enable);
 
 /*----------------------------------------------------------------------
+  TtaSetLockButton button
+  ----------------------------------------------------------------------*/
+extern void TtaSetLockButton (Document doc_id, int status);
+
+/*----------------------------------------------------------------------
   TtaRefreshMenuItemStats enable/disable, toggle/untoggle menu items
   widgets for the given doc or all items of all menus (menu_id = -1)
   ----------------------------------------------------------------------*/

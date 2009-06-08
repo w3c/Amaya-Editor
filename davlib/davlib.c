@@ -21,7 +21,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.19  2009-04-23 14:51:36  vatton
+ ** Revision 1.20  2009-06-08 14:57:00  vatton
+ ** Addd a new button to lock/unlock WebDAV resources
+ ** + display only the end of the message when the status bar is too short
+ ** Irene
+ **
+ ** Revision 1.19  2009/04/23 14:51:36  vatton
  ** Improving the WebDAV interface
  ** Irene
  **
@@ -281,8 +286,7 @@ void InitDAV (void)
 
     HTNet_addAfter (FilterMultiStatus_handler,"http://*", NULL, 
                                            HT_MULTI_STATUS,HT_FILTER_MIDDLE);
-
-    DAVSetLockIndicator(CurrentDocument, FALSE);
+    //DAVSetLockIndicator(CurrentDocument, 1);
 }
 
 
@@ -423,7 +427,7 @@ void DAVLockDocument (Document document, View view)
      {            
         DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
                            DocumentURLs[document]);
-        DAVSetLockIndicator (document, FALSE);
+        DAVSetLockIndicator (document, 0);
      }
     else 
      {
@@ -522,7 +526,7 @@ void DAVCopyLockInfo (Document document, View view)
         
      }
     else
-      DAVSetLockIndicator (document, FALSE);
+      DAVSetLockIndicator (document, 1);
 }
 
 
