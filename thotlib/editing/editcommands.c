@@ -2022,7 +2022,7 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
   PtrTransform        CTM, inverse;
   int                 frame;
   int                 ancestorX, ancestorY;
-  ThotBool            transformApplied;
+  ThotBool            transformApplied, open;
 
   frame = ActiveFrame;
   if(frame <= 0)
@@ -2067,6 +2067,14 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
   ancestorX = pBox->BxXOrg - pFrame->FrXOrg;
   ancestorY = pBox->BxYOrg - pFrame->FrYOrg;
 
+
+  // lock the undo sequence
+  open = TtaHasUndoSequence (doc);
+  if (!open)
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  // keep the history open until the button is up
+  TtaLockHistory (TRUE);
+
   /* Call the interactive module */
   transformApplied = TransformSVG (frame, doc, CTM, inverse, svgBox,
                                    ancestorX, ancestorY, transform_type, el);
@@ -2074,11 +2082,17 @@ ThotBool AskTransform (Document doc, Element svgAncestor, Element svgCanvas,
   /* Free the transform matrix */
   if (CTM)
     TtaFreeTransform(CTM);
+
   if (inverse)
     TtaFreeTransform(inverse);
+
+  TtaLockHistory (FALSE);
   /* Update the transform */
   if(transformApplied)
     UpdateTransformMatrix(doc, el);
+  // close the history now
+  if (!open)
+    TtaCloseUndoSequence (doc);
   return transformApplied;
 }
 

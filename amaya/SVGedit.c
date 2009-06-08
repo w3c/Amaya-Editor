@@ -2958,7 +2958,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
           child = TtaNewElement (doc, childType);
           TtaInsertFirstChild (&child, newEl, doc);
           selEl = child;
-
           if (isFormattedView)
             {
               /* Ask where the user wants to insert the text */
@@ -2982,7 +2981,6 @@ void CreateGraphicElement (Document doc, View view, int entry)
               TtaRegisterElementDelete (sibling, doc);
               TtaDeleteTree(sibling, doc);
             }
-	  
           if (newSVG)
             TtaRegisterElementCreate (svgCanvas, doc);
           else
@@ -3106,11 +3104,11 @@ void SelectGraphicElement (Document doc, View view)
   ThotBool  IsFirst;
 
   /* Check that a document is selected */
-  if (doc == 0)return;
-
+  if (doc == 0)
+    return;
   /* Check that whether we are in formatted view. */
-  if (view != 1 )return;
-
+  if (view != 1 )
+    return;
   TtaGiveFirstSelectedElement (doc, &first, &c1, &c2);
   if (first)
     {
@@ -3131,20 +3129,14 @@ void SelectGraphicElement (Document doc, View view)
     return;
 
   TtaSelectElement(doc, svgCanvas);
-
   /* Ask a box surrounding the element the user wants to select */
-  AskSurroundingBox(doc,
-                    svgAncestor,
-                    svgCanvas,
-                    42,
-                    &x1, &y1, &x2, &y2,
-                    &x3, &y3, &x4, &y4,
+  AskSurroundingBox(doc, svgAncestor, svgCanvas, 42,
+                    &x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4,
                     &lx, &ly);
   xmin = x1;
   xmax = x4;
   ymin = y1;
   ymax = y4;
-
   TtaUnselect(doc);
 
   /* Look for each child whether it is inside the box */
