@@ -350,7 +350,7 @@ BOOL AHTPromptUsernameAndPassword (HTRequest *request, HTAlertOpcode op,
           /* set the password */
           HTAlert_setReplySecret (reply, Answer_password);
           /* Add the new password in the password table if asked */
-          if (Answer_save_password)
+          if (Answer_save_password && Answer_name[0] != EOS)
             NewPasswordTable ((char *)realm, server, Answer_name,
                               Answer_password, i_auth, TRUE);
           if (server)
