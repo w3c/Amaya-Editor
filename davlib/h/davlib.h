@@ -22,7 +22,13 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.10  2009-04-23 14:51:36  vatton
+ ** Revision 1.11  2009-06-10 10:57:23  vatton
+ ** Change the management of Templates list
+ ** + Implementation of a new WebDAV list of sites
+ ** + Fix problems with lock/unlock status
+ ** Irene
+ **
+ ** Revision 1.10  2009/04/23 14:51:36  vatton
  ** Improving the WebDAV interface
  ** Irene
  **
@@ -152,7 +158,7 @@ WEBDAV_EXPORT char DAVUserURL[DAV_LINE_MAX];                      /* user's refe
 WEBDAV_EXPORT BOOL DAVAwareness;                              /* if user wants general awareness info */
 WEBDAV_EXPORT BOOL DAVAwarenessExit;                          /* if user wants awareness information */
                                                 /* about his/her locks, when exiting a resource */  
-WEBDAV_EXPORT char DAVResources[DAV_LINE_MAX];                    /* list of user's WebDAV resources */
+
 
 /*
  * Full qualified host.domain name 
@@ -162,7 +168,6 @@ WEBDAV_EXPORT char DAVFullHostName[DAV_LINE_MAX];
 /*----------------------------------------------------------------------
    Types and Structures used in WebDAV functions
   ----------------------------------------------------------------------*/
-
 /*
  * Context for WebDAV requests
  */ 
@@ -193,8 +198,6 @@ typedef struct _AHTDAVContext {
 /*----------------------------------------------------------------------
    Definitions for the WebDAV preferences dialogue
   ----------------------------------------------------------------------*/
-
-
 #define DAVPreferencesDlg       1
 #define DAVtextUserReference    2
 #define DAVtextUserResources    3
@@ -210,8 +213,4 @@ typedef struct _AHTDAVContext {
 #define DAVlabelEmpty5         13 
 #define DAVlabelEmpty6         14 
 #define MAX_DAVPREF_DLG        15
-
-
-
-
 #endif

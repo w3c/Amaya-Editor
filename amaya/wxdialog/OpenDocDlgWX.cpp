@@ -26,6 +26,7 @@
 #include "templates.h"
 #include "templates_f.h"
 #include "registry_wx.h"
+#include "MENUconf.h"
 #include "MENUconf_f.h"
 
 static int      Waiting = 0;
@@ -62,8 +63,8 @@ END_EVENT_TABLE()
   ----------------------------------------------------------------------*/
 void OpenDocDlgWX::UpdateTemplateList ()
 {
-  Prop_Templates       prop = GetProp_Templates();
-  Prop_Templates_Path *path = prop.FirstPath;
+#ifdef TEMPLATES
+  Prop_Templates_Path *path = TemplateRepositoryPaths;
   wxArrayString        templateList;
   wxString             value;
   bool                 initialized = false;
@@ -86,6 +87,7 @@ void OpenDocDlgWX::UpdateTemplateList ()
         }
       m_LockUpdateFlag = false;
    }
+#endif /* TEMPLATES */
 }
 
 /*----------------------------------------------------------------------
@@ -115,7 +117,6 @@ OpenDocDlgWX::OpenDocDlgWX( int ref, wxWindow* parent, const wxString & title,
   Waiting = 1;
   MyRef = ref;
   Ref_doc = doc;
-  GetTemplatesConf ();
   compound_string = TtaGetMessage(AMAYA,AM_COMPOUND_DOCUMENT);
 
   // update dialog labels with given ones

@@ -22,7 +22,13 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.19  2009-06-08 14:57:00  vatton
+ ** Revision 1.20  2009-06-10 10:57:23  vatton
+ ** Change the management of Templates list
+ ** + Implementation of a new WebDAV list of sites
+ ** + Fix problems with lock/unlock status
+ ** Irene
+ **
+ ** Revision 1.19  2009/06/08 14:57:00  vatton
  ** Addd a new button to lock/unlock WebDAV resources
  ** + display only the end of the message when the status bar is too short
  ** Irene
@@ -551,20 +557,16 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
          {
                     
             /*user if s/he wants to try again */            
-            sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),
+            sprintf (label1, TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),
                             lockinfo->relativeURI, owner, lockinfo->timeout);
             ptr = DAVBreakString (label1);
-            sprintf (label2,TtaGetMessage(AMAYA,AM_LOCK_OVERWRITE));
+            sprintf (label2, TtaGetMessage(AMAYA,AM_LOCK_OVERWRITE));
             
             if (DAVConfirmDialog (context->docid,label1, (ptr)?ptr:(char *)" ", label2))
              {
-                
                 /* add this url to the DAV Resources list */
-                if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
-                 {           
-                    if (DAVAddResource (context->urlName, DAVResources, ' ', DAV_LINE_MAX))
-                        DAVSaveRegistry();
-                 }
+                if (!DAVAllowResource (DocumentURLs[context->docid])) 
+                   AddPathInDAVList (context->urlName);
 
                 /* save lock info */
                 if (saveLockLine (davctx->absoluteURI, lockinfo)==YES) 
@@ -738,11 +740,10 @@ BOOL createLockBody (char *owner, char *scope, char *body, int len)
 {
      char tmp[DAV_XML_LEN];
      char nl[3];
-     int i; 
+     int  l; 
      BOOL status = NO;
      
-     sprintf (nl,"%c%c",CR,LF);     
-            
+     sprintf (nl,"%c%c",CR,LF);            
      if (owner && *owner && scope && *scope) 
       {
         sprintf (tmp,"<?xml version=\"1.0\" encoding=\"utf-8\" ?>%s"
@@ -751,17 +752,14 @@ BOOL createLockBody (char *owner, char *scope, char *body, int len)
                      "<D:locktype><D:write/></D:locktype>%s"
                      "<D:owner><D:href>%s</D:href></D:owner>%s"
                      "</D:lockinfo>", nl,nl,scope,nl,nl,owner,nl);
-         
-         if ( body!=NULL && (unsigned) len > strlen (tmp)) 
+        l = strlen (tmp);
+         if (body && (unsigned) len > l) 
           {
-             /* clen the memory */
-             for (i=0;i<len;i++) body[i]='\0';
              /* copy the body value */
-             sprintf (body,"%s%c",tmp,'\0');
-             status = YES;
+            strncpy (body, tmp, len);
+            status = YES;
           }
       }
-     
      return status;    
 }
 
@@ -781,7 +779,6 @@ AHTDAVContext * GetLockInfo (int document)
     AHTDAVContext * info = NULL; 
     char *owner, *scope;
     char *depth, *timeout;  
-    
     
     /* getting absolute and relative URI. If NULL, URL probably has not a 
      * "http://" scheme, returning NULL */
@@ -950,16 +947,13 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
             headers = HTAnchor_header(anchor);
             
             /* add this url to the DAV Resources list */
-            if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
-             {           
-                if (DAVAddResource (context->urlName, DAVResources, ' ', DAV_LINE_MAX))
-                    DAVSaveRegistry();
-             }
+            if (!DAVAllowResource (DocumentURLs[context->docid])) 
+              AddPathInDAVList (context->urlName);
          
             if (saveLockBase (davctx->absoluteURI,davctx->relativeURI, out, headers)!=YES) 
               DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
             
-            DAVSetLockIndicator (context->docid, TRUE);
+            DAVSetLockIndicator (context->docid, 2);
          }
          else if (status == HT_MULTI_STATUS && out) 
           {
@@ -1256,7 +1250,7 @@ int FilterUnlock_handler (HTRequest * request, HTResponse * response,
                 saved = NO;
              }
 
-            DAVSetLockIndicator (context->docid, FALSE);
+            DAVSetLockIndicator (context->docid, 1);
          }
         else if (status == HT_MULTI_STATUS && out) 
          {
@@ -1500,7 +1494,7 @@ void DAVLockDiscovery (Document document)
                    DocumentURLs[document]);
 #endif
 
-   if (!DAVAllowResource (DAVResources,DocumentURLs[document])) 
+   if (!DAVAllowResource (DocumentURLs[document])) 
     {           
        DAVSetLockIndicator (document, 0);
        return;
@@ -1602,12 +1596,9 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
             
                         if (DAVConfirmDialog (context->docid,label1, (ptr)?ptr:(char *)" ", label2)) 
                          {
-                           if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
-                            {
-                               /* add this url to the DAV Resources list */
-                               if (DAVAddResource (context->urlName, DAVResources, ' ', DAV_LINE_MAX))
-                                   DAVSaveRegistry();
-                            }
+                           if (!DAVAllowResource (DocumentURLs[context->docid])) 
+                             /* add this url to the DAV Resources list */
+                             AddPathInDAVList (context->urlName);
 
                             /* save lock info */
                             if (saveLockLine (davctx->absoluteURI, lockinfo)!=YES) 
@@ -1838,12 +1829,8 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
             DAVSetLockIndicator(context->docid, 2);
             
             /* add this url to the DAV Resources list */
-            if (DAVAllowResource (DAVResources,DocumentURLs[context->docid])!=YES) 
-             {
-                if (DAVAddResource (context->urlName, DAVResources, ' ', DAV_LINE_MAX))
-                    DAVSaveRegistry();
-             }
-            
+            if (!DAVAllowResource (DocumentURLs[context->docid])) 
+                AddPathInDAVList (context->urlName);
             /* save the lock info in local base */
             if (!saveLockLine (davctx->absoluteURI, lockinfo)) 
              {

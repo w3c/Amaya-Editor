@@ -83,11 +83,13 @@ private:
   // "DAV" tab
   void SetupLabelDialog_DAV();
   void SetupDialog_DAV( const Prop_DAV & prop );
+  void OnDAVDel(wxCommandEvent& event);
+  void OnDAVUpdate( wxCommandEvent& event );
   Prop_DAV GetValueDialog_DAV();
 
   // "Templates" tab
   void SetupLabelDialog_Templates();
-  void SetupDialog_Templates( const Prop_Templates & prop );
+  void SetupDialog_Templates();
   void UpdateTemplateList();
   void GetValueDialog_Templates();
   void OnTemplateChoose(wxCommandEvent& event);

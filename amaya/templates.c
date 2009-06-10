@@ -42,9 +42,9 @@
 #include "MENUconf.h"
 
 /* Paths from which looking for templates.*/
-static Prop_Templates_Path *TemplateRepositoryPaths;
+Prop_Templates_Path *TemplateRepositoryPaths = NULL;
 // register the parent repeat of the new created use
-static Element Creating_repeat = NULL;
+static Element       Creating_repeat = NULL;
 
 
 /*----------------------------------------------------------------------
@@ -323,7 +323,7 @@ void* AllocTemplateRepositoryListElement (const char* path, void* prevElement)
 
   element  = (Prop_Templates_Path*)TtaGetMemory (sizeof(Prop_Templates_Path));
   memset (element, 0, sizeof(Prop_Templates_Path));
-  strncpy (element->Path, path, MAX_LENGTH - 1);
+  element->Path = TtaStrdup (path);
   if (prevElement)
     {
       element->NextPath = ((Prop_Templates_Path*)prevElement)->NextPath;
@@ -335,67 +335,61 @@ void* AllocTemplateRepositoryListElement (const char* path, void* prevElement)
 
 /*----------------------------------------------------------------------
   FreeTemplateRepositoryList: Free the list of template repositories.
-  list : address of the list (address of the first element).
   ----------------------------------------------------------------------*/
-void FreeTemplateRepositoryList (void* list)
+void FreeTemplateRepositoryList ()
 {
-  Prop_Templates_Path **l = (Prop_Templates_Path**) list;
-  Prop_Templates_Path  *element = *l;
+  Prop_Templates_Path  *element = TemplateRepositoryPaths;
 
-  l = NULL;
   while (element)
     {
       Prop_Templates_Path* next = element->NextPath;
+      TtaFreeMemory (element->Path);
       TtaFreeMemory (element);
       element = next;
     }
+  TemplateRepositoryPaths = NULL;
 }
 
 /*----------------------------------------------------------------------
-  CopyTemplateRepositoryList: Copy a list of template repositories.
-  src : address of the list (address of the first element).
-  dst : address where copy the list
+  SaveTemplateRepositoryList: Save the list of template repositories.
   ----------------------------------------------------------------------*/
-static void CopyTemplateRepositoryList (const Prop_Templates_Path** src,
-                                        Prop_Templates_Path** dst)
+void SaveTemplateRepositoryList ()
 {
-  Prop_Templates_Path *element=NULL, *current=NULL;
+  const Prop_Templates_Path *element;
+  char *path, *homePath;
+  unsigned char *c;
+  FILE *file;
 
-  if (*src)
+  path = (char *) TtaGetMemory (MAX_LENGTH);
+  homePath       = TtaGetEnvString ("APP_HOME");
+  sprintf (path, "%s%ctemplates.dat", homePath, DIR_SEP);
+
+  file = TtaWriteOpen ((char *)path);
+  c = (unsigned char*)path;
+  *c = EOS;
+  if (file)
     {
-      *dst = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
-      (*dst)->NextPath = NULL;
-      strcpy((*dst)->Path, (*src)->Path);
-
-      element = (*src)->NextPath;
-      current = *dst;
-    }
-
-  while (element)
-    {
-      current->NextPath = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
-      current = current->NextPath;
-      current->NextPath = NULL;
-      strcpy(current->Path, element->Path);
-      element = element->NextPath;
+      element = TemplateRepositoryPaths;
+      while (element)
+        {
+          fprintf(file, "%s\n", element->Path);
+          element = element->NextPath;
+        }
+      TtaWriteClose (file);
     }
 }
 
 /*----------------------------------------------------------------------
   LoadTemplateRepositoryList: Load the list of template repositories.
-  list   : address of the list (address of the first element).
   return : the number of readed repository paths.
   ----------------------------------------------------------------------*/
-static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
+static int LoadTemplateRepositoryList ()
 {
   Prop_Templates_Path *element, *current = NULL;
-  char *path, *homePath;
-  unsigned char *c;
-  int nb = 0;
-  FILE *file;
-
-  //clean up the curent list
-  FreeTemplateRepositoryList (list);
+  char                *path, *homePath;
+  unsigned char       *c;
+  int                  nb = 0;
+  FILE                *file;
 
   // open the file
   path = (char *) TtaGetMemory (MAX_LENGTH);
@@ -413,7 +407,7 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
       /* Retry to open it.*/
       file = TtaReadOpen ((char *)path);
     }
-
+  TemplateRepositoryPaths = NULL;
   if (file)
     {
       // read the file
@@ -427,10 +421,9 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
             {
               element = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
               element->NextPath = NULL;
-              strcpy (element->Path, path);
-
-              if (*list == NULL)
-                *list = element;
+              element->Path = TtaStrdup (path);
+              if (TemplateRepositoryPaths == NULL)
+                TemplateRepositoryPaths = element;
               else
                 current->NextPath = element;
               current = element;
@@ -446,11 +439,11 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
         {
           element = (Prop_Templates_Path*) TtaGetMemory (sizeof(Prop_Templates_Path));
           *(c+1) = EOS;
-          strcpy (element->Path, path);
+          element->Path = TtaStrdup (path);
           element->NextPath = NULL;
 
-          if (*list == NULL)
-            *list = element;
+          if (TemplateRepositoryPaths == NULL)
+            TemplateRepositoryPaths = element;
           else
             current->NextPath = element;
           nb++;
@@ -461,57 +454,6 @@ static int LoadTemplateRepositoryList (Prop_Templates_Path** list)
   return nb;
 }
 
-/*----------------------------------------------------------------------
-  SaveTemplateRepositoryList: Save the list of template repositories.
-  list   : address of the list (address of the first element).
-  ----------------------------------------------------------------------*/
-static void SaveTemplateRepositoryList (const Prop_Templates_Path** list)
-{
-  const Prop_Templates_Path *element;
-  char *path, *homePath;
-  unsigned char *c;
-  FILE *file;
-
-  path = (char *) TtaGetMemory (MAX_LENGTH);
-  homePath       = TtaGetEnvString ("APP_HOME");
-  sprintf (path, "%s%ctemplates.dat", homePath, DIR_SEP);
-
-  file = TtaWriteOpen ((char *)path);
-  c = (unsigned char*)path;
-  *c = EOS;
-  if (file)
-    {
-      element = *list;
-      while (element)
-        {
-          fprintf(file, "%s\n", element->Path);
-          element = element->NextPath;
-        }
-      TtaWriteClose (file);
-    }
-}
-
-/*----------------------------------------------------------------------
-  GetTemplateRepositoryList: Get the list of template repositories from template environment.
-  list : address of the list (address of the first element).
-  ----------------------------------------------------------------------*/
-void GetTemplateRepositoryList (void* list)
-{
-  Prop_Templates_Path** l = (Prop_Templates_Path**) list;
-  CopyTemplateRepositoryList((const Prop_Templates_Path**)&TemplateRepositoryPaths, l);
-}
-
-/*----------------------------------------------------------------------
-  SetTemplateRepositoryList: Set the list of template repositories environment.
-  list : address of the list (address of the first element).
-  ----------------------------------------------------------------------*/
-void SetTemplateRepositoryList (const void* list)
-{
-  const Prop_Templates_Path** l = (const Prop_Templates_Path**) list;
-  CopyTemplateRepositoryList((const Prop_Templates_Path**)l, &TemplateRepositoryPaths);
-  SaveTemplateRepositoryList((const Prop_Templates_Path**)&TemplateRepositoryPaths);
-}
-
 /*-----------------------------------------------------------------------
   InitTemplates
   Initializes the annotation library
@@ -519,7 +461,7 @@ void SetTemplateRepositoryList (const void* list)
 void InitTemplates ()
 {
   TtaSetEnvBoolean ("SHOW_TEMPLATES", TRUE, FALSE);
-  LoadTemplateRepositoryList (&TemplateRepositoryPaths);
+  LoadTemplateRepositoryList ();
 }
 
 

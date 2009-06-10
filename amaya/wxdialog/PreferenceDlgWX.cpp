@@ -30,7 +30,9 @@
 #include "Elemlist.h"
 #include "templates_f.h"
 #include "HTMLhistory_f.h"
-
+#ifdef DAV
+#include "davlibUI_f.h"
+#endif /* DAV */
 bool PreferenceDlgWX::m_OnApplyLock = FALSE;
 extern bool WarnRestart;
 static int MyRef = 0;
@@ -81,7 +83,11 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_UPDATE_UI( XRCID("wxID_BUTTON_ADD_TEMPLATE"),     PreferenceDlgWX::OnUpdateTemplateAdd )
   EVT_TEXT(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"), PreferenceDlgWX::OnTemplateKey)
   EVT_LISTBOX(XRCID("wxID_LIST_TEMPLATE_REPOSITORIES"), PreferenceDlgWX::OnTemplateSelected)
-#endif /* TEMPLATES*/
+#endif /* TEMPLATES */
+#ifdef DAV
+  EVT_BUTTON( XRCID("wxID_BUTTON_DELETE_DAV"),    PreferenceDlgWX::OnDAVDel )
+  EVT_TEXT_ENTER( XRCID("wxID_VALUE_DAV_RESOURCES"),    PreferenceDlgWX::OnDAVUpdate )
+#endif /* DAV */
   // Passwords tab callbacks
   EVT_LISTBOX(XRCID("wxID_LIST_PASSWORDS"),         PreferenceDlgWX::OnPasswordSelected)
   EVT_BUTTON( XRCID("wxID_BUTTON_DELETE_PASSWORD"), PreferenceDlgWX::OnPasswordDeleted )
@@ -102,7 +108,7 @@ END_EVENT_TABLE()
     + ...
     returns:
     ----------------------------------------------------------------------*/
-  PreferenceDlgWX::PreferenceDlgWX( int ref, wxWindow* parent,
+  PreferenceDlgWX::PreferenceDlgWX (int ref, wxWindow* parent,
                                     const wxArrayString & url_list,
 				    const wxArrayString & rdfa_list) :
     AmayaDialog( parent, ref ),
@@ -197,7 +203,7 @@ END_EVENT_TABLE()
   SetupDialog_DAV( GetProp_DAV() );
 #endif /* DAV */
 #ifdef TEMPLATES
-  SetupDialog_Templates( GetProp_Templates() );
+  SetupDialog_Templates();
 #endif /* TEMPLATES */
   SetupDialog_Emails( GetProp_Emails() );
   SetupDialog_Passwords( GetProp_Passwords() );
@@ -1164,11 +1170,20 @@ void PreferenceDlgWX::SetupLabelDialog_DAV()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_DAV( const Prop_DAV & prop)
 {
-  int          val;
-
+  int            val;
+  wxComboBox    *box = XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxComboBox);
+  Prop_DAV_Path *path = DAV_Paths;
+  if (path)
+    {
+      box->SetValue(TtaConvMessageToWX(path->Path));
+      path = path->NextPath;
+      while (path)
+        {
+          box->Append(TtaConvMessageToWX(path->Path));
+          path = path->NextPath;
+        }
+    }
   XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserReference) );
-  XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserResources) );
-
   if (!strcmp (prop.radioDepth, "infinity"))
     val = 1;
   else
@@ -1191,6 +1206,47 @@ void PreferenceDlgWX::SetupDialog_DAV( const Prop_DAV & prop)
 }
 
 /*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnDAVDel(wxCommandEvent& event)
+{
+  wxString       value;
+  wxComboBox    *box = XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxComboBox);
+  Prop_DAV_Path *path;
+
+  value = box->GetValue();
+  if (value.Len() > 0)
+    {
+      RemovePathInDAVList ((const char*)value.mb_str(wxConvUTF8));
+      // update the combobox
+      path = DAV_Paths;
+      if (path)
+        {
+          box->SetValue(TtaConvMessageToWX(path->Path));
+          path = path->NextPath;
+          while (path)
+            {
+              box->Append(TtaConvMessageToWX(path->Path));
+              path = path->NextPath;
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnDAVUpdate( wxCommandEvent& event )
+{
+  wxString       value;
+
+  value = XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxComboBox)->GetValue();
+  if (value.Len() > 0)
+    {
+      AddPathInDAVList ((const char*)value.mb_str(wxConvUTF8));
+      XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxComboBox)->Append(value);
+    }
+}
+
+/*----------------------------------------------------------------------
   GetValueDialog_DAV init labels
   params:
   returns:
@@ -1204,8 +1260,6 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
   memset( &prop, 0, sizeof(Prop_General) );
   value = XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->GetValue();
   strcpy( prop.textUserReference, (const char*)value.mb_str(wxConvUTF8) );
-  value = XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxTextCtrl)->GetValue();
-  strcpy( prop.textUserResources, (const char*)value.mb_str(wxConvUTF8) );
 
   val = XRCCTRL(*this, "wxID_RADIO_LOCK_DEPTH", wxRadioBox)->GetSelection();
   if (val == 1)
@@ -1252,10 +1306,10 @@ void PreferenceDlgWX::SetupLabelDialog_Templates()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::SetupDialog_Templates( const Prop_Templates & prop)
+void PreferenceDlgWX::SetupDialog_Templates()
 {
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  Prop_Templates_Path* path = prop.FirstPath;
+  Prop_Templates_Path* path = TemplateRepositoryPaths;
   while (path)
     {
       box->Append(TtaConvMessageToWX(path->Path));
@@ -1271,20 +1325,19 @@ void PreferenceDlgWX::SetupDialog_Templates( const Prop_Templates & prop)
 void PreferenceDlgWX::UpdateTemplateList()
 {
   wxString             value;
-  Prop_Templates       prop = GetProp_Templates();
   Prop_Templates_Path *element = NULL;
   wxListBox           *box;
   int                  i;
 
-  FreeTemplateRepositoryList(&(prop.FirstPath));
+  FreeTemplateRepositoryList();
   box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
   for (i = 0; i < (int)box->GetCount(); i++)
     {
     element = (Prop_Templates_Path*) AllocTemplateRepositoryListElement( (const char*) box->GetString(i).mb_str(*wxConvCurrent), element);
     if (i == 0)
-       prop.FirstPath = element;
+       TemplateRepositoryPaths = element;
     }
-  SetTemplateRepositoryList ((const Prop_Templates_Path**)&(prop.FirstPath));
+  SaveTemplateRepositoryList ();
 }
 
 /*----------------------------------------------------------------------
@@ -1294,7 +1347,6 @@ void PreferenceDlgWX::UpdateTemplateList()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::GetValueDialog_Templates()
 {
-  //Prop_Templates       prop = GetProp_Templates();
 }
 
 /*----------------------------------------------------------------------
@@ -1523,12 +1575,13 @@ void PreferenceDlgWX::SetupLabelDialog_Passwords()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Passwords( const Prop_Passwords & prop)
 {
+  Prop_Passwords_Site* site;
+
   XRCCTRL(*this, "wxID_CHECK_DEF_PASSWORDS", wxCheckBox)->SetValue( prop.S_Passwords );
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_PASSWORDS", wxListBox);
   box->Clear();
   /* Build the list of server/realm pair from the internal table */
   LoadPasswordsSiteList();
-  Prop_Passwords_Site* site;
   site = GetFirtsPasswordsSite();
   while (site)
     {
@@ -1777,7 +1830,6 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   // not necessary to update the list
   OnTemplateAdd (event);
   GetValueDialog_Templates();
-  ThotCallback (GetPrefTemplatesBase() + TemplatesMenu, INTEGER_DATA, (char*) 1);
 #endif /* TEMPLATES */
 
   Prop_Emails prop_emails = GetValueDialog_Emails();
@@ -1864,10 +1916,7 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
 #endif /* DAV */
 #ifdef TEMPLATES
   else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_TEMPLATES")) )
-    {
-      ThotCallback (GetPrefTemplatesBase() + TemplatesMenu, INTEGER_DATA, (char*) 2);
-      SetupDialog_Templates( GetProp_Templates() );
-    }
+    SetupDialog_Templates();
 #endif /* TEMPLATES */
   else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_EMAILS")) )
     {
@@ -1912,12 +1961,9 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 #ifdef DAV
   ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 0);
 #endif /* DAV */
-#ifdef TEMPLATES
-  ThotCallback (GetPrefTemplatesBase() + TemplatesMenu, INTEGER_DATA, (char*) 0);
-#endif /* TEMPLATES */
   ThotCallback (GetPrefEmailsBase() + EmailsMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefPasswordsBase() + PasswordsMenu, INTEGER_DATA, (char*) 0);
-   ThotCallback (GetPrefRDFaBase() + RDFaMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefRDFaBase() + RDFaMenu, INTEGER_DATA, (char*) 0);
 
   ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
   TtaRedirectFocus();

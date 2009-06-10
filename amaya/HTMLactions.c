@@ -36,6 +36,14 @@
 #include "templateDeclarations_f.h"
 #endif /* TEMPLATES */
 
+#ifdef DAV
+#define WEBDAV_EXPORT extern
+#include "davlib.h"
+#include "davlib_f.h"
+#include "davlibRequests_f.h"
+#include "davlibUI_f.h"
+#endif /* DAV */
+
 #include "XML.h"
 #include "MENUconf.h"
 #include "anim_f.h"
@@ -2756,6 +2764,11 @@ void FocusChanged (Document doc)
   if (GoToSection)
     return;
   UpdateStyleList (doc, 1);
+#ifdef DAV
+  if (DocumentMeta[doc])
+    DAVSetLockIndicator (doc, DocumentMeta[doc]->lockState);
+#endif /* DAV */
+  
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] && DocumentSource[i] != doc &&
         DocumentTypes[i] == docLog)

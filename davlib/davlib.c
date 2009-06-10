@@ -21,7 +21,13 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.20  2009-06-08 14:57:00  vatton
+ ** Revision 1.21  2009-06-10 10:57:23  vatton
+ ** Change the management of Templates list
+ ** + Implementation of a new WebDAV list of sites
+ ** + Fix problems with lock/unlock status
+ ** Irene
+ **
+ ** Revision 1.20  2009/06/08 14:57:00  vatton
  ** Addd a new button to lock/unlock WebDAV resources
  ** + display only the end of the message when the status bar is too short
  ** Irene
@@ -91,7 +97,6 @@
  ** Revision 1.6  2002/06/06 17:10:45  kirschpi
  ** Breaking the user messages in three lines
  ** Fixing some code format problems
- ** Fixing DAVLockIndicator, when Lock discovery is disabled.
  ** Fixing unecessary memory allocations in FilterMultiStatus_handler
  ** and FilterLocked_handler.
  ** Manuele
@@ -99,9 +104,6 @@
  ** Revision 1.5  2002/06/05 16:46:06  kirschpi
  ** Applying Amaya code format.
  ** Modifying some dialogs (looking for a better windows presentation)
- ** Adding a DAVResource list, a list of resources (specially collections),
- ** where we should do a Lock discovery.
- ** Manuele
  **
  ** Revision 1.4  2002/06/04 14:51:41  kirschpi
  ** Fixing bug on InitDAV.
@@ -249,20 +251,6 @@ void InitDAV (void)
     DAVAwareness = TRUE;
     DAVAwarenessExit = TRUE;
     
-    /************************** DAVResources ******************** */
-    ptr = NULL;
-    ptr = TtaGetEnvString (DAV_URLS);
-    if (ptr && (*ptr))
-        sprintf (DAVResources,ptr);
-    else
-     { 
-        DAVResources[0] = EOS;
-
-        /* save timeout in thot env */
-        TtaSetEnvString (DAV_URLS,DAVResources,TRUE);
-        /*modified = TRUE;*/
-     }
-
     /* *********************** SAVING REGISTRY ***************** */
     if (modified)
       TtaSaveAppRegistry();
@@ -271,7 +259,6 @@ void InitDAV (void)
     fprintf (stderr,"InitDAV..... WebDAV User's preferences are \n");
     fprintf (stderr,"\tuser url: %s\n\tlock scope: %s\n",DAVUserURL,DAVLockScope); 
     fprintf (stderr,"\tdepth: %s\n\ttimeout: %s\n",DAVDepth,DAVTimeout); 
-    fprintf (stderr,"\tResources: %s\n",DAVResources); 
 
     /*HTSetTraceMessageMask("pl");*/
 #endif
@@ -286,7 +273,6 @@ void InitDAV (void)
 
     HTNet_addAfter (FilterMultiStatus_handler,"http://*", NULL, 
                                            HT_MULTI_STATUS,HT_FILTER_MIDDLE);
-    //DAVSetLockIndicator(CurrentDocument, 1);
 }
 
 
@@ -380,24 +366,15 @@ void DAVSaveRegistry (void)
     TtaSetEnvString (DAV_LOCK_SCOPE,DAVLockScope,TRUE);
     TtaSetEnvString (DAV_DEPTH,DAVDepth,TRUE);
     TtaSetEnvString (DAV_TIMEOUT,DAVTimeout,TRUE);
-    
-    /************************** DAVResources ******************** */
-    TtaSetEnvString (DAV_URLS,DAVResources,TRUE);
-
-
     /* *********************** SAVING REGISTRY ***************** */
     TtaSaveAppRegistry();
-
     
 #ifdef DEBUG_DAV
     fprintf (stderr,"DAVSaveRegistry..... WebDAV User's preferences are \n");
     fprintf (stderr,"\tuser url: %s\n\tlock scope: %s\n",DAVUserURL,DAVLockScope); 
     fprintf (stderr,"\tdepth: %s\n\ttimeout: %s\n",DAVDepth,DAVTimeout); 
-    fprintf (stderr,"\tResources: %s\n",DAVResources); 
 #endif
-
 }
-
 
 
 /* ********************************************************************* *
@@ -407,92 +384,93 @@ void DAVSaveRegistry (void)
 
 /*----------------------------------------------------------------------
    DAVLockDocument - Lock the document URL 
-
   ----------------------------------------------------------------------*/
-void DAVLockDocument (Document document, View view)
+void DAVLockDocument (Document doc, View view)
 {
-    AHTDAVContext *davctx = NULL;
+  AHTDAVContext *davctx = NULL;
+  char          *url = DocumentURLs[doc];
 
-    if (!DAVLibEnable)
-      return;
+  if (!DAVLibEnable || url == NULL)
+    return;
+  if (DocumentMeta[doc] == NULL || DocumentMeta[doc]->lockState == 0)
+    // not a webDAV resource
+    return;
 
 #ifdef DEBUG_DAV    
-    fprintf (stderr,"DAVLockDocument..... Locking document %s\n",DocumentURLs[document]);
-    fprintf (stderr,"DAVLockDocument..... creating the dav context object\n");
+  fprintf (stderr,"DAVLockDocument..... Locking document %s\n", url);
+  fprintf (stderr,"DAVLockDocument..... creating the dav context object\n");
 #endif
     
-    /* getting DAV context object */ 
-    davctx = GetLockInfo (document);
-    if (!davctx) 
-     {            
-        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
-                           DocumentURLs[document]);
-        DAVSetLockIndicator (document, 0);
-     }
-    else 
-     {
+  /* getting DAV context object */ 
+  davctx = GetLockInfo (doc);
+  if (!davctx) 
+    {
+      DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), url);
+      DAVSetLockIndicator (doc, 0);
+    }
+  else 
+    {
 #ifdef DEBUG_DAV
-        char *url = DocumentURLs[document];
-        fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
-        fprintf (stderr,"\tdepth: %s\n",HTDAV_DepthHeader(davctx->davheaders));
-        fprintf (stderr,"\ttimeout: %s\n",HTDAV_TimeoutHeader(davctx->davheaders));
-        fprintf (stderr,"\turl: %s\n",url);
-        fprintf (stderr,"\tLock XML body: %s\n",(davctx->xmlbody)?"YES":"NO");
+      fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
+      fprintf (stderr,"\tdepth: %s\n",HTDAV_DepthHeader(davctx->davheaders));
+      fprintf (stderr,"\ttimeout: %s\n",HTDAV_TimeoutHeader(davctx->davheaders));
+      fprintf (stderr,"\turl: %s\n",url);
+      fprintf (stderr,"\tLock XML body: %s\n",(davctx->xmlbody)?"YES":"NO");
 #endif 
-
-        /* executing the request */
-        if (!DoLockRequest (document,davctx)) 
-            DAVDisplayMessage (TtaGetMessage (AMAYA, AM_LOCK_FAILED), NULL);
-
-     }
-        
+      /* executing the request */
+      if (!DoLockRequest (doc, davctx)) 
+        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_LOCK_FAILED), NULL);
+      else
+        DAVSetLockIndicator (doc, 2);
+    }
 }
-
 
 
 /*----------------------------------------------------------------------
    DAVUlnlocDocument - Unlock document URL
 
   ----------------------------------------------------------------------*/
-void DAVUnlockDocument (Document document, View view) 
+void DAVUnlockDocument (Document doc, View view) 
 {
-    AHTDAVContext *davctx = NULL;
+  AHTDAVContext *davctx = NULL;
+  char          *url = DocumentURLs[doc];
 
-    if (!DAVLibEnable)
-      return;
-    
+  if (!DAVLibEnable || url == NULL)
+    return;
+  if (DocumentMeta[doc] == NULL || DocumentMeta[doc]->lockState == 0)
+    // not a webDAV resource
+    return;
+
 #ifdef DEBUG_DAV    
-    fprintf (stderr,"DAVUnlockDocument..... Unlocking document %s\n",DocumentURLs[document]);
-    fprintf (stderr,"DAVUnlockDocument..... creating the dav context object\n");
+  fprintf (stderr,"DAVUnlockDocument..... Unlocking document %s\n", url);
+  fprintf (stderr,"DAVUnlockDocument..... creating the dav context object\n");
 #endif
-  
-    davctx = GetUnlockInfo(document);
-    if (davctx) 
-     {
+  davctx = GetUnlockInfo (doc);
+  if (davctx) 
+    {
 #ifdef DEBUG_DAV
-        fprintf (stderr,"DAVUnlockDocument..... DAV context object:\n");
-        fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
-        fprintf (stderr,"\tdepth: %s\n",HTDAV_DepthHeader(davctx->davheaders));
-        fprintf (stderr,"\tlock-token: %s\n",HTDAV_LockTokenHeader(davctx->davheaders));
+      fprintf (stderr,"DAVUnlockDocument..... DAV context object:\n");
+      fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n", davctx->absoluteURI, davctx->relativeURI);
+      fprintf (stderr,"\tdepth: %s\n", HTDAV_DepthHeader(davctx->davheaders));
+      fprintf (stderr,"\tlock-token: %s\n", HTDAV_LockTokenHeader(davctx->davheaders));
 #endif 
-        /* do the request */       
-        if (!DoUnlockRequest (document,davctx)) 
-            DAVDisplayMessage (TtaGetMessage (AMAYA, AM_UNLOCK_FAILED), NULL);
-     }
-    else 
-     {
-        /* *** Should we give to the user the option to unlock a document anyway? YES *** */
-        ForceUnlockRequest (document);
-     }
+      /* do the request */       
+      if (!DoUnlockRequest (doc, davctx)) 
+        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_UNLOCK_FAILED), NULL);
+      else
+        DAVSetLockIndicator (doc, 1);
+    }
+  else 
+    /* *** Should we give to the user the option to unlock a document anyway? YES *** */
+    ForceUnlockRequest (doc);
 }
-
 
 
 /*----------------------------------------------------------------------
    DAVCopyLockInfo - do a Propfind request in the document URL 
    to discover and copy (to the local base) the lock information
   ----------------------------------------------------------------------*/
-void DAVCopyLockInfo (Document document, View view) 
+void DAVCopyLockInfo (Document doc, View view) 
 {
     AHTDAVContext *davctx= NULL;
     BOOL ok = NO;
@@ -501,34 +479,29 @@ void DAVCopyLockInfo (Document document, View view)
       return;
 
 #ifdef DEBUG_DAV
-    fprintf (stderr,"DAVCopyLockInfo.... Profind document %s\n",DocumentURLs[document]);
+    fprintf (stderr,"DAVCopyLockInfo.... Profind document %s\n",DocumentURLs[doc]);
     fprintf (stderr,"DAVCopyLockInfo..... creating the dav context object\n");    
 #endif    
     
-    davctx = GetPropfindInfo(document);
+    davctx = GetPropfindInfo(doc);
     if (davctx) 
      {
 #ifdef DEBUG_DAV
         fprintf (stderr,"DAVPropfindDocument..... DAV context object:\n");
-        fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
-        fprintf (stderr,"\tdepth: %s\n",HTDAV_DepthHeader(davctx->davheaders));
-        fprintf (stderr,"\txml body: %s\n",(davctx->xmlbody));    
+        fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n", davctx->absoluteURI, davctx->relativeURI);
+        fprintf (stderr,"\tdepth: %s\n", HTDAV_DepthHeader(davctx->davheaders));
+        fprintf (stderr,"\txml body: %s\n", (davctx->xmlbody));    
 #endif
-        
         /* YES, show the results*/
         davctx->showIt = YES;
-
-        if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) 
-            ok = DoPropfindRequest (document,davctx,FilterCopyLockInfo_handler,NULL);
-        
+        if (createPropfindBody (YES, davctx->xmlbody, DAV_XML_LEN)) 
+            ok = DoPropfindRequest (doc,davctx, FilterCopyLockInfo_handler, NULL);
         if (!ok)
-            DAVDisplayMessage (TtaGetMessage (AMAYA,AM_PROPFIND_FAILED), NULL);
-        
+            DAVDisplayMessage (TtaGetMessage (AMAYA, AM_PROPFIND_FAILED), NULL);
      }
     else
-      DAVSetLockIndicator (document, 1);
+      DAVSetLockIndicator (doc, 1);
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -536,14 +509,13 @@ void DAVCopyLockInfo (Document document, View view)
   ----------------------------------------------------------------------*/
 void DAVLockIndicator (Document doc, View view) 
 {
-        
     /* if lock indicator is TRUE, unlock the document
      * if it's FALSE, lock the document */
   if (DocumentMeta[doc])
     {
-      if (DocumentMeta[doc]->lockIndicatorState) 
+      if (DocumentMeta[doc]->lockState == 2) 
         DAVUnlockDocument (doc, view);    
-      else
+      else if (DocumentMeta[doc]->lockState == 1)
         DAVLockDocument (doc, view);    
     }
 }

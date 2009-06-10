@@ -20,9 +20,8 @@ extern ThotBool CheckPromptIndicator ( Element el,
 extern ThotBool RemovePromptIndicator ( NotifyOnTarget *event );
 extern void* AllocTemplateRepositoryListElement ( const char* path,
                                                   void* prevElement );
-extern void FreeTemplateRepositoryList ( void* list );
-extern void GetTemplateRepositoryList ( void* list );
-extern void SetTemplateRepositoryList ( const void* list );
+extern void FreeTemplateRepositoryList ( void );
+extern void SaveTemplateRepositoryList ( void );
 extern void InitTemplates ( void );
 extern void CreateInstanceOfTemplate ( Document doc,
                                        char *templatename,
@@ -123,9 +122,8 @@ extern ThotBool CheckPromptIndicator ( Element el,
 extern ThotBool RemovePromptIndicator ( NotifyOnTarget *event );
 extern void* AllocTemplateRepositoryListElement ( const char* path,
                                                     void* prevElement );
-extern void FreeTemplateRepositoryList ( void* list );
-extern void GetTemplateRepositoryList ( void* list );
-extern void SetTemplateRepositoryList ( const void* list );
+extern void FreeTemplateRepositoryList ( void );
+extern void SaveTemplateRepositoryList ( void );
 extern void InitTemplates ( void );
 extern void CreateInstanceOfTemplate ( Document doc,
                                          char *templatename,

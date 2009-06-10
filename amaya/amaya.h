@@ -580,9 +580,9 @@ typedef struct _DocumentMetaDataElement
   char      *reason;           /* http_headers reason*/
   int        method;           /* method used to send this data */
   Element    link_icon;        /* there is a link to an icon */
+  int        lockState;        /* 0=not webDAV, 1=unlocked, 2=locked */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
   ThotBool   compound;         /* the document is a compound document */
-  ThotBool   lockIndicatorState; /* the webdav document is locked */
 #ifdef ANNOTATIONS
   Document   source_doc;       /* if the document is an annotation,
 				  this variable giveso the annoted document docid */

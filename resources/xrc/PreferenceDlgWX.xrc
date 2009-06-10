@@ -1199,7 +1199,6 @@
         <flag>wxALL|wxEXPAND</flag>
         <border>10</border>
       </object>
-      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <orient>wxVERTICAL</orient>
@@ -1212,10 +1211,27 @@
             <size>0,5</size>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_VALUE_DAV_RESOURCES"/>
+            <object class="wxBoxSizer">
+              <object class="sizeritem">
+                <object class="wxBitmapButton" name="wxID_BUTTON_DELETE_DAV">
+                  <bitmap>../icons/16x16/editdelete.png</bitmap>
+                </object>
+                <option>0</option>
+              </object>
+              <object class="spacer">
+                <size>0,5</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxComboBox" name="wxID_VALUE_DAV_RESOURCES"/>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <orient>wxHORIZONTAL</orient>
+            </object>
             <option>0</option>
-            <flag>wxALL|wxEXPAND</flag>
+            <flag>wxEXPAND</flag>
           </object>
+        
         </object>
         <option>0</option>
         <flag>wxALL|wxEXPAND</flag>

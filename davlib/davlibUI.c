@@ -22,7 +22,13 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.32  2009-06-08 14:57:00  vatton
+** Revision 1.33  2009-06-10 10:57:23  vatton
+** Change the management of Templates list
+** + Implementation of a new WebDAV list of sites
+** + Fix problems with lock/unlock status
+** Irene
+**
+** Revision 1.32  2009/06/08 14:57:00  vatton
 ** Addd a new button to lock/unlock WebDAV resources
 ** + display only the end of the message when the status bar is too short
 ** Irene
@@ -181,36 +187,34 @@
 #include "davlibUI_f.h"
 #include "davlibCommon_f.h"
 #include "davlibRequests_f.h"
+#include "AHTURLTools_f.h"
 
 #include "init_f.h"
 #include "query_f.h"
 #include "MENUconf.h"
 #include "MENUconf_f.h"
 
-
 /* ********************************************************************* *
  *                         PRIVATE VARIABLES                             *
  * ********************************************************************* */
 
+/* Paths from which looking for templates.*/
+Prop_DAV_Path *DAV_Paths = NULL;
 extern int      DAVBase;
 extern Prop_DAV GProp_DAV;
-#ifdef _WINGUI
-#include "resource.h"
-extern HINSTANCE    hInstance;
-static HWND     DAVDlg;
-#endif /* _WINGUI */
 
+static AwList * GetPropfindInfoFromNode (AwNode *propnode);
 
 /*----------------------------------------------------------------------
   DAVSetLockIndicator: set the Lock indicator button.
   ---------------------------------------------------------------------- */
 void DAVSetLockIndicator (Document doc, int status) 
 {
-  ThotBool val = status == 2;
+  ThotBool  val = status == 2;
   /* updates Lock indicator*/
   if (DocumentMeta[doc])
     {
-      DocumentMeta[doc]->lockIndicatorState = val;
+      DocumentMeta[doc]->lockState = status;
       TtaSetToggleItem (doc, DAV_VIEW, Tools, TLock, val);
       TtaSetLockButton (doc, status);
     }
@@ -272,7 +276,7 @@ BOOL DAVConfirmDialog (Document docid, char *msg1, char *msg2, char *msg3)
 
   THE LIST AND ITS COMPONENTES ARE DESTROYED INSIDE THIS FUNCTION!!!!
   ---------------------------------------------------------------------- */
-void DAVPropertiesVerticalDialog (Document docid, const char *title,
+static void DAVPropertiesVerticalDialog (Document docid, const char *title,
     const char *rheader, const char *lheader, AwList *list) 
 {
   int     lines = 0;
@@ -482,7 +486,7 @@ void DAVShowPropfindInfo (AHTReqContext *context)
   GetPropfindInfoFromNode: get the PROPFIND allprop request's results 
   from the node 'prop' of the propfind response tree.  
   ---------------------------------------------------------------------- */
-AwList * GetPropfindInfoFromNode (AwNode *propnode) 
+static AwList * GetPropfindInfoFromNode (AwNode *propnode) 
 {
   AwList *list = NULL;
   AwNode *child = NULL;
@@ -742,10 +746,6 @@ void SetDAVConf (void)
       strcpy (DAVUserURL, GProp_DAV.textUserReference);
     }
   
-  /* ***** User's resource list - DAVResources  ***** */
-  /* it can be empty, so we don't verify it */
-  strcpy (DAVResources, GProp_DAV.textUserResources);
-  
   /* ***** Lock depth -  DAVDepth **** */
   /* we control the radioDepth content in DAVPreferencesDlg_callback */
   strcpy (DAVDepth, GProp_DAV.radioDepth);
@@ -777,8 +777,6 @@ void GetDAVConf (void)
 
   /* user reference */
   strcpy (GProp_DAV.textUserReference, DAVUserURL);
-  /* user resource list */
-  strcpy (GProp_DAV.textUserResources, DAVResources);
   /* lock depth */
   strcpy (GProp_DAV.radioDepth, DAVDepth);
   /* lock scope */
@@ -836,10 +834,6 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
           strcpy (GProp_DAV.textUserReference, data);
           break;
 
-        case DAVtextUserResources :
-          strcpy (GProp_DAV.textUserResources, data);
-          break;
-
         case DAVradioDepth :
           switch ((long int)data) 
             {
@@ -883,6 +877,217 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
     }
 }
 
+/*----------------------------------------------------------------------
+  AllocDAVPathsListElement: allocates an element for the list of DAV paths.
+  path : path of the new element
+  return : address of the new element
+  ----------------------------------------------------------------------*/
+void* AllocDAVPathsListElement (const char* path, void* prevElement)
+{
+  Prop_DAV_Path *element;
+
+  element  = (Prop_DAV_Path*)TtaGetMemory (sizeof(Prop_DAV_Path));
+  memset (element, 0, sizeof(Prop_DAV_Path));
+  element->Path = TtaStrdup (path);
+  if (prevElement)
+    {
+      element->NextPath = ((Prop_DAV_Path*)prevElement)->NextPath;
+      ((Prop_DAV_Path*)prevElement)->NextPath = element;
+    }
+  return element;
+}
+
+
+/*----------------------------------------------------------------------
+  SaveDAVPathsList: Save the list of DAV paths.
+  list   : address of the list (address of the first element).
+  ----------------------------------------------------------------------*/
+static void SaveDAVPathsList ()
+{
+  const Prop_DAV_Path *element;
+  char                *path, *homePath;
+  unsigned char       *c;
+  FILE                *file;
+
+  path = (char *) TtaGetMemory (MAX_LENGTH);
+  homePath       = TtaGetEnvString ("APP_HOME");
+  sprintf (path, "%s%cdav.dat", homePath, DIR_SEP);
+
+  file = TtaWriteOpen ((char *)path);
+  c = (unsigned char*)path;
+  *c = EOS;
+  if (file)
+    {
+      element = DAV_Paths;
+      while (element)
+        {
+          fprintf(file, "%s\n", element->Path);
+          element = element->NextPath;
+        }
+      TtaWriteClose (file);
+    }
+}
+
+/*----------------------------------------------------------------------
+  AddPathInDAVList: add a path in the list of DAV paths.
+  ----------------------------------------------------------------------*/
+void AddPathInDAVList (const char *path)
+{
+  Prop_DAV_Path  *element, *prev;
+
+  if (path == NULL || *path == EOS && IsHTTPPath (path))
+    return;
+  element = (Prop_DAV_Path*) TtaGetMemory (sizeof(Prop_DAV_Path));
+  element->NextPath = NULL;
+  element->Path = TtaStrdup (path);
+  prev = DAV_Paths;
+  if (prev)
+    {
+      while (prev->NextPath)
+        prev = prev->NextPath;
+      prev->NextPath = element;
+    }
+  else
+    DAV_Paths = element;
+  SaveDAVPathsList ();
+}
+
+/*----------------------------------------------------------------------
+  RemovePathInDAVList: add a path in the list of DAV paths.
+  ----------------------------------------------------------------------*/
+void RemovePathInDAVList (const char *path)
+{
+  Prop_DAV_Path  *element, *prev = NULL;
+
+  if (path == NULL || *path == EOS)
+    return;
+  element = DAV_Paths;
+  while (element)
+    {
+      if (element->Path && !strcmp (path, element->Path))
+        {
+          if (prev)
+            prev->NextPath = element->NextPath;
+          else
+            DAV_Paths = element->NextPath;
+          TtaFreeMemory (element->Path);
+          TtaFreeMemory (element);
+          SaveDAVPathsList ();
+          return;
+        }
+      prev = element;
+      element = element->NextPath;
+    }
+  return;
+}
+
+/*----------------------------------------------------------------------
+  IsPathInDAVList: look for a path in the list of DAV paths.
+  ----------------------------------------------------------------------*/
+ThotBool IsPathInDAVList (char *path)
+{
+  Prop_DAV_Path  *element;
+  int             l;
+
+  if (path == NULL || *path == EOS)
+    return FALSE;
+  element = DAV_Paths;
+  while (element)
+    {
+      if (element->Path)
+        {
+          l = strlen (element->Path);
+          if (!strncmp (element->Path, path, l))
+            return TRUE;
+        }
+      element = element->NextPath;
+    }
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  FreeDAVPathsList: Free the list of DAV paths.
+  list : address of the list (address of the first element).
+  ----------------------------------------------------------------------*/
+void FreeDAVPathsList ()
+{
+  Prop_DAV_Path  *element = DAV_Paths;
+
+  while (element)
+    {
+      Prop_DAV_Path* next = element->NextPath;
+      TtaFreeMemory (element->Path);
+      TtaFreeMemory (element);
+      element = next;
+    }
+  DAV_Paths = NULL;
+}
+
+
+/*----------------------------------------------------------------------
+  LoadDAVPathsList: Load the list of DAV paths.
+  list   : address of the list (address of the first element).
+  return : the number of readed paths.
+  ----------------------------------------------------------------------*/
+static int LoadDAVPathsList (Prop_DAV_Path** list)
+{
+  Prop_DAV_Path *element, *current = NULL;
+  char          *path, *homePath;
+  unsigned char *c;
+  int            nb = 0;
+  FILE          *file;
+
+  // open the file
+  path = (char *) TtaGetMemory (MAX_LENGTH);
+  homePath       = TtaGetEnvString ("APP_HOME");
+  sprintf (path, "%s%cdav.dat", homePath, DIR_SEP);
+  file = TtaReadOpen ((char *)path);
+  if (file)
+    {
+      // read the file
+      c = (unsigned char*)path;
+      *c = EOS;
+      while (TtaReadByte (file, c))
+        {
+          if (*c == 13 || *c == EOL)
+            *c = EOS;
+          if (*c == EOS && c != (unsigned char*)path )
+            {
+              element = (Prop_DAV_Path*) TtaGetMemory (sizeof(Prop_DAV_Path));
+              element->NextPath = NULL;
+              element->Path = TtaStrdup (path);
+
+              if (*list == NULL)
+                *list = element;
+              else
+                current->NextPath = element;
+              current = element;
+              nb++;
+
+              c = (unsigned char*) path;
+              *c = EOS;
+            }
+          else
+            c++;
+        }
+      if (c != (unsigned char*)path && *path != EOS)
+        {
+          element = (Prop_DAV_Path*) TtaGetMemory (sizeof(Prop_DAV_Path));
+          *(c+1) = EOS;
+          element->Path =TtaStrdup (path);
+          element->NextPath = NULL;
+
+          if (*list == NULL)
+            *list = element;
+          else
+            current->NextPath = element;
+          nb++;
+        }
+      TtaReadClose (file);
+    }
+  TtaFreeMemory(path);
+  return nb;
+}
 
 /*----------------------------------------------------------------------
   InitDAVPreferences inits DAV preferences
@@ -891,5 +1096,6 @@ void InitDAVPreferences ()
 {
   DAVBase = TtaSetCallback ((Proc)DAVPreferencesDlg_callback,
                             MAX_DAVPREF_DLG);
+  LoadDAVPathsList (&DAV_Paths);
 }
 

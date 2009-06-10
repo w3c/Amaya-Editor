@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1999-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1999-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -145,12 +145,6 @@ static Prop_Annot  GProp_Annot;
 int       DAVBase;
 Prop_DAV  GProp_DAV;
 #endif /* DAV */
-
-/* ============> Templates menu option */
-#ifdef TEMPLATES
-int            TemplatesBase;
-Prop_Templates GProp_Templates;
-#endif /* TEMPLATES */
 
 /* ============> Emails menu option */
 int            EmailsBase;
@@ -2465,88 +2459,6 @@ static void UpdateShowTemplates ()
 }
 
 
-/*----------------------------------------------------------------------
-  GetTemplateConf
-  Makes a copy of the current registry templates values
-  ----------------------------------------------------------------------*/
-void GetTemplatesConf (void)
-{
-#ifdef TEMPLATES
-  TtaGetEnvBoolean ("SHOW_TEMPLATES", &(GProp_Templates.S_Templates));  
-  GetTemplateRepositoryList(&(GProp_Templates.FirstPath));
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  SetTemplatesConf
-  Updates the registry Templates values and calls the General functions
-  to take into account the changes
-  ----------------------------------------------------------------------*/
-void SetTemplatesConf (void)
-{
-#ifdef TEMPLATES
-  ThotBool    old;
-  TtaGetEnvBoolean ("SHOW_TEMPLATES", &old);
-  TtaSetEnvBoolean ("SHOW_TEMPLATES", GProp_Templates.S_Templates, TRUE);
-  if (old != GProp_Templates.S_Templates)
-    UpdateShowTemplates ();
-  TtaSaveAppRegistry ();
-  //SetTemplateRepositoryList((const Prop_Templates_Path**)&(GProp_Templates.FirstPath));
-#endif /* TEMPLATES */
-}
-
-#ifdef TEMPLATES
-/*----------------------------------------------------------------------
-  GetDefaultTemplatesConf
-  Gets the registry default templates values.
-  ----------------------------------------------------------------------*/
-void GetDefaultTemplatesConf ()
-{
-  /* read the default values */
-  TtaGetDefEnvBoolean ("SHOW_TEMPLATES", &(GProp_Templates.S_Templates));
-  GetTemplateRepositoryList(&(GProp_Templates.FirstPath));
-}
-
-/*----------------------------------------------------------------------
-  TemplatesCallbackDialog
-  callback of the templates configuration menu
-  ----------------------------------------------------------------------*/
-static void TemplatesCallbackDialog (int ref, int typedata, char *data)
-{
-  intptr_t  val;
-  if (ref==-1)
-    {
-    }
-  else
-    {
-      val = (intptr_t) data;
-      switch (ref - TemplatesBase)
-        {
-        case TemplatesMenu:
-          switch (val)
-            {
-            case 0: /* CANCEL */
-              TtaDestroyDialogue (ref);
-              break;
-            case 1: /* OK */
-              SetTemplatesConf();
-              //TtaDestroyDialogue (ref);
-              break;
-            case 2: /* DEFAULT */
-              GetDefaultTemplatesConf();
-              break;
-            default:
-              break;
-            }
-          break;
-        default:
-          break;
-        }
-    }
-}
-#endif /* TEMPLATES */
-
-
 /**********************
  ** Passwords Menu
  **********************/
@@ -3037,18 +2949,6 @@ int GetPrefDAVBase()
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
-int GetPrefTemplatesBase()
-{
-#ifdef TEMPLATES
-  return TemplatesBase;
-#else /* TEMPLATES */
-  return 0;
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
-  ----------------------------------------------------------------------*/
 int GetPrefEmailsBase()
 {
   return EmailsBase;
@@ -3228,28 +3128,6 @@ Prop_DAV GetProp_DAV()
 #endif /* DAV */
 }
 
-
-/*----------------------------------------------------------------------
-  Use to set the Amaya global variables (Templates preferences)
-  ----------------------------------------------------------------------*/
-void SetProp_Templates( const Prop_Templates * prop )
-{
-#ifdef TEMPLATES
-  GProp_Templates = *prop;
-#endif /* TEMPLATES */
-}
-
-/*----------------------------------------------------------------------
-  Use to get the Amaya global variables (Templates preferences)
-  ----------------------------------------------------------------------*/
-Prop_Templates GetProp_Templates()
-{
-#ifdef TEMPLATES
-  return GProp_Templates;
-#endif /* TEMPLATES */
-}
-
-
 /*----------------------------------------------------------------------
   Use to set the Amaya global variables (Emails preferences)
   ----------------------------------------------------------------------*/
@@ -3364,11 +3242,6 @@ void PreferenceMenu (Document document, View view)
   GetDAVConf ();
 #endif /* DAV */
 
-#ifdef TEMPLATES
-  /* ---> Templates Tab */
-  GetTemplatesConf ();
-#endif /* TEMPLATES */
-
   /* ---> Emails Tab */
   GetEmailsConf();
   /* ---> Passwords Tab */
@@ -3428,9 +3301,6 @@ void InitConfMenu (void)
   /* create a new dialog reference for Preferences */
   PreferenceBase = TtaSetCallback( (Proc)PreferenceCallbackDialog, 1 );
   
-#ifdef TEMPLATES  
-  TemplatesBase = TtaSetCallback( (Proc)TemplatesCallbackDialog, MAX_TEMPLATEMENU_DLG );
-#endif /* TEMPLATES */  
   PasswordsBase = TtaSetCallback( (Proc)PasswordsCallbackDialog, MAX_PASSWORDMENU_DLG );
   CacheBase = TtaSetCallback ((Proc)CacheCallbackDialog, MAX_CACHEMENU_DLG);
   ProxyBase = TtaSetCallback ((Proc)ProxyCallbackDialog, MAX_PROXYMENU_DLG);

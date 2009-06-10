@@ -51,7 +51,7 @@ PUBLIC time_t strtotime (char *time)
     /* month */
     ptr2 = strchr (ptr1,' ');
     if (!ptr2) return 0;
-    *ptr2='\0';
+    *ptr2=EOS;
     ptr2++;
     
     for (i=0;i<12;i++) 
@@ -65,7 +65,7 @@ PUBLIC time_t strtotime (char *time)
     while (ptr1 && *ptr1 && *ptr1==' ') ptr1++;
     ptr2 = strchr (ptr1,' ');
     if (!ptr2) return 0;
-    *ptr2='\0';
+    *ptr2=EOS;
     ptr2++;
  
     dia = atoi(ptr1);
@@ -75,7 +75,7 @@ PUBLIC time_t strtotime (char *time)
     while (ptr1 && *ptr1 && *ptr1==' ') ptr1++;
     ptr2 = strchr (ptr1,':');
     if (!ptr2) return 0;
-    *ptr2='\0';
+    *ptr2=EOS;
     ptr2++;
      
     hora = atoi (ptr1);
@@ -84,7 +84,7 @@ PUBLIC time_t strtotime (char *time)
     ptr1 = ptr2; 
     ptr2 = strchr (ptr1,':');
     if (!ptr2) return 0;
-    *ptr2='\0';
+    *ptr2=EOS;
     ptr2++;
    
     min = atoi (ptr1);
@@ -93,7 +93,7 @@ PUBLIC time_t strtotime (char *time)
     ptr1 = ptr2; 
     ptr2 = strchr (ptr1,' ');
     if (!ptr2) return 0;
-    *ptr2='\0';
+    *ptr2=EOS;
     ptr2++;
    
     seg = atoi (ptr1);
@@ -134,7 +134,7 @@ PUBLIC char * timetostr (time_t t)
      {
         s[i] = *(ptr+i);
      }
-    s[i]='\0';
+    s[i]=EOS;
     ptr = (char *)calloc (i+1,sizeof(char));
     strcpy(ptr,s);
     /*ptr = NULL;
@@ -181,7 +181,7 @@ LockLine * LockLine_new (const char * aline)
         last = line;
         if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) 
          {
-            *ptr = '\0';
+            *ptr = EOS;
             url = line;
             lock = ++ptr;
             last = lock;
@@ -189,21 +189,21 @@ LockLine * LockLine_new (const char * aline)
     
         if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) 
          {
-            *ptr = '\0';
+            *ptr = EOS;
             depth = *(++ptr);
             last = ptr;
          }
 
         if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) 
          {
-            *ptr = '\0';
+            *ptr = EOS;
             timeout = ++ptr;
             last = timeout;
          }
 
         if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) 
          {
-            *ptr = '\0';
+            *ptr = EOS;
             itime = ++ptr;
             last = ptr;
          }
@@ -211,7 +211,7 @@ LockLine * LockLine_new (const char * aline)
         /* we don't want any '\n' at the end of line */
         if ( (ptr = strchr (last,'\n')) != NULL) 
          {
-            *ptr = '\0';
+            *ptr = EOS;
          }
     
         if (url && *url && lock && *lock && depth!=' ' && 
@@ -636,7 +636,7 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
     host = port = rel = dom = NULL;
     filename = relUri = NULL;
     address = fqdn = NULL;
-    pnumber[0]='\0';
+    pnumber[0] = EOS;
     status = NO;
     i = 0;
 
@@ -672,11 +672,11 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
     for (i=0; port && *(port+i) && *(port+i)!='/'; i++) 
         pnumber[i]=*(port+i);
     
-    pnumber[i] = '\0';
+    pnumber[i] = EOS;
     
     /* use PORT_CHAR instead ':' (from ":port_number") in the filename 
      * (Windows does not allow ':' in filename) */
-    if (pnumber[0] != '\0')
+    if (pnumber[0] != EOS)
         pnumber[0] = PORT_CHAR;
     
     /* copy the relativeURI in "rel" to relUri, or
@@ -689,11 +689,11 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
      * the relative URI part */
     if (port)
      {
-        (*port) = '\0';
+        (*port) = EOS;
         port++;
      }
     else if (rel) 
-      (*rel) = '\0';
+      (*rel) = EOS;
     /* try to find the domain name in the host */
     StrAllocCopy (filename, host);
     dom = HTStrCaseStr (host, (char*)".");
@@ -718,7 +718,7 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
      }
 
     /* copy the port number to the host */
-    if (pnumber[0]!='\0')
+    if (pnumber[0]!=EOS)
       StrAllocCat (filename, pnumber);
 
     /* returning */
@@ -925,7 +925,7 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
             if (ptr) 
              {
                 old = (*ptr);
-                (*ptr) = '\0';
+                (*ptr) = EOS;
                 
                 /* if doesn't match, it will be save */
                 if (strcasecomp (buf,line->relativeURI)!=0) 

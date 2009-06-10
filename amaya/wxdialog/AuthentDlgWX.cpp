@@ -98,30 +98,29 @@ AuthentDlgWX::AuthentDlgWX( int ref, wxWindow * parent, char *auth_realm,
       XRCCTRL(*this, "wxID_PASSWD", wxTextCtrl)->SetValue(wx_password);
       // 'Save passwords' checkbox
       XRCCTRL(*this, "wxID_CHECK_PWD",  wxCheckBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA ,AM_PASSWORDS_SAVE)));
-      if (name[0] != EOS && pwd[0] != EOS)
-        XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(TRUE);
-      else
-        XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(FALSE);
+      //if (name[0] != EOS && pwd[0] != EOS)
+      XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(TRUE);
+      //else
+      //XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(FALSE);
     }
   else
     {
       // hide save password check entry
-      wxWindow * p_obj;
+      //wxWindow * p_obj;
       XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox)->SetValue(FALSE);
-      p_obj = XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox);
-      p_obj->GetContainingSizer()->Show(p_obj, FALSE);
+      //p_obj = XRCCTRL(*this, "wxID_CHECK_PWD", wxCheckBox);
+      //p_obj->GetContainingSizer()->Show(p_obj, FALSE);
     }
 
   XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetSelection (0, -1);
-
   // Set focus to ...
   //  XRCCTRL(*this, "wxID_AU", wxTextCtrl)->SetFocus();
-
   Layout();
   SetAutoLayout( TRUE );
 }
 
-/*---------------------------------------------------------------------------bra  Destructor. (Empty, as we don't need anything special done when destructing).
+/*---------------------------------------------------------------------------
+  Destructor. (Empty, as we don't need anything special done when destructing).
   ---------------------------------------------------------------------------*/
 AuthentDlgWX::~AuthentDlgWX()
 {
