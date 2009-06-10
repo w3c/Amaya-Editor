@@ -1573,27 +1573,22 @@ void NewPasswordTable (char *realm, char *server, char *name, char *pwd,
 
   if (i_auth != 0)
     {
+      /* same name/pwd infos - don't change the record */
+      new_auth = FALSE;
       /* get the existing server/realm infos */
       pm_name[0] = EOS;
       pm_passwd[0] = EOS;
       GetPasswordTable (i_auth, &pm_name[0], &pm_passwd[0]);
 
       if (name[0] != EOS && strcmp (name, pm_name))
-        {
-          TtaFreeMemory (PM_Name[i_auth]);
-          PM_Name[i_auth] = TtaStrdup (name);
-          if (user)
-            PM_Save = TRUE;
-        }
-      if (pwd[0] != EOS && strcmp (pwd, pm_passwd))
+        new_auth = TRUE;
+      else if (pwd[0] != EOS && strcmp (pwd, pm_passwd))
         {
           TtaFreeMemory (PM_Passwd[i_auth]);
           PM_Passwd[i_auth] = TtaStrdup (pwd);
           if (user)
             PM_Save = TRUE;
         }
-      /* same name/pwd infos - don't change the record */
-      new_auth = FALSE;
     }
 
   /* Store the new record */
