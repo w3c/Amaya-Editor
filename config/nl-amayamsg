@@ -70,7 +70,7 @@
 68 Achtergrondafbeelding
 69 Hier kan geen achtergrondafbeelding gebruikt worden.
 70 CSS-opmaakmodel
-71 Bij het opslaan ook de volgende afbeeldingen opslaan?
+71 Bij het opslaan ook de volgende bestanden opslaan?
 72 De URL kon niet worden opgeslagen
 73 Opslaan?
 74 Afbeeldingen kopiëren
@@ -289,7 +289,7 @@
 287 Wilt u het opnieuw proberen?
 288 WebDAV
 289 Identificatie gebruiker (URL):
-290 Lijst van WebDAV-bronnen van gebruiker (URL URL ...):
+290 Lijst van WebDAV-bronnen van gebruiker:
 291 Diepte voor vergrendelen:
 292 oneindig
 293 Time-out voor vergrendelen:

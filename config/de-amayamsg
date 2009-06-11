@@ -70,7 +70,7 @@
 68 Hintergrundbild
 69 Hintergrundbild hier nicht zulässig
 70 Formatvorlage
-71 Folgende Bilder ebenfalls speichern?
+71 Folgende datei ebenfalls speichern?
 72 Speichern auf URI fehlerhaft
 73 Speichern auf Festplatte?
 74 Bilder kopieren
@@ -289,7 +289,7 @@
 287 Erneut versuchen?
 288 WebDAV
 289 Persönliche Benutzerreferenzen (URL)
-290 WebDAV Resourcenliste des Benutzers (URL)
+290 WebDAV Resourcenliste
 291 Sperrtiefe
 292 Unendlich
 293 Sperrzeitüberschreitung

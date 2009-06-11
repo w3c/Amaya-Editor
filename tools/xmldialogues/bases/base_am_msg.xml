@@ -1449,13 +1449,11 @@ CSS</message>
 	<message xml:lang="nl">CSS-opmaakmodel</message>
 </label>
 <label define="AM_WARNING_SAVE_OVERWRITE">
-	<message xml:lang="en">Saving will save following images too?</message>
-	<message xml:lang="fr">Enregistrer aussi les images suivantes?</message>
-	<message xml:lang="it">Il salvataggio salverà anche le immagini
-successive?</message>
-	<message xml:lang="es">¿Guardar también las imágenes siguientes al
-guardar?</message>
-	<message xml:lang="de">Folgende Bilder ebenfalls speichern?</message>
+	<message xml:lang="en">Saving will save following files too?</message>
+	<message xml:lang="fr">Enregistrer aussi les fichiers suivants ?</message>
+	<message xml:lang="it">Il salvataggio salverà anche gli archivi seguenti?</message>
+	<message xml:lang="es">¿Guardar también los ficheros siguientes al guardar?</message>
+	<message xml:lang="de">Folgende datei ebenfalls speichern?</message>
 	<message xml:lang="tr">Bi sonraki görüntülerde kayıt edilecektir</message>
 	<message xml:lang="ru">Сохранять изображения при
 последующих сохранениях?</message>
@@ -1467,7 +1465,7 @@ guardar?</message>
 	<message xml:lang="tw">同時保存這些圖片嗎?</message>
 	<message xml:lang="sk">Uložiť aj obrázky?</message>
 	<message xml:lang="ja">以下の画像も保存しますか?</message>
-	<message xml:lang="nl">Bij het opslaan ook de volgende afbeeldingen opslaan?</message>
+	<message xml:lang="nl">Bij het opslaan ook de volgende bestanden opslaan?</message>
 </label>
 <label define="AM_URL_SAVE_FAILED">
 	<message xml:lang="en">Failed to save to URL</message>
@@ -6001,27 +5999,23 @@ nadväznosť</message>
 	<message xml:lang="nl">Identificatie gebruiker (URL):</message>
 </label>
 <label define="AM_DAV_USER_RESOURCES">
-	<message xml:lang="en">User's WebDAV resource list (URL URL)</message>
-	<message xml:lang="fr">Liste des ressources de l'utilisateur (URL
-URL)</message>
-	<message xml:lang="pt">Lista de recursos WebDAV do usuário (URL URL)</message>
-	<message xml:lang="de">WebDAV Resourcenliste des Benutzers (URL)</message>
-	<message xml:lang="fi">Käyttäjän WebDAV resurssi luettelo (URL
-URL)</message>
-	<message xml:lang="it">Resource list WebDAV per l'utente(URL URL)</message>
+	<message xml:lang="en">WebDAV sites list</message>
+	<message xml:lang="fr">Liste des sites WebDAV</message>
+	<message xml:lang="pt">Lista de recursos WebDAV</message>
+	<message xml:lang="de">WebDAV Resourcenliste</message>
+	<message xml:lang="fi">Käyttäjän WebDAV resurssi luettelo</message>
+	<message xml:lang="it">Resource list WebDAV per l'utente</message>
 	<message xml:lang="es">Lista de recursos WebDAV del usuario:</message>
-	<message xml:lang="tr">Kullanıyıcının referans listesi (URL URL)</message>
-	<message xml:lang="ru">Пользовательский список
-ресурсов WebDAV (URL URL)</message>
-	<message xml:lang="hu">User's WebDAV erőforrás listája (URL URL)</message>
+	<message xml:lang="tr">Kullanıyıcının referans listesi</message>
+	<message xml:lang="ru">Пользовательский список ресурсов WebDAV</message>
+	<message xml:lang="hu">User's WebDAV erőforrás listája</message>
 	<message xml:lang="ka">მონაწილის WebDAV
-რესურსების სია (URL URL)</message>
-	<message xml:lang="cn">用户 WebDAV 资源列表 (URL URL)</message>
-	<message xml:lang="tw">用戶 WebDAV 資源列表 (URL URL)</message>
-	<message xml:lang="sk">Používateľské WebDAV zoznamy zdrojov (URL
-URL)</message>
-	<message xml:lang="ja">ユーザーのWebDAV リソースリスト(URL URL)</message>
-	<message xml:lang="nl">Lijst van WebDAV-bronnen van gebruiker (URL URL ...):</message>
+რესურსების სია</message>
+	<message xml:lang="cn">用户 WebDAV 资源列表 </message>
+	<message xml:lang="tw">用戶 WebDAV 資源列表 </message>
+	<message xml:lang="sk">Používateľské WebDAV zoznamy zdrojov</message>
+	<message xml:lang="ja">ユーザーのWebDAV リソースリスト</message>
+	<message xml:lang="nl">Lijst van WebDAV-bronnen van gebruiker:</message>
 </label>
 <label define="AM_DAV_DEPTH">
 	<message xml:lang="en">Lock Depth</message>

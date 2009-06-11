@@ -70,7 +70,7 @@
 68 Image de fond
 69 Image de fond interdite ici
 70 CSS
-71 Enregistrer aussi les images suivantes?
+71 Enregistrer aussi les fichiers suivants ?
 72 Erreur de sauvegarde de l'URL
 73 Enregistrer sur le disque ?
 74 Copier les images
@@ -289,7 +289,7 @@
 287 Ressayez?
 288 WebDAV
 289 Référence personnelle de l'utilisateur (URL)
-290 Liste des ressources de l'utilisateur (URL URL)
+290 Liste des sites WebDAV
 291 Profondeur du Verrou
 292 infini
 293 Expiration du verrou

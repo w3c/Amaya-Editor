@@ -2704,7 +2704,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
           pImage = ImageURLs;
           manage_images = TRUE;
         }
-      else if (ImageURLs)
+      else
         {
           pImage = LoadedResources;
           manage_images = FALSE;

@@ -70,7 +70,7 @@
 68 Immagine di sfondo
 69 L'immagine di background non è consentita qui
 70 CSS
-71 Il salvataggio salverà anche le immagini successive?
+71 Il salvataggio salverà anche gli archivi seguenti?
 72 Il salvataggio sull'URL è fallito
 73 Salvo su disco ?
 74 Copia immagini
@@ -289,7 +289,7 @@
 287 Riprovo?
 288 WebDAV
 289 Riferimento personale utente (URL)
-290 Resource list WebDAV per l'utente(URL URL)
+290 Resource list WebDAV per l'utente
 291 Profondità lock
 292 infinito
 293 Timeout per il lock

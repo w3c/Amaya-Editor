@@ -70,7 +70,7 @@
 68 Taustakuva
 69 Taustakuvaa ei sallita tässä
 70 CSS
-71 **Saving will save following images too?
+71 **Saving will save following files too?
 72 URL:n tallennus epäonnistui
 73 Tallennetaanko levylle ?
 74 Kopioi kuvat
@@ -289,7 +289,7 @@
 287 Yritä uudelleen?
 288 WebDAV
 289 Käyttäjän henkilökohtainen linkki (URL)
-290 Käyttäjän WebDAV resurssi luettelo (URL URL)
+290 Käyttäjän WebDAV resurssi luettelo
 291 Lukituksen syvyys
 292 rajattomuus
 293 Lukituksen aikakatkaisu

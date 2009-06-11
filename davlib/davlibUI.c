@@ -22,7 +22,12 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.33  2009-06-10 10:57:23  vatton
+** Revision 1.34  2009-06-11 15:12:32  vatton
+** Keep the value of the old DAV_URLS environment variable
+** + update dialogs
+** Irene
+**
+** Revision 1.33  2009/06/10 10:57:23  vatton
 ** Change the management of Templates list
 ** + Implementation of a new WebDAV list of sites
 ** + Fix problems with lock/unlock status
@@ -1026,22 +1031,38 @@ void FreeDAVPathsList ()
 
 /*----------------------------------------------------------------------
   LoadDAVPathsList: Load the list of DAV paths.
-  list   : address of the list (address of the first element).
   return : the number of readed paths.
   ----------------------------------------------------------------------*/
-static int LoadDAVPathsList (Prop_DAV_Path** list)
+static int LoadDAVPathsList ()
 {
   Prop_DAV_Path *element, *current = NULL;
-  char          *path, *homePath;
+  char          *path, *homePath, *s, *ptr;
   unsigned char *c;
-  int            nb = 0;
+  int            nb;
   FILE          *file;
 
-  // open the file
   path = (char *) TtaGetMemory (MAX_LENGTH);
+  // get the old list of webdav resources
+  s = TtaGetEnvString ("DAV_URLS");
+  if (s && s[0] != EOS)
+    {
+      strncpy (path, s, MAX_LENGTH - 1);
+      path[MAX_LENGTH - 1] = EOS;
+      ptr = strstr (s, " ");
+      if (ptr)
+        *ptr = EOS;
+      element = (Prop_DAV_Path*) TtaGetMemory (sizeof(Prop_DAV_Path));
+      element->NextPath = NULL;
+      element->Path = TtaStrdup (path);
+      DAV_Paths = element;
+      current = element;
+      TtaSetEnvString ("DAV_URLS", "", TRUE);
+    }
+  // open the file
   homePath       = TtaGetEnvString ("APP_HOME");
   sprintf (path, "%s%cdav.dat", homePath, DIR_SEP);
   file = TtaReadOpen ((char *)path);
+  nb = 0;
   if (file)
     {
       // read the file
@@ -1057,8 +1078,8 @@ static int LoadDAVPathsList (Prop_DAV_Path** list)
               element->NextPath = NULL;
               element->Path = TtaStrdup (path);
 
-              if (*list == NULL)
-                *list = element;
+              if ( DAV_Paths== NULL)
+                DAV_Paths = element;
               else
                 current->NextPath = element;
               current = element;
@@ -1077,8 +1098,8 @@ static int LoadDAVPathsList (Prop_DAV_Path** list)
           element->Path =TtaStrdup (path);
           element->NextPath = NULL;
 
-          if (*list == NULL)
-            *list = element;
+          if (DAV_Paths == NULL)
+            DAV_Paths = element;
           else
             current->NextPath = element;
           nb++;
@@ -1086,6 +1107,11 @@ static int LoadDAVPathsList (Prop_DAV_Path** list)
       TtaReadClose (file);
     }
   TtaFreeMemory(path);
+  if (s && s[0] != EOS)
+    {
+      SaveDAVPathsList ();
+      nb++;
+    }
   return nb;
 }
 
@@ -1096,6 +1122,6 @@ void InitDAVPreferences ()
 {
   DAVBase = TtaSetCallback ((Proc)DAVPreferencesDlg_callback,
                             MAX_DAVPREF_DLG);
-  LoadDAVPathsList (&DAV_Paths);
+  LoadDAVPathsList ();
 }
 

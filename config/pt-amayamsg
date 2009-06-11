@@ -70,7 +70,7 @@
 68 Imagem de fundo
 69 Imagem de fundo não é permitida aqui
 70 CSS
-71 **Saving will save following images too?
+71 **Saving will save following files too?
 72 Falha ao salvar na URL
 73 Salvar no disco?
 74 Copiar imagens
@@ -289,7 +289,7 @@
 287 Tentar de novo?
 288 WebDAV
 289 Referência pessoal do usuário (URL)
-290 Lista de recursos WebDAV do usuário (URL URL)
+290 Lista de recursos WebDAV
 291 Profundidade da Trava
 292 infinita
 293 Duração da Trava

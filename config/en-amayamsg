@@ -70,7 +70,7 @@
 68 Background image
 69 Background image not allowed here
 70 CSS
-71 Saving will save following images too?
+71 Saving will save following files too?
 72 Failed to save to URL
 73 Save to disk ?
 74 Copy images
@@ -293,7 +293,7 @@
 287 Try again?
 288 WebDAV
 289 User's personal reference (URL)
-290 User's WebDAV resource list (URL URL)
+290 WebDAV sites list
 291 Lock Depth
 292 infinity
 293 Lock Timeout
