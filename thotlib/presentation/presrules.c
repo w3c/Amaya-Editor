@@ -57,6 +57,8 @@
 #include "presvariables_f.h"
 #include "font_f.h"
 #include "units_f.h"
+#include "nodialog.h"
+#include "nodialog_f.h"
 
 /*----------------------------------------------------------------------
   AttrValue retourne la valeur que prend l'attribut numerique	
