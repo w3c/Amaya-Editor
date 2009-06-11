@@ -17,6 +17,7 @@
 #include "amaya.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
+#include "registry_wx.h"
 
 static int      MyRef;
 static int      Waiting = 0;
@@ -254,8 +255,13 @@ void ImageDlgWX::OnBrowseButton( wxCommandEvent& event )
      m_Filter,
      wxOPEN | wxCHANGE_DIR /* remember the last directory used. */);
 
+  // set an initial path
   wxString url = XRCCTRL(*this, "wxID_URL", wxTextCtrl)->GetValue( );
-  p_dlg->SetPath(url);
+  if (url.StartsWith(_T("http")) ||
+      url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
+    p_dlg->SetDirectory(TtaConvMessageToWX(TtaGetDocumentsDir()));
+  else
+    p_dlg->SetPath(url);
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
   
   if (p_dlg->ShowModal() == wxID_OK)
