@@ -1528,8 +1528,10 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
   AttributeType       attrType;
   Attribute           attr;
   Element             piEl;
+  LoadedImageDesc   *desc;
   char               *value, *base, *s, *utf8val;
   char                tempURL[MAX_LENGTH];
+  char                resname[MAX_LENGTH];
   char                buffer[MAX_LENGTH];
   int                 length, piNum;
   ThotBool            new_, oldStructureChecking;
@@ -1567,9 +1569,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
         }
 #ifdef _SVG
       else if (isSVG)
-        {
           attrType.AttrTypeNum = SVG_ATTR_xlink_href;
-        }
 #endif /* _SVG */
       else
         {
@@ -1617,7 +1617,18 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 
   /* build the complete target URL */
   if (targetURL && strcmp(targetURL, DocumentURLs[doc]))
-    strcpy (tempURL, targetURL);
+    {
+      if (!IsHTTPPath (targetURL) && IsHTTPPath (DocumentURLs[doc]))
+        {
+          /* link a local resource to a remote document */
+          /* copy the file into the temporary directory of the document */
+          TtaExtractName (targetURL, tempURL, resname);
+          NormalizeURL (resname, doc, tempURL, resname, NULL);
+          AddLocalImage (targetURL, resname, tempURL, doc,  &desc, FALSE);
+        }
+      else
+        strcpy (tempURL, targetURL);
+    }
   else
     tempURL[0] = EOS;
   if (targetName != NULL)

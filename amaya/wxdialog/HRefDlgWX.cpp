@@ -18,6 +18,8 @@
 #include "amaya.h"
 #include "appdialogue_wx.h"
 #include "message_wx.h"
+#include "registry_wx.h"
+
 static int Waiting = 0;
 static int m_doc = 0;
 static int MyRef = 0;
@@ -164,7 +166,13 @@ void HRefDlgWX::OnBrowse( wxCommandEvent& event )
     {
       url = TtaConvMessageToWX(DocumentURLs[m_doc]);
     }
-  p_dlg->SetPath(url);
+
+  // set an initial path
+  if (url.StartsWith(_T("http")) ||
+      url.StartsWith(TtaConvMessageToWX((TtaGetEnvString ("THOTDIR")))))
+    p_dlg->SetDirectory(TtaConvMessageToWX(TtaGetDocumentsDir()));
+  else
+   p_dlg->SetPath(url);
   p_dlg->SetFilterIndex(*m_pLastUsedFilter);
   
   if (p_dlg->ShowModal() == wxID_OK)

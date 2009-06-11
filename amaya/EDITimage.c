@@ -584,7 +584,7 @@ static char *GetImageURL (Document document, View view,
 void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
                           Attribute attr, char *text)
 {
-  Element            pict;
+  Element            pict = NULL;
   ElementType        elType;
   LoadedImageDesc   *desc;
   Attribute          srcattr = NULL;
@@ -633,19 +633,14 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
       if (!IsHTTPPath (pathimage))
         {
           /* loading a local image into a remote document */
-          /* copy image file into the temporary directory of the document */
+          /* copy the file into the temporary directory of the document */
           TtaExtractName (pathimage, localname, imagename);
           NormalizeURL (imagename, doc, localname, imagename, NULL);
-          AddLoadedImage (imagename, localname, doc, &desc);
-          desc->status = RESOURCE_MODIFIED;
           if (TtaFileExist (pathimage))
-            /* it's a paste command */
-            TtaFileCopy (pathimage, desc->localName);
-          else if (TtaFileExist (LastURLImage) &&
-                   desc->localName && !TtaFileExist (desc->localName))
-            /* it's a new inserted image */
-            TtaFileCopy (LastURLImage, desc->localName);
-          desc->tempfile = TtaStrdup (desc->localName);
+            AddLocalImage (pathimage, imagename, localname, doc,  &desc, TRUE);
+          else if (TtaFileExist (LastURLImage))
+            AddLocalImage (LastURLImage, imagename, localname, doc,  &desc, TRUE);
+
           /* suppose that the image will be stored in the same directory */
           TtaSetAttributeText (attr, imagename, el, doc);
           // update the src of the PICTURE element
@@ -1718,8 +1713,7 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
           pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
           /* clear the structure */
           memset ((void *) pImage, 0, sizeof (LoadedImageDesc));
-          pImage->originalName = (char *)TtaGetMemory (strlen (url) + 1);
-          strcpy (pImage->originalName, url);
+          pImage->originalName = TtaStrdup (url);
           pImage->localName = TtaStrdup (localname);
           pImage->tempfile = TtaStrdup (pImage->localName);
           pImage->prevImage = previous;
@@ -1735,8 +1729,11 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
           pImage->imageType = unknown_type;
         }
       pImage->status = RESOURCE_MODIFIED;
+      if (pImage->tempfile == NULL)
+        pImage->tempfile = localname;
+      else
+        TtaFreeMemory (localname);
       *desc = pImage;
-      TtaFreeMemory (localname);
       return (TRUE);
     }
 }
