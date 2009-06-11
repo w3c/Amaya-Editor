@@ -475,7 +475,7 @@ THOT_EXPORT ThotBool   SaveAsHTML;
 THOT_EXPORT ThotBool   SaveAsXML;
 THOT_EXPORT ThotBool   SaveAsText;
 THOT_EXPORT ThotBool   CopyImages;	    /* should amaya copy images in Save As? */
-THOT_EXPORT ThotBool   CopyCss;         /* should amaya copy CSS in Save As? */
+THOT_EXPORT ThotBool   CopyResources;   /* should amaya copy resource in Save As? */
 THOT_EXPORT ThotBool   UpdateURLs;	    /* should amaya update URLs in Save As? */
 THOT_EXPORT ThotBool   RemoveTemplate;	/* should amaya remove template in Save As? */
 THOT_EXPORT ThotBool   UserAnswer;
@@ -622,20 +622,17 @@ THOT_EXPORT int                      FilesLoading[DocumentTableLength];
 THOT_EXPORT int                      DocNetworkStatus[DocumentTableLength];
 
 
-#define IMAGE_NOT_LOADED        0
-#define IMAGE_LOCAL		          1
-#define IMAGE_LOADED		        2
-#define IMAGE_MODIFIED		      3
-
-
+#define RESOURCE_NOT_LOADED       0
+#define RESOURCE_LOADED		        1
+#define RESOURCE_MODIFIED		      2
 typedef void (*LoadedImageCallback)(Document doc, Element el, char *file,
 				    void *extra, ThotBool isnew);
 typedef struct _ElemImage
   {
-     Element             currentElement;/* first element using this image */
-     struct _ElemImage  *nextElement;
-     LoadedImageCallback callback;	/* Callback for non-standard handling */
-     void		*extra;		/* any extra info for the CallBack */
+     Element              currentElement;/* first element using this image */
+     struct _ElemImage   *nextElement;
+     LoadedImageCallback  callback;	/* Callback for non-standard handling */
+     void		             *extra;		/* any extra info for the CallBack */
   }
 ElemImage;
 
@@ -647,10 +644,10 @@ typedef struct _LoadedImageDesc
      char               *content_type;  /* the MIME type as sent by the server      */
      struct _LoadedImageDesc *prevImage;/* double linked list                       */
      struct _LoadedImageDesc *nextImage;/* easier to unchain                        */
-     Document            document;	/* document concerned                       */
-     struct _ElemImage  *elImage;	/* first element using this image           */
+     Document            document;	    /* document concerned                       */
+     struct _ElemImage  *elImage;       /* first element using this image           */
      int                 imageType;     /* the type of the image                    */
-     int                 status;	/* the status of the image loading          */
+     int                 status;        /* the status of the image loading          */
   }
 LoadedImageDesc;
 
@@ -663,7 +660,7 @@ typedef struct _FetchImage_context {
 
 
 THOT_EXPORT LoadedImageDesc *ImageURLs;
-THOT_EXPORT LoadedImageDesc *ImageLocal;
+THOT_EXPORT LoadedImageDesc *LoadedResources;
 
 /* The default Amaya HOME pages (page shown at boot time */
 #ifdef _WX

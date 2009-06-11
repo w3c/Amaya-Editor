@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -30,6 +30,7 @@
 #include "HTMLedit_f.h"
 #include "html2thot_f.h"
 #include "Xml2thot_f.h"
+
 
 /*----------------------------------------------------------------------
   AddLoadedImage adds a new image into image descriptor table.	
@@ -103,7 +104,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
   if (sameImage)
     {
       /* the image file exists for a different document */
-      pImage->status = IMAGE_LOADED;
+      pImage->status = RESOURCE_LOADED;
       pImage->tempfile = localname;
       TtaFileCopy (sameImage->tempfile, pImage->tempfile);
       if (sameImage->content_type)
@@ -114,7 +115,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
     }
   else
     {
-      pImage->status = IMAGE_NOT_LOADED;
+      pImage->status = RESOURCE_NOT_LOADED;
       pImage->content_type = NULL;
       TtaFreeMemory (localname);
       return (TRUE);
@@ -688,7 +689,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
       /* If image load failed show the alternate text or content */
       parent = TtaGetParent (el);
       parentType = TtaGetElementType (parent);
-      if ((desc && desc->status == IMAGE_NOT_LOADED) ||
+      if ((desc && desc->status == RESOURCE_NOT_LOADED) ||
           (desc == NULL && !TtaFileExist (originalName)))
         {
           if (parentType.ElTypeNum == HTML_EL_Object ||
@@ -908,9 +909,9 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
       /* update desc->status in order to alert DisplayImage if the
          image was not found */	
       if (status != 200 && status != 0)
-        desc->status = IMAGE_NOT_LOADED;
+        desc->status = RESOURCE_NOT_LOADED;
       else
-        desc->status = IMAGE_LOADED;
+        desc->status = RESOURCE_LOADED;
 	
       /* display for each elements in the list */
       /* get the mime type if the image was downloaded from the net */
@@ -934,7 +935,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
              an OBJECT, a use or a tref element */
           if (ctxEl->callback)
             {
-              if (desc->status == IMAGE_LOADED)
+              if (desc->status == RESOURCE_LOADED)
                 ctxEl->callback (doc, ctxEl->currentElement, desc->tempfile,
                                  ctxEl->extra, TRUE);
             }
@@ -950,7 +951,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName, char *outputf
               elType = TtaGetElementType (ctxEl->currentElement);
               name = TtaGetSSchemaName (elType.ElSSchema);
               if ((strcmp (name, "HTML") == 0 &&
-                   desc->status == IMAGE_LOADED &&
+                   desc->status == RESOURCE_LOADED &&
                    (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
                     elType.ElTypeNum == HTML_EL_Embed_ ||
                     elType.ElTypeNum == HTML_EL_Object ||
@@ -1182,11 +1183,11 @@ ThotBool FetchImage (Document doc, Element el, char *imageURI, int flags,
                                 (void (*)(int, int, char*, char*, char*, const AHTHeaders*, void*)) libWWWImageLoaded,
                                 (void *) FetchImage_ctx, NO, NULL);
               if (i != -1) 
-                desc->status = IMAGE_LOADED;
+                desc->status = RESOURCE_LOADED;
               else
                 {
                   update = TRUE;
-                  desc->status = IMAGE_NOT_LOADED;
+                  desc->status = RESOURCE_NOT_LOADED;
                 }
               TtaFreeMemory (utf8pathname);
             }

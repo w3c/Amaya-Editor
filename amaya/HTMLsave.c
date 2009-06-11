@@ -847,7 +847,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
       pImage = ImageURLs;
       while (!saveImgs && pImage)
         {
-          saveImgs = (pImage->document == document && pImage->status == IMAGE_MODIFIED);
+          saveImgs = (pImage->document == document && pImage->status == RESOURCE_MODIFIED);
           pImage = pImage->nextImage;
         }
     }
@@ -2583,6 +2583,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   int              index = 0, len, nb = 0;
   int              i, res;
   ThotBool        *imgToSave = NULL, savecopy = FALSE;
+  ThotBool         manage_images = TRUE;
 
   msg = (char *)TtaGetMemory (remainder);
   if (msg == NULL)
@@ -2631,9 +2632,14 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   msg[0] = EOS;
   len = 0;
   pImage = ImageURLs;
+  if (pImage == NULL)
+    {
+      manage_images = FALSE;
+      pImage = LoadedResources;
+    }
   while (pImage)
     {
-      if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
+      if (pImage->document == doc && pImage->status == RESOURCE_MODIFIED)
         {
           if (nb > 30)
             {
@@ -2653,6 +2659,12 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
           nb++;
         }
       pImage = pImage->nextImage;
+      // next list
+      if (pImage == NULL && manage_images)
+        {
+          manage_images = FALSE;
+          pImage = LoadedResources;
+        }
     }
 
   if (msg[0] != EOS)
@@ -2678,8 +2690,16 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       if (!UserAnswer)
         /* do not continue */
         res = -1;
-      else
-        pImage = ImageURLs;
+      else if (ImageURLs)
+        {
+          pImage = ImageURLs;
+          manage_images = TRUE;
+        }
+      else if (ImageURLs)
+        {
+          pImage = LoadedResources;
+          manage_images = FALSE;
+        }
     }
   else
     {
@@ -2726,7 +2746,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
           i = 0;
           while (pImage)
             {
-              if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
+              if (pImage->document == doc && pImage->status == RESOURCE_MODIFIED)
                 {
                   if (imgToSave[i++])
                     {
@@ -2754,12 +2774,18 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
                           /*pImage = NULL;*/
                         }
                       else
-                        pImage->status = IMAGE_LOADED;
+                        pImage->status = RESOURCE_LOADED;
                     }
                 }
               
-              if (pImage != NULL)
+              if (pImage)
                 pImage = pImage->nextImage;
+              // next list
+              if (pImage == NULL && manage_images)
+                {
+                  manage_images = FALSE;
+                  pImage = LoadedResources;
+                }
             }
         }
       ResetStop (doc);
@@ -3757,7 +3783,7 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
           if (pImage->localName)
             TtaFreeMemory (pImage->localName);
           pImage->localName = localName;
-          pImage->status = IMAGE_LOADED;
+          pImage->status = RESOURCE_LOADED;
         }
       else
         {
@@ -3788,14 +3814,14 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
           pImage->elImage = NULL;
           pImage->imageType = TtaGetPictureType (el);
         }
-      pImage->status = IMAGE_LOADED;
+      pImage->status = RESOURCE_LOADED;
     }
   return TRUE;
 }
 
 
 /*----------------------------------------------------------------------
-  UpdateImages
+  CheckCopiedResources
   if CopyImage is TRUE change all picture SRC attribute and CSS background
   images.
   If pictures are saved locally, make the copy
@@ -3803,7 +3829,7 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
   The parameter imgbase gives the relative path of the new image directory.
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
-static void UpdateImages (Document doc, ThotBool src_is_local,
+static void CheckCopiedResources (Document doc, ThotBool src_is_local,
                           ThotBool dst_is_local, char *imgbase, char *newURL)
 {
   SSchema             XHTMLSSchema, MathSSchema, SVGSSchema, XLinkSSchema;
@@ -4019,7 +4045,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
                               if (src_is_local && !dst_is_local)
                                 {
                                   /* add the localfile to the images list */
-                                  AddLocalImage (buf, imgname, tempname, doc, &pImage);
+                                  AddLocalImage (buf, imgname, tempname, doc, &pImage, TRUE);
                                   /* get image type */
                                   if (pImage)
                                     pImage->imageType = TtaGetPictureType (el);
@@ -4072,17 +4098,12 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
                                             TtaFreeMemory (pImage->originalName);
                                           pImage->originalName = TtaStrdup (tempname);
                                           if (TtaFileExist(pImage->tempfile))
-                                            pImage->status = IMAGE_MODIFIED;
+                                            pImage->status = RESOURCE_MODIFIED;
                                           else
-                                            pImage->status = IMAGE_NOT_LOADED;
+                                            pImage->status = RESOURCE_NOT_LOADED;
                                           /*pImage->elImage = (struct _ElemImage *) el;*/
                                         }
                                     }
-#if 0 /* JK Not sure if this is needed (tempfile isn't initialized for local files */
-                                  else
-                                    /* add the localfile to the images list */
-                                    AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
-#endif
                                 }
                             }
                           TtaFreeMemory (buf);
@@ -4097,14 +4118,14 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 
 
 /*----------------------------------------------------------------------
-  UpdateCss
-  if CopyCss is TRUE change all CSS links
+  UpdateResources
+  if CopyResources is TRUE change all CSS links
   If Css are saved locally, make the copy
   else add them to the list of remote files to be copied.
   The parameter cssbase gives the relative path of the new css directory.
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
-static void UpdateCss (Document doc, ThotBool src_is_local,
+static void UpdateResources (Document doc, ThotBool src_is_local,
                        ThotBool dst_is_local, char *cssbase, char *newURL)
 {
   CSSInfoPtr          css, cssnext, cssnew, cssdone[20];
@@ -4458,7 +4479,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
             }
         }
 
-      if (CopyCss)
+      if (CopyResources)
         {
           if (SaveCssURL[0] != EOS)
             {
@@ -4616,16 +4637,16 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
         {
           TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
           /* Transform all URLs to absolute ones */
-          if (UpdateURLs || CopyCss)
+          if (UpdateURLs || CopyResources)
             {
               if (base)
                 /* URLs are still relative to the document base */
                 SetRelativeURLs (doc, base, cssbase,
-                                 CopyImages, CopyCss, fullCopy);
+                                 CopyImages, CopyResources, fullCopy);
               else
                 /* URLs are relative to the new document directory */
                 SetRelativeURLs (doc, documentFile, cssbase,
-                                 CopyImages, CopyCss, fullCopy);
+                                 CopyImages, CopyResources, fullCopy);
             }
           /* now free base */
           if (base)
@@ -4643,9 +4664,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
                   DocumentTypes[doc] != docMath &&
                   DocumentTypes[doc] != docTemplate &&
                   DocumentTypes[doc] != docXml)
-                UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
-              if (CopyCss)
-                UpdateCss (doc, src_is_local, dst_is_local, cssbase, documentFile);
+                CheckCopiedResources (doc, src_is_local, dst_is_local, imgbase, documentFile);
+              if (CopyResources)
+                UpdateResources (doc, src_is_local, dst_is_local, cssbase, documentFile);
             }
           toUndo = TtaCloseUndoSequence (doc);
           if (dst_is_local)
@@ -4876,7 +4897,7 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
   SavePath = TtaStrdup(dstdir);
   SaveName = (char *)TtaGetMemory (MAX_LENGTH);
   TtaExtractName (DocumentURLs[doc], buff, SaveName);
-  if (SaveName[0]==EOS)
+  if (SaveName[0] == EOS)
     {
       defaultName = TtaGetEnvString ("DEFAULTNAME");
       if (defaultName == NULL || *defaultName == EOS)
@@ -4886,7 +4907,7 @@ ThotBool SaveTempCopy (Document doc, const char* dstdir, char** filename)
     }
   
   CopyImages = FALSE;
-  CopyCss    = FALSE;
+  CopyResources = FALSE;
   UpdateURLs = TRUE; // just copy local resources
   SaveAsXML = DocumentMeta[doc]->xmlformat;
   SaveAsText = FALSE; // don't generate text from HTML

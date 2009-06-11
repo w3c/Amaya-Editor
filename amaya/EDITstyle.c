@@ -380,7 +380,7 @@ char *UpdateCSSURLs (Document doc, char *oldpath, char *newpath,
                           /* save to a remote server */
                           if (src_is_local)
                             /* add the existing localfile to images list to be saved */
-                            AddLocalImage (old_url, imgname, new_url, doc, &pImage);
+                            AddLocalImage (old_url, imgname, new_url, doc, &pImage, TRUE);
                           else
                             {
                               /* it was a remote image:
@@ -394,9 +394,9 @@ char *UpdateCSSURLs (Document doc, char *oldpath, char *newpath,
                                     TtaFreeMemory (pImage->originalName);
                                   pImage->originalName = TtaStrdup (new_url);
                                   if (TtaFileExist(pImage->localName))
-                                    pImage->status = IMAGE_MODIFIED;
+                                    pImage->status = RESOURCE_MODIFIED;
                                   else
-                                    pImage->status = IMAGE_NOT_LOADED;
+                                    pImage->status = RESOURCE_NOT_LOADED;
                                 }
                             }
                         }

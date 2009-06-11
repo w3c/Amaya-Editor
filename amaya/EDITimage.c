@@ -562,7 +562,7 @@ static char *GetImageURL (Document document, View view,
         {
           NormalizeURL (s, document, tempfile, ImageName, NULL);
           AddLoadedImage (ImageName, tempfile, document, &desc);
-          desc->status = IMAGE_MODIFIED;
+          desc->status = RESOURCE_MODIFIED;
           TtaFileCopy (LastURLImage, desc->localName);
           return (ImageName);
         }
@@ -637,7 +637,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           TtaExtractName (pathimage, localname, imagename);
           NormalizeURL (imagename, doc, localname, imagename, NULL);
           AddLoadedImage (imagename, localname, doc, &desc);
-          desc->status = IMAGE_MODIFIED;
+          desc->status = RESOURCE_MODIFIED;
           if (TtaFileExist (pathimage))
             /* it's a paste command */
             TtaFileCopy (pathimage, desc->localName);
@@ -1252,7 +1252,7 @@ void  SRCattrModified (NotifyAttribute *event)
               NormalizeURL (imageName, doc, value, imageName, NULL);
               /* loading a local image into a remote document */
               AddLoadedImage (imageName, value, doc, &desc);
-              desc->status = IMAGE_MODIFIED;
+              desc->status = RESOURCE_MODIFIED;
               TtaFileCopy (buf2, desc->localName);
               TtaSetTextContent (pict, (unsigned char *)desc->localName, SPACE, doc);
             }
@@ -1661,15 +1661,16 @@ void InsertImageOrObject (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  AddLocalImage adds a new local image into image descriptor table   
-  with the purpose of having it saved through the Net later.    
-  This function copy the image in the TempFileDirectory.        
-  fullname is the complete path to the local file.              
-  name is the name of the local file.                           
-  url is the complete URL of the distant location.              
+  AddLocalImage adds a new local resource into image descriptors table
+  or the resource descriptors table with the purpose of having it saved
+ through the Net later.
+  This function copy the file in the TempFileDirectory.
+  fullname is the complete path to the local file.
+  name is the name of the local file.
+  url is the complete URL of the distant location.
   ----------------------------------------------------------------------*/
 ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
-                        LoadedImageDesc **desc)
+                        LoadedImageDesc **desc, ThotBool isImage)
 {
   LoadedImageDesc    *pImage, *previous;
   char               *localname;
@@ -1686,8 +1687,10 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
     {
       /* It is an image loaded from the Web */
       localname = GetLocalPath (doc, url);
-
-      pImage = ImageURLs;
+      if (isImage)
+        pImage = ImageURLs;
+      else
+        pImage = LoadedResources;
       previous = NULL;
       while (pImage != NULL)
         {
@@ -1722,87 +1725,22 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
           pImage->prevImage = previous;
           if (previous != NULL)
             previous->nextImage = pImage;
-          else
+          else if (isImage)
             ImageURLs = pImage;
+          else
+            LoadedResources = pImage;
           pImage->nextImage = NULL;
           pImage->document = doc;
           pImage->elImage = NULL;
           pImage->imageType = unknown_type;
         }
-      pImage->status = IMAGE_MODIFIED;
+      pImage->status = RESOURCE_MODIFIED;
       *desc = pImage;
       TtaFreeMemory (localname);
       return (TRUE);
     }
 }
 
-/*----------------------------------------------------------------------
-  MoveDocumentImages moves loaded images of the document docSrc into
-  the document doc.        
-  ----------------------------------------------------------------------*/
-void MoveDocumentImages (Document docSrc, Document doc)
-{
-  LoadedImageDesc    *pImage, *previous, *next;
-  ElemImage          *ctxEl, *ctxPrev;
-  char               *ptr;
-
-  pImage = ImageURLs;
-  previous = NULL;
-  if (doc == 0)
-    return;			/* nothing to do */
-
-  while (pImage)
-    {
-      next = pImage->nextImage;
-      /* does the current image belong to the document ? */
-      if (pImage->document == doc)
-        {
-          pImage->status = IMAGE_NOT_LOADED;
-          /* remove the image */
-          TtaFileUnlink (pImage->tempfile);
-          if (!strncmp (pImage->originalName, "internal:", sizeof ("internal:") - 1)
-              && IsHTTPPath (pImage->originalName + sizeof ("internal:") - 1))
-            {
-              /* erase the local copy of the image */
-              ptr = GetLocalPath (doc, pImage->originalName);
-              TtaFileUnlink (ptr);
-              TtaFreeMemory (ptr);
-            }
-          /* free the descriptor */
-          if (pImage->originalName != NULL)
-            TtaFreeMemory (pImage->originalName);
-          if (pImage->localName != NULL)
-            TtaFreeMemory (pImage->localName);
-          if (pImage->tempfile != NULL)
-            TtaFreeMemory (pImage->tempfile);
-          if (pImage->content_type != NULL)
-            TtaFreeMemory (pImage->content_type);
-          if (pImage->elImage)
-            {
-              ctxEl = pImage->elImage;
-              pImage->elImage = NULL;
-              while (ctxEl != NULL)
-                {
-                  ctxPrev = ctxEl;
-                  ctxEl = ctxEl->nextElement;
-                  TtaFreeMemory ( ctxPrev);
-                }
-            }
-          /* set up the image descriptors link */
-          if (previous != NULL)
-            previous->nextImage = next;
-          else
-            ImageURLs = next;
-          if (next != NULL)
-            next->prevImage = previous;
-          TtaFreeMemory ((char *) pImage);
-          pImage = previous;
-        }
-      /* next descriptor */
-      previous = pImage;
-      pImage = next;
-    }
-}
 
 /*----------------------------------------------------------------------
   RemoveDocumentImages removes loaded images of the document.        
@@ -1812,8 +1750,14 @@ void RemoveDocumentImages (Document doc)
   LoadedImageDesc    *pImage, *previous, *next;
   ElemImage          *ctxEl, *ctxPrev;
   char               *ptr;
+  ThotBool            manage_images = TRUE;
 
   pImage = ImageURLs;
+  if (pImage == NULL)
+    {
+      manage_images = FALSE;
+      pImage = LoadedResources;
+    }
   previous = NULL;
   while (pImage)
     {
@@ -1821,7 +1765,7 @@ void RemoveDocumentImages (Document doc)
       /* does the current image belong to the document ? */
       if (pImage->document == doc)
         {
-          pImage->status = IMAGE_NOT_LOADED;
+          pImage->status = RESOURCE_NOT_LOADED;
           /* remove the image */
           TtaFileUnlink (pImage->tempfile);
           if (!strncmp (pImage->originalName, "internal:", sizeof ("internal:") - 1)
@@ -1853,17 +1797,28 @@ void RemoveDocumentImages (Document doc)
                 }
             }
           /* set up the image descriptors link */
-          if (previous != NULL)
+          if (previous)
             previous->nextImage = next;
-          else
+          else if (manage_images)
             ImageURLs = next;
-          if (next != NULL)
+          else
+            LoadedResources = next;
+          if (next)
             next->prevImage = previous;
+          else
+            
           TtaFreeMemory ((char *) pImage);
           pImage = previous;
         }
       /* next descriptor */
       previous = pImage;
       pImage = next;
+      // next list
+      if (pImage == NULL && manage_images)
+        {
+          manage_images = FALSE;
+          pImage = LoadedResources;
+          previous = NULL;
+        }
     }
 }
