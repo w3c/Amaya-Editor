@@ -947,6 +947,7 @@ ThotBool ApplyDelayedRules (int ruleType, PtrAbstractBox pAb, PtrDocument pDoc)
             }
         }
     }
+  return TRUE;
 }
 
 
