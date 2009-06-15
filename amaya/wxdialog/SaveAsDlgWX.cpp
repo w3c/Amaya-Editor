@@ -27,7 +27,7 @@
 static int MyRef = 0;
 static int Waiting = 0;
 static ThotBool MysaveImgs = FALSE;
-static ThotBool MysaveCss = FALSE;
+static ThotBool MysaveRes = FALSE;
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
@@ -58,8 +58,9 @@ END_EVENT_TABLE()
     + parent : parent window
     + pathname : document location
     ----------------------------------------------------------------------*/
-SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
-                          int doc, ThotBool  saveImgs, ThotBool  checkTemplate) :
+SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow *parent, const wxString & pathname,
+                          int doc, ThotBool saveImgs, ThotBool saveRes,
+                          ThotBool checkTemplate) :
   AmayaDialog( parent, ref )
 {
   wxNotebook *p_notebook;
@@ -71,6 +72,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
   doc_type = DocumentTypes[doc];
   MyRef = ref;
   MysaveImgs = saveImgs;
+  MysaveRes = saveRes;
   // waiting for a return
   Waiting = 1;
 
@@ -124,6 +126,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow* parent, const wxString & pathname,
       GetSizer()->SetSizeHints( this );
       // no image will be saved
       MysaveImgs = FALSE;
+      MysaveRes = FALSE;
     }
   else
     {
@@ -447,7 +450,7 @@ void SaveAsDlgWX::OnDirCssButton( wxCommandEvent& event )
 
   path = XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->GetValue();
   path = path.Trim(TRUE).Trim(FALSE);
-  if ((MysaveCss || CopyResources) && !path.StartsWith(_T("http")))
+  if ((MysaveRes || CopyResources) && !path.StartsWith(_T("http")))
     {
       // Create a generic filedialog
       p_dlg = new wxDirDialog (this);
@@ -505,7 +508,7 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
     {
       path = p_dlg->GetPath();
       XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue( path);
-      if (MysaveImgs || CopyImages || MysaveCss || CopyResources)
+      if (MysaveImgs || CopyImages || MysaveRes || CopyResources)
         {
           end_pos = path.Find(DIR_SEP, true);
           dir_value = path.SubString(0, end_pos);
@@ -513,7 +516,7 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
       if (MysaveImgs || CopyImages)
         // update the image path
         XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(dir_value);
-      if (MysaveCss || CopyResources)
+      if (MysaveRes || CopyResources)
         // update the css path
         XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(dir_value);
       // destroy the dlg before calling thotcallback because it's a child of this
@@ -532,7 +535,7 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SavePath));
   if (MysaveImgs)
     XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
-  if (MysaveCss)
+  if (MysaveRes)
     XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX(""));
 }
 
@@ -620,8 +623,8 @@ void SaveAsDlgWX::OnCssChkBox ( wxCommandEvent& event )
     }
   else
     {
-      XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetEditable (MysaveCss);
-      if (!MysaveCss)
+      XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetEditable (MysaveRes);
+      if (!MysaveRes)
         {
           // no image is saved
           XRCCTRL(*this, "wxID_CSS_LOCATION_CTRL", wxTextCtrl)->SetValue(_T(""));

@@ -22,7 +22,7 @@ extern char *UpdateDocResource ( Document doc,
                                  ThotBool fullCopy );
 extern void SetRelativeURLs ( Document doc,
                               char *newpath,
-                              char *cssbase,
+                              char *resbase,
                               ThotBool savedImages,
                               ThotBool savedResources,
                               ThotBool fullCopy );
@@ -114,7 +114,7 @@ extern char *UpdateDocResource ( Document doc,
                                    ThotBool fullCopy );
 extern void SetRelativeURLs ( Document doc,
                                 char *newpath,
-                                char *cssbase,
+                                char *resbase,
                                 ThotBool savedImages,
                                 ThotBool savedResources,
                                 ThotBool fullCopy );

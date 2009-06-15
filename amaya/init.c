@@ -7521,7 +7521,7 @@ void CheckAmayaClosed ()
   if (i == DocumentTableLength)
     {
       /* remove images loaded by shared CSS style sheets */
-      RemoveDocumentImages (0);
+      RemoveLoadedResources (0, &ImageURLs);
 #ifdef  _JAVA
       DestroyJavascript ();
 #endif /* _JAVA */

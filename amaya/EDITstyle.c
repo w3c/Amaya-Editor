@@ -380,7 +380,7 @@ char *UpdateCSSURLs (Document doc, char *oldpath, char *newpath,
                           /* save to a remote server */
                           if (src_is_local)
                             /* add the existing localfile to images list to be saved */
-                            AddLocalImage (old_url, imgname, new_url, doc, &pImage, TRUE);
+                            AddLocalResource (old_url, imgname, new_url, doc, &pImage, &ImageURLs);
                           else
                             {
                               /* it was a remote image:

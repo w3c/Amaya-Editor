@@ -2879,7 +2879,10 @@ void FreeDocumentResource (Document doc)
               }
           /* avoid to free images of backup documents */
           if (BackupDocument != doc)
-            RemoveDocumentImages (doc);
+            {
+              RemoveLoadedResources (doc, &ImageURLs);
+              RemoveLoadedResources (doc, &LoadedResources);
+            }
         }
       /* restore the default document type */
       DocumentTypes[doc] = docFree;

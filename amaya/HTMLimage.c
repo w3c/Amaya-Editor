@@ -122,6 +122,74 @@ ThotBool AddLoadedImage (char *name, char *pathname,
     }
 }
 
+
+/*----------------------------------------------------------------------
+  RemoveLoadedResources removes loaded resources of the document in the
+  current list.        
+  ----------------------------------------------------------------------*/
+void RemoveLoadedResources (Document doc, LoadedImageDesc **list)
+{
+  LoadedImageDesc    *pImage, *previous, *next;
+  ElemImage          *ctxEl, *ctxPrev;
+  char               *ptr;
+
+  pImage = *list;
+  previous = NULL;
+  while (pImage)
+    {
+      next = pImage->nextImage;
+      /* does the current image belong to the document ? */
+      if (pImage->document == doc)
+        {
+          pImage->status = RESOURCE_NOT_LOADED;
+          /* remove the image */
+          TtaFileUnlink (pImage->tempfile);
+          if (!strncmp (pImage->originalName, "internal:", sizeof ("internal:") - 1)
+              && IsHTTPPath (pImage->originalName + sizeof ("internal:") - 1))
+            {
+              /* erase the local copy of the image */
+              ptr = GetLocalPath (doc, pImage->originalName);
+              TtaFileUnlink (ptr);
+              TtaFreeMemory (ptr);
+            }
+          /* free the descriptor */
+          if (pImage->originalName != NULL)
+            TtaFreeMemory (pImage->originalName);
+          if (pImage->localName != NULL)
+            TtaFreeMemory (pImage->localName);
+          if (pImage->tempfile != NULL)
+            TtaFreeMemory (pImage->tempfile);
+          if (pImage->content_type != NULL)
+            TtaFreeMemory (pImage->content_type);
+          if (pImage->elImage)
+            {
+              ctxEl = pImage->elImage;
+              pImage->elImage = NULL;
+              while (ctxEl != NULL)
+                {
+                  ctxPrev = ctxEl;
+                  ctxEl = ctxEl->nextElement;
+                  TtaFreeMemory ( ctxPrev);
+                }
+            }
+          /* set up the image descriptors link */
+          if (previous)
+            previous->nextImage = next;
+          else
+            *list = next;
+          if (next)
+            next->prevImage = previous;
+          else
+            
+          TtaFreeMemory ((char *) pImage);
+          pImage = previous;
+        }
+      /* next descriptor */
+      previous = pImage;
+      pImage = next;
+    }
+}
+
 /*----------------------------------------------------------------------
   SearchLoadedImage searches the image descriptor of a loaded image using
   its local name.

@@ -10,6 +10,8 @@ extern ThotBool AddLoadedImage ( char *name,
                                  char *pathname,
                                  Document doc,
                                  LoadedImageDesc **desc );
+extern void RemoveLoadedResources ( Document doc,
+                                    LoadedImageDesc **list );
 extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
                                             Document doc );
 extern LoadedImageDesc *SearchLoadedImageByURL ( Document doc,
@@ -48,6 +50,8 @@ extern ThotBool AddLoadedImage ( char *name,
                                    char *pathname,
                                    Document doc,
                                    LoadedImageDesc **desc );
+extern void RemoveLoadedResources ( Document doc,
+                                      LoadedImageDesc **list );
 extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
                                               Document doc );
 extern LoadedImageDesc *SearchLoadedImageByURL ( Document doc,

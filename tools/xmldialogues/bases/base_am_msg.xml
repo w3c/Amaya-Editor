@@ -7951,18 +7951,16 @@ chiusura</message>
 	<message xml:lang="nl">Samengesteld document</message>
 </label>
 <label define="AM_BCOPY_CSS">
-	<message xml:lang="en">Copy resources (styles and scripts)</message>
-	<message xml:lang="fr">Copier les ressources (styles et scripts)</message>
-	<message xml:lang="es">Copiar recursos (estilos y scripts)</message>
-	<message xml:lang="sk">Skopírovať zdroje (štýly a skripty)</message>
-	<message xml:lang="it">Copia le risorse (stili e script)</message>
-	<message xml:lang="ru">Копировать ресурсы (стили и
-сценарии)</message>
-	<message xml:lang="de">Bezugsquelle kopieren (Stile und Skripte)</message>
-	<message xml:lang="hu">Erőforrások másolása (stílusok és
-szkriptek)</message>
+	<message xml:lang="en">Copy resources (styles, scripts, ...)</message>
+	<message xml:lang="fr">Copier les ressources (styles, scripts, ...)</message>
+	<message xml:lang="es">Copiar recursos (estilos, scripts, ...)</message>
+	<message xml:lang="sk">Skopírovať zdroje (štýly, skripty, ...)</message>
+	<message xml:lang="it">Copia le risorse (stili, script, ...)</message>
+	<message xml:lang="ru">Копировать ресурсы (стили, сценарии, ...)</message>
+	<message xml:lang="de">Bezugsquelle kopieren (Stile, Skripte, ...)</message>
+	<message xml:lang="hu">Erőforrások másolása (stílusok, szkriptek, ...)</message>
 	<message xml:lang="ja">リソース（スタイルとスクリプト）をコピー</message>
-	<message xml:lang="nl">Bronnen kopiëren (opmaakmodellen en scripts)</message>
+	<message xml:lang="nl">Bronnen kopiëren (opmaakmodellen, scripts, ...)</message>
 </label>
 <label define="AM_WHERE_RESOURCE">
 	<message xml:lang="en">Where to save resources</message>

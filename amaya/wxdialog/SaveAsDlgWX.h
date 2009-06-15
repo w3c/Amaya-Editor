@@ -20,7 +20,7 @@ public:
   // Constructor.
   SaveAsDlgWX( int ref,
                wxWindow* parent, const wxString & pathname, int doc,
-               ThotBool  saveImgs, ThotBool  checkTemplate);
+               ThotBool  saveImgs, ThotBool  saveRes, ThotBool  checkTemplate);
   
   // Destructor.                  
   virtual ~SaveAsDlgWX();

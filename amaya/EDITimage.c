@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -47,6 +47,14 @@ static int        RefFormImage = 0;
 #include "SVGbuilder_f.h"
 #include "SVGedit_f.h"
 
+// Management of saved resources
+typedef struct _UndoSaveAs
+{
+  LoadedImageDesc    *desc;
+  char               *olduri;
+  struct _UndoSaveAs *next;
+} UndoSaveAs;
+static UndoSaveAs *SaveAsUpdate = NULL;
 
 /*----------------------------------------------------------------------
   DeleteMap                                              
@@ -637,9 +645,9 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           TtaExtractName (pathimage, localname, imagename);
           NormalizeURL (imagename, doc, localname, imagename, NULL);
           if (TtaFileExist (pathimage))
-            AddLocalImage (pathimage, imagename, localname, doc,  &desc, TRUE);
+            AddLocalResource (pathimage, imagename, localname, doc,  &desc, &ImageURLs);
           else if (TtaFileExist (LastURLImage))
-            AddLocalImage (LastURLImage, imagename, localname, doc,  &desc, TRUE);
+            AddLocalResource (LastURLImage, imagename, localname, doc,  &desc, &ImageURLs);
 
           /* suppose that the image will be stored in the same directory */
           TtaSetAttributeText (attr, imagename, el, doc);
@@ -1656,43 +1664,106 @@ void InsertImageOrObject (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  AddLocalImage adds a new local resource into image descriptors table
-  or the resource descriptors table with the purpose of having it saved
- through the Net later.
+  ----------------------------------------------------------------------*/
+static void RegisterSaveAsUpdate (LoadedImageDesc *desc, char *newuri)
+{
+  UndoSaveAs *pRec = SaveAsUpdate;
+  ThotBool    done = FALSE;
+
+  if (desc == NULL)
+    return;
+
+  while (pRec && !done)
+    {
+      if (desc == pRec->desc)
+        {
+          if (desc->originalName != newuri)
+            {
+              TtaFreeMemory (desc->originalName);
+              desc->originalName = TtaStrdup (newuri);              
+            }
+          done = TRUE;
+        }
+      else
+        pRec = pRec->next;
+    }
+  if (!done)
+    {
+      pRec = (UndoSaveAs *) TtaGetMemory (sizeof (UndoSaveAs));
+      pRec->olduri = desc->originalName;
+      desc->originalName = TtaStrdup (newuri);              
+      SaveAsUpdate = pRec;
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void ClearSaveAsUpdate (ThotBool withUndo)
+{
+  LoadedImageDesc *desc;
+  UndoSaveAs      *pRec = SaveAsUpdate, *next = NULL;
+
+  while (pRec)
+    {
+      if (pRec->desc && withUndo)
+        {
+          desc = pRec->desc;
+          TtaFreeMemory (desc->originalName);
+          desc->originalName = pRec->olduri;
+        }
+      next = pRec->next;
+      TtaFreeMemory (pRec);
+      pRec = next;
+    }
+  SaveAsUpdate = NULL;
+}
+
+/*----------------------------------------------------------------------
+  AddLocalResource adds a new local resource into *list descriptors table
+  with the purpose of having it saved through the Net later.
   This function copy the file in the TempFileDirectory.
   fullname is the complete path to the local file.
   name is the name of the local file.
   url is the complete URL of the distant location.
+  list points to the used list.
+  list  with the purpose of having it undo.
+  Return TRUE if a new entry is created.
   ----------------------------------------------------------------------*/
-ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
-                        LoadedImageDesc **desc, ThotBool isImage)
+ThotBool AddLocalResource (char *fullname, char *name, char *url, Document doc,
+                           LoadedImageDesc **desc, LoadedImageDesc **list)
 {
   LoadedImageDesc    *pImage, *previous;
   char               *localname;
+  ThotBool            res = FALSE;
 
   *desc = NULL;
   if (!TtaFileExist (fullname))
-    return (FALSE);
+    return FALSE;
   else if (url == NULL || name == NULL)
-    return (FALSE);
+    return FALSE;
   else if (!IsHTTPPath (url))
     /* it is a local image - nothing to do */
-    return (FALSE);
+    return FALSE;
   else
     {
       /* It is an image loaded from the Web */
       localname = GetLocalPath (doc, url);
-      if (isImage)
-        pImage = ImageURLs;
-      else
-        pImage = LoadedResources;
+      pImage = *list;
       previous = NULL;
-      while (pImage != NULL)
+      while (pImage)
         {
           if ((pImage->document == doc) &&
               (strcmp (url, pImage->originalName) == 0))
             {
               /* image already loaded */
+              *desc = pImage;
+              break;
+            }
+          else if ((pImage->document == doc) &&
+              (strcmp (fullname, pImage->localName) == 0))
+            {
+              /* image url changes */
+              RegisterSaveAsUpdate (pImage, url);
               *desc = pImage;
               break;
             }
@@ -1709,113 +1780,31 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
       /* add a new identifier to the list if necessary */
       if (pImage == NULL)
         {
+          res = TRUE;
           /* It is a new loaded image */
           pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
           /* clear the structure */
           memset ((void *) pImage, 0, sizeof (LoadedImageDesc));
-          pImage->originalName = TtaStrdup (url);
           pImage->localName = TtaStrdup (localname);
           pImage->tempfile = TtaStrdup (pImage->localName);
           pImage->prevImage = previous;
-          if (previous != NULL)
+          if (previous)
             previous->nextImage = pImage;
-          else if (isImage)
-            ImageURLs = pImage;
           else
-            LoadedResources = pImage;
+            *list = pImage;
           pImage->nextImage = NULL;
           pImage->document = doc;
           pImage->elImage = NULL;
           pImage->imageType = unknown_type;
-        }
+          pImage->originalName = TtaStrdup (url);
+       }
       pImage->status = RESOURCE_MODIFIED;
       if (pImage->tempfile == NULL)
         pImage->tempfile = localname;
       else
         TtaFreeMemory (localname);
       *desc = pImage;
-      return (TRUE);
+      return res;
     }
 }
 
-
-/*----------------------------------------------------------------------
-  RemoveDocumentImages removes loaded images of the document.        
-  ----------------------------------------------------------------------*/
-void RemoveDocumentImages (Document doc)
-{
-  LoadedImageDesc    *pImage, *previous, *next;
-  ElemImage          *ctxEl, *ctxPrev;
-  char               *ptr;
-  ThotBool            manage_images = TRUE;
-
-  pImage = ImageURLs;
-  if (pImage == NULL)
-    {
-      manage_images = FALSE;
-      pImage = LoadedResources;
-    }
-  previous = NULL;
-  while (pImage)
-    {
-      next = pImage->nextImage;
-      /* does the current image belong to the document ? */
-      if (pImage->document == doc)
-        {
-          pImage->status = RESOURCE_NOT_LOADED;
-          /* remove the image */
-          TtaFileUnlink (pImage->tempfile);
-          if (!strncmp (pImage->originalName, "internal:", sizeof ("internal:") - 1)
-              && IsHTTPPath (pImage->originalName + sizeof ("internal:") - 1))
-            {
-              /* erase the local copy of the image */
-              ptr = GetLocalPath (doc, pImage->originalName);
-              TtaFileUnlink (ptr);
-              TtaFreeMemory (ptr);
-            }
-          /* free the descriptor */
-          if (pImage->originalName != NULL)
-            TtaFreeMemory (pImage->originalName);
-          if (pImage->localName != NULL)
-            TtaFreeMemory (pImage->localName);
-          if (pImage->tempfile != NULL)
-            TtaFreeMemory (pImage->tempfile);
-          if (pImage->content_type != NULL)
-            TtaFreeMemory (pImage->content_type);
-          if (pImage->elImage)
-            {
-              ctxEl = pImage->elImage;
-              pImage->elImage = NULL;
-              while (ctxEl != NULL)
-                {
-                  ctxPrev = ctxEl;
-                  ctxEl = ctxEl->nextElement;
-                  TtaFreeMemory ( ctxPrev);
-                }
-            }
-          /* set up the image descriptors link */
-          if (previous)
-            previous->nextImage = next;
-          else if (manage_images)
-            ImageURLs = next;
-          else
-            LoadedResources = next;
-          if (next)
-            next->prevImage = previous;
-          else
-            
-          TtaFreeMemory ((char *) pImage);
-          pImage = previous;
-        }
-      /* next descriptor */
-      previous = pImage;
-      pImage = next;
-      // next list
-      if (pImage == NULL && manage_images)
-        {
-          manage_images = FALSE;
-          pImage = LoadedResources;
-          previous = NULL;
-        }
-    }
-}

@@ -63,9 +63,12 @@ when browsing, but the file name is required for publishing. </p>
 server when the document is loaded. If the file name is not provided in the
 HTTP header, Amaya asks you to provide one when saving.</p>
 
-<p>Newly added images are saved in the same directory automatically. If you
-want to save new added images into another directory, you have to use the
-<strong>Save as</strong> command.</p>
+<p>Newly added local resources are saved in the same directory automatically.
+The list of saved files is proposed to the user, so he/she can remove some
+files in the list.</p>
+
+<p>If you want to save new added resources into another directory, you have to
+use the <strong>Save as</strong> command.</p>
 
 <h3 id="site">Web site update</h3>
 
@@ -114,7 +117,7 @@ different location.</p>
 
 <p>The dialog box contains two tabs and two buttons. The first tab is about the
 document itself. The second tab is about its associated resources (images,
-styles sheets, scripts).</p>
+styles sheets, scripts, etc.).</p>
 
 <p>The <strong>Document</strong> tab contains:</p>
 <ul>
@@ -160,7 +163,7 @@ styles sheets, scripts).</p>
         <strong>src</strong> and <strong>data</strong> attributes to point new
         locations. New locations are relative URIs.</p>
       </li>
-      <li>The <strong>Copy resources (styles and scripts)</strong> toggle
+      <li>The <strong>Copy resources (styles, scripts, ...)</strong> toggle
         indicates whether style sheets (including imported style sheets and
         images) and scripts embedded in the current document must be copied
         along with the document to a new location. You have to keep this switch

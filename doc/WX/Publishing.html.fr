@@ -62,10 +62,13 @@ fournie par le serveur lors du chargement du document. Si le nom du fichier
 n'est pas fourni dans l'en-tête HTTP, Amaya demande de lui en fournir un lors
 de la sauvegarde.</p>
 
-<p>Les images nouvellement ajoutées sont sauvées dans le même répertoire que
-celui du document. Si vous voulez enregistrer des images nouvellement ajoutées
-dans un autre endroit que le document lui-même, utilisez la commande
-<strong>Enregistrer sous</strong>.</p>
+<p>Les ressources nouvellement ajoutées sont sauvées dans le même répertoire
+que celui du document. La liste des fichiers sauvés est proposée à
+l'utilisateur pour qu'il puisse retirer certains fichier.</p>
+
+<p>Si vous voulez enregistrer des images nouvellement ajoutées dans un autre
+endroit que le document lui-même, utilisez la commande <strong>Enregistrer
+sous</strong>.</p>
 
 <h3 id="Mise">Mise à jour d'un site web</h3>
 
@@ -116,7 +119,8 @@ différente.</p>
 
 <p>La boîte de dialogue comporte deux onglets et deux boutons. Le premier
 onglet permet de choisir les options pour le document lui-même, le deuxième les
-options pour les ressources associées (images, feuilles de style, scripts).</p>
+options pour les ressources associées (images, feuilles de style, scripts,
+etc.).</p>
 
 <p>L'onglet <strong>Document</strong> contient :</p>
 <ul>
@@ -163,12 +167,12 @@ options pour les ressources associées (images, feuilles de style, scripts).</p>
         <strong>data</strong> pour pointer vers les nouvelles adresses. Les
         nouvelles adresses sont des URIs relatifs.</p>
       </li>
-      <li>Le choix <strong>Copier les ressources (styles et scripts)</strong>
-        indique que les feuilles de style (y compris les feuilles de style et
-        les images importées) et les scripts inclus dans le document doivent
-        être copiés avec le document à une nouvelle adresse. Vous devez garder
-        ce bouton actif, quand vous voulez engendrer une copie complète du
-        document. 
+      <li>Le choix <strong>Copier les ressources (styles, scripts,
+        ...)</strong> indique que les feuilles de style (y compris les feuilles
+        de style et les images importées) et les scripts inclus dans le
+        document doivent être copiés avec le document à une nouvelle adresse.
+        Vous devez garder ce bouton actif, quand vous voulez engendrer une
+        copie complète du document. 
         <p>Quand ces ressources sont copiées, Amaya met à jour automatiquement
         tous les liens et <em>processing instructions</em> pour pointer vers
         les nouvelles adresses. Les nouvelles adresses sont des URIs

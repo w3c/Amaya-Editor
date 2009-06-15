@@ -125,12 +125,12 @@ typedef struct WIKI_context {
   char *localfile;
   char *output;
 } WIKI_context;
+
 // use HTMLform buffer to store post parameters
 extern char  *FormBuf;    /* temporary buffer used to build the query string */
 extern int    FormLength;  /* size of the temporary buffer */
 extern int    FormBufIndex; /* gives the index of the last char + 1 added to
                               the buffer (only used in AddBufferWithEos) */
-
 
 /*----------------------------------------------------------------------
   CheckValidProfile
@@ -185,18 +185,6 @@ ThotBool CheckGenerator (NotifyElement *event)
               if (ptr == NULL)
                 /* it's not a pure Amaya document -> remove the meta element */
                 return TRUE;
-#ifdef IV
-              else
-                {
-                  /* update the version */
-                  strcpy (buff, TtaGetAppName()); 
-                  strcat (buff, " ");
-                  strcat (buff, TtaGetAppVersion());
-                  strcat (buff, ", see http://www.w3.org/Amaya/");
-                  TtaSetAttributeText (attr, buff, event->element,
-                                       event->document);
-                }
-#endif /* IV */
             }
         }
     }
@@ -374,6 +362,7 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
   ElementType         elType;
+  LoadedImageDesc    *desc;
   char               *b, *e, *newString, *oldptr;
   char                old_url[MAX_LENGTH];
   char                new_url[MAX_LENGTH];
@@ -381,35 +370,32 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
   char                oldname[MAX_LENGTH];
   char                newname[MAX_LENGTH];
   char               *tempdocument = NULL;
-  int                 len, newlen, res;
+  int                 len, newlen;
   ThotBool            src_is_local, dst_is_local;
   ThotBool            toSave = FALSE, isCSS = FALSE;
 
   newString = NULL;
-  if (!saveResources && !isLink &&
-      (strstr (sString, ".htm") != NULL ||
-       strstr (sString, ".xhtm") != NULL || strstr (sString, ".xml") != NULL))
+  if (!saveResources ||// && !isLink &&
+      strstr (sString, ".htm") != NULL ||
+      strstr (sString, ".xhtm") != NULL ||
+      strstr (sString, ".php") != NULL ||
+      strstr (sString, ".mml") != NULL ||
+      strstr (sString, ".svg") != NULL ||
+      strstr (sString, ".xml") != NULL ||
+      strstr (sString, "#") != NULL ||
+      (sString[0] != EOS && sString[strlen(sString)-1] == '/'))
     // don't consider a html document as a resource
     return newString;
-  // look for a javascript
-  b = strstr (sString, ".js");
-  if (b == NULL)
-    {
-      b = strstr (sString, ".xsl");
-      if (b == NULL)
-        {
-          // look for a css
-          b = strstr (sString, ".css");
-          if (b == NULL && isLink)
-            b = sString;
-          else if (saveResources)
-            isCSS = TRUE; // check if this CSS must be saved
-        }
-      else
-        toSave = saveResources;
-    }
+
+  // look for a css
+  b = strstr (sString, ".css");
+  if (b && saveResources)
+    isCSS = TRUE; // check if this CSS must be saved
   else
+    {
+      b = sString;
       toSave = saveResources;
+    }
 
   if (b)
     {
@@ -532,19 +518,11 @@ fprintf(stderr, "Move file: from %s to %s\n", old_url, new_url);
               if (saveResources)
                 {
               if (dst_is_local)
-                {
-                  /* copy the file to the new location */
-                  TtaFileCopy (old_url, new_url);
-                }
+                /* copy the file to the new location */
+                TtaFileCopy (old_url, new_url);
               else
-                {
-                  /* save to a remote server */
-                  ActiveTransfer (doc);
-                  TtaHandlePendingEvents ();
-                  res = PutObjectWWW (doc, old_url, new_url, "text/javascript", NULL,
-                                      AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST,
-                                      NULL, NULL);
-                }
+                AddLocalResource (old_url, filename, new_url, doc,
+                                  &desc, &LoadedResources);
               if (!src_is_local)
                 // remove the temporay file
                 TtaFileUnlink (tempdocument);
@@ -819,8 +797,7 @@ void SetRelativeURLs (Document doc, char *newpath, char *resbase,
   ----------------------------------------------------------------------*/
 static void InitSaveForm (Document document, View view, char *pathname)
 {
-  LoadedImageDesc *pImage;
-  ThotBool         created, saveImgs;
+  ThotBool         created, saveImgs, saveRes;
 
   if (TextFormat)
     {
@@ -841,19 +818,10 @@ static void InitSaveForm (Document document, View view, char *pathname)
       SaveAsText = FALSE;
     }
   TtaGetEnvBoolean ("SAVE_IMAGES", &saveImgs);
-  if (IsW3Path (pathname))
-    {
-      // check idf some images must be saved
-      pImage = ImageURLs;
-      while (!saveImgs && pImage)
-        {
-          saveImgs = (pImage->document == document && pImage->status == RESOURCE_MODIFIED);
-          pImage = pImage->nextImage;
-        }
-    }
+  TtaGetEnvBoolean ("SAVE_CSS", &saveRes);
   created = CreateSaveAsDlgWX (BaseDialog + SaveForm,
                                TtaGetViewFrame (document, view), pathname,
-                               document, saveImgs,
+                               document, saveImgs, saveRes,
                                IsTemplateInstanceDocument(document));
   if (created)
     TtaShowDialogue (BaseDialog + SaveForm, FALSE, TRUE);
@@ -2335,7 +2303,6 @@ static int SaveWikiFile (Document doc, char *localfile,
     }
   /* it's not the wiki server! */
   return res;
-  
 }
 
 /*----------------------------------------------------------------------
@@ -2511,7 +2478,6 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
 static int SaveLocalCopy (Document doc, View view, char *url,
                           char *tempname, ThotBool ask)
 {
-  LoadedImageDesc    *pImage;
   char                pathname[MAX_LENGTH], *ptr, *last = NULL;
   char                msg[MAX_LENGTH];
   char               *docdir;
@@ -2568,7 +2534,6 @@ static int SaveLocalCopy (Document doc, View view, char *url,
               TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), pathname);
               /* Notify the document as modified */
               TtaSetDocumentModified (doc);
-              pImage = ImageURLs;
             }
         }
     }
@@ -2803,7 +2768,15 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
                   pImage = LoadedResources;
                 }
             }
+          if (!savecopy)
+            // resources are now saved
+            RemoveLoadedResources (doc, &LoadedResources);
+          // keep URI changes
+          ClearSaveAsUpdate (FALSE);
         }
+      else
+        // restore previous URIs
+        ClearSaveAsUpdate (TRUE);
       ResetStop (doc);
     }
 
@@ -4060,7 +4033,8 @@ static void CheckCopiedObjects (Document doc, ThotBool src_is_local,
                               if (src_is_local && !dst_is_local)
                                 {
                                   /* add the localfile to the images list */
-                                  AddLocalImage (buf, imgname, tempname, doc, &pImage, TRUE);
+                                  AddLocalResource (buf, imgname, tempname, doc, &pImage,
+                                                    &ImageURLs);
                                   /* get image type */
                                   if (pImage)
                                     pImage->imageType = TtaGetPictureType (el);
@@ -4133,14 +4107,14 @@ static void CheckCopiedObjects (Document doc, ThotBool src_is_local,
 
 
 /*----------------------------------------------------------------------
-  UpdateResources
+  UpdateCss
   if CopyResources is TRUE change all CSS links
   If Css are saved locally, make the copy
   else add them to the list of remote files to be copied.
   The parameter resbase gives the relative path of the new css directory.
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
-static void UpdateResources (Document doc, ThotBool src_is_local,
+static void UpdateCss (Document doc, ThotBool src_is_local,
                        ThotBool dst_is_local, char *resbase, char *newURL)
 {
   CSSInfoPtr          css, cssnext, cssnew, cssdone[20];
@@ -4681,7 +4655,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype, ThotBool fullCopy)
                   DocumentTypes[doc] != docXml)
                 CheckCopiedObjects (doc, src_is_local, dst_is_local, imgbase, documentFile);
               if (CopyResources)
-                UpdateResources (doc, src_is_local, dst_is_local, resbase, documentFile);
+                UpdateCss (doc, src_is_local, dst_is_local, resbase, documentFile);
             }
           toUndo = TtaCloseUndoSequence (doc);
           if (dst_is_local)
