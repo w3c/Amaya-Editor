@@ -28,6 +28,7 @@
 #include "registry_wx.h"
 #include "MENUconf.h"
 #include "MENUconf_f.h"
+#include "AHTURLTools_f.h"
 
 static int      Waiting = 0;
 static int      MyRef = 0;
@@ -314,11 +315,19 @@ void OpenDocDlgWX::OnDirButton( wxCommandEvent& event )
       dir_value =  p_dlg->GetPath();
       strncpy (buffer, (const char*)dir_value.mb_str(wxConvUTF8),MAX_LENGTH-3);
       buffer[MAX_LENGTH-2] = EOS;
-      len = strlen (buffer);
-      if (buffer[len-1] == DIR_SEP)
-        buffer[len-1] = EOS;
-      dir_value = url.Mid(end_pos);
-      strcat (buffer, (const char*)dir_value.mb_str(wxConvUTF8));          
+      if (IsHTMLName (buffer))
+        {
+          // make sure there is no directory name of the same name
+          wxRmdir (dir_value);
+        }
+      else
+        {
+          len = strlen (buffer);
+          if (buffer[len-1] == DIR_SEP)
+            buffer[len-1] = EOS;
+          dir_value = url.Mid(end_pos);
+          strcat (buffer, (const char*)dir_value.mb_str(wxConvUTF8));
+        }
       XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue(TtaConvMessageToWX(buffer));
     }
   p_dlg->Destroy();
