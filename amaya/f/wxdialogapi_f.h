@@ -46,6 +46,8 @@ extern ThotBool CreateObjectDlgWX ( int ref,
                                     const char *title,
                                     const char *urlToOpen,
                                     const char *type );
+extern ThotBool CreateMetaDlgWX ( int ref,
+                                  ThotWindow parent );
 extern ThotBool CreateTitleDlgWX ( int ref,
                                    ThotWindow parent,
                                    char *doc_title );
@@ -240,6 +242,8 @@ extern ThotBool CreateObjectDlgWX ( int ref,
                                       const char *title,
                                       const char *urlToOpen,
                                       const char *type );
+extern ThotBool CreateMetaDlgWX ( int ref,
+                                    ThotWindow parent );
 extern ThotBool CreateTitleDlgWX ( int ref,
                                      ThotWindow parent,
                                      char *doc_title );

@@ -1944,10 +1944,70 @@ void CreateBase (Document doc, View view)
 void CreateMeta (Document doc, View view)
 {
   Element             el;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  ThotBool            created;
 
   el = InsertWithinHead (doc, view, HTML_EL_META);
   if (el)
-    TtaSelectElement (doc, el);
+    {
+      created = CreateMetaDlgWX (BaseDialog + TitleForm,
+                                 TtaGetViewFrame (doc, view));
+      if (created)
+        {
+          TtaSetDialoguePosition ();
+          TtaShowDialogue (BaseDialog + TitleForm, FALSE, TRUE);
+          /* wait for an answer */
+          TtaWaitShowDialogue ();
+        }
+      if (MetaContent && (MetaEquiv || MetaName))
+        {
+          // add meta attributes
+          TtaExtendUndoSequence (doc);
+          // re-register the created element
+          TtaCancelLastRegisteredOperation (doc);
+          elType = TtaGetElementType (el);
+          attrType.AttrSSchema = elType.ElSSchema;
+          if (MetaName)
+            attrType.AttrTypeNum = HTML_ATTR_meta_name;
+          else
+            attrType.AttrTypeNum = HTML_ATTR_http_equiv;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+            }
+          if (MetaName)
+            TtaSetAttributeText (attr, MetaName, el, doc);
+          else
+            TtaSetAttributeText (attr, MetaEquiv, el, doc);
+          attrType.AttrTypeNum = HTML_ATTR_meta_content;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+            }
+          TtaSetAttributeText (attr, MetaContent, el, doc);
+          TtaRegisterElementCreate (el, doc);
+          TtaCloseUndoSequence (doc);
+          TtaSelectElement (doc, el);
+        }
+      else
+        {
+          // not a valid meta
+          TtaDeleteTree (el, doc);
+          TtaCancelLastRegisteredSequence (doc);
+        }
+      TtaFreeMemory (MetaContent);
+      MetaContent = NULL;
+      TtaFreeMemory (MetaEquiv);
+      MetaEquiv = NULL;
+      TtaFreeMemory (MetaName);
+      MetaName = NULL;
+    }
 #ifdef _WX
   TtaRedirectFocus();
 #endif /* _WX */
@@ -1989,17 +2049,22 @@ void CreateStyle (Document doc, View view)
   if (el)
     {
       /* create an attribute type="text/css" */
+      TtaExtendUndoSequence (doc);
+      // re-register the created element
+      TtaCancelLastRegisteredOperation (doc);
       elType = TtaGetElementType (el);
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = HTML_ATTR_Notation;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
       TtaSetAttributeText (attr, "text/css", el, doc);
+      TtaRegisterElementCreate (el, doc);
       child = TtaGetFirstChild (el);
       if (child)
         TtaSelectElement (doc, child);
       else
         TtaSelectElement (doc, el);
+      TtaCloseUndoSequence (doc);
     }
 #ifdef _WX
   TtaRedirectFocus();

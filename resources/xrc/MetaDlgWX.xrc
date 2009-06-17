@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="MetaDlgWX">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="spacer">
+        <size>0,5</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_HTTPEQUIV_LABEL">
+              <size>80,-1</size>
+              <label>http-equiv:</label>
+            </object>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxTextCtrl" name="wxID_HTTPEQUIV">
+              <style>wxTE_PROCESS_ENTER</style>
+            </object>
+            <option>0</option>
+            <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>2</border>
+            <minsize>400,-1</minsize>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+        <border>2</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_NAME_LABEL">
+              <size>80,-1</size>
+              <label>name:</label>
+            </object>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxTextCtrl" name="wxID_NAME"/>
+            <option>0</option>
+            <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>2</border>
+            <minsize>400,-1</minsize>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+        <border>2</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_CONTENT_LABEL">
+              <size>80,-1</size>
+              <label>content:</label>
+            </object>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxTextCtrl" name="wxID_CONTENT"/>
+            <option>0</option>
+            <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>2</border>
+            <minsize>400,-1</minsize>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+        <border>2</border>
+      </object>
+      <object class="spacer">
+        <size>0,10</size>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_OK">
+              <label>CONFIRMBUTTON</label>
+              <default>1</default>
+              <focused>1</focused>
+            </object>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>CANCELBUTTON</label>
+            </object>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <border>5</border>
+      </object>
+    </object>
+    <title>meta</title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
+  </object>
+</resource>

@@ -1945,8 +1945,8 @@ static void BrowserForm (Document doc, View view, char *urlname)
   The parameter name gives a proposed document name (New document).
   The parameter title gives the title of the the form.
   ----------------------------------------------------------------------*/
-static void InitOpenDocForm (Document doc, View view, const char *name, const char *title,
-                             DocumentType docType)
+static void InitOpenDocForm (Document doc, View view, const char *name,
+                             const char *title, DocumentType docType)
 {
   char              s[MAX_LENGTH];
   char             *thotdir, *docdir;
@@ -7055,7 +7055,8 @@ void InitAmaya (NotifyEvent * event)
   SavingFile = (char *)TtaGetMemory (MAX_LENGTH);
   AttrHREFvalue = (char *)TtaGetMemory (MAX_LENGTH);
   AttrHREFvalue[0] = EOS;
-
+  // Initialize the meta dialog
+  MetaName = MetaEquiv = MetaContent = NULL;
 #ifdef WITH_SOCKS
   SOCKSinit ("amaya");
 #endif

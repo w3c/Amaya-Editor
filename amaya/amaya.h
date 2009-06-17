@@ -390,6 +390,10 @@ THOT_EXPORT char      *RDFa_list; /* list of Namespace declarations for RDFa */
 #ifdef _SVG
 THOT_EXPORT char      *SVGlib_list;
 #endif /* _SVG */
+THOT_EXPORT char      *MetaName;
+THOT_EXPORT char      *MetaContent;
+THOT_EXPORT char      *MetaEquiv;
+
 THOT_EXPORT char       TempFileDirectory[MAX_LENGTH];
 THOT_EXPORT char       Answer_text[MAX_LENGTH];
 THOT_EXPORT char       Answer_name[NAME_LENGTH];

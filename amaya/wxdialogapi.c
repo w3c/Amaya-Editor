@@ -41,6 +41,7 @@
   #include "wxdialog/ListEditDlgWX.h"
   #include "wxdialog/ListNSDlgWX.h"
   #include "wxdialog/MakeIdDlgWX.h"
+  #include "wxdialog/MetaDlgWX.h"
   #include "wxdialog/ObjectDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
@@ -482,6 +483,31 @@ ThotBool CreateObjectDlgWX (int ref, ThotWindow parent, const char *title,
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     /* the dialog has been sucesfully registred */
     return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateMetaDlgWX create the dialog to set meta attributes
+  ----------------------------------------------------------------------*/
+ThotBool CreateMetaDlgWX (int ref, ThotWindow parent)
+{
+#ifdef _WX
+  /* check if the dialog is alredy open */
+  if (TtaRaiseDialogue (ref))
+    return FALSE;
+
+  MetaDlgWX * p_dlg = new MetaDlgWX (ref, parent);
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucesfully registred */
+      return TRUE;
   else
     {
       /* an error occured durring registration */
