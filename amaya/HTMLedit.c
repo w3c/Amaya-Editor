@@ -1624,7 +1624,8 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
           /* copy the file into the temporary directory of the document */
           TtaExtractName (targetURL, tempURL, resname);
           NormalizeURL (resname, doc, tempURL, resname, NULL);
-          AddLocalResource (targetURL, resname, tempURL, doc,  &desc, &LoadedResources);
+          AddLocalResource (targetURL, resname, tempURL, doc,  &desc,
+                            &LoadedResources, FALSE);
         }
       else
         strcpy (tempURL, targetURL);

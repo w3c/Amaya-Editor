@@ -645,9 +645,9 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
           TtaExtractName (pathimage, localname, imagename);
           NormalizeURL (imagename, doc, localname, imagename, NULL);
           if (TtaFileExist (pathimage))
-            AddLocalResource (pathimage, imagename, localname, doc,  &desc, &ImageURLs);
+            AddLocalResource (pathimage, imagename, localname, doc,  &desc, &ImageURLs, FALSE);
           else if (TtaFileExist (LastURLImage))
-            AddLocalResource (LastURLImage, imagename, localname, doc,  &desc, &ImageURLs);
+            AddLocalResource (LastURLImage, imagename, localname, doc,  &desc, &ImageURLs, FALSE);
 
           /* suppose that the image will be stored in the same directory */
           TtaSetAttributeText (attr, imagename, el, doc);
@@ -1665,14 +1665,17 @@ void InsertImageOrObject (Element el, Document doc)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void RegisterSaveAsUpdate (LoadedImageDesc *desc, char *newuri)
+void RegisterSaveAsUpdate (LoadedImageDesc *desc, char *newuri)
 {
   UndoSaveAs *pRec = SaveAsUpdate;
   ThotBool    done = FALSE;
 
   if (desc == NULL)
     return;
-
+  if (TtaFileExist(desc->tempfile))
+    desc->status = RESOURCE_MODIFIED;
+  else
+    desc->status = RESOURCE_NOT_LOADED;
   while (pRec && !done)
     {
       if (desc == pRec->desc)
@@ -1690,8 +1693,10 @@ static void RegisterSaveAsUpdate (LoadedImageDesc *desc, char *newuri)
   if (!done)
     {
       pRec = (UndoSaveAs *) TtaGetMemory (sizeof (UndoSaveAs));
+      pRec->desc = desc;
       pRec->olduri = desc->originalName;
       desc->originalName = TtaStrdup (newuri);              
+      pRec->next = NULL;
       SaveAsUpdate = pRec;
     }
 }
@@ -1710,6 +1715,8 @@ void ClearSaveAsUpdate (ThotBool withUndo)
           desc = pRec->desc;
           TtaFreeMemory (desc->originalName);
           desc->originalName = pRec->olduri;
+          if (TtaFileExist(desc->tempfile))
+            desc->status = RESOURCE_LOADED;
         }
       next = pRec->next;
       TtaFreeMemory (pRec);
@@ -1722,15 +1729,16 @@ void ClearSaveAsUpdate (ThotBool withUndo)
   AddLocalResource adds a new local resource into *list descriptors table
   with the purpose of having it saved through the Net later.
   This function copy the file in the TempFileDirectory.
-  fullname is the complete path to the local file.
+  fullname is the complete path of the local file.
   name is the name of the local file.
   url is the complete URL of the distant location.
   list points to the used list.
-  list  with the purpose of having it undo.
+  saveAs is TRUE if changes concern a saveAs command.
   Return TRUE if a new entry is created.
   ----------------------------------------------------------------------*/
 ThotBool AddLocalResource (char *fullname, char *name, char *url, Document doc,
-                           LoadedImageDesc **desc, LoadedImageDesc **list)
+                           LoadedImageDesc **desc, LoadedImageDesc **list,
+                           ThotBool saveAs)
 {
   LoadedImageDesc    *pImage, *previous;
   char               *localname;

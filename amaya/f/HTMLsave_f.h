@@ -25,7 +25,8 @@ extern void SetRelativeURLs ( Document doc,
                               char *resbase,
                               ThotBool savedImages,
                               ThotBool savedResources,
-                              ThotBool fullCopy );
+                              ThotBool fullCopy,
+                              ThotBool saveAs );
 extern void InitSaveObjectForm ( Document document,
                                  View view,
                                  char *object,
@@ -117,7 +118,8 @@ extern void SetRelativeURLs ( Document doc,
                                 char *resbase,
                                 ThotBool savedImages,
                                 ThotBool savedResources,
-                                ThotBool fullCopy );
+                                ThotBool fullCopy,
+                                ThotBool saveAs );
 extern void InitSaveObjectForm ( Document document,
                                    View view,
                                    char *object,

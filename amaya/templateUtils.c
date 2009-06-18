@@ -598,7 +598,7 @@ char *SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
 
   localFile = GetLocalPath (newdoc, newpath);
   // update all links
-  SetRelativeURLs (doc, newpath, NULL, FALSE, FALSE, FALSE);
+  SetRelativeURLs (doc, newpath, NULL, FALSE, FALSE, FALSE, FALSE);
   // prepare the new document view
   TtaExtractName (newpath, DirectoryName, DocumentName);
 

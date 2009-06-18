@@ -35,13 +35,16 @@ extern void CreateImage ( Document doc,
                           View view );
 extern void InsertImageOrObject ( Element el,
                                   Document doc );
+extern void RegisterSaveAsUpdate ( LoadedImageDesc *desc,
+                                   char *newuri );
 extern void ClearSaveAsUpdate ( ThotBool withUndo );
 extern ThotBool AddLocalResource ( char *fullname,
                                    char *name,
                                    char *url,
                                    Document doc,
                                    LoadedImageDesc **desc,
-                                   LoadedImageDesc **list );
+                                   LoadedImageDesc **list,
+                                   ThotBool saveAs );
 
 #else /* __STDC__ */
 
@@ -74,13 +77,16 @@ extern void CreateImage ( Document doc,
                             View view );
 extern void InsertImageOrObject ( Element el,
                                     Document doc );
+extern void RegisterSaveAsUpdate ( LoadedImageDesc *desc,
+                                     char *newuri );
 extern void ClearSaveAsUpdate ( ThotBool withUndo );
 extern ThotBool AddLocalResource ( char *fullname,
                                      char *name,
                                      char *url,
                                      Document doc,
                                      LoadedImageDesc **desc,
-                                     LoadedImageDesc **list );
+                                     LoadedImageDesc **list,
+                                     ThotBool saveAs );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

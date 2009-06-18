@@ -156,7 +156,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref, wxWindow *parent, const wxString & pathname,
       XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BTRANSFORM_URL) ));
       CopyImages = saveImgs;
       XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetValue(CopyImages);
-      TtaGetEnvBoolean ("COPY_CSS", &CopyResources);
+      CopyResources = saveRes;
       XRCCTRL(*this, "wxID_CPY_CSS_CHK", wxCheckBox)->SetValue(CopyResources);
       TtaGetEnvBoolean ("TRANSFORM_URL", &UpdateURLs);
       XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetValue(UpdateURLs);
