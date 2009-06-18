@@ -1079,7 +1079,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   Document        doc = event->document;
   Element         el = event->element;
   Element         child, parent;
-  ElementType     elType, childType;
+  ElementType     elType, parentType;
   View            view;
   XTigerTemplate  t;
   Declaration     decl;
@@ -1102,12 +1102,12 @@ ThotBool UseButtonClicked (NotifyElement *event)
     return FALSE; /* let Thot perform normal operation */
 
   elType = TtaGetElementType (el);
-  firstEl = TtaGetFirstChild (el);
-  childType = TtaGetElementType (firstEl);
-  if (firstEl &&
+  parent = TtaGetParent (el);
+  parentType = TtaGetElementType (parent);
+  if (parent &&
       // TemplateObject is just a place holder
-      (childType.ElSSchema != elType.ElSSchema ||
-      childType.ElTypeNum != Template_EL_TemplateObject))
+      (parentType.ElSSchema == elType.ElSSchema ||
+       parentType.ElTypeNum == Template_EL_useEl))
     RepeatButtonClicked(event);
   else
     {
@@ -1129,15 +1129,23 @@ ThotBool UseButtonClicked (NotifyElement *event)
                   oldStructureChecking = TtaGetStructureChecking (doc);
                   TtaSetStructureChecking (FALSE, doc);
                   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
+                  // clean up the current content
+                  firstEl = TtaGetFirstChild (el);
+                  while (firstEl)
+                    {
+                      TtaRegisterElementDelete(firstEl, doc);
+                      TtaDeleteTree (firstEl, doc);
+                      firstEl = TtaGetFirstChild (el);
+                    }
+             
                   // look for the enclosing target element
                   parent = GetParentLine (el, elType.ElSSchema);
                   /* Insert */
                   newEl = Template_InsertUseChildren(doc, el, decl, parent, TRUE);
                   for (child = TtaGetFirstChild(newEl); child; TtaNextSibling(&child))
                       TtaRegisterElementCreate (child, doc);
-                  TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
-                  TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
+                  //TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
+                  //TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
 
                   /* xt:currentType attribute.*/
                   SetAttributeStringValueWithUndo(el, Template_ATTR_currentType, result);

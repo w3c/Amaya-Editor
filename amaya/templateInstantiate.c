@@ -909,8 +909,10 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec,
                         current = InsertWithNotify (prev, current, el, doc);
                         prev = next;
                       }
+                    TtaDeleteTree (child, doc);
                   }
-                TtaDeleteTree (child, doc);
+                else
+                  current = InsertWithNotify (child, current, el, doc);
               }
             else
               {
