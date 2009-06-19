@@ -880,8 +880,9 @@ ThotBool IsResourceName (const char *path)
   suffix = (char *)TtaGetMemory (strlen (ptr) + 1);
   TtaExtractSuffix (ptr, suffix);
   if (*suffix == EOS || *suffix == '/' ||
-      strstr (suffix, "#") ||
+      strstr (suffix, "#") || strstr (suffix, "?") ||
       !strncasecmp (suffix, "htm", 3) ||
+      !strncasecmp (suffix, "shtm", 4) ||
       !strncasecmp (suffix,"xhtm", 4) ||
       !strncasecmp (suffix, "php", 3) ||
       !strncasecmp (suffix, "mml", 3) ||
