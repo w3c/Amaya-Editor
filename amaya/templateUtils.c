@@ -597,7 +597,9 @@ char *SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
   ThotBool      res = FALSE;
 
   localFile = GetLocalPath (newdoc, newpath);
-  // update all links
+
+  // apply link changes to the template
+    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   SetRelativeURLs (doc, newpath, NULL, FALSE, FALSE, FALSE, FALSE);
   // prepare the new document view
   TtaExtractName (newpath, DirectoryName, DocumentName);
@@ -624,6 +626,10 @@ char *SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
   else
     /* docType = docXml; */
     res = TtaExportDocumentWithNewLineNumbers (doc, localFile, NULL, FALSE);
+
+  // restore the previous state of the template
+  TtaCloseUndoSequence (doc);
+  TtaUndoNoRedo (doc);
   if (res)
     return localFile;
   else

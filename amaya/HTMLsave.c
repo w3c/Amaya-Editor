@@ -372,11 +372,10 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
   char               *tempdocument = NULL;
   int                 len, newlen;
   ThotBool            src_is_local, dst_is_local;
-  ThotBool            toSave = FALSE, isCSS = FALSE;
+  ThotBool            toSave = saveResources, isCSS = FALSE;
 
   newString = NULL;
-  if (!saveResources ||
-      (isLink && !IsResourceName (sString)))
+  if (saveResources && !IsResourceName (sString))
     // don't consider a html document as a resource
     return newString;
 
@@ -385,10 +384,7 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
   if (b && saveResources)
     isCSS = TRUE; // check if this CSS must be saved
   else
-    {
-      b = sString;
-      toSave = saveResources;
-    }
+    b = sString;
 
   if (b)
     {
@@ -665,8 +661,8 @@ void SetRelativeURLs (Document doc, char *newpath, char *resbase,
                 {
                 // Update the XML PI content
                 newString = UpdateDocResource (doc, oldpath, newpath,
-					       resbase, orgString,
-                                               el, savedResources, FALSE, fullCopy);
+                                               resbase, orgString,
+                                               el, savedResources, TRUE, fullCopy);
                 }
               if (newString)
                 {
@@ -4076,7 +4072,7 @@ static void CheckCopiedObjects (Document doc, ThotBool src_is_local,
                                       /* update the descriptor */
                                       if (pImage)
                                         {
-                                          if (pImage->originalName && tempname &&
+                                          if (pImage->originalName &&
                                               strcmp (pImage->originalName, tempname))
                                             RegisterSaveAsUpdate (pImage, tempname);
 #ifdef IV
@@ -4119,7 +4115,7 @@ static void UpdateCss (Document doc, ThotBool src_is_local,
   CSSInfoPtr          css, cssnext, cssnew, cssdone[20];
   PInfoPtr            pInfo, pnext;
   LoadedImageDesc    *desc;
-  int                 buflen, res, index, i;
+  int                 buflen, index, i;
   CSSmedia            media;
   CSSCategory         category;
   char                oldpath[MAX_LENGTH];
