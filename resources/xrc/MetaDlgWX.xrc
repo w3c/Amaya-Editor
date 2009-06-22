@@ -11,13 +11,15 @@
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_NAME_LABEL">
               <size>60,-1</size>
-              <label>name</label>
+              <label> name</label>
             </object>
             <flag>wxALIGN_CENTRE_VERTICAL</flag>
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_NAME"/>
-            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+            <option>1</option>
+            <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>4</border>
             <minsize>150,-1</minsize>
           </object>
           <object class="spacer">
@@ -40,38 +42,34 @@
             <border>2</border>
             <minsize>150,-1</minsize>
           </object>
-          
           <orient>wxHORIZONTAL</orient>
         </object>
         <option>1</option>
         <flag>wxEXPAND</flag>
         <border>2</border>
       </object>
-      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_CONTENT_LABEL">
               <size>60,-1</size>
-              <label>content</label>
+              <label> content</label>
             </object>
             <flag>wxALIGN_CENTRE_VERTICAL</flag>
-            <border>2</border>
+            <border>4</border>
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_CONTENT"/>
-            <option>0</option>
+            <option>1</option>
             <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
             <border>2</border>
-            <minsize>400,-1</minsize>
           </object>
           <orient>wxHORIZONTAL</orient>
         </object>
         <option>1</option>
-        <flag>wxEXPAND</flag>
+        <flag>wxALL|wxEXPAND</flag>
         <border>2</border>
       </object>
-      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
@@ -100,6 +98,6 @@
     </object>
     <title>meta</title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
+    <style>wxFULL_REPAINT_ON_RESIZE|wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
   </object>
 </resource>
