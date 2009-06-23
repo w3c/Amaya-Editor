@@ -196,7 +196,6 @@ typedef struct Prop_Annot_t
   ThotBool AnnotRAutoLoadRst;
 } Prop_Annot;
 
-#ifdef DAV
 typedef struct Prop_DAV_Path_t {
   char                   *Path;
   struct Prop_DAV_Path_t *NextPath;
@@ -212,16 +211,13 @@ typedef struct Prop_DAV_t
   int  numberTimeout;
   char radioLockScope[MAX_LENGTH];
 } Prop_DAV;
-#endif /* DAV */
 
-#ifdef TEMPLATES
 typedef struct Prop_Templates_Path_t {
   char                         *Path;
   struct Prop_Templates_Path_t *NextPath;
 } Prop_Templates_Path;
 
 extern Prop_Templates_Path *TemplateRepositoryPaths;
-#endif /* TEMPLATES */
 
 typedef struct Prop_Emails_t
 {

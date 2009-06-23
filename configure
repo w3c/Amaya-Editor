@@ -14380,7 +14380,7 @@ if test "$enable_system_libwww" != "yes" ; then
   chmod +x libwww/libwww-config
   BUILDLIBWWW="libwww"
   LIBWWW_CONFIG="libwww/libwww-config"
-  LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -L$CURRENT_PATH/libwww/modules/md5/.libs -L$CURRENT_PATH/libwww/modules/expat/.libs `$LIBWWW_CONFIG --libs`"
+  LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -L$CURRENT_PATH/libwww/modules/md5/.libs $CURRENT_PATH/libwww/modules/expat/.libs/libexpat.a `$LIBWWW_CONFIG --libs`"
   LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww"
 else
   LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
