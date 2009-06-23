@@ -721,8 +721,8 @@ if test "$with_system_libwww" = "yes" ; then
     AC_PATH_PROG([LIBWWW_CONFIG],[libwww-config])
 
     if test "$LIBWWW_CONFIG" = "" ; then
-		with_system_libwww="no"
 		AC_MSG_WARN(libwww system library not found, falling back to the builtin version.)
+		with_system_libwww="no"
     fi
 fi
 
@@ -752,7 +752,7 @@ else
    WITHDAV="--without-dav"
 fi
 
-if test "$enable_system_libwww" != "yes" ; then
+if test "$with_system_libwww" != "yes" ; then
   # configure libwww
   CURRENT_PATH="`pwd`"
   mkdir libwww
