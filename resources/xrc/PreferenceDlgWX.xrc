@@ -104,7 +104,7 @@
               <object class="sizeritem">
                 <object class="wxChoice" name="wxID_CHOICE_LG">
                   <content>
-                    <item/>
+                    <item></item>
                     <item>de (German)</item>
                     <item>en (English)</item>
                     <item>es (Spanish)</item>
@@ -120,6 +120,7 @@
                     <item>ru (Russian)</item>
                     <item>sk (Slovak)</item>
                     <item>tr (Turkish)</item>
+                    <item>uk (Ukrainian)</item>
                     <item>zh-cn (Simplified Chinese)</item>
                     <item>zh-tw (Traditional Chinese)</item>
                   </content>
@@ -1231,7 +1232,6 @@
             <option>0</option>
             <flag>wxEXPAND</flag>
           </object>
-        
         </object>
         <option>0</option>
         <flag>wxALL|wxEXPAND</flag>
