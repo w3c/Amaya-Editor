@@ -13629,6 +13629,8 @@ fi
 
   if test -z "$WXCONFIG"; then
     with_system_wx="no"
+    { echo "$as_me:$LINENO: WARNING: wxWidgets system library not found" >&5
+echo "$as_me: WARNING: wxWidgets system library not found" >&2;}
   fi
 fi
 
@@ -13644,9 +13646,9 @@ if test "$with_system_wx" != "yes"; then
 
   # check that sources of wxWidgets exists
   if test ! -f $WX_SRCDIR/Makefile.in ; then
-    { { echo "$as_me:$LINENO: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/)" >&5
-echo "$as_me: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/)" >&2;}
-   { (exit or remove --with-wx option); exit or remove --with-wx option; }; }
+    { { echo "$as_me:$LINENO: error: wxWidgets library sources not found" >&5
+echo "$as_me: error: wxWidgets library sources not found" >&2;}
+   { (exit check --with-wxsrcdir is correct !); exit check --with-wxsrcdir is correct !; }; }
   fi
 
   # --------- configure wxWidgets library --------------- #
@@ -14324,9 +14326,9 @@ fi
 
 
     if test "$LIBWWW_CONFIG" = "" ; then
-		{ echo "$as_me:$LINENO: WARNING: Not using system-provided libWWW" >&5
-echo "$as_me: WARNING: Not using system-provided libWWW" >&2;}
 		with_system_libwww="no"
+		{ echo "$as_me:$LINENO: WARNING: libwww system library not found" >&5
+echo "$as_me: WARNING: libwww system library not found" >&2;}
     fi
 fi
 

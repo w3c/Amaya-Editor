@@ -302,6 +302,7 @@ if test "$with_system_wx" = "yes"; then
   AC_PATH_PROG(WXCONFIG, wx-config)
   if test -z "$WXCONFIG"; then
     with_system_wx="no"
+    AC_MSG_WARN(wxWidgets system library not found, falling back to the builtin version.)
   fi
 fi
   
@@ -317,7 +318,7 @@ if test "$with_system_wx" != "yes"; then
 
   # check that sources of wxWidgets exists
   if test ! -f $WX_SRCDIR/Makefile.in ; then
-    AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/), or remove --with-wx option, or check --with-wxsrcdir is correct !)
+    AC_MSG_ERROR(wxWidgets library sources not found, check --with-wxsrcdir is correct !)
   fi
 
   # --------- configure wxWidgets library --------------- #
@@ -720,8 +721,8 @@ if test "$with_system_libwww" = "yes" ; then
     AC_PATH_PROG([LIBWWW_CONFIG],[libwww-config])
 
     if test "$LIBWWW_CONFIG" = "" ; then
-		AC_MSG_WARN(Not using system-provided libWWW, falling back to the builtin version.)
 		with_system_libwww="no"
+		AC_MSG_WARN(libwww system library not found, falling back to the builtin version.)
     fi
 fi
 
