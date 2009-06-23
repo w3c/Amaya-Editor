@@ -1,0 +1,424 @@
+# encoding= utf8
+0 X11 помилка : %s\n
+1 Підтвердити
+2 Відсутній файл алфавіту (Amaya-*.*/dicopar/alphabet)
+3 Нове представлення не может замінити старого
+4 Несумісні схеми. Перекомпілюйте %s
+5 Непоправна помилка: не знайдені шрифти
+6 Ресурси пам'яті вичерпані
+7 Непоправна помилка: Неможливо з'єднатися з X
+8 Перед створенням, представлення було змінено
+9 Таблиця правил заповнена.
+10 Неправильний файл: %s.STR
+11 Неправильний файл: %s.PRS
+12 Друкується документ %s
+13 Розташування
+14 1 сторінка/аркуш
+15 2 сторінки/аркуш
+16 4 сторінки/аркуш
+17 %s
+18 Недостатньо пам'яті
+19 *** Amaya: Непоправна помилка ***
+20 якщо існують змінені документи, їх буде збережено
+21 Неправильний .TRA файл: %s
+22 %s не є правильним однорівневим вузлом для %s (%s)
+23 %s не є правильним нащадком для %s (%s)
+24 %s, сторінка %d
+25 Мова
+26 Атрибути
+27 Стандартна демонстрація
+28 Застосувати
+29 Символи
+30 Підкреслення
+31 Графіка
+32 Форматування
+33 За замовчуванням
+34 Вирівнювання
+35 Відступ
+36 Виконується друкування
+37 Друк
+38 Ручна подача
+39 Додатково
+40 A4
+41 US
+42 Розмір паперу
+43 Закрити
+44 Директорії
+45 Документ %s вже існує. Перезаписати його?
+46 **Set the text color
+47 **Set the background color
+48 Сім'я шрифтів
+49 Нормальне
+50 Напівжирне
+51 Курсив
+52 Похиле
+53 Нормальна
+54 Товщина линії символа
+55 Нормальне
+56 Підрядкове
+57 Закреслювання
+58 Розмір шрифта
+59 **Unindent
+60 **Single line spacing
+61 **Middle line spacing
+62 **Double line spacing
+63 Зберегти документ
+64 Закрити, не зберігати
+65 Начертання символа
+66 Колір
+67 **Elements
+68 Видалити
+69 Вихідний потік даних
+70 PostScript файл
+71 Принтер
+72 Знайти
+73 Не враховувати регістр літер
+74 Замістити на
+75 Режим заміщення
+76 Не заміщати
+77 Заміщати за запросом
+78 Заміщати автоматично
+79 Місце пошуку
+80 Перед вибраним
+81 В межах вибраного
+82 Після вибраного
+83 В усьому документі
+84 Не заміщати
+85 перед його закриттям
+86 Закрити документ
+87 Математичні символи
+88 Графіка
+89 Латинський алфавіт
+90 Грецький алфавіт
+91 Зберегти
+92 Текст
+93 Графіка
+94 Символ
+95 Зображення
+96 XML
+97 після
+98 перед
+99 навкруги
+100 Включити
+101 Вставити
+102 створювати
+103 Вставити
+104 Розділювач сторінки
+105 Мова елементу
+106 Успадкована мова:
+107 Не знайдено
+108 Пошук в
+109 Пошук
+110 Елемент Лише для читання
+111 Нічого не заміщено
+112 Стандартні символи
+113 Стандартна графіка
+114 Стандартний формат
+115 Стандартна геометрія
+116 п.
+117 Тип лінії
+118 Ширина лінії
+119 Зразок заповнення
+120 Розділяти
+121 Тип об'єкту
+122 Перейти на сторінку номер:
+123 Будь-який
+124 Атрибут пошуку
+125 Введіть для пошуку
+126 Основна властивість
+127 Ім'я
+128 Величина
+129 Величина атрибуту:
+130 Невідомий атрибут
+131 Скасування
+132 Помилка PostScript перетворення
+133 Команда відкинута спулером "%s"
+134 Неможливо створити "%s"
+135 Надрядкове
+136 Тип документу
+137 Видалити атрибут
+138 Колір фону
+139 Колір тексту документа
+140 Вибрати generic (основну) структуру XML
+141 Перевірка
+142 Знайти/Пропустити
+143 Замістити (+словник)
+144 Замістити та наступний
+145 Інша мова
+146 Навчити
+147 слова, які містять:
+148 Перевірка правопису ...
+149 римські цифри
+150 Ігнорувати
+151 слова з заголовними літерами
+152 слова з цифрами
+153 Помилка параметру файла
+154 Відсутній файл клавіатури (Amaya-*.*/config/amaya.kb)
+155 Неможливо зберегти словник документу
+156 Неправильне слово "%s" не буде додано у словник
+157 Слово "%s" додано у словник документу
+158 Кінець перевірки правопису
+159 Перевірка правопису перервана
+160 Виберіть документ
+161 Словник документу збережено в: %s
+162 Недоступно в цій версії
+163 Показати/Сховати плаваючу панель
+164 Інструменти
+165 Обов'язковий атрибут, його не може бути видалено
+166 Перезавантажити документ
+167 По лівому краю
+168 По правому краю
+169 По центру
+170 По ширині
+171 Застосувати клас
+172 Вибрати клас або псевдо-клас
+173 Перегляд
+174 Скасувати вибір
+175 Математика
+176 Інше
+177 Символи рівності
+178 Символи нерівності
+179 Оператори
+180 Грецький алфавіт (заголовні)
+181 Стрілки
+182 Спец символи
+183 Перервати передачу даних
+184 Попередній документ
+185 Наступний документ
+186 Перезавантажити документ
+187 Зберегти
+188 Зберегти
+189 Новий документ
+190 Відкритий документ
+191 Друк
+192 Знайти
+193 Початкова сторінка
+194 Звичайне виділення Увімк./Вимкн.
+195 Особливе виділення Увімк./Вимкн.
+196 Виділення комп'ютерного коду Увімк./Вимкн.
+197 Вставити/Замістити зображення
+198 Заголовок рівень 1
+199 Заголовок рівень 2
+200 Заголовок рівень 3
+201 Заголовок рівень 4
+202 Параграф
+203 Маркований список
+204 Нумерований список
+205 Список визначення
+206 Посилання
+207 Таблиця
+208 Зараз буде закрито %d панелі. Продовжити та закрити їх?
+209 Попереджувати о спробі закриття кількох панелей
+210 Закрити панелі
+211 Помилки не знайдено
+212 Показати розбір помилок
+213 Блоки
+214 Розділ
+215 Ціль
+216 Вставка Увімк./Вимкн.
+217 Видалення Увімк./Вимкн.
+218 Підрядковий індекс Увімк./Вимкн.
+219 Надрядковий індекс Увімк./Вимкн.
+220 Термін
+221 Визначення
+222 Об'єкт
+223 Налагодження каскадної таблиці стилю
+224 Файли
+225 Поділ/Скасування поділу вікна по горизонталі
+226 Поділ/Скасування поділу вікна по вертикалі
+227 Показати/Сховати панель інструментів
+228 Скасувати
+229 Повернути
+230 Вирізати
+231 Копіювати
+232 Вставити
+233 Перевірка правопису
+234 **Various constructs
+235 **Relations, orders and logic
+236 **Sets and functions
+237 **Arithmetic, operations, complexes and constants
+238 **Analysis, linear algebra and statistic
+239 **Trigonometry and logarithms
+240 Збільшити
+241 Зменшити
+242 **Theme
+243 XML
+244 Text
+245 **No recent document
+246 **Click an element to select it
+247 **Click to change the editing mode
+248 Об'єднати
+249 Зменшити розширення по горизонталі
+250 Зменшити розширення по вертикалі
+251 Вставити рядок
+252 Додати рядок
+253 Вставити стовпец
+254 Додати стовпец
+255 **Tip of the day
+256 **Show tip at startup
+257 **Previous tip
+258 **Next tip
+259 **Did you know...
+260 **Close
+261 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
+262 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
+263 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
+264 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
+265 **In customizable mode, you can drag panels to change their order or to make them floating.
+266 **With the customizable mode, you can move panels on both sides of the window just by dragging.
+267 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
+268 **When there is red button in the bottom right corner, you can display errors by clicking on it.
+269 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
+270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
+271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
+272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
+273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
+274 **For SVG drawing, lines are created with a precision of 15Рif you press the shift button. It is useful when you want to draw straight lines.
+275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
+276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
+277 **Classic
+278 **Modern
+279 **No theme
+280 **Title/Description
+281 **Generate a description
+282 **Square
+283 **Rounded Square
+284 **Rectangle
+285 **Rounded rectangle
+286 **Diamond
+287 **Parallelogram
+288 **Trapezium
+289 **Equilateral triangle
+290 **Isosceles triangle
+291 **Right triangle
+292 **Circle
+293 **Ellipse
+294 **Line
+295 **Arrow
+296 **Double Arrow
+297 **Zigzag
+298 **Group
+299 **Ungroup
+300 **Bring to front
+301 **Send to back
+302 **One level up
+303 **One level down
+304 **90Рleft
+305 **90Рright
+306 **Rotate
+307 **Vertical symmetry
+308 **Horizontal symmetry
+309 **Scale
+310 **Skew
+311 **Move
+312 **Align bottom
+313 **Align center
+314 **Align left
+315 **Align middle
+316 **Align right
+317 **Align top
+318 **Distribute bottom
+319 **Distribute center
+320 **Distribute left
+321 **Distribute middle
+322 **Distribute right
+323 **Distribute top
+324 **Distribute vertical spacing
+325 **Distribute horizontal spacing
+326 **Closed Bezier curve
+327 **Bezier curve
+328 **Polyline
+329 **Polygon
+330 **Foreign Object
+331 **Image
+332 **SVG Canvas
+333 **Text
+334 **Cone
+335 **Cube
+336 **Cylinder
+337 **Octahedron
+338 **Parallelepiped
+339 **Pyramid
+340 **Beaker
+341 **Funnel
+342 **Bunsen burner
+343 **Buchner flask
+344 **Boiling flask
+345 **Burette
+346 **Erlenmeyer flask
+347 **Test tube
+348 **Pipette
+349 **Rectangular
+350 **Rounded rectangular
+351 **Round
+352 **Scream
+353 **Thought
+354 **Capacitor
+355 **Power source
+356 **Diode
+357 **Ground Point
+358 **Inductor
+359 **LED
+360 **Op-amp
+361 **Resistor
+362 **Switch
+363 **Transistor
+364 **Voltage source
+365 **Zener diode
+366 **Pentagon
+367 **Hexagon
+368 **Heptagon
+369 **Octogon
+370 **Star (4 branches)
+371 **Star (5 branches)
+372 **Star (6 branches)
+373 AND
+374 NAND
+375 OR
+376 NOR
+377 XOR
+378 XNOR
+379 NOT
+380 **Cross
+381 **Frame
+382 **Ring
+383 **Cloud
+384 **Scroll
+385 **Sun
+386 **Lightning_Bolt
+387 **Moon
+388 **Smiley
+389 **Heart
+390 **Flower
+391 **Prohibited
+392 **Pentagon
+393 **2-Way Rounded Arrow
+394 **3-Way Arrow Callout
+395 **3-Way Arrow
+396 **4-Way_Arrow_Callout
+397 **4-Way Arrow
+398 **Chevron
+399 **Circular Arrow
+400 **Corner Arrow
+401 **Corner Double Arrow Callout
+402 **Corner Double Arrow
+403 **Double Arrow Callout
+404 **Double Arrow
+405 **Notched Arrow
+406 **Rounded Arrow
+407 **Simple Arrow Callout
+408 **Simple Arrow
+409 **Split Arrow
+410 **S-Shape Arrow
+411 **Striped Arrow
+412 **Create template from current document
+413 **Create a text area
+414 **Use a component or an element
+415 **Create and use a component
+416 **Repeat the current use
+417 **Create and repeat a component
+418 **Create a free editing box
+419 **Create a new types union
+420 **Button up to close
+421 **Double click to close
+422 **Click to close
