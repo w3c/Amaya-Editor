@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<base version="54">
+<base version="55">
 <control>
 	<language encoding="latin1">en</language>
- 		<language encoding="latin1">fr</language>
- 		<language encoding="latin1">de</language>
- 		<language encoding="latin1">it</language>
- 		<language encoding="utf8">tr</language>
- 		<language encoding="latin1">es</language>
- 		<language encoding="latin1">pt</language>
- 		<language encoding="latin1">fi</language>
- 		<language encoding="utf8">ru</language>
- 		<language encoding="utf8">hu</language>
- 		<language encoding="utf8">hu</language>
- 		<language encoding="utf8">ka</language>
- 		<language encoding="utf8">cn</language>
- 		<language encoding="utf8">tw</language>
- 		<language encoding="utf8">sk</language>
- 		<language encoding="utf8">jp</language>
- 		<language encoding="utf8">ja</language>
- 		<language encoding="latin1">nl</language>
+ 			<language encoding="latin1">fr</language>
+ 			<language encoding="latin1">de</language>
+ 			<language encoding="latin1">it</language>
+ 			<language encoding="utf8">tr</language>
+ 			<language encoding="latin1">es</language>
+ 			<language encoding="latin1">pt</language>
+ 			<language encoding="latin1">fi</language>
+ 			<language encoding="utf8">ru</language>
+ 			<language encoding="utf8">hu</language>
+ 			<language encoding="utf8">hu</language>
+ 			<language encoding="utf8">ka</language>
+ 			<language encoding="utf8">cn</language>
+ 			<language encoding="utf8">tw</language>
+ 			<language encoding="utf8">sk</language>
+ 			<language encoding="utf8">jp</language>
+ 			<language encoding="utf8">ja</language>
+ 			<language encoding="latin1">nl</language>
+ 			<language encoding="utf8">uk</language>
 </control>
  <messages>
 <label define="TMSG_LIB_X11_ERR">
@@ -38,6 +39,7 @@
 	<message xml:lang="sk">Chyba X11 : %s\n</message>
 	<message xml:lang="ja">X11 エラー : %s\n</message>
 	<message xml:lang="nl">Fout in X11: %s\n</message>
+	<message xml:lang="uk">X11 помилка : %s\n</message>
 </label>
 <label define="TMSG_LIB_CONFIRM">
 	<message xml:lang="en">Confirm</message>
@@ -56,6 +58,7 @@
 	<message xml:lang="sk">Potvrdiť</message>
 	<message xml:lang="ja">確認</message>
 	<message xml:lang="nl">Bevestigen</message>
+	<message xml:lang="uk">Підтвердити</message>
 </label>
 <label define="TMSG_MISSING_ALPHABET">
 	<message xml:lang="en">No alphabet file</message>
@@ -76,6 +79,7 @@
 	<message xml:lang="sk">Chýba súbor s abecedou</message>
 	<message xml:lang="ja">ノーアルファベットファイル</message>
 	<message xml:lang="nl">Geen alfabetbestand</message>
+	<message xml:lang="uk">Відсутній файл алфавіту (Amaya-*.*/dicopar/alphabet)</message>
 </label>
 <label define="TMSG_OLD_VIEW_NOT_REPLACED">
 	<message xml:lang="en">New view cannot replace the old one</message>
@@ -97,6 +101,7 @@ precedente</message>
 	<message xml:lang="sk">Nové zobrazenie nemôže nahradiť staré</message>
 	<message xml:lang="ja">新規ビューは古いビューと置換できません</message>
 	<message xml:lang="nl">Nieuwe weergave kan de vorige niet vervangen</message>
+	<message xml:lang="uk">Нове представлення не может замінити старого</message>
 </label>
 <label define="TMSG_OLD_SCH_TO_RECOMP">
 	<message xml:lang="en">Incompatible schemas. Recompile %s</message>
@@ -118,6 +123,7 @@ precedente</message>
 	<message xml:lang="sk">Nekompatibilná schéma. Prekompilujte %s</message>
 	<message xml:lang="ja">スキーマに互換性がありません。 %s をリコンパイルします。</message>
 	<message xml:lang="nl">Incompatibele schema's. %s opnieuw compileren.</message>
+	<message xml:lang="uk">Несумісні схеми. Перекомпілюйте %s</message>
 </label>
 <label define="TMSG_MISSING_FONT">
 	<message xml:lang="en">Fatal Error: fonts not found</message>
@@ -139,6 +145,7 @@ található</message>
 	<message xml:lang="sk">Kritická chyba: fonty neboli nájdené</message>
 	<message xml:lang="ja">致命的なエラー: フォントが見つかりません</message>
 	<message xml:lang="nl">Kritieke fout: kan fonts niet vinden.</message>
+	<message xml:lang="uk">Непоправна помилка: не знайдені шрифти</message>
 </label>
 <label define="TMSG_NO_MEMORY">
 	<message xml:lang="en">Memory exhausted</message>
@@ -158,6 +165,7 @@ található</message>
 	<message xml:lang="sk">Pamäť vyčerpaná</message>
 	<message xml:lang="ja">メモリ不足</message>
 	<message xml:lang="nl">Het geheugen is vol</message>
+	<message xml:lang="uk">Ресурси пам'яті вичерпані</message>
 </label>
 <label define="TMSG_UNABLE_TO_CONNECT_TO_X">
 	<message xml:lang="en">Fatal Error: Unable to connect to X</message>
@@ -180,6 +188,7 @@ X-თან დაკავშირება ვერ
 	<message xml:lang="sk">Nedá sa pripojiť k X</message>
 	<message xml:lang="ja">致命的なエラー: X に接続できません</message>
 	<message xml:lang="nl">Kritieke fout: kan geen verbinding maken met X</message>
+	<message xml:lang="uk">Непоправна помилка: Неможливо з'єднатися з X</message>
 </label>
 <label define="TMSG_VIEW_MODIFIED_BEFORE_CREATION">
 	<message xml:lang="en">View is modified before creation</message>
@@ -201,6 +210,7 @@ değiştirildi</message>
 	<message xml:lang="sk">Zobrazenie bolo vytvorené pred vytvorením</message>
 	<message xml:lang="ja">ビューは作成される前に修正されています。</message>
 	<message xml:lang="nl">Het beeld wordt gewijzigd voordat het weergegeven wordt</message>
+	<message xml:lang="uk">Перед створенням, представлення було змінено</message>
 </label>
 <label define="TMSG_LIB_RULES_TABLE_FULL">
 	<message xml:lang="en">Rules table full.</message>
@@ -221,6 +231,7 @@ değiştirildi</message>
 	<message xml:lang="sk">Tabuľka pravidiel je plná.</message>
 	<message xml:lang="ja">ルール表がいっぱいです。</message>
 	<message xml:lang="nl">De tabel met regels is vol.</message>
+	<message xml:lang="uk">Таблиця правил заповнена.</message>
 </label>
 <label define="TMSG_INCORRECT_STR_FILE">
 	<message xml:lang="en">Incorrect file: %s.STR</message>
@@ -239,6 +250,7 @@ değiştirildi</message>
 	<message xml:lang="sk">Nesprávny súbor: %s.STR</message>
 	<message xml:lang="ja">誤ったファイル: %s.STR</message>
 	<message xml:lang="nl">Onjuist bestand: %s.str</message>
+	<message xml:lang="uk">Неправильний файл: %s.STR</message>
 </label>
 <label define="TMSG_INCORRECT_PRS_FILE">
 	<message xml:lang="en">Incorrect file: %s.PRS</message>
@@ -257,6 +269,7 @@ değiştirildi</message>
 	<message xml:lang="sk">Nesprávny súbor: %s.PRS</message>
 	<message xml:lang="ja">誤ったファイル: %s.PRS</message>
 	<message xml:lang="nl">Onjuist bestand: %s.prs</message>
+	<message xml:lang="uk">Неправильний файл: %s.PRS</message>
 </label>
 <label define="TMSG_DOC_PRINTED">
 	<message xml:lang="en">Document %s printed</message>
@@ -276,6 +289,7 @@ değiştirildi</message>
 	<message xml:lang="sk">Dokument %s bol vytlačený</message>
 	<message xml:lang="ja">%s 文章は印刷されました</message>
 	<message xml:lang="nl">Document %s is afgedrukt</message>
+	<message xml:lang="uk">Друкується документ %s</message>
 </label>
 <label define="TMSG_REDUCTION">
 	<message xml:lang="en">Disposition</message>
@@ -294,6 +308,7 @@ değiştirildi</message>
 	<message xml:lang="sk">Dispozície</message>
 	<message xml:lang="ja">配置</message>
 	<message xml:lang="nl">Schikking</message>
+	<message xml:lang="uk">Розташування</message>
 </label>
 <label define="TMSG_1_PAGE_SHEET">
 	<message xml:lang="en">1 page/sheet</message>
@@ -312,6 +327,7 @@ değiştirildi</message>
 	<message xml:lang="sk">1 strana/hárok</message>
 	<message xml:lang="ja">一枚に一ページ</message>
 	<message xml:lang="nl">1 pagina per vel</message>
+	<message xml:lang="uk">1 сторінка/аркуш</message>
 </label>
 <label define="TMSG_2_PAGE_SHEET">
 	<message xml:lang="en">2 pages/sheet</message>
@@ -330,6 +346,7 @@ değiştirildi</message>
 	<message xml:lang="sk">2 strany/hárky</message>
 	<message xml:lang="ja">一枚に二ページ</message>
 	<message xml:lang="nl">2 pagina's per vel</message>
+	<message xml:lang="uk">2 сторінки/аркуш</message>
 </label>
 <label define="TMSG_4_PAGE_SHEET">
 	<message xml:lang="en">4 pages/sheet</message>
@@ -348,6 +365,7 @@ değiştirildi</message>
 	<message xml:lang="sk">4 strany/hárky</message>
 	<message xml:lang="ja">一枚に四ページ</message>
 	<message xml:lang="nl">4 pagina's per vel</message>
+	<message xml:lang="uk">4 сторінки/аркуш</message>
 </label>
 <label define="TMSG_LIB_STRING">
 	<message xml:lang="en">%s</message>
@@ -366,6 +384,7 @@ değiştirildi</message>
 	<message xml:lang="sk">%s</message>
 	<message xml:lang="ja">%s</message>
 	<message xml:lang="nl">%s</message>
+	<message xml:lang="uk">%s</message>
 </label>
 <label define="TMSG_NOT_ENOUGH_MEMORY">
 	<message xml:lang="en">Not enough memory</message>
@@ -385,6 +404,7 @@ değiştirildi</message>
 	<message xml:lang="sk">Nedostatok pamäte</message>
 	<message xml:lang="ja">メモリが足りません</message>
 	<message xml:lang="nl">Onvoldoende geheugen</message>
+	<message xml:lang="uk">Недостатньо пам'яті</message>
 </label>
 <label define="TMSG_DEBUG_ERROR">
 	<message xml:lang="en">*** Amaya: Irrecoverable error ***</message>
@@ -405,6 +425,7 @@ değiştirildi</message>
 	<message xml:lang="sk">*** Amaya: Neopraviteľná chyba ***</message>
 	<message xml:lang="ja">*** Amaya: 回復できないエラーです ***</message>
 	<message xml:lang="nl">*** Amaya: onherstelbare fout ***</message>
+	<message xml:lang="uk">*** Amaya: Непоправна помилка ***</message>
 </label>
 <label define="TMSG_DEBUG_SAV_FILES">
 	<message xml:lang="en">modified documents, if any, will be saved</message>
@@ -428,6 +449,7 @@ salvati</message>
 uložené</message>
 	<message xml:lang="ja">変更を保存します</message>
 	<message xml:lang="nl">gewijzigde documenten (indien van toepassing) worden opgeslagen</message>
+	<message xml:lang="uk">якщо існують змінені документи, їх буде збережено</message>
 </label>
 <label define="TMSG_TRA_FILE_INCORRECT">
 	<message xml:lang="en">Incorrect .TRA file: %s</message>
@@ -446,6 +468,7 @@ uložené</message>
 	<message xml:lang="sk">Nesprávny .TRA súbor: %s</message>
 	<message xml:lang="ja">誤った .TRA ファイル: %s</message>
 	<message xml:lang="nl">Onjuist .TRA-bestand: %s</message>
+	<message xml:lang="uk">Неправильний .TRA файл: %s</message>
 </label>
 <label define="TMSG_INVALID_SIBLING">
 	<message xml:lang="en">%s is not a valid sibling for %s (%s)</message>
@@ -467,6 +490,7 @@ uložené</message>
 	<message xml:lang="sk">%s nie je platným súrodencom pre %s (%s)</message>
 	<message xml:lang="ja">%s は %s (%s) と正当な兄弟関係ではありません</message>
 	<message xml:lang="nl">%s is geen geldig element op hetzelfde niveau voor %s (%s)</message>
+	<message xml:lang="uk">%s не є правильним однорівневим вузлом для %s (%s)</message>
 </label>
 <label define="TMSG_INVALID_CHILD">
 	<message xml:lang="en">%s is not a valid child for %s (%s)</message>
@@ -488,6 +512,7 @@ uložené</message>
 	<message xml:lang="sk">%s nie je platným rodičom pre %s (%s)</message>
 	<message xml:lang="ja">%s は %s (%s) と正当な子関係ではありません</message>
 	<message xml:lang="nl">%s is geen geldig onderliggend element voor %s (%s)</message>
+	<message xml:lang="uk">%s не є правильним нащадком для %s (%s)</message>
 </label>
 <label define="TMSG_PAGE">
 	<message xml:lang="en">%s, page %d</message>
@@ -506,6 +531,7 @@ uložené</message>
 	<message xml:lang="sk">%s, strana %d</message>
 	<message xml:lang="ja">%s, ページ %d</message>
 	<message xml:lang="nl">%s, pagina %d</message>
+	<message xml:lang="uk">%s, сторінка %d</message>
 </label>
 <label define="TMSG_LANGUAGE">
 	<message xml:lang="en">Language</message>
@@ -524,6 +550,7 @@ uložené</message>
 	<message xml:lang="sk">Jazyk</message>
 	<message xml:lang="ja">言語</message>
 	<message xml:lang="nl">Taal</message>
+	<message xml:lang="uk">Мова</message>
 </label>
 <label define="TMSG_ATTR">
 	<message xml:lang="en">Attributes</message>
@@ -542,6 +569,7 @@ uložené</message>
 	<message xml:lang="sk">Attribúty</message>
 	<message xml:lang="ja">属性</message>
 	<message xml:lang="nl">Attributen</message>
+	<message xml:lang="uk">Атрибути</message>
 </label>
 <label define="TMSG_STD_PRES">
 	<message xml:lang="en">Standard presentation</message>
@@ -562,6 +590,7 @@ uložené</message>
 	<message xml:lang="sk">Štandardná prezentácia</message>
 	<message xml:lang="ja">標準プレゼンテーション</message>
 	<message xml:lang="nl">Standaardpresentatie</message>
+	<message xml:lang="uk">Стандартна демонстрація</message>
 </label>
 <label define="TMSG_APPLY">
 	<message xml:lang="en">Apply</message>
@@ -580,6 +609,7 @@ uložené</message>
 	<message xml:lang="sk">Nastaviť</message>
 	<message xml:lang="ja">適用</message>
 	<message xml:lang="nl">Toepassen</message>
+	<message xml:lang="uk">Застосувати</message>
 </label>
 <label define="TMSG_CHAR">
 	<message xml:lang="en">Characters</message>
@@ -598,6 +628,7 @@ uložené</message>
 	<message xml:lang="sk">Písmo</message>
 	<message xml:lang="ja">文字</message>
 	<message xml:lang="nl">Tekst</message>
+	<message xml:lang="uk">Символи</message>
 </label>
 <label define="TMSG_LINE">
 	<message xml:lang="en">Underline</message>
@@ -616,6 +647,7 @@ uložené</message>
 	<message xml:lang="sk">Podčiarknutie</message>
 	<message xml:lang="ja">下線</message>
 	<message xml:lang="nl">Onderstrepen</message>
+	<message xml:lang="uk">Підкреслення</message>
 </label>
 <label define="TMSG_GRAPHICS_PRES">
 	<message xml:lang="en">Graphics</message>
@@ -634,6 +666,7 @@ uložené</message>
 	<message xml:lang="sk">Grafika</message>
 	<message xml:lang="ja">グラフィックス</message>
 	<message xml:lang="nl">Afbeeldingen</message>
+	<message xml:lang="uk">Графіка</message>
 </label>
 <label define="TMSG_FORMAT">
 	<message xml:lang="en">Format</message>
@@ -652,6 +685,7 @@ uložené</message>
 	<message xml:lang="sk">Formát</message>
 	<message xml:lang="ja">フォーマット</message>
 	<message xml:lang="nl">Indeling</message>
+	<message xml:lang="uk">Форматування</message>
 </label>
 <label define="TMSG_UNCHANGED">
 	<message xml:lang="en">Default</message>
@@ -670,6 +704,7 @@ uložené</message>
 	<message xml:lang="sk">Predvolené</message>
 	<message xml:lang="ja">デフォルト</message>
 	<message xml:lang="nl">Standaard</message>
+	<message xml:lang="uk">За замовчуванням</message>
 </label>
 <label define="TMSG_ALIGN">
 	<message xml:lang="en">Align</message>
@@ -688,6 +723,7 @@ uložené</message>
 	<message xml:lang="sk">Zarovnanie</message>
 	<message xml:lang="ja">整列</message>
 	<message xml:lang="nl">Uitlijnen</message>
+	<message xml:lang="uk">Вирівнювання</message>
 </label>
 <label define="TMSG_INDENT">
 	<message xml:lang="en">Indent</message>
@@ -706,6 +742,7 @@ uložené</message>
 	<message xml:lang="sk">Odsadenie</message>
 	<message xml:lang="ja">インデントを増やす</message>
 	<message xml:lang="nl">Inspringing vergroten</message>
+	<message xml:lang="uk">Відступ</message>
 </label>
 <label define="TMSG_LIB_PRINTING_IN_PROGRESS">
 	<message xml:lang="en">Printing in progress</message>
@@ -722,6 +759,7 @@ uložené</message>
 	<message xml:lang="sk">Prebieha tlač</message>
 	<message xml:lang="ja">印刷中</message>
 	<message xml:lang="nl">Bezig met afdrukken</message>
+	<message xml:lang="uk">Виконується друкування</message>
 </label>
 <label define="TMSG_LIB_PRINT">
 	<message xml:lang="en">Print</message>
@@ -740,6 +778,7 @@ uložené</message>
 	<message xml:lang="sk">Tlač</message>
 	<message xml:lang="ja">印刷</message>
 	<message xml:lang="nl">Afdrukken</message>
+	<message xml:lang="uk">Друк</message>
 </label>
 <label define="TMSG_MANUAL_FEED">
 	<message xml:lang="en">Manual feed</message>
@@ -758,6 +797,7 @@ uložené</message>
 	<message xml:lang="sk">Ručné zakladanie</message>
 	<message xml:lang="ja">手送り</message>
 	<message xml:lang="nl">Handmatig papier invoeren</message>
+	<message xml:lang="uk">Ручна подача</message>
 </label>
 <label define="TMSG_OPTIONS">
 	<message xml:lang="en">Options</message>
@@ -776,6 +816,7 @@ uložené</message>
 	<message xml:lang="sk">Nastavenia</message>
 	<message xml:lang="ja">オプション</message>
 	<message xml:lang="nl">Opties</message>
+	<message xml:lang="uk">Додатково</message>
 </label>
 <label define="TMSG_A4">
 	<message xml:lang="en">A4</message>
@@ -794,6 +835,7 @@ uložené</message>
 	<message xml:lang="sk">A4</message>
 	<message xml:lang="ja">A4</message>
 	<message xml:lang="nl">A4</message>
+	<message xml:lang="uk">A4</message>
 </label>
 <label define="TMSG_US">
 	<message xml:lang="en">US</message>
@@ -812,6 +854,7 @@ uložené</message>
 	<message xml:lang="sk">US</message>
 	<message xml:lang="ja">US</message>
 	<message xml:lang="nl">US</message>
+	<message xml:lang="uk">US</message>
 </label>
 <label define="TMSG_PAPER_SIZE">
 	<message xml:lang="en">Paper format</message>
@@ -830,6 +873,7 @@ uložené</message>
 	<message xml:lang="sk">Formát papiera</message>
 	<message xml:lang="ja">用紙の書式設定</message>
 	<message xml:lang="nl">Papierformaat</message>
+	<message xml:lang="uk">Розмір паперу</message>
 </label>
 <label define="TMSG_DONE">
 	<message xml:lang="en">Close</message>
@@ -848,6 +892,7 @@ uložené</message>
 	<message xml:lang="sk">Zatvoriť</message>
 	<message xml:lang="ja">閉じる</message>
 	<message xml:lang="nl">Sluiten</message>
+	<message xml:lang="uk">Закрити</message>
 </label>
 <label define="TMSG_DOC_DIR">
 	<message xml:lang="en">Directories</message>
@@ -866,6 +911,7 @@ uložené</message>
 	<message xml:lang="sk">Priečinky</message>
 	<message xml:lang="ja">ディレクトリ</message>
 	<message xml:lang="nl">Mappen</message>
+	<message xml:lang="uk">Директорії</message>
 </label>
 <label define="TMSG_FILE_EXIST">
 	<message xml:lang="en">The document %s already exists. Do you want to overwrite
@@ -893,6 +939,7 @@ dele?</message>
 	<message xml:lang="sk">Dokument %s už existuje. Chcete ho nahradiť?</message>
 	<message xml:lang="ja">このドキュメント %s はすでに存在します。上書きしますか？</message>
 	<message xml:lang="nl">Document %s bestaat al. Wilt u het overschrijven?</message>
+	<message xml:lang="uk">Документ %s вже існує. Перезаписати його?</message>
 </label>
 <label define="TMSG_BUTTON_1">
 	<message xml:lang="en">Set the text color</message>
@@ -936,6 +983,7 @@ dele?</message>
 	<message xml:lang="sk">Rodina písma</message>
 	<message xml:lang="ja">フォントファミリー</message>
 	<message xml:lang="nl">Fontfamilie</message>
+	<message xml:lang="uk">Сім'я шрифтів</message>
 </label>
 <label define="TMSG_ROMAN">
 	<message xml:lang="en">Normal</message>
@@ -954,6 +1002,7 @@ dele?</message>
 	<message xml:lang="sk">Normálne</message>
 	<message xml:lang="ja">普通</message>
 	<message xml:lang="nl">Normaal</message>
+	<message xml:lang="uk">Нормальне</message>
 </label>
 <label define="TMSG_BOLD">
 	<message xml:lang="en">Bold</message>
@@ -972,6 +1021,7 @@ dele?</message>
 	<message xml:lang="sk">Tučné</message>
 	<message xml:lang="ja">太字</message>
 	<message xml:lang="nl">Vet</message>
+	<message xml:lang="uk">Напівжирне</message>
 </label>
 <label define="TMSG_ITALIC">
 	<message xml:lang="en">Italic</message>
@@ -990,6 +1040,7 @@ dele?</message>
 	<message xml:lang="sk">Kurzíva</message>
 	<message xml:lang="ja">斜体 (italic)</message>
 	<message xml:lang="nl">Cursief</message>
+	<message xml:lang="uk">Курсив</message>
 </label>
 <label define="TMSG_OBLIQUE">
 	<message xml:lang="en">Oblique</message>
@@ -1008,6 +1059,7 @@ dele?</message>
 	<message xml:lang="sk">Naklonené</message>
 	<message xml:lang="ja">斜体 (Oblique)</message>
 	<message xml:lang="nl">Schuin</message>
+	<message xml:lang="uk">Похиле</message>
 </label>
 <label define="TMSG_NOT_BOLD">
 	<message xml:lang="en">Normal</message>
@@ -1026,6 +1078,7 @@ dele?</message>
 	<message xml:lang="sk">Normálne</message>
 	<message xml:lang="ja">普通</message>
 	<message xml:lang="nl">Normaal</message>
+	<message xml:lang="uk">Нормальна</message>
 </label>
 <label define="TMSG_BOLDNESS">
 	<message xml:lang="en">Boldness</message>
@@ -1044,6 +1097,7 @@ dele?</message>
 	<message xml:lang="sk">Hrúbka</message>
 	<message xml:lang="ja">太さ</message>
 	<message xml:lang="nl">Dikte</message>
+	<message xml:lang="uk">Товщина линії символа</message>
 </label>
 <label define="TMSG_NORMAL">
 	<message xml:lang="en">Normal</message>
@@ -1062,6 +1116,7 @@ dele?</message>
 	<message xml:lang="sk">Normálna</message>
 	<message xml:lang="ja">普通</message>
 	<message xml:lang="nl">Normaal</message>
+	<message xml:lang="uk">Нормальне</message>
 </label>
 <label define="TMSG_UNDERLINE">
 	<message xml:lang="en">Underline</message>
@@ -1080,6 +1135,7 @@ dele?</message>
 	<message xml:lang="sk">Podčiarknuté</message>
 	<message xml:lang="ja">下線</message>
 	<message xml:lang="nl">Onderstrepen</message>
+	<message xml:lang="uk">Підрядкове</message>
 </label>
 <label define="TMSG_CROSS_OUT">
 	<message xml:lang="en">Cross out</message>
@@ -1098,6 +1154,7 @@ dele?</message>
 	<message xml:lang="sk">Prečiarknuté</message>
 	<message xml:lang="ja">取り消し線</message>
 	<message xml:lang="nl">Doorhalen</message>
+	<message xml:lang="uk">Закреслювання</message>
 </label>
 <label define="TMSG_BODY_SIZE_PTS">
 	<message xml:lang="en">Size</message>
@@ -1116,6 +1173,7 @@ dele?</message>
 	<message xml:lang="sk">Veľkosť písmen (v bodoch)</message>
 	<message xml:lang="ja">サイズ</message>
 	<message xml:lang="nl">Grootte</message>
+	<message xml:lang="uk">Розмір шрифта</message>
 </label>
 <label define="TMSG_NOINDENT">
 	<message xml:lang="en">Unindent</message>
@@ -1183,6 +1241,7 @@ dele?</message>
 	<message xml:lang="sk">Uložiť dokument</message>
 	<message xml:lang="ja">文章の保存</message>
 	<message xml:lang="nl">Document opslaan</message>
+	<message xml:lang="uk">Зберегти документ</message>
 </label>
 <label define="TMSG_CLOSE_DON_T_SAVE">
 	<message xml:lang="en">Close, don't save</message>
@@ -1202,6 +1261,7 @@ dele?</message>
 	<message xml:lang="sk">Zatvoriť bez uloženia</message>
 	<message xml:lang="ja">保存しないで閉じる</message>
 	<message xml:lang="nl">Sluiten zonder opslaan</message>
+	<message xml:lang="uk">Закрити, не зберігати</message>
 </label>
 <label define="TMSG_STYLE">
 	<message xml:lang="en">Character style</message>
@@ -1220,6 +1280,7 @@ dele?</message>
 	<message xml:lang="sk">Štýl znakov</message>
 	<message xml:lang="ja">文字スタイル</message>
 	<message xml:lang="nl">Tekenstijl</message>
+	<message xml:lang="uk">Начертання символа</message>
 </label>
 <label define="TMSG_COLORS">
 	<message xml:lang="en">Colors</message>
@@ -1238,6 +1299,7 @@ dele?</message>
 	<message xml:lang="sk">Farby</message>
 	<message xml:lang="ja">色</message>
 	<message xml:lang="nl">Kleuren</message>
+	<message xml:lang="uk">Колір</message>
 </label>
 <label define="TMSG_ELEMENTS">
 	<message xml:lang="en">Elements</message>
@@ -1270,6 +1332,7 @@ dele?</message>
 	<message xml:lang="sk">Odstrániť</message>
 	<message xml:lang="ja">削除</message>
 	<message xml:lang="nl">Wissen</message>
+	<message xml:lang="uk">Видалити</message>
 </label>
 <label define="TMSG_OUTPUT">
 	<message xml:lang="en">Output</message>
@@ -1288,6 +1351,7 @@ dele?</message>
 	<message xml:lang="sk">Výstup</message>
 	<message xml:lang="ja">出力</message>
 	<message xml:lang="nl">Uitvoer</message>
+	<message xml:lang="uk">Вихідний потік даних</message>
 </label>
 <label define="TMSG_PS_FILE">
 	<message xml:lang="en">PostScript file</message>
@@ -1306,6 +1370,7 @@ dele?</message>
 	<message xml:lang="sk">PostScriptový súbor</message>
 	<message xml:lang="ja">ポストスクリプトファイル</message>
 	<message xml:lang="nl">PostScript-bestand</message>
+	<message xml:lang="uk">PostScript файл</message>
 </label>
 <label define="TMSG_PRINTER">
 	<message xml:lang="en">Printer</message>
@@ -1324,6 +1389,7 @@ dele?</message>
 	<message xml:lang="sk">Tlačiareň</message>
 	<message xml:lang="ja">プリンター</message>
 	<message xml:lang="nl">Printer</message>
+	<message xml:lang="uk">Принтер</message>
 </label>
 <label define="TMSG_SEARCH_FOR">
 	<message xml:lang="en">Search for</message>
@@ -1342,6 +1408,7 @@ dele?</message>
 	<message xml:lang="sk">Hľadať výraz</message>
 	<message xml:lang="ja">検索</message>
 	<message xml:lang="nl">Zoeken naar:</message>
+	<message xml:lang="uk">Знайти</message>
 </label>
 <label define="TMSG_UPPERCASE_EQ_LOWERCASE">
 	<message xml:lang="en">Ignore case</message>
@@ -1362,6 +1429,7 @@ dele?</message>
 	<message xml:lang="sk">Nerozlišovať veľkosť písmen</message>
 	<message xml:lang="ja">大文字と小文字を区別しない</message>
 	<message xml:lang="nl">Niet hoofdlettergevoelig</message>
+	<message xml:lang="uk">Не враховувати регістр літер</message>
 </label>
 <label define="TMSG_REPLACE_BY">
 	<message xml:lang="en">Replace by</message>
@@ -1380,6 +1448,7 @@ dele?</message>
 	<message xml:lang="sk">Nahradiť výrazom</message>
 	<message xml:lang="ja">次で置換</message>
 	<message xml:lang="nl">Vervangen door:</message>
+	<message xml:lang="uk">Замістити на</message>
 </label>
 <label define="TMSG_REPLACE">
 	<message xml:lang="en">Replace</message>
@@ -1398,6 +1467,7 @@ dele?</message>
 	<message xml:lang="sk">Nahradiť</message>
 	<message xml:lang="ja">置換</message>
 	<message xml:lang="nl">Vervangen</message>
+	<message xml:lang="uk">Режим заміщення</message>
 </label>
 <label define="TMSG_NO_REPLACE">
 	<message xml:lang="en">No replace</message>
@@ -1417,6 +1487,7 @@ dele?</message>
 	<message xml:lang="sk">Nič nenahrádzať</message>
 	<message xml:lang="ja">置換しない</message>
 	<message xml:lang="nl">Niet vervangen</message>
+	<message xml:lang="uk">Не заміщати</message>
 </label>
 <label define="TMSG_REPLACE_ON_REQU">
 	<message xml:lang="en">Replace on request</message>
@@ -1436,6 +1507,7 @@ dele?</message>
 	<message xml:lang="sk">Potrvrdzovať nahradenie</message>
 	<message xml:lang="ja">一つずつ置換</message>
 	<message xml:lang="nl">Vervangen bevestigen</message>
+	<message xml:lang="uk">Заміщати за запросом</message>
 </label>
 <label define="TMSG_AUTO_REPLACE">
 	<message xml:lang="en">Automatic replace</message>
@@ -1455,6 +1527,7 @@ dele?</message>
 	<message xml:lang="sk">Automaticky nahradiť</message>
 	<message xml:lang="ja">自動的に置換</message>
 	<message xml:lang="nl">Automatisch vervangen</message>
+	<message xml:lang="uk">Заміщати автоматично</message>
 </label>
 <label define="TMSG_SEARCH_WHERE">
 	<message xml:lang="en">Search where</message>
@@ -1473,6 +1546,7 @@ dele?</message>
 	<message xml:lang="sk">Kde hľadať</message>
 	<message xml:lang="ja">検索箇所</message>
 	<message xml:lang="nl">Zoekbereik</message>
+	<message xml:lang="uk">Місце пошуку</message>
 </label>
 <label define="TMSG_BEFORE_SEL">
 	<message xml:lang="en">Before selection</message>
@@ -1491,6 +1565,7 @@ dele?</message>
 	<message xml:lang="sk">Pred výberom</message>
 	<message xml:lang="ja">選択箇所より前</message>
 	<message xml:lang="nl">Vóór selectie</message>
+	<message xml:lang="uk">Перед вибраним</message>
 </label>
 <label define="TMSG_WITHIN_SEL">
 	<message xml:lang="en">Within selection</message>
@@ -1509,6 +1584,7 @@ dele?</message>
 	<message xml:lang="sk">Vo výbere</message>
 	<message xml:lang="ja">選択箇所の中</message>
 	<message xml:lang="nl">Binnen selectie</message>
+	<message xml:lang="uk">В межах вибраного</message>
 </label>
 <label define="TMSG_AFTER_SEL">
 	<message xml:lang="en">After selection</message>
@@ -1528,6 +1604,7 @@ dele?</message>
 	<message xml:lang="sk">Za výberom</message>
 	<message xml:lang="ja">選択箇所より後ろ</message>
 	<message xml:lang="nl">Na selectie</message>
+	<message xml:lang="uk">Після вибраного</message>
 </label>
 <label define="TMSG_IN_WHOLE_DOC">
 	<message xml:lang="en">In the whole document</message>
@@ -1546,6 +1623,7 @@ dele?</message>
 	<message xml:lang="sk">V celom dokumente</message>
 	<message xml:lang="ja">ドキュメント全体</message>
 	<message xml:lang="nl">Gehele document</message>
+	<message xml:lang="uk">В усьому документі</message>
 </label>
 <label define="TMSG_DO_NOT_REPLACE">
 	<message xml:lang="en">Do not replace</message>
@@ -1565,6 +1643,7 @@ dele?</message>
 	<message xml:lang="sk">Nenahrádzať</message>
 	<message xml:lang="ja">置換しない</message>
 	<message xml:lang="nl">Niet vervangen</message>
+	<message xml:lang="uk">Не заміщати</message>
 </label>
 <label define="TMSG_BEFORE_CLOSING">
 	<message xml:lang="en">before closing it</message>
@@ -1583,6 +1662,7 @@ dele?</message>
 	<message xml:lang="sk">pred zatvorením</message>
 	<message xml:lang="ja">閉じる前に</message>
 	<message xml:lang="nl">vóór het sluiten</message>
+	<message xml:lang="uk">перед його закриттям</message>
 </label>
 <label define="TMSG_CLOSE_DOC">
 	<message xml:lang="en">Close a document</message>
@@ -1602,6 +1682,7 @@ dele?</message>
 	<message xml:lang="sk">Zatvoriť dokumetn</message>
 	<message xml:lang="ja">ドキュメントを閉じる</message>
 	<message xml:lang="nl">Een document sluiten</message>
+	<message xml:lang="uk">Закрити документ</message>
 </label>
 <label define="TMSG_MATH_SYMBOLS">
 	<message xml:lang="en">Math symbols</message>
@@ -1621,6 +1702,7 @@ dele?</message>
 	<message xml:lang="sk">Matematické symboly</message>
 	<message xml:lang="ja">数学記号</message>
 	<message xml:lang="nl">Wiskundige symbolen</message>
+	<message xml:lang="uk">Математичні символи</message>
 </label>
 <label define="TMSG_GRAPHICS">
 	<message xml:lang="en">Graphics</message>
@@ -1639,6 +1721,7 @@ dele?</message>
 	<message xml:lang="sk">Grafika</message>
 	<message xml:lang="ja">グラフィックス</message>
 	<message xml:lang="nl">Figuren</message>
+	<message xml:lang="uk">Графіка</message>
 </label>
 <label define="TMSG_LATIN_ALPHABET">
 	<message xml:lang="en">Latin alphabet</message>
@@ -1657,6 +1740,7 @@ dele?</message>
 	<message xml:lang="sk">Latinská abeceda</message>
 	<message xml:lang="ja">ラテン文字</message>
 	<message xml:lang="nl">Latijns alfabet</message>
+	<message xml:lang="uk">Латинський алфавіт</message>
 </label>
 <label define="TMSG_GREEK_ALPHABET">
 	<message xml:lang="en">Greek alphabet</message>
@@ -1675,6 +1759,7 @@ dele?</message>
 	<message xml:lang="sk">Grécka abeceda</message>
 	<message xml:lang="ja">ギリシャ文字</message>
 	<message xml:lang="nl">Grieks alfabet</message>
+	<message xml:lang="uk">Грецький алфавіт</message>
 </label>
 <label define="TMSG_SAVE">
 	<message xml:lang="en">Save</message>
@@ -1693,6 +1778,7 @@ dele?</message>
 	<message xml:lang="sk">Uložiť</message>
 	<message xml:lang="ja">保存</message>
 	<message xml:lang="nl">Opslaan</message>
+	<message xml:lang="uk">Зберегти</message>
 </label>
 <label define="TMSG_TEXT">
 	<message xml:lang="en">Text</message>
@@ -1711,6 +1797,7 @@ dele?</message>
 	<message xml:lang="sk">Text</message>
 	<message xml:lang="ja">テキスト</message>
 	<message xml:lang="nl">Tekst</message>
+	<message xml:lang="uk">Текст</message>
 </label>
 <label define="TMSG_GRAPHIC">
 	<message xml:lang="en">Graphic</message>
@@ -1729,6 +1816,7 @@ dele?</message>
 	<message xml:lang="sk">Grafika</message>
 	<message xml:lang="ja">グラフィックス</message>
 	<message xml:lang="nl">Figuur</message>
+	<message xml:lang="uk">Графіка</message>
 </label>
 <label define="TMSG_SYMBOL">
 	<message xml:lang="en">Symbol</message>
@@ -1747,6 +1835,7 @@ dele?</message>
 	<message xml:lang="sk">Symbol</message>
 	<message xml:lang="ja">シンボル</message>
 	<message xml:lang="nl">Symbool</message>
+	<message xml:lang="uk">Символ</message>
 </label>
 <label define="TMSG_PICTURE">
 	<message xml:lang="en">Image</message>
@@ -1765,6 +1854,7 @@ dele?</message>
 	<message xml:lang="sk">Obrázok</message>
 	<message xml:lang="ja">イメージ</message>
 	<message xml:lang="nl">Afbeelding</message>
+	<message xml:lang="uk">Зображення</message>
 </label>
 <label define="TMSG_EL_TYPE">
 	<message xml:lang="en">XML elements</message>
@@ -1783,6 +1873,7 @@ dele?</message>
 	<message xml:lang="sk">XML</message>
 	<message xml:lang="ja">XML 要素</message>
 	<message xml:lang="nl">XML-elementen</message>
+	<message xml:lang="uk">XML</message>
 </label>
 <label define="TMSG_AFTER">
 	<message xml:lang="en">after</message>
@@ -1801,6 +1892,7 @@ dele?</message>
 	<message xml:lang="sk">za</message>
 	<message xml:lang="ja">後</message>
 	<message xml:lang="nl">na</message>
+	<message xml:lang="uk">після</message>
 </label>
 <label define="TMSG_BEFORE">
 	<message xml:lang="en">before</message>
@@ -1819,6 +1911,7 @@ dele?</message>
 	<message xml:lang="sk">pred</message>
 	<message xml:lang="ja">前</message>
 	<message xml:lang="nl">voor</message>
+	<message xml:lang="uk">перед</message>
 </label>
 <label define="TMSG_AROUND">
 	<message xml:lang="en">around</message>
@@ -1837,6 +1930,7 @@ dele?</message>
 	<message xml:lang="sk">okolo</message>
 	<message xml:lang="ja">周囲</message>
 	<message xml:lang="nl">rondom</message>
+	<message xml:lang="uk">навкруги</message>
 </label>
 <label define="TMSG_INCLUDE">
 	<message xml:lang="en">Include</message>
@@ -1855,6 +1949,7 @@ dele?</message>
 	<message xml:lang="sk">Zahrnúť</message>
 	<message xml:lang="ja">インクルード</message>
 	<message xml:lang="nl">Insluiten</message>
+	<message xml:lang="uk">Включити</message>
 </label>
 <label define="TMSG_PASTE">
 	<message xml:lang="en">Paste</message>
@@ -1873,6 +1968,7 @@ dele?</message>
 	<message xml:lang="sk">Prilepiť</message>
 	<message xml:lang="ja">貼り付け</message>
 	<message xml:lang="nl">Plakken</message>
+	<message xml:lang="uk">Вставити</message>
 </label>
 <label define="TMSG_TO_CREATE">
 	<message xml:lang="en">to create</message>
@@ -1891,6 +1987,7 @@ dele?</message>
 	<message xml:lang="sk">vytvoriť</message>
 	<message xml:lang="ja">作成</message>
 	<message xml:lang="nl">om te maken</message>
+	<message xml:lang="uk">створювати</message>
 </label>
 <label define="TMSG_INSERT">
 	<message xml:lang="en">Insert</message>
@@ -1909,6 +2006,7 @@ dele?</message>
 	<message xml:lang="sk">Vložiť</message>
 	<message xml:lang="ja">挿入</message>
 	<message xml:lang="nl">Invoegen</message>
+	<message xml:lang="uk">Вставити</message>
 </label>
 <label define="TMSG_PAGE_BRK">
 	<message xml:lang="en">Page break</message>
@@ -1927,6 +2025,7 @@ dele?</message>
 	<message xml:lang="sk">Koniec strany</message>
 	<message xml:lang="ja">改ページ</message>
 	<message xml:lang="nl">Pagina-einde</message>
+	<message xml:lang="uk">Розділювач сторінки</message>
 </label>
 <label define="TMSG_LANG_OF_EL">
 	<message xml:lang="en">Language of element</message>
@@ -1945,6 +2044,7 @@ dele?</message>
 	<message xml:lang="sk">Jazyk prvku</message>
 	<message xml:lang="ja">要素の言語</message>
 	<message xml:lang="nl">Taal van element</message>
+	<message xml:lang="uk">Мова елементу</message>
 </label>
 <label define="TMSG_INHERITED_LANG">
 	<message xml:lang="en">Inherited language:</message>
@@ -1963,6 +2063,7 @@ dele?</message>
 	<message xml:lang="sk">Prevzatý jazyk:</message>
 	<message xml:lang="ja">引き継いでいる言語:</message>
 	<message xml:lang="nl">Overgeërfde taal</message>
+	<message xml:lang="uk">Успадкована мова:</message>
 </label>
 <label define="TMSG_NOT_FOUND">
 	<message xml:lang="en">Not found</message>
@@ -1981,6 +2082,7 @@ dele?</message>
 	<message xml:lang="sk">Nenájdené</message>
 	<message xml:lang="ja">見つかりません</message>
 	<message xml:lang="nl">Niet gevonden</message>
+	<message xml:lang="uk">Не знайдено</message>
 </label>
 <label define="TMSG_SEARCH_IN">
 	<message xml:lang="en">Search in</message>
@@ -1999,6 +2101,7 @@ dele?</message>
 	<message xml:lang="sk">Hľadať v</message>
 	<message xml:lang="ja">ファイル内を検索</message>
 	<message xml:lang="nl">Zoeken in</message>
+	<message xml:lang="uk">Пошук в</message>
 </label>
 <label define="TMSG_SEARCH">
 	<message xml:lang="en">Search</message>
@@ -2017,6 +2120,7 @@ dele?</message>
 	<message xml:lang="sk">Hľadať</message>
 	<message xml:lang="ja">検索</message>
 	<message xml:lang="nl">Zoeken</message>
+	<message xml:lang="uk">Пошук</message>
 </label>
 <label define="TMSG_EL_RO">
 	<message xml:lang="en">Read only element</message>
@@ -2037,6 +2141,7 @@ dele?</message>
 	<message xml:lang="sk">Prvok iba na čítanie</message>
 	<message xml:lang="ja">読み取り専用要素</message>
 	<message xml:lang="nl">Alleen-lezenelement</message>
+	<message xml:lang="uk">Елемент Лише для читання</message>
 </label>
 <label define="TMSG_NOTHING_TO_REPLACE">
 	<message xml:lang="en">Nothing to replace</message>
@@ -2056,6 +2161,7 @@ dele?</message>
 	<message xml:lang="sk">Nie je čo nahrádzať</message>
 	<message xml:lang="ja">置換するものがありません</message>
 	<message xml:lang="nl">Er moet niets vervangen worden</message>
+	<message xml:lang="uk">Нічого не заміщено</message>
 </label>
 <label define="TMSG_STD_CHAR">
 	<message xml:lang="en">Standard characters</message>
@@ -2075,6 +2181,7 @@ dele?</message>
 	<message xml:lang="sk">Štandardné znaky</message>
 	<message xml:lang="ja">標準のキャラクタ</message>
 	<message xml:lang="nl">Standaardtekens</message>
+	<message xml:lang="uk">Стандартні символи</message>
 </label>
 <label define="TMSG_STD_GRAPHICS">
 	<message xml:lang="en">Standard graphics</message>
@@ -2094,6 +2201,7 @@ dele?</message>
 	<message xml:lang="sk">Štandardná grafika</message>
 	<message xml:lang="ja">標準のグラフィックス</message>
 	<message xml:lang="nl">Standaardafbeeldingen</message>
+	<message xml:lang="uk">Стандартна графіка</message>
 </label>
 <label define="TMSG_STD_FORMAT">
 	<message xml:lang="en">Standard format</message>
@@ -2113,6 +2221,7 @@ dele?</message>
 	<message xml:lang="sk">Štandardný formát</message>
 	<message xml:lang="ja">標準のフォーマット</message>
 	<message xml:lang="nl">Standaardformaat</message>
+	<message xml:lang="uk">Стандартний формат</message>
 </label>
 <label define="TMSG_STD_GEOMETRY">
 	<message xml:lang="en">Standard geometry</message>
@@ -2132,6 +2241,7 @@ dele?</message>
 	<message xml:lang="sk">Štandardné rozmery</message>
 	<message xml:lang="ja">標準配置</message>
 	<message xml:lang="nl">Standaardafmetingen</message>
+	<message xml:lang="uk">Стандартна геометрія</message>
 </label>
 <label define="TMSG_TYPOGRAPHIC_POINTS">
 	<message xml:lang="en">pt</message>
@@ -2150,6 +2260,7 @@ dele?</message>
 	<message xml:lang="sk">body</message>
 	<message xml:lang="ja">pt</message>
 	<message xml:lang="nl">pt</message>
+	<message xml:lang="uk">п.</message>
 </label>
 <label define="TMSG_LINE_STYLE">
 	<message xml:lang="en">Line style</message>
@@ -2168,6 +2279,7 @@ dele?</message>
 	<message xml:lang="sk">Štýl riadkov</message>
 	<message xml:lang="ja">線のスタイル</message>
 	<message xml:lang="nl">Lijnstijl</message>
+	<message xml:lang="uk">Тип лінії</message>
 </label>
 <label define="TMSG_LINE_WEIGHT">
 	<message xml:lang="en">Line weight</message>
@@ -2186,6 +2298,7 @@ dele?</message>
 	<message xml:lang="sk">Šírka riadka</message>
 	<message xml:lang="ja">線の太さ</message>
 	<message xml:lang="nl">Lijndikte</message>
+	<message xml:lang="uk">Ширина лінії</message>
 </label>
 <label define="TMSG_FILL_PATTERN">
 	<message xml:lang="en">Fill pattern</message>
@@ -2204,6 +2317,7 @@ dele?</message>
 	<message xml:lang="sk">Vzor výplne</message>
 	<message xml:lang="ja">フィル・パターン</message>
 	<message xml:lang="nl">Opvulpatroon</message>
+	<message xml:lang="uk">Зразок заповнення</message>
 </label>
 <label define="TMSG_SPLIT">
 	<message xml:lang="en">Split</message>
@@ -2222,6 +2336,7 @@ dele?</message>
 	<message xml:lang="sk">Rozdeliť</message>
 	<message xml:lang="ja">分割</message>
 	<message xml:lang="nl">Splitsen</message>
+	<message xml:lang="uk">Розділяти</message>
 </label>
 <label define="TMSG_OBJECT_TYPE">
 	<message xml:lang="en">Object type</message>
@@ -2240,6 +2355,7 @@ dele?</message>
 	<message xml:lang="sk">Typ objektu</message>
 	<message xml:lang="ja">オブジェクトタイプ</message>
 	<message xml:lang="nl">Type object</message>
+	<message xml:lang="uk">Тип об'єкту</message>
 </label>
 <label define="TMSG_GOTO_PAGE">
 	<message xml:lang="en">Goto page number:</message>
@@ -2260,6 +2376,7 @@ dele?</message>
 	<message xml:lang="sk">Prejsť na stranu číslo:</message>
 	<message xml:lang="ja">移動先ページ番号:</message>
 	<message xml:lang="nl">Ga naar paginanummer:</message>
+	<message xml:lang="uk">Перейти на сторінку номер:</message>
 </label>
 <label define="TMSG_ANY">
 	<message xml:lang="en">Any</message>
@@ -2278,6 +2395,7 @@ dele?</message>
 	<message xml:lang="sk">Ľubovoľný</message>
 	<message xml:lang="ja">その他</message>
 	<message xml:lang="nl">Gelijk welke</message>
+	<message xml:lang="uk">Будь-який</message>
 </label>
 <label define="TMSG_ATTR_TO_SEARCH">
 	<message xml:lang="en">Attribute to search</message>
@@ -2297,6 +2415,7 @@ dele?</message>
 	<message xml:lang="sk">Hľadať atribút</message>
 	<message xml:lang="ja">属性を検索</message>
 	<message xml:lang="nl">Gezocht attribuut</message>
+	<message xml:lang="uk">Атрибут пошуку</message>
 </label>
 <label define="TMSG_TYPE_TO_SEARCH">
 	<message xml:lang="en">Type to search</message>
@@ -2316,6 +2435,7 @@ dele?</message>
 	<message xml:lang="sk">Hľadať typ</message>
 	<message xml:lang="ja">検索の種類</message>
 	<message xml:lang="nl">Gezocht type</message>
+	<message xml:lang="uk">Введіть для пошуку</message>
 </label>
 <label define="TMSG_NATURES">
 	<message xml:lang="en">Natures</message>
@@ -2334,6 +2454,7 @@ dele?</message>
 	<message xml:lang="sk">Prirodzený</message>
 	<message xml:lang="ja">種類</message>
 	<message xml:lang="nl">Type</message>
+	<message xml:lang="uk">Основна властивість</message>
 </label>
 <label define="TMSG_ATTRIBUTE_NAME">
 	<message xml:lang="en">Name</message>
@@ -2352,6 +2473,7 @@ dele?</message>
 	<message xml:lang="sk">Meno</message>
 	<message xml:lang="ja">名前</message>
 	<message xml:lang="nl">Naam</message>
+	<message xml:lang="uk">Ім'я</message>
 </label>
 <label define="TMSG_ATTRIBUTE_VALUE">
 	<message xml:lang="en">Value</message>
@@ -2370,6 +2492,7 @@ dele?</message>
 	<message xml:lang="sk">Hodnota</message>
 	<message xml:lang="ja">値</message>
 	<message xml:lang="nl">Waarde</message>
+	<message xml:lang="uk">Величина</message>
 </label>
 <label define="TMSG_VALUE_OF_ATTR">
 	<message xml:lang="en">Attribute value</message>
@@ -2389,6 +2512,7 @@ dele?</message>
 	<message xml:lang="sk">Hodnota atríbútu</message>
 	<message xml:lang="ja">属性値</message>
 	<message xml:lang="nl">Attribuutwaarde</message>
+	<message xml:lang="uk">Величина атрибуту:</message>
 </label>
 <label define="TMSG_UNKNOWN_ATTR">
 	<message xml:lang="en">Unknown attribute</message>
@@ -2407,6 +2531,7 @@ dele?</message>
 	<message xml:lang="sk">Neznámy atribút</message>
 	<message xml:lang="ja">未知の属性</message>
 	<message xml:lang="nl">Onbekend attribuut</message>
+	<message xml:lang="uk">Невідомий атрибут</message>
 </label>
 <label define="TMSG_CANCEL">
 	<message xml:lang="en">Cancel</message>
@@ -2425,6 +2550,7 @@ dele?</message>
 	<message xml:lang="sk">Zrušiť</message>
 	<message xml:lang="ja">キャンセル</message>
 	<message xml:lang="nl">Annuleren</message>
+	<message xml:lang="uk">Скасування</message>
 </label>
 <label define="TMSG_ERROR_PS_TRANSLATION">
 	<message xml:lang="en">Error in PostScript translation</message>
@@ -2445,6 +2571,7 @@ dele?</message>
 	<message xml:lang="sk">Chyba v PostScriptovom preklade</message>
 	<message xml:lang="ja">ポストスクリプト翻訳におけるエラー</message>
 	<message xml:lang="nl">Fout in PostScript-omzetting</message>
+	<message xml:lang="uk">Помилка PostScript перетворення</message>
 </label>
 <label define="TMSG_UNKNOWN_PRINTER">
 	<message xml:lang="en">Command refused by the spooler &quot;%s&quot;</message>
@@ -2470,6 +2597,7 @@ zurückgewiesen</message>
 &quot;%s&quot;</message>
 	<message xml:lang="ja">スプーラ"%s"によってコマンドが拒否されました</message>
 	<message xml:lang="nl">Opdracht geweigerd door spooler "%s"</message>
+	<message xml:lang="uk">Команда відкинута спулером "%s"</message>
 </label>
 <label define="TMSG_CANNOT_CREATE_PS">
 	<message xml:lang="en">Cannot create &quot;%s&quot;</message>
@@ -2489,6 +2617,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Nedá sa vytvoriť &quot;%s&quot;</message>
 	<message xml:lang="ja">"%s"を作成できません</message>
 	<message xml:lang="nl">"%s" kan niet gemaakt worden</message>
+	<message xml:lang="uk">Неможливо створити "%s"</message>
 </label>
 <label define="TMSG_OVERLINE">
 	<message xml:lang="en">Overline</message>
@@ -2507,6 +2636,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Pruh nad</message>
 	<message xml:lang="ja">オーバライン</message>
 	<message xml:lang="nl">Bovenlijn</message>
+	<message xml:lang="uk">Надрядкове</message>
 </label>
 <label define="TMSG_DOCUMENT_FORMAT">
 	<message xml:lang="en">Document format</message>
@@ -2526,6 +2656,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Formát dokumentu</message>
 	<message xml:lang="ja">ドキュメント形式</message>
 	<message xml:lang="nl">Documentformaat</message>
+	<message xml:lang="uk">Тип документу</message>
 </label>
 <label define="TMSG_DEL_ATTR">
 	<message xml:lang="en">Remove attribute</message>
@@ -2545,6 +2676,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Odstániť atribút</message>
 	<message xml:lang="ja">属性の消去</message>
 	<message xml:lang="nl">Attribuut verwijderen</message>
+	<message xml:lang="uk">Видалити атрибут</message>
 </label>
 <label define="TMSG_CPCOLORBG">
 	<message xml:lang="en">Select a background color</message>
@@ -2560,6 +2692,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Farba pozadia</message>
 	<message xml:lang="ja">背景色を選択</message>
 	<message xml:lang="nl">Achtergrondkleur selecteren</message>
+	<message xml:lang="uk">Колір фону</message>
 </label>
 <label define="TMSG_CPCOLORFG">
 	<message xml:lang="en">Select a text color</message>
@@ -2575,6 +2708,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Farba popredia</message>
 	<message xml:lang="ja">文字色を選択</message>
 	<message xml:lang="nl">Tekstkleur selecteren</message>
+	<message xml:lang="uk">Колір тексту документа</message>
 </label>
 <label define="TMSG_NO_ELEMENT">
 	<message xml:lang="en">Select a generic XML structure</message>
@@ -2592,6 +2726,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Vybrať základnú štruktúru XML</message>
 	<message xml:lang="ja">一般的なXML 構造を選択</message>
 	<message xml:lang="nl">Selecteer een algemene XML-structuur</message>
+	<message xml:lang="uk">Вибрати generic (основну) структуру XML</message>
 </label>
 <label define="TMSG_What">
 	<message xml:lang="en">Checking</message>
@@ -2610,6 +2745,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Kontrola</message>
 	<message xml:lang="ja">チェック</message>
 	<message xml:lang="nl">Bezig met controleren</message>
+	<message xml:lang="uk">Перевірка</message>
 </label>
 <label define="TMSG_Pass_Without">
 	<message xml:lang="en">Search/Skip</message>
@@ -2628,6 +2764,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Hľadať/Preskočiť</message>
 	<message xml:lang="ja">検索</message>
 	<message xml:lang="nl">Zoeken/Overslaan</message>
+	<message xml:lang="uk">Знайти/Пропустити</message>
 </label>
 <label define="TMSG_Replace_With">
 	<message xml:lang="en">Replace (+ dic)</message>
@@ -2647,6 +2784,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Nahradiť (+ slovník)</message>
 	<message xml:lang="ja">置換 (+ dic)</message>
 	<message xml:lang="nl">Vervangen (woordenlijst)</message>
+	<message xml:lang="uk">Замістити (+словник)</message>
 </label>
 <label define="TMSG_Replace_Without">
 	<message xml:lang="en">Replace and next</message>
@@ -2666,6 +2804,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Nahradiť a nájsť ďalšie</message>
 	<message xml:lang="ja">置換して次へ</message>
 	<message xml:lang="nl">Vervangen en volgende</message>
+	<message xml:lang="uk">Замістити та наступний</message>
 </label>
 <label define="TMSG_Keep_Unknown">
 	<message xml:lang="en">Other language</message>
@@ -2684,6 +2823,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Iný jazyk</message>
 	<message xml:lang="ja">他の言語</message>
 	<message xml:lang="nl">Andere taal</message>
+	<message xml:lang="uk">Інша мова</message>
 </label>
 <label define="TMSG_Pass_With">
 	<message xml:lang="en">Learn</message>
@@ -2703,6 +2843,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Pridať do slovníka</message>
 	<message xml:lang="ja">記憶する</message>
 	<message xml:lang="nl">Leren</message>
+	<message xml:lang="uk">Навчити</message>
 </label>
 <label define="TMSG_Specials">
 	<message xml:lang="en">words containing:</message>
@@ -2722,6 +2863,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">slová obsahujúce:</message>
 	<message xml:lang="ja">以下を含む単語</message>
 	<message xml:lang="nl">woorden met:</message>
+	<message xml:lang="uk">слова, які містять:</message>
 </label>
 <label define="TMSG_Correct">
 	<message xml:lang="en">Spell checking ...</message>
@@ -2741,6 +2883,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Kontrola pravopisu ...</message>
 	<message xml:lang="ja">スペルをチェックしています ...</message>
 	<message xml:lang="nl">Bezig met spellingcontrole?</message>
+	<message xml:lang="uk">Перевірка правопису ...</message>
 </label>
 <label define="TMSG_Romans">
 	<message xml:lang="en">Roman numerals</message>
@@ -2759,6 +2902,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Rímske čísla</message>
 	<message xml:lang="ja">ロマン数字</message>
 	<message xml:lang="nl">Romeinse cijfers</message>
+	<message xml:lang="uk">римські цифри</message>
 </label>
 <label define="TMSG_Ignore">
 	<message xml:lang="en">Ignore</message>
@@ -2777,6 +2921,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Ignorovať</message>
 	<message xml:lang="ja">無視</message>
 	<message xml:lang="nl">Negeren</message>
+	<message xml:lang="uk">Ігнорувати</message>
 </label>
 <label define="TMSG_Capitals">
 	<message xml:lang="en">words that are all caps</message>
@@ -2796,6 +2941,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">slová napísané VEĽKÝMI písmenami</message>
 	<message xml:lang="ja">全て大文字の単語</message>
 	<message xml:lang="nl">woorden in hoofdletters</message>
+	<message xml:lang="uk">слова з заголовними літерами</message>
 </label>
 <label define="TMSG_Arabics">
 	<message xml:lang="en">words with digits</message>
@@ -2815,6 +2961,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">slová s číslami</message>
 	<message xml:lang="ja">数字入りの単語</message>
 	<message xml:lang="nl">woorden met cijfers</message>
+	<message xml:lang="uk">слова з цифрами</message>
 </label>
 <label define="TMSG_NO_PARAM">
 	<message xml:lang="en">Parameter file error</message>
@@ -2834,6 +2981,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Chyba súboru s parametrami</message>
 	<message xml:lang="ja">パラメータファイルエラー</message>
 	<message xml:lang="nl">Fout in parameterbestand</message>
+	<message xml:lang="uk">Помилка параметру файла</message>
 </label>
 <label define="TMSG_NO_KEYBOARD">
 	<message xml:lang="en">No keyboard file</message>
@@ -2854,6 +3002,7 @@ zurückgewiesen</message>
 	<message xml:lang="sk">Neexistuje súbor klávesnice</message>
 	<message xml:lang="ja">キーボードファイルがありません</message>
 	<message xml:lang="nl">Toetsenbordbestand ontbreekt</message>
+	<message xml:lang="uk">Відсутній файл клавіатури (Amaya-*.*/config/amaya.kb)</message>
 </label>
 <label define="TMSG_NO_SAVE">
 	<message xml:lang="en">Cannot save the document dictionary</message>
@@ -2878,6 +3027,7 @@ documento</message>
 	<message xml:lang="sk">Slovník sa nedá uložiť</message>
 	<message xml:lang="ja">このドキュメントディクショナリは保存できません</message>
 	<message xml:lang="nl">Kan de woordenlijst voor dit document niet opslaan</message>
+	<message xml:lang="uk">Неможливо зберегти словник документу</message>
 </label>
 <label define="TMSG_REFUSE_WORD">
 	<message xml:lang="en">Incorrect word &quot;%s&quot; refused in this
@@ -2910,6 +3060,7 @@ szótár</message>
 tomto slovníku</message>
 	<message xml:lang="ja">不正な単語 "%s" がこのディクショナリに拒否されました</message>
 	<message xml:lang="nl">Onjuist woord "%s" kon niet worden opgenomen in deze woordenlijst</message>
+	<message xml:lang="uk">Неправильне слово "%s" не буде додано у словник</message>
 </label>
 <label define="TMSG_ADD_WORD">
 	<message xml:lang="en">Word &quot;%s&quot; added in the document
@@ -2940,6 +3091,7 @@ sanastoon</message>
 slovníka</message>
 	<message xml:lang="ja">単語 "%s" がドキュメントディクショナリに追加されました</message>
 	<message xml:lang="nl">Woord "%s" is toegevoegd aan de woordenlijst van dit document</message>
+	<message xml:lang="uk">Слово "%s" додано у словник документу</message>
 </label>
 <label define="TMSG_END_CHECK">
 	<message xml:lang="en">End of spell checking</message>
@@ -2960,6 +3112,7 @@ slovníka</message>
 	<message xml:lang="sk">Koniec kontroly pravopisu</message>
 	<message xml:lang="ja">スペルチェックが完了しました</message>
 	<message xml:lang="nl">De spellingcontrole is voltooid</message>
+	<message xml:lang="uk">Кінець перевірки правопису</message>
 </label>
 <label define="TMSG_STOP_CHECK">
 	<message xml:lang="en">Spell checking aborted</message>
@@ -2980,6 +3133,7 @@ slovníka</message>
 	<message xml:lang="sk">Kontrola pravopisu prerušená</message>
 	<message xml:lang="ja">スペルチェックが中断されました</message>
 	<message xml:lang="nl">De spellingcontrole is afgebroken</message>
+	<message xml:lang="uk">Перевірка правопису перервана</message>
 </label>
 <label define="TMSG_NO_SELECT">
 	<message xml:lang="en">Please select a document</message>
@@ -2999,6 +3153,7 @@ slovníka</message>
 	<message xml:lang="sk">Prosím vyberte dokument</message>
 	<message xml:lang="ja">ドキュメントを選択してください</message>
 	<message xml:lang="nl">Selecteer een document</message>
+	<message xml:lang="uk">Виберіть документ</message>
 </label>
 <label define="TMSG_OK_SAVE">
 	<message xml:lang="en">Document dictionary saved: %s</message>
@@ -3019,6 +3174,7 @@ slovníka</message>
 	<message xml:lang="sk">Slovník bol uložený</message>
 	<message xml:lang="ja">ドキュメント辞書を保存しました: %s</message>
 	<message xml:lang="nl">De woordenlijst van document is opgeslagen: %s</message>
+	<message xml:lang="uk">Словник документу збережено в: %s</message>
 </label>
 <label define="TMSG_NOT_AVAILABLE">
 	<message xml:lang="en">Not available in this version</message>
@@ -3035,6 +3191,7 @@ slovníka</message>
 	<message xml:lang="sk">Nie je prístupné v tejto verzii</message>
 	<message xml:lang="ja">このバージョンでは利用できません</message>
 	<message xml:lang="nl">Niet beschikbaar in deze versie</message>
+	<message xml:lang="uk">Недоступно в цій версії</message>
 </label>
 <label define="TMSG_ATTACHDETACH">
 	<message xml:lang="en">Enable/Disable palette</message>
@@ -3052,6 +3209,7 @@ slovníka</message>
 	<message xml:lang="sk">Vysunúť/zasunúť nástrojovú lištu</message>
 	<message xml:lang="ja">パレットの有効/無効</message>
 	<message xml:lang="nl">Palet inschakelen/uitschakelen</message>
+	<message xml:lang="uk">Показати/Сховати плаваючу панель</message>
 </label>
 <label define="TMSG_TOOLS">
 	<message xml:lang="en">Tools</message>
@@ -3067,6 +3225,7 @@ slovníka</message>
 	<message xml:lang="sk">Nástroje</message>
 	<message xml:lang="ja">ツール</message>
 	<message xml:lang="nl">Hulpmiddelen</message>
+	<message xml:lang="uk">Інструменти</message>
 </label>
 <label define="TMSG_ATTR_MANDATORY">
 	<message xml:lang="en">Mandatory attribute, it can't be removed</message>
@@ -3088,6 +3247,7 @@ werden</message>
 odstránený</message>
 	<message xml:lang="ja">義務的な属性。それを取り除くことができません</message>
 	<message xml:lang="nl">Verplicht attribuut (kan niet verwijderd worden)</message>
+	<message xml:lang="uk">Обов'язковий атрибут, його не може бути видалено</message>
 </label>
 <label define="TMSG_REFRESH">
 	<message xml:lang="en">Refresh</message>
@@ -3103,6 +3263,7 @@ odstránený</message>
 	<message xml:lang="sk">Obnoviť</message>
 	<message xml:lang="ja">更新</message>
 	<message xml:lang="nl">Vernieuwen</message>
+	<message xml:lang="uk">Перезавантажити документ</message>
 </label>
 <label define="TMSG_FORMATLEFT">
 	<message xml:lang="en">Align left</message>
@@ -3118,6 +3279,7 @@ odstránený</message>
 	<message xml:lang="sk">Doľava</message>
 	<message xml:lang="ja">文字列を左に揃える</message>
 	<message xml:lang="nl">Links uitlijnen</message>
+	<message xml:lang="uk">По лівому краю</message>
 </label>
 <label define="TMSG_FORMATRIGHT">
 	<message xml:lang="en">Align right</message>
@@ -3133,6 +3295,7 @@ odstránený</message>
 	<message xml:lang="sk">Doprava</message>
 	<message xml:lang="ja">文字列を右に揃える</message>
 	<message xml:lang="nl">Rechts uitlijnen</message>
+	<message xml:lang="uk">По правому краю</message>
 </label>
 <label define="TMSG_FORMATCENTER">
 	<message xml:lang="en">Center</message>
@@ -3148,6 +3311,7 @@ odstránený</message>
 	<message xml:lang="sk">Centrovať</message>
 	<message xml:lang="ja">中央揃え</message>
 	<message xml:lang="nl">Centreren</message>
+	<message xml:lang="uk">По центру</message>
 </label>
 <label define="TMSG_FORMATJUSTIFY">
 	<message xml:lang="en">Justify</message>
@@ -3163,6 +3327,7 @@ odstránený</message>
 	<message xml:lang="sk">Do bloku</message>
 	<message xml:lang="ja">両端揃え</message>
 	<message xml:lang="nl">Uitvullen</message>
+	<message xml:lang="uk">По ширині</message>
 </label>
 <label define="TMSG_APPLY_CLASS">
 	<message xml:lang="en">Apply class</message>
@@ -3182,6 +3347,7 @@ odstránený</message>
 	<message xml:lang="sk">Aplikovať triedu (class)</message>
 	<message xml:lang="ja">クラスを適用</message>
 	<message xml:lang="nl">Klassen</message>
+	<message xml:lang="uk">Застосувати клас</message>
 </label>
 <label define="TMSG_SEL_CLASS">
 	<message xml:lang="en">Select a class or a pseudo-class</message>
@@ -3202,6 +3368,7 @@ odstránený</message>
 	<message xml:lang="sk">Vyberte triedu alebo pseudotriedu</message>
 	<message xml:lang="ja">クラスまたは擬似クラスを選択</message>
 	<message xml:lang="nl">Selecteer een klasse of pseudoklasse</message>
+	<message xml:lang="uk">Вибрати клас або псевдо-клас</message>
 </label>
 <label define="TMSG_SEL">
 	<message xml:lang="en">Select</message>
@@ -3220,6 +3387,7 @@ odstránený</message>
 	<message xml:lang="sk">Vybrať</message>
 	<message xml:lang="ja">選択</message>
 	<message xml:lang="nl">Selecteren</message>
+	<message xml:lang="uk">Перегляд</message>
 </label>
 <label define="TMSG_DISCARD">
 	<message xml:lang="en">Discard</message>
@@ -3234,6 +3402,7 @@ odstránený</message>
 	<message xml:lang="ru">Отменить выбор</message>
 	<message xml:lang="ja">破棄</message>
 	<message xml:lang="nl">Negeren</message>
+	<message xml:lang="uk">Скасувати вибір</message>
 </label>
 <label define="TMSG_MATHML">
 	<message xml:lang="en">Math</message>
@@ -3252,6 +3421,7 @@ odstránený</message>
 	<message xml:lang="sk">Vzorce</message>
 	<message xml:lang="ja">数式 / Math</message>
 	<message xml:lang="nl">Wiskunde</message>
+	<message xml:lang="uk">Математика</message>
 </label>
 <label define="TMSG_MISC">
 	<message xml:lang="en">Misc</message>
@@ -3267,6 +3437,7 @@ odstránený</message>
 	<message xml:lang="sk">Rôzne</message>
 	<message xml:lang="ja">その他</message>
 	<message xml:lang="nl">Diverse</message>
+	<message xml:lang="uk">Інше</message>
 </label>
 <label define="TMSG_BINARY_REL">
 	<message xml:lang="en">Binary relations</message>
@@ -3283,6 +3454,7 @@ odstránený</message>
 	<message xml:lang="sk">Relačné operátory</message>
 	<message xml:lang="ja">二項関係</message>
 	<message xml:lang="nl">Binaire relaties</message>
+	<message xml:lang="uk">Символи рівності</message>
 </label>
 <label define="TMSG_BINARY_REL_NEG">
 	<message xml:lang="en">Binary relations of negation</message>
@@ -3299,6 +3471,7 @@ odstránený</message>
 	<message xml:lang="sk">Negované relačné operátory</message>
 	<message xml:lang="ja">否定二項関係</message>
 	<message xml:lang="nl">Binaire niet-relaties</message>
+	<message xml:lang="uk">Символи нерівності</message>
 </label>
 <label define="TMSG_OPERATOR">
 	<message xml:lang="en">Operators</message>
@@ -3314,6 +3487,7 @@ odstránený</message>
 	<message xml:lang="sk">Operátory</message>
 	<message xml:lang="ja">演算子</message>
 	<message xml:lang="nl">Operators</message>
+	<message xml:lang="uk">Оператори</message>
 </label>
 <label define="TMSG_GREEK_CAP">
 	<message xml:lang="en">Greek alphabet (capital)</message>
@@ -3331,6 +3505,7 @@ odstránený</message>
 	<message xml:lang="sk">Grácka abeceda (veľké)</message>
 	<message xml:lang="ja">ギリシャ文字 (大文字)</message>
 	<message xml:lang="nl">Grieks alfabet (hoofdletters)</message>
+	<message xml:lang="uk">Грецький алфавіт (заголовні)</message>
 </label>
 <label define="TMSG_ARROW">
 	<message xml:lang="en">Arrows</message>
@@ -3346,6 +3521,7 @@ odstránený</message>
 	<message xml:lang="sk">Šipky</message>
 	<message xml:lang="ja">矢印</message>
 	<message xml:lang="nl">Pijlen</message>
+	<message xml:lang="uk">Стрілки</message>
 </label>
 <label define="TMSG_SPECHAR">
 	<message xml:lang="en">Special characters</message>
@@ -3362,6 +3538,7 @@ odstránený</message>
 	<message xml:lang="sk">Špeciálne znaky</message>
 	<message xml:lang="ja">特殊文字</message>
 	<message xml:lang="nl">Speciale tekens</message>
+	<message xml:lang="uk">Спец символи</message>
 </label>
 <label define="TMSG_BUTTON_INTERRUPT">
 	<message xml:lang="en">Interrupt transfer</message>
@@ -3381,6 +3558,7 @@ odstránený</message>
 	<message xml:lang="sk">Prerušiť prenos</message>
 	<message xml:lang="ja">転送中止</message>
 	<message xml:lang="nl">Overdracht stoppen</message>
+	<message xml:lang="uk">Перервати передачу даних</message>
 </label>
 <label define="TMSG_BUTTON_PREVIOUS">
 	<message xml:lang="en">Previous document</message>
@@ -3399,6 +3577,7 @@ odstránený</message>
 	<message xml:lang="sk">Predchádzajúci dokument</message>
 	<message xml:lang="ja">戻る</message>
 	<message xml:lang="nl">Vorig document</message>
+	<message xml:lang="uk">Попередній документ</message>
 </label>
 <label define="TMSG_BUTTON_NEXT">
 	<message xml:lang="en">Next document</message>
@@ -3418,6 +3597,7 @@ odstránený</message>
 	<message xml:lang="sk">Nasledujúci dokument</message>
 	<message xml:lang="ja">進む</message>
 	<message xml:lang="nl">Volgend document</message>
+	<message xml:lang="uk">Наступний документ</message>
 </label>
 <label define="TMSG_BUTTON_RELOAD">
 	<message xml:lang="en">Reload</message>
@@ -3437,6 +3617,7 @@ odstránený</message>
 	<message xml:lang="sk">Načítať najnovšiu verziu stránky</message>
 	<message xml:lang="ja">更新</message>
 	<message xml:lang="nl">Opnieuw laden</message>
+	<message xml:lang="uk">Перезавантажити документ</message>
 </label>
 <label define="TMSG_BUTTON_SAVE">
 	<message xml:lang="en">Save</message>
@@ -3455,6 +3636,7 @@ odstránený</message>
 	<message xml:lang="sk">Uložiť</message>
 	<message xml:lang="ja">保存</message>
 	<message xml:lang="nl">Opslaan</message>
+	<message xml:lang="uk">Зберегти</message>
 </label>
 <label define="TMSG_BUTTON_SAVE_ALL">
 	<message xml:lang="en">Save All</message>
@@ -3473,6 +3655,7 @@ odstránený</message>
 	<message xml:lang="sk">Uložiť</message>
 	<message xml:lang="ja">すべて保存</message>
 	<message xml:lang="nl">Alle opslaan</message>
+	<message xml:lang="uk">Зберегти</message>
 </label>
 <label define="TMSG_BUTTON_NEW">
 	<message xml:lang="en">New document</message>
@@ -3491,6 +3674,7 @@ odstránený</message>
 	<message xml:lang="sk">Nový dokument</message>
 	<message xml:lang="ja">新しいXHTML文書</message>
 	<message xml:lang="nl">Nieuw document</message>
+	<message xml:lang="uk">Новий документ</message>
 </label>
 <label define="TMSG_BUTTON_OPEN">
 	<message xml:lang="en">Open document</message>
@@ -3510,6 +3694,7 @@ odstránený</message>
 	<message xml:lang="sk">Otvoriť dokument</message>
 	<message xml:lang="ja">開く</message>
 	<message xml:lang="nl">Document openen</message>
+	<message xml:lang="uk">Відкритий документ</message>
 </label>
 <label define="TMSG_BUTTON_PRINT">
 	<message xml:lang="en">Print</message>
@@ -3528,6 +3713,7 @@ odstránený</message>
 	<message xml:lang="sk">Tlačiť</message>
 	<message xml:lang="ja">印刷</message>
 	<message xml:lang="nl">Afdrukken</message>
+	<message xml:lang="uk">Друк</message>
 </label>
 <label define="TMSG_BUTTON_SEARCH">
 	<message xml:lang="en">Find</message>
@@ -3546,6 +3732,7 @@ odstránený</message>
 	<message xml:lang="sk">Hľadať</message>
 	<message xml:lang="ja">検索</message>
 	<message xml:lang="nl">Zoeken</message>
+	<message xml:lang="uk">Знайти</message>
 </label>
 <label define="TMSG_BUTTON_HOME">
 	<message xml:lang="en">Home</message>
@@ -3564,6 +3751,7 @@ odstránený</message>
 	<message xml:lang="sk">Prejsť na domovskú stránku</message>
 	<message xml:lang="ja">ホーム</message>
 	<message xml:lang="nl">Startpagina</message>
+	<message xml:lang="uk">Початкова сторінка</message>
 </label>
 <label define="TMSG_BUTTON_ITALICS">
 	<message xml:lang="en">Emphasis On/Off</message>
@@ -3583,6 +3771,7 @@ odstránený</message>
 	<message xml:lang="sk">Zvýrazniť On/Off</message>
 	<message xml:lang="ja">斜体</message>
 	<message xml:lang="nl">Nadruk aan/uit</message>
+	<message xml:lang="uk">Звичайне виділення Увімк./Вимкн.</message>
 </label>
 <label define="TMSG_BUTTON_BOLD">
 	<message xml:lang="en">Strong On/Off</message>
@@ -3602,6 +3791,7 @@ odstránený</message>
 	<message xml:lang="sk">Silno zvýrazniť On/Off</message>
 	<message xml:lang="ja">強調</message>
 	<message xml:lang="nl">Sterke nadruk aan/uit</message>
+	<message xml:lang="uk">Особливе виділення Увімк./Вимкн.</message>
 </label>
 <label define="TMSG_BUTTON_CODE">
 	<message xml:lang="en">Code On/Off</message>
@@ -3621,6 +3811,7 @@ odstránený</message>
 	<message xml:lang="sk">Zdrojový kód On/Off</message>
 	<message xml:lang="ja">ソースコード</message>
 	<message xml:lang="nl">Code aan/uit</message>
+	<message xml:lang="uk">Виділення комп'ютерного коду Увімк./Вимкн.</message>
 </label>
 <label define="TMSG_BUTTON_IMG">
 	<message xml:lang="en">Insert/Replace image</message>
@@ -3640,6 +3831,7 @@ odstránený</message>
 	<message xml:lang="sk">Obrázok (img)</message>
 	<message xml:lang="ja">画像の挿入/置換</message>
 	<message xml:lang="nl">Afbeelding invoegen of vervangen</message>
+	<message xml:lang="uk">Вставити/Замістити зображення</message>
 </label>
 <label define="TMSG_BUTTON_H1">
 	<message xml:lang="en">Heading level 1</message>
@@ -3658,6 +3850,7 @@ odstránený</message>
 	<message xml:lang="sk">Nadpis úrovne 1</message>
 	<message xml:lang="ja">見出しの大きさ 1</message>
 	<message xml:lang="nl">Kopniveau 1</message>
+	<message xml:lang="uk">Заголовок рівень 1</message>
 </label>
 <label define="TMSG_BUTTON_H2">
 	<message xml:lang="en">Heading level 2</message>
@@ -3676,6 +3869,7 @@ odstránený</message>
 	<message xml:lang="sk">Nadpis úrovne 2</message>
 	<message xml:lang="ja">見出しの大きさ 2</message>
 	<message xml:lang="nl">Kopniveau 2</message>
+	<message xml:lang="uk">Заголовок рівень 2</message>
 </label>
 <label define="TMSG_BUTTON_H3">
 	<message xml:lang="en">Heading level 3</message>
@@ -3694,6 +3888,7 @@ odstránený</message>
 	<message xml:lang="sk">Nadpis úrovne 3</message>
 	<message xml:lang="ja">見出しの大きさ 3</message>
 	<message xml:lang="nl">Kopniveau 3</message>
+	<message xml:lang="uk">Заголовок рівень 3</message>
 </label>
 <label define="TMSG_BUTTON_H4">
 	<message xml:lang="en">Heading level 4</message>
@@ -3712,6 +3907,7 @@ odstránený</message>
 	<message xml:lang="sk">Nadpis úrovne 4</message>
 	<message xml:lang="ja">見出しの大きさ 4</message>
 	<message xml:lang="nl">Kopniveau 4</message>
+	<message xml:lang="uk">Заголовок рівень 4</message>
 </label>
 <label define="TMSG_BUTTON_P">
 	<message xml:lang="en">Paragraph</message>
@@ -3730,6 +3926,7 @@ odstránený</message>
 	<message xml:lang="sk">Odsek</message>
 	<message xml:lang="ja">段落</message>
 	<message xml:lang="nl">Alinea</message>
+	<message xml:lang="uk">Параграф</message>
 </label>
 <label define="TMSG_BUTTON_UL">
 	<message xml:lang="en">Bulleted list</message>
@@ -3748,6 +3945,7 @@ odstránený</message>
 	<message xml:lang="sk">Odrážky (ul)</message>
 	<message xml:lang="ja">箇条書き</message>
 	<message xml:lang="nl">Lijst met opsommingstekens</message>
+	<message xml:lang="uk">Маркований список</message>
 </label>
 <label define="TMSG_BUTTON_OL">
 	<message xml:lang="en">Numbered list</message>
@@ -3766,6 +3964,7 @@ odstránený</message>
 	<message xml:lang="sk">Číslovanie (ol)</message>
 	<message xml:lang="ja">段落番号</message>
 	<message xml:lang="nl">Genummerde lijst</message>
+	<message xml:lang="uk">Нумерований список</message>
 </label>
 <label define="TMSG_BUTTON_DL">
 	<message xml:lang="en">Definition list</message>
@@ -3785,6 +3984,7 @@ odstránený</message>
 	<message xml:lang="sk">Zoznam definícií (dl)</message>
 	<message xml:lang="ja">リスト（定義）</message>
 	<message xml:lang="nl">Lijst met definities</message>
+	<message xml:lang="uk">Список визначення</message>
 </label>
 <label define="TMSG_BUTTON_LINK">
 	<message xml:lang="en">Link</message>
@@ -3803,6 +4003,7 @@ odstránený</message>
 	<message xml:lang="sk">Hypertextový odkaz</message>
 	<message xml:lang="ja">リンク</message>
 	<message xml:lang="nl">Koppeling</message>
+	<message xml:lang="uk">Посилання</message>
 </label>
 <label define="TMSG_BUTTON_TABLE">
 	<message xml:lang="en">Table</message>
@@ -3821,6 +4022,7 @@ odstránený</message>
 	<message xml:lang="sk">Tabuľka (table)</message>
 	<message xml:lang="ja">表</message>
 	<message xml:lang="nl">Tabel</message>
+	<message xml:lang="uk">Таблиця</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_INFO">
 	<message xml:lang="en">You are about to close %d open tabs. Are you sure you
@@ -3847,6 +4049,7 @@ kívánja?</message>
 (%d). Chcete naozaj pokračovať?</message>
 	<message xml:lang="ja">このウィンドウでは %d 個のタブが開かれています。すべてのタブを閉じてよろしいですか？</message>
 	<message xml:lang="nl">%d geopende tabbladen worden gesloten. Wilt u doorgaan?</message>
+	<message xml:lang="uk">Зараз буде закрито %d панелі. Продовжити та закрити їх?</message>
 </label>
 <label define="TMSG_LIB_WARNCTAB_CHECK">
 	<message xml:lang="en">Warn me when I attempt to close multiple tabs</message>
@@ -3868,6 +4071,7 @@ werden sollen</message>
 naraz</message>
 	<message xml:lang="ja">一度に複数のタブを閉じるときに警告する</message>
 	<message xml:lang="nl">Waarschuwen wanneer meerdere tabbladen worden gesloten</message>
+	<message xml:lang="uk">Попереджувати о спробі закриття кількох панелей</message>
 </label>
 <label define="TMSG_LIB_CLOSETABS">
 	<message xml:lang="en">Close tabs</message>
@@ -3883,6 +4087,7 @@ naraz</message>
 	<message xml:lang="sk">Zatvoriť karty</message>
 	<message xml:lang="ja">タブを閉じる</message>
 	<message xml:lang="nl">Tabbladen sluiten</message>
+	<message xml:lang="uk">Закрити панелі</message>
 </label>
 <label define="TMSG_LIB_NOERROR_DOC">
 	<message xml:lang="en">No error detected</message>
@@ -3899,6 +4104,7 @@ naraz</message>
 	<message xml:lang="sk">Žiadne chyby neboli nájdené</message>
 	<message xml:lang="ja">エラーは発見されませんでした</message>
 	<message xml:lang="nl">Er zijn geen fouten aangetroffen</message>
+	<message xml:lang="uk">Помилки не знайдено</message>
 </label>
 <label define="TMSG_LIB_ERROR_DOC">
 	<message xml:lang="en">Show parsing errors</message>
@@ -3918,6 +4124,7 @@ naraz</message>
 	<message xml:lang="sk">Zobraziť nájdené chyby</message>
 	<message xml:lang="ja">解析したエラーを表示</message>
 	<message xml:lang="nl">Parseerfouten weergeven</message>
+	<message xml:lang="uk">Показати розбір помилок</message>
 </label>
 <label define="TMSG_LIB_BOXES">
 	<message xml:lang="en">Boxes</message>
@@ -3932,6 +4139,7 @@ naraz</message>
 	<message xml:lang="ru">Блоки</message>
 	<message xml:lang="ja">ボックス</message>
 	<message xml:lang="nl">Vakken</message>
+	<message xml:lang="uk">Блоки</message>
 </label>
 <label define="TMSG_BUTTON_DIV">
 	<message xml:lang="en">Division</message>
@@ -3949,6 +4157,7 @@ naraz</message>
 	<message xml:lang="sk">Oddelenie, vrstva (div)</message>
 	<message xml:lang="ja">分割</message>
 	<message xml:lang="nl">Sectie</message>
+	<message xml:lang="uk">Розділ</message>
 </label>
 <label define="TMSG_BUTTON_TARGET">
 	<message xml:lang="en">Target</message>
@@ -3966,6 +4175,7 @@ naraz</message>
 	<message xml:lang="sk">Záložka</message>
 	<message xml:lang="ja">ターゲット</message>
 	<message xml:lang="nl">Doel</message>
+	<message xml:lang="uk">Ціль</message>
 </label>
 <label define="TMSG_INSERTION">
 	<message xml:lang="en">Inserted text On/Off</message>
@@ -3984,6 +4194,7 @@ naraz</message>
 	<message xml:lang="sk">Novovložený text On/Off</message>
 	<message xml:lang="ja">引用文</message>
 	<message xml:lang="nl">Ingevoegde tekst aan/uit</message>
+	<message xml:lang="uk">Вставка Увімк./Вимкн.</message>
 </label>
 <label define="TMSG_DELETION">
 	<message xml:lang="en">Deleted text On/Off</message>
@@ -4002,6 +4213,7 @@ naraz</message>
 	<message xml:lang="sk">Text na odstránenie On/Off</message>
 	<message xml:lang="ja">打ち消し線</message>
 	<message xml:lang="nl">Doorgehaalde tekst aan/uit</message>
+	<message xml:lang="uk">Видалення Увімк./Вимкн.</message>
 </label>
 <label define="TMSG_SUB">
 	<message xml:lang="en">Subscript On/Off</message>
@@ -4021,6 +4233,7 @@ naraz</message>
 	<message xml:lang="sk">Dolný index On/Off</message>
 	<message xml:lang="ja">サブスクリプト</message>
 	<message xml:lang="nl">Subscript aan/uit</message>
+	<message xml:lang="uk">Підрядковий індекс Увімк./Вимкн.</message>
 </label>
 <label define="TMSG_SUP">
 	<message xml:lang="en">Superscript On/Off</message>
@@ -4040,6 +4253,7 @@ naraz</message>
 	<message xml:lang="sk">Horný index On/Off</message>
 	<message xml:lang="ja">スーパースクリプト</message>
 	<message xml:lang="nl">Superscript aan/uit</message>
+	<message xml:lang="uk">Надрядковий індекс Увімк./Вимкн.</message>
 </label>
 <label define="TMSG_BUTTON_DT">
 	<message xml:lang="en">Term</message>
@@ -4058,6 +4272,7 @@ naraz</message>
 	<message xml:lang="sk">Termín (dt)</message>
 	<message xml:lang="ja">定義語</message>
 	<message xml:lang="nl">Term</message>
+	<message xml:lang="uk">Термін</message>
 </label>
 <label define="TMSG_BUTTON_DD">
 	<message xml:lang="en">Definition</message>
@@ -4076,6 +4291,7 @@ naraz</message>
 	<message xml:lang="sk">Definícia termínu (dd)</message>
 	<message xml:lang="ja">定義の説明</message>
 	<message xml:lang="nl">Definitie</message>
+	<message xml:lang="uk">Визначення</message>
 </label>
 <label define="TMSG_OBJECT">
 	<message xml:lang="en">Object</message>
@@ -4094,6 +4310,7 @@ naraz</message>
 	<message xml:lang="sk">Objekt (object)</message>
 	<message xml:lang="ja">オブジェクト</message>
 	<message xml:lang="nl">Object</message>
+	<message xml:lang="uk">Об'єкт</message>
 </label>
 <label define="TMSG_CSSStyle">
 	<message xml:lang="en">Style</message>
@@ -4110,6 +4327,7 @@ naraz</message>
 	<message xml:lang="sk">Pravidlá</message>
 	<message xml:lang="ja">スタイル</message>
 	<message xml:lang="nl">Opmaak</message>
+	<message xml:lang="uk">Налагодження каскадної таблиці стилю</message>
 </label>
 <label define="TMSG_EXPLORE">
 	<message xml:lang="en">Files</message>
@@ -4128,6 +4346,7 @@ naraz</message>
 	<message xml:lang="sk">Súbor</message>
 	<message xml:lang="ja">ファイル</message>
 	<message xml:lang="nl">Bestanden</message>
+	<message xml:lang="uk">Файли</message>
 </label>
 <label define="TMSG_SplitHorizontally">
 	<message xml:lang="en">Horizontal split/unsplit</message>
@@ -4145,6 +4364,7 @@ naraz</message>
 	<message xml:lang="sk">Rozdeliť okno horizontálne</message>
 	<message xml:lang="ja">横向きの 分割/結合</message>
 	<message xml:lang="nl">Horizontaal splitsen/splitsing opheffen</message>
+	<message xml:lang="uk">Поділ/Скасування поділу вікна по горизонталі</message>
 </label>
 <label define="TMSG_SplitVertically">
 	<message xml:lang="en">Vertical split/unsplit</message>
@@ -4162,6 +4382,7 @@ naraz</message>
 	<message xml:lang="sk">Rozdeliť okno vertikálne</message>
 	<message xml:lang="ja">縦向きの 分割/結合</message>
 	<message xml:lang="nl">Verticaal splitsen/splitsing opheffen</message>
+	<message xml:lang="uk">Поділ/Скасування поділу вікна по вертикалі</message>
 </label>
 <label define="TMSG_ShowPanel">
 	<message xml:lang="en">Show/hide tools</message>
@@ -4179,6 +4400,7 @@ naraz</message>
 	<message xml:lang="sk">Zobraziť/skryť nástroje</message>
 	<message xml:lang="ja">ツールを表示/隠す</message>
 	<message xml:lang="nl">Hulpmiddelen weergeven/verbergen</message>
+	<message xml:lang="uk">Показати/Сховати панель інструментів</message>
 </label>
 <label define="TMSG_Undo">
 	<message xml:lang="en">Undo</message>
@@ -4197,6 +4419,7 @@ naraz</message>
 	<message xml:lang="sk">Späť</message>
 	<message xml:lang="ja">元に戻す</message>
 	<message xml:lang="nl">Ongedaan maken</message>
+	<message xml:lang="uk">Скасувати</message>
 </label>
 <label define="TMSG_Redo">
 	<message xml:lang="en">Redo</message>
@@ -4215,6 +4438,7 @@ naraz</message>
 	<message xml:lang="sk">Opakovať</message>
 	<message xml:lang="ja">やり直し</message>
 	<message xml:lang="nl">Herhalen</message>
+	<message xml:lang="uk">Повернути</message>
 </label>
 <label define="TMSG_Cut">
 	<message xml:lang="en">Cut</message>
@@ -4233,6 +4457,7 @@ naraz</message>
 	<message xml:lang="sk">Vystrihnúť</message>
 	<message xml:lang="ja">切り取り</message>
 	<message xml:lang="nl">Knippen</message>
+	<message xml:lang="uk">Вирізати</message>
 </label>
 <label define="TMSG_Copy">
 	<message xml:lang="en">Copy</message>
@@ -4251,6 +4476,7 @@ naraz</message>
 	<message xml:lang="sk">Kopírovať</message>
 	<message xml:lang="ja">コピー</message>
 	<message xml:lang="nl">Kopiëren</message>
+	<message xml:lang="uk">Копіювати</message>
 </label>
 <label define="TMSG_Paste">
 	<message xml:lang="en">Paste</message>
@@ -4269,6 +4495,7 @@ naraz</message>
 	<message xml:lang="sk">Prilepiť</message>
 	<message xml:lang="ja">貼り付け</message>
 	<message xml:lang="nl">Plakken</message>
+	<message xml:lang="uk">Вставити</message>
 </label>
 <label define="TMSG_Spell">
 	<message xml:lang="en">Check spelling</message>
@@ -4288,6 +4515,7 @@ naraz</message>
 	<message xml:lang="sk">Kontrola pravopisu</message>
 	<message xml:lang="ja">スペルチェック</message>
 	<message xml:lang="nl">Spelling controleren</message>
+	<message xml:lang="uk">Перевірка правопису</message>
 </label>
 <label define="TMSG_MATH_PANEL_1">
 	<message xml:lang="en">Various constructs</message>
@@ -4379,6 +4607,7 @@ Konstante</message>
 	<message xml:lang="sk">Zväčšiť veľkosť textu</message>
 	<message xml:lang="ja">拡大</message>
 	<message xml:lang="nl">Inzoomen</message>
+	<message xml:lang="uk">Збільшити</message>
 </label>
 <label define="TMSG_ZoomOut">
 	<message xml:lang="en">Zoom out</message>
@@ -4397,6 +4626,7 @@ Konstante</message>
 	<message xml:lang="sk">Zmenšiť veľkosť textu</message>
 	<message xml:lang="ja">縮小</message>
 	<message xml:lang="nl">Uitzoomen</message>
+	<message xml:lang="uk">Зменшити</message>
 </label>
 <label define="TMSG_THEME">
 	<message xml:lang="en">Theme</message>
@@ -4427,6 +4657,7 @@ Konstante</message>
 	<message xml:lang="sk">XML</message>
 	<message xml:lang="ja">XML</message>
 	<message xml:lang="nl">XML</message>
+	<message xml:lang="uk">XML</message>
 </label>
 <label define="TMSG_INSERT_MODE_TEXT">
 	<message xml:lang="en">Text</message>
@@ -4445,6 +4676,7 @@ Konstante</message>
 	<message xml:lang="de">Text</message>
 	<message xml:lang="ja">テキスト</message>
 	<message xml:lang="nl">Tekst</message>
+	<message xml:lang="uk">Text</message>
 </label>
 <label define="TMSG_NO_RECENT_DOC">
 	<message xml:lang="en">No recent document</message>
@@ -4495,6 +4727,7 @@ Konstante</message>
 	<message xml:lang="sk">Zlúčiť</message>
 	<message xml:lang="ja">セルの結合</message>
 	<message xml:lang="nl">Cellen samenvoegen</message>
+	<message xml:lang="uk">Об'єднати</message>
 </label>
 <label define="CellHShrink">
 	<message xml:lang="en">Shrink horizontal extend</message>
@@ -4511,6 +4744,7 @@ Konstante</message>
 	<message xml:lang="sk">Rozdeliť bunky horizontálne</message>
 	<message xml:lang="ja">セルを列に分割する</message>
 	<message xml:lang="nl">Samengevoegde cel horizontaal splitsen</message>
+	<message xml:lang="uk">Зменшити розширення по горизонталі</message>
 </label>
 <label define="CellVShrink">
 	<message xml:lang="en">Shrink vertical extend</message>
@@ -4527,6 +4761,7 @@ Konstante</message>
 	<message xml:lang="sk">Rozdeliť bunky vertikálne</message>
 	<message xml:lang="ja">セルを行に分割する</message>
 	<message xml:lang="nl">Samengevoegde cel verticaal splitsen</message>
+	<message xml:lang="uk">Зменшити розширення по вертикалі</message>
 </label>
 <label define="CreateRowB">
 	<message xml:lang="en">Insert a row</message>
@@ -4543,6 +4778,7 @@ Konstante</message>
 	<message xml:lang="sk">Vložiť riadok nad</message>
 	<message xml:lang="ja">上に行を挿入</message>
 	<message xml:lang="nl">Rij invoegen</message>
+	<message xml:lang="uk">Вставити рядок</message>
 </label>
 <label define="CreateRowA">
 	<message xml:lang="en">Append a row</message>
@@ -4559,6 +4795,7 @@ Konstante</message>
 	<message xml:lang="sk">Vložiť riadok pod</message>
 	<message xml:lang="ja">下に行を挿入</message>
 	<message xml:lang="nl">Rij toevoegen</message>
+	<message xml:lang="uk">Додати рядок</message>
 </label>
 <label define="CreateColumnB">
 	<message xml:lang="en">Insert a column</message>
@@ -4574,6 +4811,7 @@ Konstante</message>
 	<message xml:lang="sk">Vložiť stĺpec vľavo</message>
 	<message xml:lang="ja">左に列を挿入</message>
 	<message xml:lang="nl">Kolom invoegen</message>
+	<message xml:lang="uk">Вставити стовпец</message>
 </label>
 <label define="CreateColumnA">
 	<message xml:lang="en">Append a column</message>
@@ -4589,6 +4827,7 @@ Konstante</message>
 	<message xml:lang="sk">Vložiť stĺpec vpravo</message>
 	<message xml:lang="ja">右に列を挿入</message>
 	<message xml:lang="nl">Kolom toevoegen</message>
+	<message xml:lang="uk">Додати стовпец</message>
 </label>
 <label define="TIP_DIALOG_TITLE">
 	<message xml:lang="en">Tip of the day</message>
@@ -5990,6 +6229,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">AND</message>
 	<message xml:lang="sk">AND</message>
 	<message xml:lang="ja">論理積 (AND)</message>
+	<message xml:lang="uk">AND</message>
 </label>
 <label define="TMSG_SVG_NAND">
 	<message xml:lang="en">NAND</message>
@@ -6007,6 +6247,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">NAND</message>
 	<message xml:lang="sk">NAND</message>
 	<message xml:lang="ja">否定論理積 (NAND)</message>
+	<message xml:lang="uk">NAND</message>
 </label>
 <label define="TMSG_SVG_OR">
 	<message xml:lang="en">OR</message>
@@ -6024,6 +6265,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">OR</message>
 	<message xml:lang="sk">OR</message>
 	<message xml:lang="ja">論理和 (OR)</message>
+	<message xml:lang="uk">OR</message>
 </label>
 <label define="TMSG_SVG_NOR">
 	<message xml:lang="en">NOR</message>
@@ -6041,6 +6283,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">NOR</message>
 	<message xml:lang="sk">NOR</message>
 	<message xml:lang="ja">否定論理和 (NOR)</message>
+	<message xml:lang="uk">NOR</message>
 </label>
 <label define="TMSG_SVG_XOR">
 	<message xml:lang="en">XOR</message>
@@ -6058,6 +6301,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">XOR</message>
 	<message xml:lang="sk">XOR</message>
 	<message xml:lang="ja">排他的論理和 (XOR)</message>
+	<message xml:lang="uk">XOR</message>
 </label>
 <label define="TMSG_SVG_XNOR">
 	<message xml:lang="en">XNOR</message>
@@ -6075,6 +6319,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">XNOR</message>
 	<message xml:lang="sk">XNOR</message>
 	<message xml:lang="ja">排他的否定論理和 (XNOR)</message>
+	<message xml:lang="uk">XNOR</message>
 </label>
 <label define="TMSG_SVG_NOT">
 	<message xml:lang="en">NOT</message>
@@ -6092,6 +6337,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="tw">NOT</message>
 	<message xml:lang="sk">NOT</message>
 	<message xml:lang="ja">否定論理 (NOT)</message>
+	<message xml:lang="uk">NOT</message>
 </label>
 <label define="TMSG_SVG_Cross">
 	<message xml:lang="en">Cross</message>
@@ -6526,15 +6772,16 @@ Komponente</message>
 	<message xml:lang="ja">*クリックで閉じる*Click to close</message>
 </label>
 <label define="LOCK">
-<message xml:lang="en">Locked resource</message>
-<message xml:lang="fr">Ressource bloquée</message></label>
+	<message xml:lang="en">Locked resource</message>
+	<message xml:lang="fr">Ressource bloquée</message>
+</label>
 <label define="UNLOCK">
-<message xml:lang="en">Unlocked resource</message>
-<message xml:lang="fr">Ressource débloquée</message>
+	<message xml:lang="en">Unlocked resource</message>
+	<message xml:lang="fr">Ressource débloquée</message>
 </label>
 <label define="NO_WEBDAV">
-<message xml:lang="en">Not a WebDAV resource</message>
-<message xml:lang="fr">Ce n'est pas une resource</message>
+	<message xml:lang="en">Not a WebDAV resource</message>
+	<message xml:lang="fr">Ce n'est pas une resource</message>
 </label>
 <!--
 End of SVG panel --><label define="TMSG_LIB_MSG_MAX">
