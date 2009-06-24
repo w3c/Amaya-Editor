@@ -1,68 +1,68 @@
 # encoding= utf8
-0 **&File
-1 **Context
-2 **Context
-3 **&Edit
-4 **&Views
-5 **&Insert
-6 **F&ormat
-7 **&Links
-8 **Attributes
+0 Ф&айл
+1 Зміст
+2 Зміст
+3 Редагування
+4 Представлення
+5 Вставити
+6 Стиль
+7 Посилання
+8 Атрибути
 9 **&Tools
-10 **&Help
-11 **New tab
-12 **New &document...
-13 **New
-14 **New &document...
-15 **New &formula...
-16 **New &Drawing...
-17 **New s&tyle sheet...
-18 **&Open document...
-19 **&File
-20 **Open in new &window...
-21 **&Reload document
-22 **Read as
-23 **Unicode (UTF-8)
-24 **Western (ISO-8859-1)
-25 **Western (ISO-8859-15)
-26 **Western (Windows-1252)
-27 **Central Europe (ISO-8859-2)
-28 **Central Europe (Windows-1250)
-29 **South Europe (ISO-8859-3)
-30 **Baltic (ISO-8859-4)
-31 **Baltic (Windows-1257)
-32 **Cyrillic (ISO-8859-5)
-33 **Cyrillic (Windows-1251)
-34 **Cyrillic (KOI8-R)
-35 **Arabic (ISO-8859-6)
-36 **Arabic (Windows-1256)
-37 **Greek (ISO-8859-7)
-38 **Greek (Windows-1253)
-39 **Hebrew (ISO-8859-8)
-40 **Hebrew (Windows-1255)
-41 **Turkish (ISO-8859-9)
-42 **Turkish (Windows-1254)
-43 **Chinese Simplified (GB-2312)
-44 **Japanese (ISO-2022-JP)
-45 **Japanese (EUC-JP)
-46 **Japanese (Shift-JIS)
-47 **&Back
-48 **&Forward
-49 **&Save
-50 **Save &as...
+10 До&відка
+11 Нова панель
+12 Новий документ...
+13 Новий
+14 Новий документ...
+15 Новий &MathML документ...
+16 Новий SV&G документ...
+17 Нова каскадна таблиця стил&ів CSS...
+18 Відкрити документ...
+19 Ф&айл
+20 Відкрити у новому вікні...
+21 Перезавантажити до&кумент
+22 Прочитати у кодуванні
+23 Юнікод (UTF-8)
+24 Західноєвропейська (ISO-8859-1)
+25 Західноєвропейська (ISO-8859-15)
+26 Західноєвропейська (Windows-1252)
+27 Центральноєвропейська (ISO-8859-2)
+28 Центральноєвропейська (Windows-1250)
+29 Південноєвропейська (ISO-8859-3)
+30 Балтійська (ISO-8859-4)
+31 Балтійська (Windows-1257)
+32 Кирилиця (ISO-8859-5)
+33 Кирилиця (Windows-1251)
+34 Кирилиця (KOI8-R)
+35 Арабська (ISO-8859-6)
+36 Арабська (Windows-1256)
+37 Грецька (ISO-8859-7)
+38 Грецька (Windows-1253)
+39 Іврит (ISO-8859-8)
+40 Іврит (Windows-1255)
+41 Турецька (ISO-8859-9)
+42 Турецька (Windows-1254)
+43 Китайська спрощена (GB-2312)
+44 Японська (ISO-2022-JP)
+45 Японська (EUC-JP)
+46 Японська (Shift-JIS)
+47 Назад
+48 Уперед
+49 Зберегти
+50 Зберегти як...
 51 **Save all
-52 **S&ynchronize
-53 **Send by mail ...
-54 **Set&up and print...
-55 **&Print
-56 **&Close tab
-57 **Close &window
-58 **E&xit Amaya
-59 **New tab
-60 **Refresh tab
-61 **Refresh all tabs
-62 **Close other tabs
-63 **Close tab
+52 Синхро&нізувати
+53 Настройка та друк...
+54 Настройка та друк...
+55 Друк
+56 Закрити панель
+57 Закрити вікно
+58 Вийти з Amaya
+59 Нова панель
+60 Перезавантажити панель
+61 Перезавантажити усі панелі
+62 Закрити решту панелей
+63 Закрити панель
 64 **Open the link
 65 **Open the link in new tab
 66 **Open the link in new window
@@ -71,120 +71,120 @@
 69 **Scale
 70 **Move
 71 **Ungroup
-72 **Cut
-73 **Copy
-74 **Paste
-75 **Delete
-76 **Insert
-77 **Append
-78 **&Undo
-79 **&Redo
-80 **Cu&t
-81 **&Copy
-82 **&Paste
-83 **&Delete
-84 **&Insert
-85 **&Append
+72 Вирізати
+73 Копіювати
+74 Вставити
+75 Видалити
+76 Вставити перед
+77 Додати після
+78 Скасувати
+79 Повернути
+80 Вир&ізати
+81 Копіювати
+82 Вставити
+83 Видалити
+84 Вставити перед
+85 Додати після
 86 **Select all
-87 **Select
-88 **Parent element
-89 **First child
-90 **Previous element
-91 **Next element
-92 **&Find...
-93 **&Preferences
+87 Перейти до
+88 Батьківського елементу
+89 Першого потомку
+90 Попереднього елементу
+91 Наступного елементу
+92 Зн&айти
+93 Настройки
 94 **Show/Hide toolbars
 95 **&Browsing
 96 **&Editing
-97 **Show &tools
-98 **Show &map areas
-99 **Show &targets
-100 **Show &formatted view
-101 **Show &structure
-102 **Show so&urce
-103 **Show lin&ks
-104 **Show &alternate
-105 **Show table &of contents
+97 Показати панель Інструм&енти
+98 Показати ділянки карти
+99 Показати ц&ілі
+100 Показати представлення Форм&атований
+101 Показати представлення Структура
+102 Показати представлення Вихідний код
+103 Показати представлення Пос&илання
+104 Показати представлення Альтернативний (лише текст)
+105 Показати заголовки документу
 106 **Split view horizontally
 107 **Split view vertically
-108 **Document &info
-109 **Show parsing errors
-110 **&Full screen
-111 **Zoom in
-112 **Zoom out
+108 інформація о документі
+109 Показати розбір помилок
+110 У весь екр&ан
+111 Збільшити
+112 Зменшити
 113 **Normal zoom
-114 **Paragraph (p)
-115 **Heading
-116 **h1
-117 **h2
-118 **h3
-119 **h4
-120 **h5
-121 **h6
-122 **List
-123 **Unordered list (ul)
-124 **Ordered list (ol)
-125 **Definition list (dl)
-126 **Term (dt)
-127 **Definition (dd)
-128 **Information type
-129 **Emphasis (em)
-130 **strong
-131 **cite
-132 **Definition (dfn)
-133 **code
-134 **Variable (var)
-135 **Sample (samp)
-136 **Keyboard (kbd)
-137 **Abbreviation (abbr)
-138 **acronym
-139 **Insertion (ins)
-140 **Deletion (del)
-141 **Character element
-142 **Italic (i)
-143 **Bold (b)
-144 **Teletype (tt)
-145 **big
-146 **small
-147 **Span
-148 **Subscript (sub)
-149 **Superscript (sup)
-150 **Quotation (q)
-151 **BiDi override (bdo)
-152 **Image (img)...
-153 **Horizontal rule (hr)
-154 **Break (br)
-155 **Preformatted (pre)
-156 **Insert a table
-157 **Table
-158 **Insert a table
-159 **caption
-160 **thead
-161 **tbody
-162 **tfoot
-163 **&Math
-164 **Insert a formula
-165 **Plain text (mtext)
-166 **Identifier (mi)
-167 **Number (mn)
-168 **Operator (mo)
-169 **Space (mspace)
-170 **Character (&xxx;)
-171 **InvisibleTimes
-172 **ApplyFunction
-173 **Root (mroot)
-174 **Square root (msqrt)
-175 **Enclose (menclose)
-176 **Fraction (mfrac)
-177 **Subscript and superscript (msubsup)
-178 **Subscript (msub)
-179 **Superscript (msup)
-180 **Under and over (munderover)
-181 **Under (munder)
-182 **Over (mover)
-183 **Parentheses (mrow)
-184 **Multiscripts (mmultiscripts)
-185 **New matrix (mtable)
+114 Параграф (p)
+115 Заголовок
+116 h1
+117 h2
+118 h3
+119 h4
+120 h5
+121 h6
+122 Список
+123 Маркований список (ul)
+124 Нумерований список (ol)
+125 Список визначення (dl)
+126 Термін (dt)
+127 Визначення (dd)
+128 Типи інформації
+129 Звичайне виділення (em)
+130 Особливе виділення (strong)
+131 Цитування (cite)
+132 Визначення (dfn)
+133 Виділення комп'ютерного коду (code)
+134 Змінна (var)
+135 Вивідні дані (приклад) (samp)
+136 Дані що уводяться з клавіатури (kbd)
+137 Абревіатура (abbr)
+138 Акронім (acronym)
+139 Вставка (ins)
+140 Видалення (del)
+141 Елементи стиля символу
+142 Курсив (i)
+143 Напівжирний (b)
+144 Телетайпний (tt)
+145 Великий текст (big)
+146 Малий текст (small)
+147 Span
+148 Підрядковий індекс (sub)
+149 Надрядковий індекс (sup)
+150 Коротка убудована цитата (q)
+151 Скасування двоспрямованого тексту (bdo)
+152 Зображення (img)...
+153 Горизонтальна лінія (hr)
+154 Розрив (br)
+155 Попередньо форматований (pre)
+156 Ділянка tаблиця
+157 Таблиця
+158 Ділянка tаблиця
+159 Заголовок (caption)
+160 Назва таблиці (thead)
+161 Тіло таблиці (tbody)
+162 Нижній колонтитул таблиці (tfoot)
+163 &Math
+164 Нова формула
+165 Простий текст (mtext)
+166 Ідентифікатор (mi)
+167 Число (mn)
+168 Оператор (mo)
+169 Пробіл (mspace)
+170 Символ (&xxx;)
+171 Невидимий час (InvisibleTimes)
+172 Застосувати функцію (ApplyFunction)
+173 Корінь у ступені (mroot)
+174 Квадратний корінь (msqrt)
+175 Вкладення-Enclose (menclose)
+176 Дріб (mfrac)
+177 Підрядковий і надрядковий індекси (msubsup)
+178 Підрядковий індекс (msub)
+179 Надрядковий індекс (msup)
+180 Під и над (munderover)
+181 Під (munder)
+182 Над (mover)
+183 Круглі дужки (mrow)
+184 Перед(після)символьний індекси (mmultiscripts)
+185 Нова матриця (mtable)
 186 **Graphics
 187 **Line
 188 **Arrow
@@ -201,53 +201,53 @@
 199 **Polygon
 200 **Open curve
 201 **Closed curve
-202 **Form
-203 **Insert a form
-204 **Button (input)
-205 **Checkbox (input)
-206 **File selector (input)
-207 **Hidden (input)
-208 **Image (input)...
-209 **Password (input)
-210 **Radio (input)
-211 **Reset (input)
-212 **Submit (input)
-213 **Text (input)
-214 **fieldset
-215 **label
-216 **Menu (option)
-217 **Submenu (optgroup)
-218 **textarea
-219 **Object
-220 **object
-221 **Parameter (param)
-222 **Map area
-223 **Insert a map
-224 **Circle area
-225 **Polygon area
-226 **Rectangle area
-227 **Hidden elements
-228 **style
-229 **Comment
-230 **base
-231 **meta
-232 **link
-233 **script
-234 **noscript
-235 **Division (div)
-236 **address
-237 **blockquote
-238 **Inline frame (iframe)
-239 **ruby
+202 Форма
+203 Вставити форму
+204 Кнопка-Button (input)
+205 Вимикач-Checkbox (input)
+206 Меню вибіру файлів (input)
+207 Схований-Hidden (input)
+208 Зображення-Image (input)...
+209 Пароль-Password (input)
+210 Перемикач-Radio (input)
+211 Скидання-Reset (input)
+212 Підтвердження-Submit (input)
+213 Текст-Text (input)
+214 Набір полів (fieldset)
+215 Мітка (label)
+216 Меню (option)
+217 Підменю (optgroup)
+218 Ділянка уводу текста (textarea)
+219 Об'єкт
+220 Об'єкт (object)
+221 Параметр (param)
+222 Ділянка карти
+223 Вставити карту (map)
+224 Ділянка кругу (area)
+225 Ділянка багатокутника (area)
+226 Ділянка прямокутника (area)
+227 Структура
+228 Стиль (style)
+229 Коментар
+230 Базовий каталог (base)
+231 Мета-інформація (meta)
+232 Посилання (link)
+233 Сценарій (script)
+234 Без сценарія (noscript)
+235 Розділ (div)
+236 Адреса (address)
+237 Довга цитата (blockquote)
+238 Убудований фрейм (iframe)
+239 Текст ruby (для східно-азіатських мов)
 240 **Theme
 241 **Classic
 242 **Modern
 243 **No theme
-244 **Text color
-245 **Select a text color...
+244 Tекста документа
+245 Колір тексту документа...
 246 **No color
-247 **Background color
-248 **Select a background color...
+247 фона
+248 Колір фона...
 249 **No color
 250 **Alignment
 251 **Left
@@ -264,75 +264,75 @@
 262 **Increase
 263 **Decrease
 264 **Default
-265 **Character
+265 Символ
 266 **Select a font...
 267 **Default
-268 **&Style editor...
-269 **Create &rule...
-270 **Show applied style...
-271 **Style sheets
-272 **Link...
-273 **Open...
-274 **Disable...
-275 **Enable...
-276 **Remove...
-277 **Copy location
-278 **Paste location
-279 **&Link to previous target
-280 **&Create or change link...
-281 **Create &target
-282 **&Delete link or target
-283 **&Add/Remove IDs...
-284 **Chec&k spelling...
-285 **Transfor&m...
+268 Настройка каскадної таблиці стиля CSS...
+269 Створити правило...
+270 Показати уживаний стиль...
+271 Каскадні таблиці стилів
+272 Посилання на CSS...
+273 Відкрити CSS...
+274 Відключити CSS...
+275 Увімкнути CSS...
+276 Видалити CSS...
+277 Копіювати розташування
+278 Вставити розташування
+279 Посилання на поп&ередню ціль
+280 &Створити або змінити посилання...
+281 Створити ц&іль
+282 Видалити посилання або ціль
+283 Додати/Видалити IDs...
+284 Перевірка правопису...
+285 Перетворит&и...
 286 **Code clean up
 287 **Edit table
-288 **Change to data cell
-289 **Change to heading cell
-290 **Merge cells
-291 **Join with the cell at the right
-292 **Join with the cell below
-293 **Shrink horizontal extend
-294 **Shrink vertical extend
-295 **Select the row
-296 **Insert a row
-297 **Append a row
-298 **Select the column
-299 **Insert a column
-300 **Append a column
-301 **Paste before
-302 **Paste after
-303 **Change title...
-304 **Change doctype
-305 **Remove the doctype
-306 **Add a doctype
-307 **Change to XHTML 1.1
-308 **Change to XHTML 1.0 Transitional
-309 **Change to XHTML 1.0 Strict
-310 **Change to XHTML 1.0 Basic
+288 Змінити в елементі даних
+289 Змінити в елементі заголовку
+290 Об'єднати
+291 Об'єднати з елементом праворуч
+292 Об'єднати з елементом нижче
+293 Зменшити розширення по горизонталі
+294 Зменшити розширення по вертикалі
+295 Вибрати рядок
+296 Вставити рядок
+297 Додати рядок
+298 Вибрати стовпець
+299 Вставити стовпець
+300 Додати стовпець
+301 Вставити перед
+302 Додати після
+303 Змінити назву документа...
+304 Змінити тип документу
+305 Видалити тип документу
+306 Додати тип документу
+307 Змінити на XHTML 1.1
+308 Змінити на XHTML 1.0 Transitional
+309 Змінити на XHTML 1.0 Strict
+310 Змінити на XHTML 1.0 Basic
 311 **Change to XHTML+RDFa
-312 **Change to HTML 4.01 Transitional
-313 **Change to HTML 4.01 Strict
-314 **&Section numbering
-315 **&Add/Update table of contents
-316 **&Make book
-317 **Insert time stamp
+312 Змінити на HTML 4.01 Transitional
+313 Змінити на HTML 4.01 Strict
+314 Нумерувати розділ&и
+315 Додати/Оновити Зміст
+316 Створит&и книгу
+317 Вставити мітку часу
 318 **Namespace declarations...
-319 **A&nnotations
-320 **Annotate selection
-321 **Annotate document
-322 **Move to selection
-323 **Store selection as &XPointer
-324 **Move to stored XPointer
-325 **Reply to annotation
-326 **Post to server
-327 **Delete
-328 **Load
-329 **Customize query...
-330 **Local filter...
-331 **C&ooperation
-332 **Lock resource
-333 **Copy lock information...
+319 Ано&тації
+320 Анотувати обране
+321 Анотувати документ
+322 Перемістити до обраного
+323 Зберегти обране як &XPointer
+324 Перемістити на збереження до XPointer
+325 Відповісти на анотацію
+326 Опублікувати (post) на сервері
+327 Видалити анотацію
+328 Завантажити анотації
+329 Налаштувати запит...
+330 Локальний фільтр...
+331 Спільна робота
+332 Блокувати ресурс
+333 Копіювати інформацію блокування...
 334 **Templates
 335 **Create template from current document
 336 **Create a text area
@@ -342,13 +342,13 @@
 340 **Create and repeat a component
 341 **Create a free editing box
 342 **Create a new types union
-343 **&Javascript/DOM
+343 &Javascript/DOM
 344 **Enable/Disable
 345 **Execute a command
 346 **Execute an external script
 347 **Add an external script
 348 **Insert a script
 349 **Check for update
-350 **Amaya Help...
+350 Довідка Amaya...
 351 **Tip of the day...
-352 **About Amaya
+352 Про програму Amaya

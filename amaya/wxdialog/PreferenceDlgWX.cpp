@@ -410,6 +410,8 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
     value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Russian)");
   else if (!strcmp (prop.DialogueLang, "tr"))
     value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Turkish)");
+  else if (!strcmp (prop.DialogueLang, "uk"))
+    value = TtaConvMessageToWX(prop.DialogueLang)+_T(" (Ukrainian)");
   else if (!strcmp (prop.DialogueLang, "cn"))
     value = _T("zh-")+TtaConvMessageToWX(prop.DialogueLang)+_T(" (Simplified Chinese)");
   else if (!strcmp (prop.DialogueLang, "tw"))
