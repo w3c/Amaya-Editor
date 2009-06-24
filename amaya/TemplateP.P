@@ -754,7 +754,7 @@ RULES
 
   useSimple:	
     BEGIN
-    if option
+    if  NOT immediately within repeat AND option
       CreateFirst(OptionButton);
 #ifdef INSTANCE
     if immediately within repeat

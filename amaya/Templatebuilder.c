@@ -136,7 +136,7 @@ ThotBool NeedAMenu (Element el, Document doc)
     // there are several types
     res = TRUE;
   else if (!strcmp (types, "string") || !strcmp (types, "number"))
-    res = FALSE;
+    return FALSE;
   else
     {
       t = GetXTigerDocTemplate (doc);
@@ -155,7 +155,7 @@ ThotBool NeedAMenu (Element el, Document doc)
             }
         }
       else if (elType.ElTypeNum == Template_EL_useEl)
-        res =  TRUE; //(TtaGetFirstChild (el) == NULL);
+        res =  TRUE;
     }
 
   // When only one type is possible add the currentType attribute
@@ -171,7 +171,7 @@ ThotBool NeedAMenu (Element el, Document doc)
           TtaAttachAttribute (el, att, doc);
           TtaSetAttributeText(att, types, el, doc);
         }
-      else if (att)
+      else if (att && ptr == NULL)
         // the use is already instantiated
         res = FALSE;
     }
@@ -227,7 +227,7 @@ void CheckNotEmptyComponent (Element el, Document doc)
             return;
           else
             elType.ElTypeNum = XML_EL_XML_Element;
-printf ("==>Complete component %s:%d\n",s,elType.ElTypeNum);
+          //printf ("==>Complete component %s:%d\n",s,elType.ElTypeNum);
           child = TtaNewElement (doc, elType);
           TtaInsertFirstChild (&child, el, doc);
         }
@@ -397,10 +397,6 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
       CheckMandatoryAttribute (el, doc, Template_ATTR_ref_name);
       break;
 
-      /*case Template_EL_option :
-      CheckMandatoryAttribute (el, doc, Template_ATTR_title);
-      break;
-      */
     case Template_EL_repeat :
       // children must be use elements
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);

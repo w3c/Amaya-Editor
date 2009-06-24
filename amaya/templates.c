@@ -630,23 +630,31 @@ void giveItems (char *text, int size, struct menuType **items, int *nbitems)
 
 #ifdef TEMPLATES
 /*----------------------------------------------------------------------
+  The parameter option adds an empty string
   ----------------------------------------------------------------------*/
-static char *createMenuString (const struct menuType* items, const int nbItems)
+static char *createMenuString (const struct menuType* items, const int nbItems,
+                               ThotBool option)
 {
   char *result, *iter;
   int   size = 0;
   int   i;
 
-  for (i=0; i < nbItems; i++)
+  if (option)
+    size += 3;
+  for (i = 0; i < nbItems; i++)
     size += 2 + strlen (items[i].label);
 
   result = (char *) TtaGetMemory (size);
   iter = result;
-  for (i=0; i < nbItems; i++)
+  if (option)
+    {
+      strcpy (iter, "B ");
+      iter +=  3;
+    }
+  for (i = 0; i < nbItems; i++)
     {
       *iter = 'B';
       ++iter;
-
       strcpy (iter, items[i].label);
       iter += strlen (items[i].label)+1;
     }
@@ -784,15 +792,16 @@ ThotBool Template_CanInsertRepeatChild(Element el)
 /*----------------------------------------------------------------------
   QueryStringFromMenu
   Show a context menu to query a choice.
-  @param items space-separated choice list string.
-  @return The choosed item string or NULL if none.
+  The parameter items is a space-separated choice list string.
+  The parameter option adds an empty string
+  Return The choosed item string or NULL if none.
   ----------------------------------------------------------------------*/
-static char* QueryStringFromMenu (Document doc, char* items)
+static char *QueryStringFromMenu (Document doc, char* items, ThotBool option)
 {
-  int nbitems, size;
+  int              nbitems, size;
   struct menuType *itemlist;
-  char *menuString;
-  char *result = NULL;
+  char            *menuString;
+  char            *result = NULL;
 
   if (!TtaGetDocumentAccessMode (doc))
     return NULL;
@@ -802,7 +811,7 @@ static char* QueryStringFromMenu (Document doc, char* items)
   if (size == 0)
     return NULL;
   giveItems (items, size, &itemlist, &nbitems);
-  menuString = createMenuString (itemlist, nbitems);
+  menuString = createMenuString (itemlist, nbitems, option);
   TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1), NULL,
                      nbitems, menuString , NULL, false, 'L');
   TtaFreeMemory (menuString);
@@ -812,7 +821,17 @@ static char* QueryStringFromMenu (Document doc, char* items)
   TtaDestroyDialogue (BaseDialog + OptionMenu);
 
   if (ReturnOption != -1)
-    result = TtaStrdup(itemlist[ReturnOption].label);
+    {
+      if (option)
+        {
+          if (ReturnOption == 0)
+            result = TtaStrdup(" ");
+          else
+            result = TtaStrdup(itemlist[ReturnOption-1].label);
+        }
+      else
+        result = TtaStrdup(itemlist[ReturnOption].label);
+    }
 
   TtaFreeMemory (itemlist);
   return result;
@@ -892,7 +911,7 @@ ThotBool BagButtonClicked (NotifyElement *event)
       listtypes = Template_GetListTypes (t, bagEl);
       if (listtypes)
         {
-          result = QueryStringFromMenu (doc, listtypes);
+          result = QueryStringFromMenu (doc, listtypes, FALSE);
           TtaFreeMemory (listtypes);
           if (result)
             {
@@ -1052,7 +1071,7 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
 #ifdef TEMPLATE_DEBUG
               printf("RepeatButtonClicked : \n  > %s\n", listtypes);
 #endif /* TEMPLATE_DEBUG */
-              result = QueryStringFromMenu (doc, listtypes);
+              result = QueryStringFromMenu (doc, listtypes, FALSE);
               TtaFreeMemory (listtypes);
               if (result)
                 DoReplicateUseElement (t, doc, view, el, repeatEl, result);
@@ -1067,6 +1086,23 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  ElementIsOptional
+  Return TRUE if the element is optional
+  ----------------------------------------------------------------------*/
+ThotBool ElementIsOptional (Element el)
+{
+  ElementType	     elType;
+	AttributeType    attType;
+  Attribute        att;
+
+  elType = TtaGetElementType (el);
+  attType.AttrSSchema = elType.ElSSchema;
+  attType.AttrTypeNum = Template_ATTR_types;
+  att = TtaGetAttribute (el, attType);
+  return (att != NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1085,7 +1121,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   Declaration     decl;
   Element         firstEl, newEl = NULL;
   char           *types, *listtypes = NULL, *result = NULL;
-  ThotBool        oldStructureChecking;
+  ThotBool        oldStructureChecking, option;
 
   if (!TtaGetDocumentAccessMode (doc))
     return TRUE;
@@ -1118,12 +1154,12 @@ ThotBool UseButtonClicked (NotifyElement *event)
 #ifdef TEMPLATE_DEBUG
           printf("UseButtonClicked : \n  > %s\n", listtypes);
 #endif /* TEMPLATE_DEBUG */
-
-          result = QueryStringFromMenu(doc, listtypes);
+          option = ElementIsOptional(el);
+          result = QueryStringFromMenu(doc, listtypes, option);
           if (result)
             {
               decl = Template_GetDeclaration(t, result);
-              if (decl)
+              if (decl || !strcmp (result, " "))
                 {
                   /* Prepare insertion.*/
                   oldStructureChecking = TtaGetStructureChecking (doc);
@@ -1140,12 +1176,16 @@ ThotBool UseButtonClicked (NotifyElement *event)
              
                   // look for the enclosing target element
                   parent = GetParentLine (el, elType.ElSSchema);
-                  /* Insert */
-                  newEl = Template_InsertUseChildren(doc, el, decl, parent, TRUE);
+                  if (decl)
+                    /* Insert */
+                    newEl = Template_InsertUseChildren(doc, el, decl, parent, TRUE);
+                  else
+                    {
+                    newEl = Template_GetNewSimpleTypeInstance(doc, el, decl);
+                    newEl = InsertWithNotify (newEl, NULL, el, doc);
+                    }
                   for (child = TtaGetFirstChild(newEl); child; TtaNextSibling(&child))
                       TtaRegisterElementCreate (child, doc);
-                  //TtaChangeTypeOfElement(el, doc, Template_EL_useSimple);
-                  //TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
 
                   /* xt:currentType attribute.*/
                   SetAttributeStringValueWithUndo(el, Template_ATTR_currentType, result);
