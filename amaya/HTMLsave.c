@@ -375,7 +375,6 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
   ThotBool            toSave = saveResources, isCSS = FALSE;
 
   newString = NULL;
-    return newString;
   if (saveResources && !IsResourceName (sString))
     // don't consider a html document as a resource
     return newString;
