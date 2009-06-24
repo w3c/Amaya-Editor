@@ -5950,6 +5950,7 @@ void StartXmlParser (Document doc, char *fileName,
 {
   Element         el, oldel;
   CHARSET         charset;  
+  DisplayMode     dispMode;
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
   char           *s;
@@ -6030,6 +6031,7 @@ void StartXmlParser (Document doc, char *fileName,
       TtaSetStructureChecking (FALSE, doc);
       /* Set the notification mode for the new document */
       TtaSetNotificationMode (doc, 1);
+      dispMode = TtaGetDisplayMode (doc);
       TtaSetDisplayMode (doc, NoComputedDisplay);
       /* Delete all element except the root element */
       el = TtaGetFirstChild (RootElement);
@@ -6142,7 +6144,7 @@ void StartXmlParser (Document doc, char *fileName,
              in the structure schema, one for each type appearing in a
              selector in the User style sheet */
           LoadUserStyleSheet (doc);
-          TtaSetDisplayMode (doc, DisplayImmediately);
+          TtaSetDisplayMode (doc, dispMode);
           UpdateStyleList (doc, 1);
         }
 

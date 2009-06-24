@@ -5336,6 +5336,7 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
                   char *localFile = GetLocalPath (newdoc, initial_url);
                   strcpy (tempfile, localFile);
                   TtaFreeMemory (localFile);      
+                  TtaSetDisplayMode (newdoc, NoComputedDisplay);
                 }
               /* wasn't a document off the web, we need to open it */
               TtaSetStatus (newdoc, 1,
@@ -5344,6 +5345,8 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
               GetAmayaDoc_callback (newdoc, 0, initial_url, tempfile,
                                     NULL, NULL, (void *) ctx);
               TtaHandlePendingEvents ();
+              if (method == CE_INSTANCE)
+                TtaSetDisplayMode (newdoc, DisplayImmediately);
             }
         }
     }

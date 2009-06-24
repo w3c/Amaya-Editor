@@ -375,6 +375,7 @@ char *UpdateDocResource (Document doc, char *oldpath, char *newpath,
   ThotBool            toSave = saveResources, isCSS = FALSE;
 
   newString = NULL;
+    return newString;
   if (saveResources && !IsResourceName (sString))
     // don't consider a html document as a resource
     return newString;
@@ -652,18 +653,22 @@ void SetRelativeURLs (Document doc, char *newpath, char *resbase,
               buflen = TtaGetTextLength (content) + 1;
               orgString = (char *)TtaGetMemory (buflen);
               TtaGiveTextContent (content, (unsigned char *)orgString, &buflen, &lang);
-              if ((elType.ElSSchema == XHTMLSSchema || elType.ElSSchema == SVGSSchema) &&
+              if ((elType.ElSSchema == XHTMLSSchema ||
+                   elType.ElSSchema == SVGSSchema) &&
                   elType.ElTypeNum == searchedType1.ElTypeNum)
                 // Manage the style string with no image save and no import update
                 newString = UpdateCSSURLs (doc, oldpath, newpath, NULL, orgString,
                                         FALSE, FALSE);
+              else if (strstr (orgString, ".xtd") == NULL &&
+                       strstr (orgString, ".css") == NULL)
+                // skip that PI
+                newString = NULL;
               else
-                {
                 // Update the XML PI content
                 newString = UpdateDocResource (doc, oldpath, newpath,
                                                resbase, orgString,
                                                el, savedResources, TRUE, fullCopy);
-                }
+
               if (newString)
                 {
                   /* register the modification to be able to undo it */

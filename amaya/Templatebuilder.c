@@ -155,7 +155,7 @@ ThotBool NeedAMenu (Element el, Document doc)
             }
         }
       else if (elType.ElTypeNum == Template_EL_useEl)
-        res =  (TtaGetFirstChild (el) == NULL);
+        res =  TRUE; //(TtaGetFirstChild (el) == NULL);
     }
 
   // When only one type is possible add the currentType attribute
