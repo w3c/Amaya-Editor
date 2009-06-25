@@ -2442,6 +2442,24 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   if (ok && (pEl->ElHolophrast || pEl->ElTerminal))
     if (funct == FnCreateFirst || funct == FnCreateLast || funct == FnContent)
       ok = FALSE;
+
+  if (ok && funct == FnContent && (pRCre->PrBoxType == BtBefore || pRCre->PrBoxType == BtAfter))
+    /* it's a CSS content property. Check if we are allowed to insert some content here: it is
+       for instance forbidden to create content between rows in a table or after a tbody, etc. */
+    {
+      pE = pEl;
+      while (pE && ok)
+	{
+	  if (TypeHasException (ExcIsCell, pE->ElTypeNumber, pE->ElStructSchema) ||
+	      TypeHasException (ExcIsCaption, pE->ElTypeNumber, pE->ElStructSchema))
+	    break;
+	  else if (TypeHasException (ExcIsTable, pE->ElTypeNumber, pE->ElStructSchema))
+	    ok = FALSE;
+	  else
+	    pE = pE->ElParent;
+	}
+    }
+
   /* on ne cree pas de pave de presentation qui soit un frere ou le pere du */
   /* pave racine de la vue. */
   if (ok && pEl->ElAbstractBox[viewIndex]->AbEnclosing == NULL)
