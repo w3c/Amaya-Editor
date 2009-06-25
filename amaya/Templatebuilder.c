@@ -248,7 +248,8 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
   Attribute        att;
   char            *name, *ancestor_name, *ptr, *types;
   char             msgBuffer[MaxMsgLength];
-  int              len;
+  int              len, option;
+  ThotBool         hidden;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
@@ -338,6 +339,23 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
         XmlParseError (errorParsing,
                        (unsigned char *)"Missing mandatory attribute types for use element",
                        TtaGetElementLineNumber(el));
+      child = TtaGetFirstChild (el);
+      if (child == NULL)
+        {
+          // insert almost a pseudo element
+          elType.ElTypeNum = Template_EL_TemplateObject;
+          child = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&child, el, doc);
+          hidden = ElementIsOptional (el);
+          if (hidden)
+            {
+              // check the current option value
+              option = GetAttributeIntValueFromNum (el, Template_ATTR_option);
+              hidden = (option == Template_ATTR_option_VAL_option_unset);
+            }
+          if (hidden)
+            TtaSetAccessRight (child, ReadOnly, doc);
+        }
       break;
 
     case Template_EL_bag:

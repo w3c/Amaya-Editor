@@ -22,11 +22,8 @@ extern void CreateInstance ( char *templatePath,
                              char *docname,
                              DocumentType docType,
                              int basedoc );
-extern Element Template_GetNewSimpleTypeInstance ( Document doc,
-                                                   Element parent,
-                                                   Declaration decl );
+extern Element Template_GetNewSimpleTypeInstance ( Document doc );
 extern Element Template_GetNewXmlElementInstance ( Document doc,
-                                                   Element parent,
                                                    Declaration decl );
 extern Element InsertWithNotify ( Element el,
                                   Element child,
@@ -88,11 +85,8 @@ extern void CreateInstance ( char *templatePath,
                                char *docname,
                                DocumentType docType,
                                int basedoc );
-extern Element Template_GetNewSimpleTypeInstance ( Document doc,
-                                                     Element parent,
-                                                     Declaration decl );
+extern Element Template_GetNewSimpleTypeInstance ( Document doc );
 extern Element Template_GetNewXmlElementInstance ( Document doc,
-                                                     Element parent,
                                                      Declaration decl );
 extern Element InsertWithNotify ( Element el,
                                     Element child,

@@ -1100,7 +1100,7 @@ ThotBool ElementIsOptional (Element el)
 
   elType = TtaGetElementType (el);
   attType.AttrSSchema = elType.ElSSchema;
-  attType.AttrTypeNum = Template_ATTR_types;
+  attType.AttrTypeNum = Template_ATTR_option;
   att = TtaGetAttribute (el, attType);
   return (att != NULL);
 }
@@ -1158,7 +1158,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
           result = QueryStringFromMenu(doc, listtypes, option);
           if (result)
             {
-              decl = Template_GetDeclaration(t, result);
+              decl = Template_GetDeclaration (t, result);
               if (decl || !strcmp (result, " "))
                 {
                   /* Prepare insertion.*/
@@ -1181,15 +1181,14 @@ ThotBool UseButtonClicked (NotifyElement *event)
                     newEl = Template_InsertUseChildren(doc, el, decl, parent, TRUE);
                   else
                     {
-                    newEl = Template_GetNewSimpleTypeInstance(doc, el, decl);
-                    newEl = InsertWithNotify (newEl, NULL, el, doc);
+                      newEl = Template_GetNewSimpleTypeInstance(doc);
+                      newEl = InsertWithNotify (newEl, NULL, el, doc);
                     }
                   for (child = TtaGetFirstChild(newEl); child; TtaNextSibling(&child))
-                      TtaRegisterElementCreate (child, doc);
+                    TtaRegisterElementCreate (child, doc);
 
                   /* xt:currentType attribute.*/
-                  SetAttributeStringValueWithUndo(el, Template_ATTR_currentType, result);
-
+                  SetAttributeStringValueWithUndo (el, Template_ATTR_currentType, result);
                   /* Finish insertion. */
                   TtaCloseUndoSequence(doc);
                   TtaSetDocumentModified (doc);
@@ -1257,8 +1256,8 @@ ThotBool UseSimpleButtonClicked (NotifyElement *event)
 ThotBool OptionButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-  Element         useEl, contentEl, next, parent;
-  ElementType     useType;
+  Element         el, child, next, parent;
+  ElementType     useType, childType;
   Document        doc;
   XTigerTemplate  t;
   View            view;
@@ -1273,53 +1272,67 @@ ThotBool OptionButtonClicked (NotifyElement *event)
     return FALSE; /* let Thot perform normal operation */
 
   doc = event->document;
-  useEl = event->element;
-  if (!useEl)
+  el = event->element;
+  if (!el)
     return FALSE; /* let Thot perform normal operation */
-  useType = TtaGetElementType (useEl);
+  useType = TtaGetElementType (el);
   if (useType.ElTypeNum != Template_EL_useEl &&
       useType.ElTypeNum != Template_EL_useSimple)
     return FALSE;
 
   TtaOpenUndoSequence(doc, NULL, NULL, 0, 0);
   TtaCancelSelection (doc);
-  contentEl = TtaGetFirstChild (useEl);
-  if (!contentEl)
+  child = TtaGetFirstChild (el);
+  childType = TtaGetElementType (child);
+  if (child == NULL ||
+      (childType.ElSSchema == useType.ElSSchema &&
+       childType.ElTypeNum == Template_EL_TemplateObject))
     /* the "use" element is empty. Instantiate it */
     {
+      if (child)
+        {
+          TtaRegisterElementDelete (child, doc);
+          TtaDeleteTree (child, doc);
+        }
       t = GetXTigerDocTemplate (doc);
       if (!t)
         return FALSE; // no template ?!?!
 
       // look for the enclosing target element
-      parent = GetParentLine (useEl, useType.ElSSchema);
-      InstantiateUse (t, useEl, doc, parent, TRUE);
+      parent = GetParentLine (el, useType.ElSSchema);
+      InstantiateUse (t, el, doc, parent, TRUE);
+      SetAttributeIntValue (el, Template_ATTR_option,
+                            Template_ATTR_option_VAL_option_set, TRUE);
     }
   else
     /* remove the content of the "use" element */
     {
       do
         {
-          next = contentEl;
+          next = child;
           TtaNextSibling (&next);
-          TtaRegisterElementDelete(contentEl, doc);
-          TtaDeleteTree (contentEl, doc);
-          contentEl = next;
+          TtaRegisterElementDelete(child, doc);
+          TtaDeleteTree (child, doc);
+          child = next;
         }
       while (next);
-      if (NeedAMenu (useEl, doc))
-        {
-          TtaChangeTypeOfElement (useEl, doc, Template_EL_useEl);
-          TtaRegisterElementTypeChange(useEl, Template_EL_useSimple, doc);
-        }
+      childType.ElSSchema = useType.ElSSchema;
+      childType.ElTypeNum = Template_EL_TemplateObject;
+      child = TtaNewElement (doc, childType);
+      TtaInsertFirstChild (&child, el, doc);
+      TtaRegisterElementCreate (child, doc);
+      TtaSetAccessRight (child, ReadOnly, doc);
+      SetAttributeIntValue (el, Template_ATTR_option,
+                            Template_ATTR_option_VAL_option_unset, TRUE);
     }
-  TtaSelectElement (doc, event->element);
+  child = TtaGetFirstChild (el);
+  TtaSelectElement (doc, child);
   TtaCloseUndoSequence(doc);
+  TtaSetDocumentModified (doc);
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
   return TRUE;
 }
-
 
 
 /*----------------------------------------------------------------------

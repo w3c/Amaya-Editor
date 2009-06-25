@@ -397,28 +397,38 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
                       // elements are now out of the parent line
                       savedInline = NULL;
                       parentLine = NULL;
+                      child = TtaGetFirstChild (el);
                     }
 
                   // generate the currentType attribute
                   otherType = TtaGetElementType (child);
-                  attType.AttrTypeNum = Template_ATTR_currentType;
-                  att = TtaGetAttribute (el, attType);
-                  if (att == NULL)
+                  if (otherType.ElSSchema == elType.ElSSchema &&
+                      otherType.ElTypeNum == Template_EL_TemplateObject)
                     {
-                      att = TtaNewAttribute (attType);
-                      TtaAttachAttribute (el, att, doc);
+                      // not already instantiated
+                      TtaDeleteTree (child, doc);
+                      child = NULL;
                     }
-                  if (otherType.ElTypeNum == 1)
-                    TtaSetAttributeText (att, "string", el, doc);
                   else
                     {
-                      name = (char *)GetXMLElementName (otherType, doc);
-                      if (name && strcmp (name,"???"))
-                        TtaSetAttributeText (att, name, el, doc);
+                      attType.AttrTypeNum = Template_ATTR_currentType;
+                      att = TtaGetAttribute (el, attType);
+                      if (att == NULL)
+                        {
+                          att = TtaNewAttribute (attType);
+                          TtaAttachAttribute (el, att, doc);
+                        }
+                      if (otherType.ElTypeNum == 1)
+                        TtaSetAttributeText (att, "string", el, doc);
+                      else
+                        {
+                          name = (char *)GetXMLElementName (otherType, doc);
+                          if (name && strcmp (name,"???"))
+                            TtaSetAttributeText (att, name, el, doc);
+                        }
                     }
                 }
             }
-          TtaFreeMemory (types);
           if (child == NULL)
             InstantiateUse (t, el, doc, parentLine, FALSE);
           else
@@ -426,6 +436,7 @@ static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
               Template_FixAccessRight (t, el, doc);
               TtaUpdateAccessRightInViews (doc, el);
             }
+          TtaFreeMemory (types);
           break;
         case Template_EL_attribute :
           if (!loading)
@@ -727,14 +738,10 @@ static void ProcessAttr (XTigerTemplate t, Element el, Document doc)
 
 /*----------------------------------------------------------------------
   Template_GetNewSimpleTypeInstance
-  Create an new instance of xt:use/SimpleType
-  The decl attribute must embed SimpleType declaration (no validation).
-  @param decl Declaration of new element
-  @param parent Future parent element
-  @param doc Document
-  @return The new element
+  Create an new instance of xt:use/SimpleType for the document doc.
+  Return the new element
   ----------------------------------------------------------------------*/
-Element Template_GetNewSimpleTypeInstance(Document doc, Element parent, Declaration decl)
+Element Template_GetNewSimpleTypeInstance(Document doc)
 {
   Element           newEl = NULL;
 #ifdef TEMPLATES
@@ -751,14 +758,11 @@ Element Template_GetNewSimpleTypeInstance(Document doc, Element parent, Declarat
 
 /*----------------------------------------------------------------------
   Template_GetNewXmlElementInstance
-  Create an new instance of xt:use/XmlElement
-  The decl attribute must embed XmlElement declaration (no validation).
-  @param decl Declaration of new element
-  @param parent Future parent element
-  @param doc Document
-  @return The new element
+  Create an new instance of xt:use/XmlElement for the document doc.
+  The parameter decl gives the type of the element of new element.
+  Return the new element
   ----------------------------------------------------------------------*/
-Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declaration decl)
+Element Template_GetNewXmlElementInstance(Document doc, Declaration decl)
 {
   Element           newEl = NULL;
 #ifdef TEMPLATES
@@ -766,9 +770,7 @@ Element Template_GetNewXmlElementInstance(Document doc, Element parent, Declarat
 
   GIType (decl->name, &elType, doc);
   if (elType.ElTypeNum != 0)
-  {
     newEl = TtaNewTree (doc, elType, "");
-  }
 #endif /* TEMPLATES */
   return newEl;
 }
@@ -872,11 +874,11 @@ Element Template_InsertUseChildren (Document doc, Element el, Declaration dec,
     switch (dec->nature)
     {
       case SimpleTypeNat:
-        newEl = Template_GetNewSimpleTypeInstance(doc, el, dec);
+        newEl = Template_GetNewSimpleTypeInstance(doc);
         newEl = InsertWithNotify (newEl, NULL, el, doc);
         break;
       case XmlElementNat:
-        newEl = Template_GetNewXmlElementInstance(doc, el, dec);
+        newEl = Template_GetNewXmlElementInstance(doc, dec);
         newEl = InsertWithNotify (newEl, NULL, el, doc);
         break;
       case ComponentNat:
@@ -1128,13 +1130,13 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
                         Element parentLine, ThotBool registerUndo)
 {
 #ifdef TEMPLATES
-  Element          cont = NULL;
+  Element          child = NULL;
   ElementType      elType;
   Declaration      dec;
-  int              size, nbitems, i;
+  int              size, nbitems, i, option;
   struct menuType  *items;
   char             *types;
-  ThotBool          oldStructureChecking;
+  ThotBool          oldStructureChecking, hidden;
 
   if (!t)
     return NULL;
@@ -1148,29 +1150,40 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
       return NULL;
     }
   if (!strcmp (types, "string") || !strcmp (types, "number"))
-    AddPromptIndicator (el, doc);
+    {
+      child = TtaGetFirstChild (el);
+      if (child == NULL)
+        {
+          child = Template_GetNewSimpleTypeInstance(doc);
+          child = InsertWithNotify (child, NULL, el, doc);
+        }
+      AddPromptIndicator (el, doc);
+    }
   else
     {
       giveItems (types, size, &items, &nbitems);
       // No structure checking
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (FALSE, doc);
-      
-      if (nbitems == 1)
+      hidden = ElementIsOptional (el);
+      if (hidden)
+        {
+          // check the current option value
+          option = GetAttributeIntValueFromNum (el, Template_ATTR_option);
+          hidden = (option == Template_ATTR_option_VAL_option_unset);
+        }
+      if (nbitems == 1 || !hidden)
         /* only one type in the "types" attribute */
         {
           dec = Template_GetDeclaration (t, items[0].label);
           if (dec)
             {
-              cont = Template_InsertUseChildren (doc, el, dec, parentLine, registerUndo);
-              if (cont)
+              child = Template_InsertUseChildren (doc, el, dec, parentLine, registerUndo);
+              if (child && elType.ElTypeNum != Template_EL_useSimple)
                 {
-                  if (elType.ElTypeNum != Template_EL_useSimple)
-                    {
-                      TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
-                      if (registerUndo)
-                        TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
-                    }
+                  TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
+                  if (registerUndo)
+                    TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
                 }
             }
         }
@@ -1178,8 +1191,8 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
         {
           // insert almost a pseudo element
           elType.ElTypeNum = Template_EL_TemplateObject;
-          cont = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&cont, el, doc);
+          child = TtaNewElement (doc, elType);
+          TtaInsertFirstChild (&child, el, doc);
         }
 
       for (i = 0; i < nbitems; i++)
@@ -1194,7 +1207,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   TtaFreeMemory (types);
   Template_FixAccessRight (t, el, doc);
   TtaUpdateAccessRightInViews (doc, el);
-  return cont;
+  return child;
 #else /* TEMPLATES */
   return NULL;
 #endif /* TEMPLATES */

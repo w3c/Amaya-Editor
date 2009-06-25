@@ -47,6 +47,7 @@ extern void DoReplicateUseElement ( XTigerTemplate t,
                                     Element repeatEl,
                                     char *name );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
+extern ThotBool ElementIsOptional ( Element el );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
@@ -149,6 +150,7 @@ extern void DoReplicateUseElement ( XTigerTemplate t,
                                       Element repeatEl,
                                       char *name );
 extern ThotBool RepeatButtonClicked ( NotifyElement *event );
+extern ThotBool ElementIsOptional ( Element el );
 extern ThotBool UseButtonClicked ( NotifyElement *event );
 extern ThotBool UseSimpleButtonClicked ( NotifyElement *event );
 extern ThotBool OptionButtonClicked ( NotifyElement *event );
