@@ -709,12 +709,15 @@ RULES
 		BEGIN
     CreateBefore(ElementName);
 #ifdef INSTANCE
+    if  NOT immediately within repeat AND NOT immediately within bag
+      CreateFirst(UseButton);
     if immediately within repeat
       CreateAfter(RepeatUse);
     if immediately within bag
       CreateAfter(BagUse);
-#endif
+#else
     CreateFirst(UseButton);
+#endif
     CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
