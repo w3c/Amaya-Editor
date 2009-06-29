@@ -3823,7 +3823,9 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
                             {
                               nchar += diff;
                               /* add skipped spaces */
-                              if (ibox1->BxIndChar > 0)
+                              if (ibox1->BxBuffer == NULL)
+                                c = 0;
+                              else if (ibox1->BxIndChar > 0)
                                 c = ibox1->BxBuffer->BuContent[ibox1->BxIndChar - 1];
                               else if (ibox1->BxBuffer->BuPrevious)
                                 c = ibox1->BxBuffer->BuPrevious->BuContent[ibox1->BxBuffer->BuPrevious->BuLength - 1];

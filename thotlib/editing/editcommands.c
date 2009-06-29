@@ -457,7 +457,7 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
           pBox = pSelBox->BxAbstractBox->AbBox;
           if (j == 0)
             {
-              if (pSelBox->BxBuffer->BuLength != 0 &&
+              if (pSelBox->BxBuffer && pSelBox->BxBuffer->BuLength != 0 &&
                   pSelBox->BxIndChar > pSelBox->BxBuffer->BuLength &&
                   pSelBox->BxNChars > 0)
                 {
