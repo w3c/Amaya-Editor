@@ -14382,7 +14382,9 @@ if test "$with_system_libwww" != "yes" ; then
   chmod +x libwww/libwww-config
   BUILDLIBWWW="libwww"
   LIBWWW_CONFIG="libwww/libwww-config"
-  LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -L$CURRENT_PATH/libwww/modules/md5/.libs $CURRENT_PATH/libwww/modules/expat/.libs/libexpat.a `$LIBWWW_CONFIG --libs`"
+  LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -lwwwxml -lwwwzip -lwwwinit -lwwwapp -lwwwhtml -lwwwtelnet -lwwwnews -lwwwhttp -lwwwmime -lwwwgopher -lwwwftp -lwwwfile -lwwwdir -lwwwcache -lwwwstream -lwwwmux -lwwwtrans -lwwwcore -lwwwutils -lwwwdav \
+  -L$CURRENT_PATH/libwww/modules/md5/.libs -lmd5 \
+  -L$CURRENT_PATH/libwww/modules/expat/.libs -lexpat"
   LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww"
 else
   LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
@@ -14463,7 +14465,6 @@ fi
 if test "$with_dav" = "yes" ; then
    DAV_OPTIONS=-DDAV
    DAVDIR="davlib"
-   LIBWWW_LDFLAGS="$LIBWWW_LDFLAGS -lwwwdav"
 else
    with_dav="no"
    DAV_OPTIONS=""
