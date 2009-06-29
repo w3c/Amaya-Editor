@@ -272,10 +272,12 @@ ThotBool NewXTigerTemplatePath (Document doc, const char *templatePath)
 void Template_Close (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if (t)
+  if (t && (t->uri || t->base_uri))
     {
-      HashMap_DestroyElement (Templates_Map, t->uri);
+	  if (Template_IsInstance (t))
+        HashMap_DestroyElement (Templates_Map, t->uri);
       t->uri = NULL; // the uri was freed
+	  t->base_uri = NULL; // the uri was freed
       Template_Clear (t);
     }
 #endif /* TEMPLATES */
@@ -1288,9 +1290,10 @@ void Template_Clear (XTigerTemplate t)
       TtaFreeMemory(t->uri);
       TtaFreeMemory(t->version);
       TtaFreeMemory(t->templateVersion);
-      t->uri = NULL; 
+      t->uri = NULL;
       t->version = NULL;
       t->templateVersion = NULL;
+	  t->ref = 0;
     }
 #endif /* TEMPLATES */
 }
@@ -1345,7 +1348,7 @@ void Template_Destroy (XTigerTemplate t)
       t->errorList = NULL;
     
       //Freeing the document
-      if (t->doc>0)
+      if (t->doc > 0)
         {
           TtaRemoveDocumentReference(t->doc);
           t->doc = 0;
@@ -1943,10 +1946,10 @@ void Template_AddReference (XTigerTemplate t)
 void Template_RemoveReference (XTigerTemplate t)
 {
 #ifdef TEMPLATES
-  if (t)
+  if (t && t->ref > 0)
   {
     t->ref--;
-    if (t->ref <= 0 && !Template_IsPredefined(t))
+    if (t->ref == 0 && !Template_IsPredefined(t))
       Template_Close (t);
   }  
 #endif /* TEMPLATES */
