@@ -22,7 +22,11 @@
 ** $Id$
 ** $Date$
 ** $Log$
-** Revision 1.17  2009-06-10 10:57:23  vatton
+** Revision 1.18  2009-06-29 08:28:58  vatton
+** Fix Windows warnings
+** Irene
+**
+** Revision 1.17  2009/06/10 10:57:23  vatton
 ** Change the management of Templates list
 ** + Implementation of a new WebDAV list of sites
 ** + Fix problems with lock/unlock status
@@ -250,7 +254,7 @@ char * DAVCopyFile (char * filename, int size)
 ThotBool DAVAllowResource (char *url)  
 {
   HTList     *entries = NULL;
-  char       *host, *rel, *next, *ptr;
+  char       *host, *rel, *next;
   ThotBool    match = FALSE;
 
   host = rel = next = NULL;
@@ -572,6 +576,7 @@ ThotBool DAVAddIfHeader (AHTReqContext *context, char *url)
             return FALSE;
         }
     }
+  return FALSE;
 }
 
 

@@ -22,7 +22,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.20  2009-06-10 10:57:23  vatton
+ ** Revision 1.21  2009-06-29 08:28:58  vatton
+ ** Fix Windows warnings
+ ** Irene
+ **
+ ** Revision 1.20  2009/06/10 10:57:23  vatton
  ** Change the management of Templates list
  ** + Implementation of a new WebDAV list of sites
  ** + Fix problems with lock/unlock status
@@ -753,7 +757,7 @@ BOOL createLockBody (char *owner, char *scope, char *body, int len)
                      "<D:owner><D:href>%s</D:href></D:owner>%s"
                      "</D:lockinfo>", nl,nl,scope,nl,nl,owner,nl);
         l = strlen (tmp);
-         if (body && (unsigned) len > l) 
+         if (body && len > l) 
           {
              /* copy the body value */
             strncpy (body, tmp, len);
