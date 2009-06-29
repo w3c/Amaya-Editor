@@ -37,7 +37,7 @@
             <object class="wxTextCtrl" name="wxID_HTTPEQUIV">
               <style>wxTE_PROCESS_ENTER</style>
             </object>
-            <option>0</option>
+            <option>1</option>
             <flag>wxALIGN_CENTRE_VERTICAL</flag>
             <border>2</border>
             <minsize>150,-1</minsize>
@@ -45,7 +45,7 @@
           <orient>wxHORIZONTAL</orient>
         </object>
         <option>1</option>
-        <flag>wxEXPAND</flag>
+        <flag>wxALL|wxEXPAND</flag>
         <border>2</border>
       </object>
       <object class="sizeritem">
