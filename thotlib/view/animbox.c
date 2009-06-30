@@ -324,7 +324,7 @@ static void UpdateClipping (PtrAbstractBox pAb, int w, int h)
 
 /*----------------------------------------------------------------------
   interpolate_double_value : Compute a the value corresponding to a time
-  using the "regle de trois" ("rule of tree")
+  using the "regle de trois" ("rule of three")
   ----------------------------------------------------------------------*/
 static double interpolate_double_value (float from, float to, 
                                         AnimTime current_time,
@@ -747,6 +747,43 @@ static void animate_box_animate (PtrElement El,
 }
 
 /*----------------------------------------------------------------------
+  skip white spaces
+  ----------------------------------------------------------------------*/
+static char *skipWsp (char *ptr)
+{
+  while (*ptr == SPACE || *ptr == EOL || *ptr == TAB || *ptr == __CR__)
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+  skip white spaces or a comma preceded and/or followed by white spaces
+  ----------------------------------------------------------------------*/
+static char *skipCommaWsp (char *ptr)
+{
+  while (*ptr == SPACE || *ptr == EOL || *ptr == TAB || *ptr == __CR__)
+    ptr++;
+  if (*ptr == ',')
+    {
+      ptr++;
+      while (*ptr == SPACE || *ptr == EOL || *ptr == TAB || *ptr == __CR__)
+	ptr++;
+    }
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+  skip a number
+  ----------------------------------------------------------------------*/
+static char *skipNumber (char *ptr)
+{
+  while (*ptr != SPACE && *ptr != EOL && *ptr != TAB && *ptr != __CR__ &&
+	 *ptr != ',' && *ptr != EOS)
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
   animate_box_transformation : animate the scale, translate, skew, rotate...
   ----------------------------------------------------------------------*/
 static void animate_box_transformation (PtrElement El,
@@ -758,7 +795,8 @@ static void animate_box_transformation (PtrElement El,
   float            result;
   long int         trans_type;
   PtrTransform     Trans = NULL;
-  
+  char*            ptr;
+
   if (animated->AttrName == NULL)
     return;
   
@@ -766,23 +804,29 @@ static void animate_box_transformation (PtrElement El,
   /*translate, scale, rotate_, skewX, skewY*/
   switch (trans_type)
     {
-    case 1 : /*TRANSLATE*/
+    case 1 : /* translate */
       FrameToView (Animated_Frame, &doc, &view);
-      if (strstr ((char *) animated->to, ","))
-        {
-          tx = T_atof ((char *) animated->to);
-          ty =  T_atof (strstr ((char *) animated->to, ",") + 1);
-        }
+      tx = ty = fx = fy = 0; /* default values */
+      /* parse the "to" attribute */
+      ptr = (char *) animated->to;
+      ptr = skipWsp (ptr);
+      tx = T_atof (ptr);
+      ptr = skipNumber (ptr);
+      ptr = skipCommaWsp (ptr);
+      if (*ptr == EOS)
+	ty = tx;
       else
-        tx = ty =  T_atof ((char *) animated->to);
-
-      if (strstr ((char *) animated->from, ","))
-        {
-          fx = T_atof ((char *) animated->from);
-          fy = T_atof (strstr ((char *) animated->from, ",") + 1);
-        }
+	ty = T_atof (ptr);
+      /* parse the "from" attribute */
+      ptr = (char *) animated->from;
+      ptr = skipWsp (ptr);
+      fx = T_atof (ptr);
+      ptr = skipNumber (ptr);
+      ptr = skipCommaWsp (ptr);
+      if (*ptr == EOS)
+	fy = fx;
       else
-        fx = fy =  T_atof ((char *) animated->from);
+	fy = T_atof (ptr);
 
       tx = (float) interpolate_double_value (fx, 
                                              tx,
@@ -792,11 +836,9 @@ static void animate_box_transformation (PtrElement El,
                                              ty,
                                              current_time,
                                              animated->duration);
-
       if (El->ElTransform)
         Trans = GetTransformation (El->ElTransform, 
                                    PtElTranslate); 
-      
       if (Trans == NULL)
         {
           Trans = (PtrTransform)TtaNewTransformTranslate (tx, ty);
@@ -806,24 +848,29 @@ static void animate_box_transformation (PtrElement El,
       Trans->YScale = ty;
       break;
 
-    case 2 : /*SCALE*/
+    case 2 : /* scale */
       FrameToView (Animated_Frame, &doc, &view);
-
-      if (strstr ((char *) animated->to, ","))
-        {
-          tx = T_atof ((char *) animated->to);
-          ty =  T_atof (strstr ((char *) animated->to, ",") + 1);
-        }
+      tx = ty = fx = fy = 0; /* default values */
+      /* parse the "to" attribute */
+      ptr = (char *) animated->to;
+      ptr = skipWsp (ptr);
+      tx = T_atof (ptr);
+      ptr = skipNumber (ptr);
+      ptr = skipCommaWsp (ptr);
+      if (*ptr == EOS)
+	ty = tx;
       else
-        tx = ty =  T_atof ((char *) animated->to);
-
-      if (strstr ((char *) animated->from, ","))
-        {
-          fx = T_atof ((char *) animated->from);
-          fy = T_atof (strstr ((char *) animated->from, ",") + 1);
-        }
+	ty = T_atof (ptr);
+      /* parse the "from" attribute */
+      ptr = (char *) animated->from;
+      ptr = skipWsp (ptr);
+      fx = T_atof (ptr);
+      ptr = skipNumber (ptr);
+      ptr = skipCommaWsp (ptr);
+      if (*ptr == EOS)
+	fy = fx;
       else
-        fx = fy =  T_atof ((char *) animated->from);
+	fy = T_atof (ptr);
 
       tx = (float) interpolate_double_value (fx, 
                                              tx,
@@ -833,50 +880,48 @@ static void animate_box_transformation (PtrElement El,
                                              ty,
                                              current_time,
                                              animated->duration);
-      
       if (El->ElTransform)
         Trans = GetTransformation (El->ElTransform, 
                                    PtElScale); 
-      
       if (Trans == NULL)
         {
           Trans = (PtrTransform)TtaNewTransformScale (tx, ty);
           TtaReplaceTransform ((Element) El, Trans, doc); 
         }
-
-	    Trans->XScale = tx;
-	    Trans->YScale = ty;
+      Trans->XScale = tx;
+      Trans->YScale = ty;
       break;
 
-    case 3 :/*Rotate*/
+    case 3 : /* Rotate */
       FrameToView (Animated_Frame, &doc, &view);
-      tx = ty = fx = fy = 0;
-      if (strstr ((char *) animated->to, ","))
-        {
-          rott = T_atof ((char *) animated->to);
-          if (strstr (strstr ((char *) animated->to, ",") + 1, ","))
-            {
-              tx =  T_atof (strstr ((char *) animated->to, ",") + 1);
-              ty =  T_atof (strstr (strstr ((char *) animated->to, ",") + 1, ",") + 1);
-            }
-          else
-            tx = ty = T_atof (strstr ((char *) animated->to, ",") + 1);
-        }
-      else
-        rott =  T_atof ((char *) animated->to);
-      if (strstr ((char *) animated->from, ","))
-        {
-          rotf = T_atof ((char *) animated->from);
-          if (strstr (strstr ((char *) animated->from, ",") + 1, ","))
-            {
-              fx =  T_atof (strstr ((char *) animated->from, ",") + 1);
-              fy =  T_atof (strstr (strstr ((char *) animated->from, ",") + 1, ",") + 1);
-            }
-          else
-            fx = fy = T_atof (strstr ((char *) animated->from, ",") + 1);
-        }
-      else
-        rotf =  T_atof ((char *) animated->from);
+      rott = tx = ty = rotf = fx = fy = 0; /* default values */
+      /* parse the "to" attribute */
+      ptr = (char *) animated->to;
+      ptr = skipWsp (ptr);
+      rott = T_atof (ptr); /* angle */
+      ptr = skipNumber (ptr);
+      ptr = skipCommaWsp (ptr);
+      if (*ptr != EOS)
+	{
+	  tx = T_atof (ptr);  /* x coord. of center of rotation */
+	  ptr = skipNumber (ptr);
+	  ptr = skipCommaWsp (ptr);
+	  ty = T_atof (ptr); /* y coord. of center of rotation */
+	}
+      /* parse the "from" attribute */
+      ptr = (char *) animated->from;
+      ptr = skipWsp (ptr);
+      rotf = T_atof (ptr); /* angle */
+      ptr = skipNumber (ptr);
+      ptr = skipCommaWsp (ptr);
+      if (*ptr != EOS)
+	{
+	  fx = T_atof (ptr);  /* x coord. of center of rotation */
+	  ptr = skipNumber (ptr);
+	  ptr = skipCommaWsp (ptr);
+	  fy = T_atof (ptr);  /* y coord. of center of rotation */
+	}
+
       if (tx && fx)
         tx = (float) interpolate_double_value (fx, 
                                                tx,
@@ -899,16 +944,23 @@ static void animate_box_transformation (PtrElement El,
           Trans = (PtrTransform)TtaNewTransformRotate (rott, tx, ty);
           TtaReplaceTransform ((Element) El, Trans, doc); 
         }
-
-	    Trans->TrAngle = rott;
-	    Trans->XRotate = tx;
-	    Trans->YRotate = ty;
+      Trans->TrAngle = rott;
+      Trans->XRotate = tx;
+      Trans->YRotate = ty;
       break;
       
-    case 4 :/*skewX*/
+    case 4 : /* skewX */
       FrameToView (Animated_Frame, &doc, &view);
-      result = (float)interpolate_double_value (T_atof ((char *) animated->from), 
-                                                T_atof ((char *) animated->to),
+      /* parse the "to" attribute */
+      ptr = (char *) animated->to;
+      ptr = skipWsp (ptr);
+      tx = T_atof (ptr);
+      /* parse the "from" attribute */
+      ptr = (char *) animated->from;
+      ptr = skipWsp (ptr);
+      fx = T_atof (ptr);
+      result = (float)interpolate_double_value (fx, 
+                                                tx,
                                                 current_time,
                                                 animated->duration);      
       if (El->ElTransform)
@@ -922,10 +974,18 @@ static void animate_box_transformation (PtrElement El,
       Trans->TrFactor = result;
       break;
      
-    case 5 :/*SKEWY*/
+    case 5 : /* skewY */
       FrameToView (Animated_Frame, &doc, &view);
-      result = (float)interpolate_double_value (T_atof ((char *) animated->from), 
-                                                T_atof ((char *) animated->to),
+      /* parse the "to" attribute */
+      ptr = (char *) animated->to;
+      ptr = skipWsp (ptr);
+      ty = T_atof (ptr);
+      /* parse the "from" attribute */
+      ptr = (char *) animated->from;
+      ptr = skipWsp (ptr);
+      fy = T_atof (ptr);
+      result = (float)interpolate_double_value (fy,
+                                                ty,
                                                 current_time,
                                                 animated->duration);      
       if (El->ElTransform)

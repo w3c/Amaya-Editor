@@ -60,7 +60,7 @@ static int get_int_attribute_from_el (Element el, int Attribut_Type)
 #endif /* _SVG */
 }
 /*----------------------------------------------------------------------
-  get_int_attribute_from_el: Get a int value from an xml attribute
+  get_attribute_from_el: Get an xml attribute
   ----------------------------------------------------------------------*/
 static Attribute get_attribute_from_el (Element el, int Attribut_Type)
 {
