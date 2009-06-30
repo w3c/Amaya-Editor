@@ -116,7 +116,7 @@ ThotBool NeedAMenu (Element el, Document doc)
   ThotBool         res = FALSE;
   ForwardIterator  iter;
 
-  if(!TtaGetDocumentAccessMode(doc))
+  if (!TtaGetDocumentAccessMode(doc))
     return FALSE;
 
   // look for the list of types
@@ -136,7 +136,10 @@ ThotBool NeedAMenu (Element el, Document doc)
     // there are several types
     res = TRUE;
   else if (!strcmp (types, "string") || !strcmp (types, "number"))
-    return FALSE;
+    {
+      TtaFreeMemory (types);
+      return FALSE;
+    }
   else
     {
       t = GetXTigerDocTemplate (doc);

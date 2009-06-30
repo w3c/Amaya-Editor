@@ -9,16 +9,14 @@
 
 
 #define Template_Current_Version "0.9"
-
-
- #define templNone        0
- #define templTemplate    1  //#define template
- #define templLibraryFlag 2   // Library (implies#define template).
- #define templLibrary     3
- #define templInstance    4  // Instance of#define template 
- #define templloaded      8  //#define template is really loaded.
- #define templInternal    16  // Internal only, no edited document.
- #define templPredefined  32   // predefined library (base or html).
+#define templNone        0
+#define templTemplate    1  //#define template
+#define templLibraryFlag 2   // Library (implies#define template).
+#define templLibrary     3
+#define templInstance    4  // Instance of#define template 
+#define templloaded      8  //#define template is really loaded.
+#define templInternal    16  // Internal only, no edited document.
+#define templPredefined  32   // predefined library (base or html).
 
 struct _XTigerTemplate;
 typedef struct _XTigerTemplate *XTigerTemplate;
@@ -31,13 +29,11 @@ struct _XTigerTemplate
   char*         templateVersion;// Version of template
 
   HashMap       libraries;      // Imported libraries (StringHashMap<XTigerTemplate>)
-  
   SearchSet     simpleTypes;    // All simple types declared in the document (SearchSet<Declaration, char*>)
   SearchSet     elements;       // All element types declared in the document (SearchSet<Declaration, char*>)
   SearchSet     components;     // All component types declared in the document (SearchSet<Declaration, char*>)
   SearchSet     unions;         // All union types declared in the document (SearchSet<Declaration, char*>)
   SearchSet     unknowns;       // All unknown declarations, used in template parsing (SearchSet<Declaration, char*>)
-
   Document      doc;            // Use to store component structures
   int           ref;            // Reference counting
   SList         errorList;      // Error string list (DLList<char*>)

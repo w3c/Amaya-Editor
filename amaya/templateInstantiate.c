@@ -173,13 +173,13 @@ Element Template_InsertBagChild (Document doc, Element sel, Element bag,
           if (use)
             {
               Template_InsertUseChildren (doc, use, decl, NULL, TRUE);
-              SetAttributeStringValueWithUndo (use, Template_ATTR_types, decl->name);
-              SetAttributeStringValueWithUndo (use, Template_ATTR_title, decl->name);
-              SetAttributeStringValueWithUndo (use, Template_ATTR_currentType, decl->name);
               if (sel != bag)
                 TtaInsertSibling (use, sel, before, doc);
               else
                  TtaInsertFirstChild (&use, bag, doc);
+              SetAttributeStringValueWithUndo (use, Template_ATTR_types, decl->name);
+              SetAttributeStringValueWithUndo (use, Template_ATTR_title, decl->name);
+              SetAttributeStringValueWithUndo (use, Template_ATTR_currentType, decl->name);
               TtaRegisterElementCreate (use, doc);
               
               sel = use;
@@ -1177,15 +1177,13 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
         {
           dec = Template_GetDeclaration (t, items[0].label);
           if (dec)
-            {
-              child = Template_InsertUseChildren (doc, el, dec, parentLine, registerUndo);
-              if (child && elType.ElTypeNum != Template_EL_useSimple)
-                {
-                  TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
-                  if (registerUndo)
-                    TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
-                }
-            }
+            child = Template_InsertUseChildren (doc, el, dec, parentLine, registerUndo);
+/*               if (child && elType.ElTypeNum != Template_EL_useSimple) */
+/*                 { */
+/*                   TtaChangeTypeOfElement (el, doc, Template_EL_useSimple); */
+/*                   if (registerUndo) */
+/*                     TtaRegisterElementTypeChange (el, Template_EL_useEl, doc); */
+/*                 } */
         }
       else
         {
