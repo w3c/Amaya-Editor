@@ -1121,7 +1121,7 @@ void SelectCheckbox (Document doc, Element el)
 void SelectOneRadio (Document doc, Element el)
 {
   ElementType         elType;
-  Element             elForm;
+  Element             elForm, elFound;
   Attribute           attr, attrN;
   AttributeType       attrType, attrTypeN;
   ThotBool            modified = FALSE;
@@ -1172,17 +1172,17 @@ void SelectOneRadio (Document doc, Element el)
               elType = TtaGetElementType (elForm);
             }
 
-          if (elForm != NULL)
+          if (elForm)
             {
               /* search the first radio input */
               elType.ElTypeNum = HTML_EL_Radio_Input;
-              elForm = TtaSearchTypedElement (elType, SearchInTree, elForm);
-              while (elForm != NULL)
+              elFound = TtaSearchTypedElement (elType, SearchInTree, elForm);
+              while (elFound)
                 {
-                  if (elForm != el)
+                  if (elFound != el)
                     {
                       /* compare its NAME attribute */
-                      attrN = TtaGetAttribute (elForm, attrTypeN);
+                      attrN = TtaGetAttribute (elFound, attrTypeN);
                       if (attrN != NULL)
                         {
                           length = TtaGetTextAttributeLength (attrN) + 1;
@@ -1191,14 +1191,14 @@ void SelectOneRadio (Document doc, Element el)
                           if (!strcmp (name, buffer))
                             {
                               /* same NAME: set the checked attribute to NO */
-                              attr = TtaGetAttribute (elForm, attrType);
+                              attr = TtaGetAttribute (elFound, attrType);
                               if (attr != NULL
                                   && TtaGetAttributeValue (attr) == HTML_ATTR_Checked_VAL_Yes_)
                                 {
-                                  TtaRemoveAttribute (elForm, attr, doc);
+                                  TtaRemoveAttribute (elFound, attr, doc);
                                   attr = TtaNewAttribute (attrType);
-                                  TtaAttachAttribute (elForm, attr, doc);
-                                  TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, elForm, doc);
+                                  TtaAttachAttribute (elFound, attr, doc);
+                                  TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, elFound, doc);
                                 }
                             }
                           TtaFreeMemory (buffer);
@@ -1206,7 +1206,7 @@ void SelectOneRadio (Document doc, Element el)
                         }
                     }
                   /* search the next radio input */
-                  elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
+                  elFound = TtaSearchTypedElementInTree (elType, SearchForward, elForm, elFound);
                 }
             }
           if (!modified)
