@@ -983,7 +983,7 @@ BOXES
         END;
 
  Radio_gif: BEGIN
-        Content: Picture 'radio.gif';
+        Content: Picture 'radio.png';
         HorizPos: Left = Previous . Right;
         VertPos: HRef = Previous . HRef;        
         IN Structure_view
@@ -995,7 +995,7 @@ BOXES
         END;
 
  RadioS_gif: BEGIN
-        Content: Picture 'radio-s.gif';
+        Content: Picture 'radio-s.png';
         HorizPos: Left = Previous . Right;
         VertPos: HRef = Previous . HRef;
         IN Structure_view
