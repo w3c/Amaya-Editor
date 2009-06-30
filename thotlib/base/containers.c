@@ -733,12 +733,6 @@ DLList DLList_GetRefListFromIterator(ForwardIterator iter, Container_CompareFunc
 }
 
 
-
-
-
-
-
-
 /*------------------------------------------------------------------------------
  * Simple set
  *----------------------------------------------------------------------------*/
@@ -813,7 +807,10 @@ SSetNode SSet_Insert(SSet set, ContainerElement elem)
           while(node==NULL)
             {
               if(set->compare(before->elem, elem)==0)
-                return before;
+                {
+                  // should free elem
+                  return before;
+                }
               next = before->next;
               if(set->compare(elem, next->elem)<0)
                 {

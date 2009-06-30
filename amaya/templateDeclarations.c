@@ -277,7 +277,8 @@ void Template_Close (XTigerTemplate t)
 	  if (Template_IsInstance (t))
         HashMap_DestroyElement (Templates_Map, t->uri);
       t->uri = NULL; // the uri was freed
-	  t->base_uri = NULL; // the uri was freed
+      TtaFreeMemory (t->base_uri);
+      t->base_uri = NULL; // the uri was freed
       Template_Clear (t);
     }
 #endif /* TEMPLATES */
@@ -610,6 +611,7 @@ void Declaration_CalcBlockLevel (XTigerTemplate t, Declaration dec)
                       // check the blocklevel of the component
                       name = GetUsedTypeName (elem);
                       sub_dcl = Template_GetDeclaration (t, name);
+                      TtaFreeMemory(name);
                       if (sub_dcl && sub_dcl->blockLevel == 0)
                         Declaration_CalcBlockLevel (t, sub_dcl);
                       if (sub_dcl)
@@ -618,7 +620,6 @@ void Declaration_CalcBlockLevel (XTigerTemplate t, Declaration dec)
                           if (dec->blockLevel == 2)
                             break;
                         }
-                      TtaFreeMemory(name);
                     }
                   else if (!IsCharacterLevelType (elType))
                     {
@@ -1405,6 +1406,7 @@ static void Template_FillDeclarationContent(XTigerTemplate t, Declaration decl)
               SearchSet_Insert(decl->unionType.include, Template_GetDeclaration(decl->usedIn, (char*)((Declaration)node)->name));
             }
           TtaFreeMemory(iter);
+          StringSet_Destroy(set);
           break;
         default:
           break;

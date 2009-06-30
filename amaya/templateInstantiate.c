@@ -661,6 +661,7 @@ void CreateInstance (char *templatePath, char *instancePath,
 
   // Revert template changes
   TtaSetDocumentCharset (doc, ocharset, FALSE);
+  TtaFreeMemory (DocumentMeta[doc]->charset);
   DocumentMeta[doc]->charset = ocharsetname;
   // Now parse the instance
   // The xtiger PI will be added and components will be removed

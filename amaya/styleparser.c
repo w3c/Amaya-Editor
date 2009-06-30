@@ -4911,9 +4911,9 @@ static char *ParseSVGStopColor (Element element, PSchema tsch,
   The color used will be approximed from the current color      
   table                                                         
   ----------------------------------------------------------------------*/
-static char *ParseSVGMarkerValue (char *cssRule, PresentationValue *val, char *url)
+static char *ParseSVGMarkerValue (char *cssRule, PresentationValue *val, char **url)
 {
-  url = NULL;
+  *url = NULL;
   val->typed_data.unit = UNIT_INVALID;
   val->typed_data.real = FALSE;
   if (!strncasecmp (cssRule, "none", 4))
@@ -4930,9 +4930,9 @@ static char *ParseSVGMarkerValue (char *cssRule, PresentationValue *val, char *u
   else if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
-      cssRule = ParseCSSUrl (cssRule, &url);
+      cssRule = ParseCSSUrl (cssRule, url);
       val->typed_data.unit = VALUE_URL;
-      val->pointer = url;
+      val->pointer = *url;
     }
   return cssRule;
 }
@@ -4948,7 +4948,7 @@ static char *ParseSVGMarker (Element element, PSchema tsch,
   char                  *url;
 
   url = NULL;
-  cssRule = ParseSVGMarkerValue (cssRule, &marker, url);
+  cssRule = ParseSVGMarkerValue (cssRule, &marker, &url);
   if (marker.typed_data.unit != UNIT_INVALID && DoApply)
     /* install the new presentation. */
     TtaSetStylePresentation (PRMarker, element, tsch, context, marker);
@@ -4968,7 +4968,7 @@ static char *ParseSVGMarkerEnd (Element element, PSchema tsch,
   char                  *url;
 
   url = NULL;
-  cssRule = ParseSVGMarkerValue (cssRule, &marker, url);
+  cssRule = ParseSVGMarkerValue (cssRule, &marker, &url);
   if (marker.typed_data.unit != UNIT_INVALID && DoApply)
     /* install the new presentation. */
     TtaSetStylePresentation (PRMarkerEnd, element, tsch, context, marker);
@@ -4988,7 +4988,7 @@ static char *ParseSVGMarkerMid (Element element, PSchema tsch,
   char                  *url;
 
   url = NULL;
-  cssRule = ParseSVGMarkerValue (cssRule, &marker, url);
+  cssRule = ParseSVGMarkerValue (cssRule, &marker, &url);
   if (marker.typed_data.unit != UNIT_INVALID && DoApply)
     /* install the new presentation. */
     TtaSetStylePresentation (PRMarkerMid, element, tsch, context, marker);
@@ -5008,7 +5008,7 @@ static char *ParseSVGMarkerStart (Element element, PSchema tsch,
   char                  *url;
 
   url = NULL;
-  cssRule = ParseSVGMarkerValue (cssRule, &marker, url);
+  cssRule = ParseSVGMarkerValue (cssRule, &marker, &url);
   if (marker.typed_data.unit != UNIT_INVALID && DoApply)
     /* install the new presentation. */
     TtaSetStylePresentation (PRMarkerStart, element, tsch, context, marker);
