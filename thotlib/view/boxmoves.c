@@ -1794,7 +1794,8 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                            pParent->AbBox->BxType == BoGhost ||
                            pParent->AbBox->BxType == BoFloatGhost)
                     {
-                      if (Propagate == ToAll)
+                      if (Propagate == ToAll &&
+                          !IsParentBox (pParent->AbBox, pRefBox))
                         EncloseInLine (pBox, frame, pParent);
                     }
                   else if (!IsParentBox (pParent->AbBox, pRefBox)
