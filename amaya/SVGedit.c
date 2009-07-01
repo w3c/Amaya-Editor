@@ -2055,6 +2055,8 @@ static ThotBool AttachMarker (Document doc, Element el, int attrnum,
   sprintf(buffer, "url(#%s)", marker_id);
   TtaSetAttributeText (attr, buffer, el, doc);
   TtaRegisterAttributeCreate (attr, el, doc);
+  // generate a copy of the marker
+  ParseCSSequivAttribute (attrnum, attr, el, doc, FALSE);
   TtaFreeMemory(buffer);
   return TRUE;
 }
@@ -2087,7 +2089,7 @@ void CreateGraphicElement (Document doc, View view, int entry)
   /* Move this elsewhere when markers are used more */
   const char       *Arrow1Mend_id = "Arrow1Mend";
   const char       *Arrow1Mstart_id = "Arrow1Mstart";
-  ThotBool	        found, newSVG = FALSE, replaceGraph = FALSE;
+  ThotBool	    found, newSVG = FALSE, replaceGraph = FALSE;
   ThotBool          created = FALSE;
   ThotBool          oldStructureChecking;
   ThotBool          isFormattedView, closed;   
