@@ -2432,6 +2432,12 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
         pBox->BxShrink = pParentAb->AbBox->BxShrink;
 
       /* Check validity of rules */
+      if (horizRef && pAb->AbWidth.DimIsPosition &&
+          pAb->AbWidth.DimPosition.PosAbRef == NULL)
+        pAb->AbWidth.DimIsPosition = FALSE;
+      if (!horizRef && pAb->AbHeight.DimIsPosition &&
+          pAb->AbHeight.DimPosition.PosAbRef == NULL)
+        pAb->AbHeight.DimIsPosition = FALSE;
       if (horizRef && pAb->AbWidth.DimIsPosition)
         {
           if (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
