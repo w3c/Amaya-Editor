@@ -97,11 +97,6 @@ static ThotBool           NewInsert;
 #include "viewapi_f.h"
 #include "views_f.h"
 #include "windowdisplay_f.h"
-
-#ifdef _WINGUI 
-#include "wininclude.h"
-#endif /* _WINGUI */
-
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /*_GL*/
@@ -4212,13 +4207,6 @@ void TtcCutSelection (Document doc, View view)
   DisplayMode         dispMode;
   int                 frame;
   ThotBool            lock = TRUE;
-#ifdef _WINGUI
-  HANDLE              hMem   = 0;
-  LPTSTR              lpData = 0;
-  char               *ptrData;
-  LPTSTR              pBuff;
-  int                 ndx;
-#endif /* _WINGUI */
 
   if (doc == 0)
     return;
@@ -4251,26 +4239,6 @@ void TtcCutSelection (Document doc, View view)
 
   // set a structured copy
   DoCopyToClipboard (doc, view, TRUE, FALSE);
-#ifdef _WINGUI
-  if (!OpenClipboard (FrRef[frame]))
-    WinErrorBox (FrRef [frame], "TtcCutSelection (1)");
-  else
-    {
-      EmptyClipboard ();
-      hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-      lpData = (LPTSTR) GlobalLock (hMem);
-      ptrData = lpData;
-      pBuff  = (LPTSTR) Xbuffer;
-      for (ndx = 0; ndx < ClipboardLength; ndx++)
-        *ptrData++ = *pBuff++;
-      *ptrData = 0;
-       
-      GlobalUnlock (hMem);
-      SetClipboardData (CF_TEXT, hMem);
-      /* add Unicode clipboard here (CF_UNICODETEXT) */
-      CloseClipboard ();
-    }
-#endif /* _WINGUI */
   ContentEditing (TEXT_CUT);
 
   if (!lock)
@@ -4570,12 +4538,6 @@ void TtcInsert (Document doc, View view)
 void TtcCopySelection (Document doc, View view)
 {
   int                frame;
-#ifdef _WINGUI
-  HANDLE             hMem   = 0;
-  char              *lpData = NULL;
-  char              *pBuff;
-  HWND               activeWnd;
-#endif /* _WINGUI */
 
   if (doc == 0)
     return;
@@ -4590,31 +4552,7 @@ void TtcCopySelection (Document doc, View view)
     }
   if (SelPosition && FirstSelectedElement->ElTerminal)
     return;
-#ifdef _WINGUI
-  activeWnd = GetFocus ();
-  if (activeWnd == FrRef [frame])
-    {
-      DoCopyToClipboard (doc, view, TRUE, FALSE);
-      if (OpenClipboard (FrRef[frame]))
-        {
-          EmptyClipboard ();
-          /* if the clipboard buffer is empty, don't copy anything into it */
-          if (Xbuffer)
-            {
-              hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-              lpData = GlobalLock (hMem);
-              pBuff  = Xbuffer;
-              lstrcpy (lpData, Xbuffer);
-              GlobalUnlock (hMem);
-              if (!SetClipboardData (CF_TEXT, hMem))
-                WinErrorBox (NULL, "");
-              CloseClipboard ();
-            }
-        } 
-    }
-#else /* _WINGUI */
   DoCopyToClipboard (doc, view, TRUE, FALSE);
-#endif /* _WINGUI */
   ContentEditing (TEXT_COPY);
 }
 
@@ -4625,11 +4563,6 @@ void TtcCopySelection (Document doc, View view)
 void TtcPaste (Document doc, View view)
 {
   DisplayMode         dispMode;
-#ifdef _WINGUI
-  HANDLE              hMem;
-  char               *lpData;
-  int                 lpDatalength;
-#endif /* _WINGUI */
   PtrDocument         pDoc;
   PtrElement          firstEl, lastEl;
   int                 firstChar, lastChar;
@@ -4690,38 +4623,6 @@ void TtcPaste (Document doc, View view)
                strcmp (firstEl->ElStructSchema->SsName, "SVG")))
             /* delete the current selection */
             ContentEditing (TEXT_SUP);
-#ifdef _WINGUI
-          OpenClipboard (FrRef [frame]);
-          /* check if the clipboard comes from Amaya */
-          if (hMem = GetClipboardData (CF_UNICODETEXT))
-            {
-              wchar_t* lpData = (wchar_t*) GlobalLock (hMem);
-              char *dest;
-              lpDatalength = wcslen (lpData);
-              /* dest = TtaConvertWCToByte (lpData, UTF_8); */
-              dest = TtaConvertWCToByte (lpData, TtaGetDefaultCharset ());
-              if (Xbuffer == NULL || dest == NULL || strncmp (Xbuffer, dest, 100))
-                PasteXClipboardW (lpData, lpDatalength);
-              else 
-                ContentEditing (TEXT_PASTE);
-              TtaFreeMemory (dest);
-              GlobalUnlock (hMem);
-            }
-          else if (hMem = GetClipboardData (CF_TEXT))
-            {
-              lpData = GlobalLock (hMem);
-              lpDatalength = strlen (lpData);	      
-              if (Xbuffer == NULL || strcmp (Xbuffer, lpData)) /****/
-                PasteXClipboard (lpData, lpDatalength, TtaGetDefaultCharset ());
-              else 
-                ContentEditing (TEXT_PASTE);
-              GlobalUnlock (hMem);
-            }
-          else 
-            ContentEditing (TEXT_PASTE);
-          CloseClipboard ();
-#endif /* _WINGUI */
-
 #ifdef _WX
           wxTheClipboard->UsePrimarySelection(false);
           if (wxTheClipboard->Open())
@@ -4734,7 +4635,7 @@ void TtcPaste (Document doc, View view)
 	      
                       int len = strlen((const char *)text.mb_str(wxConvUTF8));
                       int i = ClipboardLength;
-                      if (len==0)
+                      if (len == 0)
                       {
                          ContentEditing (TEXT_PASTE);
                       }
