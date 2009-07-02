@@ -132,7 +132,7 @@ AmayaStatusBar::AmayaStatusBar( wxWindow * p_parent )
   m_insertMode = new AmayaStatusText(this, wxID_ANY, wxT(""));
 
   // setup statusbar attributes
-  widths[Field_InsertMode] = 70;//m_insertMode->GetSize().GetWidth()
+  widths[Field_InsertMode] = 60;//m_insertMode->GetSize().GetWidth()
   widths[Field_LogError] = m_pLogErrorButton->GetSize().GetWidth() + LOG_SHIFT;
   widths[Field_Lock] = m_pLockButton->GetSize().GetWidth() + LOG_SHIFT;
   SetFieldsCount(Field_Max);
@@ -181,23 +181,22 @@ void AmayaStatusBar::OnLockButton( wxCommandEvent& event )
 void AmayaStatusBar::OnSize(wxSizeEvent& event)
 {
   wxRect rect;
-  wxSize size, fsize;
 
-  GetFieldRect(Field_LogError, rect);
-  size.x = 0;
-  size.y = 0;
   if (m_pLogErrorButton)
   {
-    //fsize = m_pLogErrorButton->GetSize();
-    size.x += widths[Field_LogError];
-    m_pLogErrorButton->Move(rect.x + rect.width - size.x, rect.y-1);
+    GetFieldRect(Field_LogError, rect);
+    //size.x += widths[Field_LogError];
+	m_pLogErrorButton->Move(rect.x + LOG_SHIFT, rect.y-1);
+    //m_pLogErrorButton->Move(rect.x + rect.width - size.x, rect.y-1);
   }
   if (m_pLockButton)
   {
-    //fsize = m_pLockButton->GetSize();
-    size.x += widths[Field_Lock];
-    m_pLockButton->Move(rect.x + rect.width - size.x, rect.y-1);
+    GetFieldRect(Field_Lock, rect);
+    //size.x += widths[Field_Lock];
+	m_pLockButton->Move(rect.x + LOG_SHIFT, rect.y-1);
+    //m_pLockButton->Move(rect.x + rect.width - size.x, rect.y-1);
   }
+
   GetFieldRect(Field_Path, rect);
   m_pathCtrl->SetSize(rect.x+1, rect.y+1, rect.width-1, rect.height-1);
 
