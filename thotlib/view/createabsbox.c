@@ -793,7 +793,21 @@ static void Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb,
   pAb = NULL;
   if (pAbb->AbEnclosing)
     {
-      pAb = pAbb->AbEnclosing;
+      /* link the delayed rule to the table to be sure that
+         colheads are created */
+      if ((pR->PrType == PtHorizPos || pR->PrType == PtWidth) &&
+          pAbb->AbElement &&
+          TypeHasException (ExcIsCell, pAbb->AbElement->ElTypeNumber,
+                            pAbb->AbElement->ElStructSchema))
+        {
+          pAb = pAbb->AbEnclosing;
+          while (pAb && pAb->AbElement &&
+                 !TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber,
+                                    pAb->AbElement->ElStructSchema))
+            pAb = pAb->AbEnclosing;
+        }
+      if (pAb == NULL)
+        pAb = pAbb->AbEnclosing;
       /* si ce pave est un pave de presentation cree par la regle */
       /* FnCreateEnclosing, on met la regle en attente sur le pave englobant */
       if (pAb->AbEnclosing &&
@@ -6445,10 +6459,10 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                             break;
                           }
                       }
-                    if (!crAbsBox)
-                      /* ce n'est pas une regle de creation */
-                      if (!ApplyRule (pRule, pSPres, pAb, pDoc, pAttr, pAb))
-                        Delay (pRule, pSPres, pAb, pAttr);
+                    if (!crAbsBox &&
+                        /* not a creation rule */
+                        !ApplyRule (pRule, pSPres, pAb, pDoc, pAttr, pAb))
+                      Delay (pRule, pSPres, pAb, pAttr);
                   }
               }
             while (pRule);
