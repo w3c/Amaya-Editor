@@ -1480,7 +1480,10 @@ static void NsDeclarationStart (char *ns_prefix, char *ns_uri)
   if (ns_prefix && Ns_Level == 0)
     {
       // declare a default namespace
-      Ns_Uri[Ns_Level] = NULL;
+      if (CurrentParserCtxt)
+        Ns_Uri[Ns_Level] = TtaStrdup (CurrentParserCtxt->UriName);
+      else
+        Ns_Uri[Ns_Level] = NULL;
       Ns_Prefix[Ns_Level] = NULL;
       Ns_Level ++;
       CurNs_Level ++;      
