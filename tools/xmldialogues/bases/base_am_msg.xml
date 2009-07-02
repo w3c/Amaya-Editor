@@ -2396,6 +2396,7 @@ odpoveď</message>
 	<message xml:lang="en">Do you want to keep a local copy?</message>
 	<message xml:lang="fr">Voulez-vous garder une copie locale ?</message>
 	<message xml:lang="uk">Невдала спроба збереження в %s. Зберегти на диск?</message>
+	<message xml:lang="it">Vuoi una copia in locale?</message>
 </label>
 <label define="AM_SAVE_COMPARE_FAILED">
 	<message xml:lang="en">Saving to %s seems corrupted, ignore?</message>
@@ -9563,11 +9564,13 @@ cancellarlo.</message>
 	<message xml:lang="fr">Utiliser les éléments</message>
 	<message xml:lang="ja">要素を使う</message>
 	<message xml:lang="nl">Elementen gebruiken</message>
+	<message xml:lang="it">Usa gli elementi</message>
 </label>
 <label define="AM_TEMPLATE_USELABEL">
 	<message xml:lang="en">Label</message>
 	<message xml:lang="fr">Label</message>
 	<message xml:lang="nl">Bijschrift</message>
+	<message xml:lang="it">Etichetta</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -111,7 +111,7 @@
 109 Questo metodo non è consentito
 110 Identificazione richiesta per accedere a %s
 111 Verifica in corso ...
-112 **Do you want to keep a local copy?
+112 Vuoi una copia in locale?
 113 Il salvataggio su %s sembra non funzionare, ignora?
 114 L'URL %s è rediretto su %s, ignora ?
 115 Ricaricamento di %s fallito, ignora ?
@@ -509,5 +509,5 @@
 506 Nuova unione
 507 Unione
 508 Nome di l'unione:
-509 **Use elements
-510 **Label
+509 Usa gli elementi
+510 Etichetta

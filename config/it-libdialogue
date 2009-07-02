@@ -422,6 +422,6 @@
 420 Tasto fino alla fine
 421 Doppio scatto da chiudersi
 422 Scatto da chiudersi
-423 **Locked resource
-424 **Unlocked resource
-425 **Not a WebDAV resource
+423 Risorsa bloccata
+424 Risorsa non bloccata
+425 Non è una risorsa WebDAV

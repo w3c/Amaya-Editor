@@ -422,6 +422,6 @@
 420 Botón hasta cierre
 421 Tecleo doble a cerrarse
 422 Tecleo a cerrarse
-423 **Locked resource
-424 **Unlocked resource
-425 **Not a WebDAV resource
+423 Recurso bloqueado
+424 Recurso desbloqueado
+425 No es un recurso WebDAV

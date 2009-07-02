@@ -6774,17 +6774,22 @@ Komponente</message>
 <label define="LOCK">
 	<message xml:lang="en">Locked resource</message>
 	<message xml:lang="fr">Ressource bloquée</message>
+	<message xml:lang="it">Risorsa bloccata</message>
+	<message xml:lang="es">Recurso bloqueado</message>
 </label>
 <label define="UNLOCK">
 	<message xml:lang="en">Unlocked resource</message>
 	<message xml:lang="fr">Ressource débloquée</message>
+	<message xml:lang="it">Risorsa non bloccata</message>
+	<message xml:lang="es">Recurso desbloqueado</message>
 </label>
 <label define="NO_WEBDAV">
 	<message xml:lang="en">Not a WebDAV resource</message>
 	<message xml:lang="fr">Ce n'est pas une resource</message>
+	<message xml:lang="it">Non è una risorsa WebDAV</message>
+	<message xml:lang="es">No es un recurso WebDAV</message>
 </label>
-<!--
-End of SVG panel --><label define="TMSG_LIB_MSG_MAX">
+<label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
 <!--end of base --></base>

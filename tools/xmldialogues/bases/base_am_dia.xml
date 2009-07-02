@@ -5553,7 +5553,8 @@ XHTML 4.01-ით</message>
 	<message xml:lang="en">Namespace declarations...</message>
 	<message xml:lang="fr">Déclaration d'espaces de noms...</message>
 	<message xml:lang="nl">Namespace-declaraties...</message>
-	<message xml:lang="ja">ネームスペースの宣言</message>
+	<message xml:lang="ja">ネームスペースの宣言...</message>
+	<message xml:lang="it">Dichiarazione dei Namespace...</message>
 </label>
 <label define="Annotations_">
 	<message xml:lang="en">A&amp;nnotations</message>
