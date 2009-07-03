@@ -230,9 +230,9 @@
 228 По серверу
 229 Ключ модифікатор
 230 Не використовувати
-231 **Panel bar position: 
-232 **left
-233 **right
+231 Позиція панелі инструментів:
+232 ліворуч
+233 праворуч
 234 Елемент стилю
 235 Неможливо створити XPointer
 236 Неможливо прикріпити початок XPointer на доданий усередину елемент
@@ -439,74 +439,75 @@
 437 Запам'ятати паролі для сайтів
 438 Сайти
 439 Видалити усе
-440 **XML namespaces generated for new XHTML+RDFa documents
-441 **Select a namespace in the list below or add a new one (syntax prefix="uri")
-442 **An error occured during the building of the javascript/DOM objects
-443 **A script is still running but will be aborted as soon as possible. Please try later.
-444 **Javascript/DOM can not be enabled in this view.
-445 **Enter a javascript command:
-446 **The command returned the value: %s
-447 **The command returned no value
-448 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+440 Простори імен XML сгенеровано для нових XHTML+RDFa документів
+441 Виберіть простір імен у списку нижче або додайте новий (синтаксичний префікс="uri")
+442 Під час побудування javascript/DOM об'єктів трапилася помилка
+443 Скрипт досі працює, але його буде зупинено якомога скоріше. Будь-ласка, спробуйте пізніше.
+444 Javascript/DOM не може бути активовано у цьому представленні.
+445 Уведіть команду javascript:
+446 Команда повернула значення: %s
+447 Команда не повернула жодних значень
+448 SpiderMonkey повернула наступну помилку:\n\nFile: %s\nLine: %d\n\n%s
 449 Видалити усе
-450 **Customizable
-451 **Create
-452 **Create the link by click
+450 Налагоджувано
+451 Створити
+452 Створити посилання клацанням
 453 Видалити посилання або ціль
-454 **Save without template
-455 **With theme ...
-456 **Full width
-457 **With caption
-458 **Size
-459 **Position
-460 **XML editing mode
-461 **List of style sheets
-462 **Add a style sheet...
-463 **Remove selected style sheets
-464 **Activate selected style sheets
-465 **Desactivate selected style sheets
-466 **Open selected style sheets
+454 Зберегти без шаблону
+455 З темою ...
+456 У повну ширину
+457 Із заголовком
+458 Розмір
+459 Позиція
+460 Режим редагування XML
+461 Список таблиць стилів
+462 Додати таблицю стилів...
+463 Видалити обрані таблиці стилів
+464 Активувати обрані таблиці стилів
+465 Деактивувати обрані таблиці стилів
+466 Відкрити обрані таблиці стилів
 467 Тип Amaya:
-468 **Show "Tip of the day" at startup
-469 **Choose font family and size:
-470 **Template has error(s), it will not be used:
-471 **Close
-472 **Component '%s' has multiple definition.
-473 **Library '%s' can not be loaded.
-474 **Can not convert an instance document to template.
-475 **The document is already a template
-476 **Template creation fails
-477 **Text area
-478 **Element label:
-479 **Bag area
-480 **Repeat element
-481 **New component
-482 **Component is used, you can not remove it.
-483 **at the top left corner
-484 **at the bottom left corner
-485 **on the left
-486 **at the top right corner
-487 **at the bottom right corner
-488 **on the right
-489 **at the top
-490 **at the bottom
-491 **in the center
-492 **to the left and above
-493 **to the left and below
-494 **to the left of
-495 **to the right and above
-496 **to the right and below
-497 **to the right of
-498 **above
-499 **below
-500 **in front of
-501 **There are %d objects: 
-502 **New use
-503 **Optional use
-504 **Color source code
-505 **Repeat label:
-506 **New union
-507 **Union
-508 **Union name:
-509 **Use elements
-510 **Label
+468 Показувати "Пораду дня" під час запуску
+469 Вибрати тип шрифту та його розмір:
+470 Шаблон має помилку(и), його не можна використати:
+471 Закрити
+472 Компонент '%s' має множинне значення.
+473 Бібліотеку '%s' не може бути завантажено.
+474 Неможливо конвертувати цей документ у шаблон.
+475 Цей документ вже є шаблоном
+476 Збій під час створення шаблону
+477 Текстове поле
+478 Мітка елементу:
+479 Область множин
+480 Повторити елемент
+481 Новий компонент
+482 Компонент викоритовується, ви не можете видалити його.
+483 в лівому верхньому кутку
+484 в лівому нижньому кутку
+485 ліворуч
+486 в правому верхньому кутку
+487 в правому нижньому кутку
+488 праворуч
+489 зверху
+490 знизу
+491 у центр
+492 наліво і уверх
+493 наліво і униз
+494 наліво от
+495 направо і уверх
+496 направо і униз
+497 направо от
+498 уверху
+499 унизу
+500 перед
+501 Наявно %d об'єктів:
+502 Нове використовування
+503 Опціональне використовування
+504 Початковий код кольору
+505 Повторити мітку:
+506 Нове об'єднання
+507 Об'єднання
+508 Им'я об'єднання:
+509 Використовувати елементи
+510 Мітка
+511 Локальна копія

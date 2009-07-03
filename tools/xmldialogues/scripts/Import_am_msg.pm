@@ -369,7 +369,7 @@ sub end_hndl { #	do the modification if necessary
 			}	
 		}
 		if  ($exist == 0) {
-			print OUT "\t<language encoding=\"$encodage\">$language_code</language>\n" ;
+			print OUT "<language encoding=\"$encodage\">$language_code</language>\n" ;
 		}
 	}	
 ####################### always do:

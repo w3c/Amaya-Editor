@@ -111,7 +111,7 @@
 109 Этот метод не разрешён
 110 Для доступа к %s пройдите идентификацию
 111 Проверка ...
-112 **Do you want to keep a local copy?
+112 Неудачная попытка сохранения в %s. Сохранить на диск?
 113 Сохранение в %s вероятно выполнено с повреждениями. Игнорировать?
 114 URL %s перенаправлен в %s. Игнорировать?
 115 Неудачная попытка перезагрузки из %s. Игнорировать?
@@ -230,9 +230,9 @@
 228 По серверу
 229 Ключ модификатор
 230 Не использовать
-231 **Panel bar position: 
-232 **left
-233 **right
+231 Позиция панели инструментов:
+232 слева
+233 справа
 234 Элемент стиля
 235 Невозможно создать XPointer
 236 Невозможно прикрепить начало XPointer на добавленный внутрь элемент
@@ -289,7 +289,7 @@
 287 Попробовать снова?
 288 WebDAV
 289 Персональная ссылка пользователя (URL)
-290 Пользовательский список ресурсов WebDAV
+290 Пользовательский список ресурсов WebDAV (URL URL)
 291 Глубина блокировки
 292 Бесконечно
 293 Длительность блокировки
@@ -404,7 +404,7 @@
 402 Степень
 403 Степень числа переменной %d
 404 Составной документ
-405 Копировать ресурсы (стили, сценарии, ...)
+405 Копировать ресурсы (стили и сценарии)
 406 Место для сохранения ресурсов
 407 Место для сохранения изображений
 408 Документ
@@ -439,74 +439,74 @@
 437 Запоминать пароли для сайтов
 438 Сайты
 439 Удалить все
-440 **XML namespaces generated for new XHTML+RDFa documents
-441 **Select a namespace in the list below or add a new one (syntax prefix="uri")
-442 **An error occured during the building of the javascript/DOM objects
-443 **A script is still running but will be aborted as soon as possible. Please try later.
-444 **Javascript/DOM can not be enabled in this view.
-445 **Enter a javascript command:
-446 **The command returned the value: %s
-447 **The command returned no value
-448 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+440 Пространства имен XML сгенерированы для новых XHTML+RDFa документов
+441 Выберите просторантсво имен в списке ниже или добавьте новое (синтаксический префикс="uri")
+442 Во время построения javascript/DOM объектов произошла ошибка
+443 Скрипт все еще работает, но будет остановлен как можно скорее. Пожалуйста, попробуйте позже.
+444 Javascript/DOM не может быть активирован в этом представлении.
+445 Введите команду javascript:
+446 Команда возвратила значение: %s
+447 Команда не возвратила никаких значений
+448 SpiderMonkey возвратила следующую ошибку:\n\nFile: %s\nLine: %d\n\n%s
 449 Удалить все
-450 **Customizable
-451 **Create
-452 **Create the link by click
+450 Настраиваемо
+451 Создать
+452 Создать ссылку кликом
 453 Удалить ссылку или цель
-454 **Save without template
-455 **With theme ...
-456 **Full width
-457 **With caption
-458 **Size
-459 **Position
-460 **XML editing mode
-461 **List of style sheets
-462 **Add a style sheet...
-463 **Remove selected style sheets
-464 **Activate selected style sheets
-465 **Desactivate selected style sheets
-466 **Open selected style sheets
-467 Тип Amaya:
-468 **Show "Tip of the day" at startup
-469 **Choose font family and size:
-470 **Template has error(s), it will not be used:
-471 **Close
-472 **Component '%s' has multiple definition.
-473 **Library '%s' can not be loaded.
-474 **Can not convert an instance document to template.
-475 **The document is already a template
-476 **Template creation fails
-477 **Text area
-478 **Element label:
-479 **Bag area
-480 **Repeat element
-481 **New component
-482 **Component is used, you can not remove it.
-483 **at the top left corner
-484 **at the bottom left corner
-485 **on the left
-486 **at the top right corner
-487 **at the bottom right corner
-488 **on the right
-489 **at the top
-490 **at the bottom
-491 **in the center
-492 **to the left and above
-493 **to the left and below
-494 **to the left of
-495 **to the right and above
-496 **to the right and below
-497 **to the right of
-498 **above
-499 **below
-500 **in front of
-501 **There are %d objects: 
-502 **New use
-503 **Optional use
-504 **Color source code
-505 **Repeat label:
-506 **New union
-507 **Union
-508 **Union name:
-509 **Use elements
-510 **Label
+454 Сохранить без шаблона
+455 С темой ...
+456 Во всю ширину
+457 С заголовком
+458 Размер
+459 Позиция
+460 Режим редактирования XML
+461 Список таблиц стилей
+462 Добавить таблицу стилей...
+463 Удалить выбранные таблицы стилей
+464 Активировать выбранные таблицы стилей
+465 Деактивировать выбранные таблицы стилей
+466 Открыть выбранные таблицы стилей
+467 Совет Amaya:
+468 Показывать "Совет дня" при запуске
+469 Выбрать тип шрифта и его размер:
+470 Шаблон содержит ошибку(и), его нельзя использовать:
+471 Закрыть
+472 Компонент '%s' имеет множественное значение.
+473 Библиотека '%s' не может быть загружена.
+474 Невозможно конввертировать настоящий документ в шаблон.
+475 Этот документ уже является шаблоном
+476 Сбой во время создания шаблона
+477 Текстовое поле
+478 Метка элемента:
+479 Область множеств
+480 Повторить элемент
+481 Новый компонент
+482 Компонент используется, вы не можете удалить его.
+483 в левом верхнем углу
+484 в левом нижнем углу
+485 слева
+486 в правом верхнем углу
+487 в правом нижнем углу
+488 справа
+489 сверху
+490 снизу
+491 в центр
+492 налево и вверх
+493 налево и вниз
+494 налево от
+495 направо и вверх
+496 направо и вниз
+497 направо от
+498 вверху
+499 внизу
+500 перед
+501 Обнаружено %d объектов:
+502 Новое использование
+503 Опциональное использование
+504 Исходный код цвета
+505 Повторить метку:
+506 Новое объединение
+507 Объединение
+508 Имя объединения:
+509 Использовать элементы
+510 Метка
