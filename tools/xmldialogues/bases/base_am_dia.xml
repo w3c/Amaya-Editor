@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<base version="108">
+<base version="112">
 <control>
 	<language encoding="latin1">en</language>
- 			<language encoding="latin1">fr</language>
- 			<language encoding="latin1">de</language>
- 			<language encoding="latin1">it</language>
- 			<language encoding="utf8">tr</language>
- 			<language encoding="latin1">es</language>
- 			<language encoding="latin1">pt</language>
- 			<language encoding="latin1">fi</language>
- 			<language encoding="utf8">ru</language>
- 			<language encoding="utf8">hu</language>
- 			<language encoding="utf8">ka</language>
- 			<language encoding="utf8">cn</language>
- 			<language encoding="utf8">tw</language>
- 			<language encoding="utf8">sk</language>
- 			<language encoding="utf8">jp</language>
- 			<language encoding="utf8">ja</language>
- 			<language encoding="latin1">nl</language>
- 			<language encoding="utf8">uk</language>
+ 	<language encoding="latin1">fr</language>
+ 	<language encoding="latin1">de</language>
+ 	<language encoding="latin1">it</language>
+ 	<language encoding="utf8">tr</language>
+ 	<language encoding="latin1">es</language>
+ 	<language encoding="latin1">pt</language>
+ 	<language encoding="latin1">fi</language>
+ 	<language encoding="utf8">ru</language>
+ 	<language encoding="utf8">hu</language>
+ 	<language encoding="utf8">ka</language>
+ 	<language encoding="utf8">cn</language>
+ 	<language encoding="utf8">tw</language>
+ 	<language encoding="utf8">sk</language>
+ 	<language encoding="utf8">ja</language>
+ 	<language encoding="latin1">nl</language>
+ 	<language encoding="utf8">uk</language>
 </control>
 <messages>
 <label define="File">
@@ -198,6 +197,8 @@
 	<message xml:lang="hu">&amp;Eszközök</message>
 	<message xml:lang="ja">ツール(&amp;T)</message>
 	<message xml:lang="nl">&amp;Gerei</message>
+	<message xml:lang="ru">&amp;Инструменты</message>
+	<message xml:lang="uk">&amp;Інструменти</message>
 </label>
 <label define="Help_">
 	<message xml:lang="en">&amp;Help</message>
@@ -337,8 +338,7 @@
 	<message xml:lang="pt">Nova folha de es&amp;tilo CSS...</message>
 	<message xml:lang="fi">Uusi CSS &amp;tyylitiedosto...</message>
 	<message xml:lang="tr">Yeni CSS düz dizayn(&amp;T)...</message>
-	<message xml:lang="ru">Новая каскадная таблица
-стил&amp;ей CSS...</message>
+	<message xml:lang="ru">Новая каскадная таблица стил&amp;ей CSS...</message>
 	<message xml:lang="hu">Új CSS s&amp;tíluslap...</message>
 	<message xml:lang="ka">ახალი CSS სტილების
 ცხრილი(&amp;T)...</message>
@@ -417,8 +417,7 @@
 	<message xml:lang="es">Actuali&amp;zar</message>
 	<message xml:lang="pt">&amp;Recarregar documento</message>
 	<message xml:lang="fi">Päivitä dokumentti(&amp;R)</message>
-	<message xml:lang="ru">Перезагрузить
-до&amp;кумент</message>
+	<message xml:lang="ru">Перезагрузить до&amp;кумент</message>
 	<message xml:lang="hu">Dokumentum újratöltése(&amp;R)</message>
 	<message xml:lang="ka">დოკუმენტის
 განახლება(&amp;R)</message>
@@ -474,8 +473,7 @@
 	<message xml:lang="fi">Western (ISO-8859-1)</message>
 	<message xml:lang="tr">Western (ISO-8859-1)</message>
 	<message xml:lang="de">Western (ISO-8859-1)</message>
-	<message xml:lang="ru">Западноевропейская
-(ISO-8859-1)</message>
+	<message xml:lang="ru">Западноевропейская (ISO-8859-1)</message>
 	<message xml:lang="hu">Nyugat-európai (ISO-8859-1)</message>
 	<message xml:lang="ka">დასავლეთ ევროპული
 (ISO-8859-1)</message>
@@ -495,8 +493,7 @@
 	<message xml:lang="fi">Western (ISO-8859-15)</message>
 	<message xml:lang="tr">Western (ISO-8859-15)</message>
 	<message xml:lang="de">Western (ISO-8859-15)</message>
-	<message xml:lang="ru">Западноевропейская
-(ISO-8859-15)</message>
+	<message xml:lang="ru">Западноевропейская (ISO-8859-15)</message>
 	<message xml:lang="hu">Nyugat-európai (ISO-8859-15)</message>
 	<message xml:lang="ka">დასავლეთ ევროპული
 (ISO-8859-15)</message>
@@ -516,8 +513,7 @@
 	<message xml:lang="fi">Western (Windows-1252)</message>
 	<message xml:lang="tr">Western (Windows-1252)</message>
 	<message xml:lang="de">Western (Windows-1252)</message>
-	<message xml:lang="ru">Западноевропейская
-(Windows-1252)</message>
+	<message xml:lang="ru">Западноевропейская (Windows-1252)</message>
 	<message xml:lang="hu">Nyugat-európai (Windows-1252)</message>
 	<message xml:lang="ka">დასავლეთ ევროპული
 (Windows-1252)</message>
@@ -537,8 +533,7 @@
 	<message xml:lang="fi">Central Europe (ISO-8859-2)</message>
 	<message xml:lang="tr">Central Europe (ISO-8859-2)</message>
 	<message xml:lang="de">Mitteleuropa (ISO-8859-2)</message>
-	<message xml:lang="ru">Центральноевропейская
-(ISO-8859-2)</message>
+	<message xml:lang="ru">Центральноевропейская (ISO-8859-2)</message>
 	<message xml:lang="hu">Közép-európai (ISO-8859-2)</message>
 	<message xml:lang="ka">ცენტრალურ ევროპული
 (ISO-8859-2)</message>
@@ -558,8 +553,7 @@
 	<message xml:lang="fi">Central Europe (Windows-1250)</message>
 	<message xml:lang="tr">Central Europe (Windows-1250)</message>
 	<message xml:lang="de">Mitteleuropa (Windows-1250)</message>
-	<message xml:lang="ru">Центральноевропейская
-(Windows-1250)</message>
+	<message xml:lang="ru">Центральноевропейская (Windows-1250)</message>
 	<message xml:lang="hu">Közép-európai (Windows-1250)</message>
 	<message xml:lang="ka">ცენტრალურ ევროპული
 (Windows-1250)</message>
@@ -846,8 +840,7 @@
 	<message xml:lang="fi">Chinese (GB-2312)</message>
 	<message xml:lang="tr">Chinese (GB-2312)</message>
 	<message xml:lang="de">Chinese vereinfacht (GB-2312)</message>
-	<message xml:lang="ru">Китайская упрощённая
-(GB-2312)</message>
+	<message xml:lang="ru">Китайская упрощённая (GB-2312)</message>
 	<message xml:lang="hu">Chinese (GB-2312)</message>
 	<message xml:lang="ka">Chinese (GB-2312)</message>
 	<message xml:lang="cn">Chinese Simplified (GB-2312)</message>
@@ -1204,6 +1197,8 @@ Document context menu: --><label define="BFollowTheLink">
 	<message xml:lang="it">Apri il collegamento</message>
 	<message xml:lang="ja">リンクを開く</message>
 	<message xml:lang="nl">Koppeling openen</message>
+	<message xml:lang="ru">Открыть ссылку</message>
+	<message xml:lang="uk">Відкрити посилання</message>
 </label>
 <label define="BFollowTheLinkNewTab">
 	<message xml:lang="en">Open the link in new tab</message>
@@ -1214,6 +1209,8 @@ Document context menu: --><label define="BFollowTheLink">
 	<message xml:lang="it">Apri il collegamento in una nuova scheda</message>
 	<message xml:lang="ja">リンクを新規タブで開く</message>
 	<message xml:lang="nl">Koppeling in nieuw tabblad openen</message>
+	<message xml:lang="ru">Открыть ссылку в новой вкладке</message>
+	<message xml:lang="uk">Відкрити посилання у новій вкладці</message>
 </label>
 <label define="BFollowTheLinkNewWin">
 	<message xml:lang="en">Open the link in new window</message>
@@ -1224,6 +1221,8 @@ Document context menu: --><label define="BFollowTheLink">
 	<message xml:lang="it">Apri il collegamento in una nuova finestra</message>
 	<message xml:lang="ja">リンクを新規ウィンドウで開く</message>
 	<message xml:lang="nl">Koppeling in nieuw venster openen</message>
+	<message xml:lang="ru">Открыть ссылку в новом окне</message>
+	<message xml:lang="uk">Відкрити посилання у новому вікні</message>
 </label>
 <label define="BSVG_Rotate">
 	<message xml:lang="en">Rotate</message>
@@ -1233,6 +1232,8 @@ Document context menu: --><label define="BFollowTheLink">
 	<message xml:lang="it">Ruotare</message>
 	<message xml:lang="nl">Roteren</message>
 	<message xml:lang="ja">回転</message>
+	<message xml:lang="ru">Вращать</message>
+	<message xml:lang="uk">Обертати</message>
 </label>
 <label define="BSVG_Skew">
 	<message xml:lang="en">Skew</message>
@@ -1242,6 +1243,8 @@ Document context menu: --><label define="BFollowTheLink">
 	<message xml:lang="it">Inclinare</message>
 	<message xml:lang="nl">Hellen</message>
 	<message xml:lang="ja">変形</message>
+	<message xml:lang="ru">Наклонить</message>
+	<message xml:lang="uk">Нахилити</message>
 </label>
 <label define="BSVG_Scale">
 	<message xml:lang="en">Scale</message>
@@ -1251,6 +1254,8 @@ Document context menu: --><label define="BFollowTheLink">
 	<message xml:lang="it">Scala</message>
 	<message xml:lang="nl">Grootte</message>
 	<message xml:lang="ja">拡大縮小</message>
+	<message xml:lang="ru">Масштабировать</message>
+	<message xml:lang="uk">Масштабувати</message>
 </label>
 <label define="BSVG_Tranlate">
 	<message xml:lang="en">Move</message>
@@ -1259,6 +1264,8 @@ Document context menu: --><label define="BFollowTheLink">
 	<message xml:lang="de">Verschieben</message>
 	<message xml:lang="it">Muovere</message>
 	<message xml:lang="nl">Verplaatsen</message>
+	<message xml:lang="ru">Двигать</message>
+	<message xml:lang="uk">Рухати</message>
 </label>
 <label define="BSVG_Ungroup">
 	<message xml:lang="en">Ungroup</message>
@@ -1268,6 +1275,8 @@ Document context menu: --><label define="BFollowTheLink">
 	<message xml:lang="it">NoGruppo</message>
 	<message xml:lang="nl">Groepering opheffen</message>
 	<message xml:lang="ja">グループ解除</message>
+	<message xml:lang="ru">Разгруппировать</message>
+	<message xml:lang="uk">Розгрупувати</message>
 </label>
 <label define="BCCut">
 	<message xml:lang="en">Cut</message>
@@ -1539,6 +1548,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Seleziona tutto</message>
 	<message xml:lang="ja">全て送信</message>
 	<message xml:lang="nl">Alles selecteren</message>
+	<message xml:lang="ru">Выбрать всё</message>
+	<message xml:lang="uk">Вибрати усе</message>
 </label>
 <label define="NavGoto">
 	<message xml:lang="en">Select</message>
@@ -1669,6 +1680,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Mostra/Nascodi la barra degli strumenti</message>
 	<message xml:lang="ja">ツールバーの表示/非表示</message>
 	<message xml:lang="nl">Werkbalken</message>
+	<message xml:lang="ru">Показать/Спрятать панели инструментов</message>
+	<message xml:lang="uk">Показати/Сховати панелі інструментів</message>
 </label>
 <label define="TShowBrowsingBar">
 	<message xml:lang="en">&amp;Browsing</message>
@@ -1679,6 +1692,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">&amp;Browsing</message>
 	<message xml:lang="ja">ブラウザバー(&amp;B)</message>
 	<message xml:lang="nl">&amp;Navigatie</message>
+	<message xml:lang="ru">&amp;Просмотр</message>
+	<message xml:lang="uk">&amp;Перегляд</message>
 </label>
 <label define="toggle:TShowEditingBar">
 	<message xml:lang="en">&amp;Editing</message>
@@ -1689,6 +1704,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">&amp;Modifica</message>
 	<message xml:lang="ja">編集バー(&amp;E)</message>
 	<message xml:lang="nl">&amp;Standaard</message>
+	<message xml:lang="ru">&amp;Редактирование</message>
+	<message xml:lang="uk">&amp;Редагування</message>
 </label>
 <label define="TShowPanel">
 	<message xml:lang="en">Show &amp;tools</message>
@@ -1755,8 +1772,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="hu">&amp;Formázott nézet</message>
 	<message xml:lang="ka">ფორმატირებული
 ჩვენება</message>
-	<message xml:lang="ru">Показать представление
-Форм&amp;атированный</message>
+	<message xml:lang="ru">Показать представление Форм&amp;атированный</message>
 	<message xml:lang="cn">显示格式化的视图(&amp;F)</message>
 	<message xml:lang="tw">顯示格式化的視圖(&amp;F)</message>
 	<message xml:lang="sk">&amp;Normálne zobrazenie</message>
@@ -1773,8 +1789,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">Es&amp;tructura</message>
 	<message xml:lang="pt">Exibir estrutura</message>
 	<message xml:lang="fi">Näytä rakenne</message>
-	<message xml:lang="ru">Показать представление
-Структура</message>
+	<message xml:lang="ru">Показать представление Структура</message>
 	<message xml:lang="hu">&amp;Szerkezet mutatása</message>
 	<message xml:lang="ka">სტრუქტურის ჩვენება</message>
 	<message xml:lang="cn">显示结构(&amp;S)</message>
@@ -1793,8 +1808,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="pt">Exibir source</message>
 	<message xml:lang="fi">Näytä lähdekoodi</message>
 	<message xml:lang="tr">kaynak göster</message>
-	<message xml:lang="ru">Показать представление
-Исходный код</message>
+	<message xml:lang="ru">Показать представление Исходный код</message>
 	<message xml:lang="hu">&amp;Forrás mutatása</message>
 	<message xml:lang="ka">წყაროს ჩვენება</message>
 	<message xml:lang="cn">显示源文件(&amp;U)</message>
@@ -1813,8 +1827,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">&amp;Enlaces</message>
 	<message xml:lang="pt">Exibir enlaces (links)</message>
 	<message xml:lang="fi">Näytä linkit</message>
-	<message xml:lang="ru">Показать представление
-Ссы&amp;лки</message>
+	<message xml:lang="ru">Показать представление Ссы&amp;лки</message>
 	<message xml:lang="hu">&amp;Kapcsok mutatása</message>
 	<message xml:lang="ka">ბმების ჩვენება</message>
 	<message xml:lang="cn">显示链接(&amp;K)</message>
@@ -1833,8 +1846,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">A&amp;lternativo</message>
 	<message xml:lang="pt">Exibir alternativa</message>
 	<message xml:lang="fi">Show alternate</message>
-	<message xml:lang="ru">Показать представление
-Альтернативный (только текст)</message>
+	<message xml:lang="ru">Показать представление Альтернативный (только текст)</message>
 	<message xml:lang="hu">&amp;Szöveges böngészőnézet</message>
 	<message xml:lang="ka">ალტერნატული
 ჩვენება</message>
@@ -1854,11 +1866,9 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">Tabla de &amp;contenidos</message>
 	<message xml:lang="pt">Exibir índice de conteúdos</message>
 	<message xml:lang="fi">Näytä sisällysluettelo</message>
-	<message xml:lang="ru">Показать заголовки
-документа</message>
+	<message xml:lang="ru">Показать заголовки документа</message>
 	<message xml:lang="hu">&amp;Tartalomjegyzék mutatása</message>
-	<message xml:lang="ka">საძიებლის
-ჩვენება</message>
+	<message xml:lang="ka">საძიებლის ჩვენება</message>
 	<message xml:lang="cn">显示表格内容(&amp;O)</message>
 	<message xml:lang="tw">顯示表格內容(&amp;O)</message>
 	<message xml:lang="sk">Obsah</message>
@@ -1873,14 +1883,14 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="de">Ansicht horizontal teilen</message>
 	<message xml:lang="it">Dividi la vista in orizzontale</message>
 	<message xml:lang="hu">Vízszintes felosztás</message>
-	<message xml:lang="ka">ხედის ჰორიზონტალური
-გაყოფა</message>
+	<message xml:lang="ka">ხედის ჰორიზონტალური გაყოფა</message>
 	<message xml:lang="ru">Разделить по горизонтали</message>
 	<message xml:lang="cn">水平排列视图</message>
 	<message xml:lang="tw">水平排列視圖</message>
 	<message xml:lang="sk">Rozdeliť okno horizontálne</message>
 	<message xml:lang="ja">横に分割表示(&amp;h)</message>
 	<message xml:lang="nl">Horizontaal splitsen</message>
+	<message xml:lang="uk">Розділити по горизонталі</message>
 </label>
 <label define="BSplitVertically">
 	<message xml:lang="en">Split view vertically</message>
@@ -1889,14 +1899,14 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="de">Ansicht vertikal teilen</message>
 	<message xml:lang="it">Dividi la vista in verticale</message>
 	<message xml:lang="hu">Függőleges felosztás</message>
-	<message xml:lang="ka">ხედის ვერტიკალური
-გაყოფა</message>
+	<message xml:lang="ka">ხედის ვერტიკალური გაყოფა</message>
 	<message xml:lang="ru">Разделить по вертикали</message>
 	<message xml:lang="cn">垂直排列视图</message>
 	<message xml:lang="tw">垂直排列視圖</message>
 	<message xml:lang="sk">Rozdeliť okno vertikálne</message>
 	<message xml:lang="ja">縦に分割表示(&amp;v)</message>
 	<message xml:lang="nl">Verticaal splitsen</message>
+	<message xml:lang="uk">Розділити по вертикалі</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document &amp;info</message>
@@ -1998,6 +2008,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Zoom normale</message>
 	<message xml:lang="nl">Geen zoom</message>
 	<message xml:lang="ja">規定の倍率に戻す</message>
+	<message xml:lang="ru">Исходный масштаб</message>
 </label>
 <label define="BParagraph">
 	<message xml:lang="en">Paragraph (p)</message>
@@ -2371,8 +2382,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">Código (code)</message>
 	<message xml:lang="pt">Código (code)</message>
 	<message xml:lang="fi">koodi</message>
-	<message xml:lang="ru">Выделение компьютерного кода
-(code)</message>
+	<message xml:lang="ru">Выделение компьютерного кода (code)</message>
 	<message xml:lang="hu">&amp;Kód (code)</message>
 	<message xml:lang="ka">კოდი (code)</message>
 	<message xml:lang="cn">代码 (code)</message>
@@ -2410,8 +2420,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">Ejemplo (samp)</message>
 	<message xml:lang="pt">Exemplo (samp)</message>
 	<message xml:lang="fi">Malli (samp)</message>
-	<message xml:lang="ru">Выводимые данные (пример)
-(samp)</message>
+	<message xml:lang="ru">Выводимые данные (пример) (samp)</message>
 	<message xml:lang="hu">&amp;Minta (samp)</message>
 	<message xml:lang="ka">ნიმუში (samp)</message>
 	<message xml:lang="cn">样例 (samp)</message>
@@ -2430,8 +2439,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">Teclado (kbd)</message>
 	<message xml:lang="pt">Teclado (kbd)</message>
 	<message xml:lang="fi">Näppäimistä (kbd)</message>
-	<message xml:lang="ru">Вводимые с клавиатуры данные
-(kbd)</message>
+	<message xml:lang="ru">Вводимые с клавиатуры данные (kbd)</message>
 	<message xml:lang="hu">&amp;Billentyű (kbd)</message>
 	<message xml:lang="ka">კლავიატურა (kbd)</message>
 	<message xml:lang="cn">键盘 (kbd)</message>
@@ -2697,8 +2705,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="pt">Citação (q)</message>
 	<message xml:lang="fi">Lainaus/Siteeraus (q)</message>
 	<message xml:lang="tr">Alıntılama (q)</message>
-	<message xml:lang="ru">Краткая встроенная цитата
-(q)</message>
+	<message xml:lang="ru">Краткая встроенная цитата (q)</message>
 	<message xml:lang="hu">&amp;Idézet (q)</message>
 	<message xml:lang="ka">ციტატა (q)</message>
 	<message xml:lang="cn">Quotation 引用 (q)</message>
@@ -2717,8 +2724,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="pt">Sobrepor BiDi (bdo)</message>
 	<message xml:lang="fi">BiDi syrjäyttävänä (bdo)</message>
 	<message xml:lang="tr">BiDi (bdo)</message>
-	<message xml:lang="ru">Отмена двунаправленного
-текста (bdo)</message>
+	<message xml:lang="ru">Отмена двунаправленного текста (bdo)</message>
 	<message xml:lang="hu">&amp;Kétirányúság felülbírálása (bdo)</message>
 	<message xml:lang="ka">ბუსტროფედონის
 გაუქმება (bdo)</message>
@@ -2795,8 +2801,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">Pre-formateado (pre)</message>
 	<message xml:lang="pt">Preformatado (pre)</message>
 	<message xml:lang="fi">Valmiiksi muotoiltu (pre)</message>
-	<message xml:lang="ru">Предварительно
-форматированный (pre)</message>
+	<message xml:lang="ru">Предварительно форматированный (pre)</message>
 	<message xml:lang="hu">&amp;Előformázott (pre)</message>
 	<message xml:lang="ka">წინასწარ
 დაფორმატებული (pre)</message>
@@ -2930,8 +2935,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">tfoot</message>
 	<message xml:lang="pt">Rodapé (tfoot)</message>
 	<message xml:lang="fi">Taulukon alaotsikko</message>
-	<message xml:lang="ru">Нижний колонтитул таблицы
-(tfoot)</message>
+	<message xml:lang="ru">Нижний колонтитул таблицы (tfoot)</message>
 	<message xml:lang="hu">Táblázat&amp;lábléc (tfoot)</message>
 	<message xml:lang="ka">ქვესართი (tfoot)</message>
 	<message xml:lang="cn">tfoot</message>
@@ -2947,7 +2951,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">&amp;Math</message>
 	<message xml:lang="de">&amp;Math</message>
 	<message xml:lang="es">&amp;Math</message>
-	<message xml:lang="ru">&amp;Math</message>
+	<message xml:lang="ru">&amp;Математика</message>
 	<message xml:lang="hu">&amp;Matematika</message>
 	<message xml:lang="ka">&amp;Math</message>
 	<message xml:lang="cn">&amp;Math</message>
@@ -3120,8 +3124,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="pt">Aplicar função (ApplyFunction)</message>
 	<message xml:lang="fi">Käytä funktiota</message>
 	<message xml:lang="tr">Fonksiyonu onayla</message>
-	<message xml:lang="ru">Применить функцию
-(ApplyFunction)</message>
+	<message xml:lang="ru">Применить функцию (ApplyFunction)</message>
 	<message xml:lang="hu">&amp;ApplyFunction</message>
 	<message xml:lang="ka">ფუნქციის გამოყენება
 (ApplyFunction)</message>
@@ -3219,8 +3222,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">Subíndice y superíndice (msubsup)</message>
 	<message xml:lang="pt">Índice e Expoente (msubsup)</message>
 	<message xml:lang="fi">Ala- ja yläindeksi (msubsup)</message>
-	<message xml:lang="ru">Подстрочный и надстрочный
-индексы (msubsup)</message>
+	<message xml:lang="ru">Подстрочный и надстрочный индексы (msubsup)</message>
 	<message xml:lang="hu">Alsó és felső &amp;index (msubsup)</message>
 	<message xml:lang="ka">ზედა და ქვედა
 ინდექსები (msubsup)</message>
@@ -3356,8 +3358,7 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="es">Multiscripts (mmultiscripts)</message>
 	<message xml:lang="pt">Multiscripts (mmultiscripts)</message>
 	<message xml:lang="fi">Multiscript (mmultiscripts)</message>
-	<message xml:lang="ru">Пред(после)символьный индексы
-(mmultiscripts)</message>
+	<message xml:lang="ru">Пред(после)символьный индексы (mmultiscripts)</message>
 	<message xml:lang="hu">&amp;Multiscripts (mmultiscripts)</message>
 	<message xml:lang="ka">მრავალინდექსი
 (mmultiscripts)</message>
@@ -3402,6 +3403,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="tw">圖形</message>
 	<message xml:lang="ja">図形(&amp;G)</message>
 	<message xml:lang="nl">Figuur</message>
+	<message xml:lang="ru">Графика</message>
+	<message xml:lang="uk">Графіка</message>
 </label>
 <label define="BSVG_Line">
 	<message xml:lang="en">Line</message>
@@ -3413,6 +3416,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Linea</message>
 	<message xml:lang="nl">Lijn</message>
 	<message xml:lang="ja">直線</message>
+	<message xml:lang="ru">Линия</message>
+	<message xml:lang="uk">Лінія</message>
 </label>
 <label define="BSVG_SimpleArrow">
 	<message xml:lang="en">Arrow</message>
@@ -3424,6 +3429,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Freccia</message>
 	<message xml:lang="nl">Pijl</message>
 	<message xml:lang="ja">矢印</message>
+	<message xml:lang="ru">Стрелка</message>
+	<message xml:lang="uk">Стрілка</message>
 </label>
 <label define="BSVG_Text">
 	<message xml:lang="en">Text</message>
@@ -3435,6 +3442,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Testo</message>
 	<message xml:lang="nl">Tekst</message>
 	<message xml:lang="ja">テキスト</message>
+	<message xml:lang="ru">Текст</message>
+	<message xml:lang="uk">Текст</message>
 </label>
 <label define="BSVG_ForeignObject">
 	<message xml:lang="en">ForeignObject</message>
@@ -3445,6 +3454,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="tw">外來對象</message>
 	<message xml:lang="it">OggettoEsterno</message>
 	<message xml:lang="nl">Extern object (foreignObject)</message>
+	<message xml:lang="ru">Сторонний объект</message>
+	<message xml:lang="uk">ForeignObject</message>
 </label>
 <label define="BSVG_Group">
 	<message xml:lang="en">Group</message>
@@ -3456,6 +3467,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Gruppo</message>
 	<message xml:lang="nl">Groep</message>
 	<message xml:lang="ja">グループ</message>
+	<message xml:lang="ru">Группировать</message>
+	<message xml:lang="uk">Групувати</message>
 </label>
 <label define="BSVG_Square">
 	<message xml:lang="en">Square</message>
@@ -3467,6 +3480,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Quadrato</message>
 	<message xml:lang="nl">Vierkant</message>
 	<message xml:lang="ja">正方形</message>
+	<message xml:lang="ru">Квадрат</message>
+	<message xml:lang="uk">Квадрат</message>
 </label>
 <label define="BSVG_Rectangle">
 	<message xml:lang="en">Rectangle</message>
@@ -3478,6 +3493,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Rettangolo</message>
 	<message xml:lang="nl">Rechthoek</message>
 	<message xml:lang="ja">方形</message>
+	<message xml:lang="ru">Прямоугольник</message>
+	<message xml:lang="uk">Прямокутник</message>
 </label>
 <label define="BSVG_Diamond">
 	<message xml:lang="en">Diamond</message>
@@ -3489,6 +3506,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Rombo</message>
 	<message xml:lang="nl">Ruit</message>
 	<message xml:lang="ja">菱形</message>
+	<message xml:lang="ru">Ромб</message>
+	<message xml:lang="uk">Ромб</message>
 </label>
 <label define="BSVG_IsoscelesTriangle">
 	<message xml:lang="en">Triangle</message>
@@ -3500,6 +3519,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Triangolo</message>
 	<message xml:lang="nl">Driehoek</message>
 	<message xml:lang="ja">三角形</message>
+	<message xml:lang="ru">Треугольник</message>
+	<message xml:lang="uk">Трикутник</message>
 </label>
 <label define="BSVG_Circle">
 	<message xml:lang="en">Circle</message>
@@ -3511,6 +3532,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Cerchio</message>
 	<message xml:lang="nl">Cirkel</message>
 	<message xml:lang="ja">円</message>
+	<message xml:lang="ru">Круг</message>
+	<message xml:lang="uk">Коло</message>
 </label>
 <label define="BSVG_Ellipse">
 	<message xml:lang="en">Ellipse</message>
@@ -3522,6 +3545,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Ellisse</message>
 	<message xml:lang="nl">Ellips</message>
 	<message xml:lang="ja">楕円</message>
+	<message xml:lang="ru">Эллипс</message>
+	<message xml:lang="uk">Еліпс</message>
 </label>
 <label define="BSVG_Polyline">
 	<message xml:lang="en">Polyline</message>
@@ -3532,6 +3557,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">PiuLinee</message>
 	<message xml:lang="nl">Gebroken lijn</message>
 	<message xml:lang="ja">ポリライン</message>
+	<message xml:lang="ru">Ломаная</message>
+	<message xml:lang="uk">Ламана</message>
 </label>
 <label define="BSVG_Polygon">
 	<message xml:lang="en">Polygon</message>
@@ -3542,6 +3569,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Poligono</message>
 	<message xml:lang="nl">Veelhoek</message>
 	<message xml:lang="ja">ポリゴン</message>
+	<message xml:lang="ru">Многоугольник</message>
+	<message xml:lang="uk">Багатокутник</message>
 </label>
 <label define="BSVG_Spline">
 	<message xml:lang="en">Open curve</message>
@@ -3552,6 +3581,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Curva aperta</message>
 	<message xml:lang="nl">Open curve</message>
 	<message xml:lang="ja">開曲線</message>
+	<message xml:lang="ru">Незамкнутая кривая</message>
+	<message xml:lang="uk">Незамкнена крива</message>
 </label>
 <label define="BSVG_Closed">
 	<message xml:lang="en">Closed curve</message>
@@ -3562,6 +3593,8 @@ End of Document context menu. --><label define="BUndo">
 	<message xml:lang="it">Curva chiusa</message>
 	<message xml:lang="nl">Gesloten curve</message>
 	<message xml:lang="ja">閉曲線</message>
+	<message xml:lang="ru">Замкнутая кривая</message>
+	<message xml:lang="uk">Замкнена крива</message>
 </label>
 <!--<label define="BSVG_Cube">	<message xml:lang="en">Cube</message>	<message
 xml:lang="fr">Cube</message>	<message
@@ -3887,8 +3920,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="es">Área de texto (textarea)</message>
 	<message xml:lang="pt">Área de texto (textarea)</message>
 	<message xml:lang="fi">tekstialue</message>
-	<message xml:lang="ru">Область ввода текста
-(textarea)</message>
+	<message xml:lang="ru">Область ввода текста (textarea)</message>
 	<message xml:lang="hu">Szövegmező (textarea)</message>
 	<message xml:lang="ka">ტექსტური არე (textarea)</message>
 	<message xml:lang="cn">textarea</message>
@@ -4015,8 +4047,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="es">Polígono (area)</message>
 	<message xml:lang="pt">Polígono (area)</message>
 	<message xml:lang="fi">Monikulmio (area)</message>
-	<message xml:lang="ru">Область многоугольника
-(area)</message>
+	<message xml:lang="ru">Область многоугольника (area)</message>
 	<message xml:lang="hu">&amp;Sokszög</message>
 	<message xml:lang="ka">მრავალკუთხედი
 არე</message>
@@ -4036,8 +4067,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="es">Rectángulo (area)</message>
 	<message xml:lang="pt">Retângulo (area)</message>
 	<message xml:lang="fi">Nelikulmio (area)</message>
-	<message xml:lang="ru">Область прямоугольника
-(area)</message>
+	<message xml:lang="ru">Область прямоугольника (area)</message>
 	<message xml:lang="hu">&amp;Téglalap</message>
 	<message xml:lang="ka">მართკუთხედი არე</message>
 	<message xml:lang="cn">矩形区域</message>
@@ -4286,8 +4316,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="es">ruby</message>
 	<message xml:lang="pt">rubi</message>
 	<message xml:lang="fi">ruby</message>
-	<message xml:lang="ru">Текст ruby (для
-восточно-азиатских языков)</message>
+	<message xml:lang="ru">Текст ruby (для восточно-азиатских языков)</message>
 	<message xml:lang="hu">&amp;Ruby</message>
 	<message xml:lang="ka">ლალი (ruby)</message>
 	<message xml:lang="cn">ruby</message>
@@ -4308,6 +4337,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="it">Tema</message>
 	<message xml:lang="ja">テーマ</message>
 	<message xml:lang="nl">Thema</message>
+	<message xml:lang="ru">Тема</message>
+	<message xml:lang="uk">Тема</message>
 </label>
 <label define="BClassic">
 	<message xml:lang="en">Classic</message>
@@ -4320,6 +4351,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Klasszikus</message>
 	<message xml:lang="ja">クラシック</message>
 	<message xml:lang="nl">Klassiek</message>
+	<message xml:lang="ru">Классика</message>
+	<message xml:lang="uk">Класика</message>
 </label>
 <label define="BModern">
 	<message xml:lang="en">Modern</message>
@@ -4332,6 +4365,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Modern</message>
 	<message xml:lang="ja">モダン</message>
 	<message xml:lang="nl">Modern</message>
+	<message xml:lang="ru">Модерн</message>
+	<message xml:lang="uk">Модерн</message>
 </label>
 <label define="BNoTheme">
 	<message xml:lang="en">No theme</message>
@@ -4344,6 +4379,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Téma nélkül</message>
 	<message xml:lang="ja">テーマなし</message>
 	<message xml:lang="nl">Geen thema</message>
+	<message xml:lang="ru">Нет темы</message>
+	<message xml:lang="uk">Немає теми</message>
 </label>
 <label define="TextColorMenu">
 	<message xml:lang="en">Text color</message>
@@ -4387,6 +4424,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Szín nélkül</message>
 	<message xml:lang="ja">なし</message>
 	<message xml:lang="nl">Geen kleur</message>
+	<message xml:lang="ru">Нет цвета</message>
+	<message xml:lang="uk">Немає кольору</message>
 </label>
 <label define="BgColorMenu">
 	<message xml:lang="en">Background color</message>
@@ -4430,6 +4469,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Szín nélkül</message>
 	<message xml:lang="ja">なし</message>
 	<message xml:lang="nl">Geen kleur</message>
+	<message xml:lang="ru">Нет цвета</message>
+	<message xml:lang="uk">Немає кольору</message>
 </label>
 <label define="Align">
 	<message xml:lang="en">Alignment</message>
@@ -4442,6 +4483,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Igazítás</message>
 	<message xml:lang="ja">行揃え</message>
 	<message xml:lang="nl">Uitlijning</message>
+	<message xml:lang="ru">Выравнивание</message>
+	<message xml:lang="uk">Вирівнювання</message>
 </label>
 <label define="BLeftAlign">
 	<message xml:lang="en">Left</message>
@@ -4454,6 +4497,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu"></message>
 	<message xml:lang="ja">左寄せ</message>
 	<message xml:lang="nl">Links</message>
+	<message xml:lang="ru">Слева</message>
+	<message xml:lang="uk">Ліворуч</message>
 </label>
 <label define="BAlignCenter">
 	<message xml:lang="en">Center</message>
@@ -4466,6 +4511,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Középre</message>
 	<message xml:lang="ja">中央</message>
 	<message xml:lang="nl">Midden</message>
+	<message xml:lang="ru">По центру</message>
+	<message xml:lang="uk">По центру</message>
 </label>
 <label define="BRightAlign">
 	<message xml:lang="en">Right</message>
@@ -4478,6 +4525,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Jobbra</message>
 	<message xml:lang="ja">右寄せ</message>
 	<message xml:lang="nl">Rechts</message>
+	<message xml:lang="ru">Справа</message>
+	<message xml:lang="uk">Праворуч</message>
 </label>
 <label define="BJustify">
 	<message xml:lang="en">Justify</message>
@@ -4490,6 +4539,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Sorkizárt</message>
 	<message xml:lang="ja">両端揃え</message>
 	<message xml:lang="nl">Uitvullen</message>
+	<message xml:lang="ru">По ширине</message>
+	<message xml:lang="uk">За шириною</message>
 </label>
 <label define="BRemoveAlign">
 	<message xml:lang="en">Default</message>
@@ -4502,6 +4553,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu"></message>
 	<message xml:lang="ja">デフォルト</message>
 	<message xml:lang="nl">Standaard</message>
+	<message xml:lang="ru">По умолчанию</message>
+	<message xml:lang="uk">За замовчуванням</message>
 </label>
 <label define="BLineSpacing">
 	<message xml:lang="en">Line spacing</message>
@@ -4514,6 +4567,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Sortávolság</message>
 	<message xml:lang="ja">両端揃え</message>
 	<message xml:lang="nl">Regelafstand</message>
+	<message xml:lang="ru">Междустрочный интервал</message>
+	<message xml:lang="uk">Міжрядковий інтервал</message>
 </label>
 <label define="BLineSpacingSingle">
 	<message xml:lang="en">Single</message>
@@ -4526,6 +4581,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Egyszeres</message>
 	<message xml:lang="ja">１行間</message>
 	<message xml:lang="nl">Enkel</message>
+	<message xml:lang="ru">Одинарный</message>
+	<message xml:lang="uk">Одинарний</message>
 </label>
 <label define="BLineSpacingHalf">
 	<message xml:lang="en">Half</message>
@@ -4538,6 +4595,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Fél</message>
 	<message xml:lang="ja">１．５行間</message>
 	<message xml:lang="nl">Anderhalf</message>
+	<message xml:lang="ru">Наполовину</message>
+	<message xml:lang="uk">Наполовину</message>
 </label>
 <label define="BLineSpacingDouble">
 	<message xml:lang="en">Double</message>
@@ -4550,6 +4609,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Kétszeres</message>
 	<message xml:lang="ja">２行間</message>
 	<message xml:lang="nl">Dubbel</message>
+	<message xml:lang="ru">Двойной</message>
+	<message xml:lang="uk">Подвійний</message>
 </label>
 <label define="BRemoveLineSpacing">
 	<message xml:lang="en">Default</message>
@@ -4562,6 +4623,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Alapérték</message>
 	<message xml:lang="ja">デフォルト</message>
 	<message xml:lang="nl">Standaard</message>
+	<message xml:lang="ru">По умолчанию</message>
+	<message xml:lang="uk">За замовчуванням</message>
 </label>
 <label define="Indent">
 	<message xml:lang="en">Indent</message>
@@ -4574,6 +4637,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Behúzás</message>
 	<message xml:lang="ja">インデント</message>
 	<message xml:lang="nl">Inspringing</message>
+	<message xml:lang="ru">Выемка</message>
+	<message xml:lang="uk">Виїмка</message>
 </label>
 <label define="BIncrease">
 	<message xml:lang="en">Increase</message>
@@ -4586,6 +4651,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Növel</message>
 	<message xml:lang="ja">増やす</message>
 	<message xml:lang="nl">Inspringing vergroten</message>
+	<message xml:lang="ru">Увеличить</message>
+	<message xml:lang="uk">Збільшити</message>
 </label>
 <label define="BDecrease">
 	<message xml:lang="en">Decrease</message>
@@ -4598,6 +4665,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Csökkent</message>
 	<message xml:lang="ja">減らす</message>
 	<message xml:lang="nl">Inspringing verkleinen</message>
+	<message xml:lang="ru">Уменьшить</message>
+	<message xml:lang="uk">Зменшити</message>
 </label>
 <label define="BRemoveMargin">
 	<message xml:lang="en">Default</message>
@@ -4610,6 +4679,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Alapérték</message>
 	<message xml:lang="ja">デフォルト</message>
 	<message xml:lang="nl">Standaard</message>
+	<message xml:lang="ru">По умолчанию</message>
+	<message xml:lang="uk">За замовчуванням</message>
 </label>
 <label define="FontStyle">
 	<message xml:lang="en">Character</message>
@@ -4641,6 +4712,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Válasszon betűkészletet...</message>
 	<message xml:lang="ja">フォントの選択...</message>
 	<message xml:lang="nl">Lettertype selecteren?</message>
+	<message xml:lang="ru">Выбрать шрифт...</message>
+	<message xml:lang="uk">Вибрати шрифт...</message>
 </label>
 <label define="BRemoveFont">
 	<message xml:lang="en">Default</message>
@@ -4653,6 +4726,8 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">Alapérték</message>
 	<message xml:lang="ja">デフォルト</message>
 	<message xml:lang="nl">Standaard</message>
+	<message xml:lang="ru">По умолчанию</message>
+	<message xml:lang="uk">За замовчуванням</message>
 </label>
 <label define="BCSSStyle">
 	<message xml:lang="en">&amp;Style editor...</message>
@@ -4662,8 +4737,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="hu">CSS &amp;stílus...</message>
 	<message xml:lang="de">&amp;Stil editieren</message>
 	<message xml:lang="ka">CSS style...</message>
-	<message xml:lang="ru">Настройка каскадной таблицы
-стиля CSS...</message>
+	<message xml:lang="ru">Настройка каскадной таблицы стиля CSS...</message>
 	<message xml:lang="cn">CSS样式(&amp;S)...</message>
 	<message xml:lang="tw">CSS樣式(&amp;S)...</message>
 	<message xml:lang="sk">CSS &amp;pravidlá...</message>
@@ -4696,8 +4770,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="it">Mostra lo stile applicato...</message>
 	<message xml:lang="es">&amp;Mostrar estilo aplicado...</message>
 	<message xml:lang="de">Zugewiesenes Format anzeigen...</message>
-	<message xml:lang="ru">Показать применяемый
-стиль...</message>
+	<message xml:lang="ru">Показать применяемый стиль...</message>
 	<message xml:lang="hu">&amp;Alkalmazott stílusok mutatása...</message>
 	<message xml:lang="ka">გამოყენებული სტილის
 ჩვენება...</message>
@@ -4861,8 +4934,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="pt">Ligar ao destino precedente</message>
 	<message xml:lang="fi">Linkki edelliseen kohteeseen</message>
 	<message xml:lang="tr">Önceki hedefe bağlantı</message>
-	<message xml:lang="ru">Ссылка на пре&amp;дыдущую
-цель</message>
+	<message xml:lang="ru">Ссылка на пре&amp;дыдущую цель</message>
 	<message xml:lang="hu">&amp;Előző célponthoz kapcsolás</message>
 	<message xml:lang="ka">ბმა წინა
 სამიზნეზე</message>
@@ -4882,8 +4954,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="es">Crear o cambiar &amp;enlace...</message>
 	<message xml:lang="pt">Criar ou mudar enlace (link)...</message>
 	<message xml:lang="fi">Luo tai muuta linkki...</message>
-	<message xml:lang="ru">&amp;Создать или изменить
-ссылку...</message>
+	<message xml:lang="ru">&amp;Создать или изменить ссылку...</message>
 	<message xml:lang="hu">&amp;Kapocs létrehozása vagy
 megváltoztatása...</message>
 	<message xml:lang="ka">ბმის შექმნა ან
@@ -5003,6 +5074,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="tw">整理代碼</message>
 	<message xml:lang="it">Codice pulito</message>
 	<message xml:lang="nl">Code zuiveren</message>
+	<message xml:lang="ru">Очистка кода</message>
 </label>
 <label define="TableE">
 	<message xml:lang="en">Edit table</message>
@@ -5015,6 +5087,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="hu"></message>
 	<message xml:lang="ja">表の編集</message>
 	<message xml:lang="nl">Tabel bewerken</message>
+	<message xml:lang="ru">Редактирование таблицы</message>
 </label>
 <label define="BDataCell">
 	<message xml:lang="en">Change to data cell</message>
@@ -5039,8 +5112,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="it">Cambia la cella a intestazione</message>
 	<message xml:lang="de">Umwandeln in titelzelle</message>
 	<message xml:lang="es">Cambiar a celda de cabecera</message>
-	<message xml:lang="ru">Изменить в ячейки
-заголовка</message>
+	<message xml:lang="ru">Изменить в ячейки заголовка</message>
 	<message xml:lang="hu">&amp;Fejléccé tétel</message>
 	<message xml:lang="ka">შეცვლა სათაურის
 უჯრით</message>
@@ -5072,8 +5144,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="it">Unisci la cella a quella di destra</message>
 	<message xml:lang="de">Zusammenfügen mit rechter Zelle</message>
 	<message xml:lang="es">Unir con celda derecha</message>
-	<message xml:lang="ru">Объединить с ячейкой
-справа</message>
+	<message xml:lang="ru">Объединить с ячейкой справа</message>
 	<message xml:lang="hu">Egyesítés a &amp;jobbra lévő cellával</message>
 	<message xml:lang="ka">შერწყმა მარჯვენა
 უჯრასთან</message>
@@ -5090,8 +5161,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="it">Unisci la cella a quella sotto</message>
 	<message xml:lang="de">Zusammenfügen mit der zelle darunter</message>
 	<message xml:lang="es">Unir con celda inferior</message>
-	<message xml:lang="ru">Объединить с ячейкой
-ниже</message>
+	<message xml:lang="ru">Объединить с ячейкой ниже</message>
 	<message xml:lang="hu">Egyesítés az &amp;alatta lévő cellával</message>
 	<message xml:lang="ka">შერწყმა ქვედა
 უჯრასთან</message>
@@ -5108,8 +5178,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="it">Riduci l'estensione orizzontale</message>
 	<message xml:lang="de">Verkleinern der breite</message>
 	<message xml:lang="es">Reducir extensión horizontal</message>
-	<message xml:lang="ru">Уменьшить расширение по
-горизонтали</message>
+	<message xml:lang="ru">Уменьшить расширение по горизонтали</message>
 	<message xml:lang="hu">Shrink &amp;horizontal extend</message>
 	<message xml:lang="ka">განივი შეკუმშვა</message>
 	<message xml:lang="cn">收缩水平范围</message>
@@ -5125,8 +5194,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="it">Riduci l'estensione verticale</message>
 	<message xml:lang="de">Verkleinern der breite</message>
 	<message xml:lang="es">Reducir extensión vertical</message>
-	<message xml:lang="ru">Уменьшить расширение по
-вертикали</message>
+	<message xml:lang="ru">Уменьшить расширение по вертикали</message>
 	<message xml:lang="hu">Shrink &amp;vertical extend</message>
 	<message xml:lang="ka">მართობი შეკუმშვა</message>
 	<message xml:lang="cn">收缩垂直范围</message>
@@ -5275,8 +5343,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="pt">Mudar título...</message>
 	<message xml:lang="fi">Muuta otsake...</message>
 	<message xml:lang="tr">Başlığı değiştir</message>
-	<message xml:lang="ru">Изменить название
-документа...</message>
+	<message xml:lang="ru">Изменить название документа...</message>
 	<message xml:lang="hu">Cím &amp;cseréje...</message>
 	<message xml:lang="ka">დოკუმენტის სათაურის
 შეცვლა...</message>
@@ -5500,8 +5567,7 @@ XHTML 4.01-ით</message>
 	<message xml:lang="en">&amp;Add/Update table of contents</message>
 	<message xml:lang="fr">&amp;Ajouter/Actualiser la table des matières</message>
 	<message xml:lang="es">&amp;Generar índice de materias</message>
-	<message xml:lang="ru">Добавить/Обновить
-Оглавление</message>
+	<message xml:lang="ru">Добавить/Обновить Оглавление</message>
 	<message xml:lang="de">Inhaltsverzeichnis erzeugen</message>
 	<message xml:lang="it">Genera Indice</message>
 	<message xml:lang="hu">&amp;Tartalomjegyzék létrehozása</message>
@@ -5555,6 +5621,8 @@ XHTML 4.01-ით</message>
 	<message xml:lang="nl">Namespace-declaraties...</message>
 	<message xml:lang="ja">ネームスペースの宣言...</message>
 	<message xml:lang="it">Dichiarazione dei Namespace...</message>
+	<message xml:lang="ru">Объявление пространства имён...</message>
+	<message xml:lang="uk">Оголошення простору імен...</message>
 </label>
 <label define="Annotations_">
 	<message xml:lang="en">A&amp;nnotations</message>
@@ -5644,8 +5712,7 @@ XHTML 4.01-ით</message>
 	<message xml:lang="pt">Salvar seleção como XPointer</message>
 	<message xml:lang="fi">Tallenna valinta XPointer:iin</message>
 	<message xml:lang="tr">seçilen alanı XPointer gibi kaydet</message>
-	<message xml:lang="ru">Сохранить выбранное как
-&amp;XPointer</message>
+	<message xml:lang="ru">Сохранить выбранное как &amp;XPointer</message>
 	<message xml:lang="hu">Kijelölés tárolása &amp;XPointerként</message>
 	<message xml:lang="ka">მონიშნულის შენახვა
 როგორც XPointer</message>
@@ -5665,8 +5732,7 @@ XHTML 4.01-ით</message>
 	<message xml:lang="pt">Mover para o XPointer memorizado</message>
 	<message xml:lang="fi">Siirrä XPointer:iin</message>
 	<message xml:lang="tr">Xpointer\'daki birikenleri taşı</message>
-	<message xml:lang="ru">Переместить на хранение в
-XPointer</message>
+	<message xml:lang="ru">Переместить на хранение в XPointer</message>
 	<message xml:lang="hu">&amp;Tárolt XPointerhez ugrás</message>
 	<message xml:lang="ka">გადატანა შენახულ
 XPointer-ში</message>
@@ -5706,8 +5772,7 @@ XPointer-ში</message>
 	<message xml:lang="pt">Registrar</message>
 	<message xml:lang="fi">Lähetä palvelimelle</message>
 	<message xml:lang="tr">Server\'e kaydet</message>
-	<message xml:lang="ru">Опубликовать (post) на
-сервере</message>
+	<message xml:lang="ru">Опубликовать (post) на сервере</message>
 	<message xml:lang="hu">Küldés a &amp;kiszolgálóra</message>
 	<message xml:lang="ka">სევერზე
 გამოქვეყნება (post)</message>
@@ -5842,8 +5907,7 @@ XPointer-ში</message>
 	<message xml:lang="it">Copia delle informazioni per il lock...</message>
 	<message xml:lang="es">Copiar información de bloqueo</message>
 	<message xml:lang="tr">kilitli bilgileri kopyala...</message>
-	<message xml:lang="ru">Копировать информацию
-блокировки...</message>
+	<message xml:lang="ru">Копировать информацию блокировки...</message>
 	<message xml:lang="hu">Zárolási adatok &amp;másolása...</message>
 	<message xml:lang="ka">დაბლოკვის
 ინფორმაციის კოპირება...</message>
@@ -5864,6 +5928,8 @@ XPointer-ში</message>
 	<message xml:lang="it">Schemi</message>
 	<message xml:lang="nl">Sjablonen</message>
 	<message xml:lang="ja">テンプレート</message>
+	<message xml:lang="ru">Шаблоны</message>
+	<message xml:lang="uk">Шаблони</message>
 </label>
 <label define="BCreateTemplateFromDocument">
 	<message xml:lang="en">Create template from current document</message>
@@ -5876,6 +5942,8 @@ erstellen</message>
 	<message xml:lang="it">Crea uno schema dal documento corrente</message>
 	<message xml:lang="nl">Sjabloon maken van huidige document</message>
 	<message xml:lang="ja">現在のドキュメントからテンプレートを作る</message>
+	<message xml:lang="ru">Создать шаблон из текущего документа</message>
+	<message xml:lang="uk">Створити шаблон з поточного документу</message>
 </label>
 <label define="BTemplateCreateTextBox">
 	<message xml:lang="en">Create a text area</message>
@@ -5887,6 +5955,8 @@ erstellen</message>
 	<message xml:lang="it">Crea area di testo</message>
 	<message xml:lang="nl">Tekstveld maken...</message>
 	<message xml:lang="ja">テキスト領域を作る</message>
+	<message xml:lang="ru">Создать текстовое поле</message>
+	<message xml:lang="uk">Створити текстове поле</message>
 </label>
 <label define="BTemplateCreateUseBox">
 	<message xml:lang="en">Use a component or an element</message>
@@ -5898,6 +5968,8 @@ erstellen</message>
 	<message xml:lang="it">Usa un componente o un elemento</message>
 	<message xml:lang="nl">Component of element gebruiken</message>
 	<message xml:lang="ja">コンポーネントまたは要素を使う</message>
+	<message xml:lang="ru">Использовать компонент или элемент</message>
+	<message xml:lang="uk">Використати компонент або елемент</message>
 </label>
 <label define="BTemplateCreateUseCompBox">
 	<message xml:lang="en">Create and use a component</message>
@@ -5909,6 +5981,8 @@ erstellen</message>
 	<message xml:lang="it">Crea e usa un componente</message>
 	<message xml:lang="nl">Component maken en gebruiken...</message>
 	<message xml:lang="ja">コンポーネントを作成して使う (Create and use a component)</message>
+	<message xml:lang="ru">Создать и использовать компонент</message>
+	<message xml:lang="uk">Створити і використати компонент</message>
 </label>
 <label define="BTemplateCreateRepeat">
 	<message xml:lang="en">Repeat the current use</message>
@@ -5920,6 +5994,8 @@ erstellen</message>
 	<message xml:lang="it">Ripeti uso corrente</message>
 	<message xml:lang="nl">Huidige gebruik herhalen</message>
 	<message xml:lang="ja">カレントを繰り返して使う (Repeat the current use)</message>
+	<message xml:lang="ru">Повторить текущее использование</message>
+	<message xml:lang="uk">Повторити поточне викристання</message>
 </label>
 <label define="BTemplateCreateRepeatComp">
 	<message xml:lang="en">Create and repeat a component</message>
@@ -5932,6 +6008,8 @@ Komponente</message>
 	<message xml:lang="it">Crea e ripeti un componente</message>
 	<message xml:lang="nl">Component maken en herhalen...</message>
 	<message xml:lang="ja">コンポーネントを作成して繰り返えす (Create and repeat a component)</message>
+	<message xml:lang="ru">Создать и повторить элемент</message>
+	<message xml:lang="uk">Створити і повторити елемент</message>
 </label>
 <label define="BTemplateCreateFreeBox">
 	<message xml:lang="en">Create a free editing box</message>
@@ -5943,6 +6021,8 @@ Komponente</message>
 	<message xml:lang="it">Crea un box da editare</message>
 	<message xml:lang="nl">Verzamelveld maken...</message>
 	<message xml:lang="ja">自由編集ボックスを作る</message>
+	<message xml:lang="ru">Создать свободное окно редактирования</message>
+	<message xml:lang="uk">Створити вільне вікно редагування</message>
 </label>
 <label define="BTemplateCreateUnion">
 	<message xml:lang="en">Create a new types union</message>
@@ -5953,6 +6033,8 @@ Komponente</message>
 	<message xml:lang="it">Crea una nuona unione di tipi</message>
 	<message xml:lang="nl">Nieuwe typenverbinding maken...</message>
 	<message xml:lang="ja">新しい共用体型を作る (Create a new types union)</message>
+	<message xml:lang="ru">Создать новое объединение шрифтов</message>
+	<message xml:lang="uk">Створити нове об'єднання шрифтів</message>
 </label>
 <label define="JavascriptDom_">
 	<message xml:lang="en">&amp;Javascript/DOM</message>
@@ -5984,6 +6066,8 @@ Komponente</message>
 	<message xml:lang="tw">有效／無效</message>
 	<message xml:lang="ja">有効/無効</message>
 	<message xml:lang="nl">Inschakelen/Uitschakelen</message>
+	<message xml:lang="ru">Активировать/Деактивировать</message>
+	<message xml:lang="uk">Активувати/Деактивувати</message>
 </label>
 <label define="BExecuteACommand">
 	<message xml:lang="en">Execute a command</message>
@@ -5996,6 +6080,8 @@ Komponente</message>
 	<message xml:lang="it">Esegui un comando</message>
 	<message xml:lang="ja">コマンドの実行</message>
 	<message xml:lang="nl">Opdracht uitvoeren</message>
+	<message xml:lang="ru">Исполнить команду</message>
+	<message xml:lang="uk">Виконати команду</message>
 </label>
 <label define="BExecuteExternal">
 	<message xml:lang="en">Execute an external script</message>
@@ -6008,6 +6094,8 @@ Komponente</message>
 	<message xml:lang="it">Esegui un comando</message>
 	<message xml:lang="ja">外部スクリプトの実行</message>
 	<message xml:lang="nl">Extern script uitvoeren</message>
+	<message xml:lang="ru">Исполнить внешний скрипт</message>
+	<message xml:lang="uk">Виконати зовнішній скрипт</message>
 </label>
 <label define="BAddExternal">
 	<message xml:lang="en">Add an external script</message>
@@ -6020,6 +6108,8 @@ Komponente</message>
 	<message xml:lang="it">Aggiungi uno script esterno</message>
 	<message xml:lang="ja">外部スクリプトの追加</message>
 	<message xml:lang="nl">Extern script toevoegen</message>
+	<message xml:lang="ru">Запустить внешний скрипт</message>
+	<message xml:lang="uk">Запустить зовнішній скрипт</message>
 </label>
 <label define="BInsertScript">
 	<message xml:lang="en">Insert a script</message>
@@ -6032,6 +6122,8 @@ Komponente</message>
 	<message xml:lang="it">Inserisci uno script</message>
 	<message xml:lang="ja">スクリプトの挿入</message>
 	<message xml:lang="nl">Script invoegen</message>
+	<message xml:lang="ru">Вставить скрипт</message>
+	<message xml:lang="uk">Вставити скрипт</message>
 </label>
 <label define="BAtW3C">
 	<message xml:lang="en">Check for update</message>
@@ -6048,6 +6140,8 @@ Komponente</message>
 	<message xml:lang="it">Controlla per aggiornare</message>
 	<message xml:lang="nl">Controleren op nieuwere versie</message>
 	<message xml:lang="ja">アップデートの確認</message>
+	<message xml:lang="ru">Проверить обновления</message>
+	<message xml:lang="uk">Перевірити оовлення</message>
 </label>
 <label define="BHelpIndex">
 	<message xml:lang="en">Amaya Help...</message>
@@ -6079,6 +6173,8 @@ Komponente</message>
 	<message xml:lang="hu">A nap tippje</message>
 	<message xml:lang="ja">今日のTips</message>
 	<message xml:lang="nl">Tip van de dag...</message>
+	<message xml:lang="ru">Совет дня...</message>
+	<message xml:lang="uk">Порада дня...</message>
 </label>
 <label define="BInformation">
 	<message xml:lang="en">About Amaya</message>
