@@ -1673,12 +1673,14 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
       ok = ok && found;
 
       if (pCond->CoCondition == PcWithin || pCond->CoCondition == PcSibling)
-        if (!pCond->CoImmediate && pCond->CoChangeElem && pAsc)
-          /* The condition we have just processed is the first at its level
-             in the CSS selector. Remember it */
-          firstCondLevel = pCond;
-        else
-          firstCondLevel = NULL;
+	{
+	  if (!pCond->CoImmediate && pCond->CoChangeElem && pAsc)
+	    /* The condition we have just processed is the first at its level
+	       in the CSS selector. Remember it */
+	    firstCondLevel = pCond;
+	  else
+	    firstCondLevel = NULL;
+	}
 
       if (ok)
         pCond = pCond->CoNextCondition;
@@ -2027,8 +2029,8 @@ PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
           pRule->PrMinValue = 0;
           pAb = ListItemAbsBox (pEl, pDoc);
           if (pAb &&
-              (ruleType == PtMarginRight && pAb->AbDirection == 'L' ||
-               ruleType == PtMarginLeft && pAb->AbDirection == 'R'))
+              ((ruleType == PtMarginRight && pAb->AbDirection == 'L') ||
+               (ruleType == PtMarginLeft && pAb->AbDirection == 'R')))
             pRule->PrMinValue = 6;
           break;
         case PtVisibility:
@@ -2361,60 +2363,62 @@ ThotBool CreateListItemMarker (PtrAbstractBox pAb, PtrDocument pDoc,
         }
 
       if (!done)
-        /* set content and size, according to the marker type */
-        if (pAb->AbListStyleType == 'D' ||   /* disc */
-            pAb->AbListStyleType == 'C' ||   /* circle */
-            pAb->AbListStyleType == 'S')   /* square */
-          /* content is a graphic shape */
-          {
-            /* HorizRef: * . Bottom; */
-            pMarkerAb->AbHorizRef.PosEdge = HorizRef;
-            pMarkerAb->AbHorizRef.PosRefEdge = Bottom;
-            pMarkerAb->AbHorizRef.PosAbRef = pMarkerAb;
-            /* Height: 0.4 em */
-            pMarkerAb->AbHeight.DimValue = 4;
-            pMarkerAb->AbHeight.DimAbRef = NULL;
-            pMarkerAb->AbHeight.DimUnit = UnRelative;
-            pMarkerAb->AbHeight.DimSameDimension = FALSE;
-            /* Width: 0.4 em */
-            pMarkerAb->AbWidth.DimValue = 4;
-            pMarkerAb->AbWidth.DimAbRef = NULL;
-            pMarkerAb->AbWidth.DimUnit = UnRelative;
-            pMarkerAb->AbWidth.DimSameDimension = FALSE;	  
-            /* LineWeight: 1 px */
-            pMarkerAb->AbLineWeight = 1;
-            pMarkerAb->AbLineWeightUnit = UnPixel;
-            /* FillPattern: foregroundcolor */
-            if (pAb->AbListStyleType == 'D' ||
-                pAb->AbListStyleType == 'S')
-              /* disc or square */
-              pMarkerAb->AbFillPattern = 1;
-            /* set content */
-            pMarkerAb->AbLeafType = LtGraphics;
-            if (pAb->AbListStyleType == 'S')
-              /* square */
-              pMarkerAb->AbShape = 'R';
-            else
-              /* circle or disc */
-              pMarkerAb->AbShape = 'c';
-            pMarkerAb->AbGraphScript = 'L';
-            pMarkerAb->AbVolume = 1;
-          }
-        else if (pAb->AbListStyleType == '1' ||  /* decimal */
-                 pAb->AbListStyleType == 'Z' ||  /* decimal-leading-zero */
-                 pAb->AbListStyleType == 'i' ||  /* lower-roman */
-                 pAb->AbListStyleType == 'I' ||  /* Upper-Roman */
-                 pAb->AbListStyleType == 'g' ||  /* lower greek */
-                 pAb->AbListStyleType == 'a' ||  /* lower-latin */
-                 pAb->AbListStyleType == 'A')    /* upper-latin */
-          /* it's a counter */
-          {
-            pMarkerAb->AbLeafType = LtText;
-            if (pMarkerAb->AbText == NULL)
-              GetConstantBuffer (pMarkerAb);
-            pMarkerAb->AbLang = TtaGetDefaultLanguage ();
-            ComputeListItemNumber (pMarkerAb);
-          }
+	{
+	  /* set content and size, according to the marker type */
+	  if (pAb->AbListStyleType == 'D' ||   /* disc */
+	      pAb->AbListStyleType == 'C' ||   /* circle */
+	      pAb->AbListStyleType == 'S')   /* square */
+	    /* content is a graphic shape */
+	    {
+	      /* HorizRef: * . Bottom; */
+	      pMarkerAb->AbHorizRef.PosEdge = HorizRef;
+	      pMarkerAb->AbHorizRef.PosRefEdge = Bottom;
+	      pMarkerAb->AbHorizRef.PosAbRef = pMarkerAb;
+	      /* Height: 0.4 em */
+	      pMarkerAb->AbHeight.DimValue = 4;
+	      pMarkerAb->AbHeight.DimAbRef = NULL;
+	      pMarkerAb->AbHeight.DimUnit = UnRelative;
+	      pMarkerAb->AbHeight.DimSameDimension = FALSE;
+	      /* Width: 0.4 em */
+	      pMarkerAb->AbWidth.DimValue = 4;
+	      pMarkerAb->AbWidth.DimAbRef = NULL;
+	      pMarkerAb->AbWidth.DimUnit = UnRelative;
+	      pMarkerAb->AbWidth.DimSameDimension = FALSE;	  
+	      /* LineWeight: 1 px */
+	      pMarkerAb->AbLineWeight = 1;
+	      pMarkerAb->AbLineWeightUnit = UnPixel;
+	      /* FillPattern: foregroundcolor */
+	      if (pAb->AbListStyleType == 'D' ||
+		  pAb->AbListStyleType == 'S')
+		/* disc or square */
+		pMarkerAb->AbFillPattern = 1;
+	      /* set content */
+	      pMarkerAb->AbLeafType = LtGraphics;
+	      if (pAb->AbListStyleType == 'S')
+		/* square */
+		pMarkerAb->AbShape = 'R';
+	      else
+		/* circle or disc */
+		pMarkerAb->AbShape = 'c';
+	      pMarkerAb->AbGraphScript = 'L';
+	      pMarkerAb->AbVolume = 1;
+	    }
+	  else if (pAb->AbListStyleType == '1' ||  /* decimal */
+		   pAb->AbListStyleType == 'Z' ||  /* decimal-leading-zero */
+		   pAb->AbListStyleType == 'i' ||  /* lower-roman */
+		   pAb->AbListStyleType == 'I' ||  /* Upper-Roman */
+		   pAb->AbListStyleType == 'g' ||  /* lower greek */
+		   pAb->AbListStyleType == 'a' ||  /* lower-latin */
+		   pAb->AbListStyleType == 'A')    /* upper-latin */
+	    /* it's a counter */
+	    {
+	      pMarkerAb->AbLeafType = LtText;
+	      if (pMarkerAb->AbText == NULL)
+		GetConstantBuffer (pMarkerAb);
+	      pMarkerAb->AbLang = TtaGetDefaultLanguage ();
+	      ComputeListItemNumber (pMarkerAb);
+	    }
+	}
     }
   return TRUE;
 }
@@ -4288,33 +4292,35 @@ static void CascadeVisibility (PtrPRule pRule, PtrPSchema pSchP,
                                 PtrAttribute pAttr, PtrAttributePres pAttrBlk)
 {
   if (pRule)
-    /* register the rule in the appropriate rule table */
-    if (pRule->PrType == PtVisibility)
-      {
-        if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
-                                   PriorRuleV,
-                                   PriorschemaOfRuleV, PriorattrBlockOfRuleV))
-          {
-            // keep the right rule
-            PriorRuleV = pRule;
-            PriorschemaOfRuleV = pSchP;      
-            PriorattrOfRuleV = pAttr;
-            PriorattrBlockOfRuleV = pAttrBlk;
-          }
-      }
-    else
-      {
-        if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
-                                   PriorRuleD,
-                                   PriorschemaOfRuleD, PriorattrBlockOfRuleD))
-          {
-            // keep the right rule
-            PriorRuleD = pRule;
-            PriorschemaOfRuleD = pSchP;      
-            PriorattrOfRuleD = pAttr;
-            PriorattrBlockOfRuleD = pAttrBlk;
-          }
-      }
+    {
+      /* register the rule in the appropriate rule table */
+      if (pRule->PrType == PtVisibility)
+	{
+	  if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
+				     PriorRuleV,
+				     PriorschemaOfRuleV, PriorattrBlockOfRuleV))
+	    {
+	      // keep the right rule
+	      PriorRuleV = pRule;
+	      PriorschemaOfRuleV = pSchP;      
+	      PriorattrOfRuleV = pAttr;
+	      PriorattrBlockOfRuleV = pAttrBlk;
+	    }
+	}
+      else
+	{
+	  if (RuleHasHigherPriority (pRule, pSchP, pAttrBlk,
+				     PriorRuleD,
+				     PriorschemaOfRuleD, PriorattrBlockOfRuleD))
+	    {
+	      // keep the right rule
+	      PriorRuleD = pRule;
+	      PriorschemaOfRuleD = pSchP;      
+	      PriorattrOfRuleD = pAttr;
+	      PriorattrBlockOfRuleD = pAttrBlk;
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -5026,14 +5032,16 @@ static void GetRulesFromInheritedAttributes (PtrElement pEl,
                       if (viewSch != 1 ||
                           !CascRegistered (pRule, pSchPres, pAttr, attrBlock,
                                            casc))
-                        if (fileDescriptor)
-                          DisplayPRule (pRule, fileDescriptor, pEl, pSchPres,
-                                        0);
-                        else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,
-                                             pAttr, pNewAbbox))
-                          /* not the main view, apply the rule now */
-                          WaitingRule (pRule, pNewAbbox, pSchPres, pAttr, NULL,
-                                       queue, lqueue);
+			{
+			  if (fileDescriptor)
+			    DisplayPRule (pRule, fileDescriptor, pEl, pSchPres,
+					  0);
+			  else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,
+					       pAttr, pNewAbbox))
+			    /* not the main view, apply the rule now */
+			    WaitingRule (pRule, pNewAbbox, pSchPres, pAttr, NULL,
+					 queue, lqueue);
+			}
                     }
                   /* next rule associated with this value of the attribute */
                   pR = pR->PrNextPRule;
@@ -5165,17 +5173,19 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                      the rule for the same property we have already
                      encountered */
                   if (!CascRegistered (pRule, pSchPres, NULL, NULL, casc))
-                    if (fileDescriptor)
-                      DisplayPRule (pRule, fileDescriptor, pEl, pSchPres, 0);
-                    else 
-                      /* if it's a creation rule, apply it now */
-                      if (!ApplCrRule (pRule, pSchS, pSchPres, NULL,pAbbReturn,
-                                       viewNb, pDoc, pEl, forward, lqueue,
-                                       queue, pNewAbbox, fileDescriptor))
-                        if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL,
-                                        pNewAbbox))
-                          WaitingRule (pRule, pNewAbbox, pSchPres, NULL, NULL,
-                                       queue, lqueue);
+		    {
+		      if (fileDescriptor)
+			DisplayPRule (pRule, fileDescriptor, pEl, pSchPres, 0);
+		      else 
+			/* if it's a creation rule, apply it now */
+			if (!ApplCrRule (pRule, pSchS, pSchPres, NULL,pAbbReturn,
+					 viewNb, pDoc, pEl, forward, lqueue,
+					 queue, pNewAbbox, fileDescriptor) &&
+			    !ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL,
+					pNewAbbox))
+			  WaitingRule (pRule, pNewAbbox, pSchPres, NULL, NULL,
+				       queue, lqueue);
+		    }
                 }
               /* next rule for all element types in the same P schema
                  extension */
@@ -5215,17 +5225,18 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                   /* keep that rule only if it has a higher priority than the
                      rule for the same property we have already encountered */
                   if (!CascRegistered (pRule, pSchPres, NULL, NULL, casc))
-                    if (fileDescriptor)
-                      DisplayPRule (pRule, fileDescriptor, pEl, pSchPres, 0);
-                    else
-                      /* if it's a creation rule, apply it now */
-                      if (!ApplCrRule (pRule, pSchS, pSchPres, NULL,pAbbReturn,
-                                       viewNb, pDoc, pEl, forward, lqueue, queue, pNewAbbox,
-                                       fileDescriptor))
-                        if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL,
-                                        pNewAbbox))
+		    {
+		      if (fileDescriptor)
+			DisplayPRule (pRule, fileDescriptor, pEl, pSchPres, 0);
+		      else
+			/* if it's a creation rule, apply it now */
+			if (!ApplCrRule (pRule, pSchS, pSchPres, NULL,pAbbReturn,
+					 viewNb, pDoc, pEl, forward, lqueue, queue, pNewAbbox,
+					 fileDescriptor) && 
+			    !ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL, pNewAbbox))
                           WaitingRule (pRule, pNewAbbox, pSchPres, NULL, NULL,
                                        queue, lqueue);
+		    }
                 }
               /* next rule for the element type in the same P schema extens. */
               pRule = pRule->PrNextPRule;
@@ -5337,14 +5348,16 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
                           if (viewSch != 1 ||
                               !CascRegistered (pRule, pSchPattr, pAttr,
                                                attrBlock, casc))
-                            if (fileDescriptor)
-                              DisplayPRule (pRule, fileDescriptor, pEl,
-                                            pSchPattr, 0);
-                            else if (!ApplyRule (pRule, pSchPattr,
-                                                 pNewAbbox, pDoc, pAttr, pNewAbbox))
-                              /* not the main view, apply the rule now */
-                              WaitingRule (pRule, pNewAbbox, pSchPattr,
-                                           pAttr, NULL, queue, lqueue);
+			    {
+			      if (fileDescriptor)
+				DisplayPRule (pRule, fileDescriptor, pEl,
+					      pSchPattr, 0);
+			      else if (!ApplyRule (pRule, pSchPattr,
+						   pNewAbbox, pDoc, pAttr, pNewAbbox))
+				/* not the main view, apply the rule now */
+				WaitingRule (pRule, pNewAbbox, pSchPattr,
+					     pAttr, NULL, queue, lqueue);
+			    }
                         }
                       /* next rule associated with this value of the attr*/
                       pR = pR->PrNextPRule;

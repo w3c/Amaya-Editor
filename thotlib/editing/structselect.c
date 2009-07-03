@@ -911,46 +911,50 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
                           else
                             {
                               if (back > 0)
-                                /* pCell is an extended cell from a previous
-                                   column. Take next cell if it is not after
-                                   the last selected column */
-                                if (LastSelectedColumn == FirstSelectedColumn)
-                                  /*the whole selection is in a single column*/
-                                  pCell = NULL;
-                                else
-                                  {
-                                  pCell = pCell->ElNext;
-                                  while (pCell && !TypeHasException (ExcIsCell,
-                                                        pCell->ElTypeNumber,
-                                                        pCell->ElStructSchema))
-                                    pCell = pCell->ElNext;
-                                  if (pCell)
-                                    {
-                                    pCol = GetColHeadOfCell (pCell);
-                                    if (pCol != LastSelectedColumn)
-                                      /* the next cell is not in the last
-                                         selected column */
-                                      if (!ElemIsBefore (pCol, LastSelectedColumn))
-                                        /* the next cell is after the last
-                                           selected column */
-                                        pCell = NULL;
-                                    }
-                                  }
+				{
+				  /* pCell is an extended cell from a previous
+				     column. Take next cell if it is not after
+				     the last selected column */
+				  if (LastSelectedColumn == FirstSelectedColumn)
+				    /*the whole selection is in a single column*/
+				    pCell = NULL;
+				  else
+				    {
+				      pCell = pCell->ElNext;
+				      while (pCell && !TypeHasException (ExcIsCell,
+									 pCell->ElTypeNumber,
+									 pCell->ElStructSchema))
+					pCell = pCell->ElNext;
+				      if (pCell)
+					{
+					  pCol = GetColHeadOfCell (pCell);
+					  if (pCol != LastSelectedColumn)
+					    /* the next cell is not in the last
+					       selected column */
+					    if (!ElemIsBefore (pCol, LastSelectedColumn))
+					      /* the next cell is after the last
+						 selected column */
+					      pCell = NULL;
+					}
+				    }
+				}
                             }
                           if (pCell)
-                            /* the row contains a cell that is between the
-                               selected columns */
-                            if (ElemIsWithinSubtree (pLastEl, pCell))
-                              /* this cell contains the end of the selection */
-                              {
-                                pEl = pCell;
-                                while (pEl != pLastEl &&
-                                       ElemIsWithinSubtree (pLastEl, pEl))
-                                  pEl = pEl->ElFirstChild;
-                              }
-                            else
-                              /* take that cell */
-                              pEl = pCell;
+			    {
+			      /* the row contains a cell that is between the
+				 selected columns */
+			      if (ElemIsWithinSubtree (pLastEl, pCell))
+				/* this cell contains the end of the selection */
+				{
+				  pEl = pCell;
+				  while (pEl != pLastEl &&
+					 ElemIsWithinSubtree (pLastEl, pEl))
+				    pEl = pEl->ElFirstChild;
+				}
+			      else
+				/* take that cell */
+				pEl = pCell;
+			    }
                         }
                     }
                 }
@@ -2554,10 +2558,12 @@ static void MakeSelectionRectangle ()
 
       /* get the next row to be checked */
       if (pCurRow)
-        if (pCurRow == pLastRow)
-          pCurRow = NULL;
-        else
-          pCurRow = NextRowInTable (pCurRow, pTable);
+	{
+	  if (pCurRow == pLastRow)
+	    pCurRow = NULL;
+	  else
+	    pCurRow = NextRowInTable (pCurRow, pTable);
+	}
     }
 }
 
