@@ -45,8 +45,8 @@
 43 Закрити
 44 Директорії
 45 Документ %s вже існує. Перезаписати його?
-46 **Set the text color
-47 **Set the background color
+46 Встановити колір тексту
+47 Встановити колір фона
 48 Сім'я шрифтів
 49 Нормальне
 50 Напівжирне
@@ -58,15 +58,15 @@
 56 Підрядкове
 57 Закреслювання
 58 Розмір шрифта
-59 **Unindent
-60 **Single line spacing
-61 **Middle line spacing
-62 **Double line spacing
+59 Відступ
+60 Одиночний інтервал
+61 Полуторний інтервал
+62 Подвійний інтервал
 63 Зберегти документ
 64 Закрити, не зберігати
 65 Начертання символа
 66 Колір
-67 **Elements
+67 Елементи
 68 Видалити
 69 Вихідний потік даних
 70 PostScript файл
@@ -233,20 +233,20 @@
 231 Копіювати
 232 Вставити
 233 Перевірка правопису
-234 **Various constructs
-235 **Relations, orders and logic
-236 **Sets and functions
-237 **Arithmetic, operations, complexes and constants
-238 **Analysis, linear algebra and statistic
-239 **Trigonometry and logarithms
+234 Раз
+235 Залежності, послідовності й логіка
+236 Класи й функції
+237 Арифметика, операції, комплекси й константи
+238 Аналіз, лінійна алгебра і статистика
+239 Тригонометрія і логарифми
 240 Збільшити
 241 Зменшити
-242 **Theme
+242 Тема
 243 XML
 244 Text
-245 **No recent document
-246 **Click an element to select it
-247 **Click to change the editing mode
+245 Немає недавніх документів
+246 Клацніть по елементу для його вибору
+247 Клацніть для зміни режиму редагування
 248 Об'єднати
 249 Зменшити розширення по горизонталі
 250 Зменшити розширення по вертикалі
@@ -254,124 +254,124 @@
 252 Додати рядок
 253 Вставити стовпец
 254 Додати стовпец
-255 **Tip of the day
-256 **Show tip at startup
-257 **Previous tip
-258 **Next tip
-259 **Did you know...
-260 **Close
-261 **Amaya can be adapted to your own needs: five profiles are provided with different sets of menus and panels. See Preferences/General.
-262 **Panels can be displayed on the left or on the right side of the window or even customized panel by panel. See Preferences.
-263 **With the F2 or Escape key you can select the parent element in the document structure, to apply editing functions (copy, paste, attributes, style, etc.) to the right element.
-264 **You can display two documents side by side in the window by dragging a document tab to the left or right side of the displayed document.
-265 **In customizable mode, you can drag panels to change their order or to make them floating.
-266 **With the customizable mode, you can move panels on both sides of the window just by dragging.
-267 **You can switch editing mode (Text/XML) by clicking on the corresponding button in the bottom right corner.
-268 **When there is red button in the bottom right corner, you can display errors by clicking on it.
-269 **You can select an ancestor of the current selection by clicking on its name on the path control displayed at the bottom of the window.
-270 **You can move to another tab with the menu displayed by the arrow button at right of document tabs.
-271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
-272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
-274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
-275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
-277 **Classic
-278 **Modern
-279 **No theme
-280 **Title/Description
-281 **Generate a description
-282 **Square
-283 **Rounded Square
-284 **Rectangle
-285 **Rounded rectangle
-286 **Diamond
-287 **Parallelogram
-288 **Trapezium
-289 **Equilateral triangle
-290 **Isosceles triangle
-291 **Right triangle
-292 **Circle
-293 **Ellipse
-294 **Line
-295 **Arrow
-296 **Double Arrow
-297 **Zigzag
-298 **Group
-299 **Ungroup
-300 **Bring to front
-301 **Send to back
-302 **One level up
-303 **One level down
-304 **90° left
-305 **90° right
-306 **Rotate
-307 **Vertical symmetry
-308 **Horizontal symmetry
-309 **Scale
-310 **Skew
-311 **Move
-312 **Align bottom
-313 **Align center
-314 **Align left
-315 **Align middle
-316 **Align right
-317 **Align top
-318 **Distribute bottom
-319 **Distribute center
-320 **Distribute left
-321 **Distribute middle
-322 **Distribute right
-323 **Distribute top
-324 **Distribute vertical spacing
-325 **Distribute horizontal spacing
-326 **Closed Bezier curve
-327 **Bezier curve
-328 **Polyline
-329 **Polygon
-330 **Foreign Object
-331 **Image
-332 **SVG Canvas
-333 **Text
-334 **Cone
-335 **Cube
-336 **Cylinder
-337 **Octahedron
-338 **Parallelepiped
-339 **Pyramid
-340 **Beaker
-341 **Funnel
-342 **Bunsen burner
-343 **Buchner flask
-344 **Boiling flask
-345 **Burette
-346 **Erlenmeyer flask
-347 **Test tube
-348 **Pipette
-349 **Rectangular
-350 **Rounded rectangular
-351 **Round
-352 **Scream
-353 **Thought
-354 **Capacitor
-355 **Power source
-356 **Diode
-357 **Ground Point
-358 **Inductor
-359 **LED
-360 **Op-amp
-361 **Resistor
-362 **Switch
-363 **Transistor
-364 **Voltage source
-365 **Zener diode
-366 **Pentagon
-367 **Hexagon
-368 **Heptagon
-369 **Octogon
-370 **Star (4 branches)
-371 **Star (5 branches)
-372 **Star (6 branches)
+255 Порада дня
+256 Показувати поради після запуску
+257 Попередня порада
+258 Наступна порада
+259 Чи знали ви, що...
+260 Закрити
+261 Amaya може бути пристосована до ваших власних потреб: п'ять профілів споряджені різноманітними наборами меню і панелей. Дивіться Настройки/Загальні.
+262 Панелі можуть бути відображені з лівої та з правої сторони вікна, або навіть підгонені одне під інше. Дивіться Настройки.
+263 З допомогою F2 або Escape можна обрати батьківський документ у структурі документа, щоб докласти функції редагування (копіювання, вставку, властивості, стиль, і т.ін.) до потрібного елементу.
+264 У вікні можна показувати два документа поряд, перетаскуючи вкладку до лівої або правої сторони документа, що відображається.
+265 У налагоджуваному режимі ви можете перетаскувати панелі, щоб змінити їх порядок або зробити їх плаваючими.
+266 З допомогою налагоджуваного режиму можна розміщувати панелі з обох сторін вікна простим перетаскуванням.
+267 Режим редагування (Text/XML) можна переключати, клацаючи по відповідній кнопці у правому нижньому кутку.
+268 Коли у правому нижньому кутку з'являється червона кнопка, можна показати помилки, клацнув по ній.
+269 Можна обрати предка поточного елемента, клацаючи по його імені в управлінні шляхом, що зображено унизу вікна.
+270 Ви можете переміститися до наступної вкладки, використовуючи меню, що спливає під стрілкою справа від вкладок.
+271 Якщо активувати елемент "Показувати цілі" у меню "Перегляди", цілі зображатимуться у форматованому вигляді. Це зручно для створення посилання: ціль можна обрати, клацнув по ній.
+272 Коли ви обертаєте SVG об'єкт, його центр відображується хрестиком. Можна використати мишу, щоб зсунути його.
+273 Базові SVG форми наділені мітками-маніпуляторами, що використовуються для їх редагування. Сині трикутники або зелений квадрат дозволяють змінювати розмір форм. В елементах <rect/> червоні кружальця керують радіусом скруглених кутів.
+274 У малюванні SVG, лінії створюються з точністю 15Рякщо ви натиснете Shift. Це корисно, якщо вам потрібні прямі лінії.
+275 Якщо ви змінюєте розмір зображення або об'єкта SVG, натиснення клавіші Shift дозволить зберегти пропорції сторін.
+276 Використовуйте Редагувати>Настройки>Мова Спілкування щоб обрати мову користувацького інтерфейсу.
+277 Класика
+278 Модерн
+279 Немає теми
+280 Заголовок/Опис
+281 Сгенерувати опис
+282 Квадрат
+283 Скруглений квадрат
+284 Прямокутник
+285 Скруглений прямокутник
+286 Ромб
+287 Паралелограм
+288 Трапеція
+289 Рівносторонній трикутник
+290 Рівнобедрений трикутник
+291 Прямокутний трикутник
+292 Коло
+293 Еліпс
+294 Лінія
+295 Стрілка
+296 Подвійна стрілка
+297 Зигзаг
+298 Групувати
+299 Розгрупувати
+300 На передній план
+301 На задній план
+302 Рівнем вище
+303 Рівнем нижче
+304 90Рналіво
+305 90Рнаправо
+306 Обертати
+307 Вертикальна симетрія
+308 Горизонтальна симетрія
+309 Масштабувати
+310 Нахилити
+311 Рухати
+312 Вирівнювання по нижній стороні
+313 Вирівнювання по центру
+314 Вирівнювання по лівій стороні
+315 Вирівнювання посередині
+316 Вирівнювання по правій стороні
+317 Вирівнювання по верхній стороні
+318 Розкласти по низу
+319 Розкласти по центру
+320 Розкласти по лівій стороні
+321 Розкласти по середині
+322 Розкласти по правій стороні
+323 Розкласти по верху
+324 Розкласти вертикальний інтервал
+325 Розкласти горизонтальний інтервал
+326 Замкнена Бейзеровська крива
+327 Бейзеровська крива
+328 Ломана
+329 Багатокутник
+330 Foreign Object
+331 Зображення
+332 SVG Полотно
+333 Текст
+334 Конус
+335 Куб
+336 Циліндр
+337 Октаедр
+338 Паралелепіпед
+339 Піраміда
+340 Мензурка
+341 Лійка
+342 Бунзенівський пальник
+343 Посудина Д'юара
+344 Перегінна колба
+345 Бюретка
+346 Колба Ерленмейєра
+347 Пробірка
+348 Піпетка
+349 Прямокутна
+350 Скруглена прямокутна
+351 Скруглена
+352 Крик
+353 Думка
+354 Конденсатор
+355 Джерело живлення
+356 Діод
+357 Заземлення
+358 Індуктор
+359 СПД
+360 Операційний підсилювач
+361 Резистор
+362 Перемикач
+363 Транзистор
+364 Джерело напруги
+365 Стабістор
+366 П'ятикутник
+367 Шестикутник
+368 Семикутник
+369 Восьмикутник
+370 Зірка (4 променя)
+371 Зірка (5 променів)
+372 Зірка (6 променів)
 373 AND
 374 NAND
 375 OR
@@ -379,49 +379,49 @@
 377 XOR
 378 XNOR
 379 NOT
-380 **Cross
-381 **Frame
-382 **Ring
-383 **Cloud
-384 **Scroll
-385 **Sun
-386 **Lightning_Bolt
-387 **Moon
-388 **Smiley
-389 **Heart
-390 **Flower
-391 **Prohibited
-392 **Pentagon
-393 **2-Way Rounded Arrow
-394 **3-Way Arrow Callout
-395 **3-Way Arrow
-396 **4-Way_Arrow_Callout
-397 **4-Way Arrow
-398 **Chevron
-399 **Circular Arrow
-400 **Corner Arrow
-401 **Corner Double Arrow Callout
-402 **Corner Double Arrow
-403 **Double Arrow Callout
-404 **Double Arrow
-405 **Notched Arrow
-406 **Rounded Arrow
-407 **Simple Arrow Callout
-408 **Simple Arrow
-409 **Split Arrow
-410 **S-Shape Arrow
-411 **Striped Arrow
-412 **Create template from current document
-413 **Create a text area
-414 **Use a component or an element
-415 **Create and use a component
-416 **Repeat the current use
-417 **Create and repeat a component
-418 **Create a free editing box
-419 **Create a new types union
-420 **Button up to close
-421 **Double click to close
-422 **Click to close
+380 Хрест
+381 Рамка
+382 Кільце
+383 Хмарка
+384 Сувій
+385 Сонце
+386 Розряд_Блискавки
+387 Місяць
+388 Смайл
+389 Серце
+390 Квітка
+391 Заборона
+392 П'ятикутник
+393 2-Гілкова Скруглена Стрілка
+394 3-Гілкова Виносна Стрілка
+395 3-Гілкова Стрілка
+396 4-Гілкова_Виносна_Стрілка
+397 4-Гілкова Стрілка
+398 Шеврон
+399 Циркулярна Стрілка
+400 Кутова Стрілка
+401 Кутова Подвійна Виносна Стрілка
+402 Кутова Подвійна Стрілка
+403 Подвійна Виносна Стрілка
+404 Подвійна Стрілка
+405 Стрілка З Виїмкою
+406 Скруглена Стрілка
+407 Проста Виносна Стрілка
+408 Проста Стрілка
+409 Розбиваюча Стрілка
+410 S-Образна Стрілка
+411 Смугаста Стрілка
+412 Створити шаблон з поточного документу
+413 Створити текстове поле
+414 Використати компонент або елемент
+415 Створити і використати компонент
+416 Повторити поточне використання
+417 Створити і повторити елемент
+418 Створити вільне поле редагування
+419 Створити нове сімейство шрифтів
+420 Натиснути кнопку для закриття
+421 Подвійне клацання для закриття
+422 Клацнути для закриття
 423 **Locked resource
 424 **Unlocked resource
 425 **Not a WebDAV resource
