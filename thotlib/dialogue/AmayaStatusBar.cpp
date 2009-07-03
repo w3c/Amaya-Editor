@@ -121,12 +121,12 @@ AmayaStatusBar::AmayaStatusBar( wxWindow * p_parent )
   m_pLogErrorButton = new wxBitmapButton( this, XRCID("wxID_STATUS_LOG_BUTTON"),
                                           m_LogErrorBmp_Green,
                                           wxDefaultPosition, wxDefaultSize,
-                                          wxBU_AUTODRAW | wxNO_BORDER);
+                                          wxBU_EXACTFIT | wxNO_BORDER);
   wxASSERT(m_pLogErrorButton);
   m_pLockButton = new wxBitmapButton( this, XRCID("wxID_STATUS_LOCK_BUTTON"),
                                       m_Lock_No,
                                       wxDefaultPosition, wxDefaultSize,
-                                      wxBU_AUTODRAW | wxNO_BORDER);
+                                      wxBU_EXACTFIT | wxNO_BORDER);
   m_pLockButton->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,NO_WEBDAV)));
   m_pathCtrl = new AmayaPathControl(this, wxID_ANY);
   m_insertMode = new AmayaStatusText(this, wxID_ANY, wxT(""));
@@ -134,7 +134,7 @@ AmayaStatusBar::AmayaStatusBar( wxWindow * p_parent )
   // setup statusbar attributes
   widths[Field_InsertMode] = 60;//m_insertMode->GetSize().GetWidth()
   widths[Field_LogError] = m_pLogErrorButton->GetSize().GetWidth() + LOG_SHIFT;
-  widths[Field_Lock] = m_pLockButton->GetSize().GetWidth();
+  widths[Field_Lock] = m_pLockButton->GetSize().GetWidth() + LOG_SHIFT;
   SetFieldsCount(Field_Max);
   SetStatusWidths(Field_Max, widths);
   SetMinHeight(m_pLogErrorButton->GetSize().GetHeight() + 4);
@@ -217,14 +217,12 @@ void AmayaStatusBar::EnableLogError( bool enable )
       m_pLogErrorButton->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LIB_ERROR_DOC)));
       m_pLogErrorButton->SetBitmapLabel(m_LogErrorBmp_Red);
       m_pLogErrorButton->SetBitmapDisabled(m_LogErrorBmp_Red);
-      m_pLogErrorButton->SetBitmapHover(m_LogErrorBmp_Red);
     }
   else
     {
       m_pLogErrorButton->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_LIB_NOERROR_DOC)));
       m_pLogErrorButton->SetBitmapLabel(m_LogErrorBmp_Green);
       m_pLogErrorButton->SetBitmapDisabled(m_LogErrorBmp_Green);
-      m_pLogErrorButton->SetBitmapHover(m_LogErrorBmp_Green);
     }
 }
 
