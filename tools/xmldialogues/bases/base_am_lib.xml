@@ -6665,10 +6665,10 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Crear plantilla a partir de documento actual</message>
 	<message xml:lang="cn">从当前文档创建模板</message>
 	<message xml:lang="tw">從當前文檔創建模板</message>
-	<message xml:lang="de">Eine Vorlage aus dem aktuellen Dokument
-erstellen</message>
+	<message xml:lang="de">Eine Vorlage aus dem aktuellen Dokument erstellen</message>
 	<message xml:lang="it">Crea lo schema dal documento corrente</message>
 	<message xml:lang="ja">*現在のドキュメントからテンプレートを作成*Create template from current document</message>
+	<message xml:lang="hu">Sablon létrehozása a jelenlegi dokumentum alapján</message>
 </label>
 <label define="TemplateTextBox">
 	<message xml:lang="en">Create a text area</message>
@@ -6679,6 +6679,7 @@ erstellen</message>
 	<message xml:lang="tw">創建文本區</message>
 	<message xml:lang="it">Crea area di testo</message>
 	<message xml:lang="ja">*テキスト領域を作成</message>
+	<message xml:lang="hu">Szövegdoboz létrehozása</message>
 </label>
 <label define="TemplateUseBox">
 	<message xml:lang="en">Use a component or an element</message>
@@ -6690,6 +6691,7 @@ erstellen</message>
 	<message xml:lang="it">Usa un componente o un elemento</message>
 	<message xml:lang="ja">*部品または要素を使う*Use a component or an element</message>
 </label>
+	<message xml:lang="hu">Komponens vagy elem használata</message>
 <label define="TemplateUseCompBox">
 	<message xml:lang="en">Create and use a component</message>
 	<message xml:lang="fr">Créer et utiliser un composant</message>
@@ -6699,6 +6701,7 @@ erstellen</message>
 	<message xml:lang="de">Erstellen und Verwenden einer Komponente</message>
 	<message xml:lang="it">Crea e usa un component</message>
 	<message xml:lang="ja">*部品を作って使う*Create and use a component</message>
+	<message xml:lang="hu">Komponens létrehozása és használata</message>
 </label>
 <label define="TemplateRepeat">
 	<message xml:lang="en">Repeat the current use</message>
@@ -6709,6 +6712,7 @@ erstellen</message>
 	<message xml:lang="de">Aktuelle Anwendung wiederholen</message>
 	<message xml:lang="it">Ripeti uso corrente </message>
 	<message xml:lang="ja">*現在の利用を繰り返す*Repeat the current use</message>
+	<message xml:lang="hu">Jelenlegi használat ismétlése</message>
 </label>
 <label define="TemplateRepeatComp">
 	<message xml:lang="en">Create and repeat a component</message>
@@ -6720,6 +6724,7 @@ Komponente</message>
 	<message xml:lang="tw">創建並重複組件</message>
 	<message xml:lang="it">Crea e ripeti un componente</message>
 	<message xml:lang="ja">*部品を作って繰り返す*Create and repeat a component</message>
+	<message xml:lang="hu">Komponens létrehozása és ismétlése</message>
 </label>
 <label define="TemplateFreeBox">
 	<message xml:lang="en">Create a free editing box</message>
@@ -6730,6 +6735,7 @@ Komponente</message>
 	<message xml:lang="de">Eine freie Editierbox erstellen</message>
 	<message xml:lang="it">Crea un box da editare</message>
 	<message xml:lang="ja">*ボックスを作って自由に編集*Create a free editing box</message>
+	<message xml:lang="hu">Szabad szerkesztésű szövegdoboz létrehozása</message>
 </label>
 <label define="TemplateUnion">
 	<message xml:lang="en">Create a new types union</message>
@@ -6740,6 +6746,7 @@ Komponente</message>
 	<message xml:lang="de">Verursachen Sie neue Typen Anschluss</message>
 	<message xml:lang="it">Crea una nuova unione di tipi</message>
 	<message xml:lang="ja">*新しい共用体の型を作る*Create a new types union</message>
+	<message xml:lang="hu">Új típus unió létrehozása</message>
 </label>
 <label define="BUTTON_UP">
 	<message xml:lang="en">Button up to close</message>
@@ -6750,6 +6757,7 @@ Komponente</message>
 	<message xml:lang="de">Knopf bis zum Abschluss</message>
 	<message xml:lang="it">Tasto fino alla fine</message>
 	<message xml:lang="ja">*ボタンを離して閉じる*Button up to close</message>
+	<message xml:lang="hu">Bezárás felnyíl billentyűvel</message>
 </label>
 <label define="TMSG_DOUBLECLICK">
 	<message xml:lang="en">Double click to close</message>
@@ -6760,6 +6768,7 @@ Komponente</message>
 	<message xml:lang="de">Doppeltes Klicken zum zu schließen</message>
 	<message xml:lang="it">Doppio scatto da chiudersi</message>
 	<message xml:lang="ja">*ダブルクリックで閉じる*Double click to close</message>
+	<message xml:lang="hu">Bezárás duplakattintással</message>
 </label>
 <label define="TMSG_SIMPLECLICK">
 	<message xml:lang="en">Click to close</message>
@@ -6770,24 +6779,28 @@ Komponente</message>
 	<message xml:lang="de">Klicken zum zu schließen</message>
 	<message xml:lang="it">Scatto da chiudersi</message>
 	<message xml:lang="ja">*クリックで閉じる*Click to close</message>
+	<message xml:lang="hu">Bezárás kattintással</message>
 </label>
 <label define="LOCK">
 	<message xml:lang="en">Locked resource</message>
 	<message xml:lang="fr">Ressource bloquée</message>
 	<message xml:lang="it">Risorsa bloccata</message>
 	<message xml:lang="es">Recurso bloqueado</message>
+	<message xml:lang="hu">Zárolt erőforrás</message>
 </label>
 <label define="UNLOCK">
 	<message xml:lang="en">Unlocked resource</message>
 	<message xml:lang="fr">Ressource débloquée</message>
 	<message xml:lang="it">Risorsa non bloccata</message>
 	<message xml:lang="es">Recurso desbloqueado</message>
+	<message xml:lang="hu">Nem zárolt erőforrás</message>
 </label>
 <label define="NO_WEBDAV">
 	<message xml:lang="en">Not a WebDAV resource</message>
 	<message xml:lang="fr">Ce n'est pas une resource</message>
 	<message xml:lang="it">Non è una risorsa WebDAV</message>
 	<message xml:lang="es">No es un recurso WebDAV</message>
+	<message xml:lang="hu">Nem WebDAV erőforrás</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

@@ -411,17 +411,18 @@
 409 **Split Arrow
 410 **S-Shape Arrow
 411 **Striped Arrow
-412 **Create template from current document
-413 **Create a text area
+412 Sablon létrehozása a jelenlegi dokumentum alapján
+413 Szövegdoboz létrehozása
 414 **Use a component or an element
-415 **Create and use a component
-416 **Repeat the current use
-417 **Create and repeat a component
-418 **Create a free editing box
-419 **Create a new types union
-420 **Button up to close
-421 **Double click to close
-422 **Click to close
-423 **Locked resource
-424 **Unlocked resource
-425 **Not a WebDAV resource
+415 Komponens vagy elem használata
+415 Komponens létrehozása és használata
+416 Jelenlegi használat ismétlése
+417 Komponens létrehozása és ismétlése
+418 Szabad szerkesztésű szövegdoboz létrehozása
+419 Új típus unió létrehozása
+420 Bezárás felnyíl billentyűvel
+421 Bezárás duplakattintással
+422 Bezárás kattintással
+423 Zárolt erőforrás
+424 Nem zárolt erőforrás
+425 Nem WebDAV erőforrás
