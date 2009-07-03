@@ -186,15 +186,20 @@ void AmayaStatusBar::OnSize(wxSizeEvent& event)
   {
     GetFieldRect(Field_LogError, rect);
     //size.x += widths[Field_LogError];
-	m_pLogErrorButton->Move(rect.x, rect.y-3);
-    //m_pLogErrorButton->Move(rect.x + rect.width - size.x, rect.y-1);
+#ifdef _MACOS
+    m_pLogErrorButton->Move(rect.x, rect.y-1);
+#else
+    m_pLogErrorButton->Move(rect.x, rect.y-3);
+#endif
   }
   if (m_pLockButton)
   {
     GetFieldRect(Field_Lock, rect);
-    //size.x += widths[Field_Lock];
+#ifdef _MACOS
+    m_pLockButton->Move(rect.x, rect.y-1);
+#else
     m_pLockButton->Move(rect.x, rect.y-3);
-    //m_pLockButton->Move(rect.x + rect.width - size.x, rect.y-1);
+#endif
   }
 
   GetFieldRect(Field_Path, rect);

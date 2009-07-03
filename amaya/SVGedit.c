@@ -2047,7 +2047,7 @@ static ThotBool AttachMarker (Document doc, Element el, int attrnum,
     
   if (!LoadSVG_Markers (doc, marker_id, svgCanvas, svgSchema))
     return FALSE;
-
+  TtaExtendUndoSequence (doc);
   attrType.AttrTypeNum = attrnum;
   attrType.AttrSSchema = svgSchema;
   attr = TtaNewAttribute (attrType);
