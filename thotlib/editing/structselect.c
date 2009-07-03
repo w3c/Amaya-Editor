@@ -3468,7 +3468,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   PtrSSchema          pSS;
   PtrElement          pEl, pParent;
   PtrAttribute        pAttr;
-  PtrAbstractBox      pGroup, pOld = pAb;
+  PtrAbstractBox      pGroup;
   NotifyElement       notifyEl;
   Document            doc;
   int                 view;
