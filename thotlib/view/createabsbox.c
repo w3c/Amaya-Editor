@@ -796,34 +796,37 @@ static void Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb,
   if (pAbb->AbEnclosing)
     {
       if (/* is it a position relatively to a referred element? */
-	  ((pR->PrType == PtHorizPos || pR->PrType == PtVertPos) &&
-	   pR->PrPosRule.PoRelation == RlReferred) ||
-	  /* is it the width or height... */
-	  ((pR->PrType == PtWidth || pR->PrType == PtHeight) &&
-	   /* ... of a rubber band box... */
-	   (pR->PrDimRule.DrPosition &&
-	    pR->PrDimRule.DrPosRule.PoRelation == RlReferred) ||
-	   /* ... or defined by a reference to another element? */
-	   (!pR->PrDimRule.DrPosition && pR->PrDimRule.DrSameDimens &&
-	    pR->PrDimRule.DrRelation == RlReferred)))
-	if (pAttr && pAttr->AeAttrType == AtReferenceAttr &&
-	    pAttr->AeAttrReference &&
-	    pAttr->AeAttrReference->RdReferred &&
-	    pAttr->AeAttrReference->RdReferred->ReReferredElem)
-	  /* the rule is associated with a reference attribute that actually
-	     refers to an element */
-	  {
-	    /* get the first ancestor of this referred element that has an
-	       abstract box in the same view */
-	    view = pAbb->AbDocView;
-	    pAncest = pAttr->AeAttrReference->RdReferred->ReReferredElem->ElParent;
-	    while (pAncest && !pAncest->ElAbstractBox[view - 1])
-	      pAncest = pAncest->ElParent;
-	    if (pAncest)
-	      /* link the rule to the abstract box of this ancestor for later
-		 evaluation */
-	      pAb = pAncest->ElAbstractBox[view - 1];
-	  }
+          ((pR->PrType == PtHorizPos || pR->PrType == PtVertPos) &&
+           pR->PrPosRule.PoRelation == RlReferred) ||
+
+          /* is it the width or height... */
+          ((pR->PrType == PtWidth || pR->PrType == PtHeight) &&
+           /* ... of a rubber band box... */
+           ((pR->PrDimRule.DrPosition &&
+             pR->PrDimRule.DrPosRule.PoRelation == RlReferred) ||
+            /* ... or defined by a reference to another element? */
+            (!pR->PrDimRule.DrPosition && pR->PrDimRule.DrSameDimens &&
+             pR->PrDimRule.DrRelation == RlReferred))))
+        {
+          if (pAttr && pAttr->AeAttrType == AtReferenceAttr &&
+              pAttr->AeAttrReference &&
+              pAttr->AeAttrReference->RdReferred &&
+              pAttr->AeAttrReference->RdReferred->ReReferredElem)
+            /* the rule is associated with a reference attribute that actually
+               refers to an element */
+            {
+              /* get the first ancestor of this referred element that has an
+                 abstract box in the same view */
+              view = pAbb->AbDocView;
+              pAncest = pAttr->AeAttrReference->RdReferred->ReReferredElem->ElParent;
+              while (pAncest && !pAncest->ElAbstractBox[view - 1])
+                pAncest = pAncest->ElParent;
+              if (pAncest)
+                /* link the rule to the abstract box of this ancestor for later
+                   evaluation */
+                pAb = pAncest->ElAbstractBox[view - 1];
+            }
+        }
       if (pAb == NULL)
         pAb = pAbb->AbEnclosing;
       /* si ce pave est un pave de presentation cree par la regle */
