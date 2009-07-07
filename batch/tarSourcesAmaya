@@ -86,9 +86,9 @@ ${LIBWWWDIR}/Library/src/windows/*.h \
 ${LIBWWWDIR}/Library/src/windows/*.def \
 ${LIBWWWDIR}/Library/src/windows/*.files \
 ${LIBWWWDIR}/modules/Makefile.am \
+${LIBWWWDIR}/modules/Makefile.am.64 \
 ${LIBWWWDIR}/modules/Makefile.in \
 ${LIBWWWDIR}/modules/md5/Makefile.am \
-${LIBWWWDIR}/modules/md5/Makefile.am.64 \
 ${LIBWWWDIR}/modules/md5/Makefile.in \
 ${LIBWWWDIR}/modules/md5/*.c \
 ${LIBWWWDIR}/modules/md5/*.h \
@@ -254,7 +254,6 @@ ${AMAYADIR}/config/amaya.kb-mac \
 ${AMAYADIR}/config/amaya.keyboard \
 ${AMAYADIR}/config/amaya.emacs \
 ${AMAYADIR}/config/amaya.profiles \
-${AMAYADIR}/config/gtkrc \
 ${AMAYADIR}/config/*-amayadialogue \
 ${AMAYADIR}/config/*-amayamsg \
 ${AMAYADIR}/config/*-libdialogue \
