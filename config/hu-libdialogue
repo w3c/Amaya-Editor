@@ -273,7 +273,7 @@
 271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
 272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
 273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
-274 **For SVG drawing, lines are created with a precision of 15Â° if you press the shift button. It is useful when you want to draw straight lines.
+274 **For SVG drawing, lines are created with a precision of 15° if you press the shift button. It is useful when you want to draw straight lines.
 275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
 276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
 277 Klasszikus
@@ -303,8 +303,8 @@
 301 **Send to back
 302 **One level up
 303 **One level down
-304 **90Â° left
-305 **90Â° right
+304 **90° left
+305 **90° right
 306 **Rotate
 307 **Vertical symmetry
 308 **Horizontal symmetry

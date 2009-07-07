@@ -88,6 +88,7 @@ ${LIBWWWDIR}/Library/src/windows/*.files \
 ${LIBWWWDIR}/modules/Makefile.am \
 ${LIBWWWDIR}/modules/Makefile.in \
 ${LIBWWWDIR}/modules/md5/Makefile.am \
+${LIBWWWDIR}/modules/md5/Makefile.am.64 \
 ${LIBWWWDIR}/modules/md5/Makefile.in \
 ${LIBWWWDIR}/modules/md5/*.c \
 ${LIBWWWDIR}/modules/md5/*.h \

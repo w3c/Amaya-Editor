@@ -238,7 +238,7 @@ sub start_hndl {
 	}
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	elsif ( $element eq "language" ) {
-		print OUT "\t";	
+		#print OUT "\t";	
 		addbegintag ( $element, %attributes );					
 	}	
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
@@ -426,7 +426,6 @@ sub default_hndl {	#for all the cases of an invalid xml document
 	#to used all the text recognized
 	elsif ($data !~ /^\t/) {
 		if ( $current_tag eq "language") {
-			#if ( )
 			@list_of_lang_occur = (@list_of_lang_occur, $data) ;
 			recopy ($data);
 		}
@@ -435,7 +434,7 @@ sub default_hndl {	#for all the cases of an invalid xml document
 		}
 	}
 	else { # do nothing
-      print "=>\"$text\" Data:\"$data->utf8\"\n";
+      #print "=>\"$text\" Data:\"$data->utf8\"\n";
 	}
 } #End default_hndl
 
