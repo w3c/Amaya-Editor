@@ -105,7 +105,7 @@ AmayaEditPathEvtHandler::AmayaEditPathEvtHandler(AmayaFrame *p_frame,
 {
   PtrAbstractBox pAb;
   int i,j;
-  PtrPathSeg          pPa, pPaStart;
+  PtrPathSeg          pPa, pPaStart = NULL;
 
   *hasBeenTransformed = FALSE;
   if (pFrame)

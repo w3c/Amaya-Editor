@@ -5030,12 +5030,12 @@ void TtaGivePolylineAngle (Element element, int rank, double *angle)
       buff = ((PtrElement) element)->ElPolyLineBuffer;
       xStart = buff->BuPoints[1].XCoord;
       yStart = buff->BuPoints[1].YCoord;
-
+      xPrev = yPrev = xNext = yNext = 0;
       prevBuff = NULL;
       while (rank >= buff->BuLength && buff->BuNext != NULL)
         {
           rank -= buff->BuLength;
-	  prevBuff = buff;
+          prevBuff = buff;
           buff = buff->BuNext;
         }
       if (rank > buff->BuLength)
@@ -5044,38 +5044,39 @@ void TtaGivePolylineAngle (Element element, int rank, double *angle)
         {
           x = buff->BuPoints[rank].XCoord;
           y = buff->BuPoints[rank].YCoord;
-	  if (rank > 1)
-	    {
-	      xPrev = buff->BuPoints[rank-1].XCoord;
-	      yPrev = buff->BuPoints[rank-1].YCoord;
-	    }
-	  else if (prevBuff && !first)
-	    {
-	      xPrev = prevBuff->BuPoints[prevBuff->BuLength].XCoord;
-	      yPrev = prevBuff->BuPoints[prevBuff->BuLength].YCoord;
-	    }
-	  if (rank < buff->BuLength)
-	    {
-	      xNext = buff->BuPoints[rank+1].XCoord;
-	      yNext = buff->BuPoints[rank+1].YCoord;
-	    }
-	  else if (buff->BuNext && !last)
-	    {
-	      xNext = buff->BuNext->BuPoints[1].XCoord;
-	      yNext = buff->BuNext->BuPoints[1].YCoord;
-	    }
+          if (rank > 1)
+            {
+              xPrev = buff->BuPoints[rank-1].XCoord;
+              yPrev = buff->BuPoints[rank-1].YCoord;
+            }
+          else if (prevBuff && !first)
+            {
+              xPrev = prevBuff->BuPoints[prevBuff->BuLength].XCoord;
+              yPrev = prevBuff->BuPoints[prevBuff->BuLength].YCoord;
+            }
 
-	  if (first)
-	    /* first point in the polyline */
-	    *angle = ThetaAngle(xNext-x, yNext-y);
-	  else if (last)
-	    /* last point in the polyline */
-	    *angle = ThetaAngle(x-xPrev, y-yPrev);
-	  else
-	    /* any other point in the polyline : bisector of the angle */
-	    *angle = BisectorAngle(x-xPrev, y-yPrev, xNext-x, yNext-y);
+          if (rank < buff->BuLength)
+            {
+              xNext = buff->BuPoints[rank+1].XCoord;
+              yNext = buff->BuPoints[rank+1].YCoord;
+            }
+          else if (buff->BuNext && !last)
+            {
+              xNext = buff->BuNext->BuPoints[1].XCoord;
+              yNext = buff->BuNext->BuPoints[1].YCoord;
+            }
 
-	  (*angle)*=(180/M_PI);
+          if (first)
+            /* first point in the polyline */
+            *angle = ThetaAngle(xNext-x, yNext-y);
+          else if (last)
+            /* last point in the polyline */
+            *angle = ThetaAngle(x-xPrev, y-yPrev);
+          else
+            /* any other point in the polyline : bisector of the angle */
+            *angle = BisectorAngle(x-xPrev, y-yPrev, xNext-x, yNext-y);
+          
+          (*angle)*=(180/M_PI);
         }
     }
 }
@@ -5616,8 +5617,8 @@ ThotBool CheckGeometricProperties(Document doc, Element leaf,
   int x1,y1,x2,y2,x3,y3,x4,y4;
   int nbPoints;
   int shape = -1;
-  double w, h;
-  double a = 1,b = 0, c = 0,d = 1, e = 0, f = 0;
+  double w = 0, h = 0;
+  double a = 1, b = 0, c = 0, d = 1, e = 0, f = 0;
   double x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_;
   ThotBool doAnalyse = FALSE;
 

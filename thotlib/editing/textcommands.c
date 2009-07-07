@@ -902,6 +902,7 @@ static void MovingCommands (int code, Document doc, View view,
               if (pBox)
                 MoveInLine (frame, TRUE, extendSel);
               if (pViewSel->VsBox)
+                {
                 /* Get the last X position */
 #ifdef _GL
                 if (pViewSel->VsBox->BxBoundinBoxComputed)
@@ -909,6 +910,7 @@ static void MovingCommands (int code, Document doc, View view,
                 else
 #endif /* _GL */
                   ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+                }
             }
           break;
 	   
