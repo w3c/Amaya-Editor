@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<base version="112">
+<base version="113">
 <control>
-	<language encoding="latin1">en</language>
+<language encoding="latin1">en</language>
  	<language encoding="latin1">fr</language>
  	<language encoding="latin1">de</language>
  	<language encoding="latin1">it</language>
@@ -4284,7 +4284,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="tw">區域引用 (blockquote)</message>
 	<message xml:lang="sk">Úryvok (blockquote)</message>
 	<message xml:lang="ja">引用 (ブロックレベル内容) (blockquote)</message>
-	<message xml:lang="nl">Blokquotatie (blockquote)</message>
+	<message xml:lang="nl">Blokcitaat (blockquote)</message>
 	<message xml:lang="uk">Довга цитата (blockquote)</message>
 </label>
 <label define="BIFrame">
@@ -4410,7 +4410,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="tw">前景色...</message>
 	<message xml:lang="sk">Popredia...</message>
 	<message xml:lang="ja">文字色の選択...</message>
-	<message xml:lang="nl">Tekstkleur selecteren?</message>
+	<message xml:lang="nl">Tekstkleur selecteren</message>
 	<message xml:lang="uk">Колір тексту документа...</message>
 </label>
 <label define="BRemoveColor">
@@ -4455,7 +4455,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="tw">背景色...</message>
 	<message xml:lang="sk">Farba pozadia...</message>
 	<message xml:lang="ja">背景色の選択...</message>
-	<message xml:lang="nl">Achtergrondkleur selecteren?</message>
+	<message xml:lang="nl">Achtergrondkleur selecteren...</message>
 	<message xml:lang="uk">Колір фона...</message>
 </label>
 <label define="BRemoveBgColor">
@@ -4711,7 +4711,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="tw">選擇字體...</message>
 	<message xml:lang="hu">Válasszon betűkészletet...</message>
 	<message xml:lang="ja">フォントの選択...</message>
-	<message xml:lang="nl">Lettertype selecteren?</message>
+	<message xml:lang="nl">Lettertype selecteren...</message>
 	<message xml:lang="ru">Выбрать шрифт...</message>
 	<message xml:lang="uk">Вибрати шрифт...</message>
 </label>
@@ -4742,7 +4742,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="tw">CSS樣式(&amp;S)...</message>
 	<message xml:lang="sk">CSS &amp;pravidlá...</message>
 	<message xml:lang="ja">スタイルの編集(&amp;S)...</message>
-	<message xml:lang="nl">&amp;Opmaakeditor?</message>
+	<message xml:lang="nl">&amp;Opmaakeditor...</message>
 	<message xml:lang="uk">Настройка каскадної таблиці стиля CSS...</message>
 </label>
 <label define="BCreateClass">
@@ -4778,7 +4778,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="tw">顯示已應用的樣式...</message>
 	<message xml:lang="sk">Zobraziť použité štýly...</message>
 	<message xml:lang="ja">適用されたスタイルの表示...</message>
-	<message xml:lang="nl">Toegepaste opmaak weergeven?</message>
+	<message xml:lang="nl">Toegepaste opmaak weergeven</message>
 	<message xml:lang="uk">Показати уживаний стиль...</message>
 </label>
 <label define="StyleSheets">
@@ -4816,7 +4816,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="tw">鏈接(..</message>
 	<message xml:lang="sk">Pripojiť súbor s CSS...</message>
 	<message xml:lang="ja">リンクする...</message>
-	<message xml:lang="nl">Koppeling?</message>
+	<message xml:lang="nl">Koppeling...</message>
 	<message xml:lang="uk">Посилання на CSS...</message>
 </label>
 <label define="BOpenCSS">
@@ -4835,7 +4835,7 @@ xml:lang="es">Cilindro</message></label>--><label define="Form">
 	<message xml:lang="tw">打開(..</message>
 	<message xml:lang="sk">Otvoriť súbor s CSS...</message>
 	<message xml:lang="ja">開く...</message>
-	<message xml:lang="nl">Openen?</message>
+	<message xml:lang="nl">Openen...</message>
 	<message xml:lang="uk">Відкрити CSS...</message>
 </label>
 <label define="BDisableCSS">
@@ -5351,7 +5351,7 @@ hozzáadása/törlése...</message>
 	<message xml:lang="tw">更改標題...</message>
 	<message xml:lang="sk">Zmeniť názov (title)</message>
 	<message xml:lang="ja">タイトルの変更...</message>
-	<message xml:lang="nl">Titel wijzigen?</message>
+	<message xml:lang="nl">Titel wijzigen...</message>
 	<message xml:lang="uk">Змінити назву документа...</message>
 </label>
 <label define="Doctype1">
@@ -5838,7 +5838,7 @@ XPointer-ში</message>
 	<message xml:lang="tw">自定義查詢...</message>
 	<message xml:lang="sk">Zadefinovať požiadavku...</message>
 	<message xml:lang="ja">クエリーのカスタマイズ...</message>
-	<message xml:lang="nl">Zoekopdracht aanpassen?</message>
+	<message xml:lang="nl">Zoekopdracht aanpassen...</message>
 	<message xml:lang="uk">Налаштувати запит...</message>
 </label>
 <label define="BFilterAnnotations">
@@ -5895,7 +5895,7 @@ XPointer-ში</message>
 	<message xml:lang="tw">鎖定資源</message>
 	<message xml:lang="sk">Uzamknúť zdrojový súbor</message>
 	<message xml:lang="ja">リソースをロックする</message>
-	<message xml:lang="nl">Bron vergrendelen</message>
+	<message xml:lang="nl">Bron vergrendelen...</message>
 	<message xml:lang="uk">Блокувати ресурс</message>
 </label>
 <label define="BCopyLock">

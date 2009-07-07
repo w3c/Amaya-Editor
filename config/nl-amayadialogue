@@ -236,7 +236,7 @@
 234 Geen script (noscript)
 235 Sectie (div)
 236 Adres (address)
-237 Blokquotatie (blockquote)
+237 Blokcitaat (blockquote)
 238 Inline frame (iframe)
 239 Ruby (ruby)
 240 Thema
@@ -244,10 +244,10 @@
 242 Modern
 243 Geen thema
 244 Tekstkleur
-245 Tekstkleur selecteren?
+245 Tekstkleur selecteren
 246 Geen kleur
 247 Achtergrondkleur
-248 Achtergrondkleur selecteren?
+248 Achtergrondkleur selecteren...
 249 Geen kleur
 250 Uitlijning
 251 Links
@@ -265,14 +265,14 @@
 263 Inspringing verkleinen
 264 Standaard
 265 Tekst
-266 Lettertype selecteren?
+266 Lettertype selecteren...
 267 Standaard
-268 &Opmaakeditor?
+268 &Opmaakeditor...
 269 &Regel maken...
-270 Toegepaste opmaak weergeven?
+270 Toegepaste opmaak weergeven
 271 Opmaakmodellen
-272 Koppeling?
-273 Openen?
+272 Koppeling...
+273 Openen...
 274 Uitschakelen...
 275 Inschakelen...
 276 Verwijderen...
@@ -302,7 +302,7 @@
 300 Kolom toevoegen
 301 Plakken vóór
 302 Plakken na
-303 Titel wijzigen?
+303 Titel wijzigen...
 304 Doctype wijzigen
 305 Doctype verwijderen
 306 Doctype toevoegen
@@ -328,10 +328,10 @@
 326 Naar server posten
 327 Verwijderen
 328 Laden
-329 Zoekopdracht aanpassen?
+329 Zoekopdracht aanpassen...
 330 Lokaal filter...
 331 &Samenwerken
-332 Bron vergrendelen
+332 Bron vergrendelen...
 333 Informatie over vergrendeling kopiëren...
 334 Sjablonen
 335 Sjabloon maken van huidige document
