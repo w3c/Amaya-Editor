@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<base version="95">
+<base version="96">
 <control>
-	<language encoding="latin1">en</language>
+<language encoding="latin1">en</language>
  	<language encoding="latin1">fr</language>
  	<language encoding="latin1">de</language>
  	<language encoding="latin1">it</language>
@@ -1502,7 +1502,7 @@ neodpovedá</message>
 	<message xml:lang="tw">同時保存這些圖片嗎?</message>
 	<message xml:lang="sk">Uložiť aj obrázky?</message>
 	<message xml:lang="ja">以下の画像も保存しますか?</message>
-	<message xml:lang="nl">Bij het opslaan ook de volgende bestanden opslaan?</message>
+	<message xml:lang="nl">Bij het opslaan ook de volgende afbeeldingen opslaan?</message>
 	<message xml:lang="uk">Зберігати зображення під час наступних збережень?</message>
 </label>
 <label define="AM_URL_SAVE_FAILED">
@@ -1756,7 +1756,7 @@ neodpovedá</message>
 	<message xml:lang="tw">W3C的網頁編輯器/瀏覽器</message>
 	<message xml:lang="sk">Editor/prehliadač webu od W3C</message>
 	<message xml:lang="ja">webのための W3C's エディタ/ブラウザ</message>
-	<message xml:lang="nl">De webeditor and -browser van het W3C</message>
+	<message xml:lang="nl">De webeditor en -browser van het W3C</message>
 	<message xml:lang="uk">Редактор/браузер від W3C's</message>
 </label>
 <label define="AM_ABOUT2">
@@ -2346,6 +2346,7 @@ odpoveď</message>
 	<message xml:lang="uk">Невдала спроба збереження в %s. Зберегти на диск?</message>
 	<message xml:lang="it">Vuoi una copia in locale?</message>
 	<message xml:lang="ru">Неудачная попытка сохранения в %s. Сохранить на диск?</message>
+	<message xml:lang="nl">Opslaan naar %s mislukt. Opslaan op schijf?</message>
 </label>
 <label define="AM_SAVE_COMPARE_FAILED">
 	<message xml:lang="en">Saving to %s seems corrupted, ignore?</message>
@@ -4161,7 +4162,7 @@ remote</message>
 	<message xml:lang="tw">自動遠程本地注釋</message>
 	<message xml:lang="sk">Automaticky nahrať vzdialené komentáre</message>
 	<message xml:lang="ja">リモートな注釈を自動読み込みする</message>
-	<message xml:lang="nl">Annotaties op afstand automatisch laden</message>
+	<message xml:lang="nl">Netwerkannotaties automatisch laden</message>
 	<message xml:lang="uk">Автозавантаження віддалених анотацій</message>
 </label>
 <label define="AM_ANNOT_RAUTOLOAD_RST">
@@ -4428,7 +4429,7 @@ errors</message>
 	<message xml:lang="sk">Nájdené chyby - pozri Zobrazenia &gt; Skontrolovať
 chyby</message>
 	<message xml:lang="ja">エラー発見 - ファイルを見る > 文解析エラー表示</message>
-	<message xml:lang="nl">Er zijn fouten aangetroffen. Zie Weergave &gt; Parseerfouten</message>
+	<message xml:lang="nl">Er zijn fouten aangetroffen. Zie Weergave > Parseerfouten</message>
 	<message xml:lang="uk">Виявлено помилки. Виберіть пункт меню Файл/Показати розбір помилок.</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
@@ -5025,7 +5026,7 @@ menüsüne bakın</message>
 菜單</message>
 	<message xml:lang="sk">Nebol vytvorený žiadny uživateľský komentár. Otvorte Možnosti</message>
 	<message xml:lang="ja">アノテーションユーザの宣言がありません。アノテーション/コンフィグ メニューを開いてください。</message>
-	<message xml:lang="nl">Er is geen gebruiker ingesteld voor annotaties. U kunt dit doen in het Voorkeuren</message>
+	<message xml:lang="nl">Er is geen gebruiker ingesteld voor annotaties. U kunt dit doen in het menu Voorkeuren > Annotaties</message>
 	<message xml:lang="uk">Не вказано автора анотації. Відкрийте меню Настройки</message>
 </label>
 <label define="AM_CANNOT_ANNOTATE">
@@ -6155,7 +6156,7 @@ nadväznosť</message>
 	<message xml:lang="tw">用戶 WebDAV 資源列表 </message>
 	<message xml:lang="sk">Používateľské WebDAV zoznamy zdrojov</message>
 	<message xml:lang="ja">ユーザーのWebDAV リソースリスト</message>
-	<message xml:lang="nl">Lijst van WebDAV-bronnen van gebruiker:</message>
+	<message xml:lang="nl">Lijst van WebDAV-bronnen van gebruiker (URL URL ...):</message>
 	<message xml:lang="uk">Список користувачів ресурсів WebDAV (URL URL)</message>
 </label>
 <label define="AM_DAV_DEPTH">
@@ -8169,7 +8170,7 @@ chiusura</message>
 	<message xml:lang="de">Bezugsquelle kopieren (Stile, Skripte, ...)</message>
 	<message xml:lang="hu">Erőforrások másolása (stílusok, szkriptek, ...)</message>
 	<message xml:lang="ja">リソース（スタイルとスクリプト）をコピー</message>
-	<message xml:lang="nl">Bronnen kopiëren (opmaakmodellen, scripts, ...)</message>
+	<message xml:lang="nl">Bronnen kopiëren (opmaakmodellen en scripts)</message>
 	<message xml:lang="uk">Копиювати ресурси (стабо й сценарії)</message>
 </label>
 <label define="AM_WHERE_RESOURCE">
@@ -9448,7 +9449,7 @@ cancellarlo.</message>
 	<message xml:lang="de">Titel der Wiederholung:</message>
 	<message xml:lang="it">Titolo della ripetizione:</message>
 	<message xml:lang="ja">繰り返しラベル:</message>
-	<message xml:lang="nl">Bijschrift herhalen:</message>
+	<message xml:lang="nl">Bijschrift voor herhaling:</message>
 	<message xml:lang="ru">Повторить метку:</message>
 	<message xml:lang="uk">Повторити мітку:</message>
 </label>
