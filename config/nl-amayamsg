@@ -70,7 +70,7 @@
 68 Achtergrondafbeelding
 69 Hier kan geen achtergrondafbeelding gebruikt worden.
 70 CSS-opmaakmodel
-71 Bij het opslaan ook de volgende bestanden opslaan?
+71 Bij het opslaan ook de volgende afbeeldingen opslaan?
 72 De URL kon niet worden opgeslagen
 73 Opslaan?
 74 Afbeeldingen kopiëren
@@ -83,7 +83,7 @@
 81 CSS-opmaakmodel uitschakelen
 82 CSS-opmaakmodel inschakelen
 83 CSS-opmaakmodel verwijderen
-84 De webeditor and -browser van het W3C
+84 De webeditor en -browser van het W3C
 85 (neem bij problemen contact op met www-amaya@w3.org)
 86 Copyright © 1994-%s INRIA en W3C® (MIT, ERCIM, Keio). Alle rechten voorbehouden.
 87 w3.org/Amaya/
@@ -111,7 +111,7 @@
 109 Deze methode is niet toegestaan
 110 Identificeer u voor toegang tot %s
 111 Bezig met verifiëren...
-112 **Do you want to keep a local copy?
+112 Opslaan naar %s mislukt. Opslaan op schijf?
 113 Bij het opslaan naar %s worden wellicht gegevens beschadigd. Wilt u dit negeren?
 114 URL %s is omgeleid naar %s. Wilt u dit negeren?
 115 Opnieuw laden van %s is mislukt. Wilt u dit negeren?
@@ -198,7 +198,7 @@
 196 Postserver voor annotaties:
 197 Annotatieservers:
 198 Lokale annotaties automatisch laden
-199 Annotaties op afstand automatisch laden
+199 Netwerkannotaties automatisch laden
 200 Automatisch laden bij opstarten uitschakelen (voor offline werken)
 201 Kleur selectie:
 202 Achtergrondkleur selectie:
@@ -239,7 +239,7 @@
 237 Er kan geen einde-XPointer op een intern toegevoegd element worden gemaakt
 238 Kan de verplaatsing voor de annotatie niet bepalen
 239 Kan de annotatie niet naar een ander document verplaatsen
-240 Er is geen gebruiker ingesteld voor annotaties. U kunt dit doen in het Voorkeuren
+240 Er is geen gebruiker ingesteld voor annotaties. U kunt dit doen in het menu Voorkeuren > Annotaties
 241 Kan geen XPointer creëren voor deze annotatie
 242 Nieuwe annotatie maken
 243 Kan de annotatie niet posten
@@ -289,7 +289,7 @@
 287 Wilt u het opnieuw proberen?
 288 WebDAV
 289 Identificatie gebruiker (URL):
-290 Lijst van WebDAV-bronnen van gebruiker:
+290 Lijst van WebDAV-bronnen van gebruiker (URL URL ...):
 291 Diepte voor vergrendelen:
 292 oneindig
 293 Time-out voor vergrendelen:
@@ -404,7 +404,7 @@
 402 Graad
 403 Graad van variabele nummer %d
 404 Samengesteld document
-405 Bronnen kopiëren (opmaakmodellen, scripts, ...)
+405 Bronnen kopiëren (opmaakmodellen en scripts)
 406 Locatie voor opslaan bronnen
 407 Locatie voor opslaan afbeeldingen
 408 Document
@@ -504,7 +504,7 @@
 502 Nieuw gebruik
 503 Optioneel gebruik
 504 Broncode kleuren
-505 Bijschrift herhalen:
+505 Bijschrift voor herhaling:
 506 Nieuwe typenverbinding
 507 Verbinding
 508 Naam verbinding:
