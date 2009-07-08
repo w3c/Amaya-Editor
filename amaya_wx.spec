@@ -91,9 +91,9 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/
 # WARNING: Check that Mesa/configs/linux-x86-64 uses
 #          "LIB_DIR = lib" "EXTRA_LIB_PATH = -L/usr/X11R6/lib"
 #cp ../Mesa/configs/linux-x86-64-static ../Mesa/configs/current
-autoconf
-cd libwww  && libtoolize --force --copy
-cd libwww && aclocal; autoheader; automake; autoconf
+#autoconf
+#cd libwww  && libtoolize --force --copy
+#cd libwww && aclocal; autoheader; automake; autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`

@@ -14385,7 +14385,7 @@ if test "$with_system_libwww" != "yes" ; then
   LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -lwwwxml -lwwwzip -lwwwinit -lwwwapp -lwwwhtml -lwwwtelnet -lwwwnews -lwwwhttp -lwwwmime -lwwwgopher -lwwwftp -lwwwfile -lwwwdir -lwwwcache -lwwwstream -lwwwmux -lwwwtrans -lwwwcore -lwwwutils -lwwwdav \
   -L$CURRENT_PATH/libwww/modules/md5/.libs -lmd5 \
   -L$CURRENT_PATH/libwww/modules/expat/.libs -lexpat"
-  LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww"
+  LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww -I$CURRENT_PATH/../../libwww/modules/lib/expat"
 else
   LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
   LIBWWW_LDFLAGS="`$LIBWWW_CONFIG --libs`"
