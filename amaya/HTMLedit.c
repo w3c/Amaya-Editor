@@ -1616,9 +1616,15 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
     }
 
   /* build the complete target URL */
-  if (targetURL && strcmp(targetURL, DocumentURLs[doc]))
+  if (targetURL && targetURL[0] != EOS && strcmp(targetURL, DocumentURLs[doc]))
     {
-      if (!IsHTTPPath (targetURL) && IsHTTPPath (DocumentURLs[doc]))
+      if (targetURL[0] != '.' &&
+#ifdef _WINDOWS
+	  targetURL[1] == ':' &&
+#else /* _WINDOWS */
+	  targetURL[0] == '/' &&
+#endif /* _WINDOWS */
+	  IsHTTPPath (DocumentURLs[doc]))
         {
           /* link a local resource to a remote document */
           /* copy the file into the temporary directory of the document */
