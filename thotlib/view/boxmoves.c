@@ -3982,10 +3982,11 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 {
   PtrAbstractBox      pChildAb, pRelativeAb, pRefAb;
   PtrBox              pChildBox, pRelativeBox, pBox;
+  PtrFlow             pFlow;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 val, height;
-  int                 y, i, j, top;
+  int                 y, i, j, top, bottom;
   ThotBool            movingChild;
   ThotBool            toMove, isExtra;
   ThotBool            absoluteMove;
@@ -4107,7 +4108,23 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
             }
           pChildAb = pChildAb->AbNext;
         }
-      
+
+      // The body or root element should be extended?
+      if (TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
+                            pAb->AbElement->ElStructSchema))
+        {
+          pFlow = ViewFrameTable[frame - 1].FrFlow;
+          bottom = pBox->BxBMargin;
+          while (pFlow && pFlow->FlRootBox && pFlow->FlRootBox->AbBox)
+            {
+              // take into account the height of the positionned child
+              i = pFlow->FlRootBox->AbBox->BxYOrg + pFlow->FlRootBox->AbBox->BxHeight;
+              if (i - bottom - pFlow->FlRootBox->AbBox->BxBMargin > height)
+                height = i - bottom - pFlow->FlRootBox->AbBox->BxBMargin;
+              pFlow = pFlow->FlNext;
+            }
+        }
+
       val = y - top; /* Shift of the extra top edge */
       if (movingChild)
         height += val; /* Nex position of the extra bottom edge */

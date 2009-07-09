@@ -5302,46 +5302,47 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
 void ComputeEnclosing (int frame)
 {
   int                 i;
-  PtrDimRelations     pDimRel;
+  PtrDimRelations     pDimRel, prev;
 
   /* Apply all differed WidthPack and HeightPack  */
   PackBoxRoot = NULL;
-  pDimRel = DifferedPackBlocks;
-  while (pDimRel != NULL)
-    {
-      /* On traite toutes les boites enregistrees */
-      i = 0;
-      while (i < MAX_RELAT_DIM)
-        {
-          if (pDimRel->DimRTable[i] == NULL)
-            i = MAX_RELAT_DIM;
-          else if (pDimRel->DimRTable[i]->BxAbstractBox == NULL)
-            ;		/* doesn't exist anymore */
-          else if (pDimRel->DimROp[i] == OpSame)
-            {
-              if (pDimRel->DimRTable[i]->BxType == BoBlock ||
-                   pDimRel->DimRTable[i]->BxType == BoFloatBlock ||
-                   pDimRel->DimRTable[i]->BxType == BoCellBlock)
-                  RecomputeLines (pDimRel->DimRTable[i]->BxAbstractBox, NULL, NULL, frame);
-              /* make sure that the enclosing of this box is updated */
-              WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
-            }
-          else if (pDimRel->DimROp[i] == OpReverse)
-            HeightPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
-          /* next entry */
-          i++;
-        }
-
-      /* next block */
-      pDimRel = pDimRel->DimRNext;
-    }
-
-  /* Free allocated blocks */
-  while (DifferedPackBlocks != NULL)
+  while (DifferedPackBlocks)
     {
       pDimRel = DifferedPackBlocks;
-      DifferedPackBlocks = DifferedPackBlocks->DimRNext;
+      prev = NULL;
+      while (pDimRel->DimRNext)
+        {
+          /* next block */
+          prev = pDimRel;
+          pDimRel = pDimRel->DimRNext;
+        }
+      /* On traite toutes les boites enregistrees */
+      i = MAX_RELAT_DIM - 1;
+      while (i >= 0)
+        {
+          if (pDimRel->DimRTable[i] &&
+              pDimRel->DimRTable[i]->BxAbstractBox)
+            {
+              if (pDimRel->DimROp[i] == OpSame)
+                {
+                  if (pDimRel->DimRTable[i]->BxType == BoBlock ||
+                      pDimRel->DimRTable[i]->BxType == BoFloatBlock ||
+                      pDimRel->DimRTable[i]->BxType == BoCellBlock)
+                    RecomputeLines (pDimRel->DimRTable[i]->BxAbstractBox, NULL, NULL, frame);
+                  /* make sure that the enclosing of this box is updated */
+                  WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
+                }
+              else if (pDimRel->DimROp[i] == OpReverse)
+                HeightPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
+            }
+          /* next entry */
+          i--;
+        }
       FreeDimBlock (&pDimRel);
+      if (prev)
+        prev->DimRNext = NULL;
+      else
+        DifferedPackBlocks = NULL;
     }
 }
 
@@ -5817,11 +5818,11 @@ void CheckScrollingWidthHeight (int frame)
                             }
                         }
                       // check if a positioned box is out of the document
-                      if (ExtraFlow (pBox, frame))
-                        {
-                          if (ymax < pBox->BxClipY + pBox->BxClipH)
-                            ymax = pBox->BxClipY + pBox->BxClipH;
-                        }
+/*                       if (ExtraFlow (pBox, frame)) */
+/*                         { */
+/*                           if (ymax < pBox->BxClipY + pBox->BxClipH) */
+/*                             ymax = pBox->BxClipY + pBox->BxClipH; */
+/*                         } */
                     }
                   else
 #endif /*  _GL */
@@ -5837,11 +5838,11 @@ void CheckScrollingWidthHeight (int frame)
                             xmax = pBox->BxXOrg + pBox->BxWidth;
                         }
                       // check if a positioned box is out of the document
-                      if (ExtraFlow (pBox, frame))
-                        {
-                          if (ymax < pBox->BxXOrg + pBox->BxWidth)
-                            ymax = pBox->BxYOrg + pBox->BxHeight;
-                        }
+/*                       if (ExtraFlow (pBox, frame)) */
+/*                         { */
+/*                           if (ymax < pBox->BxYOrg + pBox->BxHeight) */
+/*                             ymax = pBox->BxYOrg + pBox->BxHeight; */
+/*                         } */
                     }
                   if (pBox->BxNext == box)
                     {
