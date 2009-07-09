@@ -2523,11 +2523,12 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                         {
                           if (pParent->AbBox->BxType == BoCell || pParent->AbBox->BxType == BoCellBlock)
                             UpdateColumnWidth (pParent, NULL, frame);
-                          else
+                          else if (pParent->AbBox != pSourceBox)
                             WidthPack (pParent, pSourceBox, frame);
                         }
                     }
-                  else if (pParent->AbBox && pParent->AbBox->BxType == BoTable)
+                  else if (pParent->AbBox &&
+                           (pParent->AbBox->BxShrink || pParent->AbBox->BxType == BoTable))
                     RecordEnclosing (pParent->AbBox, TRUE);
                 }
               else if (!pAb->AbNew &&
@@ -3718,6 +3719,8 @@ static void Shrink (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
           pChildAb = pChildAb->AbNext;
         }
       width -= x;
+      if (width == pBox->BxW)
+        return;
       ResizeWidth (pBox, pSourceBox, NULL, width - pBox->BxW, 0, 0, 0, frame, TRUE);
     }
 }

@@ -573,7 +573,7 @@ static void Align (PtrBox pParentBox, PtrBox pBBox, PtrLine pLine, int frame,
   /* take into account the writing direction */
   rtl = pBBox->BxAbstractBox->AbDirection == 'R';
   pBox = pLine->LiFirstBox;
-  if (pBBox->BxContentWidth)
+  if (pBBox->BxContentWidth || pBBox->BxShrink)
     x = pLine->LiXOrg;
   else if (rtl)
     {
@@ -4339,7 +4339,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
             }
 	  
           /* Take into account the text-align */
-          if (toAdjust && pRefBlock->AbInLine &&
+          if (toAdjust && pRefBlock->AbInLine && !pBox->BxShrink &&
               pRefBlock->AbAdjust == AlignJustify && !newblock &&
               (full ||
                pRefBlock->AbTruncatedTail || pLine->LiRealLength > pLine->LiXMax))
