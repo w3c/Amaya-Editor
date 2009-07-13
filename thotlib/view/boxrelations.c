@@ -784,13 +784,15 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
         dim = pBox->BxW;
 
       /* left margin */
-      if (pBox->BxType == BoCell || pBox->BxType == BoRow)
+      if (pBox->BxType == BoCell || pBox->BxType == BoRow ||
+          (pAb->AbLeftMargin >= 0 && (pAb->AbFloat != 'N' || ExtraAbFlow (pAb, frame))))
         pBox->BxLMargin = 0;
       else if (pAb->AbLeftMarginUnit != UnAuto)
         pBox->BxLMargin = GetPixelValue (pAb->AbLeftMargin, pAb->AbLeftMarginUnit, dim,
                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* right margin */
-      if (pBox->BxType == BoCell || pBox->BxType == BoRow)
+      if (pBox->BxType == BoCell || pBox->BxType == BoRow ||
+          (pAb->AbRightMargin >= 0 && (pAb->AbFloat != 'N' || ExtraAbFlow (pAb, frame))))
         pBox->BxRMargin = 0;
       else if (pAb->AbRightMarginUnit != UnAuto)
         pBox->BxRMargin = GetPixelValue (pAb->AbRightMargin, pAb->AbRightMarginUnit, dim,
@@ -915,7 +917,9 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       else
         {
           /* top margin */
-          if (pBox->BxType == BoCell || pBox->BxType == BoCellBlock || pBox->BxType == BoRow)
+          if (pBox->BxType == BoCell || pBox->BxType == BoCellBlock ||
+              pBox->BxType == BoRow ||
+              (pAb->AbTopMargin >= 0 && (pAb->AbFloat != 'N' || ExtraAbFlow (pAb, frame))))
             pBox->BxTMargin = 0;
           else if (pAb->AbTopMarginUnit != UnAuto)
             pBox->BxTMargin = GetPixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit, dim,
@@ -946,7 +950,9 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       else
         {
           /* bottom margin */
-          if (pBox->BxType == BoCell || pBox->BxType == BoRow)
+          if (pBox->BxType == BoCell || pBox->BxType == BoCellBlock ||
+              pBox->BxType == BoRow ||
+              (pAb->AbBottomMargin >= 0 && (pAb->AbFloat != 'N' || ExtraAbFlow (pAb, frame))))
             pBox->BxBMargin = 0;
           else if (pAb->AbBottomMarginUnit != UnAuto)
             pBox->BxBMargin = GetPixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit, dim,
@@ -2274,7 +2280,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 val, delta, i;
-  int                 dx, dy, dim;
+  int                 dx, dy, dim, inx, iny;
   int                 t, b, l, r, zoom;
   ThotBool            inLine, isExtraFlow;
   ThotBool            defaultDim;
@@ -2338,7 +2344,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
     }
 
 
-  dx = dy = 0;
+  dx = dy = inx = iny = 0;
   if (pAb->AbLeafType == LtCompound)
     pos = pAb->AbPositioning;
   else
@@ -2686,16 +2692,24 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
           dx += l + r;
           if (pBox->BxLMargin > 0)
             dx += pBox->BxLMargin;
+          else
+            inx -= pBox->BxLMargin;
           dx += pBox->BxLBorder + pBox->BxLPadding + pBox->BxRBorder + pBox->BxRPadding;
           if (pBox->BxRMargin > 0)
             dx += pBox->BxRMargin;
+          else
+            inx -= pBox->BxRMargin;
           /* Compute the delta height that must be substract to 100% height or enclosing height */
           dy += t + b;
           if (pBox->BxTMargin > 0)
             dy += pBox->BxTMargin;
+          else
+            iny -= pBox->BxTMargin;
           dy += pBox->BxTBorder + pBox->BxTPadding + pBox->BxBBorder + pBox->BxBPadding;
           if (pBox->BxBMargin > 0)
             dy += pBox->BxBMargin;
+          else
+            iny -= pBox->BxBMargin;
           if (pParentAb == NULL)
             {
               /* It's the root box */
@@ -2721,8 +2735,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                       if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent ||
                           pDimAb->DimUnit == UnAuto)
                         /* the rule gives the outside value */
-                        val = val - dx;
-                      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame, FALSE);
+                        val = val + inx - dx;
+                      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0,
+                                   frame, FALSE);
                     }
                 }
               else
@@ -2742,7 +2757,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                              zoom);
                       if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
                         /* the rule gives the outside value */
-                        val = val - dy;
+                        val = val + iny - dy;
                       ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
                     }
                 }
@@ -2930,14 +2945,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                                     (PtrAbstractBox) i, 0);
                                   if (pDimAb->DimValue == 100)
                                     /* the rule gives the outside value */
-                                    val = val - dx;
+                                    val = val + inx - dx;
                                 }
                               else /* UnAuto */
                                 {
                                   val = PixelValue (100, UnPercent, 
                                                     (PtrAbstractBox) i, 0);
                                   /* the rule gives the outside value */
-                                  val = val - dx;
+                                  val = val + inx - dx;
                                 }
                               if (pParentAb)
                                 {
@@ -2953,7 +2968,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                             {
                               val = PixelValue (pDimAb->DimValue, UnPercent,
                                                 (PtrAbstractBox) pParentAb->AbBox->BxW, 0);
-                              val = val - dx;
+                              val = val + inx - dx;
                             }
                         }
                       else
@@ -2962,7 +2977,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
                                             zoom);
                         }
-                      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame, FALSE);
+                      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0,
+                                   frame, FALSE);
                     }
                   else
                     {
