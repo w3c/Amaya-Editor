@@ -583,8 +583,7 @@ void TtaGetTime (char *s, CHARSET charset)
   to break the content of an RCS keyword.
   Returns TRUE if the character must be skipped.
   ----------------------------------------------------------------------*/
-static ThotBool CheckRCS (unsigned char c, int fnum, char *outBuf,
-                           Document doc)
+static ThotBool CheckRCS (wchar_t c, int fnum, char *outBuf, Document doc)
 {
   PtrDocument pDoc;
   char        tm[DATESTRLEN];
@@ -595,10 +594,10 @@ static ThotBool CheckRCS (unsigned char c, int fnum, char *outBuf,
   if (StartDate)
     {
       if (c == '-' || c == '>' || c == SPACE)
-	{
-	  /* keep this character */
-	  return FALSE;
-	}
+        {
+          /* keep this character */
+          return FALSE;
+        }
       else
         {
           /* generate the current date */
@@ -621,22 +620,22 @@ static ThotBool CheckRCS (unsigned char c, int fnum, char *outBuf,
         /* close the previous date parsing */
         IgnoreDate = FALSE;
       if (!RCSDollar)
-	{
-	  RCSDollar = TRUE;
-	  RCSIndex = 0;
-	}
+        {
+          RCSDollar = TRUE;
+          RCSIndex = 0;
+        }
       else
-	{
-	  RCSDollar = FALSE;
-	  RCSMarker = FALSE;
-	  RCSIndex = 0;
-	  ExportChar ((wchar_t) c, fnum, outBuf, doc, FALSE, FALSE, FALSE);
-	  return TRUE;
-	}
+        {
+          RCSDollar = FALSE;
+          RCSMarker = FALSE;
+          RCSIndex = 0;
+          ExportChar (c, fnum, outBuf, doc, FALSE, FALSE, FALSE);
+          return TRUE;
+        }
     }
   else if (RCSMarker)
     {
-      ExportChar ((wchar_t) c, fnum, outBuf, doc, FALSE, FALSE, FALSE);
+      ExportChar (c, fnum, outBuf, doc, FALSE, FALSE, FALSE);
       return TRUE;
     }
   else if (RCSDollar)
@@ -715,7 +714,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, Document doc,
                      ThotBool entityName)
 {
   /* detect if the generation of a date is requested */
-  if (fnum > 0 && CheckRCS ((unsigned char) c, fnum, outBuf, doc))
+  if (fnum > 0 && CheckRCS (c, fnum, outBuf, doc))
     return;
   else
     ExportChar (c, fnum, outBuf, doc, lineBreak, translate, entityName);
