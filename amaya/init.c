@@ -4992,7 +4992,12 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
   TtaFreeMemory (ctx);
   /* check if a refresh is requested */
   CheckRefresh (newdoc);
-  if (DocumentTypes[newdoc] == docXml && !DocHasCSS (newdoc))
+  if (IsTemplateInstanceDocument(newdoc))
+    {
+      ShowStructure (newdoc, 1);
+      //SplitVertically (newdoc, 1);
+    }
+  else if (DocumentTypes[newdoc] == docXml && !DocHasCSS (newdoc))
     // Display the source view
     ShowSource (newdoc, 1);
 }

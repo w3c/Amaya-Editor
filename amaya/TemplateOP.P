@@ -1,0 +1,1048 @@
+    { Presentation Schema for Templates.
+      A. Tollenaere & I. Vatton    January 2009 }
+
+
+PRESENTATION Template;
+
+VIEWS
+   Formatted_view,
+   Structure_view merge with Structure_view;
+
+
+#define STRUCT_INDENT 1.5
+#define TAG_Font Helvetica
+#define TAG_Color DarkGold3
+#define TAG_Weight Bold
+#define TAG_Visibility 7
+#define TAG_FONTSIZE 11 pt
+#define DOC_FONTSIZE 12 pt
+#define ATTR_Font Helvetica
+#define ATTR_Style Roman
+#define ATTR_Weight Normal
+#define ATTR_Visibility 6
+#define INVALID_Style Roman
+#define INVALID_Weight Normal
+#define INVALID_Visibility 7
+#define INVALID_Font Helvetica
+#define ATTR_Color DarkGold3
+#define ATTRVALUE_Color DarkBlue2
+#define INVALID_Color Red
+#define COMMENT_Font Helvetica
+#define COMMENT_Style Italics
+#define COMMENT_Weight Normal
+#define COMMENT_Color DarkGreen3
+
+   
+DEFAULT
+   BEGIN
+   Visibility: Enclosing =;
+   VertRef: * . Left ;
+   HorizRef: * . Bottom - 2 px;
+   Height: Enclosed . Height;
+   Width: Enclosed . Width;
+   VertPos: HRef = Previous . HRef;
+   HorizPos: Left = Previous . Right;
+   LineBreak: Yes;
+   Font: Enclosing =;
+   Style: Roman;
+   Weight: Enclosing =;
+   Size: Enclosing =;
+   Indent: 0;
+   Adjust: Left;
+   LineSpacing: 1;
+   Depth: Enclosing =;
+   UnderLine: Enclosing =;
+   Thickness: Enclosing =;
+   LineStyle: Enclosing =;
+   LineWeight: Enclosing =;
+   Background: Enclosing =;
+   Foreground: Enclosing =;
+   FillPattern: Enclosing =;
+   IN Structure_view BEGIN
+	    VertPos: Top = Previous . Bottom;
+	    HorizPos: Left = Enclosing . Left;
+	    END;
+   END;
+
+BOXES
+
+
+ COMMENT_S: BEGIN
+        Content: Text '<!--';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                END;
+        END;
+
+ COMMENT_E: BEGIN
+        Content: Text '-->';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                END;
+        END;
+
+ PI_S: BEGIN
+        Content: Text '<?';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Foreground: TAG_Color;
+                END;
+        END;
+
+ PI_E: BEGIN
+        Content: Text '?>';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                VertPos: HRef = Previous . HRef;
+                HorizPos: Left = Previous . Right;
+                Foreground: TAG_Color;
+                END;
+        END;
+
+  ComponentName: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10;
+    Content: (AttributeValue);
+    HorizPos: Left = Enclosing . Left + 10 px;
+    VertPos: Bottom = Creator . Top;
+    Size: TAG_FONTSIZE;
+		PaddingTop: 			  5 px;
+		PaddingBottom: 			5 px;
+		PaddingLeft: 		  	5 px;
+		PaddingRight: 			5 px;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTRVALUE_Color;
+    Background: White;
+    FillPattern: backgroundcolor;
+    ShowBox;
+    IN Structure_view BEGIN
+      Visibility: 0;
+ 	    END;
+#endif
+   END;
+
+  Option_space: BEGIN
+    Content: (Text '  ');
+    HorizPos: Left = Creator . Left + 10 px;
+    VertPos: Top = Creator . Top + 4 px;
+   END;
+
+  UsedTypes: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10;
+    Content: (AttributeValue Text ' ');
+    HorizPos: Right = Enclosing . Right;
+    VertPos: Top = Enclosing . Top - 5 px;
+    Size: 8 pt;
+		PaddingTop: 			  5 px;
+		PaddingBottom: 			5 px;
+		PaddingLeft: 		  	5 px;
+		PaddingRight: 			5 px;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTRVALUE_Color;
+    Background: White;
+    FillPattern: backgroundcolor;
+    ShowBox;
+    IN Structure_view BEGIN
+      Visibility: 0;
+ 	    END;
+#endif
+   END;
+
+  AttrName: BEGIN
+    Visibility: 0;
+    Content: (Text ' ' AttributeName Text '=');
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+ 	    END;
+   END;
+
+  AttrValue: BEGIN
+    Visibility: 0;
+    Content: (AttributeValue);
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      END;
+   END;
+
+  UnionAttrName: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10; 
+    Content: (Text ' ' AttributeName Text '=');
+    HorizPos: Left = Enclosing . Left;
+    VertPos: Top = Previous . Bottom;
+    Size: TAG_FONTSIZE;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTR_Color;
+    Depth: Enclosing - 2;
+    Background : White;
+    FillPattern: backgroundcolor;
+    ShowBox;
+  PaddingTop: 5 px;
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+  PaddingTop: 0;
+ 	    END;
+#endif
+   END;
+
+  UnionAttrValue: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10; 
+    Content: (AttributeValue);
+    HorizPos: Left = Previous . Right;
+    VertPos: HRef = Previous . HRef;
+    Size: TAG_FONTSIZE;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTRVALUE_Color;
+    Depth: Enclosing - 2;
+    Background : White;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      END;
+#endif
+   END;
+
+  AttrNameAndValue: BEGIN
+    Content: (Text ' ' AttributeName Text '=' AttributeValue);
+    Visibility: 0;
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+      END;
+    END;
+  
+ ElementName: BEGIN
+   Content: (ElemName);
+   Visibility: 0;
+	 IN Structure_view BEGIN
+		 Size: TAG_FONTSIZE;
+		 Font: TAG_Font;
+		 Weight: TAG_Weight;
+		 Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		 END;
+	 END;
+
+ VerticalLine: BEGIN
+	 Content: Graphics 'W';
+	 Visibility: 0;
+	 IN Structure_view BEGIN
+		 VertPos: Top = Creator . Top;
+		 Height: Creator . Height;
+		 Width: 1.1;
+		 LineWeight: 1 px;
+		 Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		 END;
+	 END;
+
+ UnknownAttrValue: BEGIN
+	Content: (AttributeValue);
+	Visibility: 0;
+	IN Structure_view BEGIN
+    HorizPos: Left = Previous . Right;
+    VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+    Font: INVALID_Font;
+		Style: INVALID_Style;
+		Visibility: INVALID_Visibility;
+		Foreground: INVALID_Color;
+		END;	
+	END;
+
+ Unknown_End: BEGIN
+	Content: Text '>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: INVALID_Style;
+		Visibility: INVALID_Visibility;
+		Foreground: Creator =;
+		END;
+	END;
+
+ UseButton: BEGIN
+	Content: Picture 'xtigeruse.png';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 2 px;
+  VertOverflow: Yes;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
+ OptionButton: BEGIN
+	Content: Picture 'xtigeroption.png';
+  HorizRef: * . Bottom;
+	HorizPos: Left = Creator . Left - 6 px;
+	VertPos: Top = Creator . Top - 6 px;
+  VertOverflow: Yes;
+  HorizOverflow: Yes;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
+#ifdef INSTANCE
+ BagButton: BEGIN
+	Content: Picture 'add.png';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 2 px;
+  VertOverflow: Yes;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+#else
+ BagButton: BEGIN
+	Content: Picture 'xtigeruse.png';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 2 px;
+  VertOverflow: Yes;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+#endif
+
+#ifdef INSTANCE
+ BagUse: BEGIN
+	Content: Picture 'add.png';
+	HorizPos: Left = Previous . Left;
+	VertPos: Top = Previous . Bottom;
+  VertOverflow: Yes;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+#endif
+
+#ifdef INSTANCE
+ RepeatButton: BEGIN
+	Content: Picture 'add.png';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 2 px;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+#else
+ RepeatButton: BEGIN
+	Content: Picture 'xtigerrepeat.png';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 2 px;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+#endif
+
+#ifdef INSTANCE
+ RepeatUse: BEGIN
+	Content: Picture 'add.png';
+	HorizPos: Left = Previous . Left;
+	VertPos: Top = Previous . Bottom;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+#endif
+
+ IndexBox: BEGIN
+        Content: Picture 'AmayaSrcSyncIndex.gif';
+        HorizPos: Left = Root . Left;
+        VertPos: Top = Creator . Top;
+        VertOverflow : Yes;
+        HorizOverflow : Yes;
+        Width: Enclosed . Width;
+        Height: Enclosed . Height;
+        Inline: No;
+        Visibility: Creator =;
+        IN Structure_view
+                Visibility: 0;
+        END;
+
+RULES
+ Document:
+        BEGIN
+        Depth: 0;
+        Direction: ltr;
+        Adjust: Left;
+        Indent: 0;
+        Font: Times;
+        Style: Roman;
+        Weight: Normal;
+        LineWeight: 0;
+        Width: Enclosing . Width;
+        Size: DOC_FONTSIZE;
+        Height: Enclosing . Height min;
+        HorizPos: Left = Enclosing . Left;
+        VertPos: Top = Enclosing . Top;
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Width: Enclosing . Width;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left;
+                PaddingLeft: 0.4;
+                Font: Helvetica;
+                END;
+        END;
+
+  Template:
+        BEGIN
+        Width: Enclosing . Width;
+        CreateBefore(ElementName);
+        CreateWith(VerticalLine);
+        IN Structure_view BEGIN
+                Size: TAG_FONTSIZE;
+                Width: Enclosing . Width - 1;
+                Height: Enclosed . Height;
+                HorizPos: Left = Enclosing . Left + 1;
+                PaddingLeft: 0.4;
+                Font: Helvetica;
+                END;
+        END;
+
+  Comment\240:
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Font: COMMENT_Font;
+                Style: COMMENT_Style;
+                Weight: COMMENT_Weight;
+                Foreground: COMMENT_Color;
+		            HorizPos: Left = Enclosing . Left;
+	              Width: Enclosing . Width;
+		            VertPos: Top = Previous . Bottom;
+                END;
+        END;
+
+  Comment_line:
+        BEGIN
+        if First CreateFirst(COMMENT_S);
+        if Last CreateLast(COMMENT_E);
+        IN Structure_view BEGIN
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom + 0.2;
+                END;
+        END;
+
+  XMLPI:
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Font: COMMENT_Font;
+                Style: COMMENT_Style;
+                Weight: COMMENT_Weight;
+                Width: Enclosing . Width;
+                END;
+        END;
+
+  PI_line:
+        BEGIN
+        if First CreateFirst(PI_S);
+        if Last CreateLast(PI_E);
+        IN Structure_view BEGIN
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom + 0.2;
+                END;
+        END;
+
+  head:
+    BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Display : Block;
+    Visibility: 10;
+    Depth: Enclosing - 2;
+	  CreateBefore(ElementName);
+  	CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    VertPos: Top = 			Previous ElementName. Bottom;
+    HorizPos: Left =		Enclosing . Left;
+		PaddingTop: 			  30 px;
+		PaddingBottom: 			30 px;
+		PaddingLeft: 		  	30 px;
+		PaddingRight: 			30 px;
+		MarginBottom: 			10 px;
+		MarginTop: 			    2 px;
+    Background : DarkGrey1;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+  	IN Structure_view BEGIN
+      Visibility: Enclosing =;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+      FillPattern: nopattern;
+	  	BorderBottomWidth: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+	  	PaddingLeft: 0;
+	  	PaddingRight: 0;
+	  	MarginTop: 0;
+	  	MarginBottom: 0;
+		  END;
+#endif
+    END;
+    
+  component:
+		BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10;
+	  CreateBefore(ElementName);
+	  CreateWith(VerticalLine);
+    Width: Enclosing . Width;
+    Height:  Enclosed . Height;
+    VertPos: Top = Previous AnyElem. Bottom + 30 px;
+    HorizPos: Left = Enclosing . Left;
+    Background : White;
+    Display : Block;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+    BorderTopStyle: Solid;
+    BorderLeftStyle:  Solid;
+    BorderBottomStyle :  Solid;
+    BorderRightStyle :  Solid;
+    BorderTopColor:  Grey;
+    BorderLeftColor:  Grey;
+    BorderBottomColor : Grey;
+    BorderRightColor :  Grey;
+  	IN Structure_view BEGIN
+      Visibility: Enclosing =;
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+      FillPattern: nopattern;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+#endif
+	 END;
+
+  union:
+		BEGIN
+#ifdef INSTANCE
+		Visibility: 0;
+#else
+		Visibility: 10;
+	  CreateBefore(ElementName);
+	  CreateWith(VerticalLine);
+    VertPos: Top = Previous AnyElem. Bottom + 30 px;
+	  Width: Enclosing . Width;
+    HorizPos: Left = Enclosing . Left;
+    Display : Block;
+    Background : White;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+  	IN Structure_view BEGIN
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+      FillPattern: nopattern;
+		  END;
+#endif
+	 END;
+
+  attribute:
+		BEGIN
+#ifdef INSTANCE
+		Visibility: 0;
+#else
+		Visibility: 10;
+	  CreateBefore(ElementName);
+	  CreateWith(VerticalLine);
+  	IN Structure_view BEGIN
+  	  Visibility: Enclosing =;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+#endif
+	 END;
+
+  bag:
+		BEGIN
+    CreateBefore(ElementName);
+	  CreateFirst(BagButton);
+#ifndef INSTANCE
+    Background : LightGreen4;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+#endif
+  	CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    LineBreak: No;
+    Display: Block;
+    VertPos: Top = 			Previous AnyElem . Bottom;
+    HorizPos: Left =		Enclosing . Left; 
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dotted;
+		BorderLeftStyle: 		Dotted;
+		BorderBottomStyle: 	Dotted;
+		BorderRightStyle: 	Dotted;
+		BorderTopColor: 		Green;
+		BorderLeftColor: 		Green;
+		BorderBottomColor: 	Green;
+		BorderRightColor: 	Green;
+		PaddingRight: 			2 px;
+		PaddingLeft: 				2 px;
+		PaddingTop: 				8 px;
+		PaddingBottom: 			2 px;
+  	IN Structure_view BEGIN
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+      FillPattern: nopattern;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;
+	 
+  useEl:	
+		BEGIN
+    CreateBefore(ElementName);
+#ifdef INSTANCE
+    if  NOT immediately within repeat AND NOT immediately within bag
+      CreateFirst(UseButton);
+    if immediately within repeat
+      CreateAfter(RepeatUse);
+    if immediately within bag
+      CreateAfter(BagUse);
+#else
+    CreateFirst(UseButton);
+#endif
+    CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    VertPos: Top = Previous AnyElem . Bottom;
+    HorizPos: Left = Enclosing . Left; 
+    BorderTopWidth: 1 px;
+    BorderLeftWidth: 1 px;
+    BorderBottomWidth: 1 px;
+    BorderRightWidth: 1 px;
+    BorderTopStyle: Dotted;
+    BorderLeftStyle: Dotted;
+    BorderBottomStyle: Dotted;
+    BorderRightStyle: Dotted;
+    BorderTopColor: Blue;
+    BorderLeftColor: Blue;
+    BorderBottomColor: Blue;
+    BorderRightColor: Blue;
+    PaddingRight: 2 px;
+    PaddingLeft: 3 px;
+    PaddingTop: 2 px;
+    PaddingBottom: 2 px;
+    IN Structure_view BEGIN
+      BorderTopWidth: 0;
+		  BorderLeftWidth: 0;
+		  BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+	  	PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+      FillPattern: nopattern;
+      HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		  Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;
+
+  useSimple:	
+    BEGIN
+    if  NOT immediately within repeat AND option
+      CreateFirst(OptionButton);
+#ifdef INSTANCE
+    if immediately within repeat
+      CreateAfter(RepeatUse);
+    if immediately within bag
+      CreateAfter(BagUse);
+#else
+    Background : LightBlue4;
+    FillPattern: backgroundcolor;
+    ShowBox;
+#endif
+    CreateBefore(ElementName);
+    CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    {LineBreak: No;}
+    {Display: CSSInline;}
+    VertPos: Top = Previous AnyElem. Bottom;
+    HorizPos: Left = Enclosing . Left;
+		BorderTopWidth: 	 	1 px;
+		BorderLeftWidth: 		1 px;
+		BorderBottomWidth: 	1 px;
+		BorderRightWidth: 	1 px;
+		BorderTopStyle: 		Dotted;
+		BorderLeftStyle: 		Dotted;
+		BorderBottomStyle: 	Dotted;
+		BorderRightStyle: 	Dotted;
+		BorderTopColor: 		Blue;
+		BorderLeftColor: 		Blue;
+		BorderBottomColor: 	Blue;
+		BorderRightColor: 	Blue;
+		PaddingLeft: 				5 px;
+		PaddingRight: 			2 px;
+		PaddingTop: 				5 px;
+		PaddingBottom: 			2 px;
+  	IN Structure_view BEGIN
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+      FillPattern: nopattern;
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+		  END;
+	 END;
+
+  repeat:
+	  BEGIN	
+    CreateBefore(ElementName);
+    CreateFirst(RepeatButton);
+    CreateWith(VerticalLine);
+    Width: auto{Enclosing . Width};
+    {LineBreak: No;}
+    Display: Block;
+    VertPos: Top = Previous AnyElem . Bottom;
+    MarginTop	: 3 px;
+    HorizPos: Left = Enclosing . Left; 
+#ifndef INSTANCE
+    BorderTopWidth:  2 pt;
+    BorderLeftWidth:  2 pt;
+    BorderBottomWidth :  2 pt;
+    BorderRightWidth :  2 pt;
+    BorderTopStyle: Solid;
+    BorderLeftStyle:  Solid;
+    BorderBottomStyle :  Solid;
+    BorderRightStyle :  Solid;
+    BorderTopColor:  Grey;
+    BorderLeftColor:  Grey;
+    BorderBottomColor : Grey;
+    BorderRightColor :  Grey;
+#endif
+    PaddingRight:  3 px;
+    PaddingLeft	:  3 px;
+    PaddingTop	: 10 px;
+    PaddingBottom: 3 px; 
+    IN Structure_view BEGIN
+    	BorderTopWidth :  0;
+    	BorderLeftWidth :	 	0;
+    	BorderBottomWidth	: 0;
+    	BorderRightWidth	: 0;
+      PaddingRight: 0;
+      PaddingLeft: 0;
+      PaddingTop: 0;
+      PaddingBottom: 0;
+    	HorizPos: Left  = Enclosing . Left + STRUCT_INDENT;
+    	Width	:  Enclosing . Width - STRUCT_INDENT;
+    	VertPos	: Top  =  Previous . Bottom;
+    END;
+	 END;	 
+
+
+ATTRIBUTES
+
+  xmlid:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  option:
+  BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;    
+
+  name:
+  BEGIN
+	CreateBefore(ComponentName);
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  ref_name:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  title:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  includeAt:
+  BEGIN
+#ifndef INSTANCE
+	CreateFirst(UnionAttrName);
+	CreateFirst(UnionAttrValue);
+#endif
+	END;    
+
+  exclude:
+  BEGIN
+#ifndef INSTANCE
+	CreateFirst(UnionAttrName);
+	CreateFirst(UnionAttrValue);
+#endif
+	END;    
+
+  src:
+  BEGIN
+#ifndef INSTANCE
+#endif
+	END;    
+	
+  minOccurs:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  maxOccurs:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  currentType:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+	
+  type:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  types:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#ifndef INSTANCE
+    {if Empty}
+      CreateLast(UsedTypes);
+#endif
+	END;
+
+  types= 'string':
+  BEGIN
+  if option
+    CreateFirst (Option_space);
+	END;
+
+  useAt:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  defaultAt:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  fixed:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  values:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  version:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  templateVersion:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+#endif
+	END;    
+
+  Highlight:
+  BEGIN
+  if TEXT_UNIT
+     CreateAfter (IndexBox);
+  if SYMBOL_UNIT
+     CreateAfter (IndexBox);
+  if PICTURE_UNIT
+     CreateAfter (IndexBox);
+  if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
+     CreateLast (IndexBox);
+  END;
+
+  SetInLine:
+  BEGIN
+  Display: CSSInline;
+  MarginTop	: 0;
+  PaddingTop : 2 px;
+  PaddingBottom: 2 px;
+  HorizRef: Enclosed AnyElem . HRef;
+  IN Structure_view BEGIN
+    Display: Block;
+    HorizRef: * . Bottom - 2 px;
+    END;
+  END;
+
+  Unknown_attribute:
+	BEGIN
+	if TEXT_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if PICTURE_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if Unknown_namespace
+	   CreateAfter(UnknownAttrValue);
+	if Unknown_namespace and LastAttr
+	   CreateAfter(Unknown_End);
+	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
+  	 CreateBefore(UnknownAttrValue);
+	END;
+
+END
