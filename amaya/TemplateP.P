@@ -325,6 +325,23 @@ BOXES
 		Visibility: 0;
 	END;
 
+ OptionButtonSet: BEGIN
+	Content: Picture 'xtigeroptionset.png';
+  HorizRef: * . Bottom;
+	HorizPos: Left = Creator . Left - 6 px;
+	VertPos: Top = Creator . Top - 6 px;
+  VertOverflow: Yes;
+  HorizOverflow: Yes;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
 #ifdef INSTANCE
  BagButton: BEGIN
 	Content: Picture 'add.png';
@@ -757,8 +774,6 @@ RULES
 
   useSimple:	
     BEGIN
-    if  NOT immediately within repeat AND option
-      CreateFirst(OptionButton);
 #ifdef INSTANCE
     if immediately within repeat
       CreateAfter(RepeatUse);
@@ -862,8 +877,17 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;    
 
-  option:
+  option = option_set:
   BEGIN
+  if useSimple AND NOT immediately within repeat AND NOT immediately within bag
+    CreateFirst(OptionButtonSet);
+	CreateBefore(AttrNameAndValue);
+	END;
+   
+  option = option_unset:
+  BEGIN
+  if useSimple AND NOT immediately within repeat AND NOT immediately within bag
+    CreateFirst(OptionButton);
 	CreateBefore(AttrNameAndValue);
 	END;    
 

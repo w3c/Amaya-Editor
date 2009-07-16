@@ -878,7 +878,6 @@ ThotBool BagButtonClicked (NotifyElement *event)
   Element         bagEl = el;
   Element         firstEl;
   Element         newEl = NULL;
-  View            view;
   SSchema         templateSSchema;
   char           *listtypes = NULL;
   char           *result = NULL;
@@ -890,10 +889,12 @@ ThotBool BagButtonClicked (NotifyElement *event)
   if (!IsTemplateInstanceDocument (doc))
     return FALSE; /* let Thot perform normal operation */
 
+#ifdef IV
+  View            view;
   TtaGetActiveView (&doc, &view);
-  if (view != 1)
+  if (view == 1)
     return FALSE; /* let Thot perform normal operation */
-
+#endif
   TtaCancelSelection (doc);
   templateSSchema = TtaGetSSchema ("Template", doc);
   t = GetXTigerDocTemplate(doc);
@@ -940,12 +941,12 @@ ThotBool BagButtonClicked (NotifyElement *event)
                   if (firstEl)
                     {
                       TtaSelectElement (doc, firstEl);
-                      TtaSetStatusSelectedElement (doc, view, firstEl);
+                      TtaSetStatusSelectedElement (doc, 1, firstEl);
                     }
                   else
                     {
                       TtaSelectElement (doc, newEl);
-                      TtaSetStatusSelectedElement (doc, view, newEl);
+                      TtaSetStatusSelectedElement (doc, 1, newEl);
                     }
                 }
             }
@@ -1047,9 +1048,10 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
     return FALSE; /* let Thot perform normal operation */
 
   TtaGetActiveView (&doc, &view);
-  if (view != 1)
+#ifdef IV
+  if (view == 1)
     return FALSE; /* let Thot perform normal operation */
-
+#endif
   TtaCancelSelection(doc);
   t = GetXTigerDocTemplate(doc);
   elType = TtaGetElementType(el);
@@ -1074,7 +1076,13 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
               result = QueryStringFromMenu (doc, listtypes, FALSE);
               TtaFreeMemory (listtypes);
               if (result)
-                DoReplicateUseElement (t, doc, view, el, repeatEl, result);
+                {
+                  if (event->position == 1)
+                    // force the insert before
+                    DoReplicateUseElement (t, doc, view, repeatEl, repeatEl, result);
+                  else
+                    DoReplicateUseElement (t, doc, view, el, repeatEl, result);
+                }
             }
           TtaFreeMemory (result);
           DumpSubtree (repeatEl, doc, 0);
@@ -1127,11 +1135,11 @@ ThotBool UseButtonClicked (NotifyElement *event)
     return TRUE;
   if (!IsTemplateInstanceDocument (doc))
     return FALSE; /* let Thot perform normal operation */
-
+#ifdef IV
   TtaGetActiveView (&doc, &view);
-  if (view != 1)
+  if (view == 1)
     return FALSE; /* let Thot perform normal operation */
-
+#endif
   TtaCancelSelection(doc);
   t = GetXTigerDocTemplate(doc);
   if (!t)
@@ -1234,11 +1242,13 @@ ThotBool UseSimpleButtonClicked (NotifyElement *event)
   if (!IsTemplateInstanceDocument (event->document))
     return FALSE; /* let Thot perform normal operation */
 
+  if (event->position == 0)
+    return FALSE; /* let Thot perform normal operation */
   elType = TtaGetElementType (event->element);
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = Template_ATTR_option;
   att = TtaGetAttribute (event->element, attrType);
-  if (att)
+  if (att && event->position == 2)
     return OptionButtonClicked (event);
 
   parentType = TtaGetElementType (TtaGetParent( event->element));
@@ -1246,6 +1256,12 @@ ThotBool UseSimpleButtonClicked (NotifyElement *event)
     return RepeatButtonClicked (event);
   else if (parentType.ElTypeNum == Template_EL_bag)
     return BagButtonClicked (event);
+  else
+    {
+      // select to the whole element
+      TtaSelectElement (event->document, event->element);
+      return TRUE;
+    }
 #endif /* TEMPLATES */
   return FALSE;
 }
@@ -1260,17 +1276,17 @@ ThotBool OptionButtonClicked (NotifyElement *event)
   ElementType     useType, childType;
   Document        doc;
   XTigerTemplate  t;
-  View            view;
 
   if (!TtaGetDocumentAccessMode (event->document))
     return TRUE;
   if (!IsTemplateInstanceDocument (event->document))
     return FALSE; /* let Thot perform normal operation */
-
+#ifdef IV
+  View            view;
   TtaGetActiveView (&doc, &view);
   if (view != 1)
     return FALSE; /* let Thot perform normal operation */
-
+#endif
   doc = event->document;
   el = event->element;
   if (!el)

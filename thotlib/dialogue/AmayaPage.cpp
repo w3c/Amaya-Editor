@@ -358,7 +358,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaSplittablePage, AmayaPage)
 AmayaSplittablePage::AmayaSplittablePage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
   :  AmayaPage( p_parent_window, p_amaya_parent_window)
   ,m_pWindowParent( p_amaya_parent_window )
-  ,m_SlashRatio( 0.5 )
+  ,m_SlashRatio( 0.7 )
   ,m_ActiveFrame(1) // by default, frame 1 is selected
 {
   // Insert a forground sizer
@@ -811,7 +811,7 @@ void AmayaSplittablePage::OnSplitterPosChanged( wxSplitterEvent& event )
     else if ( split_mode == 2 ) // vertically
       m_SlashRatio = new_slash_pos / width;
     if ( m_SlashRatio <= 0 || m_SlashRatio >= 1 )
-      m_SlashRatio = 0.5;
+      m_SlashRatio = 0.6;
     
     // do not forward this event because the panel/notebook splitter should not receive it
     //    event.Skip();

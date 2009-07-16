@@ -24,14 +24,18 @@ VIEWS
 #define INVALID_Weight Normal
 #define INVALID_Visibility 7
 #define INVALID_Font Helvetica
-#define ATTR_Color DarkGold3
-#define ATTRVALUE_Color DarkBlue2
+#ifdef INSTANCE
+ #define ATTR_Color DarkGrey2
+ #define ATTRVALUE_Color White
+#else
+ #define ATTR_Color DarkGold3
+ #define ATTRVALUE_Color DarkBlue2
+#endif
 #define INVALID_Color Red
 #define COMMENT_Font Helvetica
 #define COMMENT_Style Italics
 #define COMMENT_Weight Normal
 #define COMMENT_Color DarkGreen3
-
    
 DEFAULT
    BEGIN
@@ -105,10 +109,14 @@ BOXES
                 END;
         END;
 
+#ifndef INSTANCE
+  Option_space: BEGIN
+    Content: (Text '  ');
+    HorizPos: Left = Creator . Left + 10 px;
+    VertPos: Top = Creator . Top + 4 px;
+   END;
+
   ComponentName: BEGIN
-#ifdef INSTANCE
-    Visibility: 0;
-#else
     Visibility: 10;
     Content: (AttributeValue);
     HorizPos: Left = Enclosing . Left + 10 px;
@@ -126,19 +134,9 @@ BOXES
     IN Structure_view BEGIN
       Visibility: 0;
  	    END;
-#endif
-   END;
-
-  Option_space: BEGIN
-    Content: (Text '  ');
-    HorizPos: Left = Creator . Left + 10 px;
-    VertPos: Top = Creator . Top + 4 px;
    END;
 
   UsedTypes: BEGIN
-#ifdef INSTANCE
-    Visibility: 0;
-#else
     Visibility: 10;
     Content: (AttributeValue Text ' ');
     HorizPos: Right = Enclosing . Right;
@@ -156,37 +154,9 @@ BOXES
     IN Structure_view BEGIN
       Visibility: 0;
  	    END;
-#endif
-   END;
-
-  AttrName: BEGIN
-    Visibility: 0;
-    Content: (Text ' ' AttributeName Text '=');
-    IN Structure_view BEGIN
-      HorizPos: Left = Previous . Right;
-      VertPos: HRef = Previous . HRef;
-      Size: TAG_FONTSIZE;
-      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-      Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
- 	    END;
-   END;
-
-  AttrValue: BEGIN
-    Visibility: 0;
-    Content: (AttributeValue);
-    IN Structure_view BEGIN
-      HorizPos: Left = Previous . Right;
-      VertPos: HRef = Previous . HRef;
-      Size: TAG_FONTSIZE;
-      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-      END;
    END;
 
   UnionAttrName: BEGIN
-#ifdef INSTANCE
-    Visibility: 0;
-#else
     Visibility: 10; 
     Content: (Text ' ' AttributeName Text '=');
     HorizPos: Left = Enclosing . Left;
@@ -198,20 +168,16 @@ BOXES
     Background : White;
     FillPattern: backgroundcolor;
     ShowBox;
-  PaddingTop: 5 px;
+    PaddingTop: 5 px;
     IN Structure_view BEGIN
       HorizPos: Left = Previous . Right;
       VertPos: HRef = Previous . HRef;
       Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-  PaddingTop: 0;
+      PaddingTop: 0;
  	    END;
-#endif
    END;
 
   UnionAttrValue: BEGIN
-#ifdef INSTANCE
-    Visibility: 0;
-#else
     Visibility: 10; 
     Content: (AttributeValue);
     HorizPos: Left = Previous . Right;
@@ -228,8 +194,134 @@ BOXES
       VertPos: HRef = Previous . HRef;
       Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
       END;
-#endif
    END;
+  
+ ElementName: BEGIN
+   Content: (ElemName);
+   Visibility: 0;
+	 IN Structure_view BEGIN
+		 Size: TAG_FONTSIZE;
+		 Font: TAG_Font;
+		 Weight: TAG_Weight;
+		 Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		 END;
+	 END;
+
+  AttrName: BEGIN
+    Visibility: 0;
+    Content: (Text ' ' AttributeName Text '=');
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+ 	    END;
+   END;
+#endif
+
+  AttrValue: BEGIN
+    Visibility: 0;
+    Content: (AttributeValue);
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      END;
+   END;
+
+#ifdef INSTANCE
+ UseButton: BEGIN
+	Visibility: 0;
+	Content: Picture 'xtigeruse.png';
+	MarginTop: 2 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+	Depth: Creator - 2;
+	IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+		  Visibility: 10;
+		END;
+	END;
+
+  TypeMark: BEGIN
+    Visibility: 0;
+    Content: Graphics 'L';
+    IN Structure_view BEGIN
+      MarginTop: 2 px;
+      MarginBottom: 2 px;
+      HorizPos: Left = Previous . Right + 10 px;
+      VertPos: Top = Previous . Top + 2 px;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      Height: 10 px;
+      Background: ATTR_Color;
+      FillPattern: backgroundcolor;
+      ShowBox;
+      END;
+   END;
+  TypeValue: BEGIN
+    Visibility: 0;
+    Content: (AttributeValue);
+    IN Structure_view BEGIN
+      MarginTop: 2 px;
+      MarginBottom: 2 px;
+      HorizPos: Left = Previous . Left + 15 px;
+      VertPos: HRef = Previous . HRef;
+		  PaddingLeft: 		  	5 px;
+		  PaddingRight: 			5 px;
+      Size: TAG_FONTSIZE;
+      {Width: 30 px min;}
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      Background: ATTR_Color;
+      FillPattern: backgroundcolor;
+      ShowBox;
+      END;
+   END;
+
+  TypeMark_E: BEGIN
+    Visibility: 0;
+    Content: Graphics 'L';
+    IN Structure_view BEGIN
+      MarginTop: 2 px;
+      MarginBottom: 2 px;
+      HorizPos: Left = Previous . Right + 10 px;
+      VertPos: Top = Previous . Top + 2 px;
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      Height: 10 px;
+      Background: ATTR_Color;
+      FillPattern: backgroundcolor;
+      ShowBox;
+      END;
+   END;
+  TypeValue_E: BEGIN
+    Visibility: 0;
+    Content: (AttributeValue);
+    IN Structure_view BEGIN
+      MarginTop: 2 px;
+      MarginBottom: 2 px;
+      HorizPos: Left = Previous . Left + 15 px;
+      VertPos: HRef = Previous . HRef;
+		  PaddingLeft: 		  	5 px;
+		  PaddingRight: 			5 px;
+      Size: TAG_FONTSIZE;
+      {Width: 30 px min;}
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      Background: ATTR_Color;
+      FillPattern: backgroundcolor;
+      ShowBox;
+      END;
+   END;
+#endif
 
   AttrNameAndValue: BEGIN
     Content: (Text ' ' AttributeName Text '=' AttributeValue);
@@ -242,17 +334,6 @@ BOXES
       Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
       END;
     END;
-  
- ElementName: BEGIN
-   Content: (ElemName);
-   Visibility: 0;
-	 IN Structure_view BEGIN
-		 Size: TAG_FONTSIZE;
-		 Font: TAG_Font;
-		 Weight: TAG_Weight;
-		 Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		 END;
-	 END;
 
  VerticalLine: BEGIN
 	 Content: Graphics 'W';
@@ -293,22 +374,8 @@ BOXES
 		END;
 	END;
 
- UseButton: BEGIN
-	Content: Picture 'xtigeruse.png';
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top - 2 px;
-  VertOverflow: Yes;
-	MarginTop: 0 px;
-	MarginBottom: 0 px;
-	MarginLeft: 0 px;
-	MarginRight: 0 px;
-  Inline: No;
-	Depth: Creator - 2;
-	IN Structure_view
-		Visibility: 0;
-	END;
-
  OptionButton: BEGIN
+	Visibility: 0;
 	Content: Picture 'xtigeroption.png';
   HorizRef: * . Bottom;
 	HorizPos: Left = Creator . Left - 6 px;
@@ -321,12 +388,41 @@ BOXES
 	MarginRight: 0 px;
   Inline: No;
 	Depth: Creator - 2;
-	IN Structure_view
-		Visibility: 0;
+#ifdef INSTANCE
+	IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+		  Visibility: 10;
+		END;
+#endif
+	END;
+
+ OptionButtonSet: BEGIN
+	Visibility: 0;
+	Content: Picture 'xtigeroptionset.png';
+  HorizRef: * . Bottom;
+	HorizPos: Left = Creator . Left - 6 px;
+	VertPos: Top = Creator . Top - 6 px;
+  VertOverflow: Yes;
+  HorizOverflow: Yes;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+#ifdef INSTANCE
+	IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+		  Visibility: 10;
+		END;
+#endif
 	END;
 
 #ifdef INSTANCE
  BagButton: BEGIN
+	Visibility: 0;
 	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 2 px;
@@ -338,7 +434,7 @@ BOXES
   Inline: No;
 	Depth: Creator - 2;
 	IN Structure_view
-		Visibility: 0;
+		Visibility: 10;
 	END;
 #else
  BagButton: BEGIN
@@ -359,6 +455,7 @@ BOXES
 
 #ifdef INSTANCE
  BagUse: BEGIN
+	Visibility: 0;
 	Content: Picture 'add.png';
 	HorizPos: Left = Previous . Left;
 	VertPos: Top = Previous . Bottom;
@@ -370,12 +467,13 @@ BOXES
   Inline: No;
 	Depth: Creator - 2;
 	IN Structure_view
-		Visibility: 0;
+		Visibility: 10;
 	END;
 #endif
 
 #ifdef INSTANCE
  RepeatButton: BEGIN
+	Visibility: 0;
 	Content: Picture 'add.png';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top - 2 px;
@@ -386,7 +484,7 @@ BOXES
   Inline: No;
 	Depth: Creator - 2;
 	IN Structure_view
-		Visibility: 0;
+		Visibility: 10;
 	END;
 #else
  RepeatButton: BEGIN
@@ -406,6 +504,7 @@ BOXES
 
 #ifdef INSTANCE
  RepeatUse: BEGIN
+	Visibility: 0;
 	Content: Picture 'add.png';
 	HorizPos: Left = Previous . Left;
 	VertPos: Top = Previous . Bottom;
@@ -416,7 +515,7 @@ BOXES
   Inline: No;
 	Depth: Creator - 2;
 	IN Structure_view
-		Visibility: 0;
+		Visibility: 10;
 	END;
 #endif
 
@@ -463,6 +562,7 @@ RULES
   Template:
         BEGIN
         Width: Enclosing . Width;
+#ifndef INSTANCE
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         IN Structure_view BEGIN
@@ -473,6 +573,7 @@ RULES
                 PaddingLeft: 0.4;
                 Font: Helvetica;
                 END;
+#endif
         END;
 
   Comment\240:
@@ -483,8 +584,8 @@ RULES
                 Font: COMMENT_Font;
                 Style: COMMENT_Style;
                 Weight: COMMENT_Weight;
-                Foreground: COMMENT_Color;
-		            HorizPos: Left = Enclosing . Left;
+                Foreground: COMMENT_Color;	
+	            HorizPos: Left = Enclosing . Left;
 	              Width: Enclosing . Width;
 		            VertPos: Top = Previous . Bottom;
                 END;
@@ -659,20 +760,15 @@ RULES
 
   bag:
 		BEGIN
+#ifndef INSTANCE
     CreateBefore(ElementName);
 	  CreateFirst(BagButton);
-#ifndef INSTANCE
+  	CreateWith(VerticalLine);
     Background : LightGreen4;
     FillPattern: backgroundcolor;
     ShowBox; 
-#endif
-  	CreateWith(VerticalLine);
-    Width: auto{Enclosing . Width};
-    Height: auto{Enclosing . Height};
-    LineBreak: No;
-    Display: Block;
-    VertPos: Top = 			Previous AnyElem . Bottom;
-    HorizPos: Left =		Enclosing . Left; 
+#else
+	  CreateFirst(BagButton);
 		BorderTopWidth: 	 	1 px;
 		BorderLeftWidth: 		1 px;
 		BorderBottomWidth: 	1 px;
@@ -689,6 +785,13 @@ RULES
 		PaddingLeft: 				2 px;
 		PaddingTop: 				8 px;
 		PaddingBottom: 			2 px;
+#endif
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    LineBreak: No;
+    Display: Block;
+    VertPos: Top = 			Previous AnyElem . Bottom;
+    HorizPos: Left =		Enclosing . Left; 
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
@@ -698,7 +801,11 @@ RULES
 		  PaddingLeft: 0;
 		  PaddingTop: 0;
 		  PaddingBottom: 0;
-      FillPattern: nopattern;
+#ifdef INSTANCE
+      Background : LightGreen4;
+      FillPattern: backgroundcolor;
+      ShowBox;
+#endif
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
@@ -707,22 +814,9 @@ RULES
 	 
   useEl:	
 		BEGIN
+#ifndef INSTANCE
     CreateBefore(ElementName);
-#ifdef INSTANCE
-    if  NOT immediately within repeat AND NOT immediately within bag
-      CreateFirst(UseButton);
-    if immediately within repeat
-      CreateAfter(RepeatUse);
-    if immediately within bag
-      CreateAfter(BagUse);
-#else
-    CreateFirst(UseButton);
-#endif
     CreateWith(VerticalLine);
-    Width: auto{Enclosing . Width};
-    Height: auto{Enclosing . Height};
-    VertPos: Top = Previous AnyElem . Bottom;
-    HorizPos: Left = Enclosing . Left; 
     BorderTopWidth: 1 px;
     BorderLeftWidth: 1 px;
     BorderBottomWidth: 1 px;
@@ -739,6 +833,11 @@ RULES
     PaddingLeft: 3 px;
     PaddingTop: 2 px;
     PaddingBottom: 2 px;
+#endif
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    VertPos: Top = Previous AnyElem . Bottom;
+    HorizPos: Left = Enclosing . Left; 
     IN Structure_view BEGIN
       BorderTopWidth: 0;
 		  BorderLeftWidth: 0;
@@ -757,26 +856,12 @@ RULES
 
   useSimple:	
     BEGIN
-    if  NOT immediately within repeat AND option
-      CreateFirst(OptionButton);
-#ifdef INSTANCE
-    if immediately within repeat
-      CreateAfter(RepeatUse);
-    if immediately within bag
-      CreateAfter(BagUse);
-#else
+#ifndef INSTANCE
+    CreateBefore(ElementName);
+    CreateWith(VerticalLine);
     Background : LightBlue4;
     FillPattern: backgroundcolor;
     ShowBox;
-#endif
-    CreateBefore(ElementName);
-    CreateWith(VerticalLine);
-    Width: auto{Enclosing . Width};
-    Height: auto{Enclosing . Height};
-    {LineBreak: No;}
-    {Display: CSSInline;}
-    VertPos: Top = Previous AnyElem. Bottom;
-    HorizPos: Left = Enclosing . Left;
 		BorderTopWidth: 	 	1 px;
 		BorderLeftWidth: 		1 px;
 		BorderBottomWidth: 	1 px;
@@ -793,6 +878,13 @@ RULES
 		PaddingRight: 			2 px;
 		PaddingTop: 				5 px;
 		PaddingBottom: 			2 px;
+#endif
+    Width: auto{Enclosing . Width};
+    Height: auto{Enclosing . Height};
+    {LineBreak: No;}
+    {Display: CSSInline;}
+    VertPos: Top = Previous AnyElem. Bottom;
+    HorizPos: Left = Enclosing . Left;
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
@@ -811,9 +903,6 @@ RULES
 
   repeat:
 	  BEGIN	
-    CreateBefore(ElementName);
-    CreateFirst(RepeatButton);
-    CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     {LineBreak: No;}
     Display: Block;
@@ -821,6 +910,8 @@ RULES
     MarginTop	: 3 px;
     HorizPos: Left = Enclosing . Left; 
 #ifndef INSTANCE
+    CreateBefore(ElementName);
+    CreateWith(VerticalLine);
     BorderTopWidth:  2 pt;
     BorderLeftWidth:  2 pt;
     BorderBottomWidth :  2 pt;
@@ -833,11 +924,11 @@ RULES
     BorderLeftColor:  Grey;
     BorderBottomColor : Grey;
     BorderRightColor :  Grey;
-#endif
     PaddingRight:  3 px;
     PaddingLeft	:  3 px;
     PaddingTop	: 10 px;
     PaddingBottom: 3 px; 
+#endif
     IN Structure_view BEGIN
     	BorderTopWidth :  0;
     	BorderLeftWidth :	 	0;
@@ -847,8 +938,10 @@ RULES
       PaddingLeft: 0;
       PaddingTop: 0;
       PaddingBottom: 0;
+#ifndef INSTANCE
     	HorizPos: Left  = Enclosing . Left + STRUCT_INDENT;
     	Width	:  Enclosing . Width - STRUCT_INDENT;
+#endif
     	VertPos	: Top  =  Previous . Bottom;
     END;
 	 END;	 
@@ -856,39 +949,85 @@ RULES
 
 ATTRIBUTES
 
+  option = option_set:
+  BEGIN
+  if  NOT immediately within repeat AND NOT immediately within bag
+     CreateFirst(OptionButtonSet);
+  if immediately within bag
+     CreateLast(OptionButtonSet);
+#ifndef INSTANCE
+	CreateBefore(AttrNameAndValue);
+#endif
+	END;
+
+  option = option_unset:
+  BEGIN
+  if  NOT immediately within repeat AND NOT immediately within bag
+     CreateFirst(OptionButton);
+  if immediately within bag
+     CreateLast(OptionButton);
+#ifndef INSTANCE
+	CreateBefore(AttrNameAndValue);
+#endif
+	END;
+
+#ifndef INSTANCE
   xmlid:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	END;    
 
-  option:
-  BEGIN
-	CreateBefore(AttrNameAndValue);
-	END;    
-
   name:
   BEGIN
 	CreateBefore(ComponentName);
-#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-#endif
-	END;    
+	END;
 
   ref_name:
   BEGIN
-#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+	END;
 #endif
-	END;    
 
   title:
   BEGIN
-#ifndef INSTANCE
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
+#ifdef INSTANCE
+  if First AND immediately within repeat BEGIN
+    CreateBefore(RepeatUse);
+	  CreateBefore(TypeMark);
+	  CreateBefore(TypeValue);
+  END;
+  if immediately within repeat BEGIN
+    CreateAfter(RepeatUse);
+	  CreateAfter(TypeMark_E);
+	  CreateAfter(TypeValue_E);
+    CreateWith(VerticalLine);
+    END;
+  if useEl AND NOT immediately within repeat AND NOT immediately within bag BEGIN
+    CreateFirst(UseButton);
+	  CreateFirst(TypeMark);
+	  CreateFirst(TypeValue);
+    CreateWith(VerticalLine);
+    END;
+  if useSimple AND option AND NOT immediately within repeat AND NOT immediately within bag AND NOT immediately within useEl AND NOT immediately within useSimple BEGIN
+	  CreateBefore(TypeMark);
+	  CreateBefore(TypeValue);
+  END;
+  if useSimple AND NOT option AND NOT immediately within repeat AND NOT immediately within useEl AND NOT immediately within useSimple BEGIN
+	  CreateLast(TypeMark);
+	  CreateLast(TypeValue);
+    CreateWith(VerticalLine);
+    END;
+  if bag BEGIN
+	  CreateFirst(AttrValue);
+    CreateWith(VerticalLine);
+    END;
+#else
+	CreateFirst(AttrName);
+	CreateFirst(AttrValue);
 #endif
 	END;    
 
@@ -914,6 +1053,7 @@ ATTRIBUTES
 #endif
 	END;    
 	
+#ifndef INSTANCE
   minOccurs:
   BEGIN
 	CreateBefore(AttrName);
@@ -928,34 +1068,73 @@ ATTRIBUTES
 
   currentType:
   BEGIN
-#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-#endif
 	END;    
+#endif
 	
+#ifndef INSTANCE
   type:
   BEGIN
-#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-#endif
 	END;    
 
   types:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-#ifndef INSTANCE
     {if Empty}
       CreateLast(UsedTypes);
-#endif
 	END;
+#endif
 
   types= 'string':
   BEGIN
-  if option
+#ifndef INSTANCE
+ if option
     CreateFirst (Option_space);
+#endif
+	BorderTopWidth: 	 	1 px;
+	BorderLeftWidth: 		1 px;
+	BorderBottomWidth: 	1 px;
+	BorderRightWidth: 	1 px;
+	BorderTopStyle: 		Dotted;
+	BorderLeftStyle: 		Dotted;
+	BorderBottomStyle: 	Dotted;
+	BorderRightStyle: 	Dotted;
+	BorderTopColor: 		Blue;
+	BorderLeftColor: 		Blue;
+	BorderBottomColor: 	Blue;
+	BorderRightColor: 	Blue;
+	PaddingLeft: 				5 px;
+	PaddingRight: 			2 px;
+	PaddingTop: 				5 px;
+	PaddingBottom: 			2 px;
+	END;
+
+  types= 'number':
+  BEGIN
+#ifndef INSTANCE
+ if option
+    CreateFirst (Option_space);
+#endif
+	BorderTopWidth: 	 	1 px;
+	BorderLeftWidth: 		1 px;
+	BorderBottomWidth: 	1 px;
+	BorderRightWidth: 	1 px;
+	BorderTopStyle: 		Dotted;
+	BorderLeftStyle: 		Dotted;
+	BorderBottomStyle: 	Dotted;
+	BorderRightStyle: 	Dotted;
+	BorderTopColor: 		Blue;
+	BorderLeftColor: 		Blue;
+	BorderBottomColor: 	Blue;
+	BorderRightColor: 	Blue;
+	PaddingLeft: 				5 px;
+	PaddingRight: 			2 px;
+	PaddingTop: 				5 px;
+	PaddingBottom: 			2 px;
 	END;
 
   useAt:
