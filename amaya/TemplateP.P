@@ -375,6 +375,43 @@ BOXES
 #endif
 
 #ifdef INSTANCE
+  TypeMark: BEGIN
+    Visibility: 0;
+    Content: Graphics 'L';
+    IN Structure_view BEGIN
+      MarginTop: 6 px;
+      MarginBottom: 6 px;
+      {HorizPos: Left = Previous . Right + 10 px;
+      VertPos: Top = Previous . Top + 2 px;}
+      Size: TAG_FONTSIZE;
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: White;
+      Height: 10 px;
+      Background: DarkGrey2;
+      FillPattern: backgroundcolor;
+      ShowBox;
+      END;
+   END;
+  TypeValue: BEGIN
+    Visibility: 0;
+    Content: (AttributeValue);
+    IN Structure_view BEGIN
+      MarginTop: 2 px;
+      MarginBottom: 2 px;
+      HorizPos: Left = Previous . Left + 15 px;
+      VertPos: HRef = Previous . HRef;
+		  PaddingLeft: 		  	5 px;
+		  PaddingRight: 			5 px;
+      Size: TAG_FONTSIZE;
+      {Width: 30 px min;}
+      Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+      Visibility: ATTR_Visibility;  Foreground: White;
+      Background: DarkGrey2;
+      FillPattern: backgroundcolor;
+      ShowBox;
+      END;
+   END;
+
  BagUse: BEGIN
 	Content: Picture 'add.png';
 	HorizPos: Left = Previous . Left;
@@ -676,9 +713,9 @@ RULES
 
   bag:
 		BEGIN
-    CreateBefore(ElementName);
 	  CreateFirst(BagButton);
 #ifndef INSTANCE
+    CreateBefore(ElementName);
     Background : LightGreen4;
     FillPattern: backgroundcolor;
     ShowBox; 
@@ -724,7 +761,6 @@ RULES
 	 
   useEl:	
 		BEGIN
-    CreateBefore(ElementName);
 #ifdef INSTANCE
     if  NOT immediately within repeat AND NOT immediately within bag
       CreateFirst(UseButton);
@@ -733,29 +769,31 @@ RULES
     if immediately within bag
       CreateAfter(BagUse);
 #else
-    CreateFirst(UseButton);
+    CreateBefore(ElementName);
 #endif
     CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
     VertPos: Top = Previous AnyElem . Bottom;
-    HorizPos: Left = Enclosing . Left; 
-    BorderTopWidth: 1 px;
-    BorderLeftWidth: 1 px;
-    BorderBottomWidth: 1 px;
-    BorderRightWidth: 1 px;
-    BorderTopStyle: Dotted;
-    BorderLeftStyle: Dotted;
-    BorderBottomStyle: Dotted;
-    BorderRightStyle: Dotted;
-    BorderTopColor: Blue;
-    BorderLeftColor: Blue;
-    BorderBottomColor: Blue;
-    BorderRightColor: Blue;
-    PaddingRight: 2 px;
-    PaddingLeft: 3 px;
-    PaddingTop: 2 px;
-    PaddingBottom: 2 px;
+    HorizPos: Left = Enclosing . Left;
+    if NOT immediately within useEl AND NOT immediately within useSimple BEGIN
+      BorderTopWidth: 1 px;
+      BorderLeftWidth: 1 px;
+      BorderBottomWidth: 1 px;
+      BorderRightWidth: 1 px;
+      BorderTopStyle: Dotted;
+      BorderLeftStyle: Dotted;
+      BorderBottomStyle: Dotted;
+      BorderRightStyle: Dotted;
+      BorderTopColor: Blue;
+      BorderLeftColor: Blue;
+      BorderBottomColor: Blue;
+      BorderRightColor: Blue;
+      PaddingRight: 2 px;
+      PaddingLeft: 3 px;
+      PaddingTop: 2 px;
+      PaddingBottom: 2 px;
+      END;
     IN Structure_view BEGIN
       BorderTopWidth: 0;
 		  BorderLeftWidth: 0;
@@ -766,9 +804,9 @@ RULES
 		  PaddingTop: 0;
 		  PaddingBottom: 0;
       FillPattern: nopattern;
+      VertPos: Top = Previous . Bottom;
       HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		  Width: Enclosing . Width - STRUCT_INDENT;
-		  VertPos: Top = Previous . Bottom;
 		  END;
 	 END;
 
@@ -780,11 +818,11 @@ RULES
     if immediately within bag
       CreateAfter(BagUse);
 #else
+    CreateBefore(ElementName);
     Background : LightBlue4;
     FillPattern: backgroundcolor;
     ShowBox;
 #endif
-    CreateBefore(ElementName);
     CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
@@ -792,22 +830,24 @@ RULES
     {Display: CSSInline;}
     VertPos: Top = Previous AnyElem. Bottom;
     HorizPos: Left = Enclosing . Left;
-		BorderTopWidth: 	 	1 px;
-		BorderLeftWidth: 		1 px;
-		BorderBottomWidth: 	1 px;
-		BorderRightWidth: 	1 px;
-		BorderTopStyle: 		Dotted;
-		BorderLeftStyle: 		Dotted;
-		BorderBottomStyle: 	Dotted;
-		BorderRightStyle: 	Dotted;
-		BorderTopColor: 		Blue;
-		BorderLeftColor: 		Blue;
-		BorderBottomColor: 	Blue;
-		BorderRightColor: 	Blue;
-		PaddingLeft: 				5 px;
-		PaddingRight: 			2 px;
-		PaddingTop: 				5 px;
-		PaddingBottom: 			2 px;
+    if NOT immediately within useEl AND NOT immediately within useSimple BEGIN
+      BorderTopWidth: 1 px;
+      BorderLeftWidth: 1 px;
+      BorderBottomWidth: 1 px;
+      BorderRightWidth: 1 px;
+      BorderTopStyle: Dotted;
+      BorderLeftStyle: Dotted;
+      BorderBottomStyle: Dotted;
+      BorderRightStyle: Dotted;
+      BorderTopColor: Blue;
+      BorderLeftColor: Blue;
+      BorderBottomColor: Blue;
+      BorderRightColor: Blue;
+      PaddingRight: 2 px;
+      PaddingLeft: 3 px;
+      PaddingTop: 2 px;
+      PaddingBottom: 2 px;
+      END;
   	IN Structure_view BEGIN
 			BorderTopWidth: 0;
 			BorderLeftWidth: 0;
@@ -818,15 +858,14 @@ RULES
 		  PaddingTop: 0;
 		  PaddingBottom: 0;
       FillPattern: nopattern;
+      VertPos: Top = Previous . Bottom;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
-		  VertPos: Top = Previous . Bottom;
 		  END;
 	 END;
 
   repeat:
-	  BEGIN	
-    CreateBefore(ElementName);
+	  BEGIN
     CreateFirst(RepeatButton);
     CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
@@ -836,6 +875,7 @@ RULES
     MarginTop	: 3 px;
     HorizPos: Left = Enclosing . Left; 
 #ifndef INSTANCE
+    CreateBefore(ElementName);
     BorderTopWidth:  2 pt;
     BorderLeftWidth:  2 pt;
     BorderBottomWidth :  2 pt;
@@ -910,32 +950,26 @@ ATTRIBUTES
 
   title:
   BEGIN
-#ifndef INSTANCE
+#ifdef INSTANCE
+	CreateBefore(TypeMark);
+	CreateBefore(TypeValue);
+#else
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 #endif
 	END;    
 
+#ifndef INSTANCE
   includeAt:
   BEGIN
-#ifndef INSTANCE
 	CreateFirst(UnionAttrName);
 	CreateFirst(UnionAttrValue);
-#endif
 	END;    
 
   exclude:
   BEGIN
-#ifndef INSTANCE
 	CreateFirst(UnionAttrName);
 	CreateFirst(UnionAttrValue);
-#endif
-	END;    
-
-  src:
-  BEGIN
-#ifndef INSTANCE
-#endif
 	END;    
 	
   minOccurs:
@@ -952,29 +986,60 @@ ATTRIBUTES
 
   currentType:
   BEGIN
-#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-#endif
 	END;    
 	
   type:
   BEGIN
-#ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-#endif
 	END;    
 
   types:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-#ifndef INSTANCE
     {if Empty}
       CreateLast(UsedTypes);
-#endif
 	END;
+
+  useAt:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  defaultAt:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  fixed:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  values:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  version:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+
+  templateVersion:
+  BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;    
+#endif
 
   types= 'string':
   BEGIN
@@ -982,53 +1047,11 @@ ATTRIBUTES
     CreateFirst (Option_space);
 	END;
 
-  useAt:
+  types= 'number':
   BEGIN
-#ifndef INSTANCE
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-#endif
-	END;    
-
-  defaultAt:
-  BEGIN
-#ifndef INSTANCE
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-#endif
-	END;    
-
-  fixed:
-  BEGIN
-#ifndef INSTANCE
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-#endif
-	END;    
-
-  values:
-  BEGIN
-#ifndef INSTANCE
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-#endif
-	END;    
-
-  version:
-  BEGIN
-#ifndef INSTANCE
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-#endif
-	END;    
-
-  templateVersion:
-  BEGIN
-#ifndef INSTANCE
-	CreateBefore(AttrName);
-	CreateBefore(AttrValue);
-#endif
-	END;    
+  if option
+    CreateFirst (Option_space);
+	END;
 
   Highlight:
   BEGIN
