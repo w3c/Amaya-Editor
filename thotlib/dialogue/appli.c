@@ -656,11 +656,7 @@ void TtaRaiseView (Document document, View view)
       /* TODO: the page position should depends of the current active view */
       if (page_position == 0)
         page_position = 2;
-      
-      TtaAttachFrame( frame_id,
-                      window_id,
-                      page_id,
-                      page_position );
+      TtaAttachFrame (frame_id, window_id, page_id, page_position, 1);
     }
 }
 

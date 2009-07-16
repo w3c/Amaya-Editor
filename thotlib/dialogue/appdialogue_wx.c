@@ -948,11 +948,13 @@ void TtaSetPageIcon( Document doc, View view, char *iconpath)
   + frame_id : the frame
   + window_id : the window where the frame should be attached
   + page_id : the page index into the window where the frame should be attached
+  + split: 0 for horizontal, 1 if for vertical
   returns:
   + true if ok
   + false if it's impossible to attach the frame to the window
   ----------------------------------------------------------------------*/
-ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position )
+ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position,
+                         int split)
 {
   int kind;
 
@@ -978,7 +980,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
       
       /* now attach the frame to this page */
       AmayaFrame * p_oldframe = NULL;
-      p_oldframe = p_page->AttachFrame( FrameTable[frame_id].WdFrame, position );
+      p_oldframe = p_page->AttachFrame( FrameTable[frame_id].WdFrame, position, split );
     }
   else if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE )
     {

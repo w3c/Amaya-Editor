@@ -47,7 +47,8 @@ extern void TtaSetPageIcon ( Document doc,
 extern ThotBool TtaAttachFrame ( int frame_id,
                                  int window_id,
                                  int page_id,
-                                 int position );
+                                 int position,
+                                 int split );
 extern ThotBool TtaDetachFrame ( int frame_id );
 extern ThotBool TtaDestroyFrame ( int frame_id );
 extern void TtaCleanUpWindow ( int window_id );
@@ -146,7 +147,8 @@ extern void TtaSetPageIcon ( Document doc,
 extern ThotBool TtaAttachFrame ( int frame_id,
                                    int window_id,
                                    int page_id,
-                                   int position );
+                                   int position,
+                                   int split );
 extern ThotBool TtaDetachFrame ( int frame_id );
 extern ThotBool TtaDestroyFrame ( int frame_id );
 extern void TtaCleanUpWindow ( int window_id );

@@ -544,7 +544,7 @@ void OpenCreatedView (PtrDocument pDoc, int view,
   PtrSSchema          pSS;
   int                 volume = 0;
   int                 frame, frame_id;
-  int                 h, doc_id;
+  int                 h, doc_id, split;
   int                 schView, view_id;
 
   frame = 0;
@@ -574,9 +574,12 @@ void OpenCreatedView (PtrDocument pDoc, int view,
                             viewName, window_id, page_id, page_position);
       pDoc->DocViewFrame[view - 1] = frame;
       pDoc->DocViewVolume[view - 1] = volume;
-      
+      if (viewName && !strcmp (viewName,"Structure_view"))
+        split = 2;
+      else
+        split = 1;
       /* the new document need to be attached to a page */      
-      TtaAttachFrame (frame, window_id, page_id, page_position);
+      TtaAttachFrame (frame, window_id, page_id, page_position, split);
 #endif /* _WX */
     }
 

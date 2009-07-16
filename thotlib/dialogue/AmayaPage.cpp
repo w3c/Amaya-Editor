@@ -228,7 +228,7 @@ AmayaSimplePage::~AmayaSimplePage()
 *      return:
 *        + AmayaFrame * : the old frame or NULL if there was no old frame at this place
  -----------------------------------------------------------------------*/
-AmayaFrame * AmayaSimplePage::AttachFrame( AmayaFrame * p_frame, int )
+AmayaFrame *AmayaSimplePage::AttachFrame (AmayaFrame *p_frame, int pos, int split)
 {
   AmayaFrame* res = m_pFrame;
   
@@ -322,7 +322,7 @@ void AmayaSimplePage::OnClose(wxCloseEvent& event)
       if ( !TtaFrameIsClosed (frame_id) )
         {
           // if the frame didnt die, just re-attach it
-          AttachFrame(m_pFrame, 1);
+          AttachFrame(m_pFrame, 1, 1);
           SetIsClosed(false);
         }
     }
@@ -330,11 +330,6 @@ void AmayaSimplePage::OnClose(wxCloseEvent& event)
   if(!IsClosed())
     event.Veto();
 }
-
-
-
-
-
 
 
 //
@@ -437,16 +432,17 @@ AmayaQuickSplitButton * AmayaSplittablePage::GetQuickSplitButton (ThotBool horiz
 }
 
  /*----------------------------------------------------------------------
- *       Class: AmayaSplittablePage 
- *      Method: AttachFrame
- * Description: attache a AmayaFrame to the page (top or bottom)
- *      params:
- *        + AmayaFrame * p_frame : the frame to attach
- *        + int position : the position identifier - top (1) or bottom (2)
- *      return:
- *        + AmayaFrame * : the old frame or NULL if there was no old frame at this place
+   Class: AmayaSplittablePage 
+   Method: AttachFrame
+   Description: attache a AmayaFrame to the page (top or bottom)
+   params:
+   + AmayaFrame * p_frame : the frame to attach
+   + int position : the position identifier - top (1) or bottom (2)
+   + split: 0 for horizontal, 1 if for vertical
+   return:
+   + AmayaFrame * : the old frame or NULL if there was no old frame at this place
   -----------------------------------------------------------------------*/
-AmayaFrame * AmayaSplittablePage::AttachFrame( AmayaFrame * p_frame, int position )
+AmayaFrame *AmayaSplittablePage::AttachFrame (AmayaFrame *p_frame, int position, int split)
 {
   // check if this is the first frame or not
   // the first one will be considered ad the master
@@ -492,27 +488,27 @@ AmayaFrame * AmayaSplittablePage::AttachFrame( AmayaFrame * p_frame, int positio
   if (oldframe != NULL)
     ok = m_pSplitterWindow->ReplaceWindow( oldframe, p_frame );
   else if (m_pBottomFrame == NULL || m_pTopFrame == NULL)
-  {
+    {
     ok = m_pSplitterWindow->ReplaceWindow( m_DummyPanel, p_frame );
     m_DummyPanel->Hide();
-  }
+    }
   else
-  {
+    {
     AmayaFrame * p_frame = GetFrame(1);
     Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
     View view         = FrameTable[p_frame->GetFrameId()].FrView;
-    if (m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL)
-  	{
+    if (split == 2 || m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL)
+      {
   	  ok = m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
   	  TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
-  	}
+      }
     else
-  	{
+      {
   	  ok = m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
   	  TtaExecuteMenuAction ("ShowHSplitToggle", document, view, FALSE);
-  	}
+      }
     AdjustSplitterPos();
-  }
+    }
   wxASSERT_MSG(ok, _T("AmayaSplittablePage::AttachFrame -> Impossible d'attacher la frame") );
 
   // update old and new AmayaFrame parents
@@ -941,7 +937,7 @@ void AmayaSplittablePage::OnClose(wxCloseEvent& event)
       if ( !TtaFrameIsClosed (frame_id) )
         {
           // if the frame didnt die, just re-attach it
-          AttachFrame(p_AmayaFrame, 1);
+          AttachFrame(p_AmayaFrame, 1, 1);
           SetIsClosed(false);
         }
     }
@@ -959,7 +955,7 @@ void AmayaSplittablePage::OnClose(wxCloseEvent& event)
       if ( !TtaFrameIsClosed (frame_id) )
         {
           // if the frame didnt die, just re-attach it
-          AttachFrame(p_AmayaFrame, 2);
+          AttachFrame(p_AmayaFrame, 2, 1);
           SetIsClosed(false);
         }
       

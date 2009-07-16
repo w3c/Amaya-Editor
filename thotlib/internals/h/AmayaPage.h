@@ -73,21 +73,21 @@ class AmayaPage : public wxPanel
   DECLARE_ABSTRACT_CLASS(AmayaPage)
   DECLARE_EVENT_TABLE()
 public:
-  static AmayaPage* CreateAmayaPage(wxWindow* parent, AmayaWindow* window, Document doc);
+  static AmayaPage *CreateAmayaPage(wxWindow *parent, AmayaWindow *window, Document doc);
   
-  AmayaPage(wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
+  AmayaPage(wxWindow *p_parent_window = NULL, AmayaWindow *p_amaya_parent_window = NULL );
   virtual ~AmayaPage();
 
-  virtual AmayaWindow * GetWindowParent();
+  virtual AmayaWindow *GetWindowParent();
 
-  virtual AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position ) {return NULL;}
-  virtual AmayaFrame * DetachFrame( int position ) {return NULL;}
+  virtual AmayaFrame *AttachFrame( AmayaFrame *p_frame, int position, int split ) {return NULL;}
+  virtual AmayaFrame *DetachFrame( int position ) {return NULL;}
 
-  virtual void         SetActiveFrame( const AmayaFrame * p_frame ) {}
-  virtual AmayaFrame * GetActiveFrame() const {return NULL;}
+  virtual void        SetActiveFrame( const AmayaFrame *p_frame ) {}
+  virtual AmayaFrame *GetActiveFrame() const {return NULL;}
 
-  virtual void SetContainer( AmayaPageContainer * container ){m_pContainer = container;} 
-  virtual AmayaPageContainer * GetContainer() {return m_pContainer;}
+  virtual void SetContainer( AmayaPageContainer *container ){m_pContainer = container;} 
+  virtual AmayaPageContainer *GetContainer() {return m_pContainer;}
   
   virtual void SetPageId( int page_id );
   virtual int  GetPageId()const{return m_PageId;}
@@ -104,7 +104,7 @@ public:
   virtual int GetMasterFrameId()const{return m_MasterFrameId;}
   
   
-  virtual AmayaFrame * GetFrame( int frame_position ) const=0;
+  virtual AmayaFrame *GetFrame( int frame_position ) const=0;
   virtual int GetFramePosition( const AmayaFrame * p_frame ) const=0;
 
 protected:
@@ -130,7 +130,7 @@ public:
   AmayaSimplePage( wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
   virtual ~AmayaSimplePage();
 
-  AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position );
+  AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position, int split );
   AmayaFrame * DetachFrame( int position );
 
   void         SetActiveFrame( const AmayaFrame * p_frame ){/* Do nothing, always one frame always active.*/}
@@ -160,7 +160,7 @@ public:
   AmayaSplittablePage( wxWindow * p_parent_window = NULL, AmayaWindow * p_amaya_parent_window = NULL );
   virtual ~AmayaSplittablePage();
 
-  AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position );
+  AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position, int split );
   AmayaFrame * DetachFrame( int position );
 
   void SetSplitMode( int mode );
