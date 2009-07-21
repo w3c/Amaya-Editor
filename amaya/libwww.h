@@ -47,7 +47,9 @@ typedef unsigned long ms_t;
 #include "WWWHTTP.h"		/* HTTP access module */
 #include "HTProxy.h"
 #include "HTHost.h"
-
+#ifdef SSL
+#include "WWWSSL.h"	
+#endif /* SSL */
 
 typedef struct _AHTDocIdStatus
   {

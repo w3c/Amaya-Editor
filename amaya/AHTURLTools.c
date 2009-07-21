@@ -1198,6 +1198,9 @@ ThotBool IsHTTPPath (const char *path)
     return FALSE;
 
   if ((!strncmp (path, "http:", 5) != 0)
+#ifdef SSL
+      || !strncmp (path, "https:", 6)
+#endif /* SSL */
       || !strncmp (path, "ftp:", 4)
       || !strncmp (path, "internal:", 9))
     return TRUE;
@@ -1233,14 +1236,14 @@ ThotBool IsW3Path (const char *path)
   if (path == NULL)
     return FALSE;
   if (strncmp (path, "http:", 5)   && 
+      strncmp (path, "https:", 6)  &&
       strncmp (path, "ftp:", 4)    &&
       strncmp (path, "telnet:", 7) && 
       strncmp (path, "wais:", 5)   &&
       strncmp (path, "news:", 5)   && 
       strncmp (path, "gopher:", 7) &&
       strncmp (path, "mailto:", 7) && 
-      strncmp (path, "archie:", 7) &&
-      strncmp (path, "https:", 6))
+      strncmp (path, "archie:", 7))
     return FALSE;
   return TRUE;
 }
@@ -1263,6 +1266,9 @@ ThotBool IsFilePath (const char *path)
 ThotBool IsValidProtocol (const char *url)
 {
   if (!strncmp (url, "http:", 5)
+#ifdef SSL
+      || !strncmp (url, "https:", 6)
+#endif /* SSL */
       || !strncmp (url, "internal:", 9)
       || !strncmp (url, "ftp:", 4))
     /* experimental */

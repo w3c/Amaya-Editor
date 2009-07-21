@@ -1846,6 +1846,28 @@ static void         AHTProtocolInit (void)
     HTTP_setConnectionMode (HTTP_11_NO_PIPELINING);
 }
 
+#ifdef SSL
+/*----------------------------------------------------------------------
+  AHTHTTPSInit
+  SSL initialization
+  ----------------------------------------------------------------------*/
+static void        AHTHTTPSInit (void)
+{
+  /* Set the SSL protocol method. By default, it is the highest available
+     protocol. Setting it up to SSL_V23 allows the client to negotiate
+     with the server and set up either TSLv1, SSLv3 or SSLv2  */
+  HTSSL_protMethod_set (HTSSL_V23);
+  
+  /* Set the certificate verification depth to 2 in order to be able to
+     validate self signed certificates */
+  HTSSL_verifyDepth_set (2);
+  
+  /* Register SSL stuff for handling ssl access */
+  // HTSSLhttps_init(YES);
+  HTSSLhttps_init(NO);
+}
+#endif /* SSL */
+
 /*----------------------------------------------------------------------
   AHTNetInit
   Reegisters "before" and "after" request filters.
@@ -1861,6 +1883,9 @@ static void         AHTNetInit (void)
 
   HTNet_addBefore (HTCredentialsFilter, "http://*", NULL, HT_FILTER_LATE);
   HTNet_addBefore (HTProxyFilter, NULL, NULL, HT_FILTER_LATE);
+#ifdef SSL
+  HTNet_addBefore (HTPEP_beforeFilter,	"http://*", NULL, HT_FILTER_LATE);
+#endif /* SSL */
   HTHost_setActivateRequestCallback (AHTOpen_file);
 
   /*      register AFTER filters
@@ -1872,6 +1897,9 @@ static void         AHTNetInit (void)
 
   HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_NO_ACCESS, HT_FILTER_MIDDLE);
   HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_REAUTH, HT_FILTER_MIDDLE);
+#ifdef SSL
+  HTNet_addAfter (HTPEP_afterFilter,	"http://*", NULL, HT_ALL, HT_FILTER_MIDDLE);
+#endif /* SSL */
   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT, HT_FILTER_MIDDLE);
   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_FOUND, HT_FILTER_MIDDLE);
   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_SEE_OTHER, HT_FILTER_MIDDLE);
@@ -1881,6 +1909,11 @@ static void         AHTNetInit (void)
 #ifdef AMAYA_LOST_UPDATE
   HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED, HT_FILTER_MIDDLE);
 #endif /* AMAYA_LOST_UPDATE */
+
+#ifdef SSL
+  /* A rajouter ?? */
+  //HTNet_addAfter (HTAuthInfoFilter, 	"https://*", NULL, HT_ALL, HT_FILTER_MIDDLE);
+#endif /* SSL */
 
 #if defined(_GTK) || defined(_WX)
   HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);
@@ -2316,6 +2349,11 @@ static void AHTProfile_newAmaya (const char *AppName, const char *AppVersion)
   ptr = TtaGetEnvString ("ENABLE_MDA");
   if (!ptr || (ptr && *ptr && strcasecmp (ptr, "no")))
     HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, HTDigest_updateInfo, HTDigest_delete);
+
+#ifdef SSL
+  /* SSL initialization */
+  AHTHTTPSInit ();
+#endif /* SSL */
    
   /* Get any proxy settings */
   ProxyInit ();
@@ -2637,6 +2675,12 @@ void QueryClose ()
   HTNoProxy_deleteAll ();
   SafePut_delete ();
   HTGateway_deleteAll ();
+  
+#ifdef SSL
+  /* Close down SSL */
+  HTSSLhttps_terminate();
+#endif /* SSL */
+
   AHTProfile_delete ();
 
   /* close the trace file (if it exists) */
