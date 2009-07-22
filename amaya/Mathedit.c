@@ -5765,9 +5765,11 @@ static int GetCharType (CHAR_T c, char script)
   else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ')
     /* latin letter */
     ret = MathML_EL_MI;
-  else if ((c >= 0x0391 && c <= 0x03A9) || (c >= 0x03B1 && c <= 0x03C9) ||
-           (c == 0x03D5))
-    /* greek letter */
+  else if (((c >= 0x0391 && c <= 0x03A9) || (c >= 0x03B1 && c <= 0x03C9) ||
+           (c == 0x03D5)) &&
+	   c != 0x03a0 && c != 0x03a3)
+    /* greek letter, except capital Sigma and Pi, which are considered as
+       operators */
     ret = MathML_EL_MI;
   else if (c >= 0x0410 && c <= 0x044F)
     /* cyrillic letter */
@@ -7305,22 +7307,13 @@ void MtextCreated (NotifyElement *event)
   -----------------------------------------------------------------------*/
 void MathStringModified (NotifyOnTarget *event)
 {
-  PresentationValue   pval;
-  PresentationContext ctxt;
-
+  RemoveAttr (event->target, event->document, MathML_ATTR_EntityName);
   /* if the event comes from function BreakElement, don't do anything:
-     the user just want to split that character string */
+     the user just wants to split that character string */
   if (event->targetdocument != 0)
     {
-      /* if the old text was a large operator, remove the pRule that
-         made this text bigger */
-      ctxt = TtaGetSpecificStyleContext (event->document);
-      ctxt->destroy = TRUE;
-      pval.typed_data.value = 0;
-      TtaSetStylePresentation (PRSize, event->target, NULL, ctxt, pval);
       /* analyze the new content of the text element */
       ParseMathString (event->target, event->element, event->document);
-      TtaFreeMemory (ctxt);
     }
 }
 
@@ -7331,7 +7324,6 @@ void MathStringModified (NotifyOnTarget *event)
   -----------------------------------------------------------------------*/
 void NewMathString (NotifyElement *event)
 {
-  /* RemoveAttr (event->element, event->document, MathML_ATTR_EntityName); */
   if (TtaGetElementVolume (event->element) > 0)
     ParseMathString (event->element, TtaGetParent (event->element),
                      event->document);

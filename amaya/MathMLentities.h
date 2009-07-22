@@ -999,6 +999,7 @@ XmlEntity  MathEntityTable[] =
 	{"frac56", 8538},
 	{"frac58", 8541},
 	{"frac78", 8542},
+	{"frasl", 8260},
 	{"frown", 8994},
 	{"fscr", 119995},
 	{"gE", 8807},

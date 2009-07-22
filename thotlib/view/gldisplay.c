@@ -2654,7 +2654,7 @@ void DrawTilde (int frame, int thick, int style, int x, int y, int l, int h, int
 }
 
 /*----------------------------------------------------------------------
-  DrawHorizontalBrace draw a horizontal brace aligned top or bottom
+  DrawHorizontalParenthesis draw a horizontal parenthesis aligned top or bottom
   depending on align value.
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
@@ -2766,7 +2766,7 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
 }
 
 /*----------------------------------------------------------------------
-  DrawHorizontalBracket draw a horizontal brace aligned top or bottom
+  DrawHorizontalBracket draw a horizontal bracket aligned top or bottom
   depending on align value.
   The parameter fg indicates the drawing color.
   ----------------------------------------------------------------------*/
@@ -2795,8 +2795,6 @@ void DrawHorizontalBracket (int frame, int thick, int style, int x, int y,
         }
     }
 }
-
-
 
 /*----------------------------------------------------------------------
   DrawSlash draw a slash or backslash depending on direction.

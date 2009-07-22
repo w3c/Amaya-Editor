@@ -12,7 +12,7 @@ VIEWS
 
 #define SCRIPTSIZEMULTIPLIER 80 %
 #define SMALLER 90 %
-#define OPERATOR_SPACE 0.20
+#define OPERATOR_SPACE 0.3
 #define ROOT_OFFSET 0.6
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 11 pt
@@ -881,7 +881,7 @@ RULES
         CreateWith(VerticalLine);
         CreateFirst (Bar);
         LineWeight: 0.5 pt;
-        HorizRef: Enclosed Bar . Bottom + 0.1;
+        HorizRef: Enclosed Bar . Bottom + 0.2;
         VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
         if within Superscript
                 Size: Enclosing * SMALLER;
@@ -1070,7 +1070,7 @@ RULES
         BEGIN
         Size: Enclosing * SCRIPTSIZEMULTIPLIER;
         HorizPos: Left = Base . Right + 0.1;
-        VertPos: Bottom = Base . Top + 0.9;
+        VertPos: Bottom = Base . Top + 1.1;
         IN Structure_view BEGIN
                 Size: Enclosing =;
                 Width: Enclosing . Width;
@@ -1084,7 +1084,7 @@ RULES
         BEGIN
         Size: Enclosing * SCRIPTSIZEMULTIPLIER;
         HorizPos: Left = Base . Right;
-        VertPos: Top = Base . Bottom - 0.7;
+        VertPos: Top = Base . Bottom - 1.2;
         IN Structure_view BEGIN
                 Size: Enclosing =;
                 Width: Enclosing . Width;
@@ -1335,10 +1335,14 @@ RULES
         CreateWith(VerticalLine);
         HorizPos: Left = Enclosing . Left;
         VertPos: Top = Previous . Bottom;
+        PaddingTop: 0.2;
+        PaddingBottom: 0.2;
         IN Structure_view BEGIN
                 Size: DOC_FONTSIZE;
                 Width: Enclosing . Width - STRUCT_INDENT;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                PaddingTop: 0;
+                PaddingBottom: 0;
                 END;                
         END;
 
@@ -1673,7 +1677,6 @@ RULES
         BEGIN
         if within UnderOverBase
            BEGIN
-           Height: 1;
            HorizRef: * . HMiddle + 0.2;
            END;
         if not within UnderOverBase
@@ -1856,6 +1859,12 @@ ATTRIBUTES
         Visibility: 0;
         IN Structure_view Visibility: Enclosing =;
         END;
+
+  IntLargeOp:
+        BEGIN
+	Size: Enclosing * 180 %;
+	HorizRef: * . HMiddle + 0.3;
+	END;
 
   IntMovelimits(UnderOverBase):
         HorizPos: Left = Enclosing . Left;
@@ -3013,6 +3022,8 @@ ATTRIBUTES
         BEGIN
         Fillpattern: nopattern;
         Width: Enclosed . Width;
+        Height: 1;
+	HorizRef: *.Top + 0.7;
         END;
 
   IntFontstyle = IntNormal:

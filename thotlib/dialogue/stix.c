@@ -1452,7 +1452,6 @@ void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
     }
 }
 
-
 /*----------------------------------------------------------------------
   GetStixFontAndIndex returns the glyph index and the font
   used to display the wide character c
@@ -1525,6 +1524,13 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
   else if (c >= Stix_OverBrace_Start && c < (int) (Stix_OverBrace_Start + Stix_OverBrace_length))
     {
       entry = Stix_OverBrace[c - Stix_OverBrace_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+  else if (c == 0x27fa) /* Long left right double arrow */
+    /* use the short arrow instead */
+    {
+      entry = Stix_Arrows[0x21d4 - Stix_Arrows_Start];
       index = (int) (entry.MapIndex);
       face = (int) (entry.MapFont);
     }

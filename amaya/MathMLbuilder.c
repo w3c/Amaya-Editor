@@ -40,13 +40,15 @@ extern XmlEntity *pMathEntityTable;
   Return TRUE if character is listed as a largeop in the MathML 2.0
   Operator dictionary (appendix F.5)
   ----------------------------------------------------------------------*/
-static ThotBool IsLargeOp (CHAR_T character, char script)
+static ThotBool IsLargeOp (CHAR_T character)
 {
   if (character == 0x22C1 || /* Vee */
       character == 0x2296 || /* CircleMinus */
       character == 0x2295 || /* CirclePlus */
       character == 0x2211 || /* Sum */
-      character == 0x22C3 || /* Union */
+      character == 0x03A3 || /* Sigma */
+      character == 0x222A || /* Union */
+      character == 0x22C3 || /* n-ary Union */
       character == 0x228E || /* UnionPlus */
       character == 0x2232 || /* ClockwiseContourIntegral */
       character == 0x222E || /* ContourIntegral */
@@ -57,7 +59,9 @@ static ThotBool IsLargeOp (CHAR_T character, char script)
       character == 0x2297 || /* CircleTimes */
       character == 0x2210 || /* Coproduct */
       character == 0x220F || /* Product */
-      character == 0x22C2 || /* Intersection */
+      character == 0x03A0 || /* Pi */
+      character == 0x2229 || /* Intersection */
+      character == 0x22C2 || /* n-ary Intersection */
       character == 0x2299 )  /* CircleDot */
     /* it's a large operator */
     return TRUE;
@@ -577,15 +581,12 @@ static void  CheckMinus (Element el, Document doc)
   ----------------------------------------------------------------------*/
 void      CheckLargeOp (Element el, Document doc)
 {
-  ElementType	       elType, contType;
-  Element	       content, ancestor;
+  ElementType	      elType, contType;
+  Element	      content, ancestor;
   AttributeType       attrType;
-  Attribute	       attrLargeop, attr;
-  Language	       lang;
-  PresentationValue   pval;
-  PresentationContext ctxt;
+  Attribute	      attrLargeop, attr;
+  Language	      lang;
   CHAR_T              text[2];
-  char	               script;
   int                 len, val;
   ThotBool            largeop;
 
@@ -604,7 +605,6 @@ void      CheckLargeOp (Element el, Document doc)
                 /* the MO element contains a single character */
                 {
                   TtaGiveBufferContent (content, text, len+1, &lang);
-                  script = TtaGetScript (lang);
                   largeop = FALSE;
                   /* is there an attribute largeop on this MO element? */
                   attrType.AttrSSchema = elType.ElSSchema;
@@ -634,29 +634,29 @@ void      CheckLargeOp (Element el, Document doc)
                           if (val == MathML_ATTR_IntDisplaystyle_VAL_true)
                             /* an ancestor has an attribute IntDisplaystyle = true */
                             /* Look at the symbol */
-                            largeop = IsLargeOp (text[0], script);
+                            largeop = IsLargeOp (text[0]);
                         }
                     }
-                  ctxt = TtaGetSpecificStyleContext (doc);
+                  attrType.AttrTypeNum = MathML_ATTR_IntLargeOp;
+                  attrLargeop = TtaGetAttribute (el, attrType);
                   if (largeop)
-                    /* it's a large operator. Make it larger */
+                    /* it's a large operator. Set the IntLargeOp attribute if
+		       it's not already set */
                     {
-                      ctxt->destroy = FALSE;
-                      /* the specific presentation to be created is not a CSS rule */
-                      ctxt->cssSpecificity = 0;
-                      pval.typed_data.unit = UNIT_PERCENT;
-                      pval.typed_data.real = FALSE;
-                      pval.typed_data.value = 180;
+		      if (!attrLargeop)
+			{
+			  attrLargeop = TtaNewAttribute (attrType);
+			  TtaSetAttributeValue (attrLargeop,
+						MathML_ATTR_IntLargeOp_VAL_yes_,
+						el, doc);
+			  TtaAttachAttribute (el, attrLargeop, doc);
+			}
                     }
                   else
-                    /* it's not a large operator, remove the Size presentation rule
-                       if it's present */
-                    {
-                      ctxt->destroy = TRUE;
-                      pval.typed_data.value = 0;
-                    }
-                  TtaSetStylePresentation (PRSize, content, NULL, ctxt, pval);
-                  TtaFreeMemory (ctxt);
+                    /* it's not a large operator, remove the IntLargeOp
+                       attribute if it's present */
+		    if (attrLargeop)
+		      TtaRemoveAttribute (el, attrLargeop, doc);
                 }
             }
         }
@@ -2219,7 +2219,10 @@ void SetIntAddSpaceAttr (Element el, Document doc)
         /* no form attribute. Analyze the content */
         {
           len = TtaGetElementVolume (textEl);
-          if (len == 1)
+	  if (len == 0)
+	    /* empty string */
+	    val = MathML_ATTR_IntAddSpace_VAL_nospace;
+	  else if (len == 1)
             {
               TtaGiveBufferContent (textEl, text, len+1, &lang);
               script = TtaGetScript (lang);
@@ -2289,39 +2292,39 @@ void SetIntAddSpaceAttr (Element el, Document doc)
                        (int)text[0] == 130 ||  /* en space */
                        (int)text[0] == 160)    /* em space */
                 val = MathML_ATTR_IntAddSpace_VAL_nospace;
-              else
-                if ((int)text[0] == 0x2264 || /* less or equal */
-                    (int)text[0] == 0x2265 || /* greater or equal */
-                    (int)text[0] == 0x00B1 || /* plus or minus */
-                    (int)text[0] == 0x00D7 || /* times */
-                    (int)text[0] == 0x00F7 || /* divide */
-                    (int)text[0] == 0x2260 || /* not equal */
-                    (int)text[0] == 0x2261 || /* identical */
-                    (int)text[0] == 0x2248 || /* equivalent */
-                    (int)text[0] == 0x2297 || /* circle times */
-                    (int)text[0] == 0x2295 || /* circle plus */
-                    (int)text[0] == 0x2218 || /* ring operator */
-                    (int)text[0] == 0x2229 || /* Intersection */
-                    (int)text[0] == 0x222A || /* Union */
-                    (int)text[0] == 0x2283 || /* Superset of */
-                    (int)text[0] == 0x2287 || /* Superset of or equal to */
-                    (int)text[0] == 0x2284 || /* Not a subset of */
-                    (int)text[0] == 0x2282 || /* Subset of */
-                    (int)text[0] == 0x2286 || /* Subset of or equal to */
-                    (int)text[0] == 0x2208 || /* Element of */
-                    (int)text[0] == 0x2209 || /* Not an element of */
-                    (int)text[0] == 0x2220 || /* Angle */
-                    (int)text[0] == 0x2207 || /* Nabla */
-                    (int)text[0] == 0x2223 || /* Vertical bar */
-                    (int)text[0] == 0x2227 || /* and */
-                    (int)text[0] == 0x2228 || /* or */
-                    (int)text[0] == 0x2190 || /* left arrow */
-                    (int)text[0] == 0x2192 || /* right arrow */
-                    (int)text[0] == 0x2194)   /* left right arrow */
-                  /* infix operator */
-                  val = MathML_ATTR_IntAddSpace_VAL_both_;
-                else
-                  val = MathML_ATTR_IntAddSpace_VAL_nospace;
+              else if ((int)text[0] == 0x2264 || /* less or equal */
+		       (int)text[0] == 0x2265 || /* greater or equal */
+		       (int)text[0] == 0x00B1 || /* plus or minus */
+		       (int)text[0] == 0x00D7 || /* times */
+		       (int)text[0] == 0x00F7 || /* divide */
+		       (int)text[0] == 0x2044 || /* frasl */
+		       (int)text[0] == 0x2260 || /* not equal */
+		       (int)text[0] == 0x2261 || /* identical */
+		       (int)text[0] == 0x2248 || /* equivalent */
+		       (int)text[0] == 0x2297 || /* circle times */
+		       (int)text[0] == 0x2295 || /* circle plus */
+		       (int)text[0] == 0x2218 || /* ring operator */
+		       (int)text[0] == 0x2229 || /* Intersection */
+		       (int)text[0] == 0x222A || /* Union */
+		       (int)text[0] == 0x2283 || /* Superset of */
+		       (int)text[0] == 0x2287 || /* Superset of or equal to */
+		       (int)text[0] == 0x2284 || /* Not a subset of */
+		       (int)text[0] == 0x2282 || /* Subset of */
+		       (int)text[0] == 0x2286 || /* Subset of or equal to */
+		       (int)text[0] == 0x2208 || /* Element of */
+		       (int)text[0] == 0x2209 || /* Not an element of */
+		       (int)text[0] == 0x2220 || /* Angle */
+		       (int)text[0] == 0x2207 || /* Nabla */
+		       (int)text[0] == 0x2223 || /* Vertical bar */
+		       (int)text[0] == 0x2227 || /* and */
+		       (int)text[0] == 0x2228 || /* or */
+		       (int)text[0] == 0x2190 || /* left arrow */
+		       (int)text[0] == 0x2192 || /* right arrow */
+		       (int)text[0] == 0x2194)   /* left right arrow */
+		/* infix operator */
+		val = MathML_ATTR_IntAddSpace_VAL_both_;
+	      else
+		val = MathML_ATTR_IntAddSpace_VAL_nospace;
             }
         }
       TtaSetAttributeValue (attr, val, el, doc);
@@ -2497,7 +2500,7 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
   text[1] = EOS;
   length = 1;
   attr = TtaGetAttribute (mfenced, attrType);
-  if (attr != NULL)
+  if (attr)
     {
       length = 31;
       TtaGiveTextAttributeValue (attr, text, &length);
@@ -2519,7 +2522,9 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
           next = child;
           TtaNextSibling (&next);
           elType = TtaGetElementType (child);
-          if (elType.ElTypeNum != MathML_EL_Construct)
+          if (elType.ElTypeNum != MathML_EL_Construct &&
+	      elType.ElTypeNum != MathML_EL_MSPACE
+	      )
             {
               if (prev != NULL)
                 {
@@ -2532,7 +2537,8 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
                   sepValue[0] = text[sep];
                   sepValue[1] = EOS;
                   lang = TtaGetLanguageIdFromScript('L');
-                  TtaSetTextContent (leaf, (unsigned char *)sepValue, lang, doc);
+                  TtaSetTextContent (leaf, (unsigned char *)sepValue, lang,
+				     doc);
                   SetIntAddSpaceAttr (separator, doc);
                   SetIntVertStretchAttr (separator, doc, 0, NULL);
                   CheckFence (separator, doc);

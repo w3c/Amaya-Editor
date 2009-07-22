@@ -311,7 +311,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
   if (!warn)
     reportError = FALSE;
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '}')
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     {
       if (*ptr == '"' || *ptr == '\'')
         ptr = SkipString (ptr);
@@ -639,6 +639,8 @@ static char *ParseABorderValue (char *cssRule, PresentationValue *border)
   ----------------------------------------------------------------------*/
 static char *ParseBorderStyle (char *cssRule, PresentationValue *border)
 {
+  char             *ptr = cssRule;
+
   /* first parse the attribute string */
   border->typed_data.value = 0;
   border->typed_data.unit = UNIT_PX;
@@ -699,6 +701,8 @@ static char *ParseBorderStyle (char *cssRule, PresentationValue *border)
       border->typed_data.unit = UNIT_INVALID;
       return (cssRule);
     }
+  if (border->typed_data.value != 0)
+    cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid border-style value");
   return (cssRule);
 }
 
@@ -6518,7 +6522,7 @@ void  ParseCSSRule (Element element, PSchema tsch, PresentationContext ctxt,
                       /* update index and skip the ";" separator if present */
                       next = SkipBlanksAndComments (p);
                       if (*next != EOS && *next != ';')
-                        CSSParseError ("Missing closing ';'", cssRule, p);
+                        CSSParseError ("Missing closing ';' after", cssRule, p);
                       cssRule = next;
                     }
                 }

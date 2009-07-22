@@ -108,7 +108,8 @@ STRUCT
 		accent = true, false;
 		IntFontstyle;				{ for internal use }
 		IntVertStretch = yes_;			{ for internal use }
-		IntAddSpace = nospace, spacebefore, spaceafter, both_)
+		IntAddSpace = nospace, spacebefore, spaceafter, both_;
+	        IntLargeOp = yes_)
 	  = LIST OF (MathMLCharacters);
 
       MS
@@ -119,7 +120,7 @@ STRUCT
 		IntFontstyle)
 	  = LIST OF (MathMLCharacters);
 
-      { petoken}
+      { petoken }
       MSPACE
 	  (ATTR width\240 = TEXT;
 	        height\240 = TEXT;
@@ -509,6 +510,7 @@ EXCEPT
    IntFontstyle:	Invisible;
    IntParseMe:	        Invisible;
    IntAddSpace:	  	Invisible;
+   IntLargeOp:	        Invisible;
    IntMovelimits:	Invisible;
    IntHorizStretch:  	Invisible;
    IntVertStretch:  	Invisible;

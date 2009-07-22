@@ -1933,14 +1933,15 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
           else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
                     (c < 0x2018 || c > 0x201D) && /* Windows quotations */
                     c != 0x20AC) || /* euro */
+                   c == 0x192  ||  /* latin small letter f with hook */
                    c == 0x25CA ||  /* lozenge */
                    c == 0x260E ||  /* black telephone */
                    c == 0x2660 ||  /* black spade suit */
                    c == 0x2663 ||  /* black club suit */
                    c == 0x2665 ||  /* black heart suit */
                    c == 0x2666 ||  /* black diamond suit */
-                   c == 0x192  ||  /* latin small letter f with hook */
                    c == 0x2720 ||  /* maltese cross */
+		   c == 0x27FA ||  /* Long left right double arrow */
                    c == 0x2970     /* roundimplies */
                                   )
             {
