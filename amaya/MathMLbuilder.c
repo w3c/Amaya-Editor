@@ -1684,7 +1684,8 @@ static void SetIntPlaceholderAttr (Element el, Document doc)
   -----------------------------------------------------------------------*/
 static void BuildMultiscript (Element elMMULTISCRIPT, Document doc)
 {
-  Element	elem, base, next, group, pair, script, prevPair, prevScript;
+  Element	elem, base, next, group, pair, script, prevPair, prevScript,
+                prev, comment;
   ElementType	elType, elTypeGroup, elTypePair, elTypeScript;
   SSchema       MathMLSSchema;
   base = NULL;
@@ -1698,10 +1699,23 @@ static void BuildMultiscript (Element elMMULTISCRIPT, Document doc)
   elTypeGroup.ElTypeNum = 0;
   elTypePair.ElTypeNum = 0;
   elTypeScript.ElSSchema = MathMLSSchema;
+  prev = NULL;
+
+  /* skip the initial comments in the MMULTISCRIPT element */
+  elem = TtaGetFirstChild (elMMULTISCRIPT);
+  elType = TtaGetElementType (elem);
+  while (elem &&
+	 (elType.ElTypeNum == MathML_EL_XMLcomment) &&
+	 elType.ElSSchema == MathMLSSchema)
+    {
+      prev = elem;
+      TtaNextSibling (&elem);
+      if (elem)
+	elType = TtaGetElementType (elem);
+    }
 
   /* process all children of the MMULTISCRIPT element */
-  elem = TtaGetFirstChild (elMMULTISCRIPT);
-  while (elem != NULL)
+  while (elem)
     {
       /* remember the element to be processed after the current one */
       next = elem;
@@ -1719,7 +1733,10 @@ static void BuildMultiscript (Element elMMULTISCRIPT, Document doc)
              of the MultiscriptBase element */
           elTypeGroup.ElTypeNum = MathML_EL_MultiscriptBase;
           base = TtaNewElement (doc, elTypeGroup);
-          TtaInsertFirstChild (&base, elMMULTISCRIPT, doc);
+	  if (prev)
+	    TtaInsertSibling (base, prev, FALSE, doc);
+	  else
+	    TtaInsertFirstChild (&base, elMMULTISCRIPT, doc);
           TtaInsertFirstChild (&elem, base, doc);
         }
       else
@@ -1772,10 +1789,32 @@ static void BuildMultiscript (Element elMMULTISCRIPT, Document doc)
           /* insert the current element as a child of the new MSuperscript or
              MSubscript element */
           TtaInsertFirstChild (&elem, script, doc);
-          SetIntPlaceholderAttr (elem, doc);
+	  elType = TtaGetElementType (elem);
+	  if (elType.ElTypeNum != MathML_EL_Construct)
+	    /* it's not a <none/> element in the souirce code */
+	    SetIntPlaceholderAttr (elem, doc);
         }
 
       CreatePlaceholders (elem, doc);
+
+      /* move also the comments that followed the element we have just moved */
+      if (next)
+	{
+	  prev = elem;
+	  elType = TtaGetElementType (next);
+	  while (next &&
+		 (elType.ElTypeNum == MathML_EL_XMLcomment) &&
+		 elType.ElSSchema == MathMLSSchema)
+	    {
+	      comment = next;
+	      TtaNextSibling (&next);
+	      TtaRemoveTree (comment, doc);
+	      TtaInsertSibling (comment, prev, FALSE, doc);
+	      prev = comment;
+	      if (next)
+		elType = TtaGetElementType (next);
+	    }
+	}
 
       /* get next child of the MMULTISCRIPT element */
       elem = next;
@@ -1796,7 +1835,7 @@ static void BuildMultiscript (Element elMMULTISCRIPT, Document doc)
                   SetIntPlaceholderAttr (group, doc);
                 }
               /* the following elements will be interpreted as sub- superscripts
-                 in PrescriptPair elements, wich will be children of this
+                 in PrescriptPair elements, which will be children of this
                  PrescriptPairs element */
               elTypeGroup.ElTypeNum = MathML_EL_PrescriptPairs;
               elTypePair.ElTypeNum = MathML_EL_PrescriptPair;
@@ -1811,6 +1850,27 @@ static void BuildMultiscript (Element elMMULTISCRIPT, Document doc)
               SetIntPlaceholderAttr (pair, doc);
               prevScript = NULL;
               TtaNextSibling (&elem);
+	      /* move the elements that follwed the MPRESCRIPTS element */
+	      if (elem)
+		{
+		  prev = NULL;
+		  elType = TtaGetElementType (elem);
+		  while (elem &&
+			 (elType.ElTypeNum == MathML_EL_XMLcomment) &&
+			 elType.ElSSchema == MathMLSSchema)
+		    {
+		      comment = elem;
+		      TtaNextSibling (&elem);
+		      TtaRemoveTree (comment, doc);
+		      if (prev)
+			TtaInsertSibling (comment, prev, FALSE, doc);
+		      else
+			TtaInsertFirstChild (&comment, group, doc);
+		      prev = comment;
+		      if (elem)
+			elType = TtaGetElementType (elem);
+		    }
+		}
             }
         }
     }
@@ -2010,7 +2070,7 @@ void SetFontstyleAttr (Element el, Document doc)
   ElementType	elType;
   AttributeType	attrType, attrType1;
   Attribute	attr, IntAttr;
-  Element       ancestor, textEl;
+  Element       ancestor, textEl, child;
   int		len;
   Language      lang;
   CHAR_T        text[2];
@@ -2060,9 +2120,24 @@ void SetFontstyleAttr (Element el, Document doc)
            IntFontstyle attribute with a value that depends on the content of
            the MI element */
         {
-          /* get content length */
-          len = TtaGetElementVolume (el);
-          if (len > 1)
+	  textEl = NULL;
+          len = 0;
+	  /* if the MI element contains some comments, these should not
+	     be counted */
+	  child = TtaGetFirstChild (el);
+	  while (child && !textEl)
+	    {
+	      elType = TtaGetElementType (child);
+	      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+		{
+		  textEl = child;
+		  /* get content length */
+		  len = TtaGetElementVolume (textEl);
+		}
+	      else
+		TtaNextSibling (&child);
+	    }
+          if (len != 1)
             /* put an attribute IntFontstyle = IntNormal */
             {
               if (IntAttr == NULL)
@@ -2080,8 +2155,7 @@ void SetFontstyleAttr (Element el, Document doc)
                DifferentialD */
             {
               italic = TRUE;
-              textEl = TtaGetFirstChild (el);
-              if (textEl != NULL)
+              if (textEl)
                 {
                   elType = TtaGetElementType (textEl);
                   if (elType.ElTypeNum == MathML_EL_MGLYPH)

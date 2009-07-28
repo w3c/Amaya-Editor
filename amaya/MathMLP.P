@@ -743,9 +743,9 @@ RULES
 
    Construct:
         BEGIN
-        if empty and immediately within MSubscript
+        if empty and immediately within MSubscript and not IntPlaceholder
                 CreateFirst (NONE_S);
-        if empty and immediately within MSuperscript
+        if empty and immediately within MSuperscript and not IntPlaceholder
                 CreateFirst (NONE_S);
         VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
         Fillpattern: gray2;
@@ -1214,7 +1214,7 @@ RULES
         HorizRef: * . Top;
         HorizPos: Left = MultiscriptBase . Right;
         Height: MultiscriptBase . Height + 0.6;
-        VertPos: Top = MultiscriptBase . Top - 0.3;
+        VertPos: HRef = MultiscriptBase . HMiddle;
         IN Structure_view BEGIN
                 Size: Enclosing =;
                 Width: Enclosing . Width;
@@ -1229,7 +1229,7 @@ RULES
         HorizRef: * . Top;
         HorizPos: Right = MultiscriptBase . Left;
         Height: MultiscriptBase . Height + 0.6;
-        VertPos: Top = MultiscriptBase . Top - 0.3;
+        VertPos: HRef = MultiscriptBase . HMiddle;
         IN Structure_view BEGIN
                 Size: Enclosing =;
                 Width: Enclosing . Width;
@@ -1241,8 +1241,7 @@ RULES
         BEGIN
         HorizRef: * . Top;
         HorizPos: Left = Previous . Right + 0.1;
-        VertPos: Top = Enclosing . Top;
-        Height: Enclosing . Height;
+        VertPos: HRef = Enclosing . HRef;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
                 Height: Enclosed . Height;
@@ -1253,8 +1252,7 @@ RULES
         BEGIN
         HorizRef: * . Top;
         HorizPos: Left = Previous . Right + 0.1;
-        VertPos: Top = Enclosing . Top;
-        Height: Enclosing . Height;
+        VertPos: HRef = Enclosing . HRef;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
                 Height: Enclosed . Height;
@@ -1264,8 +1262,12 @@ RULES
    MSubscript:
         BEGIN
         HorizRef: * . Top;
-        HorizPos: Left = Enclosing . Left;
-        VertPos: Bottom = Enclosing . Bottom;
+	HorizPos: VMiddle = Enclosing . VMiddle;
+{@@@@	if not immediately within PrescriptPair
+           HorizPos: Left = Enclosing . Left;
+	if immediately within PrescriptPair
+           HorizPos: Right = Enclosing . Right; @@@@}
+        VertPos: Top = Enclosing . HRef;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
                 Height: Enclosed . Height;
@@ -1275,8 +1277,12 @@ RULES
    MSuperscript:
         BEGIN
         HorizRef: * . Top;
-        HorizPos: Left = Enclosing . Left;
-        VertPos: Top = Enclosing . Top;
+	HorizPos: VMiddle = Enclosing . VMiddle;
+{@@@@	if not immediately within PrescriptPair
+           HorizPos: Left = Enclosing . Left;
+	if immediately within PrescriptPair
+           HorizPos: Right = Enclosing . Right; @@@@}
+        VertPos: Bottom = Enclosing . HRef;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
                 Height: Enclosed . Height;

@@ -305,12 +305,12 @@ RULES
    
    Construct:
         begin
-        if immediately within MSubscript
+        if not IntPlaceholder and immediately within MSubscript
                 begin
                 create SOT;
                 create 'none/>\12';
                 end;
-        if immediately within MSuperscript
+        if not IntPlaceholder and immediately within MSuperscript
                 begin
                 create SOT;
                 create 'none/>\12';

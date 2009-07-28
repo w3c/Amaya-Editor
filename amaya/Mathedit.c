@@ -569,7 +569,8 @@ static void CreateParentMROW (Element el, Document doc)
           elType.ElTypeNum != MathML_EL_CellWrapper)
         /* element is not an intermediate Thot element nor a text leaf */
         {
-          /* count the number of children of parent that are not placeholders */
+          /* count the number of children of parent that are not placeholders
+	     nor comments */
           sibling = TtaGetFirstChild (parent);
           nChildren = 0;
           firstChild = sibling;
@@ -577,7 +578,8 @@ static void CreateParentMROW (Element el, Document doc)
             {
               elType = TtaGetElementType (sibling);
               if (elType.ElTypeNum != MathML_EL_Construct &&
-                  elType.ElTypeNum != MathML_EL_Construct1)
+                  elType.ElTypeNum != MathML_EL_Construct1 &&
+		  elType.ElTypeNum != MathML_EL_XMLcomment)
                 /* it's not a placeholder, count it */
                 nChildren++;
               TtaNextSibling (&sibling);
