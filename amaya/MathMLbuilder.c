@@ -42,7 +42,8 @@ extern XmlEntity *pMathEntityTable;
   ----------------------------------------------------------------------*/
 static ThotBool IsLargeOp (CHAR_T character)
 {
-  if (character == 0x22C1 || /* Vee */
+  if (character == 0x7C   || /* vertical bar */
+      character == 0x22C1 || /* Vee */
       character == 0x2296 || /* CircleMinus */
       character == 0x2295 || /* CirclePlus */
       character == 0x2211 || /* Sum */

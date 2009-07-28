@@ -1070,7 +1070,11 @@ RULES
         BEGIN
         Size: Enclosing * SCRIPTSIZEMULTIPLIER;
         HorizPos: Left = Base . Right + 0.1;
-        VertPos: Bottom = Base . Top + 1.1;
+	if not immediately within MSUBSUP
+           VertPos: Bottom = Base . Top + 1.1;
+	if immediately within MSUBSUP
+           { avoid collision with subscript }
+           VertPos: Bottom = Base . Top + 1;
         IN Structure_view BEGIN
                 Size: Enclosing =;
                 Width: Enclosing . Width;
@@ -1084,7 +1088,11 @@ RULES
         BEGIN
         Size: Enclosing * SCRIPTSIZEMULTIPLIER;
         HorizPos: Left = Base . Right;
-        VertPos: Top = Base . Bottom - 1.2;
+	if not immediately within MSUBSUP
+           VertPos: Top = Base . Bottom - 1.2;
+	if immediately within MSUBSUP
+           { avoid collision with superscript }
+           VertPos: Top = Base . Bottom - 1;
         IN Structure_view BEGIN
                 Size: Enclosing =;
                 Width: Enclosing . Width;

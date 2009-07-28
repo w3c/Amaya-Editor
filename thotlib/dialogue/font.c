@@ -1766,11 +1766,16 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
 #endif /* _GL */
             }
 #ifdef _GL
-          else if ((c >= 0x210E /* planckh */ && c <= 0x22FF) /* ImaginaryI */
-                  || c == 0x20d2 || c == 0x2758 /* Vertical Bars */
-                  || c == 0x2A2F /* vector or cross product */
-                  || (c >= 0xfe35 && c <= 0xfe38) /* over braces / parenthesis */
-                  )
+          else if ((c >= 0x2100 && c <= 0x22FF) /* math symbols */
+		   || c == 0x20d2 || c == 0x2758 /* Vertical Bars */
+		   || c == 0x2A2F /* vector or cross product */
+		   || c == 0x2970 /* roundimplies */
+		   || c == 0x2720 /* maltese cross */
+		   || c == 0x260E /* phone */
+		   || c == 0x20DB || c == 0x20DC /* dots */
+		   || (c >= 0xfe35 && c <= 0xfe38) /* over braces / parenthesis */
+		   || (c >= 0x1D49C && c <= 0x1D7E1) /* Alphanumeric symbols */
+		  )
             {
               /* use STIX fonts here */
               code = 'E';

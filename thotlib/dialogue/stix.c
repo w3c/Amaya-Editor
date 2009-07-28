@@ -85,23 +85,23 @@ int Stix_Symbs_Start = 0x2100;
 MapEntry     Stix_Symbs [] = {
   /* 210x */ {0, 0x00}, {0, 0x00}, {14, 0x43}, {0, 0x00},
   {0, 0x00}, {0, 0x00}, {0, 0x00}, {13, 0x45},
-  {0, 0x00}, {0, 0x00}, {13, 0x47}, {13, 0x48},
-  {0, 0x00}, {14, 0x48}, {13, 0x68}, {5, 0x5a},
-  /* 211x */ {13, 0x46}, {13, 0x54}, {13, 0x4c}, {13, 0x6c},
+  {0, 0x00}, {0, 0x00}, {13, 0x67}, {13, 0x48},
+  {15, 0x48}, {14, 0x48}, {13, 0x68}, {5, 0x5a},
+  /* 211x */ {13, 0x49}, {15, 0x49}, {13, 0x4c}, {13, 0x6c},
   {0, 0x00}, {14, 0x4e}, {0, 0x00}, {0, 0x00},
   {13, 0x50}, {14, 0x50}, {14, 0x51}, {13, 0x52},
-  {13, 0x52}, {14, 0x52}, {0, 0x00}, {0, 0x00},
+  {15, 0x52}, {14, 0x52}, {0, 0x00}, {0, 0x00},
   /* 212x */ {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
-  {14, 0x5a}, {16, 0x42}, {11, 0x55}, {11, 0x5b},
-  {16, 0x69}, {12, 0x31}, {0, 0x00}, {0, 0x00},
-  {15, 0x42}, {15, 0x43}, {13, 0x65}, {13, 0x65},
-  /* 213x */ {13, 0x45}, {13, 0x46}, {0, 0x00}, {15, 0x4D},
+  {14, 0x5a}, {16, 0x42}, {10, 0x55}, {10, 0x5b},
+  {15, 0x5a}, {10, 0x31}, {0, 0x00}, {0, 0x00},
+  {13, 0x42}, {15, 0x43}, {13, 0x65}, {13, 0x65},
+  /* 213x */ {13, 0x45}, {13, 0x46}, {0, 0x00}, {13, 0x4D},
   {13, 0x6f}, {14, 0x61}, {14, 0x62}, {14, 0x64},
   {14, 0x63}, {0, 0x00}, {0, 0x00}, {0, 0x00},
   {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
-  /* 214x */ {12, 0x76}, {0, 0x00}, {0, 0x00}, {0, 0x00},
-  {0, 0x00}, {0, 0x00}, {0, 0x00}, {13, 0x65},
-  {13, 0x69}, {0, 0x00}, {0, 0x00}, {0, 0x00}
+  /* 214x */ {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00}
 };
 #define Stix_Symbs_length sizeof(Stix_Symbs) / sizeof(MapEntry)
 
@@ -261,6 +261,60 @@ MapEntry     Stix_OverBrace [] = {
   {0, 0x00}, {0, 0x00}, {0, 0x00}, {0, 0x00}
 };
 #define Stix_OverBrace_length sizeof(Stix_OverBrace) / sizeof(MapEntry)
+
+/* Mapping of Unicode Script symbols (0x1D49C-0x1D4CF) */
+int Stix_ScriptSymbols_Start = 0x1D49C;
+MapEntry   Stix_ScriptSymbols [] = {
+  /* 1D49C */ {13, 0x41}, {0, 0x00}, {13, 0x43}, {13, 0x44},
+  /* 1D4Ax */ {0, 0x00}, {0, 0x00}, {13, 0x47}, {0, 0x00},
+  {0, 0x00}, {13, 0x4a}, {13, 0x4b}, {0, 0x00},
+  {0, 0x00}, {13, 0x4e}, {13, 0x4f}, {13, 0x50},
+  {13, 0x51}, {0, 0x00}, {13, 0x53}, {13, 0x54},
+  /* 1D4Bx */ {13, 0x55}, {13, 0x56}, {13, 0x57}, {13, 0x58},
+  {13, 0x59}, {13, 0x5a}, {13, 0x61}, {13, 0x62},
+  {13, 0x63}, {13, 0x64}, {0, 0x00}, {13, 0x66},
+  {0, 0x00}, {13, 0x68}, {13, 0x69}, {13, 0x6a},
+  /* 1D4Cx */ {13, 0x6b}, {13, 0x6c}, {13, 0x6d}, {13, 0x6e},
+  {0, 0x00}, {13, 0x70}, {13, 0x71}, {13, 0x72},
+  {13, 0x73}, {13, 0x74}, {13, 0x75}, {13, 0x76},
+  {13, 0x77}, {13, 0x78}, {13, 0x79}, {13, 0x7a}
+};
+#define Stix_ScriptSymbols_length sizeof(Stix_ScriptSymbols) / sizeof(MapEntry)
+
+/* Mapping of Unicode Fraktur and Double-struck symbols (0x1D504-0x1D56B) */
+int Stix_DoubleStruck_Start = 0x1D504;
+MapEntry   Stix_DoubleStruck [] = {
+  /* 1D504 */ {15, 0x41}, {15, 0x42}, {0, 0x00}, {15, 0x44},
+  {15, 0x45}, {15, 0x46}, {15, 0x47}, {0, 0x00},
+  {0, 0x00}, {15, 0x4a}, {15, 0x4b}, {15, 0x4c},
+  /* 1D51x */ {15, 0x4d}, {15, 0x4e}, {15, 0x4f}, {15, 0x50},
+  {15, 0x51}, {0, 0x00}, {15, 0x53}, {15, 0x54},
+  {15, 0x55}, {15, 0x56}, {15, 0x57}, {15, 0x58},
+  {15, 0x59}, {0, 0x00}, {15, 0x61}, {15, 0x62},
+  /* 1D52x */ {15, 0x63}, {15, 0x64}, {15, 0x65}, {15, 0x66},
+  {15, 0x67}, {15, 0x68}, {15, 0x69}, {15, 0x6a},
+  {15, 0x6b}, {15, 0x6c}, {15, 0x6d}, {15, 0x6e},
+  {15, 0x6f}, {15, 0x70}, {15, 0x71}, {15, 0x72},
+  /* 1D53x */ {15, 0x73}, {15, 0x74}, {15, 0x75}, {15, 0x76},
+  {15, 0x77}, {15, 0x78}, {15, 0x79}, {15, 0x7a},
+  {14, 0x41}, {14, 0x42}, {0, 0x00}, {14, 0x44},
+  {14, 0x45}, {14, 0x46}, {14, 0x47}, {0, 0x00},
+  /* 1D54x */ {14, 0x49}, {14, 0x4a}, {14, 0x4b}, {14, 0x4c},
+  {14, 0x4d}, {0, 0x00}, {14, 0x4f}, {0, 0x00},
+  {0, 0x00}, {0, 0x00}, {14, 0x53}, {14, 0x54},
+  {14, 0x55}, {14, 0x56}, {14, 0x57}, {14, 0x58},
+  /* 1D55x */ {14, 0x59}, {0, 0x00}
+};
+#define Stix_DoubleStruck_length sizeof(Stix_DoubleStruck) / sizeof(MapEntry)
+
+/* Mapping of Unicode Double-struck digits (0x1D7D8-0x1D7E1) */
+int Stix_DoubleDigits_Start = 0x1D7D8;
+MapEntry   Stix_DoubleDigits [] = {
+  /* 1D7D8 */ {14, 0x30}, {14, 0x31}, {14, 0x32}, {14, 0x33},
+  {14, 0x34}, {14, 0x35}, {14, 0x36}, {14, 0x37},
+  /* 1D7Ex */ {14, 0x38}, {14, 0x39}
+};
+#define Stix_DoubleDigits_length sizeof(Stix_DoubleDigits) / sizeof(MapEntry)
 
 #ifndef _GL
 /*----------------------------------------------------------------------
@@ -1534,6 +1588,25 @@ int GetStixFontAndIndex (int c, SpecFont fontset, ThotFont **font)
       index = (int) (entry.MapIndex);
       face = (int) (entry.MapFont);
     }
+  else if (c >= Stix_ScriptSymbols_Start && c < (int) (Stix_ScriptSymbols_Start + Stix_ScriptSymbols_length))
+    {
+      entry = Stix_ScriptSymbols[c - Stix_ScriptSymbols_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+  else if (c >= Stix_DoubleStruck_Start && c < (int) (Stix_DoubleStruck_Start + Stix_DoubleStruck_length))
+    {
+      entry = Stix_DoubleStruck[c - Stix_DoubleStruck_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+  else if (c >= Stix_DoubleDigits_Start && c < (int) (Stix_DoubleDigits_Start + Stix_DoubleDigits_length))
+    {
+      entry = Stix_DoubleDigits[c - Stix_DoubleDigits_Start];
+      index = (int) (entry.MapIndex);
+      face = (int) (entry.MapFont);
+    }
+
   if (face == 1)
     *font = &(fontset->SFont_1);
   else if (face == 2)
