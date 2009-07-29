@@ -1263,10 +1263,6 @@ RULES
         BEGIN
         HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
-{@@@@	if not immediately within PrescriptPair
-           HorizPos: Left = Enclosing . Left;
-	if immediately within PrescriptPair
-           HorizPos: Right = Enclosing . Right; @@@@}
         VertPos: Top = Enclosing . HRef;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
@@ -1278,10 +1274,6 @@ RULES
         BEGIN
         HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
-{@@@@	if not immediately within PrescriptPair
-           HorizPos: Left = Enclosing . Left;
-	if immediately within PrescriptPair
-           HorizPos: Right = Enclosing . Right; @@@@}
         VertPos: Bottom = Enclosing . HRef;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;

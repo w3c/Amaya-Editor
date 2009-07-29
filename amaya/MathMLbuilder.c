@@ -279,60 +279,77 @@ static void	CreatePlaceholders (Element el, Document doc)
   Element	 sibling, prev, constr, child;
   Attribute	 attr;
   ElementType	 elType;
-  AttributeType attrType;
-  ThotBool	 create, stretchableSubsup;
+  AttributeType  attrType;
+  ThotBool	 first, create, stretchableSubsup;
 
   if (!el)
     return;
   elType.ElSSchema = GetMathMLSSchema (doc);
   prev = NULL;
   create = TRUE;
+  first = TRUE;
   sibling = el;
   while (sibling != NULL)
     {
-      if (!ElementNeedsPlaceholder (sibling))
-        create = FALSE;
-      else
-        {
-          if (sibling == el)
-            /* first element */
-            {
-              elType = TtaGetElementType (sibling);
-              if (elType.ElTypeNum == MathML_EL_MF)
-                /* the first element is a MF. Don't create a placeholder
-                   before */
-                create = FALSE;
-              else if (elType.ElTypeNum == MathML_EL_MROW)
-                /* the first element is a MROW */
-                {
-                  child = TtaGetFirstChild (sibling);
-                  if (child != NULL)
-                    {
-                      elType = TtaGetElementType (child);
-                      if (elType.ElTypeNum != MathML_EL_MF)
-                        /* the first child of the MROW element is not a MF */
-                        /* Don't create a placeholder before */
-                        create = FALSE;
-                    }
-                }
-            }
-          if (create)
-            {
-              elType.ElTypeNum = MathML_EL_Construct;
-              constr = TtaNewElement (doc, elType);
-              TtaInsertSibling (constr, sibling, TRUE, doc);
-              attrType.AttrSSchema = elType.ElSSchema;
-              attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (constr, attr, doc);
-              TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
-                                    constr, doc);
-            }
-          create = TRUE;
-        }
-      prev = sibling;
-      TtaNextSibling (&sibling);
+      /* skip comments */
+      elType = TtaGetElementType (sibling);
+      while (sibling && elType.ElTypeNum == MathML_EL_XMLcomment)
+	{
+	  TtaNextSibling (&sibling);
+	  if (sibling)
+	    elType = TtaGetElementType (sibling);
+	}
+
+      if (sibling)
+	/* there is an element that is not a comment */
+	{
+	  if (!ElementNeedsPlaceholder (sibling))
+	    create = FALSE;
+	  else
+	    {
+	      if (first)
+		/* first element */
+		{
+		  elType = TtaGetElementType (sibling);
+		  if (elType.ElTypeNum == MathML_EL_MF)
+		    /* the first element is a MF. Don't create a placeholder
+		       before */
+		    create = FALSE;
+		  else if (elType.ElTypeNum == MathML_EL_MROW)
+		    /* the first element is a MROW */
+		    {
+		      child = TtaGetFirstChild (sibling);
+		      if (child != NULL)
+			{
+			  elType = TtaGetElementType (child);
+			  if (elType.ElTypeNum != MathML_EL_MF)
+			    /* the first child of the MROW element is not a MF*/
+			    /* Don't create a placeholder before */
+			    create = FALSE;
+			}
+		    }
+		}
+	      if (create)
+		{
+		  elType.ElTypeNum = MathML_EL_Construct;
+		  constr = TtaNewElement (doc, elType);
+		  TtaInsertSibling (constr, sibling, TRUE, doc);
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (constr, attr, doc);
+		  TtaSetAttributeValue (attr,
+					MathML_ATTR_IntPlaceholder_VAL_yes_,
+					constr, doc);
+		}
+	      create = TRUE;
+	    }
+	  prev = sibling;
+	  TtaNextSibling (&sibling);
+	  first = FALSE;
+	}
     }
+
   if (prev != NULL && create)
     {
       stretchableSubsup = FALSE;
