@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2007
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -4852,17 +4852,29 @@ void MathMLSetScriptLevel (Document doc, Element el, char *value)
               else if (pval.typed_data.value <= -3)
                 /* scriptlevel="-3" or less */
                 percentage = 282;
-              pval.typed_data.value = percentage;
-              pval.typed_data.unit = UNIT_PERCENT;
-              /* the specific presentation to be created is not a CSS rule */
-              ctxt->cssSpecificity = 0;
-              TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);       
             }
           else
             /* absolute value */
             {
-              /****  ****/;
+              percentage = 100;
+              if (pval.typed_data.value == 0)
+                /* scriptlevel="0" */
+                percentage = 100;
+              else if (pval.typed_data.value == 1)
+                /* scriptlevel="1" */
+                percentage = 71;
+              else if (pval.typed_data.value == 2)
+                /* scriptlevel="2" */
+                percentage = 50;
+              else if (pval.typed_data.value >= 3)
+                /* scriptlevel="3" or more */
+                percentage = 35;
             }
+	  pval.typed_data.value = percentage;
+	  pval.typed_data.unit = UNIT_PERCENT;
+	  /* the specific presentation to be created is not a CSS rule */
+	  ctxt->cssSpecificity = 0;
+	  TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);       
         }
     }
   TtaFreeMemory (ctxt);

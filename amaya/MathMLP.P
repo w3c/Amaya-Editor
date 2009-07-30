@@ -13,7 +13,7 @@ VIEWS
 #define SCRIPTSIZEMULTIPLIER 80 %
 #define SMALLER 90 %
 #define OPERATOR_SPACE 0.3
-#define ROOT_OFFSET 0.6
+#define ROOT_OFFSET 0.5
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 11 pt
 #define DOC_FONTSIZE 11 pt
@@ -273,8 +273,8 @@ BOXES
         BEGIN
         LineWeight: 1 pt;
         Width: RootBase . Width + ROOT_OFFSET;
-        Height: RootBase . Height + 0.1;
-        VertPos: Top = RootBase . Top - 0.1;
+        Height: RootBase . Height + 0.2;
+        VertPos: Top = RootBase . Top - 0.2;
         HorizPos: Left = RootBase . Left - ROOT_OFFSET;
         Content: Symbol 'r';                { root symbol }
         LineStyle: Solid;
@@ -287,11 +287,10 @@ BOXES
  SqrtSymbol:
         BEGIN
         LineWeight: 1 pt;
-        Height: Enclosing . Height;
-        Width: Enclosing . Width;
-        VertPos: Top = Enclosing . Top;
-        HorizPos: Left = Enclosing . Left;
-        {HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;}
+        Width: SqrtBase . Width + ROOT_OFFSET;
+        Height: SqrtBase . Height + 0.2;
+        VertPos: Top = RootBase . Top - 0.2;
+        HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;
         Content: Symbol 'r';                { root symbol }
         LineStyle: Solid;
         Background: Creator =;
@@ -748,7 +747,9 @@ RULES
         if empty and immediately within MSuperscript and not IntPlaceholder
                 CreateFirst (NONE_S);
         VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-        Fillpattern: gray2;
+	if not immediately within MSubscript and
+           not immediately within MSuperscript
+                Fillpattern: gray2;
         LineWeight: 0;        { do not draw the outline }
         ShowBox;
         if not immediately within MSubscript and
@@ -783,9 +784,8 @@ RULES
         CreateWith(VerticalLine);
         HorizRef: Enclosed SqrtBase . HRef ;
         VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-        if immediately within SqrtBase
-            { add some space between the horizontal bar of nested root symbols }
-            PaddingTop: 0.15;
+	Height: Enclosed . Height;
+	PaddingTop: 0.1;
         Gather: Yes;
         IN Structure_view BEGIN
                 Size: DOC_FONTSIZE;
@@ -831,12 +831,15 @@ RULES
         CreateWith(VerticalLine);
         HorizRef: Enclosed RootBase . HRef ;
         VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+	Height: Enclosed . Height;
+	PaddingTop: 0.1;
         Gather: Yes;
         IN Structure_view BEGIN
                 Size: DOC_FONTSIZE;
                 Width: Enclosing . Width - STRUCT_INDENT;
                 Height: Enclosed . Height;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                PaddingTop: 0;
                 Font: Helvetica;
                 END;
           END;
@@ -845,20 +848,19 @@ RULES
         BEGIN
         HorizRef: Enclosed . HRef;
         HorizPos: Left = Enclosing . Left;
-        VertPos: HRef = RootBase . Top + 0.5;
-        Width: ROOT_OFFSET min;
-           Size: Enclosing * 60 %;
+        VertPos: HRef = RootBase . Top + 1;
+        Width: 1 min;  { ROOT_OFFSET / 60% }
+        Size: Enclosing * 60 %;
         IN Structure_view BEGIN
                 Size: Enclosing =;
                 Width: Enclosing . Width;
                 Height: Enclosed . Height;
                 END;
            END;
-        
+
    RootBase:        
         BEGIN
-        VertPos: Top = Enclosing . Top + 0.1;
-        HorizPos: Left = Index . Right + 0.2;
+        HorizPos: Left = Index . Right + 0.4;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
                 Height: Enclosed . Height;
@@ -867,8 +869,7 @@ RULES
 
    SqrtBase:        
         BEGIN
-        VertPos: Top = Enclosing . Top + 0.1;
-        HorizPos: Left = Enclosing . Left + ROOT_OFFSET;
+        VertPos: Top = Enclosing . Top + 0.2;
         IN Structure_view BEGIN
                 Width: Enclosing . Width;
                 Height: Enclosed . Height;
@@ -3028,8 +3029,6 @@ ATTRIBUTES
         BEGIN
         Fillpattern: nopattern;
         Width: Enclosed . Width;
-        Height: 1;
-	HorizRef: *.Top + 0.7;
         END;
 
   IntFontstyle = IntNormal:

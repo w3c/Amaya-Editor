@@ -5406,6 +5406,7 @@ static ThotBool MathMoveForward ()
       for (i = 1; i < 4 && sibling && !nextEl; i++)
         {
           sibling = TtaGetFirstLeaf(TtaGetSuccessor (sibling));
+	  /* @@@@@ sucessor = comment @@@@ */
           if (sibling)
             {
               successorType = TtaGetElementType (sibling);
@@ -5417,9 +5418,9 @@ static ThotBool MathMoveForward ()
                     successorType.ElTypeNum == MathML_EL_Construct1)
                   /* this an empy construct */
                   {
-                    attrType.AttrSSchema = successorType.ElSSchema;
+		    /* @@@@@@                    attrType.AttrSSchema = successorType.ElSSchema;
                     attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
-                    if (!TtaGetAttribute (sibling, attrType))
+                    if (!TtaGetAttribute (sibling, attrType))   @@@@ */
                       /* and it is not a placeholder. Take it. */
                       nextEl = sibling;
                   }
