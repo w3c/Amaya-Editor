@@ -1191,6 +1191,7 @@ RULES
         Gather: Yes;
         HorizRef: Enclosed MultiscriptBase . HRef;
         VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+	Height: Enclosed . Height;
         IN Structure_view BEGIN
                 Size: DOC_FONTSIZE;
                 Width: Enclosing . Width - STRUCT_INDENT;
@@ -1212,9 +1213,9 @@ RULES
    PostscriptPairs:
         BEGIN
         Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-        HorizRef: * . Top;
+ 	HorizRef: Enclosed . HRef;
         HorizPos: Left = MultiscriptBase . Right;
-        Height: MultiscriptBase . Height + 0.6;
+        Height: Enclosed . Height;
         VertPos: HRef = MultiscriptBase . HMiddle;
         IN Structure_view BEGIN
                 Size: Enclosing =;
@@ -1227,9 +1228,9 @@ RULES
         BEGIN
         CreateBefore(Prescripts);
         Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-        HorizRef: * . Top;
+	HorizRef: Enclosed . HRef;
         HorizPos: Right = MultiscriptBase . Left;
-        Height: MultiscriptBase . Height + 0.6;
+        Height: Enclosed . Height;
         VertPos: HRef = MultiscriptBase . HMiddle;
         IN Structure_view BEGIN
                 Size: Enclosing =;
@@ -1240,7 +1241,7 @@ RULES
 
    PrescriptPair:
         BEGIN
-        HorizRef: * . Top;
+	HorizRef: Enclosed . HRef;
         HorizPos: Left = Previous . Right + 0.1;
         VertPos: HRef = Enclosing . HRef;
         IN Structure_view BEGIN
@@ -1251,7 +1252,7 @@ RULES
 
    PostscriptPair:
         BEGIN
-        HorizRef: * . Top;
+	HorizRef: Enclosed . HRef;
         HorizPos: Left = Previous . Right + 0.1;
         VertPos: HRef = Enclosing . HRef;
         IN Structure_view BEGIN
@@ -1273,7 +1274,7 @@ RULES
 
    MSuperscript:
         BEGIN
-        HorizRef: * . Top;
+        HorizRef: * . Bottom;
 	HorizPos: VMiddle = Enclosing . VMiddle;
         VertPos: Bottom = Enclosing . HRef;
         IN Structure_view BEGIN
