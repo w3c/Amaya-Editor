@@ -4449,9 +4449,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                     pNextBox->BxPrevious = NULL;
                   else
                     pNextBox->BxPrevious = pCurrentBox;
-	      
                   /* On defait l'ancien chainage */
-                  pCurrentBox->BxNext->BxPrevious = pCurrentBox->BxNext;
+		  if (pCurrentBox->BxNext)
+		    pCurrentBox->BxNext->BxPrevious = pCurrentBox->BxNext;
                   pCurrentBox->BxNext = pNextBox;
                 }
               pCurrentBox = pNextBox;

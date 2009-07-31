@@ -2577,11 +2577,11 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
 {
   ElementType	 elType;
   Element	 child, separator, leaf, next, prev, mfenced;
-  AttributeType attrType;
-  Attribute     attr;
+  AttributeType  attrType;
+  Attribute      attr;
   int		 length, sep, i;
   Language	 lang;
-  char	 text[32], sepValue[4];
+  CHAR_T	 text[100], sepValue[4];
 
   /* get the separators attribute */
   mfenced = TtaGetParent (fencedExpression);
@@ -2594,8 +2594,8 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
   attr = TtaGetAttribute (mfenced, attrType);
   if (attr)
     {
-      length = 31;
-      TtaGiveTextAttributeValue (attr, text, &length);
+      length = 100;
+      TtaGiveTextAttributeValue (attr, (char*)text, &length);
     }
 
   /* create FencedSeparator elements in the FencedExpression */
