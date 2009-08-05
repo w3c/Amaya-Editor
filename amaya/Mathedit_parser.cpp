@@ -9,21 +9,26 @@
  *
  * Author: F. Wang
  */         
-#include <iostream> 
+
 #include <stdarg.h>
+#include <fstream>    
+#include <iostream> 
+#include<sstream> 
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-
 #include "amaya.h"
 #include "undo.h"
 #include "mathedit.h"
-
 #include "fetchXMLname_f.h"
 
-static Document parser_doc;
-static Element parser_el;
-static Element parser_new_el;
+// #include "chemistry"
+
+// extern int chemistryparse(quex::chemistry  *qlex);
+
+Document parser_doc;
+Element parser_el;
+Element parser_new_el;
 extern int CurrentMathEditMode;
 
 
@@ -61,7 +66,7 @@ static void AttachClassName(Document doc, Element el)
 
   Create a new MathML element with a text content
   -----------------------------------------------------------------------*/
-static Element NewMathElement(Document doc, int elTypeNum, const char *string)
+Element NewMathElement(Document doc, int elTypeNum, const char *string)
 {
   ElementType elType;
   Element newEl, textUnit;
@@ -76,6 +81,7 @@ static Element NewMathElement(Document doc, int elTypeNum, const char *string)
       elType.ElTypeNum = MathML_EL_TEXT_UNIT;
       textUnit = TtaNewElement(doc, elType);
       TtaInsertFirstChild (&textUnit, newEl, doc);
+      // XXXfw should use TtaSetBufferContent here
       TtaInsertTextContent (textUnit, 0, (unsigned char *)string, doc);
     }
 
@@ -92,7 +98,7 @@ static Element NewMathElement(Document doc, int elTypeNum, const char *string)
 
   Create a new MathML element with a CHAR_T symbol inside
   -----------------------------------------------------------------------*/
-static Element NewSymbol(Document doc, int elTypeNum, CHAR_T symbol)
+Element NewSymbol(Document doc, int elTypeNum, CHAR_T symbol)
 {
   ElementType elType;
   Element newEl, textUnit;
@@ -107,6 +113,7 @@ static Element NewSymbol(Document doc, int elTypeNum, CHAR_T symbol)
   TtaInsertFirstChild (&textUnit, newEl, doc);
   text[0] = symbol;
   text[1] = EOS;
+  // XXXfw should we really use TtaGetLanguageIdFromScript('L')?
   TtaSetBufferContent (textUnit, text, TtaGetLanguageIdFromScript('L'), doc);
 
   return newEl;
@@ -117,7 +124,7 @@ static Element NewSymbol(Document doc, int elTypeNum, CHAR_T symbol)
 
   Create an empty mrow
   -----------------------------------------------------------------------*/
-static Element NewMROW(Document doc)
+Element NewMROW(Document doc)
 {
   ElementType elType;
   Element mrow;
@@ -134,7 +141,8 @@ static Element NewMROW(Document doc)
 
   Create an mrow with open and close MO's.
   -----------------------------------------------------------------------*/
-static Element NewFencedExpression(Document doc, Element el, const char *open,
+// XXXfw use CHAR_T for open and close
+Element NewFencedExpression(Document doc, Element el, const char *open,
 				   const char *close)
 {
   Element fenced;
@@ -153,7 +161,7 @@ static Element NewFencedExpression(Document doc, Element el, const char *open,
 
   Create a new msup with base and supscript children
   -----------------------------------------------------------------------*/
-static Element NewMSUP(Document doc, Element base, Element supscript)
+Element NewMSUP(Document doc, Element base, Element supscript)
 {
   ElementType elType;
   Element msup_, base_, supscript_;
@@ -179,7 +187,7 @@ static Element NewMSUP(Document doc, Element base, Element supscript)
 
   Create a new msup with base and subscript children
   -----------------------------------------------------------------------*/
-static Element NewMSUB(Document doc, Element base, Element subscript)
+Element NewMSUB(Document doc, Element base, Element subscript)
 {
   ElementType elType;
   Element msub_, base_, subscript_;
@@ -200,8 +208,6 @@ static Element NewMSUB(Document doc, Element base, Element subscript)
   return msub_;
 }
 
-#include "mathedit/chemistry.bison.cpp"
-
 /*----------------------------------------------------------------------
   InsertMathElementFromText
   -----------------------------------------------------------------------*/
@@ -209,11 +215,11 @@ Element InsertMathElementFromText(Element theElem, Element theText,
 				  Document doc)
 {
   ElementType   elType;
-#define TXTBUFLEN 100
-  CHAR_T        text[TXTBUFLEN];
   int len;
-  char               *iso;
   Language	lang;
+
+  // XXXfw: for the moment disable the experimental MathML parsing mode 
+  return NULL;
 
   elType = TtaGetElementType(theText);
   if (elType.ElTypeNum != MathML_EL_TEXT_UNIT)
@@ -223,13 +229,8 @@ Element InsertMathElementFromText(Element theElem, Element theText,
   if (len <= 0)
     return NULL;
 
-  len = TXTBUFLEN;
-  TtaGiveBufferContent (theText, text, len, &lang);
-  iso = (char *)TtaConvertCHARToByte (text, ISO_8859_1);
-  if(iso == NULL)
-    return NULL;
-
-  std::cout << "*********\nstring=" << iso;
+  CHAR_T *text = new CHAR_T[len+2];
+  TtaGiveBufferContent (theText, text+1, len+1, &lang);
 
   parser_doc = doc;
   parser_el = theElem;
@@ -240,9 +241,11 @@ Element InsertMathElementFromText(Element theElem, Element theText,
   switch(CurrentMathEditMode)
     {
     case CHEMISTRY_MODE:
-      chemistry_delete_buffer( YY_CURRENT_BUFFER );
-      chemistry_scan_string(iso);
-      chemistryparse();
+      {
+	// quex::chemistry qlex(text, len+1);
+	// qlex.buffer_fill_region_finish(len);
+	// chemistryparse(&qlex);
+      }
       break;
 
     case DEFAULT_MODE:
@@ -251,7 +254,7 @@ Element InsertMathElementFromText(Element theElem, Element theText,
       break;
     }
 
-  TtaFreeMemory (iso);
+  delete[] text;
 
   if(parser_new_el != NULL)
     {

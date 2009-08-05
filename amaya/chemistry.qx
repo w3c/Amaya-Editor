@@ -1,0 +1,46 @@
+// This file has to be encoded in UTF-8
+/*
+ *
+ *  (c) COPYRIGHT INRIA and W3C, 2009
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
+ *
+ * Author: F. Wang
+ */         
+start = DEFAULT_MODE;
+
+mode DEFAULT_MODE
+{
+	
+	<<EOF>>     => TKN_TERMINATION;
+
+	H|D|T|He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr|Rf|Db|Sg|Bh|Hs|Mt|Ds|Rg|Uub|Uut|Uuq|Uup|Uuh|Uus|Uuo => TKN_ATOM(Lexeme);
+
+	(\+|\-)?[I|V|X]+(\/[I|V|X]+)?|0 => TKN_OXIDATION_NUMBER(Lexeme);
+
+	[1-9][0-9]* => TKN_INTEGER(Lexeme);
+
+	==|---- => TKN_QUADRUPLE_BOND(Lexeme);
+	-=|=-|--- => TKN_TRIPLE_BOND(Lexeme);
+	=|-- => TKN_DOUBLE_BOND(Lexeme);
+	_ => TKN_SIMPLE_BOND(Lexeme);
+	"..." => TKN_GENERIC_BOND(Lexeme);
+
+	"." => TKN_DOT(Lexeme);
+
+	"["		{self.send('[');RETURN;}
+	"]"		{self.send(']');RETURN;}
+	"("		{self.send('(');RETURN;}
+	")"		{self.send(')');RETURN;}
+	"{"		{self.send('{');RETURN;}
+	"}"		{self.send('}');RETURN;}
+
+	"-"		{self.send('-');RETURN;}
+	"+"		{self.send('+');RETURN;}
+	"^"		{self.send('^');RETURN;}
+	"*"		{self.send('*');RETURN;}
+
+}

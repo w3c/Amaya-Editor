@@ -4,13 +4,16 @@
 # Daniel Veillard and Irene Vatton 1997
 #
 
-AMAYA_MATH_OPTIONS=
+AMAYA_MATH_OPTIONS=# -I$(QUEX_PATH) -liconv -DQUEX_OPTION_ASSERTS_DISABLED
 
 AMAYA_MATH_OBJ= \
 	MathMLAPP.o \
 	MathMLbuilder.o \
 	Mathedit.o \
-	Mathedit_parser.o
+	Mathedit_parser.o # \
+	# chemistry.o \
+	# chemistry-core-engine.o \
+	# chemistry.tab.o
 
 AMAYA_MATH_SRC= \
         MathML.h \
@@ -18,9 +21,9 @@ AMAYA_MATH_SRC= \
 
 AMAYA_MATH_LIBS= 
 
-AMAYA_MATH_EXTRA_LIBS= 
+AMAYA_MATH_EXTRA_LIBS=
 
-AMAYA_MATH_INCLUDES= 
+AMAYA_MATH_INCLUDES=
 
 MATH_SCHEMAS= $(AMAYA)/MathML.S $(AMAYA)/MathMLP.P $(AMAYA)/MathMLT.T
 
@@ -67,3 +70,16 @@ MathML.h MathMLAPP.c: $(AMAYA)/MathML.STR $(AMAYA)/MathML.A ../bin/app
 	fi)
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(ALL_AMAYA_OPTIONS) MathML.A
+	
+#
+# Mathedit Parsers
+#
+# MODE = chemistry
+
+# $(MODE).tab.hpp $(MODE).tab.cpp: $(MODE).ypp
+# 	bison $(AMAYA)/$(MODE).ypp
+
+# $(MODE).cpp $(MODE)-core-engine.cpp $(MODE) $(MODE)-token_ids: $(MODE).qx
+# 	quex -i $(AMAYA)/$(MODE).qx --engine $(MODE) \
+# 	 --token-prefix TKN_ \ --foreign-token-id-file $(AMAYA)/$(MODE).h \
+# 	 -b wchar_t

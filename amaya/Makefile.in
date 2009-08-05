@@ -9,7 +9,7 @@ THOTDIR = @top_srcdir@
 WWWDAV = @WWWDAV@
 LIBWWW_RDF_PARSER = @LIBWWW_RDF_PARSER@
 
-OBJDIRS = wxdialog mathedit
+OBJDIRS = wxdialog
 
 include ../Options
 
