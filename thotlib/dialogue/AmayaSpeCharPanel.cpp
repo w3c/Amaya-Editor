@@ -385,10 +385,13 @@ AmayaSpeChar filtre_maths[] =
     {0x211A, "double-struck Q"},
     {0x211D, "double-struck R"},
     {0x2124, "double-struck Z"},
+    {0x2135, "aleph"},
+    {0x2136, "bet"},
+    {0x2137, "gimel"},
+    {0x2138, "dalet"},
     {0x2103, "degree celsius"},
     {0x2109, "degree fahrenheit"},
     {0x210B, "script H"},
-    {0x2136, "second transfinite cardinal (bet)"},
     {0x212B, "angstrom unit"},
     {0x212F, "script e"},
     {0x212E, "estimated symbol"},
@@ -398,6 +401,10 @@ AmayaSpeChar filtre_maths[] =
     {0x212A, "kelvin sign"},
     {0x2223, "divides"},
     {0x220f, "n-ary product"},
+    {0x22EE, "vertical ellipsis"},
+    {0x22EF, "midline horizontal ellipsis"},
+    {0x22F0, "up right diagonal ellipsis"},
+    {0x22F1, "down right diagonal ellipsis"},
     {-1, ""}
   };
 
