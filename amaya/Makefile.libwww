@@ -6,7 +6,7 @@
 #    Jose Kahan, 1999 : dependency extensions, use of a lite libwww
 
 
-AMAYA_LIBWWW_OPTIONS=
+AMAYA_LIBWWW_OPTIONS= -DSSL
 
 AMAYA_LIBWWW_OBJ= \
 	AHTBridge.o \
