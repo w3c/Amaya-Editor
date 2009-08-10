@@ -761,7 +761,7 @@ if test "$with_system_libwww" != "yes" ; then
     --build=$build_alias --host=$host_alias --target=$target_alias \
     --disable-shared \
     $WITHDAV \
-    --with-zlib && \
+    --with-zlib --with-ssl && \
     echo "libwww is configured" ; \
     echo "patching wwwconf.h because appkit.h do not compile on macos, and it seems that appkit.h is not used in amaya" ; \
     cp wwwconf.h wwwconf.h.orig ; \
@@ -773,9 +773,11 @@ if test "$with_system_libwww" != "yes" ; then
   BUILDLIBWWW="libwww"
   LIBWWW_CONFIG="libwww/libwww-config"
   LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -lwwwxml -lwwwzip -lwwwinit -lwwwapp -lwwwhtml -lwwwtelnet -lwwwnews -lwwwhttp -lwwwmime -lwwwgopher -lwwwftp -lwwwfile -lwwwdir -lwwwcache -lwwwstream -lwwwmux -lwwwtrans -lwwwcore -lwwwutils -lwwwdav \
+  -L$CURRENT_PATH/libwww/Library/src/SSL/.libs -lwwwssl\
   -L$CURRENT_PATH/libwww/modules/md5/.libs -lmd5 \
-  -L$CURRENT_PATH/libwww/modules/expat/.libs -lexpat"
-  LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww -I$CURRENT_PATH/../../libwww/modules/lib/expat"
+  -L$CURRENT_PATH/libwww/modules/expat/.libs -lexpat \
+  -L/usr/lib -lssl -lcrypto"
+  LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww -I$CURRENT_PATH/../../libwww/modules/lib/expat -I$CUURENT_PATH/../../libwww/Library/src/SSL"
 else
   LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
   LIBWWW_LDFLAGS="`$LIBWWW_CONFIG --libs`"
@@ -1227,7 +1229,7 @@ if test "$build_amaya" = "yes" ; then
       if test "$with_system_raptor" = "yes" ; then
  	echo Amaya configured with the RaptorF library \(system\)
       else
-	echo Amaya configured with the Raptor library \(system\)
+	echo Amaya configured with the Raptor library \(local source\)
       fi
     fi
     if test "$with_templates" = "yes" ; then
