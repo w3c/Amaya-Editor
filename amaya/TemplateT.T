@@ -294,7 +294,7 @@ ATTRIBUTES
   type = string:
     begin
       create SAN;
-      create 'type="number"';
+      create 'type="string"';
     end;
 
   type = listVal:
