@@ -299,9 +299,9 @@ ThotBool CheckTemplateAttrInMenu (NotifyAttribute *event)
 {
 #ifdef TEMPLATES
   Document      doc = event->document;
-  Element       elem;
-  Element       parent = event->element;
+  Element       elem, parent = event->element;
   ElementType   elType;
+  SSchema       schema;
   AttributeType attrType;
   Attribute     attr;
   char         *attrName;
@@ -311,28 +311,28 @@ ThotBool CheckTemplateAttrInMenu (NotifyAttribute *event)
   /* Prevent from showing attributes for template instance but not templates. */
   if (IsTemplateInstanceDocument(doc))
     {
+      schema = TtaGetSSchema ("Template", doc);
       /* Prevent if attribute's element is not a descendant of xt:use */
       /* Dont prevent if descendant of xt:bag. */
-      elem = GetFirstTemplateParentElement(parent);
-      if (!elem)
-        return TRUE;
-      elType = TtaGetElementType(elem);
-      if (elType.ElTypeNum == Template_EL_bag)
-        return FALSE;	/* let Thot perform normal operation */
-      if (elType.ElTypeNum != Template_EL_useSimple)
-        return TRUE;
-      if (!TtaIsReadOnly (parent))
-        return FALSE;	/* let Thot perform normal operation */
- 
+      elem = GetFirstTemplateParentElement (parent);
+      if (elem)
+        {
+          elType = TtaGetElementType (elem);
+          if (elType.ElTypeNum == Template_EL_bag)
+            return FALSE;	/* let Thot perform normal operation */
+          if (elType.ElTypeNum != Template_EL_useSimple)
+            return TRUE;
+          if (!TtaIsReadOnly (parent))
+            return FALSE;	/* let Thot perform normal operation */
+        }
       /* Search for the corresponding xt:attribute element*/
-      attrName = TtaGetAttributeName(event->attributeType);
-      attrType.AttrSSchema = TtaGetSSchema ("Template", doc);
-      for (elem = TtaGetFirstChild(parent); elem; TtaNextSibling(&elem))
+      attrName = TtaGetAttributeName (event->attributeType);
+      attrType.AttrSSchema = schema;
+      for (elem = TtaGetFirstChild (parent); elem; TtaNextSibling (&elem))
         {
           attrType.AttrTypeNum = Template_ATTR_ref_name;
           elType = TtaGetElementType(elem);
-          if (elType.ElTypeNum == Template_EL_attribute &&
-              elType.ElSSchema == TtaGetSSchema ("Template", doc))
+          if (elType.ElTypeNum == Template_EL_attribute && elType.ElSSchema == schema)
             {
                attr = TtaGetAttribute(elem, attrType);
                if (attr)
@@ -362,10 +362,8 @@ ThotBool CheckTemplateAttrInMenu (NotifyAttribute *event)
                        if (useAt == Template_ATTR_useAt_VAL_prohibited)
                            return TRUE;
                        if (useAt == Template_ATTR_useAt_VAL_required)
-                         {
-                           /* Force the usage of this attribute.*/
-                           event->restr.RestrFlags |= attr_mandatory;
-                         }
+                         /* Force the usage of this attribute.*/
+                         event->restr.RestrFlags |= attr_mandatory;
 
                        /* Get 'fixed' attr value. */
                        attrType.AttrTypeNum = Template_ATTR_fixed;
@@ -518,16 +516,16 @@ void DumpTemplateElement (Element el, Document doc)
               case Template_EL_useSimple:
               case Template_EL_useEl:
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);
-                printf(" label=%s", str);
+                printf (" label=%s", str);
                 TtaFreeMemory(str);
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_types, NULL);
-                printf(" types=%s", str);
+                printf (" types=%s", str);
                 TtaFreeMemory(str);
                 attType.AttrSSchema = elType.ElSSchema;
                 attType.AttrTypeNum = Template_ATTR_option;
                 att = TtaGetAttribute (el, attType);
                 if (att)
-                  printf(" option");
+                  printf (" option");
                 break;
               case Template_EL_bag:
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_title, NULL);
@@ -539,19 +537,19 @@ void DumpTemplateElement (Element el, Document doc)
                 break;
               case Template_EL_attribute:
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_ref_name, NULL);
-                printf(" name=%s", str);
+                printf (" name=%s", str);
                 TtaFreeMemory(str);
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_type, NULL);
-                printf(" type=%s", str);
+                printf (" type=%s", str);
                 TtaFreeMemory(str);
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_useAt, NULL);
-                printf(" use=%s", str);
+                printf (" use=%s", str);
                 TtaFreeMemory(str);
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_defaultAt, NULL);
-                printf(" default=%s", str);
+                printf (" default=%s", str);
                 TtaFreeMemory(str);
                 str = GetAttributeStringValueFromNum(el, Template_ATTR_fixed, NULL);
-                printf(" fixed=%s", str);
+                printf (" fixed=%s", str);
                 TtaFreeMemory(str);
                 break;
             }
