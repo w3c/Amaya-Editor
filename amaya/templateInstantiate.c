@@ -1179,12 +1179,12 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
           dec = Template_GetDeclaration (t, items[0].label);
           if (dec)
             child = Template_InsertUseChildren (doc, el, dec, parentLine, registerUndo);
-/*               if (child && elType.ElTypeNum != Template_EL_useSimple) */
-/*                 { */
-/*                   TtaChangeTypeOfElement (el, doc, Template_EL_useSimple); */
-/*                   if (registerUndo) */
-/*                     TtaRegisterElementTypeChange (el, Template_EL_useEl, doc); */
-/*                 } */
+          if (nbitems == 1 && elType.ElTypeNum != Template_EL_useSimple)
+            {
+              TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
+              if (registerUndo)
+                TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
+            }
         }
       else
         {
