@@ -1364,27 +1364,29 @@ void Template_FillFromDocument (Document doc)
 
   if (t)
     {
-#ifdef TEMPLATE_DEBUG
-      printf("Template_FillFromDocument state: %d\n", t->state);
-#endif
       SetTemplateDocument (t, doc);
+#ifdef TEMPLATE_DEBUG
+      printf("Template_FillFromDocument state: %d ", t->doc);
+#endif
       Template_PrepareTemplate(t, doc);
       if (IsTemplateInstanceDocument (doc))
         {
 #ifdef TEMPLATE_DEBUG
-          printf("  > instance\n");
+          printf("  -> instance\n");
 #endif
           // fix all access rights in the instance
           root = TtaGetRootElement (doc);
           TtaSetAccessRight (root, ReadOnly, doc);
           Template_FixAccessRight (t, root, doc);
           TtaUpdateAccessRightInViews (doc, root);
+          // Parse template to fill structure and remove extra data
+          ParseTemplate (t, root, doc, NULL, FALSE);
         }
 #ifdef TEMPLATE_DEBUG
       else if (t->state & templLibraryFlag)
-        printf("  > library\n");
+        printf("  -> library\n");
       else if (t->state & templTemplate)
-        printf("  > template\n");
+        printf("  -> template\n");
 #endif
       // Mark loaded
       t->state |= templloaded;
