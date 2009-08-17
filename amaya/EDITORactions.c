@@ -31,6 +31,12 @@
 #include "ANNOTevent_f.h"
 #include "ANNOTmenu_f.h"
 #endif /* ANNOTATIONS */
+#ifdef TEMPLATES
+#include "Template.h"
+#include "templates.h"
+#include "templateUtils_f.h"
+#include "templates_f.h"
+#endif /* TEMPLATES */
 
 #ifdef BOOKMARKS
 #include "BMevent_f.h"
@@ -347,6 +353,14 @@ void DoNewXHTML (Document doc, View view)
 void NewXHTML (Document doc, View view)
 {
   OpenNew (doc, view, docHTML, L_Other);
+}
+
+/*----------------------------------------------------------------------
+  NewLibrary: Create a new  document
+  ----------------------------------------------------------------------*/
+void NewLibrary (Document doc, View view)
+{
+  OpenNew (doc, view, docTemplate, L_Other);
 }
 
 /*----------------------------------------------------------------------
@@ -966,6 +980,33 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
         UpdateContextSensitiveMenus (SelectionDoc, 1);
       SelectionDoc = doc;
 #endif /* _SVG */
+    }
+  else if (docType == docTemplate)
+    {
+#ifdef TEMPLATES
+      /*-------------  New Template library document ------------*/
+      /* Set the namespace declaration */
+      root = TtaGetRootElement (doc);
+      TtaSetUriSSchema (elType.ElSSchema, Template_URI);
+      TtaSetANamespaceDeclaration (doc, root, "xt", Template_URI);
+      SetAttributeStringValue(root, Template_ATTR_version, Template_Current_Version);
+      SetAttributeStringValue(root, Template_ATTR_templateVersion, "1.0");
+      TtaNewNature (doc, elType.ElSSchema,  NULL, "HTML", "HTMLP");
+      TtaSetANamespaceDeclaration (doc, root, "ht", XHTML_URI);
+
+      /* force the XML parsing */
+      DocumentMeta[doc]->xmlformat = TRUE;
+      DocumentMeta[doc]->compound = TRUE;
+      UpdateTemplateMenus (doc);
+      /* set the initial selection */
+      el = TtaGetLastChild (root);
+      if (el)
+         TtaSelectElement (doc, el);
+      if (SelectionDoc != 0)
+        UpdateContextSensitiveMenus (SelectionDoc, 1);
+      SelectionDoc = doc;
+      TtaRaiseDoctypePanels (WXAMAYA_DOCTYPE_XTIGER);
+#endif /* _TEMPLATES */
     }
   else
     {

@@ -300,213 +300,201 @@
 298 gedeeld
 299 Informeren
 300 Animatie
-301 SVG-bibliotheek
-302 Optie kopiëren
-303 Selectie kopiëren
-304 Zie selectie
-305 Nieuw model aan bibliotheek toevoegen
-306 URL van nieuwe SVG...
-307 Titel bibliotheek
-308 URL bibliotheek
-309 Bibliotheek maken
-310 Bibliotheek doorbladeren
-311 Bibliotheek maken of zoeken
-312 De selectie bevat geen SVG-elementen. Maak een andere selectie.
-313 De bibliotheek moet een titel hebben
-314 Verplaats de cursor in het document dat u bewerkt om een nieuwe sleutelpositie te bepalen...
-315 De sleutelpositie is bepaald. Verplaats de schuifknop om de duur van de animatie in te stellen...
-316 Selecteer de beginkleur van het element...
-317 De beginkleur is gedefinieerd. Verplaats de schuifknop om de duur van de animatie in te stellen...
-318 Selecteer de eindkleur...
-319 De animatie is gedefinieerd
-320 Geanimeerd attribuut
-321 Element zonder ID
-322 ID toevoegen
-323 ID verwijderen
-324 ID's toevoegen/verwijderen
-325 Bewerking uitvoeren
-326 Geef een elementnaam op
-327 CSS-opmaakmodel toepassen
-328 Huidige schermtype:
-329 Nieuw onderwerp
-330 Eigenschappen van bladwijzer
-331 Eigenschappen van onderwerp
-332 Hiërarchie van onderwerp:
-333 Titel:
-334 Terugnames:
-335 Auteur:
-336 Gemaakt:
-337 Laatst gewijzigd:
-338 Beschrijving:
-339 Selecteer een element
-340 Alle CSS-opmaakmodellen
-341 CSS-opmaakregels toegepast op element <%s>\n
-342 Gekleurde lijnen zijn koppelingen. Klik er tweemaal (of eenmaal) op om naar de aangegeven locatie te gaan.\n
-343 Objecten laden (object, embed, iframe)
-344 Er is geen opmaakregel voor dit element.
-345 Er is geen invoegpositie bepaald. Selecteer eerst de invoegpositie.
-346 Documentinformatie
-347 Type document
-348 MIME-type
-349 Tekstcodering:
-350 Lengte van inhoud
-351 Locatie van inhoud
-352 Voorkeuren
-353 Teken (&&xxx;)
-354 Object creëren
-355 Map
-356 Bestand
-357 In huidig tabblad
-358 In nieuw venster
-359 Anti-aliasing
-360 ISO-datumnotatie
-361 Locatie voor nieuwe documenten
-362 Locatie voor openen
-363 Waarschuwen als meerdere tabbladen tegelijk worden gesloten
-364 Maximum aantal URL's in geschiedenis:
-365 Lijst van URL's wissen
-366 Alle sneltoetsen tonen
-367 Vaste regellengte (standaardwaarde is 0):
-368 Sjabloon
-369 Document opslaan als...
-370 Sjabloon niet gevonden
-371 Sjabloonvelden tonen
-372 Dialoog sluiten bij toepassen
-373 Niet toegestaan
-374 Beveiligd element
-375 De selectie mag een element van dit type niet overschrijden
-376 Er is geen kopniveau aangetroffen
-377 Toch opslaan
-378 Kan host niet vinden
-379 Het document is gewijzigd (412)
-380 Er is een conflict met de huidige status van de bron
-381 Ongeldige selectie
-382 Onbekend element
-383 %d bijgewerkte elementen
-384 De titel moet worden opgegeven
-385 Sjablonen
-386 Aantal voorkomens
-387 Maximum aantal voorkomens is bereikt
-388 Minimum aantal voorkomens is bereikt
-389 Dubbele ID's controleren
-390 XSL-opmaakmodel voor MathML-elementen toevoegen
-391 Operator invoegen
-392 Selecteer hoe de operator moet worden weergegeven
-393 Integraal invoegen
-394 Selecteer het type integraal
-395 Attributen van omheining
-396 Selecteer de symbolen voor openen, scheiden en sluiten
-397 Aantal operatorsymbolen
-398 Aantal coördinaten
-399 Lengte van N-tupels
-400 Aantal elementen
-401 Aantal variabelen
-402 Graad
-403 Graad van variabele nummer %d
-404 Samengesteld document
-405 Bronnen kopiëren (opmaakmodellen en scripts)
-406 Locatie voor opslaan bronnen
-407 Locatie voor opslaan afbeeldingen
-408 Document
-409 Afbeeldingen, opmaak en scripts
-410 E-mail
-411 Gemeenschappelijke parameters voor het verzenden van e-mail:
-412 SMTP-serveradres:
-413 Serverpoort:
-414 (standaard 25)
-415 Adres afzender (veld "Van"):
-416 Aan:
-417 Per e-mail verzenden
-418 Onderwerp:
-419 Verzenden als:
-420 Hoofdtekst
-421 Bijlage
-422 Zip-archief
-423 Niet verzenden
-424 Verzenden
-425 Het serveradres en de serverpoort moeten eerst in het menu Voorkeuren worden ingesteld.
-426 Bericht:
-427 Alternatief tekstbericht:
-428 De server kan niet worden bereikt of reageert niet
-429 De server heeft het bericht afgewezen
-430 Het adres van de afzender is onjuist ingedeeld
-431 Het adres van de bestemmeling is onjuist ingedeeld
-432 De inhoud van het bericht is onjuist ingedeeld
-433 Het bericht is niet verzonden
-434 Het bericht is verzonden
-435 Wachtwoorden
-436 Wilt u dat Amaya dit wachtwoord bewaart?
-437 Wachtwoorden voor websites bewaren
-438 Websites
-439 Alle verwijderen
-440 XML-namespaces gemaakt voor nieuwe XHTML+RDFa documenten
-441 Selecteer een namespace in de volgende keuzelijst of voeg een nieuwe toe (syntaxis prefix="uri"):
-442 Er is een fout opgetreden tijdens het maken van de JavaScript/DOM-objecten
-443 Een script dat nog wordt uitgevoerd, wordt zo snel mogelijk beëindigd. Probeer het later opnieuw.
-444 JavaScript/DOM is niet beschikbaar in deze weergave.
-445 Geef een JavaScript-opdracht op:
-446 De opdracht retourneerde de waarde: %s
-447 De opdracht retourneerde geen waarde
-448 SpiderMonkey antwoordde met de volgende fout:\n\nBestand: %s\nRegel: %d\n\n%s
-449 Nieuw
-450 Aanpasbaar
-451 Maken
-452 Koppeling maken door het doel aan te klikken
-453 Koppeling verwijderen
-454 Opslaan zonder sjabloon
-455 Met thema...
-456 Volledige breedte
-457 Met bijschrift
-458 Grootte:
-459 Plaatsing:
-460 XML-bewerkingsmodus
-461 Opmaakmodellen
-462 Opmaakmodel toevoegen...
-463 Geselecteerde opmaakmodellen verwijderen
-464 Geselecteerde opmaakmodellen activeren
-465 Geselecteerde opmaakmodellen uitschakelen
-466 Geselecteerde opmaakmodellen openen
-467 Amaya-profiel:
-468 "Tip van de dag" bij opstarten weergeven
-469 Selecteer een lettertype en grootte:
-470 De sjabloon bevat een of meerdere fouten en kan niet worden gebruikt.
-471 Sluiten
-472 Component '%s' heeft een meervoudige definitie.
-473 Bibliotheek '%s' kan niet worden geladen.
-474 Een instantie van een sjabloon kan niet als sjabloon worden gebruikt.
-475 Het document is reeds een sjabloon
-476 De sjabloon kon niet gemaakt worden
-477 Tekstveld
-478 Bijschrift voor element:
-479 Verzamelveld
-480 Element herhalen
-481 Nieuwe component
-482 De component is in gebruik en kan niet verwijderd worden.
-483 linksboven
-484 linksonder
-485 links
-486 rechtsboven
-487 rechtsonder
-488 rechts
-489 boven
-490 onder
-491 in het midden
-492 links en boven
-493 links en onder
-494 links van
-495 rechts en boven
-496 rechts en onder
-497 rechts van
-498 boven
-499 onder
-500 voor
-501 Er zijn %d objecten:
-502 Nieuw gebruik
-503 Optioneel gebruik
-504 Broncode kleuren
-505 Bijschrift voor herhaling:
-506 Nieuwe typenverbinding
-507 Verbinding
-508 Naam verbinding:
-509 Elementen gebruiken
-510 Bijschrift
+301 Verplaats de cursor in het document dat u bewerkt om een nieuwe sleutelpositie te bepalen...
+302 De sleutelpositie is bepaald. Verplaats de schuifknop om de duur van de animatie in te stellen...
+303 Selecteer de beginkleur van het element...
+304 De beginkleur is gedefinieerd. Verplaats de schuifknop om de duur van de animatie in te stellen...
+305 Selecteer de eindkleur...
+306 De animatie is gedefinieerd
+307 Geanimeerd attribuut
+308 Element zonder ID
+309 ID toevoegen
+310 ID verwijderen
+311 ID's toevoegen/verwijderen
+312 Bewerking uitvoeren
+313 Geef een elementnaam op
+314 CSS-opmaakmodel toepassen
+315 Huidige schermtype:
+316 Nieuw onderwerp
+317 Eigenschappen van bladwijzer
+318 Eigenschappen van onderwerp
+319 Hiërarchie van onderwerp:
+320 Titel:
+321 Terugnames:
+322 Auteur:
+323 Gemaakt:
+324 Laatst gewijzigd:
+325 Beschrijving:
+326 Selecteer een element
+327 Alle CSS-opmaakmodellen
+328 CSS-opmaakregels toegepast op element <%s>\n
+329 Gekleurde lijnen zijn koppelingen. Klik er tweemaal (of eenmaal) op om naar de aangegeven locatie te gaan.\n
+330 Objecten laden (object, embed, iframe)
+331 Er is geen opmaakregel voor dit element.
+332 Er is geen invoegpositie bepaald. Selecteer eerst de invoegpositie.
+333 Documentinformatie
+334 Type document
+335 MIME-type
+336 Tekstcodering:
+337 Lengte van inhoud
+338 Locatie van inhoud
+339 Voorkeuren
+340 Teken (&&xxx;)
+341 Object creëren
+342 Map
+343 Bestand
+344 In huidig tabblad
+345 In nieuw venster
+346 Anti-aliasing
+347 ISO-datumnotatie
+348 Locatie voor nieuwe documenten
+349 Locatie voor openen
+350 Waarschuwen als meerdere tabbladen tegelijk worden gesloten
+351 Maximum aantal URL's in geschiedenis:
+352 Lijst van URL's wissen
+353 Alle sneltoetsen tonen
+354 Vaste regellengte (standaardwaarde is 0):
+355 Sjabloon
+356 Document opslaan als...
+357 Sjabloon niet gevonden
+358 Sjabloonvelden tonen
+359 Dialoog sluiten bij toepassen
+360 Niet toegestaan
+361 Beveiligd element
+362 De selectie mag een element van dit type niet overschrijden
+363 Er is geen kopniveau aangetroffen
+364 Toch opslaan
+365 Kan host niet vinden
+366 Het document is gewijzigd (412)
+367 Er is een conflict met de huidige status van de bron
+368 Ongeldige selectie
+369 Onbekend element
+370 %d bijgewerkte elementen
+371 De titel moet worden opgegeven
+372 Sjablonen
+373 Aantal voorkomens
+374 Maximum aantal voorkomens is bereikt
+375 Minimum aantal voorkomens is bereikt
+376 Dubbele ID's controleren
+377 XSL-opmaakmodel voor MathML-elementen toevoegen
+378 Operator invoegen
+379 Selecteer hoe de operator moet worden weergegeven
+380 Integraal invoegen
+381 Selecteer het type integraal
+382 Attributen van omheining
+383 Selecteer de symbolen voor openen, scheiden en sluiten
+384 Aantal operatorsymbolen
+385 Aantal coördinaten
+386 Lengte van N-tupels
+387 Aantal elementen
+388 Aantal variabelen
+389 Graad
+390 Graad van variabele nummer %d
+391 Samengesteld document
+392 Bronnen kopiëren (opmaakmodellen en scripts)
+393 Locatie voor opslaan bronnen
+394 Locatie voor opslaan afbeeldingen
+395 Document
+396 Afbeeldingen, opmaak en scripts
+397 E-mail
+398 Gemeenschappelijke parameters voor het verzenden van e-mail:
+399 SMTP-serveradres:
+400 Serverpoort:
+401 (standaard 25)
+402 Adres afzender (veld "Van"):
+403 Aan:
+404 Per e-mail verzenden
+405 Onderwerp:
+406 Verzenden als:
+407 Hoofdtekst
+408 Bijlage
+409 Zip-archief
+410 Niet verzenden
+411 Verzenden
+412 Het serveradres en de serverpoort moeten eerst in het menu Voorkeuren worden ingesteld.
+413 Bericht:
+414 Alternatief tekstbericht:
+415 De server kan niet worden bereikt of reageert niet
+416 De server heeft het bericht afgewezen
+417 Het adres van de afzender is onjuist ingedeeld
+418 Het adres van de bestemmeling is onjuist ingedeeld
+419 De inhoud van het bericht is onjuist ingedeeld
+420 Het bericht is niet verzonden
+421 Het bericht is verzonden
+422 Wachtwoorden
+423 Wilt u dat Amaya dit wachtwoord bewaart?
+424 Wachtwoorden voor websites bewaren
+425 Websites
+426 Alle verwijderen
+427 XML-namespaces gemaakt voor nieuwe XHTML+RDFa documenten
+428 Selecteer een namespace in de volgende keuzelijst of voeg een nieuwe toe (syntaxis prefix="uri"):
+429 Er is een fout opgetreden tijdens het maken van de JavaScript/DOM-objecten
+430 Een script dat nog wordt uitgevoerd, wordt zo snel mogelijk beëindigd. Probeer het later opnieuw.
+431 JavaScript/DOM is niet beschikbaar in deze weergave.
+432 Geef een JavaScript-opdracht op:
+433 De opdracht retourneerde de waarde: %s
+434 De opdracht retourneerde geen waarde
+435 SpiderMonkey antwoordde met de volgende fout:\n\nBestand: %s\nRegel: %d\n\n%s
+436 Nieuw
+437 Aanpasbaar
+438 Maken
+439 Koppeling maken door het doel aan te klikken
+440 Koppeling verwijderen
+441 Opslaan zonder sjabloon
+442 Met thema...
+443 Volledige breedte
+444 Met bijschrift
+445 Grootte:
+446 Plaatsing:
+447 XML-bewerkingsmodus
+448 Opmaakmodellen
+449 Opmaakmodel toevoegen...
+450 Geselecteerde opmaakmodellen verwijderen
+451 Geselecteerde opmaakmodellen activeren
+452 Geselecteerde opmaakmodellen uitschakelen
+453 Geselecteerde opmaakmodellen openen
+454 Amaya-profiel:
+455 "Tip van de dag" bij opstarten weergeven
+456 Selecteer een lettertype en grootte:
+457 De sjabloon bevat een of meerdere fouten en kan niet worden gebruikt.
+458 Sluiten
+459 Component '%s' heeft een meervoudige definitie.
+460 Bibliotheek '%s' kan niet worden geladen.
+461 Een instantie van een sjabloon kan niet als sjabloon worden gebruikt.
+462 Het document is reeds een sjabloon
+463 De sjabloon kon niet gemaakt worden
+464 Tekstveld
+465 Bijschrift voor element:
+466 Verzamelveld
+467 Element herhalen
+468 Nieuwe component
+469 De component is in gebruik en kan niet verwijderd worden.
+470 linksboven
+471 linksonder
+472 links
+473 rechtsboven
+474 rechtsonder
+475 rechts
+476 boven
+477 onder
+478 in het midden
+479 links en boven
+480 links en onder
+481 links van
+482 rechts en boven
+483 rechts en onder
+484 rechts van
+485 boven
+486 onder
+487 voor
+488 Er zijn %d objecten:
+489 Nieuw gebruik
+490 Optioneel gebruik
+491 Broncode kleuren
+492 Bijschrift voor herhaling:
+493 Nieuwe typenverbinding
+494 Verbinding
+495 Naam verbinding:
+496 Elementen gebruiken
+497 Bijschrift
+498 Bibliotheek doorbladeren

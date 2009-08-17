@@ -281,8 +281,8 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
   Parameter loading is TRUE when the document is not already loaded.
   Return the parentline to be considered for next elements
   ----------------------------------------------------------------------*/
-static Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
-                              Element parentLine, ThotBool loading)
+Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
+                       Element parentLine, ThotBool loading)
 {
 #ifdef TEMPLATES
   AttributeType attType;

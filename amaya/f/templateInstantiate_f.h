@@ -15,6 +15,11 @@ extern Element Template_InsertBagChild ( Document doc,
                                          Element bag,
                                          Declaration decl,
                                          ThotBool before );
+extern Element ParseTemplate ( XTigerTemplate t,
+                               Element el,
+                               Document doc,
+                               Element parentLine,
+                               ThotBool loading );
 extern void CreateTemplate ( Document doc,
                              char *templatePath );
 extern void CreateInstance ( char *templatePath,
@@ -78,6 +83,11 @@ extern Element Template_InsertBagChild ( Document doc,
                                            Element bag,
                                            Declaration decl,
                                            ThotBool before );
+extern Element ParseTemplate ( XTigerTemplate t,
+                                 Element el,
+                                 Document doc,
+                                 Element parentLine,
+                                 ThotBool loading );
 extern void CreateTemplate ( Document doc,
                                char *templatePath );
 extern void CreateInstance ( char *templatePath,

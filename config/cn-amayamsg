@@ -300,213 +300,201 @@
 298 共享
 299 Awarenees
 300 Animation
-301 SVG Library
-302 Copy option
-303 Copy selection
-304 Refer to selection
-305 向 library 添加新的模型
-306 URL of the new SVG ...
-307 Library 标题
-308 Library URL
-309 创建 library
-310 浏览 library
-311 创建或搜索 library
-312 The selection includes no SVG elements. Please reselect
-313 The library title is mandatory
-314 Move the position cursor in edited document to define a new key position...
-315 Key position defined. Move the slider to define animation duration...
-316 Select starting color of element...
-317 Starting color defined. Move the slider to define animation duration...
-318 Select ending color...
-319 Animation defined.
-320 Animated attribute
-321 Element without ID
-322 添加 ID
-323 删除 ID
-324 添加/删除 ID
-325 应用操作
-326 输入元素名称
-327 应用 CSS 样式表
-328 当前屏幕类型
-329 新建主题
-330 书签属性
-331 主题属性
-332 Topic hierarchy:
-333 标题:
-334 Recalls:
-335 作者:
-336 创建:
-337 最后更改:
-338 描述:
-339 Please select an element
-340 所有 CSS 样式表
-341 CSS样式被应用于 <%s> 元素\n
-342 种族分界线双重(或单身)点击激活的链接\n
-343 载入对象 (object, embed, iframe)
-344 No style rule for this element
-345 No insert position defined. Please select first
-346 Document information
-347 Document Type
-348 MIME 类型
-349 字符集
-350 Content Length
-351 Content Location
-352 使用偏好
-353 Character (&xxx;)
-354 创建对象
-355 目录
-356 文件
-357 在当前位置
-358 在新的窗口
-359 Anti-aliasing
-360 ISO 格式日期
-361 新建文档的位置
-362 打开位置
-363 关闭多个标签页是显示警告
-364 历史 URL 最大数量
-365 清空 URL 列表
-366 显示所有快捷键
-367 固定行的长度 (0 为默认值)
-368 模板
-369 文档另存为...
-370 未找到模板
-371 显示模板
-372 应用后关闭对话框
-373 此文档禁止
-374 被保护的元素
-375 选择区域不应该跨域此类元素
-376 No heading found
-377 强制保存
-378 无法定位主机
-379 文档已被改变 (412)
-380 与当前资源的状态冲突
-381 无效选择区域
-382 未知元素
-383 %d 个已更新元素
-384 **The title is mandatory
-385 **Templates
-386 **Number of occurrences
-387 **Maximum number of occurrences reached
-388 **Minimum number of occurrences reached
-389 **Check duplicated IDs
-390 **Add the xsl stylesheet for MathML elements
-391 **Insert operator
-392 **Select the way the operator has to be displayed
-393 **Insert an integral
-394 **Select the type of integral
-395 **Attributes of the fence
-396 **Select open, separator and close symbols
-397 **Number of operator symbols
-398 **Number of coordinates
-399 **Length of the N-tuples
-400 **Number of elements
-401 **Number of variables
-402 **Degree
-403 **Degree of the variable number %d
-404 **Compound document
-405 **Copy resources (styles, scripts, ...)
-406 **Where to save resources
-407 **Where to save images
-408 **Document
-409 **Images, Styles and Scripts
-410 **Mail
-411 **Common parameters for sending mails:
-412 **SMTP server address:
-413 **Server port:
-414 **(25 by default)
-415 **Sending address (From field):
-416 **To:
-417 **Send by mail
-418 **Subject:
-419 **Send as:
-420 **Message body
-421 **Attachment
-422 **Zip archive
-423 **Don't send
-424 **Send
-425 **The server address and port must be set in Preferences
-426 **Message:
-427 **Alternate textual message:
-428 **The server is unreachable or does not respond
-429 **The server has reject you
-430 **The sender address is misformatted
-431 **A recipient address is misformatted
-432 **The mail content is misformatted
-433 **Mail not sent
-434 **Mail sent
-435 **Passwords
-436 **Do you want Amaya to remember this password?
-437 **Remember passwords for sites
-438 **Sites
-439 **Remove all
-440 **XML namespaces generated for new XHTML+RDFa documents
-441 **Select a namespace in the list below or add a new one (syntax prefix="uri")
-442 **An error occured during the building of the javascript/DOM objects
-443 **A script is still running but will be aborted as soon as possible. Please try later.
-444 **Javascript/DOM can not be enabled in this view.
-445 **Enter a javascript command:
-446 **The command returned the value: %s
-447 **The command returned no value
-448 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
-449 新建
-450 **Customizable
-451 **Create
-452 **Create the link by click
-453 删除 anchor
-454 **Save without template
-455 **With theme ...
-456 **Full width
-457 **With caption
-458 **Size
-459 **Position
-460 **XML editing mode
-461 **List of style sheets
-462 **Add a style sheet...
-463 **Remove selected style sheets
-464 **Activate selected style sheets
-465 **Desactivate selected style sheets
-466 **Open selected style sheets
-467 Amaya profile:
-468 **Show "Tip of the day" at startup
-469 **Choose font family and size:
-470 **Template has error(s), it will not be used:
-471 **Close
-472 **Component '%s' has multiple definition.
-473 **Library '%s' can not be loaded.
-474 **Can not convert an instance document to template.
-475 **The document is already a template
-476 **Template creation fails
-477 **Text area
-478 **Element label:
-479 **Bag area
-480 **Repeat element
-481 **New component
-482 **Component is used, you can not remove it.
-483 **at the top left corner
-484 **at the bottom left corner
-485 **on the left
-486 **at the top right corner
-487 **at the bottom right corner
-488 **on the right
-489 **at the top
-490 **at the bottom
-491 **in the center
-492 **to the left and above
-493 **to the left and below
-494 **to the left of
-495 **to the right and above
-496 **to the right and below
-497 **to the right of
-498 **above
-499 **below
-500 **in front of
-501 **There are %d objects: 
-502 **New use
-503 **Optional use
-504 **Color source code
-505 **Repeat label:
-506 **New union
-507 **Union
-508 **Union name:
-509 **Use elements
-510 **Label
+301 Move the position cursor in edited document to define a new key position...
+302 Key position defined. Move the slider to define animation duration...
+303 Select starting color of element...
+304 Starting color defined. Move the slider to define animation duration...
+305 Select ending color...
+306 Animation defined.
+307 Animated attribute
+308 Element without ID
+309 添加 ID
+310 删除 ID
+311 添加/删除 ID
+312 应用操作
+313 输入元素名称
+314 应用 CSS 样式表
+315 当前屏幕类型
+316 新建主题
+317 书签属性
+318 主题属性
+319 Topic hierarchy:
+320 标题:
+321 Recalls:
+322 作者:
+323 创建:
+324 最后更改:
+325 描述:
+326 Please select an element
+327 所有 CSS 样式表
+328 CSS样式被应用于 <%s> 元素\n
+329 种族分界线双重(或单身)点击激活的链接\n
+330 载入对象 (object, embed, iframe)
+331 No style rule for this element
+332 No insert position defined. Please select first
+333 Document information
+334 Document Type
+335 MIME 类型
+336 字符集
+337 Content Length
+338 Content Location
+339 使用偏好
+340 Character (&xxx;)
+341 创建对象
+342 目录
+343 文件
+344 在当前位置
+345 在新的窗口
+346 Anti-aliasing
+347 ISO 格式日期
+348 新建文档的位置
+349 打开位置
+350 关闭多个标签页是显示警告
+351 历史 URL 最大数量
+352 清空 URL 列表
+353 显示所有快捷键
+354 固定行的长度 (0 为默认值)
+355 模板
+356 文档另存为...
+357 未找到模板
+358 显示模板
+359 应用后关闭对话框
+360 此文档禁止
+361 被保护的元素
+362 选择区域不应该跨域此类元素
+363 No heading found
+364 强制保存
+365 无法定位主机
+366 文档已被改变 (412)
+367 与当前资源的状态冲突
+368 无效选择区域
+369 未知元素
+370 %d 个已更新元素
+371 **The title is mandatory
+372 **Templates
+373 **Number of occurrences
+374 **Maximum number of occurrences reached
+375 **Minimum number of occurrences reached
+376 **Check duplicated IDs
+377 **Add the xsl stylesheet for MathML elements
+378 **Insert operator
+379 **Select the way the operator has to be displayed
+380 **Insert an integral
+381 **Select the type of integral
+382 **Attributes of the fence
+383 **Select open, separator and close symbols
+384 **Number of operator symbols
+385 **Number of coordinates
+386 **Length of the N-tuples
+387 **Number of elements
+388 **Number of variables
+389 **Degree
+390 **Degree of the variable number %d
+391 **Compound document
+392 **Copy resources (styles, scripts, ...)
+393 **Where to save resources
+394 **Where to save images
+395 **Document
+396 **Images, Styles and Scripts
+397 **Mail
+398 **Common parameters for sending mails:
+399 **SMTP server address:
+400 **Server port:
+401 **(25 by default)
+402 **Sending address (From field):
+403 **To:
+404 **Send by mail
+405 **Subject:
+406 **Send as:
+407 **Message body
+408 **Attachment
+409 **Zip archive
+410 **Don't send
+411 **Send
+412 **The server address and port must be set in Preferences
+413 **Message:
+414 **Alternate textual message:
+415 **The server is unreachable or does not respond
+416 **The server has reject you
+417 **The sender address is misformatted
+418 **A recipient address is misformatted
+419 **The mail content is misformatted
+420 **Mail not sent
+421 **Mail sent
+422 **Passwords
+423 **Do you want Amaya to remember this password?
+424 **Remember passwords for sites
+425 **Sites
+426 **Remove all
+427 **XML namespaces generated for new XHTML+RDFa documents
+428 **Select a namespace in the list below or add a new one (syntax prefix="uri")
+429 **An error occured during the building of the javascript/DOM objects
+430 **A script is still running but will be aborted as soon as possible. Please try later.
+431 **Javascript/DOM can not be enabled in this view.
+432 **Enter a javascript command:
+433 **The command returned the value: %s
+434 **The command returned no value
+435 **SpiderMonkey returned the following error:\n\nFile: %s\nLine: %d\n\n%s
+436 新建
+437 **Customizable
+438 **Create
+439 **Create the link by click
+440 删除 anchor
+441 **Save without template
+442 **With theme ...
+443 **Full width
+444 **With caption
+445 **Size
+446 **Position
+447 **XML editing mode
+448 **List of style sheets
+449 **Add a style sheet...
+450 **Remove selected style sheets
+451 **Activate selected style sheets
+452 **Desactivate selected style sheets
+453 **Open selected style sheets
+454 Amaya profile:
+455 **Show "Tip of the day" at startup
+456 **Choose font family and size:
+457 **Template has error(s), it will not be used:
+458 **Close
+459 **Component '%s' has multiple definition.
+460 **Library '%s' can not be loaded.
+461 **Can not convert an instance document to template.
+462 **The document is already a template
+463 **Template creation fails
+464 **Text area
+465 **Element label:
+466 **Bag area
+467 **Repeat element
+468 **New component
+469 **Component is used, you can not remove it.
+470 **at the top left corner
+471 **at the bottom left corner
+472 **on the left
+473 **at the top right corner
+474 **at the bottom right corner
+475 **on the right
+476 **at the top
+477 **at the bottom
+478 **in the center
+479 **to the left and above
+480 **to the left and below
+481 **to the left of
+482 **to the right and above
+483 **to the right and below
+484 **to the right of
+485 **above
+486 **below
+487 **in front of
+488 **There are %d objects: 
+489 **New use
+490 **Optional use
+491 **Color source code
+492 **Repeat label:
+493 **New union
+494 **Union
+495 **Union name:
+496 **Use elements
+497 **Label
+498 浏览 library

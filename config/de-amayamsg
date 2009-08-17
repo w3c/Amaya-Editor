@@ -300,213 +300,201 @@
 298 Gemeinsam
 299 Benachrichtigung
 300 Animation
-301 SVG Bibliothek
-302 Option kopieren
-303 Markierung kopieren
-304 Auf Markierung beziehen
-305 Neues Modell zu Bibliothek hinzufügen
-306 URL der neuen SVG-Datei ...
-307 Titel der Bibliothek
-308 URL der Bibliothek
-309 Bibliothek erzeugen
-310 Bibliothek durchsuchen
-311 Bibliothek erzeugen oder suchen
-312 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
-313 Der Titel der Bibliothek muss angegeben werden
-314 Den Cursor an die neue Schlüsselposition bewegen...
-315 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
-316 Anfangsfarbe des Elements wählen...
-317 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
-318 Endfarbe wählen...
-319 Animation definiert.
-320 Animiertes Attribut
-321 Element ohne ID
-322 ID hinzufügen
-323 ID löschen
-324 IDs hinzufügen/löschen
-325 Operationen anwenden
-326 Elementname eingeben
-327 CSS anwenden
-328 Aktueller Bildschirmtyp
-329 Neue Überschrift
-330 Lesezeicheneigenschaften
-331 Eigenschaften der Überschriften
-332 Inhaltsverzeichnis:
-333 Titel:
-334 Umbenennen:
-335 Autor:
-336 Erstellt am:
-337 Zuletzt geändert am:
-338 Beschreibung:
-339 Wählen Sie bitte ein Element aus
-340 CSS komplett
-341 CSS-Regeln, die für <%s> gelten\n
-342 Fabige Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
-343 Objekte laden (object, embed, iframe)
-344 Für dieses Element gibt es keine Formatvorlage
-345 Keine Einfügeposition definiert. Bitte zuerst auswählen
-346 Dokumentinformation
-347 Documenttyp
-348 MIME Type
-349 Zeichensatz
-350 Content Length
-351 Content Location
-352 Einstellungen
-353 Zeichen (&xxx;)
-354 Objekt erzeugen
-355 Verzeichnis
-356 Datei
-357 Aktuelle Seite ersetzen
-358 In neuem Fenster
-359 Anti-aliasing
-360 ISO-Datumsformat
-361 Ort für neue Dokumente
-362 Ort zum Öffnen
-363 Warnen, falls mehrere Registerkarten geschlossen werden sollen
-364 Die maximale Anzahl an URLs in der History ist erreicht
-365 URL-Liste löschen
-366 Alle Tastaturkürzel anzeigen
-367 Feste Zeilenlänge (0 = Standardwert)
-368 Vorlage
-369 Dokument speichern als...
-370 Vorlage konnte nicht gefunden werden
-371 Vorlagenumrisse anzeigen
-372 Mit "Anwenden" wird der Dialog geschlossen
-373 Nicht möglich
-374 Geschütztes Element
-375 Die Auswahl darf ein solches Element nicht treffen
-376 Keine Titel
-377 Trotzdem sichern
-378 Der Host konnte nicht gefunden werden
-379 Das Dokument wurde verändert (412)
-380 Es besteht ein Konflikt mit dem aktuellen Status der Ressource
-381 Die Auswahl ist ungültig
-382 Unbekanntes Element
-383 %d aktualisierte Elemente
-384 Der Titel muss angegeben werden
-385 Vorlagen
-386 Häufigkeit des Auftretens
-387 Die maximal mögliche Zahl des Auftretens wurde erreicht
-388 Die minimal mögliche Zahl des Auftretens wurde erreicht
-389 Überprüfen doppelter IDs
-390 Füge XSL-Form für MathML-Elemente hinzu
-391 Einfügen eines Operators
-392 Wählen der Art der Operatordarstellung
-393 Einfügen eines Integrals
-394 Auswählen des Integraltyps
-395 Attribute für die Grenzen
-396 Wählen der Eröffungs-, Trennungs- und Schließungssymbole
-397 Anzahl der Operatorsymbole
-398 Anzahl der Koordinaten
-399 Länge der n-Tupel
-400 Anzahl der Elemente
-401 Anzahl der Variablen
-402 Grad
-403 Grad der Variable mit Nummer %d
-404 Mischdokument
-405 Bezugsquelle kopieren (Stile, Skripte, ...)
-406 Speicherort der Bezugsquellen
-407 Speicherort für Bilder
-408 Dokument
-409 Bilder, Stile und Skripte
-410 E-Mail
-411 Grundeinstellungen für E-Mail versenden
-412 SMTP Server AdresseServer Port
-413 Server Port
-414 (25 voreingestellt)
-415 Absender Adresse (From field):
-416 An
-417 Per E-Mail versenden
-418 Betreff:
-419 Versenden als:
-420 Nachricht
-421 Anhang
-422 Zip Archiv
-423 Nicht senden
-424 absenden
-425 Die Server-Adresse und der Port müssen in den Einstellungen konfiguriert sein
-426 Nachricht
-427 alternative textbasierte Nachricht
-428 Der Server ist nicht erreichbar oder antwortet nicht
-429 Der Server hat Sie nicht akzeptiert
-430 Die Absender-Adresse ist falsch formatiert
-431 Eine Empfänger-Adresse ist falsch formatiert
-432 Der Inhalt der Nachricht ist falsch formatiert
-433 E-Mail wurde nicht gesendet
-434 E-Mail wurde gesendet
-435 Passwörter
-436 Wollen Sie, dass Amaya das Passwort speichert?
-437 Passwörter für Sites speichern
-438 Sites (alle Dateien)
-439 Alles entfernen
-440 XML namespaces erzeugt für neue XHTML+RDFa Dokumente
-441 Einen Namensraum aus unten stehender Liste wählen oder einen neuen hinzufügen
-442 Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts
-443 Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen
-444 Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden
-445 Geben Sie einen Javascript-Befehl ein
-446 Der Befehl wurde als Wert: %s ausgegeben
-447 Der Befehl hat keinen Wert ausgegeben
-448 SpyderMonkey hat folgenden Fehler ausgegeben:\n\nFile: %s\nLine: %d\n\n%s
-449 Neu
-450 Anpassen
-451 Anker
-452 Den Verweis durch anklicken herstellen
-453 Verweis löschen
-454 Speichern ohne Vorlage
-455 Mit Thema...
-456 Ganze Breite
-457 Mit Titel
-458 Grösse
-459 Position
-460 XML Bearbeiten Betriebsart
-461 Liste der Dokumentenvorlagen
-462 Eine Dokumentenvorlage hinzufügen...
-463 Die ausgewählte Vorlage löschen
-464 Die ausgewählte Vorlage aktivieren
-465 Die ausgewählte Vorlage ausschalten
-466 Die ausgewählte Vorlage öffnen
-467 Amaya typ:
-468 "Tip des Tages" bei Programmstart anzeigen
-469 Schriftart - und Größe wählen:
-470 Die Vorlage hat einen/mehrere Fehler und kann nicht verwendet werden:
-471 Schließen
-472 Die Komponente '%s' ist mehrfach definiert
-473 Die Bibliothek '%s' kann nicht geladen werden
-474 Ein Beispieldokument kann nicht in eine Vorlage umgewandelt werden
-475 Dieses Dokument ist bereits eine Vorlage
-476 Die Erstellung der Vorlage schlug fehl
-477 Textbereich
-478 Schild
-479 Zone Elementmulti
-480 Wiederholungselement
-481 Neue Komponente
-482 Die Komponente kann nicht entfernt werden, da sie verwendet wird
-483 an linker oberer Ecke
-484 an linker unterer Ecke
-485 links
-486 an rechter oberer Ecke
-487 an rechter unterer Ecke
-488 rechts
-489 am Kopf
-490 am Fuß
-491 in der Mitte
-492 nach links oben
-493 nach links unten
-494 links von
-495 nach rechts oben
-496 nach rechts unten
-497 rechts von
-498 darüber
-499 darunter
-500 vor
-501 Es gibt %d objekte:
-502 Neu verwenden
-503 Optional verwenden
-504 Farbcode
-505 Titel der Wiederholung:
-506 neue Vereinigung
-507 Vereinigung
-508 Vereinigungsname:
-509 **Use elements
-510 **Label
+301 Den Cursor an die neue Schlüsselposition bewegen...
+302 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+303 Anfangsfarbe des Elements wählen...
+304 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+305 Endfarbe wählen...
+306 Animation definiert.
+307 Animiertes Attribut
+308 Element ohne ID
+309 ID hinzufügen
+310 ID löschen
+311 IDs hinzufügen/löschen
+312 Operationen anwenden
+313 Elementname eingeben
+314 CSS anwenden
+315 Aktueller Bildschirmtyp
+316 Neue Überschrift
+317 Lesezeicheneigenschaften
+318 Eigenschaften der Überschriften
+319 Inhaltsverzeichnis:
+320 Titel:
+321 Umbenennen:
+322 Autor:
+323 Erstellt am:
+324 Zuletzt geändert am:
+325 Beschreibung:
+326 Wählen Sie bitte ein Element aus
+327 CSS komplett
+328 CSS-Regeln, die für <%s> gelten\n
+329 Fabige Linien sind Verweise, die durch einen Doppel- (oder Einfach-)klick aktiviert wurden.\n
+330 Objekte laden (object, embed, iframe)
+331 Für dieses Element gibt es keine Formatvorlage
+332 Keine Einfügeposition definiert. Bitte zuerst auswählen
+333 Dokumentinformation
+334 Documenttyp
+335 MIME Type
+336 Zeichensatz
+337 Content Length
+338 Content Location
+339 Einstellungen
+340 Zeichen (&xxx;)
+341 Objekt erzeugen
+342 Verzeichnis
+343 Datei
+344 Aktuelle Seite ersetzen
+345 In neuem Fenster
+346 Anti-aliasing
+347 ISO-Datumsformat
+348 Ort für neue Dokumente
+349 Ort zum Öffnen
+350 Warnen, falls mehrere Registerkarten geschlossen werden sollen
+351 Die maximale Anzahl an URLs in der History ist erreicht
+352 URL-Liste löschen
+353 Alle Tastaturkürzel anzeigen
+354 Feste Zeilenlänge (0 = Standardwert)
+355 Vorlage
+356 Dokument speichern als...
+357 Vorlage konnte nicht gefunden werden
+358 Vorlagenumrisse anzeigen
+359 Mit "Anwenden" wird der Dialog geschlossen
+360 Nicht möglich
+361 Geschütztes Element
+362 Die Auswahl darf ein solches Element nicht treffen
+363 Keine Titel
+364 Trotzdem sichern
+365 Der Host konnte nicht gefunden werden
+366 Das Dokument wurde verändert (412)
+367 Es besteht ein Konflikt mit dem aktuellen Status der Ressource
+368 Die Auswahl ist ungültig
+369 Unbekanntes Element
+370 %d aktualisierte Elemente
+371 Der Titel muss angegeben werden
+372 Vorlagen
+373 Häufigkeit des Auftretens
+374 Die maximal mögliche Zahl des Auftretens wurde erreicht
+375 Die minimal mögliche Zahl des Auftretens wurde erreicht
+376 Überprüfen doppelter IDs
+377 Füge XSL-Form für MathML-Elemente hinzu
+378 Einfügen eines Operators
+379 Wählen der Art der Operatordarstellung
+380 Einfügen eines Integrals
+381 Auswählen des Integraltyps
+382 Attribute für die Grenzen
+383 Wählen der Eröffungs-, Trennungs- und Schließungssymbole
+384 Anzahl der Operatorsymbole
+385 Anzahl der Koordinaten
+386 Länge der n-Tupel
+387 Anzahl der Elemente
+388 Anzahl der Variablen
+389 Grad
+390 Grad der Variable mit Nummer %d
+391 Mischdokument
+392 Bezugsquelle kopieren (Stile, Skripte, ...)
+393 Speicherort der Bezugsquellen
+394 Speicherort für Bilder
+395 Dokument
+396 Bilder, Stile und Skripte
+397 E-Mail
+398 Grundeinstellungen für E-Mail versenden
+399 SMTP Server AdresseServer Port
+400 Server Port
+401 (25 voreingestellt)
+402 Absender Adresse (From field):
+403 An
+404 Per E-Mail versenden
+405 Betreff:
+406 Versenden als:
+407 Nachricht
+408 Anhang
+409 Zip Archiv
+410 Nicht senden
+411 absenden
+412 Die Server-Adresse und der Port müssen in den Einstellungen konfiguriert sein
+413 Nachricht
+414 alternative textbasierte Nachricht
+415 Der Server ist nicht erreichbar oder antwortet nicht
+416 Der Server hat Sie nicht akzeptiert
+417 Die Absender-Adresse ist falsch formatiert
+418 Eine Empfänger-Adresse ist falsch formatiert
+419 Der Inhalt der Nachricht ist falsch formatiert
+420 E-Mail wurde nicht gesendet
+421 E-Mail wurde gesendet
+422 Passwörter
+423 Wollen Sie, dass Amaya das Passwort speichert?
+424 Passwörter für Sites speichern
+425 Sites (alle Dateien)
+426 Alles entfernen
+427 XML namespaces erzeugt für neue XHTML+RDFa Dokumente
+428 Einen Namensraum aus unten stehender Liste wählen oder einen neuen hinzufügen
+429 Ein Fehler ist aufgetreten beim Aufbau des Javascript/DOM Objekts
+430 Ein Skript wird noch ausgeführt, aber beendet sobald es möglich ist. Bitte später versuchen
+431 Javascript/DOM kann in dieser Ansichtsoption nicht aktiviert werden
+432 Geben Sie einen Javascript-Befehl ein
+433 Der Befehl wurde als Wert: %s ausgegeben
+434 Der Befehl hat keinen Wert ausgegeben
+435 SpyderMonkey hat folgenden Fehler ausgegeben:\n\nFile: %s\nLine: %d\n\n%s
+436 Neu
+437 Anpassen
+438 Anker
+439 Den Verweis durch anklicken herstellen
+440 Verweis löschen
+441 Speichern ohne Vorlage
+442 Mit Thema...
+443 Ganze Breite
+444 Mit Titel
+445 Grösse
+446 Position
+447 XML Bearbeiten Betriebsart
+448 Liste der Dokumentenvorlagen
+449 Eine Dokumentenvorlage hinzufügen...
+450 Die ausgewählte Vorlage löschen
+451 Die ausgewählte Vorlage aktivieren
+452 Die ausgewählte Vorlage ausschalten
+453 Die ausgewählte Vorlage öffnen
+454 Amaya typ:
+455 "Tip des Tages" bei Programmstart anzeigen
+456 Schriftart - und Größe wählen:
+457 Die Vorlage hat einen/mehrere Fehler und kann nicht verwendet werden:
+458 Schließen
+459 Die Komponente '%s' ist mehrfach definiert
+460 Die Bibliothek '%s' kann nicht geladen werden
+461 Ein Beispieldokument kann nicht in eine Vorlage umgewandelt werden
+462 Dieses Dokument ist bereits eine Vorlage
+463 Die Erstellung der Vorlage schlug fehl
+464 Textbereich
+465 Schild
+466 Zone Elementmulti
+467 Wiederholungselement
+468 Neue Komponente
+469 Die Komponente kann nicht entfernt werden, da sie verwendet wird
+470 an linker oberer Ecke
+471 an linker unterer Ecke
+472 links
+473 an rechter oberer Ecke
+474 an rechter unterer Ecke
+475 rechts
+476 am Kopf
+477 am Fuß
+478 in der Mitte
+479 nach links oben
+480 nach links unten
+481 links von
+482 nach rechts oben
+483 nach rechts unten
+484 rechts von
+485 darüber
+486 darunter
+487 vor
+488 Es gibt %d objekte:
+489 Neu verwenden
+490 Optional verwenden
+491 Farbcode
+492 Titel der Wiederholung:
+493 neue Vereinigung
+494 Vereinigung
+495 Vereinigungsname:
+496 **Use elements
+497 **Label
+498 Bibliothek durchsuchen

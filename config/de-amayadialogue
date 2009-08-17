@@ -17,338 +17,339 @@
 15 &MathML...
 16 SVG...
 17 Forma&tvorlage...
-18 Öffnen(&O)...
-19 &Datei
-20 Öffnen (neues Fenster)...
-21 Aktualisie&ren
-22 Lies als
-23 Unicode (UTF-8)
-24 Western (ISO-8859-1)
-25 Western (ISO-8859-15)
-26 Western (Windows-1252)
-27 Mitteleuropa (ISO-8859-2)
-28 Mitteleuropa (Windows-1250)
-29 Südeuropa (ISO-8859-3)
-30 Baltisch (ISO-8859-4)
-31 Baltisch (Windows-1257)
-32 Kyrillisch (ISO-8859-5)
-33 Kyrillisch (Windows-1251)
-34 Kyrillisch (KOI8-R)
-35 Arabisch (ISO-8859-6)
-36 Arabisch (Windows-1256)
-37 Griechisch (ISO-8859-7)
-38 Griechisch (Windows-1253)
-39 Hebräisch (ISO-8859-8)
-40 Hebräisch (Windows-1255)
-41 Türkisch (ISO-8859-9)
-42 Türkisch (Windows-1254)
-43 Chinese vereinfacht (GB-2312)
-44 Japanisch (ISO-2022-JP)
-45 Japanisch (EUC-JP)
-46 Japanisch (Shift-JIS)
-47 Zurück
-48 Vorwärts
-49 &Speichern
-50 Speichern unter...
-51 Alles speichern
-52 S&ynchronisieren
-53 Per E-Mail senden...
-54 Dr&uckoptionen...
-55 Drucken
-56 Registerkarte schließen
-57 Schließen
-58 Beenden
-59 Eine neue Registerkarte erstellen
-60 Registerkarte aktualisieren
-61 Alle Registerkarten aktualisieren
-62 Alle übrigen Registerkarten schließen
-63 Registerkarte schließen
-64 Verweis öffnen
-65 Verweis in neuem Tab öffnen
-66 Verweis in neuem Fenster öffnen
-67 Drehen
-68 Schrägstellen
-69 Skalieren
-70 Verschieben
-71 Gruppierung aufheben
-72 Ausschneiden
-73 Kopieren
-74 Einfügen
-75 Löschen
-76 Einfügen (davor)
-77 Inzufügen (danach)
-78 Rückgängig
-79 Erneut
-80 Ausschneiden
-81 Kopieren
-82 Einfügen
-83 Löschen
-84 &Einfügen (davor)
-85 &Inzufügen (danach)
-86 Wählen Sie alle
-87 Wählen Sie
-88 Vorfahrenelement
-89 Erster nachfahre
-90 Vorhergehendes element
-91 Nächstes element
-92 Suchen/Ersetzen...
-93 Einstellungen
-94 Werkzeugleisten anzeigen/ausblenden
-95 &Durchsuchen
-96 &Bearbeiten
-97 &Hilfsmittel anzeigen
-98 Aktive Bildbereiche
-99 Anker anzeigen
-100 Layoutansicht
-101 Struktur
-102 Quelltext
-103 Verweise
-104 Textbrowser
-105 Inhaltsverzeichnis
-106 Ansicht horizontal teilen
-107 Ansicht vertikal teilen
-108 &info
-109 Parserfehler anzeigen
-110 &Vollbildanzeige
-111 Schrift vergrößern
-112 Schrift verkleinern
-113 normale Vergrößerung
-114 Absatz (p)
-115 Überschrift
-116 h1 (groß)
-117 h2
-118 h3
-119 h4
-120 h5
-121 h6 (klein)
-122 Liste
-123 Ungeordnete Liste (ul)
-124 Geordnete Liste (ol)
-125 Definitionsliste (dl)
-126 Begriff (dt)
-127 Definition (dd)
-128 Inhaltsorientiert
-129 Betont (em)
-130 Hervorgehoben (strong)
-131 Zitatquelle (cite)
-132 Definition (dfn)
-133 Programmtext (code)
-134 Variable (var)
-135 Beispiel (samp)
-136 Tastatureingabe (kbd)
-137 Abkürzung (abbr)
-138 Akronym (acronym)
-139 Eingefügter Text (ins)
-140 Gelöschter Text (del)
-141 Darstellungsorientiert
-142 Kursiv (i)
-143 Fett (b)
-144 Gesperrt (tt)
-145 Groß (big)
-146 Klein (small)
-147 Span
-148 Tiefgestellt (sub)
-149 Hochgestellt (sup)
-150 Zitat (q)
-151 Textrichtung LTR/RTL (bdo)
-152 Bild (img)...
-153 Horizontale Linie (hr)
-154 Zeilenumbruch (br)
-155 Formatierter Text (pre)
-156 Abbildung tabelle
-157 Tabelle
-158 Abbildung tabelle
-159 Überschrift (caption)
-160 Kopf (thead)
-161 Körper (tbody)
-162 Fußzeile (tfoot)
-163 &Math
-164 Abbildung formel
-165 Text (mtext)
-166 Bezeichner (mi)
-167 Zahl (mn)
-168 Operator (mo)
-169 Leerzeichen (mspace)
-170 Zeichen (&xxx;)
-171 Unsichtbare Multiplikation
-172 Angewendete Funktion
-173 Wurzel (mroot)
-174 Quadratwurzel (msqrt)
-175 Einschluß (menclose)
-176 Bruch (mfrac)
-177 Index und Exponent (msubsup)
-178 Index (msub)
-179 Exponent (msup)
-180 Unter- und Überschrift (munderover)
-181 Unterschrift (munder)
-182 Überschrift (mover)
-183 Klammern (mrow)
-184 Vierfachindex (mmultiscripts)
-185 Matrix (mtable)
-186 Grafiken
-187 Linie
-188 Pfeil
-189 Text
-190 fremdes Objekt
-191 Gruppierung
-192 Quadrat
-193 Rechteck
-194 Raute
-195 Dreieck
-196 Kreis
-197 Elipse
-198 Linienzug
-199 Vieleck
-200 offene Kurve
-201 geschlossene Kurve
-202 Formular
-203 Neues Formular (form)
-204 Knopf (button)
-205 Ankreuzkästchen (checkbox)
-206 Feld für Dateiname (file)
-207 Verborgenes Feld (hidden)
-208 Bild (image)
-209 Kennwortfeld (password)
-210 Auswahlknopf (radio)
-211 Zurücksetzen (reset)
-212 Absenden (submit)
-213 Eingabezeile (input)
-214 Feldgruppe (fieldset)
-215 Feldbeschriftung (label)
-216 Menü (option)
-217 Untermenü (optgroup)
-218 Eingabefeld (textarea)
-219 Objekt
-220 Objekt (object)
-221 Parameter (param)
-222 Bildbereich
-223 Abbildung einfügen
-224 Kreis (area)
-225 Polygon (area)
-226 Rechteck (area)
-227 Struktur
-228 Inline-Style (style)
-229 Kommentar
-230 Basisadresse (base)
-231 Meta-Information (meta)
-232 Verweis (link)
-233 Inline-Script (script)
-234 Skripalternative (noscript)
-235 Ábschnitt (div)
-236 Autorenadresse (address)
-237 Eingerücktes Zitat (blockquote)
-238 Inline-Frame (iframe)
-239 Ruby
-240 Thema
-241 Klassisch
-242 Modern
-243 Kein Motiv
-244 Vordergrundfarbe
-245 Vordergrundfarbe wählen...
-246 Keine Farbe
-247 Hintergrundfarbe
-248 Hintergrundfarbe wählen...
-249 Keine Farbe
-250 Ausrichten
-251 Linksbündig
-252 Mittig
-253 Rechtsbündig
-254 Blocksatz
-255 Voreinstellung
-256 Zeilenmaß
-257 Einfach
-258 Halb
-259 Doppelt
-260 Voreinstellung
-261 Zeileneinzug
-262 Einrücken
-263 Ausrücken
-264 Voreinstellung
-265 Schriftart
-266 Schriftart wählen...
-267 Voreinstellung
-268 &Stil editieren
-269 Regel erzeugen...
-270 Zugewiesenes Format anzeigen...
-271 Formate/Formatvorlagen
-272 Verknüpfen...
-273 Öffnen...
-274 Deaktivieren...
-275 Aktivieren...
-276 Entfernen...
-277 Internetadresse kopieren
-278 Internetadresse einfügen
-279 Auf vorherigen Anker
-280 Erzeugen/Ändern...
-281 Anker erzeugen
-282 Verweis/Anker löschen
-283 Id hinzufügen/entfernen...
-284 Rechtschreibprüfung...
-285 Transformieren...
-286 Quelltext bereinigen
-287 Tabelle editieren
-288 Umwandeln in datenzelle
-289 Umwandeln in titelzelle
-290 Zusammenfügen die zellen
-291 Zusammenfügen mit rechter Zelle
-292 Zusammenfügen mit der zelle darunter
-293 Verkleinern der breite
+18 Bibliothek erzeugen
+19 Öffnen(&O)...
+20 &Datei
+21 Öffnen (neues Fenster)...
+22 Aktualisie&ren
+23 Lies als
+24 Unicode (UTF-8)
+25 Western (ISO-8859-1)
+26 Western (ISO-8859-15)
+27 Western (Windows-1252)
+28 Mitteleuropa (ISO-8859-2)
+29 Mitteleuropa (Windows-1250)
+30 Südeuropa (ISO-8859-3)
+31 Baltisch (ISO-8859-4)
+32 Baltisch (Windows-1257)
+33 Kyrillisch (ISO-8859-5)
+34 Kyrillisch (Windows-1251)
+35 Kyrillisch (KOI8-R)
+36 Arabisch (ISO-8859-6)
+37 Arabisch (Windows-1256)
+38 Griechisch (ISO-8859-7)
+39 Griechisch (Windows-1253)
+40 Hebräisch (ISO-8859-8)
+41 Hebräisch (Windows-1255)
+42 Türkisch (ISO-8859-9)
+43 Türkisch (Windows-1254)
+44 Chinese vereinfacht (GB-2312)
+45 Japanisch (ISO-2022-JP)
+46 Japanisch (EUC-JP)
+47 Japanisch (Shift-JIS)
+48 Zurück
+49 Vorwärts
+50 &Speichern
+51 Speichern unter...
+52 Alles speichern
+53 S&ynchronisieren
+54 Per E-Mail senden...
+55 Dr&uckoptionen...
+56 Drucken
+57 Registerkarte schließen
+58 Schließen
+59 Beenden
+60 Eine neue Registerkarte erstellen
+61 Registerkarte aktualisieren
+62 Alle Registerkarten aktualisieren
+63 Alle übrigen Registerkarten schließen
+64 Registerkarte schließen
+65 Verweis öffnen
+66 Verweis in neuem Tab öffnen
+67 Verweis in neuem Fenster öffnen
+68 Drehen
+69 Schrägstellen
+70 Skalieren
+71 Verschieben
+72 Gruppierung aufheben
+73 Ausschneiden
+74 Kopieren
+75 Einfügen
+76 Löschen
+77 Einfügen (davor)
+78 Inzufügen (danach)
+79 Rückgängig
+80 Erneut
+81 Ausschneiden
+82 Kopieren
+83 Einfügen
+84 Löschen
+85 &Einfügen (davor)
+86 &Inzufügen (danach)
+87 Wählen Sie alle
+88 Wählen Sie
+89 Vorfahrenelement
+90 Erster nachfahre
+91 Vorhergehendes element
+92 Nächstes element
+93 Suchen/Ersetzen...
+94 Einstellungen
+95 Werkzeugleisten anzeigen/ausblenden
+96 &Durchsuchen
+97 &Bearbeiten
+98 &Hilfsmittel anzeigen
+99 Aktive Bildbereiche
+100 Anker anzeigen
+101 Layoutansicht
+102 Struktur
+103 Quelltext
+104 Verweise
+105 Textbrowser
+106 Inhaltsverzeichnis
+107 Ansicht horizontal teilen
+108 Ansicht vertikal teilen
+109 &info
+110 Parserfehler anzeigen
+111 &Vollbildanzeige
+112 Schrift vergrößern
+113 Schrift verkleinern
+114 normale Vergrößerung
+115 Absatz (p)
+116 Überschrift
+117 h1 (groß)
+118 h2
+119 h3
+120 h4
+121 h5
+122 h6 (klein)
+123 Liste
+124 Ungeordnete Liste (ul)
+125 Geordnete Liste (ol)
+126 Definitionsliste (dl)
+127 Begriff (dt)
+128 Definition (dd)
+129 Inhaltsorientiert
+130 Betont (em)
+131 Hervorgehoben (strong)
+132 Zitatquelle (cite)
+133 Definition (dfn)
+134 Programmtext (code)
+135 Variable (var)
+136 Beispiel (samp)
+137 Tastatureingabe (kbd)
+138 Abkürzung (abbr)
+139 Akronym (acronym)
+140 Eingefügter Text (ins)
+141 Gelöschter Text (del)
+142 Darstellungsorientiert
+143 Kursiv (i)
+144 Fett (b)
+145 Gesperrt (tt)
+146 Groß (big)
+147 Klein (small)
+148 Span
+149 Tiefgestellt (sub)
+150 Hochgestellt (sup)
+151 Zitat (q)
+152 Textrichtung LTR/RTL (bdo)
+153 Bild (img)...
+154 Horizontale Linie (hr)
+155 Zeilenumbruch (br)
+156 Formatierter Text (pre)
+157 Abbildung tabelle
+158 Tabelle
+159 Abbildung tabelle
+160 Überschrift (caption)
+161 Kopf (thead)
+162 Körper (tbody)
+163 Fußzeile (tfoot)
+164 &Math
+165 Abbildung formel
+166 Text (mtext)
+167 Bezeichner (mi)
+168 Zahl (mn)
+169 Operator (mo)
+170 Leerzeichen (mspace)
+171 Zeichen (&xxx;)
+172 Unsichtbare Multiplikation
+173 Angewendete Funktion
+174 Wurzel (mroot)
+175 Quadratwurzel (msqrt)
+176 Einschluß (menclose)
+177 Bruch (mfrac)
+178 Index und Exponent (msubsup)
+179 Index (msub)
+180 Exponent (msup)
+181 Unter- und Überschrift (munderover)
+182 Unterschrift (munder)
+183 Überschrift (mover)
+184 Klammern (mrow)
+185 Vierfachindex (mmultiscripts)
+186 Matrix (mtable)
+187 Grafiken
+188 Linie
+189 Pfeil
+190 Text
+191 fremdes Objekt
+192 Gruppierung
+193 Quadrat
+194 Rechteck
+195 Raute
+196 Dreieck
+197 Kreis
+198 Elipse
+199 Linienzug
+200 Vieleck
+201 offene Kurve
+202 geschlossene Kurve
+203 Formular
+204 Neues Formular (form)
+205 Knopf (button)
+206 Ankreuzkästchen (checkbox)
+207 Feld für Dateiname (file)
+208 Verborgenes Feld (hidden)
+209 Bild (image)
+210 Kennwortfeld (password)
+211 Auswahlknopf (radio)
+212 Zurücksetzen (reset)
+213 Absenden (submit)
+214 Eingabezeile (input)
+215 Feldgruppe (fieldset)
+216 Feldbeschriftung (label)
+217 Menü (option)
+218 Untermenü (optgroup)
+219 Eingabefeld (textarea)
+220 Objekt
+221 Objekt (object)
+222 Parameter (param)
+223 Bildbereich
+224 Abbildung einfügen
+225 Kreis (area)
+226 Polygon (area)
+227 Rechteck (area)
+228 Struktur
+229 Inline-Style (style)
+230 Kommentar
+231 Basisadresse (base)
+232 Meta-Information (meta)
+233 Verweis (link)
+234 Inline-Script (script)
+235 Skripalternative (noscript)
+236 Ábschnitt (div)
+237 Autorenadresse (address)
+238 Eingerücktes Zitat (blockquote)
+239 Inline-Frame (iframe)
+240 Ruby
+241 Thema
+242 Klassisch
+243 Modern
+244 Kein Motiv
+245 Vordergrundfarbe
+246 Vordergrundfarbe wählen...
+247 Keine Farbe
+248 Hintergrundfarbe
+249 Hintergrundfarbe wählen...
+250 Keine Farbe
+251 Ausrichten
+252 Linksbündig
+253 Mittig
+254 Rechtsbündig
+255 Blocksatz
+256 Voreinstellung
+257 Zeilenmaß
+258 Einfach
+259 Halb
+260 Doppelt
+261 Voreinstellung
+262 Zeileneinzug
+263 Einrücken
+264 Ausrücken
+265 Voreinstellung
+266 Schriftart
+267 Schriftart wählen...
+268 Voreinstellung
+269 &Stil editieren
+270 Regel erzeugen...
+271 Zugewiesenes Format anzeigen...
+272 Formate/Formatvorlagen
+273 Verknüpfen...
+274 Öffnen...
+275 Deaktivieren...
+276 Aktivieren...
+277 Entfernen...
+278 Internetadresse kopieren
+279 Internetadresse einfügen
+280 Auf vorherigen Anker
+281 Erzeugen/Ändern...
+282 Anker erzeugen
+283 Verweis/Anker löschen
+284 Id hinzufügen/entfernen...
+285 Rechtschreibprüfung...
+286 Transformieren...
+287 Quelltext bereinigen
+288 Tabelle editieren
+289 Umwandeln in datenzelle
+290 Umwandeln in titelzelle
+291 Zusammenfügen die zellen
+292 Zusammenfügen mit rechter Zelle
+293 Zusammenfügen mit der zelle darunter
 294 Verkleinern der breite
-295 Zeile auswählen
-296 Zeile einfügen (davor)
-297 Zeile inzufügen (danach)
-298 Spalte auswählen
-299 Spalte einfügen (davor)
-300 Spalte inzufügen (danach)
-301 Einfügen (davor)
-302 Einfügen (danach)
-303 Titel ändern
-304 DTD ändern
-305 DTD entfernen
-306 Dokumenttyp hinzufügen
-307 XHTML 1.1
-308 Dokumenttyp XHTML 1.0 Transitional zuweisen
-309 XHTML 1.0 Strict
-310 XHTML 1.0 Basic
-311 XHTML+RDFa
-312 HTML 4.01 Transitional
-313 HTML Strict
-314 Abschnitte numerieren
-315 Inhaltsverzeichnis erzeugen
-316 Buch erstellen
-317 Zeitstempel einfügen
-318 **Namespace declarations...
-319 A&nmerkungen
-320 Zur Markierung
-321 Zum Dokument
-322 Auf Markierung verschieben
-323 Als XPointer speichern
-324 Auf XPointer verschieben
-325 Beantworten
-326 Veröffentlichen
-327 Löschen
-328 Laden
-329 Abfrage bearbeiten...
-330 Filter...
-331 &Kooperation
-332 Resource sperren
-333 Sperrinformation kopieren...
-334 Vorlagen
-335 Eine Vorlage aus dem aktuellen Dokument erstellen
-336 Ein Textfeld erstellen
-337 Eine Komponente oder Element verwenden
-338 Erstellen und Verwenden einer Komponente
-339 Aktuelle Anwendung wiederholen
-340 Erstellen und vervielfältigen einer Komponente
-341 Eine freie Editierbox erstellen
-342 **Create a new types union
-343 &Javascript/DOM
-344 Java-Unterstützung ein-/ausschalten
-345 Befehl ausführen
-346 externes Skript ausführen
-347 externes Skript hinzufügen
-348 Skript einfügen
-349 Nach Aktualisierungen suchen
-350 Amaya Hilfe...
-351 Tip des Tages...
-352 Info
+295 Verkleinern der breite
+296 Zeile auswählen
+297 Zeile einfügen (davor)
+298 Zeile inzufügen (danach)
+299 Spalte auswählen
+300 Spalte einfügen (davor)
+301 Spalte inzufügen (danach)
+302 Einfügen (davor)
+303 Einfügen (danach)
+304 Titel ändern
+305 DTD ändern
+306 DTD entfernen
+307 Dokumenttyp hinzufügen
+308 XHTML 1.1
+309 Dokumenttyp XHTML 1.0 Transitional zuweisen
+310 XHTML 1.0 Strict
+311 XHTML 1.0 Basic
+312 XHTML+RDFa
+313 HTML 4.01 Transitional
+314 HTML Strict
+315 Abschnitte numerieren
+316 Inhaltsverzeichnis erzeugen
+317 Buch erstellen
+318 Zeitstempel einfügen
+319 **Namespace declarations...
+320 A&nmerkungen
+321 Zur Markierung
+322 Zum Dokument
+323 Auf Markierung verschieben
+324 Als XPointer speichern
+325 Auf XPointer verschieben
+326 Beantworten
+327 Veröffentlichen
+328 Löschen
+329 Laden
+330 Abfrage bearbeiten...
+331 Filter...
+332 &Kooperation
+333 Resource sperren
+334 Sperrinformation kopieren...
+335 Vorlagen
+336 Eine Vorlage aus dem aktuellen Dokument erstellen
+337 Ein Textfeld erstellen
+338 Eine Komponente oder Element verwenden
+339 Erstellen und Verwenden einer Komponente
+340 Aktuelle Anwendung wiederholen
+341 Erstellen und vervielfältigen einer Komponente
+342 Eine freie Editierbox erstellen
+343 **Create a new types union
+344 &Javascript/DOM
+345 Java-Unterstützung ein-/ausschalten
+346 Befehl ausführen
+347 externes Skript ausführen
+348 externes Skript hinzufügen
+349 Skript einfügen
+350 Nach Aktualisierungen suchen
+351 Amaya Hilfe...
+352 Tip des Tages...
+353 Info

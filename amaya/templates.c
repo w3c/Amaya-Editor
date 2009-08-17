@@ -1914,7 +1914,7 @@ void UpdateTemplateMenus (Document doc)
       TtaSetItemOff (doc, 1, Tools, BTemplateCreateUnion);
     }
   else if (DocumentURLs[doc] && DocumentTypes[doc] != docSource &&
-           IsXTiger (DocumentURLs[doc]))
+           (IsXTiger (DocumentURLs[doc]) || IsXTigerLibrary (DocumentURLs[doc])))
     {
       // Template document
       TtaSetItemOff (doc, 1, Tools, BCreateTemplateFromDocument);

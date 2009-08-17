@@ -38,6 +38,15 @@ RULES
     create 'library>\12' after;
   end;
 
+  DOCTYPE: BEGIN
+	  NoLineBreak;
+	  NoTranslation;
+	  Create '\12' After;
+	END;
+
+  DOCTYPE_line:
+	  if not last create '\12' after;
+
   head:
     begin
     create '\12';

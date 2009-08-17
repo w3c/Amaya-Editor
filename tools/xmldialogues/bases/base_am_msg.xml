@@ -6350,263 +6350,6 @@ nadväznosť</message>
 	<message xml:lang="nl">Animatie</message>
 	<message xml:lang="uk">Анімація</message>
 </label>
-<label define="AM_BUTTON_SVG_LIBRARY">
-	<message xml:lang="en">SVG Library</message>
-	<message xml:lang="fr">Bibliotheque SVG</message>
-	<message xml:lang="de">SVG Bibliothek</message>
-	<message xml:lang="fi">SVG Kirjasto</message>
-	<message xml:lang="it">Libreria SVG</message>
-	<message xml:lang="es">Biblioteca SVG</message>
-	<message xml:lang="tr">SVG kütüphanesi</message>
-	<message xml:lang="ru">Библиотека SVG</message>
-	<message xml:lang="hu">SVG könyvtár</message>
-	<message xml:lang="ka">SVG ბიბლიოთეკა</message>
-	<message xml:lang="cn">SVG Library</message>
-	<message xml:lang="tw">SVG Library</message>
-	<message xml:lang="sk">Knižnica SVG</message>
-	<message xml:lang="ja">SVG ライブラリ</message>
-	<message xml:lang="nl">SVG-bibliotheek</message>
-	<message xml:lang="uk">Бібліотека SVG</message>
-</label>
-<label define="AM_SVGLIB_DIALOG1">
-	<message xml:lang="en">Copy option</message>
-	<message xml:lang="fr">Option de copie</message>
-	<message xml:lang="de">Option kopieren</message>
-	<message xml:lang="fi">Kopioi vaihtoehto</message>
-	<message xml:lang="it">Opzione di copia</message>
-	<message xml:lang="es">Copiar opción</message>
-	<message xml:lang="tr">Kopya opsionu</message>
-	<message xml:lang="ru">Копировать опцию</message>
-	<message xml:lang="hu">Copy option</message>
-	<message xml:lang="ka">ასლის
-პარამეტრები</message>
-	<message xml:lang="cn">Copy option</message>
-	<message xml:lang="tw">Copy option</message>
-	<message xml:lang="sk">Kopírovať voľbu</message>
-	<message xml:lang="ja">オプションのコピー</message>
-	<message xml:lang="nl">Optie kopiëren</message>
-	<message xml:lang="uk">Копіювати опцію</message>
-</label>
-<label define="AM_SVGLIB_COPY_SELECTION">
-	<message xml:lang="en">Copy selection</message>
-	<message xml:lang="fr">Copier</message>
-	<message xml:lang="de">Markierung kopieren</message>
-	<message xml:lang="fi">Kopioi valinta</message>
-	<message xml:lang="it">Copia la selezione</message>
-	<message xml:lang="es">Copiar selección</message>
-	<message xml:lang="tr">Kopyala</message>
-	<message xml:lang="ru">Копировать выбранное</message>
-	<message xml:lang="hu">Kijelölés másolása</message>
-	<message xml:lang="ka">მონიშნულის
-კოპირება</message>
-	<message xml:lang="cn">Copy selection</message>
-	<message xml:lang="tw">Copy selection</message>
-	<message xml:lang="sk">Kopírovať výber</message>
-	<message xml:lang="ja">選択したもののコピー</message>
-	<message xml:lang="nl">Selectie kopiëren</message>
-	<message xml:lang="uk">Копіювати обране</message>
-</label>
-<label define="AM_SVGLIB_REF_SELECTION">
-	<message xml:lang="en">Refer to selection</message>
-	<message xml:lang="fr">Réferencer</message>
-	<message xml:lang="de">Auf Markierung beziehen</message>
-	<message xml:lang="fi">Viittaa valintaan</message>
-	<message xml:lang="it">Riferisciti alla selezione</message>
-	<message xml:lang="es">Remitir a selección</message>
-	<message xml:lang="tr">Referans et</message>
-	<message xml:lang="ru">Сослаться на выбранное</message>
-	<message xml:lang="hu">Hivatkozás a kijelölésre</message>
-	<message xml:lang="ka">მონიშნულის
-დამოწმება</message>
-	<message xml:lang="cn">Refer to selection</message>
-	<message xml:lang="tw">Refer to selection</message>
-	<message xml:lang="sk">Odkázať na výber</message>
-	<message xml:lang="ja">選択参照</message>
-	<message xml:lang="nl">Zie selectie</message>
-	<message xml:lang="uk">Послатися на обране</message>
-</label>
-<label define="AM_SVGLIB_ADD_SVG_MODEL_DIALOG">
-	<message xml:lang="en">Add new model into library</message>
-	<message xml:lang="fr">Ajouter un modèle dans la librairie</message>
-	<message xml:lang="de">Neues Modell zu Bibliothek hinzufügen</message>
-	<message xml:lang="fi">Lisää uusi malli kirjastoon</message>
-	<message xml:lang="it">Aggiungi un nuovo modello alla libreria</message>
-	<message xml:lang="es">Añadir nuevo modelo a la bibloteca</message>
-	<message xml:lang="tr">Kütüphanede yeni model ekle</message>
-	<message xml:lang="ru">Добавить новую модель в библиотеку</message>
-	<message xml:lang="hu">Új model hozzáadása a könyvtárhoz</message>
-	<message xml:lang="ka">ახალი მოდელის
-ბიბლიოთეკაში დამატება</message>
-	<message xml:lang="cn">向 library 添加新的模型</message>
-	<message xml:lang="tw">向 library 添加新的模型</message>
-	<message xml:lang="sk">Pridať nový model do knižnice</message>
-	<message xml:lang="ja">ライブラリに新しいモデルを加える</message>
-	<message xml:lang="nl">Nieuw model aan bibliotheek toevoegen</message>
-	<message xml:lang="uk">Додати нову модель до бібліотеки</message>
-</label>
-<label define="AM_SVGLIB_CREATE_NEW_SVG_">
-	<message xml:lang="en">URL of the new SVG ...</message>
-	<message xml:lang="fr">URL du nouveau fichier SVG ...</message>
-	<message xml:lang="de">URL der neuen SVG-Datei ...</message>
-	<message xml:lang="fi">Uuden SVG-tiedoston URL...</message>
-	<message xml:lang="it">URL del nuovo SVG ...</message>
-	<message xml:lang="es">URL del nuevo archivo SVG...</message>
-	<message xml:lang="tr">Yeni SVG dosyasının URL\'i...</message>
-	<message xml:lang="ru">URL нового SVG файла...</message>
-	<message xml:lang="hu">Az új SVG fájl URL-je...</message>
-	<message xml:lang="ka">ახალი SVG ფაილის
-მისამართი ...</message>
-	<message xml:lang="cn">URL of the new SVG ...</message>
-	<message xml:lang="tw">URL of the new SVG ...</message>
-	<message xml:lang="sk">URL Nového SVG súboru ...</message>
-	<message xml:lang="ja">新規SVG のURL ...</message>
-	<message xml:lang="nl">URL van nieuwe SVG...</message>
-	<message xml:lang="uk">URL нового SVG файлу...</message>
-</label>
-<label define="AM_SVGLIB_CATALOGUE_TITLE">
-	<message xml:lang="en">Library title</message>
-	<message xml:lang="fr">Titre de la librairie</message>
-	<message xml:lang="de">Titel der Bibliothek</message>
-	<message xml:lang="fi">Kirjaston nimi</message>
-	<message xml:lang="it">Titolo della libreria</message>
-	<message xml:lang="es">Título de la bibloteca</message>
-	<message xml:lang="tr">Kütüphane başlıgı</message>
-	<message xml:lang="ru">Название библиотеки</message>
-	<message xml:lang="hu">Könyvtár címe</message>
-	<message xml:lang="ka">ბიბლიოთეკის
-დსახელება</message>
-	<message xml:lang="cn">Library 标题</message>
-	<message xml:lang="tw">Library 標題</message>
-	<message xml:lang="sk">Názov knižnice</message>
-	<message xml:lang="ja">ライブラリのタイトル</message>
-	<message xml:lang="nl">Titel bibliotheek</message>
-	<message xml:lang="uk">Назва бібліотеки</message>
-</label>
-<label define="AM_SVGLIB_CATALOGUE_URL">
-	<message xml:lang="en">Library URL</message>
-	<message xml:lang="fr">URL de la librairie</message>
-	<message xml:lang="de">URL der Bibliothek</message>
-	<message xml:lang="fi">Kirjaston URL</message>
-	<message xml:lang="it">URL per la libreria</message>
-	<message xml:lang="es">URL de la biblioteca</message>
-	<message xml:lang="tr">URL Kütüphanesi</message>
-	<message xml:lang="ru">URL библиотеки</message>
-	<message xml:lang="hu">Könyvtár URL-je</message>
-	<message xml:lang="ka">ბიბლიოთეკის
-მისამართი</message>
-	<message xml:lang="cn">Library URL</message>
-	<message xml:lang="tw">Library URL</message>
-	<message xml:lang="sk">URL Knižnice</message>
-	<message xml:lang="ja">ライブラリのURL</message>
-	<message xml:lang="nl">URL bibliotheek</message>
-	<message xml:lang="uk">URL бібліотеки</message>
-</label>
-<label define="AM_SVGLIB_CREATE_NEW_CATALOGUE">
-	<message xml:lang="en">Create library</message>
-	<message xml:lang="fr">Créer une librairie</message>
-	<message xml:lang="de">Bibliothek erzeugen</message>
-	<message xml:lang="fi">Luo kirjasto</message>
-	<message xml:lang="it">Crea libreria</message>
-	<message xml:lang="es">Crear biblioteca</message>
-	<message xml:lang="tr">Kütüphane yarat</message>
-	<message xml:lang="ru">Создать библиотеку</message>
-	<message xml:lang="hu">Könyvtár létrehozása</message>
-	<message xml:lang="ka">ბიბლიოთეკის
-შექმნა</message>
-	<message xml:lang="cn">创建 library</message>
-	<message xml:lang="tw">創建 library</message>
-	<message xml:lang="sk">Vytvoriť knižnicu</message>
-	<message xml:lang="ja">ライブラリを作成</message>
-	<message xml:lang="nl">Bibliotheek maken</message>
-	<message xml:lang="uk">Створити бібліотеку</message>
-</label>
-<label define="AM_SVGLIB_ADD_NEW_CATALOGUE">
-	<message xml:lang="en">Browse library</message>
-	<message xml:lang="fr">Parcourir les librairies</message>
-	<message xml:lang="de">Bibliothek durchsuchen</message>
-	<message xml:lang="fi">Selaa kirjastoa</message>
-	<message xml:lang="it">Scorri la libreria</message>
-	<message xml:lang="es">Ojear la biblioteca</message>
-	<message xml:lang="tr">Kütüphane tara</message>
-	<message xml:lang="ru">Просмотреть библиотеку</message>
-	<message xml:lang="hu">Könyvtár tallózása</message>
-	<message xml:lang="ka">ბიბლიოთეკის
-დათვალიერება</message>
-	<message xml:lang="cn">浏览 library</message>
-	<message xml:lang="tw">瀏覽 library</message>
-	<message xml:lang="sk">Nalistovať knižnicu</message>
-	<message xml:lang="ja">ライブラリを参照する</message>
-	<message xml:lang="nl">Bibliotheek doorbladeren</message>
-	<message xml:lang="uk">Переглянути бібліотеку</message>
-</label>
-<label define="AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG">
-	<message xml:lang="en">Create or search library</message>
-	<message xml:lang="fr">Créer ou chercher une librairie</message>
-	<message xml:lang="de">Bibliothek erzeugen oder suchen</message>
-	<message xml:lang="fi">Luo tai etsi kirjasto</message>
-	<message xml:lang="it">Crea o cerca libreria</message>
-	<message xml:lang="es">Crear o buscar en la biblioteca</message>
-	<message xml:lang="tr">Kütüphane yarat veya ara</message>
-	<message xml:lang="ru">Создать или найти библиотеку</message>
-	<message xml:lang="hu">Könyvtár létrehozása vagy keresése</message>
-	<message xml:lang="ka">ბიბლიოთეკის შექმნა
-ან ძიება</message>
-	<message xml:lang="cn">创建或搜索 library</message>
-	<message xml:lang="tw">創建或搜索 library</message>
-	<message xml:lang="sk">Vytvoriť alebo vyhľadať knižnicu</message>
-	<message xml:lang="ja">ライブラリの作成、検索</message>
-	<message xml:lang="nl">Bibliotheek maken of zoeken</message>
-	<message xml:lang="uk">Створити або знайти бібліотеку</message>
-</label>
-<label define="AM_SVGLIB_NO_SVG_SELECTION">
-	<message xml:lang="en">The selection includes no SVG elements. Please
-reselect</message>
-	<message xml:lang="fr">La sélection contient des éléments non SVG.
-Effectuer une autre sélection SVP</message>
-	<message xml:lang="de">Die Markierung enthält nicht nur SVG-Elemente. Bitte
-neu markieren</message>
-	<message xml:lang="fi">Nykyinen valinta ei sisällä pelkästään SVG
-elementtejä. Valitse uudelleen.</message>
-	<message xml:lang="it">La selezione non contiene solo elementi SVG. Per favore
-riseleziona.</message>
-	<message xml:lang="es">La selección no contiene sólo elementos SVG. Por
-favor, vuelva a seleccionar</message>
-	<message xml:lang="tr">Vu seçimde SVG olmayan veriler içeriyor. Lütfen
-başka seçim yapın</message>
-	<message xml:lang="ru">Выбранное вами не содержит в себе SVG элементы. Выберите другое.</message>
-	<message xml:lang="hu">A kijelölésben nincs SVG elem.</message>
-	<message xml:lang="ka">მონიშნული SVG
-ელემენტებს არ შეიცავს.
-მონიშნეთ ხელახლა</message>
-	<message xml:lang="cn">The selection includes no SVG elements. Please
-reselect</message>
-	<message xml:lang="tw">The selection includes no SVG elements. Please
-reselect</message>
-	<message xml:lang="sk">Výber neobsahuje prvky SVG. Urobte nový
-výber</message>
-	<message xml:lang="ja">選択内にSVG エレメントが含まれていません。もう一度選択してください</message>
-	<message xml:lang="nl">De selectie bevat geen SVG-elementen. Maak een andere selectie.</message>
-	<message xml:lang="uk">Обране вами не містить SVG елементи. Оберіть інше.</message>
-</label>
-<label define="AM_SVGLIB_MISSING_TITLE">
-	<message xml:lang="en">The library title is mandatory</message>
-	<message xml:lang="fr">Le titre de la librairie est obligatoire</message>
-	<message xml:lang="de">Der Titel der Bibliothek muss angegeben werden</message>
-	<message xml:lang="fi">Kirjaston otsikko on pakollinen</message>
-	<message xml:lang="it">Il titolo della libreria è obbligatorio</message>
-	<message xml:lang="es">El título de la biblioteca es obligatorio</message>
-	<message xml:lang="tr">Kütüphane başlıgı mecburdur</message>
-	<message xml:lang="ru">Название библиотеки обязательно</message>
-	<message xml:lang="hu">A könyvtár cím kötelező</message>
-	<message xml:lang="ka">ბიბლიოთეკის
-დსახელება აუცილებელია</message>
-	<message xml:lang="cn">The library title is mandatory</message>
-	<message xml:lang="tw">The library title is mandatory</message>
-	<message xml:lang="sk">Názov knižnive je povinný</message>
-	<message xml:lang="ja">ライブラリのタイトルが必要です</message>
-	<message xml:lang="nl">De bibliotheek moet een titel hebben</message>
-	<message xml:lang="uk">Назва бібліотеки обов'язково</message>
-</label>
 <label define="AM_SVGANIM_MOTION_HINT1">
 	<message xml:lang="en">Move the position cursor in edited document to define a
 new key position...</message>
@@ -9501,6 +9244,25 @@ cancellarlo.</message>
 	<message xml:lang="it">Etichetta</message>
 	<message xml:lang="ru">Метка</message>
 	<message xml:lang="uk">Мітка</message>
+</label>
+<label define="AM_NEW_LIBRARY">
+	<message xml:lang="en">Browse library</message>
+	<message xml:lang="fr">Parcourir les librairies</message>
+	<message xml:lang="de">Bibliothek durchsuchen</message>
+	<message xml:lang="fi">Selaa kirjastoa</message>
+	<message xml:lang="it">Scorri la libreria</message>
+	<message xml:lang="es">Ojear la biblioteca</message>
+	<message xml:lang="tr">Kütüphane tara</message>
+	<message xml:lang="ru">Просмотреть библиотеку</message>
+	<message xml:lang="hu">Könyvtár tallózása</message>
+	<message xml:lang="ka">ბიბლიოთეკის
+დათვალიერება</message>
+	<message xml:lang="cn">浏览 library</message>
+	<message xml:lang="tw">瀏覽 library</message>
+	<message xml:lang="sk">Nalistovať knižnicu</message>
+	<message xml:lang="ja">ライブラリを参照する</message>
+	<message xml:lang="nl">Bibliotheek doorbladeren</message>
+	<message xml:lang="uk">Переглянути бібліотеку</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -349,6 +349,25 @@
 	<message xml:lang="nl">Nieuw &amp;opmaakmodel...</message>
 	<message xml:lang="uk">Нова каскадна таблиця стил&amp;ів CSS...</message>
 </label>
+<label define="BLibrary">
+	<message xml:lang="en">Create library</message>
+	<message xml:lang="fr">Créer une librairie</message>
+	<message xml:lang="de">Bibliothek erzeugen</message>
+	<message xml:lang="fi">Luo kirjasto</message>
+	<message xml:lang="it">Crea libreria</message>
+	<message xml:lang="es">Crear biblioteca</message>
+	<message xml:lang="tr">Kütüphane yarat</message>
+	<message xml:lang="ru">Создать библиотеку</message>
+	<message xml:lang="hu">Könyvtár létrehozása</message>
+	<message xml:lang="ka">ბიბლიოთეკის
+შექმნა</message>
+	<message xml:lang="cn">创建 library</message>
+	<message xml:lang="tw">創建 library</message>
+	<message xml:lang="sk">Vytvoriť knižnicu</message>
+	<message xml:lang="ja">ライブラリを作成</message>
+	<message xml:lang="nl">Bibliotheek maken</message>
+	<message xml:lang="uk">Створити бібліотеку</message>
+</label>
 <label define="OpenAFile">
 	<message xml:lang="en">&amp;Open document...</message>
 	<message xml:lang="fr">&amp;Ouvrir...</message>

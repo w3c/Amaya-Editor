@@ -359,6 +359,7 @@ ShowEditingBar
 &NewMathML
 &NewSVG
 &NewCss
+&NewLibrary
 &Synchronize
 *AmayaAttributeToolPanel
 *AmayaXMLPanel

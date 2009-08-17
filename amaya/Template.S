@@ -22,6 +22,8 @@ STRUCT
 
   Template ( ATTR version = TEXT; templateVersion = TEXT ) = LIST OF (TemplateObject);
 
+  DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
+
   TemplateObject = CASE OF
       head;
       repeat;
@@ -83,6 +85,8 @@ STRUCT
 EXCEPT
   XMLPI:             ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
   PI_line:           Hidden, MarkupPreserve;
+  DOCTYPE:           NoCut, NoSpellCheck, NotAnElementNode;
+  DOCTYPE_line:      Hidden, NoCut;
   Comment\240:       ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
   Comment_line:      Hidden, MarkupPreserve;
   useEl:             NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface;

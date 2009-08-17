@@ -2081,6 +2081,14 @@ void OpenNew (Document document, View view, int docType, int docProfile)
       InitOpenDocForm (document, view, name,
                        TtaGetMessage (AMAYA, AM_NEW_SVG), docSVG);
     }
+  else if (NewDocType == docTemplate)
+    {
+      /* will scan html documents */
+      strcat (name,".xtl");
+      strcpy (ScanFilter, "*.xtl");
+      InitOpenDocForm (document, view, name,
+                       TtaGetMessage (AMAYA, AM_NEW_LIBRARY), docLibrary);
+    }
   else
     {
       /* will scan html documents */

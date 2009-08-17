@@ -554,6 +554,26 @@ RULES
                 END;
         END;
 
+  DOCTYPE:
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Width: Enclosing . Width ;
+                Foreground: TAG_Color;
+                END;
+        END;
+
+  DOCTYPE_line:
+        BEGIN
+        Visibility: 0;
+        IN Structure_view BEGIN
+                Visibility: Enclosing =;
+                Width: Enclosed . Width;
+                VertPos: Top = Previous . Bottom;
+                END;
+        END;
+
   XMLPI:
         BEGIN
         Visibility: 0;

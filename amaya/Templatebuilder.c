@@ -252,7 +252,7 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
   char            *name, *ancestor_name, *ptr, *types;
   char             msgBuffer[MaxMsgLength];
   int              len, option;
-  ThotBool         hidden;
+  ThotBool         hidden, withmenu = FALSE;
 
   doc = context->doc;
   elType = TtaGetElementType (el);
@@ -286,11 +286,9 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
 
     case Template_EL_useEl:
     case Template_EL_useSimple:
-      if (elType.ElTypeNum == Template_EL_useEl)
-        {
-          if (!NeedAMenu (el, doc))
-            TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
-        }
+      withmenu = NeedAMenu (el, doc);
+      if (!withmenu && elType.ElTypeNum == Template_EL_useEl)
+        TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
       CheckMandatoryAttribute (el, doc, Template_ATTR_title);
       // check if the name is not already 
       attType.AttrSSchema = elType.ElSSchema;
@@ -345,10 +343,6 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
       child = TtaGetFirstChild (el);
       if (child == NULL)
         {
-          // insert almost a pseudo element
-          elType.ElTypeNum = Template_EL_TemplateObject;
-          child = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&child, el, doc);
           hidden = ElementIsOptional (el);
           if (hidden)
             {
@@ -356,8 +350,15 @@ void TemplateElementComplete (ParserData *context, Element el, int *error)
               option = GetAttributeIntValueFromNum (el, Template_ATTR_option);
               hidden = (option == Template_ATTR_option_VAL_option_unset);
             }
-          if (hidden)
-            TtaSetAccessRight (child, ReadOnly, doc);
+          // insert almost a pseudo element
+          if (withmenu || hidden)
+            {
+              elType.ElTypeNum = Template_EL_TemplateObject;
+              child = TtaNewElement (doc, elType);
+              TtaInsertFirstChild (&child, el, doc);
+              if (hidden)
+                TtaSetAccessRight (child, ReadOnly, doc);
+            }
         }
       break;
 
