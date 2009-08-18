@@ -290,7 +290,9 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
   Element       next, child = NULL, savedInline, prev, parent = NULL;
   ElementType   elType, otherType;
   Declaration   dec;
+  int           option;
   char         *name, *types;
+  ThotBool      opt;
 
   if (!t || !el)
     return parentLine;
@@ -430,7 +432,11 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
                 }
             }
           if (child == NULL)
-            InstantiateUse (t, el, doc, parentLine, FALSE);
+            {
+              option = GetAttributeIntValueFromNum (el, Template_ATTR_option);
+              opt = (option == Template_ATTR_option_VAL_option_set);
+              InstantiateUse (t, el, doc, parentLine, FALSE);
+            }
           else
             {
               Template_FixAccessRight (t, el, doc);

@@ -53,6 +53,7 @@ AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEAT_SECTION", "TemplateCreateRepeat", LIB, T
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_REPEATCOMP_SECTION", "TemplateCreateRepeatComp", LIB, TemplateRepeatComp)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_FREE_BOX", "TemplateCreateFreeBox", LIB, TemplateFreeBox)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_UNION", "TemplateCreateUnion", LIB, TemplateUnion)
+AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_IMPORT", "TemplateCreateImport", LIB, TemplateImport)
 AMAYA_END_TOOLBAR_DEF_TABLE()
 
 /*----------------------------------------------------------------------------

@@ -4810,7 +4810,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName, char *outputfi
    
 #ifdef TEMPLATES
   if (method != CE_LOG && method != CE_HELP)
-    Template_CheckAndPrepareTemplate(urlName);
+    Template_CheckAndPrepareTemplate (urlName);
 #endif /* TEMPLATES */  
   
   /* now the new window is open */

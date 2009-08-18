@@ -338,18 +338,19 @@
 336 Crea uno schema dal documento corrente
 337 Crea area di testo
 338 Usa un componente o un elemento
-339 Crea e usa un componente
+339 Crea un componente
 340 Ripeti uso corrente
 341 Crea e ripeti un componente
 342 Crea un box da editare
 343 Crea una nuona unione di tipi
-344 &Javascript/DOM
-345 Attiva/Disattiva
-346 Esegui un comando
+344 **Import a XTiger library
+345 &Javascript/DOM
+346 Attiva/Disattiva
 347 Esegui un comando
-348 Aggiungi uno script esterno
-349 Inserisci uno script
-350 Controlla per aggiornare
-351 Aiuto Amaya...
-352 Suggerimenti del giorno...
-353 Informazioni su Amaya
+348 Esegui un comando
+349 Aggiungi uno script esterno
+350 Inserisci uno script
+351 Controlla per aggiornare
+352 Aiuto Amaya...
+353 Suggerimenti del giorno...
+354 Informazioni su Amaya

@@ -24,6 +24,8 @@ extern void DoNewXHTML ( Document doc,
                          View view );
 extern void NewXHTML ( Document doc,
                        View view );
+extern void NewLibrary ( Document doc,
+                         View view );
 extern void NewMathML ( Document doc,
                         View view );
 extern void NewSVG ( Document doc,
@@ -297,6 +299,8 @@ extern void DoNewXHTML ( Document doc,
                            View view );
 extern void NewXHTML ( Document doc,
                          View view );
+extern void NewLibrary ( Document doc,
+                           View view );
 extern void NewMathML ( Document doc,
                           View view );
 extern void NewSVG ( Document doc,

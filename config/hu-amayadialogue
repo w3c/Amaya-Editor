@@ -338,18 +338,19 @@
 336 **Create template from current document
 337 **Create a text area
 338 **Use a component or an element
-339 **Create and use a component
+339 **Create a component
 340 **Repeat the current use
 341 **Create and repeat a component
 342 **Create a free editing box
 343 **Create a new types union
-344 &Javascript/DOM
-345 Engedélyezés/tiltás
-346 Parancs végrehajtása
-347 Külső szkript végrehajtása
-348 Külső szkript hozzáadása
-349 Szkript beillesztése
-350 **Check for update
-351 Súgó...
-352 A nap tippje
-353 Amaya &névjegye
+344 **Import a XTiger library
+345 &Javascript/DOM
+346 Engedélyezés/tiltás
+347 Parancs végrehajtása
+348 Külső szkript végrehajtása
+349 Külső szkript hozzáadása
+350 Szkript beillesztése
+351 **Check for update
+352 Súgó...
+353 A nap tippje
+354 Amaya &névjegye

@@ -414,14 +414,15 @@
 412 Créer un modèle depuis le document courant
 413 Créer une zone de texte
 414 Utiliser un composant ou un élément
-415 Créer et utiliser un composant
+415 Créer un composant
 416 Répéter l'utilisation courante
 417 Créer et répéter un composant
 418 Créer une zone d'édition libre
 419 Créer une nouvelle union de types
-420 Bouton relaché pour terminer
-421 Double clic pour terminer
-422 Cliquer pour terminer
-423 Ressource bloquée
-424 Ressource débloquée
-425 Ce n'est pas une resource
+420 Importer une librairie
+421 Bouton relaché pour terminer
+422 Double clic pour terminer
+423 Cliquer pour terminer
+424 Ressource bloquée
+425 Ressource débloquée
+426 Ce n'est pas une resource

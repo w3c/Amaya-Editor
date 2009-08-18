@@ -1275,7 +1275,9 @@ void  SRCattrModified (NotifyAttribute *event)
 void  CreateObject (Document doc, View view)
 {
   ElementType         elType;
+  ThotBool            oldStructureChecking;
 
+  oldStructureChecking = TtaGetStructureChecking (doc);
   if (HTMLelementAllowed (doc))
     {
       CreateNewObject = TRUE;
@@ -1293,6 +1295,7 @@ void  CreateObject (Document doc, View view)
       CreateNewImage = FALSE;
       CreateNewObject = FALSE;
     }
+  TtaSetStructureChecking (oldStructureChecking, doc);
 }
 
 

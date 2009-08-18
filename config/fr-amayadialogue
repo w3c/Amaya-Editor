@@ -338,18 +338,19 @@
 336 Créer un modèle depuis le document courant
 337 Créer une zone de texte
 338 Utiliser un composant ou un élément
-339 Créer et utiliser un composant
+339 Créer un composant
 340 Répéter l'utilisation courant
 341 Créer et répéter un composant
 342 Créer une zone d'édition libre
 343 Créer une nouvelle union de types
-344 &Javascript/DOM
-345 Activer/Désactiver
-346 Exécuter une commande
-347 Exécuter un script externe
-348 Ajouter un script externe
-349 Inserer un script
-350 Vérifier les mises à jour
-351 Aide Amaya...
-352 Conseil du jour...
-353 À propos d'Amaya
+344 Importer une librairie XTiger
+345 &Javascript/DOM
+346 Activer/Désactiver
+347 Exécuter une commande
+348 Exécuter un script externe
+349 Ajouter un script externe
+350 Inserer un script
+351 Vérifier les mises à jour
+352 Aide Amaya...
+353 Conseil du jour...
+354 À propos d'Amaya

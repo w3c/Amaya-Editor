@@ -13,6 +13,7 @@ translation
 C_CR: \0
 TEXT_UNIT: \0
 Template: library
+TemplateObject: \0
 includeAt: include
 listVal : list
 useAt: use

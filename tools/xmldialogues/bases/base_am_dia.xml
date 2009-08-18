@@ -5991,15 +5991,15 @@ erstellen</message>
 	<message xml:lang="uk">Використати компонент або елемент</message>
 </label>
 <label define="BTemplateCreateUseCompBox">
-	<message xml:lang="en">Create and use a component</message>
-	<message xml:lang="fr">Créer et utiliser un composant</message>
-	<message xml:lang="es">Crear y usar componente</message>
+	<message xml:lang="en">Create a component</message>
+	<message xml:lang="fr">Créer un composant</message>
+	<message xml:lang="es">Crear componente</message>
 	<message xml:lang="cn">创建并使用组件</message>
 	<message xml:lang="tw">創建並使用組件</message>
-	<message xml:lang="de">Erstellen und Verwenden einer Komponente</message>
-	<message xml:lang="it">Crea e usa un componente</message>
-	<message xml:lang="nl">Component maken en gebruiken...</message>
-	<message xml:lang="ja">コンポーネントを作成して使う (Create and use a component)</message>
+	<message xml:lang="de">Erstellen einer Komponente</message>
+	<message xml:lang="it">Crea un componente</message>
+	<message xml:lang="nl">Component maken en gebruiken</message>
+	<message xml:lang="ja">コンポーネントを作成して使う</message>
 	<message xml:lang="ru">Создать и использовать компонент</message>
 	<message xml:lang="uk">Створити і використати компонент</message>
 </label>
@@ -6025,8 +6025,8 @@ Komponente</message>
 	<message xml:lang="cn">创建并重复组件</message>
 	<message xml:lang="tw">創建並重複組件</message>
 	<message xml:lang="it">Crea e ripeti un componente</message>
-	<message xml:lang="nl">Component maken en herhalen...</message>
-	<message xml:lang="ja">コンポーネントを作成して繰り返えす (Create and repeat a component)</message>
+	<message xml:lang="nl">Component maken en herhalen</message>
+	<message xml:lang="ja">コンポーネントを作成して繰り返えす</message>
 	<message xml:lang="ru">Создать и повторить элемент</message>
 	<message xml:lang="uk">Створити і повторити елемент</message>
 </label>
@@ -6038,7 +6038,7 @@ Komponente</message>
 	<message xml:lang="cn">创建一个自由编辑框</message>
 	<message xml:lang="tw">創建一個自由編輯框</message>
 	<message xml:lang="it">Crea un box da editare</message>
-	<message xml:lang="nl">Verzamelveld maken...</message>
+	<message xml:lang="nl">Verzamelveld maken</message>
 	<message xml:lang="ja">自由編集ボックスを作る</message>
 	<message xml:lang="ru">Создать свободное окно редактирования</message>
 	<message xml:lang="uk">Створити вільне вікно редагування</message>
@@ -6050,10 +6050,14 @@ Komponente</message>
 	<message xml:lang="cn">创建一个新类型集合</message>
 	<message xml:lang="tw">創建一個新類型集合</message>
 	<message xml:lang="it">Crea una nuona unione di tipi</message>
-	<message xml:lang="nl">Nieuwe typenverbinding maken...</message>
+	<message xml:lang="nl">Nieuwe typenverbinding maken</message>
 	<message xml:lang="ja">新しい共用体型を作る (Create a new types union)</message>
 	<message xml:lang="ru">Создать новое объединение шрифтов</message>
 	<message xml:lang="uk">Створити нове об'єднання шрифтів</message>
+</label>
+<label define="BTemplateCreateUnion">
+	<message xml:lang="en">Import a XTiger library</message>
+	<message xml:lang="fr">Importer une librairie XTiger</message>
 </label>
 <label define="JavascriptDom_">
 	<message xml:lang="en">&amp;Javascript/DOM</message>

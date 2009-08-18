@@ -997,6 +997,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
       DocumentMeta[doc]->compound = TRUE;
+      Template_PrepareLibrary (url, doc, "1.0");
       UpdateTemplateMenus (doc);
       /* set the initial selection */
       el = TtaGetLastChild (root);
@@ -2409,21 +2410,34 @@ ThotBool HTMLelementAllowed (Document doc)
   
   elType = TtaGetElementType (el);
   s = TtaGetSSchemaName (elType.ElSSchema);
-
   ancestor = el;
   while (ancestor && !strcmp (s, "Template"))
     {
-      ancestor = TtaGetParent (ancestor);
-      if (ancestor)
+      if (elType.ElTypeNum == Template_EL_component)
         {
-          elType = TtaGetElementType (ancestor);
-          s = TtaGetSSchemaName (elType.ElSSchema);
+          // no structure check within a template component
+          TtaSetStructureChecking (FALSE, doc);
+          ancestor = NULL;
+        }
+      else
+        {
+          ancestor = TtaGetParent (ancestor);
+          if (ancestor)
+            {
+              elType = TtaGetElementType (ancestor);
+              s = TtaGetSSchemaName (elType.ElSSchema);
+            }
         }
     }
 
   if (strcmp (s, "HTML") == 0)
     /* within an HTML element */
     return TRUE;
+#ifdef TEMPLATES
+  if (strcmp (s, "Template") == 0)
+    /* within a template */
+    return TRUE;
+#endif /* TEMPLATES */
 #ifdef _SVG
   else if (strcmp (s, "SVG") == 0)
     {
@@ -2493,8 +2507,9 @@ ThotBool CreateHTMLelement (int typeNum, Document doc)
 {
   DisplayMode         dispMode;
   ElementType         elType;
-  ThotBool            done;
+  ThotBool            done, oldStructureChecking;
 
+  oldStructureChecking = TtaGetStructureChecking (doc);
   if (HTMLelementAllowed (doc))
     {
       dispMode = TtaGetDisplayMode (doc);
@@ -2505,9 +2520,11 @@ ThotBool CreateHTMLelement (int typeNum, Document doc)
       done = TtaCreateElement (elType, doc);
       if (dispMode == DisplayImmediately)
         TtaSetDisplayMode (doc, dispMode);
-      return done;
     }
-  return FALSE;
+  else
+    done = FALSE;
+  TtaSetStructureChecking (oldStructureChecking, doc);
+  return done;
 }
 
 /*----------------------------------------------------------------------
@@ -2909,17 +2926,19 @@ void CreateRuby (Document doc, View view)
   DisplayMode   dispMode;
   ThotBool      oldStructureChecking;
 
+  elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+  elType.ElTypeNum = HTML_EL_complex_ruby;
+  /* if we are already within a ruby element, return immediately */
+  TtaGiveFirstSelectedElement (doc, &firstEl, &firstSelectedChar, &j);
+  if (TtaGetTypedAncestor (firstEl, elType))
+    return;
+  elType.ElTypeNum = HTML_EL_simple_ruby;
+  if (TtaGetTypedAncestor (firstEl, elType))
+    return;
+
+  oldStructureChecking = TtaGetStructureChecking (doc);
   if (HTMLelementAllowed (doc))
     {
-      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
-      elType.ElTypeNum = HTML_EL_complex_ruby;
-      /* if we are already within a ruby element, return immediately */
-      TtaGiveFirstSelectedElement (doc, &firstEl, &firstSelectedChar, &j);
-      if (TtaGetTypedAncestor (firstEl, elType))
-        return;
-      elType.ElTypeNum = HTML_EL_simple_ruby;
-      if (TtaGetTypedAncestor (firstEl, elType))
-        return;
       /* stop displaying changes that will be made */
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
@@ -3087,8 +3106,6 @@ void CreateRuby (Document doc, View view)
            the new ruby element */
         {
           /* create a first rp element after the rb element */
-          oldStructureChecking = TtaGetStructureChecking (doc);
-          TtaSetStructureChecking (FALSE, doc);
           elType.ElTypeNum = HTML_EL_rp;
           el = TtaNewTree (doc, elType, "");
           TtaInsertSibling (el, rbEl, FALSE, doc);
@@ -3110,7 +3127,6 @@ void CreateRuby (Document doc, View view)
           TtaInsertSibling (el, prevEl, FALSE, doc);
           el = TtaGetFirstChild (el);
           TtaSetTextContent (el, (unsigned char*)")", TtaGetDefaultLanguage (), doc);
-          TtaSetStructureChecking (oldStructureChecking, doc);
           /* create a text element after the ruby element, to allow the
              user to add some more text after the ruby */
           el = rubyEl;
@@ -3128,6 +3144,7 @@ void CreateRuby (Document doc, View view)
       if (selEl)
         TtaSelectElement (doc, selEl);
     }
+  TtaSetStructureChecking (oldStructureChecking, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3296,7 +3313,7 @@ void CreateTable (Document doc, View view)
   SSchema             sch;
   int                 firstChar, lastChar;
   char               *name;
-  ThotBool            withinTable, inMath, created;
+  ThotBool            withinTable, inMath, created, oldStructureChecking;
 
   withinTable = FALSE;
   inMath = FALSE;
@@ -3338,36 +3355,42 @@ void CreateTable (Document doc, View view)
         }
     }
 
-  if (!HTMLelementAllowed (doc))
-    return;
-  elType.ElSSchema = sch;
-  if (elType.ElSSchema)
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  if (HTMLelementAllowed (doc))
     {
-      /* check the selection */
-      if (TtaIsSelectionEmpty ())
-        /* selection empty.  Display the Table dialogue box */
+      elType.ElSSchema = sch;
+      if (elType.ElSSchema)
         {
-          TtaGetEnvInt ("TABLE_ROWS", &NumberRows);
-          TtaGetEnvInt ("TABLE_COLUMNS", &NumberCols);
-          TtaGetEnvInt ("TABLE_BORDER", &TBorder);
-          created = CreateCreateTableDlgWX (BaseDialog + TableForm,
-                                            TtaGetViewFrame (doc, view),
-                                            NumberCols, NumberRows, TBorder);
-          if (created)
+          /* check the selection */
+          if (TtaIsSelectionEmpty ())
+            /* selection empty.  Display the Table dialogue box */
             {
-              TtaShowDialogue (BaseDialog + TableForm, FALSE, TRUE);
-              /* wait for an answer */
-              TtaWaitShowDialogue ();
+              TtaGetEnvInt ("TABLE_ROWS", &NumberRows);
+              TtaGetEnvInt ("TABLE_COLUMNS", &NumberCols);
+              TtaGetEnvInt ("TABLE_BORDER", &TBorder);
+              created = CreateCreateTableDlgWX (BaseDialog + TableForm,
+                                                TtaGetViewFrame (doc, view),
+                                                NumberCols, NumberRows, TBorder);
+              if (created)
+                {
+                  TtaShowDialogue (BaseDialog + TableForm, FALSE, TRUE);
+                  /* wait for an answer */
+                  TtaWaitShowDialogue ();
+                }
+              if (!UserAnswer)
+                {
+                  TtaSetStructureChecking (oldStructureChecking, doc);
+                return;
+                }
             }
-          if (!UserAnswer)
-            return;
+          else
+            TBorder = 1;
+          /* create the table or 
+             try to transform the current selection if the selection is not empty */
+          DoTableCreation (doc);
         }
-      else
-        TBorder = 1;
-      /* create the table or 
-         try to transform the current selection if the selection is not empty */
-      DoTableCreation (doc);
     }
+  TtaSetStructureChecking (oldStructureChecking, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -5493,7 +5516,9 @@ void  CreateIFrame (Document doc, View view)
   Attribute           attr;
   AttributeType       attrType;
   int                 firstchar, lastchar;
+  ThotBool            oldStructureChecking;
 
+  oldStructureChecking = TtaGetStructureChecking (doc);
   if (HTMLelementAllowed (doc))
     {
       /* Don't check mandatory attributes */
@@ -5514,42 +5539,43 @@ void  CreateIFrame (Document doc, View view)
               elType = TtaGetElementType (el);
             }
           
-          if (el == NULL)
-            return;
-
-          TtaExtendUndoSequence (doc);
-          /* copy SRC attribute */
-          attrType.AttrSSchema = elType.ElSSchema;
-          attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
-          attr = TtaGetAttribute (el, attrType);
-          if (attr == NULL)
+          if (el)
             {
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, doc);
-              TtaSetAttributeText (attr, "source.html", el, doc);
-              TtaRegisterAttributeCreate (attr, el, doc);
-            }
-          /* now create a child element */
-          child = TtaGetLastChild (el);
-          if (child == NULL)
-            {
-              elType.ElTypeNum = HTML_EL_Iframe_Content;
+              TtaExtendUndoSequence (doc);
+              /* copy SRC attribute */
+              attrType.AttrSSchema = elType.ElSSchema;
+              attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+              attr = TtaGetAttribute (el, attrType);
+              if (attr == NULL)
+                {
+                  attr = TtaNewAttribute (attrType);
+                  TtaAttachAttribute (el, attr, doc);
+                  TtaSetAttributeText (attr, "source.html", el, doc);
+                  TtaRegisterAttributeCreate (attr, el, doc);
+                }
+              /* now create a child element */
+              child = TtaGetLastChild (el);
+              if (child == NULL)
+                {
+                  elType.ElTypeNum = HTML_EL_Iframe_Content;
+                  child = TtaNewElement (doc, elType);
+                  TtaInsertFirstChild (&child, el, doc);
+                  TtaRegisterElementCreate (child, doc);
+                }
+              elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+              el = TtaNewElement (doc, elType);
+              TtaInsertFirstChild (&el, child, doc);
+              TtaRegisterElementCreate (el, doc);
+              elType.ElTypeNum = HTML_EL_TEXT_UNIT;
               child = TtaNewElement (doc, elType);
               TtaInsertFirstChild (&child, el, doc);
+              TtaSelectElement (doc, child);
               TtaRegisterElementCreate (child, doc);
+              TtaCloseUndoSequence (doc);
             }
-          elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-          el = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&el, child, doc);
-          TtaRegisterElementCreate (el, doc);
-          elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-          child = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&child, el, doc);
-          TtaSelectElement (doc, child);
-          TtaRegisterElementCreate (child, doc);
-          TtaCloseUndoSequence (doc);
         }
-  }
+    }
+  TtaSetStructureChecking (oldStructureChecking, doc);
 }
 
 /*----------------------------------------------------------------------

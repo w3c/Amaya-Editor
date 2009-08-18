@@ -20,9 +20,11 @@
           <object class="tool" name="wxID_TEMPLATE_UNION">
             <bitmap>../icons/16x16/TEMPLATE_union.png</bitmap>
           </object>
+          <object class="tool" name="wxID_TEMPLATE_IMPORT">
+            <bitmap>../icons/16x16/document_library.png</bitmap>
+          </object>
         </object>
       </object>
-
       <object class="sizeritem">
         <object class="wxToolBar" name="wxID_TOOLBAR_TEMPLATE_2" subclass="AmayaBaseToolBar">
           <bitmapsize>16,16</bitmapsize>
@@ -39,10 +41,9 @@
           </object>
           <object class="tool" name="wxID_TEMPLATE_FREE_BOX">
             <bitmap>../icons/16x16/TEMPLATE_bag.png</bitmap>
-          </object>          
+          </object>
         </object>
       </object>
-    
     </object>
     <style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
   </object>

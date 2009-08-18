@@ -338,18 +338,19 @@
 336 Crear plantilla a partir de documento actual
 337 Crear área de texto
 338 Usar componente o elemento
-339 Crear y usar componente
+339 Crear componente
 340 Repetir uso actual
 341 Crear y repetir componente
 342 Crear caja de edición libre
 343 Crear nueva unión de tipos
-344 &Javascript/DOM
-345 Activar/Desactivar
-346 Ejecutar un comando
-347 Ejecutar un script externo
-348 Añadir un script externo
-349 Insertar un script
-350 Buscar actualizaciones
-351 Ayuda Amaya...
-352 Sugerencia del día...
-353 Acerca de Amaya
+344 **Import a XTiger library
+345 &Javascript/DOM
+346 Activar/Desactivar
+347 Ejecutar un comando
+348 Ejecutar un script externo
+349 Añadir un script externo
+350 Insertar un script
+351 Buscar actualizaciones
+352 Ayuda Amaya...
+353 Sugerencia del día...
+354 Acerca de Amaya

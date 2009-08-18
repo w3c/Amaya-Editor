@@ -414,14 +414,15 @@
 412 Crear plantilla a partir de documento actual
 413 Crear área de texto
 414 Usar componente o elemento
-415 Crear y usar componente
+415 Crear componente
 416 Repetir uso actual
 417 Crear y repetir componente
 418 Crear caja de edición libre
 419 Crear nueva unión de tipos
-420 Botón hasta cierre
-421 Tecleo doble a cerrarse
-422 Tecleo a cerrarse
-423 Recurso bloqueado
-424 Recurso desbloqueado
-425 No es un recurso WebDAV
+420 **Import a library
+421 Botón hasta cierre
+422 Tecleo doble a cerrarse
+423 Tecleo a cerrarse
+424 Recurso bloqueado
+425 Recurso desbloqueado
+426 No es un recurso WebDAV

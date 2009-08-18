@@ -338,18 +338,19 @@
 336 **Create template from current document
 337 **Create a text area
 338 **Use a component or an element
-339 **Create and use a component
+339 **Create a component
 340 **Repeat the current use
 341 **Create and repeat a component
 342 **Create a free editing box
 343 **Create a new types union
-344 &Javascript/DOM
-345 **Enable/Disable
-346 **Execute a command
-347 **Execute an external script
-348 **Add an external script
-349 **Insert a script
-350 Sobre Amaya no W3C
-351 Ajuda Amaya...
-352 **Tip of the day...
-353 Sobre Amaya
+344 **Import a XTiger library
+345 &Javascript/DOM
+346 **Enable/Disable
+347 **Execute a command
+348 **Execute an external script
+349 **Add an external script
+350 **Insert a script
+351 Sobre Amaya no W3C
+352 Ajuda Amaya...
+353 **Tip of the day...
+354 Sobre Amaya

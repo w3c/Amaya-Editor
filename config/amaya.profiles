@@ -770,6 +770,7 @@ TemplateCreateRepeat
 TemplateCreateRepeatComp
 TemplateCreateFreeBox
 TemplateCreateUnion
+TemplateCreateImport
 
 [spell]
 SpellCheck

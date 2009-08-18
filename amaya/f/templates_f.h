@@ -68,10 +68,13 @@ extern void CreateTemplateFromDocument ( Document doc,
                                          View view );
 extern void UpdateTemplateMenus ( Document doc );
 extern void UninstanciateTemplateDocument ( Document doc );
-extern void Template_PrepareInstance ( char *fileName,
+extern void Template_PrepareInstance ( char *url,
                                        Document doc,
                                        char* template_version,
                                        char* template_url );
+extern void Template_PrepareLibrary ( char *url,
+                                      Document doc,
+                                      char* template_version );
 extern void SetDocumentAsXTigerTemplate ( Document doc );
 extern void SetDocumentAsXTigerLibrary ( Document doc );
 extern void Template_CreateTextBox ( Document doc,
@@ -171,10 +174,13 @@ extern void CreateTemplateFromDocument ( Document doc,
                                            View view );
 extern void UpdateTemplateMenus ( Document doc );
 extern void UninstanciateTemplateDocument ( Document doc );
-extern void Template_PrepareInstance ( char *fileName,
+extern void Template_PrepareInstance ( char *url,
                                          Document doc,
                                          char* template_version,
                                          char* template_url );
+extern void Template_PrepareLibrary ( char *url,
+                                        Document doc,
+                                        char* template_version );
 extern void SetDocumentAsXTigerTemplate ( Document doc );
 extern void SetDocumentAsXTigerLibrary ( Document doc );
 extern void Template_CreateTextBox ( Document doc,

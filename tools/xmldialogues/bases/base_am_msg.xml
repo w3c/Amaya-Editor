@@ -9255,14 +9255,17 @@ cancellarlo.</message>
 	<message xml:lang="tr">Kütüphane tara</message>
 	<message xml:lang="ru">Просмотреть библиотеку</message>
 	<message xml:lang="hu">Könyvtár tallózása</message>
-	<message xml:lang="ka">ბიბლიოთეკის
-დათვალიერება</message>
+	<message xml:lang="ka">ბიბლიოთეკის დათვალიერება</message>
 	<message xml:lang="cn">浏览 library</message>
 	<message xml:lang="tw">瀏覽 library</message>
 	<message xml:lang="sk">Nalistovať knižnicu</message>
 	<message xml:lang="ja">ライブラリを参照する</message>
 	<message xml:lang="nl">Bibliotheek doorbladeren</message>
 	<message xml:lang="uk">Переглянути бібліотеку</message>
+</label>
+<label define="AM_TEMPLATE_NAME">
+	<message xml:lang="en">Component name</message>
+	<message xml:lang="fr">Nom du composant</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

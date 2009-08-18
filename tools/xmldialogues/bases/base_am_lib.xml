@@ -7125,17 +7125,17 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="ru">Использовать компонент или элемент</message>
 	<message xml:lang="uk">Використати компонент або елемент</message>
 	<message xml:lang="nl">Component maken en gebruiken</message>
-</label>
 	<message xml:lang="hu">Komponens vagy elem használata</message>
+</label>
 <label define="TemplateUseCompBox">
-	<message xml:lang="en">Create and use a component</message>
-	<message xml:lang="fr">Créer et utiliser un composant</message>
+	<message xml:lang="en">Create a component</message>
+	<message xml:lang="fr">Créer un composant</message>
 	<message xml:lang="cn">创建并使用组件</message>
 	<message xml:lang="tw">創建並使用組件</message>
-	<message xml:lang="es">Crear y usar componente</message>
-	<message xml:lang="de">Erstellen und Verwenden einer Komponente</message>
-	<message xml:lang="it">Crea e usa un component</message>
-	<message xml:lang="ja">*部品を作って使う*Create and use a component</message>
+	<message xml:lang="es">Crear componente</message>
+	<message xml:lang="de">Erstellen einer Komponente</message>
+	<message xml:lang="it">Crea un component</message>
+	<message xml:lang="ja">*部品を作って使う</message>
 	<message xml:lang="hu">Komponens létrehozása és használata</message>
 	<message xml:lang="ru">Создать и использовать компонент</message>
 	<message xml:lang="uk">Створити і використати компонент</message>
@@ -7159,8 +7159,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="en">Create and repeat a component</message>
 	<message xml:lang="fr">Créer et répéter un composant</message>
 	<message xml:lang="es">Crear y repetir componente</message>
-	<message xml:lang="de">Erstellen und vervielfältigen einer
-Komponente</message>
+	<message xml:lang="de">Erstellen und vervielfältigen einer Komponente</message>
 	<message xml:lang="cn">创建并重复组件</message>
 	<message xml:lang="tw">創建並重複組件</message>
 	<message xml:lang="it">Crea e ripeti un componente</message>
@@ -7197,6 +7196,10 @@ Komponente</message>
 	<message xml:lang="ru">Создать новое семейство шрифтов</message>
 	<message xml:lang="uk">Створити нове сімейство шрифтів</message>
 	<message xml:lang="nl">Knop omhoog om te sluiten</message>
+</label>
+<label define="TemplateImport">
+	<message xml:lang="en">Import a library</message>
+	<message xml:lang="fr">Importer une librairie</message>
 </label>
 <label define="BUTTON_UP">
 	<message xml:lang="en">Button up to close</message>

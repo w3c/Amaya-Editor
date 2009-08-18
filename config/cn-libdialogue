@@ -419,9 +419,10 @@
 417 创建并重复组件
 418 创建一个自由编辑框
 419 创建一个新类型集合
-420 释放按钮以关闭
-421 双击以关闭
-422 点击以关闭
-423 **Locked resource
-424 **Unlocked resource
-425 **Not a WebDAV resource
+420 **Import a library
+421 释放按钮以关闭
+422 双击以关闭
+423 点击以关闭
+424 **Locked resource
+425 **Unlocked resource
+426 **Not a WebDAV resource

@@ -20,67 +20,49 @@ CONST
 
 STRUCT
 
-  Template ( ATTR version = TEXT; templateVersion = TEXT ) = LIST OF (TemplateObject);
-
-  DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
+  Template (ATTR version = TEXT; templateVersion = TEXT) = LIST OF (Declaration) + (head);
+  Declaration = CASE OF
+    component;
+    union;
+    import;
+    Comment\240;
+    XMLPI;
+    END;
 
   TemplateObject = CASE OF
-      head;
-      repeat;
-      {option;}
-      useEl;
-      useSimple;
-      bag;
-      attribute;
+    repeat;
+    useEl;
+    useSimple;
+    bag;
+    attribute;
     END + (Comment\240, XMLPI);
 
-  head ( ATTR version; templateVersion ) = 
-    LIST OF ( Declaration = CASE OF
-      component;
-      union;
-      import;
-    END
-   );
+  head ( ATTR version; templateVersion ) = LIST OF (Declaration);
 
-  Comment\240 = LIST OF (Comment_line = TEXT) - (Comment\240);
-  
+  DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
+  Comment\240 = LIST OF (Comment_line = TEXT);
   XMLPI (ATTR is_css = Text) = LIST OF (PI_line = TEXT);
 
-  component ( ATTR name = TEXT ) = ANY - ( head, union, import );
-  union ( ATTR name; includeAt = TEXT; exclude = TEXT ) = CONSTANT C_CR; {It is always empty}
-  import ( ATTR src = TEXT ) = CONSTANT C_CR; {It is always empty}
+  component (ATTR name = TEXT) = ANY - (head, union, import);
+  union (ATTR name; includeAt = TEXT; exclude = TEXT)
+        = CONSTANT C_CR; {It is always empty}
+  import (ATTR src = TEXT) = CONSTANT C_CR; {It is always empty}
 
-  repeat ( ATTR title = TEXT; minOccurs = TEXT; maxOccurs = TEXT) =
-  	LIST OF ( Repetition =
-		  CASE OF
-		    useEl;
-        useSimple;
-	    	{option;}
-		    repeat;
-		    bag;
-		    END);
+  repeat ( ATTR title = TEXT; minOccurs = TEXT; maxOccurs = TEXT) = LIST OF (Repetition);
+  Repetition = TemplateObject - (repeat);
 
+  useEl (ATTR option = option_set, option_unset; title; types = TEXT;
+         currentType = TEXT;  prompt = Yes_)
+        = ANY - (head, union, import, component);
 
-  {option ( ATTR title )
-  	= ANY - ( head, union, import, component );}
-  
-  useEl ( ATTR option = option_set, option_unset; title; types = TEXT; currentType = TEXT;  prompt = Yes_ )
-     = ANY - ( head, union, import, component );
+  useSimple (ATTR option; title; types; currentType; prompt) = ANY - (head, union, import, component);
 
-  useSimple ( ATTR option; title; types; currentType; prompt)
-     = ANY - ( head, union, import, component );
+  bag (ATTR title; types) = LIST OF (ANY) - (head, union, import, component);
 
-  bag ( ATTR title; types ) 
-     =  LIST OF (ANY) - ( head, union, import, component );
-
-  attribute ( ATTR 
-    ref_name = TEXT; 
-    type = number, string, listVal; 
-    useAt = required, optional, prohibited;
-    defaultAt = TEXT; 
-    fixed = TEXT; 
-    values = TEXT;
-    ) = CONSTANT C_CR; {It is always empty}
+  attribute (ATTR ref_name = TEXT; type = number, string, listVal; 
+             useAt = required, optional, prohibited; defaultAt = TEXT; 
+             fixed = TEXT; values = TEXT)
+            = CONSTANT C_CR; {It is always empty}
 
 EXCEPT
   XMLPI:             ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;

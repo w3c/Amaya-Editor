@@ -338,18 +338,19 @@
 336 Eine Vorlage aus dem aktuellen Dokument erstellen
 337 Ein Textfeld erstellen
 338 Eine Komponente oder Element verwenden
-339 Erstellen und Verwenden einer Komponente
+339 Erstellen einer Komponente
 340 Aktuelle Anwendung wiederholen
 341 Erstellen und vervielfältigen einer Komponente
 342 Eine freie Editierbox erstellen
 343 **Create a new types union
-344 &Javascript/DOM
-345 Java-Unterstützung ein-/ausschalten
-346 Befehl ausführen
-347 externes Skript ausführen
-348 externes Skript hinzufügen
-349 Skript einfügen
-350 Nach Aktualisierungen suchen
-351 Amaya Hilfe...
-352 Tip des Tages...
-353 Info
+344 **Import a XTiger library
+345 &Javascript/DOM
+346 Java-Unterstützung ein-/ausschalten
+347 Befehl ausführen
+348 externes Skript ausführen
+349 externes Skript hinzufügen
+350 Skript einfügen
+351 Nach Aktualisierungen suchen
+352 Amaya Hilfe...
+353 Tip des Tages...
+354 Info

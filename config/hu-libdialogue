@@ -413,16 +413,16 @@
 411 **Striped Arrow
 412 Sablon létrehozása a jelenlegi dokumentum alapján
 413 Szövegdoboz létrehozása
-414 **Use a component or an element
-415 Komponens vagy elem használata
+414 Komponens vagy elem használata
 415 Komponens létrehozása és használata
 416 Jelenlegi használat ismétlése
 417 Komponens létrehozása és ismétlése
 418 Szabad szerkesztésű szövegdoboz létrehozása
 419 Új típus unió létrehozása
-420 Bezárás felnyíl billentyűvel
-421 Bezárás duplakattintással
-422 Bezárás kattintással
-423 Zárolt erőforrás
-424 Nem zárolt erőforrás
-425 Nem WebDAV erőforrás
+420 **Import a library
+421 Bezárás felnyíl billentyűvel
+422 Bezárás duplakattintással
+423 Bezárás kattintással
+424 Zárolt erőforrás
+425 Nem zárolt erőforrás
+426 Nem WebDAV erőforrás

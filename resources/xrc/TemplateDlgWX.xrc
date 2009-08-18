@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxDialog" name="TemplateNewUseDlgWX">
+  <object class="wxDialog" name="TemplateDlgWX">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -31,7 +31,6 @@
         <flag>wxALL|wxEXPAND</flag>
         <border>4</border>
       </object>
-      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
@@ -58,7 +57,7 @@
       </object>
     </object>
     <size>200,320</size>
-    <title>*New use*</title>
+    <title>*New template element*</title>
     <centered>1</centered>
     <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
   </object>

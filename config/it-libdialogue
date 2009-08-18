@@ -414,14 +414,15 @@
 412 Crea lo schema dal documento corrente
 413 Crea area di testo
 414 Usa un componente o un elemento
-415 Crea e usa un component
+415 Crea un component
 416 Ripeti uso corrente 
 417 Crea e ripeti un componente
 418 Crea un box da editare
 419 Crea una nuova unione di tipi
-420 Tasto fino alla fine
-421 Doppio scatto da chiudersi
-422 Scatto da chiudersi
-423 Risorsa bloccata
-424 Risorsa non bloccata
-425 Non è una risorsa WebDAV
+420 **Import a library
+421 Tasto fino alla fine
+422 Doppio scatto da chiudersi
+423 Scatto da chiudersi
+424 Risorsa bloccata
+425 Risorsa non bloccata
+426 Non è una risorsa WebDAV

@@ -193,12 +193,14 @@ extern ThotBool QueryUnionFromUser ( const char* proposed,
                                      char** label,
                                      char**types,
                                      ThotBool newUnion );
-extern ThotBool QueryUseFromUser ( const char* proposed,
-                                   const char* checked,
-                                   char* label,
+extern ThotBool QueryUseFromUser ( const char *proposed,
+                                   const char *checked,
+                                   char *label,
                                    int labelsz,
-                                   char**types,
-                                   ThotBool* option );
+                                   char **types,
+                                   ThotBool *option );
+extern ThotBool QueryComponentFromUser ( char* label,
+                                         int labelsz );
 
 #else /* __STDC__ */
 
@@ -389,12 +391,14 @@ extern ThotBool QueryUnionFromUser ( const char* proposed,
                                        char** label,
                                        char**types,
                                        ThotBool newUnion );
-extern ThotBool QueryUseFromUser ( const char* proposed,
-                                     const char* checked,
-                                     char* label,
+extern ThotBool QueryUseFromUser ( const char *proposed,
+                                     const char *checked,
+                                     char *label,
                                      int labelsz,
-                                     char**types,
-                                     ThotBool* option );
+                                     char **types,
+                                     ThotBool *option );
+extern ThotBool QueryComponentFromUser ( char* label,
+                                           int labelsz );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
