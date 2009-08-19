@@ -419,10 +419,11 @@
 417 創建並重複組件
 418 創建一個自由編輯框
 419 創建一個新類型集合
-420 **Import a library
-421 釋放按鈕以關閉
-422 雙擊以關閉
-423 點擊以關閉
-424 **Locked resource
-425 **Unlocked resource
-426 **Not a WebDAV resource
+420 創建 library
+421 **Import a library
+422 釋放按鈕以關閉
+423 雙擊以關閉
+424 點擊以關閉
+425 **Locked resource
+426 **Unlocked resource
+427 **Not a WebDAV resource

@@ -3303,15 +3303,10 @@ void SaveDocument (Document doc, View view)
           // Reinitialize the template description
           Template_FillFromDocument (xmlDoc);
         }
-      else
+      else if (DocumentSource[doc])
         {
-          // Reinitialize the template description
-          Template_FillFromDocument (doc);
-          if (DocumentSource[doc])
-            {
-              TtaSetDocumentUnmodified (DocumentSource[doc]);
-              TtaSetInitialSequence (DocumentSource[doc]);
-            }
+          TtaSetDocumentUnmodified (DocumentSource[doc]);
+          TtaSetInitialSequence (DocumentSource[doc]);
         }
         
       /* switch Amaya buttons and menus */

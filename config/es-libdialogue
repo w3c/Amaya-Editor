@@ -416,13 +416,14 @@
 414 Usar componente o elemento
 415 Crear componente
 416 Repetir uso actual
-417 Crear y repetir componente
+417 Crear y repetir uso
 418 Crear caja de edición libre
 419 Crear nueva unión de tipos
-420 **Import a library
-421 Botón hasta cierre
-422 Tecleo doble a cerrarse
-423 Tecleo a cerrarse
-424 Recurso bloqueado
-425 Recurso desbloqueado
-426 No es un recurso WebDAV
+420 Crear biblioteca
+421 **Import a library
+422 Botón hasta cierre
+423 Tecleo doble a cerrarse
+424 Tecleo a cerrarse
+425 Recurso bloqueado
+426 Recurso desbloqueado
+427 No es un recurso WebDAV

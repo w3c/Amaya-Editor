@@ -46,6 +46,7 @@
 static
 AMAYA_BEGIN_TOOLBAR_DEF_TABLE(AmayaTemplateToolDef)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_CREATE", "CreateTemplateFromDocument", LIB, TemplateFromDocument)
+AMAYA_TOOLBAR_DEF("wxID_LIBRARY_CREATE", "NewLibrary", LIB, TemplateLibrary)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_TEXT_BOX", "TemplateCreateTextBox", LIB, TemplateTextBox)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USE_BOX", "TemplateCreateUseBox", LIB, TemplateUseBox)
 AMAYA_TOOLBAR_DEF("wxID_TEMPLATE_USECOMP_BOX", "TemplateCreateUseCompBox", LIB, TemplateUseCompBox)

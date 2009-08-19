@@ -11,17 +11,19 @@
           <object class="tool" name="wxID_TEMPLATE_CREATE">
             <bitmap>../icons/16x16/TEMPLATE_template.png</bitmap>
           </object>
+          <object class="tool" name="wxID_LIBRARY_CREATE">
+            <bitmap>../icons/16x16/document_library.png</bitmap>
+          </object>
+          <object class="separator"/>
           <object class="tool" name="wxID_TEMPLATE_USECOMP_BOX">
             <bitmap>../icons/16x16/TEMPLATE_usecomp.png</bitmap>
           </object>
-          <object class="tool" name="wxID_TEMPLATE_REPEATCOMP_SECTION">
-            <bitmap>../icons/16x16/TEMPLATE_repeatcomp.png</bitmap>
-          </object>
+          
           <object class="tool" name="wxID_TEMPLATE_UNION">
             <bitmap>../icons/16x16/TEMPLATE_union.png</bitmap>
           </object>
           <object class="tool" name="wxID_TEMPLATE_IMPORT">
-            <bitmap>../icons/16x16/document_library.png</bitmap>
+            <bitmap>../icons/16x16/TEMPLATE_import.png</bitmap>
           </object>
         </object>
       </object>
@@ -33,11 +35,15 @@
           <object class="tool" name="wxID_TEMPLATE_TEXT_BOX">
             <bitmap>../icons/16x16/TEMPLATE_usetext.png</bitmap>
           </object>
+          <object class="separator"/>
           <object class="tool" name="wxID_TEMPLATE_USE_BOX">
             <bitmap>../icons/16x16/TEMPLATE_use.png</bitmap>
           </object>
           <object class="tool" name="wxID_TEMPLATE_REPEAT_SECTION">
             <bitmap>../icons/16x16/TEMPLATE_repeat.png</bitmap>
+          </object>
+          <object class="tool" name="wxID_TEMPLATE_REPEATCOMP_SECTION">
+            <bitmap>../icons/16x16/TEMPLATE_repeatcomp.png</bitmap>
           </object>
           <object class="tool" name="wxID_TEMPLATE_FREE_BOX">
             <bitmap>../icons/16x16/TEMPLATE_bag.png</bitmap>

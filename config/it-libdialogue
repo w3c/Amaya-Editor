@@ -416,13 +416,14 @@
 414 Usa un componente o un elemento
 415 Crea un component
 416 Ripeti uso corrente 
-417 Crea e ripeti un componente
+417 Crea e ripeti un uso
 418 Crea un box da editare
 419 Crea una nuova unione di tipi
-420 **Import a library
-421 Tasto fino alla fine
-422 Doppio scatto da chiudersi
-423 Scatto da chiudersi
-424 Risorsa bloccata
-425 Risorsa non bloccata
-426 Non è una risorsa WebDAV
+420 Crea libreria
+421 **Import a library
+422 Tasto fino alla fine
+423 Doppio scatto da chiudersi
+424 Scatto da chiudersi
+425 Risorsa bloccata
+426 Risorsa non bloccata
+427 Non è una risorsa WebDAV

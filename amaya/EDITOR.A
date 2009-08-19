@@ -42,7 +42,6 @@ MENUS
 	File.New1 button:BMathml -> NewMathML icon:document_math.png;
 	File.New1 button:BSvg -> NewSVG icon:document_svg.png;
 	File.New1 button:BCss -> NewCss icon:document_css.png;
-	File.New1 button:BLibrary -> NewLibrary icon:TEMPLATE_template.png;
 
 	File.OpenAFile button:BOpenDoc -> OpenDoc;
 	File button:BOpenInNewWindow -> OpenDocInNewWindow;
@@ -378,6 +377,7 @@ MENUS
   Tools.Cooperation_ toggle:TLock -> LockUnlock;
   Tools.Cooperation_ button:BCopyLock -> CopyLockInformation;
   Tools.Templates_  button:BCreateTemplateFromDocument -> CreateTemplateFromDocument;
+	Tools.Templates_  button:BLibrary -> NewLibrary icon:TEMPLATE_template.png;
   Tools.Templates_  Separator;
   Tools.Templates_  button:BTemplateCreateTextBox -> TemplateCreateTextBox;
   Tools.Templates_  button:BTemplateCreateUseBox -> TemplateCreateUseBox;

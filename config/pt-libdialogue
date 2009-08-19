@@ -416,13 +416,14 @@
 414 **Use a component or an element
 415 **Create a component
 416 **Repeat the current use
-417 **Create and repeat a component
+417 **Create and repeat a use
 418 **Create a free editing box
 419 **Create a new types union
-420 **Import a library
-421 **Button up to close
-422 **Double click to close
-423 **Click to close
-424 **Locked resource
-425 **Unlocked resource
-426 **Not a WebDAV resource
+420 **Create a library
+421 **Import a library
+422 **Button up to close
+423 **Double click to close
+424 **Click to close
+425 **Locked resource
+426 **Unlocked resource
+427 **Not a WebDAV resource

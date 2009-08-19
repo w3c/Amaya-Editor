@@ -434,8 +434,9 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
           if (child == NULL)
             {
               option = GetAttributeIntValueFromNum (el, Template_ATTR_option);
-              opt = (option == Template_ATTR_option_VAL_option_set);
-              InstantiateUse (t, el, doc, parentLine, FALSE);
+              opt = (option == 0 || option == Template_ATTR_option_VAL_option_set);
+              if (opt)
+                InstantiateUse (t, el, doc, parentLine, FALSE);
             }
           else
             {

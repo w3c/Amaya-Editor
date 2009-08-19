@@ -17,333 +17,333 @@
 15 Új &MathML dokumentum...
 16 Új SV&G dokumentum...
 17 Új CSS s&tíluslap...
-18 Könyvtár létrehozása
-19 D&okumentum megnyitása...
-20 &Fájl
-21 Új &ablakban...
-22 Dokumentum újratöltése(&R)
-23 Kényszerített karakter &kódolás
-24 Unicode (UTF-8)
-25 Nyugat-európai (ISO-8859-1)
-26 Nyugat-európai (ISO-8859-15)
-27 Nyugat-európai (Windows-1252)
-28 Közép-európai (ISO-8859-2)
-29 Közép-európai (Windows-1250)
-30 Dél-európai (ISO-8859-3)
-31 Balti (ISO-8859-4)
-32 Balti (Windows-1257)
-33 Cirill (ISO-8859-5)
-34 Cirill (Windows-1251)
-35 Cirill (KOI8-R)
-36 Arab (ISO-8859-6)
-37 Arab (Windows-1256)
-38 Görög (ISO-8859-7)
-39 Görög (Windows-1253)
-40 Héber (ISO-8859-8)
-41 Héber (Windows-1255)
-42 Török (ISO-8859-9)
-43 Török (Windows-1254)
-44 Chinese (GB-2312)
-45 Japán (ISO-2022-JP)
-46 Japán (EUC-JP)
-47 Japán (Shift-JIS)
-48 Vissza
-49 Előre
-50 Mentés
-51 Mentés másként...
-52 Mind mentése
-53 Szinkronizálás
-54 Küldés elektronikus levélben...
-55 Beállítás és nyomtatás...
-56 Nyomtatás
-57 Lap bezárása
-58 Ablak bezárása
-59 Kilépés az Amayából
-60 Új fül
-61 Fül frissítése
-62 Minden fül frissítése
-63 Többi fül bezárása
-64 Lap bezárása
-65 A kapocs megnyitása
-66 A kapocs megnyitása új fülön
-67 A kapocs megnyitása új ablakban
-68 **Rotate
-69 **Skew
-70 **Scale
-71 **Move
-72 **Ungroup
-73 Kivágás
-74 Másolás
-75 Beillesztés
-76 Törlés
-77 Be&szúrás
-78 Hozzáfűzés
-79 &Visszavon
-80 &Újra
-81 &Kivágás
-82 &Másolás
-83 Be&illesztés
-84 &Törlés
-85 Be&szúrás
-86 &Hozzáfűzés
-87 Mindent kijelöl
-88 Ugrás
-89 Elődelem
-90 Első utód
-91 Előző elem
-92 Következő elem
-93 &Keresés...
-94 &Beállítások
-95 Eszköztárak mutatása/rejtése
-96 &Böngészés
-97 &Szerkesztés
-98 &Eszközsor mutatása
-99 &Térképterületek mutatása
-100 &Célpontok mutatása
-101 &Formázott nézet
-102 &Szerkezet mutatása
-103 &Forrás mutatása
-104 &Kapcsok mutatása
-105 &Szöveges böngészőnézet
-106 &Tartalomjegyzék mutatása
-107 Vízszintes felosztás
-108 Függőleges felosztás
-109 Dokumentum adata&i
-110 Elemzési hibák mutatása
-111 &Teljes képenyő
-112 Nagyítás
-113 Kicsinyítés
-114 **Normal zoom
-115 &Bekezdés (p)
-116 &Címsor
-117 1. szint (h1)
-118 2. szint (h2)
-119 3. szint (h3)
-120 4. szint (h4)
-121 5. szint (h5)
-122 6. szint (h6)
-123 &Lista
-124 Listajeles lista (ul)
-125 Számozott lista (ol)
-126 Meghatározás lista (dl)
-127 Szócikk (dt)
-128 Meghatározás (dd)
-129 Adat &fajtája
-130 &Hangsúlyos (em)
-131 &Vastag (strong)
-132 &Idézet (cite)
-133 &Definíció (dfn)
-134 &Kód (code)
-135 &Változó (var)
-136 &Minta (samp)
-137 &Billentyű (kbd)
-138 &Rövidítés (abbr)
-139 &Betűszó (acronym)
-140 &Beillesztés (ins)
-141 &Törlés (del)
-142 &Karakter &elem
-143 &Dőlt (i)
-144 &Félkövér (b)
-145 &Írógép (tt)
-146 &Nagy (big)
-147 &Kicsi (small)
-148 Span
-149 &Alsó index (sub)
-150 &Felső index (sup)
-151 &Idézet (q)
-152 &Kétirányúság felülbírálása (bdo)
-153 &Kép (img)...
-154 &Vízszintes vonal (hr)
-155 &Sortörés (br)
-156 &Előformázott (pre)
-157 Térkép &táblázat
-158 &Táblázat
-159 Térkép &táblázat
-160 Táblázat&név (caption)
-161 Táblázat&fejléc (thead)
-162 Táblázat &szöveg (tbody)
-163 Táblázat&lábléc (tfoot)
-164 &Matematika
-165 Új képlet
-166 &Közönséges szöveg (mtext)
-167 &Azonosító (mi)
-168 &Szám (mn)
-169 &Műveleti jel (mo)
-170 &Szóköz (mspace)
-171 &Karakter (&xxx;)
-172 &InvisibleTimes
-173 &ApplyFunction
-174 &Gyök (mroot)
-175 &Négyzetgyök (msqrt)
-176 &Enclose (menclose)
-177 &Tört (mfrac)
-178 Alsó és felső &index (msubsup)
-179 &Alsó index (msub)
-180 &Felső index (msup)
-181 &Alá és fölé (munderover)
-182 &Alá (munder)
-183 &Fölé (mover)
-184 &Zárójel (mrow)
-185 &Multiscripts (mmultiscripts)
-186 Új &mátrix (mtable)
-187 Grafika
-188 **Line
-189 **Arrow
-190 **Text
-191 **ForeignObject
-192 **Group
-193 **Square
-194 **Rectangle
-195 **Diamond
-196 **Triangle
-197 **Circle
-198 **Ellipse
-199 **Polyline
-200 **Polygon
-201 **Open curve
-202 **Closed curve
-203 &Űrlap
-204 Űrlap beillesztése
-205 Gomb (input)
-206 Jelölőnégyzet (input)
-207 Fájlválasztó (input)
-208 Rejtett (input)
-209 Kép (input)...
-210 Jelszó (input)
-211 Választógomb (input)
-212 Alaphelyzet (input)
-213 Küldés (input)
-214 Szöveg (input)
-215 Mező (fieldset)
-216 Címke (label)
-217 Menü (option)
-218 Almenü (optgroup)
-219 Szövegmező (textarea)
-220 &Objektum
-221 Objektum (object)
-222 Paraméter (param)
-223 T&érkép terület
-224 Térkép &beillesztése
-225 &Kör
-226 &Sokszög
-227 &Téglalap
-228 Szerkezet
-229 &Stílus (style)
-230 &Megjegyzés
-231 &Alap (base)
-232 &meta
-233 &Kapocs (link)
-234 &script
-235 &noscript
-236 Fel&osztás (div)
-237 &Cím (address)
-238 &Blokkidézet (blockquote)
-239 &Sorbeli keret (iframe)
-240 &Ruby
-241 Téma
-242 Klasszikus
-243 Modern
-244 Téma nélkül
-245 Szín
-246 Szín...
-247 Szín nélkül
-248 Háttérszín
-249 Háttérszín...
-250 Szín nélkül
-251 Igazítás
-252 
-253 Középre
-254 Jobbra
-255 Sorkizárt
-256 
-257 Sortávolság
-258 Egyszeres
-259 Fél
-260 Kétszeres
-261 Alapérték
-262 Behúzás
-263 Növel
-264 Csökkent
-265 Alapérték
-266 Karakter
-267 Válasszon betűkészletet...
-268 Alapérték
-269 CSS &stílus...
-270 &Szabály létrehozása...
-271 &Alkalmazott stílusok mutatása...
-272 Stíluslapok
-273 Kapocs...
-274 Megnyitás...
-275 Tiltás...
-276 &Engedélyezés...
-277 Eltávolítás...
-278 Hely másolása
-279 Hely beillesztése
-280 &Előző célponthoz kapcsolás
-281 &Kapocs létrehozása vagy megváltoztatása...
-282 &Célpont létrehozása
-283 &Horgony törlése
-284 &Azonosítók (id) hozzáadása/törlése...
-285 Szó&elemző...
-286 &Átalakítás...
-287 **Code clean up
-288 
-289 &Adatcellává tétel
-290 &Fejléccé tétel
-291 Egyesítés
-292 Egyesítés a &jobbra lévő cellával
-293 Egyesítés az &alatta lévő cellával
-294 Shrink &horizontal extend
-295 Shrink &vertical extend
-296 Sor &kijelölése
-297 Sor &beillesztése
-298 Sor &hozzáadása
-299 Oszlop ki&jelölése
-300 Oszlop be&illesztése
-301 Oszlop hozzá&adása
-302 Beillesztés &elé
-303 Beillesztés &mögé
-304 Cím &cseréje...
-305 Doctype megváltoztatása
-306 doctype eltávolítása
-307 Doctype hozzáadása
-308 Change to XHTML 1.1
-309 XHTML 1.0 átmenetivé tétel
-310 XHTML 1.0 kötötté tétel
-311 XHTML 1.0 alappá tétel
-312 **Change to XHTML+RDFa
-313 &HTML 4.01 átmenetivé tétel
-314 HTML 4.01 kötötté tétel
-315 &Szakasz számozás
-316 &Tartalomjegyzék létrehozása
-317 &Kötet létrehozása
-318 Időbélyeg beilesztése
-319 **Namespace declarations...
-320 &Jegyzetek
-321 Jegyzet a &kijelöléshez
-322 Jegyzet a &dokumentumhoz
-323 &Ugrás a kijelöléshez
-324 Kijelölés tárolása &XPointerként
-325 &Tárolt XPointerhez ugrás
-326 Jegyzetre &válaszolás
-327 Küldés a &kiszolgálóra
-328 &Törlés
-329 &Betöltés
-330 &Lekérdezés testreszabása...
-331 &Helyi szűrő...
-332 &Együttműködés
-333 Erőforrás &zárolása
-334 Zárolási adatok &másolása...
-335 **Templates
-336 **Create template from current document
-337 **Create a text area
-338 **Use a component or an element
-339 **Create a component
-340 **Repeat the current use
-341 **Create and repeat a component
-342 **Create a free editing box
-343 **Create a new types union
-344 **Import a XTiger library
+18 D&okumentum megnyitása...
+19 &Fájl
+20 Új &ablakban...
+21 Dokumentum újratöltése(&R)
+22 Kényszerített karakter &kódolás
+23 Unicode (UTF-8)
+24 Nyugat-európai (ISO-8859-1)
+25 Nyugat-európai (ISO-8859-15)
+26 Nyugat-európai (Windows-1252)
+27 Közép-európai (ISO-8859-2)
+28 Közép-európai (Windows-1250)
+29 Dél-európai (ISO-8859-3)
+30 Balti (ISO-8859-4)
+31 Balti (Windows-1257)
+32 Cirill (ISO-8859-5)
+33 Cirill (Windows-1251)
+34 Cirill (KOI8-R)
+35 Arab (ISO-8859-6)
+36 Arab (Windows-1256)
+37 Görög (ISO-8859-7)
+38 Görög (Windows-1253)
+39 Héber (ISO-8859-8)
+40 Héber (Windows-1255)
+41 Török (ISO-8859-9)
+42 Török (Windows-1254)
+43 Chinese (GB-2312)
+44 Japán (ISO-2022-JP)
+45 Japán (EUC-JP)
+46 Japán (Shift-JIS)
+47 Vissza
+48 Előre
+49 Mentés
+50 Mentés másként...
+51 Mind mentése
+52 Szinkronizálás
+53 Küldés elektronikus levélben...
+54 Beállítás és nyomtatás...
+55 Nyomtatás
+56 Lap bezárása
+57 Ablak bezárása
+58 Kilépés az Amayából
+59 Új fül
+60 Fül frissítése
+61 Minden fül frissítése
+62 Többi fül bezárása
+63 Lap bezárása
+64 A kapocs megnyitása
+65 A kapocs megnyitása új fülön
+66 A kapocs megnyitása új ablakban
+67 **Rotate
+68 **Skew
+69 **Scale
+70 **Move
+71 **Ungroup
+72 Kivágás
+73 Másolás
+74 Beillesztés
+75 Törlés
+76 Be&szúrás
+77 Hozzáfűzés
+78 &Visszavon
+79 &Újra
+80 &Kivágás
+81 &Másolás
+82 Be&illesztés
+83 &Törlés
+84 Be&szúrás
+85 &Hozzáfűzés
+86 Mindent kijelöl
+87 Ugrás
+88 Elődelem
+89 Első utód
+90 Előző elem
+91 Következő elem
+92 &Keresés...
+93 &Beállítások
+94 Eszköztárak mutatása/rejtése
+95 &Böngészés
+96 &Szerkesztés
+97 &Eszközsor mutatása
+98 &Térképterületek mutatása
+99 &Célpontok mutatása
+100 &Formázott nézet
+101 &Szerkezet mutatása
+102 &Forrás mutatása
+103 &Kapcsok mutatása
+104 &Szöveges böngészőnézet
+105 &Tartalomjegyzék mutatása
+106 Vízszintes felosztás
+107 Függőleges felosztás
+108 Dokumentum adata&i
+109 Elemzési hibák mutatása
+110 &Teljes képenyő
+111 Nagyítás
+112 Kicsinyítés
+113 **Normal zoom
+114 &Bekezdés (p)
+115 &Címsor
+116 1. szint (h1)
+117 2. szint (h2)
+118 3. szint (h3)
+119 4. szint (h4)
+120 5. szint (h5)
+121 6. szint (h6)
+122 &Lista
+123 Listajeles lista (ul)
+124 Számozott lista (ol)
+125 Meghatározás lista (dl)
+126 Szócikk (dt)
+127 Meghatározás (dd)
+128 Adat &fajtája
+129 &Hangsúlyos (em)
+130 &Vastag (strong)
+131 &Idézet (cite)
+132 &Definíció (dfn)
+133 &Kód (code)
+134 &Változó (var)
+135 &Minta (samp)
+136 &Billentyű (kbd)
+137 &Rövidítés (abbr)
+138 &Betűszó (acronym)
+139 &Beillesztés (ins)
+140 &Törlés (del)
+141 &Karakter &elem
+142 &Dőlt (i)
+143 &Félkövér (b)
+144 &Írógép (tt)
+145 &Nagy (big)
+146 &Kicsi (small)
+147 Span
+148 &Alsó index (sub)
+149 &Felső index (sup)
+150 &Idézet (q)
+151 &Kétirányúság felülbírálása (bdo)
+152 &Kép (img)...
+153 &Vízszintes vonal (hr)
+154 &Sortörés (br)
+155 &Előformázott (pre)
+156 Térkép &táblázat
+157 &Táblázat
+158 Térkép &táblázat
+159 Táblázat&név (caption)
+160 Táblázat&fejléc (thead)
+161 Táblázat &szöveg (tbody)
+162 Táblázat&lábléc (tfoot)
+163 &Matematika
+164 Új képlet
+165 &Közönséges szöveg (mtext)
+166 &Azonosító (mi)
+167 &Szám (mn)
+168 &Műveleti jel (mo)
+169 &Szóköz (mspace)
+170 &Karakter (&xxx;)
+171 &InvisibleTimes
+172 &ApplyFunction
+173 &Gyök (mroot)
+174 &Négyzetgyök (msqrt)
+175 &Enclose (menclose)
+176 &Tört (mfrac)
+177 Alsó és felső &index (msubsup)
+178 &Alsó index (msub)
+179 &Felső index (msup)
+180 &Alá és fölé (munderover)
+181 &Alá (munder)
+182 &Fölé (mover)
+183 &Zárójel (mrow)
+184 &Multiscripts (mmultiscripts)
+185 Új &mátrix (mtable)
+186 Grafika
+187 **Line
+188 **Arrow
+189 **Text
+190 **ForeignObject
+191 **Group
+192 **Square
+193 **Rectangle
+194 **Diamond
+195 **Triangle
+196 **Circle
+197 **Ellipse
+198 **Polyline
+199 **Polygon
+200 **Open curve
+201 **Closed curve
+202 &Űrlap
+203 Űrlap beillesztése
+204 Gomb (input)
+205 Jelölőnégyzet (input)
+206 Fájlválasztó (input)
+207 Rejtett (input)
+208 Kép (input)...
+209 Jelszó (input)
+210 Választógomb (input)
+211 Alaphelyzet (input)
+212 Küldés (input)
+213 Szöveg (input)
+214 Mező (fieldset)
+215 Címke (label)
+216 Menü (option)
+217 Almenü (optgroup)
+218 Szövegmező (textarea)
+219 &Objektum
+220 Objektum (object)
+221 Paraméter (param)
+222 T&érkép terület
+223 Térkép &beillesztése
+224 &Kör
+225 &Sokszög
+226 &Téglalap
+227 Szerkezet
+228 &Stílus (style)
+229 &Megjegyzés
+230 &Alap (base)
+231 &meta
+232 &Kapocs (link)
+233 &script
+234 &noscript
+235 Fel&osztás (div)
+236 &Cím (address)
+237 &Blokkidézet (blockquote)
+238 &Sorbeli keret (iframe)
+239 &Ruby
+240 Téma
+241 Klasszikus
+242 Modern
+243 Téma nélkül
+244 Szín
+245 Szín...
+246 Szín nélkül
+247 Háttérszín
+248 Háttérszín...
+249 Szín nélkül
+250 Igazítás
+251 
+252 Középre
+253 Jobbra
+254 Sorkizárt
+255 
+256 Sortávolság
+257 Egyszeres
+258 Fél
+259 Kétszeres
+260 Alapérték
+261 Behúzás
+262 Növel
+263 Csökkent
+264 Alapérték
+265 Karakter
+266 Válasszon betűkészletet...
+267 Alapérték
+268 CSS &stílus...
+269 &Szabály létrehozása...
+270 &Alkalmazott stílusok mutatása...
+271 Stíluslapok
+272 Kapocs...
+273 Megnyitás...
+274 Tiltás...
+275 &Engedélyezés...
+276 Eltávolítás...
+277 Hely másolása
+278 Hely beillesztése
+279 &Előző célponthoz kapcsolás
+280 &Kapocs létrehozása vagy megváltoztatása...
+281 &Célpont létrehozása
+282 &Horgony törlése
+283 &Azonosítók (id) hozzáadása/törlése...
+284 Szó&elemző...
+285 &Átalakítás...
+286 **Code clean up
+287 
+288 &Adatcellává tétel
+289 &Fejléccé tétel
+290 Egyesítés
+291 Egyesítés a &jobbra lévő cellával
+292 Egyesítés az &alatta lévő cellával
+293 Shrink &horizontal extend
+294 Shrink &vertical extend
+295 Sor &kijelölése
+296 Sor &beillesztése
+297 Sor &hozzáadása
+298 Oszlop ki&jelölése
+299 Oszlop be&illesztése
+300 Oszlop hozzá&adása
+301 Beillesztés &elé
+302 Beillesztés &mögé
+303 Cím &cseréje...
+304 Doctype megváltoztatása
+305 doctype eltávolítása
+306 Doctype hozzáadása
+307 Change to XHTML 1.1
+308 XHTML 1.0 átmenetivé tétel
+309 XHTML 1.0 kötötté tétel
+310 XHTML 1.0 alappá tétel
+311 **Change to XHTML+RDFa
+312 &HTML 4.01 átmenetivé tétel
+313 HTML 4.01 kötötté tétel
+314 &Szakasz számozás
+315 &Tartalomjegyzék létrehozása
+316 &Kötet létrehozása
+317 Időbélyeg beilesztése
+318 **Namespace declarations...
+319 &Jegyzetek
+320 Jegyzet a &kijelöléshez
+321 Jegyzet a &dokumentumhoz
+322 &Ugrás a kijelöléshez
+323 Kijelölés tárolása &XPointerként
+324 &Tárolt XPointerhez ugrás
+325 Jegyzetre &válaszolás
+326 Küldés a &kiszolgálóra
+327 &Törlés
+328 &Betöltés
+329 &Lekérdezés testreszabása...
+330 &Helyi szűrő...
+331 &Együttműködés
+332 Erőforrás &zárolása
+333 Zárolási adatok &másolása...
+334 **Templates
+335 **Create template from current document
+336 Könyvtár létrehozása...
+337 **Create a text area...
+338 **Use a component or an element...
+339 **Create a component...
+340 **Repeat the current use...
+341 **Create and repeat a use...
+342 **Create a free editing box...
+343 **Create a new types union...
+344 **Import a library...
 345 &Javascript/DOM
 346 Engedélyezés/tiltás
 347 Parancs végrehajtása

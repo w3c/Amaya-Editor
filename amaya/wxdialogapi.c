@@ -1665,6 +1665,8 @@ ThotBool QueryUnionFromUser (const char* proposed, const char* checked,
 
       dialog.SetSize(200, 320);
       dialog.Layout();
+      // give focus to ...
+      XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetFocus();
 
       if (dialog.ShowModal() == wxID_OK)
         {
@@ -1753,7 +1755,10 @@ ThotBool QueryUseFromUser (const char *proposed, const char *checked, char *labe
 
       dialog.SetSize(200, 320);
       dialog.Layout();
-      if (dialog.ShowModal()==wxID_OK)
+      // give focus to ...
+      XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetFocus();
+
+      if (dialog.ShowModal() == wxID_OK)
         {
           strs.Clear();
           n = box->GetCount();
@@ -1810,6 +1815,8 @@ ThotBool QueryComponentFromUser (char* label, int labelsz)
 
       if (labelsz == 0)
         XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->Disable();
+      // give focus to ...
+      XRCCTRL(dialog, "wxID_TEXT_LABEL", wxTextCtrl)->SetFocus();
 
       if (dialog.ShowModal() == wxID_OK)
         {
