@@ -1041,6 +1041,8 @@ ThotBool CreateHRefDlgWX (int ref, ThotWindow parent,
     wx_filter = APPCSSNAMEFILTER;
   else if (doc_type == docJavascript)
     wx_filter = APPJAVASCRIPTNAMEFILTER;
+  else if (doc_type == docTemplate)
+    wx_filter = APPLIBRARYNAMEFILTER;
   else
     wx_filter = APPFILENAMEFILTER;
 

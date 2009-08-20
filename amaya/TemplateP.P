@@ -25,6 +25,8 @@ VIEWS
 #define INVALID_Visibility 7
 #define INVALID_Font Helvetica
 #define ATTR_Color DarkGold3
+#define IMPORT_BG_Color LightYellow4
+#define UNION_BG_Color LightRuby4
 #define ATTRVALUE_Color DarkBlue2
 #define INVALID_Color Red
 #define COMMENT_Font Helvetica
@@ -105,6 +107,30 @@ BOXES
                 END;
         END;
 
+  UnionName: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10;
+    Content: (AttributeValue);
+    HorizPos: Left = Enclosing . Left + 10 px;
+    VertPos: Bottom = Creator . Top;
+    Size: TAG_FONTSIZE;
+		PaddingTop: 			  5 px;
+		PaddingBottom: 			5 px;
+		PaddingLeft: 		  	5 px;
+		PaddingRight: 			5 px;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTRVALUE_Color;
+    Background: UNION_BG_Color;
+    FillPattern: backgroundcolor;
+    ShowBox;
+    IN Structure_view BEGIN
+      Visibility: 0;
+ 	    END;
+#endif
+   END;
+
   ComponentName: BEGIN
 #ifdef INSTANCE
     Visibility: 0;
@@ -183,6 +209,57 @@ BOXES
       END;
    END;
 
+  ImportAttrName: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10; 
+    Content: (Text ' import ' AttributeName Text '=');
+    HorizPos: Left = Enclosing . Left;
+    VertPos: Top = Creator . Top;
+    Size: TAG_FONTSIZE;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTR_Color;
+    Depth: Enclosing =;
+    Background : IMPORT_BG_Color;
+    FillPattern: backgroundcolor;
+    ShowBox;
+    PaddingTop: 5 px;
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Visibility: 4;  Foreground: ATTR_Color;
+      PaddingTop: 0;
+      FillPattern: nopattern;
+ 	    END;
+#endif
+   END;
+
+  ImportAttrValue: BEGIN
+#ifdef INSTANCE
+    Visibility: 0;
+#else
+    Visibility: 10; 
+    Content: (AttributeValue);
+    HorizPos: Left = Previous . Right;
+    VertPos: HRef = Previous . HRef;
+    Size: TAG_FONTSIZE;
+    Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+    Foreground: ATTRVALUE_Color;
+    Depth: Enclosing =;
+    Background : IMPORT_BG_Color;
+    FillPattern: backgroundcolor;
+    ShowBox;
+    PaddingTop: 5 px;
+    IN Structure_view BEGIN
+      HorizPos: Left = Previous . Right;
+      VertPos: HRef = Previous . HRef;
+      Visibility: 4;  Foreground: ATTRVALUE_Color;
+      FillPattern: nopattern;
+      END;
+#endif
+   END;
+
   UnionAttrName: BEGIN
 #ifdef INSTANCE
     Visibility: 0;
@@ -195,15 +272,16 @@ BOXES
     Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
     Foreground: ATTR_Color;
     Depth: Enclosing - 2;
-    Background : White;
+    Background : UNION_BG_Color;
     FillPattern: backgroundcolor;
     ShowBox;
-  PaddingTop: 5 px;
+    PaddingTop: 5 px;
     IN Structure_view BEGIN
       HorizPos: Left = Previous . Right;
       VertPos: HRef = Previous . HRef;
       Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-  PaddingTop: 0;
+      PaddingTop: 0;
+      FillPattern: nopattern;
  	    END;
 #endif
    END;
@@ -220,13 +298,14 @@ BOXES
     Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
     Foreground: ATTRVALUE_Color;
     Depth: Enclosing - 2;
-    Background : White;
+    Background : UNION_BG_Color;
     FillPattern: backgroundcolor;
-    ShowBox; 
+    ShowBox;
     IN Structure_view BEGIN
       HorizPos: Left = Previous . Right;
       VertPos: HRef = Previous . HRef;
       Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+      FillPattern: nopattern;
       END;
 #endif
    END;
@@ -456,6 +535,20 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
+
+ ImportButton: BEGIN
+	Content: Picture 'xtigerrepeat.png';
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top - 2 px;
+	MarginTop: 0 px;
+	MarginBottom: 0 px;
+	MarginLeft: 0 px;
+	MarginRight: 0 px;
+  Inline: No;
+	Depth: Creator - 2;
+	IN Structure_view
+		Visibility: 0;
+	END;
 #endif
 
 #ifdef INSTANCE
@@ -515,19 +608,28 @@ RULES
         END;
 
   Template:
-        BEGIN
-        Width: Enclosing . Width;
-        CreateBefore(ElementName);
-        CreateWith(VerticalLine);
-        IN Structure_view BEGIN
-                Size: TAG_FONTSIZE;
-                Width: Enclosing . Width - 1;
-                Height: Enclosed . Height;
-                HorizPos: Left = Enclosing . Left + 1;
-                PaddingLeft: 0.4;
-                Font: Helvetica;
-                END;
-        END;
+    BEGIN
+    Width: Enclosing . Width;
+    CreateBefore(ElementName);
+    CreateWith(VerticalLine);
+		PaddingTop: 			  30 px;
+		PaddingBottom: 			30 px;
+		PaddingLeft: 		  	30 px;
+		PaddingRight: 			30 px;
+		MarginBottom: 			10 px;
+		MarginTop: 			    2 px;
+    Background : DarkGrey1;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+    IN Structure_view BEGIN
+           Size: TAG_FONTSIZE;
+           Width: Enclosing . Width - 1;
+           Height: Enclosed . Height;
+           HorizPos: Left = Enclosing . Left + 1;
+           PaddingLeft: 0.4;
+           Font: Helvetica;
+           END;
+    END;
 
   Comment\240:
         BEGIN
@@ -646,7 +748,7 @@ RULES
 	  CreateWith(VerticalLine);
     Width: Enclosing . Width;
     Height:  Enclosed . Height;
-    VertPos: Top = Previous AnyElem. Bottom + 30 px;
+    VertPos: Top = Previous AnyElem. Bottom + 32 px;
     HorizPos: Left = Enclosing . Left;
     Background : White;
     Display : Block;
@@ -682,6 +784,38 @@ RULES
 #endif
 	 END;
 
+  import:
+		BEGIN
+#ifdef INSTANCE
+		Visibility: 0;
+#else
+		Visibility: 10;
+	  CreateBefore(ElementName);
+	  CreateWith(VerticalLine);
+    VertPos: Top = Previous AnyElem. Bottom + 4 px;
+	  Width: Enclosing . Width;
+    HorizPos: Left = Enclosing . Left;
+    Display : Block;
+    Background : IMPORT_BG_Color;
+    FillPattern: backgroundcolor;
+    ShowBox; 
+  	IN Structure_view BEGIN
+		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	    Width: Enclosing . Width - STRUCT_INDENT;
+		  VertPos: Top = Previous . Bottom;
+			BorderTopWidth: 0;
+			BorderLeftWidth: 0;
+			BorderBottomWidth: 0;
+		  BorderRightWidth: 0;
+		  PaddingRight: 0;
+		  PaddingLeft: 0;
+		  PaddingTop: 0;
+		  PaddingBottom: 0;
+      FillPattern: nopattern;
+		  END;
+#endif
+	 END;
+
   union:
 		BEGIN
 #ifdef INSTANCE
@@ -690,11 +824,11 @@ RULES
 		Visibility: 10;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
-    VertPos: Top = Previous AnyElem. Bottom + 30 px;
+    VertPos: Top = Previous AnyElem. Bottom + 32 px;
 	  Width: Enclosing . Width;
     HorizPos: Left = Enclosing . Left;
     Display : Block;
-    Background : White;
+    Background : UNION_BG_Color;
     FillPattern: backgroundcolor;
     ShowBox; 
   	IN Structure_view BEGIN
@@ -935,7 +1069,7 @@ ATTRIBUTES
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   option = option_set:
   BEGIN
@@ -949,16 +1083,19 @@ ATTRIBUTES
   if useSimple AND NOT immediately within repeat AND NOT immediately within bag
     CreateFirst(OptionButton);
 	CreateBefore(AttrNameAndValue);
-	END;    
+	END;
 
   name:
   BEGIN
-	CreateBefore(ComponentName);
+  if union
+	  CreateBefore(UnionName);
+  if NOT union
+	  CreateBefore(ComponentName);
 #ifndef INSTANCE
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 #endif
-	END;    
+	END;
 
   ref_name:
   BEGIN
@@ -966,7 +1103,17 @@ ATTRIBUTES
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 #endif
-	END;    
+	END;
+
+  src:
+  BEGIN
+#ifndef INSTANCE
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	CreateFirst(ImportAttrName);
+	CreateLast(ImportAttrValue);
+#endif
+	END;
 
   title:
   BEGIN
@@ -977,44 +1124,44 @@ ATTRIBUTES
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 #endif
-	END;    
+	END;
 
 #ifndef INSTANCE
   includeAt:
   BEGIN
 	CreateFirst(UnionAttrName);
 	CreateFirst(UnionAttrValue);
-	END;    
+	END;
 
   exclude:
   BEGIN
 	CreateFirst(UnionAttrName);
 	CreateFirst(UnionAttrValue);
-	END;    
+	END;
 	
   minOccurs:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   maxOccurs:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   currentType:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 	
   type:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   types:
   BEGIN
@@ -1028,37 +1175,37 @@ ATTRIBUTES
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   defaultAt:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   fixed:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   values:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   version:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 
   templateVersion:
   BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	END;    
+	END;
 #endif
 
   types= 'string':

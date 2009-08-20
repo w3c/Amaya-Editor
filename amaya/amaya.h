@@ -475,6 +475,7 @@ THOT_EXPORT ThotBool   UseLastTarget;
 THOT_EXPORT ThotBool   LinkAsCSS;
 THOT_EXPORT ThotBool   LinkAsXmlCSS;
 THOT_EXPORT ThotBool   LinkAsJavascript;
+THOT_EXPORT ThotBool   LinkAsImport;
 THOT_EXPORT ThotBool   SaveAsHTML;
 THOT_EXPORT ThotBool   SaveAsXML;
 THOT_EXPORT ThotBool   SaveAsText;

@@ -2179,6 +2179,72 @@ void TemplateCreateTextBox (Document doc, View view)
 void TemplateCreateImport (Document doc, View view)
 {
 #ifdef TEMPLATES
+  Element        selElem, selElem2, parent;
+  Element        el, prev, next;
+  ElementType    elType;
+  SSchema        sstempl;
+  XTigerTemplate t;
+  int            firstChar, lastChar, firstChar2, lastChar2;
+
+  if (!TtaGetDocumentAccessMode(doc))
+    return;
+
+  sstempl = TtaGetSSchema ("Template", doc);
+  if (sstempl && IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
+    {
+      TtaGiveFirstSelectedElement (doc, &selElem, &firstChar, &lastChar);
+      TtaGiveLastSelectedElement (doc, &selElem2, &firstChar2, &lastChar2);
+      t = GetXTigerDocTemplate (doc);
+      if (selElem == NULL || t == NULL || selElem != selElem2 || lastChar > firstChar)
+        return;
+
+      elType =  TtaGetElementType(selElem);
+      if (elType.ElSSchema == sstempl)
+        {
+          // locate the position of the new import
+          prev = next = NULL;
+          if (elType.ElSSchema == sstempl &&
+              elType.ElTypeNum == Template_EL_component)
+            next = selElem;
+          else if (elType.ElSSchema == sstempl &&
+                   (elType.ElTypeNum == Template_EL_union ||
+                    elType.ElTypeNum == Template_EL_import))
+            prev = selElem;
+          else if (elType.ElSSchema == sstempl &&
+                   (elType.ElTypeNum == Template_EL_head ||
+                    elType.ElTypeNum == Template_EL_Template))
+            parent = selElem;
+          else
+            {
+              elType.ElSSchema = sstempl;
+              elType.ElTypeNum = Template_EL_head;
+              parent = TtaGetExactTypedAncestor (selElem, elType);
+              if (parent == NULL)
+                {
+                  elType.ElTypeNum = Template_EL_Template;
+                  parent = TtaGetExactTypedAncestor (selElem, elType);
+                }
+              if (parent == NULL)
+                return;
+              elType.ElTypeNum = Template_EL_component;
+              prev = TtaGetExactTypedAncestor (selElem, elType);
+            }
+          // create the import
+          elType.ElTypeNum = Template_EL_import;
+          el = TtaNewElement (doc, elType);
+          if (prev)
+            TtaInsertSibling (el, prev, FALSE, doc);
+          else if (next)
+            TtaInsertSibling (el, next, TRUE, doc);
+          else
+            TtaInsertFirstChild (&el, parent, doc);
+          TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+          TtaRegisterElementCreate (el, doc);
+          TtaSelectElement (doc, el);
+          LinkAsImport = TRUE;
+          SelectDestination (doc, el, TRUE, FALSE);
+        }
+    }
 #endif /* TEMPLATES */
 }
 
@@ -2792,17 +2858,18 @@ Element Template_CreateUseFromSelection (Document doc, int view, ThotBool create
             use = Template_CreateEmptyBlockUse (doc);
           else if (selType.ElSSchema == sstempl)
             {
+              // locate the position of the new component
               prev = next = NULL;
               if (selType.ElSSchema == sstempl &&
                   selType.ElTypeNum == Template_EL_component)
                 next = selElem;
               else if (selType.ElSSchema == sstempl &&
-                       selType.ElTypeNum == Template_EL_union)
+                       (selType.ElTypeNum == Template_EL_union ||
+                        selType.ElTypeNum == Template_EL_import))
                 prev = selElem;
               else if (selType.ElSSchema == sstempl &&
                        (selType.ElTypeNum == Template_EL_head ||
-                        selType.ElTypeNum == Template_EL_Template ||
-                        selType.ElTypeNum == Template_EL_component))
+                        selType.ElTypeNum == Template_EL_Template))
                 parent = selElem;
               else
                 {
@@ -2822,6 +2889,7 @@ Element Template_CreateUseFromSelection (Document doc, int view, ThotBool create
               
               if (QueryComponentFromUser (buffer, 128))
                 {
+                  // create the component
                   compType.ElSSchema = sstempl;
                   compType.ElTypeNum = Template_EL_component;
                   comp = TtaNewElement (doc, compType);

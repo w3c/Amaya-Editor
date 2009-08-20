@@ -1535,7 +1535,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
   char                buffer[MAX_LENGTH];
   int                 length, piNum;
   ThotBool            new_, oldStructureChecking;
-  ThotBool            isHTML, isSVG;
+  ThotBool            isHTML, isSVG, isLib;
 
   if (element == NULL)
     return;
@@ -1549,6 +1549,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
   s = TtaGetSSchemaName (elType.ElSSchema);
   isHTML = !strcmp (s, "HTML");
   isSVG = !strcmp (s, "SVG");
+  isLib = !strcmp (s, "Template");
 
   if (!LinkAsXmlCSS)
     /* It isn't a link to an xml stylesheet */
@@ -1571,7 +1572,11 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
       else if (isSVG)
           attrType.AttrTypeNum = SVG_ATTR_xlink_href;
 #endif /* _SVG */
-      else
+#ifdef TEMPLATES
+      else if (isLib)
+          attrType.AttrTypeNum = Template_ATTR_src;
+#endif /* TEMPLATES */
+       else
         {
           /* the origin of the link is not a HTML element */
           /* create a XLink link */
@@ -1599,7 +1604,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
           TtaSetStructureChecking (FALSE, doc);
           TtaAttachAttribute (element, attr, doc);
           TtaSetStructureChecking (oldStructureChecking, doc);
-          if (!isHTML && !isSVG)
+          if (!isHTML && !isSVG && !isLib)
             {
               /* Attach the XLink namespace declaration */
               TtaSetUriSSchema (attrType.AttrSSchema, XLink_URI);
@@ -2022,6 +2027,14 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
                   attrType.AttrTypeNum = SVG_ATTR_xlink_href;
                 }
 #endif /* _SVG */
+#ifdef TEMPLATES
+              else if (!strcmp (name, "Template"))
+                /* it's an SVG element */
+                {
+                  attrType.AttrSSchema = elType.ElSSchema;
+                  attrType.AttrTypeNum = Template_ATTR_src;
+                }
+#endif /* TEMPLATES */
               else
                 {
                   attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
@@ -2051,6 +2064,14 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
                                    TtaGetViewFrame (doc, 1), URL_list,
                                    AttrHREFvalue,
                                    doc, docCSS);
+#ifdef TEMPLATES
+      else if (LinkAsImport)
+        /* select a Javascript file */
+        created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,
+                                   TtaGetViewFrame (doc, 1), URL_list,
+                                   AttrHREFvalue,
+                                   doc, docTemplate);
+#endif /* TEMPLATES */
       else if (LinkAsJavascript)
         /* select a Javascript file */
         created = CreateHRefDlgWX (BaseDialog + AttrHREFForm,

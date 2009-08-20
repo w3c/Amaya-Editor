@@ -2087,7 +2087,7 @@ void OpenNew (Document document, View view, int docType, int docProfile)
       strcat (name,".xtl");
       strcpy (ScanFilter, "*.xtl");
       InitOpenDocForm (document, view, name,
-                       TtaGetMessage (AMAYA, AM_NEW_LIBRARY), docLibrary);
+                       TtaGetMessage (LIB, TemplateLibrary), docLibrary);
     }
   else
     {
@@ -6140,6 +6140,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
               LinkAsCSS = FALSE;
               LinkAsXmlCSS = FALSE;
               LinkAsJavascript = FALSE;
+              LinkAsImport = FALSE;
             }
           TtaDestroyDialogue (BaseDialog + AttrHREFForm);
           //TtaDestroyDialogue (BaseDialog + FileBrowserForm);
@@ -6149,6 +6150,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
         {
           if (LinkAsXmlCSS || LinkAsCSS)
             strcpy (ScanFilter, "*.css");
+          else if (LinkAsImport)
+            strcpy (ScanFilter, "*.xtl");
           else if (LinkAsJavascript)
             strcpy (ScanFilter, "*.js");
           else if (!strcmp (ScanFilter, "*.css") && !strcmp (ScanFilter, "*.js"))
@@ -6906,6 +6909,7 @@ void InitAmaya (NotifyEvent * event)
   LinkAsCSS = FALSE;
   LinkAsXmlCSS = FALSE;
   LinkAsJavascript = FALSE;
+  LinkAsImport = FALSE;
   ImgPosition = 0;
   AttrHREFelement = NULL;
   Right_ClickedElement = NULL;

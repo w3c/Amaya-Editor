@@ -81,6 +81,8 @@ extern void Template_CreateTextBox ( Document doc,
                                      ThotBool createComp );
 extern void TemplateCreateTextBox ( Document doc,
                                     View view );
+extern void TemplateCreateImport ( Document doc,
+                                   View view );
 extern void TemplateCreateFreeBox ( Document doc,
                                     View view );
 extern void TemplateCreateUnion ( Document doc,
@@ -187,6 +189,8 @@ extern void Template_CreateTextBox ( Document doc,
                                        ThotBool createComp );
 extern void TemplateCreateTextBox ( Document doc,
                                       View view );
+extern void TemplateCreateImport ( Document doc,
+                                     View view );
 extern void TemplateCreateFreeBox ( Document doc,
                                       View view );
 extern void TemplateCreateUnion ( Document doc,
