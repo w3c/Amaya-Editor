@@ -497,7 +497,8 @@ AmayaFrame *AmayaSplittablePage::AttachFrame (AmayaFrame *p_frame, int position,
     AmayaFrame * p_frame = GetFrame(1);
     Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
     View view         = FrameTable[p_frame->GetFrameId()].FrView;
-    if (split == 2 || m_pSplitterWindow->GetSplitMode() == wxSPLIT_VERTICAL)
+    int mode = m_pSplitterWindow->GetSplitMode();
+    if ((split == 2 && mode != wxSPLIT_HORIZONTAL) || mode == wxSPLIT_VERTICAL)
       {
   	  ok = m_pSplitterWindow->SplitVertically( m_pTopFrame, m_pBottomFrame );
   	  TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
@@ -651,13 +652,13 @@ void AmayaSplittablePage::DoBottomSplitButtonAction()
     {
       // Update toggle buttons
       if ( m_pSplitterWindow->IsSplit() )
-	TtaExecuteMenuAction ("HideHSplitToggle", document, view, FALSE);
+        TtaExecuteMenuAction ("HideHSplitToggle", document, view, FALSE);
       else
-	TtaExecuteMenuAction ("ShowHSplitToggle", document, view, FALSE);
+        TtaExecuteMenuAction ("ShowHSplitToggle", document, view, FALSE);
       // store the wanted orientation for the next split action
-      SetSplitMode(wxSPLIT_HORIZONTAL);
+      SetSplitMode (wxSPLIT_HORIZONTAL);
       // do the split/unsplit action
-      DoSplitUnsplit();
+      DoSplitUnsplit (wxSPLIT_HORIZONTAL);
     }
 }
 
@@ -685,13 +686,13 @@ void AmayaSplittablePage::DoRightSplitButtonAction()
     {
       // Update toggle buttons
       if ( m_pSplitterWindow->IsSplit() )
-	TtaExecuteMenuAction ("HideVSplitToggle", document, view, FALSE);
+        TtaExecuteMenuAction ("HideVSplitToggle", document, view, FALSE);
       else
-	TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
+        TtaExecuteMenuAction ("ShowVSplitToggle", document, view, FALSE);
       // store the wanted orientation for the next split action
-      SetSplitMode(wxSPLIT_VERTICAL);
+      SetSplitMode (wxSPLIT_VERTICAL);
       // do the split/unsplit action
-      DoSplitUnsplit();
+      DoSplitUnsplit (wxSPLIT_VERTICAL);
     }
 }
 
@@ -740,7 +741,7 @@ wxSplitterWindow * AmayaSplittablePage::GetSplitterWindow()
  *      Method:  DoSplitUnsplit
  * Description:  toggle split/unsplit state
   -----------------------------------------------------------------------*/
-void AmayaSplittablePage::DoSplitUnsplit()
+void AmayaSplittablePage::DoSplitUnsplit(int mode)
 {
     AmayaFrame * p_frame = GetFrame(1);
     if (p_frame == NULL)
@@ -752,7 +753,12 @@ void AmayaSplittablePage::DoSplitUnsplit()
     {
       // TODO: montrer la meme vue que la premiere frame
       if ( !strcmp(m_LastOpenViewName, "Formatted_view") )
-        TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
+        {
+          if (mode == wxSPLIT_HORIZONTAL)
+            TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
+          else // if ( !strcmp(m_LastOpenViewName, "Structure_view") )
+            TtaExecuteMenuAction ("ShowStructure", document, view, FALSE); 
+        }
       else if ( !strcmp(m_LastOpenViewName, "Links_view") )
         TtaExecuteMenuAction ("ShowLinks", document, view, FALSE);
       else if ( !strcmp(m_LastOpenViewName, "Alternate_view") )
@@ -765,6 +771,9 @@ void AmayaSplittablePage::DoSplitUnsplit()
   else
     {
 	  FrameToView(TtaGiveActiveFrame(), &document, &view);
+    // remember the last open view
+    if (FrameTable[view].FrViewName)
+    strcpy(m_LastOpenViewName, FrameTable[view].FrViewName);
 	  TtaExecuteMenuAction("Synchronize", document, view, TRUE);
 
 	  if(m_pBottomFrame)
@@ -829,7 +838,7 @@ void AmayaSplittablePage::OnSplitterDClick( wxSplitterEvent& event )
   Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
   View view         = FrameTable[p_frame->GetFrameId()].FrView;
 
-  DoSplitUnsplit();
+  DoSplitUnsplit (wxSPLIT_VERTICAL);
   // Update Toggle buttons
   TtaExecuteMenuAction ("HideHSplitToggle", document, view, FALSE);
   TtaExecuteMenuAction ("HideVSplitToggle", document, view, FALSE);

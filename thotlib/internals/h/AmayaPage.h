@@ -166,7 +166,7 @@ public:
   void SetSplitMode( int mode );
   void DoRightSplitButtonAction();
   void DoBottomSplitButtonAction();
-  void DoSplitUnsplit();
+  void DoSplitUnsplit(int mode);
   void DoSwitchHoriVert();
 
   AmayaQuickSplitButton * GetQuickSplitButton (ThotBool horizontal);

@@ -9,7 +9,7 @@
 #define APPMATHNAMEFILTER _T("MathML files (*.mml)|*.mml|All files (*)|*")
 #define APPHTMLNAMEFILTER _T("HTML files (*.html)|*.html;*.htm;*.xhtml;*.shtml|All files (*)|*")
 #define APPIMAGENAMEFILTER _T("All files (*)|*|Image files (*.png)|*.png|Image files (*.jpg)|*.jpg;*.jpeg|Image files (*.gif)|*.gif")
-#define APPLIBRARYNAMEFILTER _T("Library files (*.lhtml)|*.lhtml|All files (*)|*")
+#define APPLIBRARYNAMEFILTER _T("Library files (*.xtl)|*.xtl")
 #define APPJAVASCRIPTNAMEFILTER _T("Javascript files (*.js)|*.js|All files (*)|*")
 #define APPALLFILESFILTER _T("All files (*)|*")
 #endif /* __FILE_FILTERS_H__ */
