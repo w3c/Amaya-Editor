@@ -255,11 +255,13 @@ static void InstantiateAttribute (XTigerTemplate t, Element el, Document doc)
                 {
                   text = GetAttributeStringValue (el, defAttr, NULL);
                   if (text)
-                    TtaSetAttributeText(attr, text, parent, doc);
-                  TtaFreeMemory(text);
-                  // if it's a src arttribute for an image, load the image
-                  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
-                      elType.ElTypeNum == HTML_EL_IMG)
+                    {
+                      TtaSetAttributeText(attr, text, parent, doc);
+                      TtaFreeMemory(text);
+                    }
+                  else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+                           // if it's a src arttribute for an image, load the image
+                           elType.ElTypeNum == HTML_EL_IMG)
                     if (attrType.AttrTypeNum == HTML_ATTR_SRC &&
                         attrType.AttrSSchema == elType.ElSSchema)
                       {
@@ -791,6 +793,8 @@ Element Template_GetNewXmlElementInstance(Document doc, Declaration decl)
 Element InsertWithNotify (Element el, Element child, Element parent, Document doc)
 {
   ElementType      elType;
+  AttributeType    attrType;
+  Attribute        attr;
   NotifyElement    event;
   char            *name;
   ThotBool         isRow = FALSE, isCell = FALSE;
@@ -820,7 +824,17 @@ Element InsertWithNotify (Element el, Element child, Element parent, Document do
   TtaSetStructureChecking (oldStructureChecking, doc);
 
   if (isImage)
-    InsertImageOrObject (el, doc);
+    {
+      // check if the src attribute is there
+      attrType.AttrSSchema = elType.ElSSchema;
+      if (elType.ElTypeNum == HTML_EL_IMG)
+        attrType.AttrTypeNum = HTML_ATTR_SRC;
+      else
+         attrType.AttrTypeNum = HTML_ATTR_data;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
+        InsertImageOrObject (el, doc);
+    }
   else if (isCell)
     {
       // a cell is created
