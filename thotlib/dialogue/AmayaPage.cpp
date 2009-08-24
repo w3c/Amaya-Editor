@@ -355,7 +355,8 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaSplittablePage, AmayaPage)
  *       ]
  *   ]
   -----------------------------------------------------------------------*/
-AmayaSplittablePage::AmayaSplittablePage( wxWindow * p_parent_window, AmayaWindow * p_amaya_parent_window )
+AmayaSplittablePage::AmayaSplittablePage( wxWindow * p_parent_window,
+                                          AmayaWindow * p_amaya_parent_window )
   :  AmayaPage( p_parent_window, p_amaya_parent_window)
   ,m_pWindowParent( p_amaya_parent_window )
   ,m_SlashRatio( 0.7 )
@@ -381,7 +382,7 @@ AmayaSplittablePage::AmayaSplittablePage( wxWindow * p_parent_window, AmayaWindo
 					    /*| wxSP_PERMIT_UNSPLIT*/
 #endif /* 0 */
 					    );
-  SetSplitMode( wxSPLIT_HORIZONTAL );
+  SetSplitMode(0); // undefined
   p_sizerTop2->Add( m_pSplitterWindow, 1, wxEXPAND, 0 );
 
 
