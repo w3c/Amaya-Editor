@@ -280,6 +280,13 @@ void Template_Close (XTigerTemplate t)
       TtaFreeMemory (t->base_uri);
       t->base_uri = NULL; // the uri was freed
       Template_Clear (t);
+      TtaFreeMemory(t->uri);
+      TtaFreeMemory(t->version);
+      TtaFreeMemory(t->templateVersion);
+      t->uri = NULL;
+      t->version = NULL;
+      t->templateVersion = NULL;
+      t->ref = 0;
     }
 #endif /* TEMPLATES */
 }
@@ -1287,14 +1294,6 @@ void Template_Clear (XTigerTemplate t)
       SearchSet_Empty(t->elements);
       SearchSet_Empty(t->simpleTypes);
       SearchSet_Empty(t->unknowns);
-      
-      TtaFreeMemory(t->uri);
-      TtaFreeMemory(t->version);
-      TtaFreeMemory(t->templateVersion);
-      t->uri = NULL;
-      t->version = NULL;
-      t->templateVersion = NULL;
-	  t->ref = 0;
     }
 #endif /* TEMPLATES */
 }
@@ -1939,7 +1938,7 @@ void Template_AddReference (XTigerTemplate t)
 {
 #ifdef TEMPLATES
   if (t)
-    t->ref++;
+    t->ref += 1;
 #endif /* TEMPLATES */
 }
 
@@ -1950,7 +1949,7 @@ void Template_RemoveReference (XTigerTemplate t)
 #ifdef TEMPLATES
   if (t && t->ref > 0)
   {
-    t->ref--;
+    t->ref -= 1;
     if (t->ref == 0 && !Template_IsPredefined(t))
       Template_Close (t);
   }  

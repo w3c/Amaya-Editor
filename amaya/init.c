@@ -5060,7 +5060,7 @@ Document GetAmayaDoc (const char *urlname, const char *form_data,
   if (doc && DocumentTypes[doc] == docSource)
     doc = GetDocFromSource (doc);
   ok = TRUE;
-  if (IsXTiger (DocumentURLs[doc]))
+  if (IsXTiger (DocumentURLs[doc]) || IsXTigerLibrary (DocumentURLs[doc]))
     // cannot replace a template by a document
     DontReplaceOldDoc = TRUE;
 

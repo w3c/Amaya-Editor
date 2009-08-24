@@ -3301,10 +3301,14 @@ void SaveDocument (Document doc, View view)
           TtaSetDocumentUnmodified (xmlDoc);
           TtaSetInitialSequence (xmlDoc);
           // Reinitialize the template description
-          Template_FillFromDocument (xmlDoc);
+          if (IsTemplateDocument (xmlDoc) && !IsTemplateInstanceDocument(xmlDoc))
+            Template_FillFromDocument (xmlDoc);
         }
       else if (DocumentSource[doc])
         {
+          // Reinitialize the template description
+          if (IsTemplateDocument (doc) && !IsTemplateInstanceDocument(doc))
+            Template_FillFromDocument (doc);
           TtaSetDocumentUnmodified (DocumentSource[doc]);
           TtaSetInitialSequence (DocumentSource[doc]);
         }

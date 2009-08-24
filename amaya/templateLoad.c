@@ -439,6 +439,7 @@ DocumentType LoadTemplate (Document doc, char* templatename)
             Template_ShowErrors(t);
           else
             docType = DocumentTypes[newdoc];
+          Template_AddReference (t);
         }
      }
   else
@@ -476,6 +477,7 @@ static void LoadLibrary_callback (int newdoc, int status,  char *urlName,
   ----------------------------------------------------------------------*/
 ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
 {
+  ThotBool         result = FALSE;
 #ifdef TEMPLATES
   int              docLoading;
   Document         newdoc = 0;
@@ -493,18 +495,21 @@ ThotBool Template_LoadXTigerTemplateLibrary (XTigerTemplate t)
       
       while (!LibraryIsLoaded)
         TtaHandlePendingEvents ();
-      t = GetXTigerDocTemplate(newdoc);
-      
-#ifdef TEMPLATE_DEBUG  
-      if (Template_HasErrors(t))
-        printf("XTiger library %s has error(s)\n", t->uri);
-      else
-        printf("XTiger library %s loaded successfully.\n", t->uri);
-#endif /* TEMPLATE_DEBUG */
-      
       W3Loading = docLoading;      
-      return !Template_HasErrors(t);
   }
+
+  if (t)
+    {
+      Template_AddReference (t);
+      result = !Template_HasErrors (t);
+
+#ifdef TEMPLATE_DEBUG 
+      if (result)
+        printf("XTiger library %s loaded successfully.\n", t->uri);
+      else
+        printf("XTiger library %s has error(s)\n", t->uri);
+#endif /* TEMPLATE_DEBUG */
+    }
 #endif /* TEMPLATES */
-  return FALSE;
+  return result;
 }
