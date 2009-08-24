@@ -1124,7 +1124,7 @@ ThotBool UseButtonClicked (NotifyElement *event)
   Element         el = event->element;
   Element         child, parent;
   ElementType     elType, parentType;
-  View            view;
+  View            view = 1;
   XTigerTemplate  t;
   Declaration     decl;
   Element         firstEl, newEl = NULL;

@@ -5366,7 +5366,6 @@ static ThotBool MathMoveForward ()
   Document      doc;
   Element       el, nextEl, leaf, ancestor, sibling, selected;
   ElementType   elType, successorType;
-  AttributeType attrType;
   int           firstChar, lastChar, len, i;
   NotifyElement event;
   ThotBool      done, found, ok;
