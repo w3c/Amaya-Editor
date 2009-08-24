@@ -2688,6 +2688,18 @@ static ThotBool ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
                             ok = TRUE;
                           }
                       }
+					if (!ok && NChangeTypeItems == 0 && pEl->ElParent &&
+						pEl->ElParent->ElStructSchema &&
+						!strcmp (pEl->ElParent->ElStructSchema->SsName, "Template") /*&&
+						!strcmp (newSSchema->SsName,
+                                     pEl->ElStructSchema->SsName)*/)
+					{
+						// Perhaps the right test is the CsAny constructor
+						ok = TRUE;
+						if (IsomorphicTypes (pEl->ElStructSchema, pEl->ElTypeNumber,
+                                 newSSchema, newTypeNum))
+						  method = M_EQUIV;
+					}
                     if (ok)
                       /* le type est dans la table, on effectue le
                          changement */
@@ -3084,7 +3096,9 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                                      typeNum, pSS, pSelDoc);
           if (ok && empty && !EmptyElement (pEl))
             empty = FALSE;
-
+          if (!ok && pEl->ElParent && pEl->ElParent->ElStructSchema &&
+			  !strcmp (pEl->ElParent->ElStructSchema->SsName, "Template"))
+			ok = TRUE;
           ancestorRule = 0;
           if (!ok)
             /* si l'element a creer apparait dans le schema de structure
