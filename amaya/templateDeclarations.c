@@ -276,17 +276,19 @@ void Template_Close (XTigerTemplate t)
     {
 	  if (Template_IsInstance (t))
         HashMap_DestroyElement (Templates_Map, t->uri);
-      t->uri = NULL; // the uri was freed
-      TtaFreeMemory (t->base_uri);
-      t->base_uri = NULL; // the uri was freed
-      Template_Clear (t);
-      TtaFreeMemory(t->uri);
-      TtaFreeMemory(t->version);
-      TtaFreeMemory(t->templateVersion);
-      t->uri = NULL;
-      t->version = NULL;
-      t->templateVersion = NULL;
-      t->ref = 0;
+	  else
+	  {
+        Template_Clear (t);
+        TtaFreeMemory(t->uri);
+        TtaFreeMemory (t->base_uri);
+        TtaFreeMemory(t->version);
+        TtaFreeMemory(t->templateVersion);
+        t->uri = NULL;
+        t->base_uri = NULL; // the uri was freed
+        t->version = NULL;
+        t->templateVersion = NULL;
+        t->ref = 0;
+	  }
     }
 #endif /* TEMPLATES */
 }

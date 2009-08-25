@@ -427,15 +427,19 @@ void TCloseDocument (PtrDocument pDoc)
       notifyDoc.view = 0;
       if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
         {
-          /* if there is a "Spell checker" menu entry, close the spell checker
-             dialog box */
-          if (ThotLocalActions[T_clearhistory] != NULL)
-            (*(Proc1)ThotLocalActions[T_clearhistory]) ((void *)pDoc);
-          /* if some dialog boxes for attribute input are displayed
-             for that document, close them */
-          CloseAttributeDialogues (pDoc);
-          TtaHandlePendingEvents ();
-          CloseDocumentAndViews(pDoc, TRUE);
+		  pDoc = LoadedDocument[document-1];
+		  if (pDoc)
+		  {
+            /* if there is a "Spell checker" menu entry, close the spell checker
+               dialog box */
+            if (ThotLocalActions[T_clearhistory] != NULL)
+              (*(Proc1)ThotLocalActions[T_clearhistory]) ((void *)pDoc);
+            /* if some dialog boxes for attribute input are displayed
+               for that document, close them */
+            CloseAttributeDialogues (pDoc);
+            TtaHandlePendingEvents ();
+            CloseDocumentAndViews(pDoc, TRUE);
+		  }
         }
     }
 }
