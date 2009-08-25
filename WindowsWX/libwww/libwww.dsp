@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\libpng\zlib" /I "..\..\..\wxWidgets\src\zlib" /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\..\libwww\Library\src" /I "..\..\..\libwww\Library\External" /I "..\..\..\libwww\modules" /I "..\..\..\libwww\Library\src\windows" /D "HT_DAV" /D "HT_ZLIB" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "LIBWWW_USEIDN" /D "WITHOUT_ICONV" /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\libpng\zlib" /I "..\..\..\wxWidgets\src\zlib" /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\..\libwww\Library\src" /I "..\..\..\libwww\modules" /I "..\..\..\libwww\Library\src\windows" /I "..\..\..\libwww\Library\src\SSL" /I "..\..\..\openssl\inc32" /D "HT_DAV" /D "HT_ZLIB" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "LIBWWW_USEIDN" /D "WITHOUT_ICONV" /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\..\..\wxWidgets\src\zlib" /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\..\libwww\Library\src" /I "..\..\..\libwww\Library\External" /I "..\..\..\libwww\modules" /I "..\..\..\libwww\Library\src\windows" /D "HT_DAV" /D "HT_ZLIB" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "LIBWWW_USEIDN" /D "WITHOUT_ICONV" /FD /c
+# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\..\..\wxWidgets\src\zlib" /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\..\libwww\Library\src" /I "..\..\..\libwww\modules" /I "..\..\..\libwww\Library\src\windows" /I "..\..\..\libwww\Library\src\SSL" /I "..\..\..\openssl\inc32" /D "HT_DAV" /D "HT_ZLIB" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "LIBWWW_USEIDN" /D "WITHOUT_ICONV" /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -468,6 +468,22 @@ SOURCE=..\..\..\libwww\Library\src\HTSChunk.c
 # Begin Source File
 
 SOURCE=..\..\..\libwww\Library\src\HTSocket.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\Library\src\SSL\HTSSL.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\Library\src\SSL\HTSSLhttps.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\Library\src\SSL\HTSSLReader.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\libwww\Library\src\SSL\HTSSLWriter.c
 # End Source File
 # Begin Source File
 
