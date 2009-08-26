@@ -8,7 +8,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "11.2"
+  !define VERSION "11.3"
   Name "Amaya"
   OutFile "amaya-WinXP-${VERSION}.exe"
   
@@ -74,10 +74,10 @@
   !insertmacro MUI_LANGUAGE "Spanish"
   !insertmacro MUI_LANGUAGE "SimpChinese"
   !insertmacro MUI_LANGUAGE "TradChinese"
-;  !insertmacro MUI_LANGUAGE "Japanese"
+  !insertmacro MUI_LANGUAGE "Japanese"
 ;  !insertmacro MUI_LANGUAGE "Korean"
   !insertmacro MUI_LANGUAGE "Italian"
-;  !insertmacro MUI_LANGUAGE "Dutch"
+  !insertmacro MUI_LANGUAGE "Dutch"
 ;  !insertmacro MUI_LANGUAGE "Danish"
 ;  !insertmacro MUI_LANGUAGE "Swedish"
 ;  !insertmacro MUI_LANGUAGE "Norwegian"
@@ -344,6 +344,26 @@ Section "Amaya" SecAmaya
 
   ;Create desktop link
   CreateShortCut "$DESKTOP\Amaya.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
+
+  ;register extension files
+  WriteRegStr HKCR ".xtd" "" "XTD"
+  WriteRegStr HKCR ".xtl" "" "XTL"
+  WriteRegStr HKCR ".svg" "" "SVG"
+  WriteRegStr HKCR ".mml" "" "MML"
+  WriteRegStr HKCR ".html" "" "HTML"
+  WriteRegStr HKCR ".htm" "" "HTM"
+  WriteRegStr HKCR "XTD\Shell\Action2" "" "Edit File"
+  WriteRegStr HKCR "XTD\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "XTL\Shell\Action2" "" "Edit File"
+  WriteRegStr HKCR "XTL\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "SVG\Shell\Action2" "" "Edit File"
+  WriteRegStr HKCR "SVG\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "MML\Shell\Action2" "" "Edit File"
+  WriteRegStr HKCR "MML\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "HTML\Shell\Action2" "" "Edit File"
+  WriteRegStr HKCR "HTML\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "HTM\Shell\Action2" "" "Edit File"
+  WriteRegStr HKCR "HTM\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
 SectionEnd
 
 
@@ -406,6 +426,26 @@ Section /o ".css (Cascading Style Sheets)" SecAssCSS
   no_amaya:
     WriteRegStr HKCR ".css" "AM_OLD_VALUE" $R0
   WriteRegStr HKCR ".css" "" "Amaya"
+  allready_amaya:
+SectionEnd
+
+; --> .xtd
+Section /o ".xtd (XTiger Template)" SecAssXTD
+  ReadRegStr $R0 HKCR ".xtd" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".xtd" "AM_OLD_VALUE" $R0
+  WriteRegStr HKCR ".xtd" "" "Amaya"
+  allready_amaya:
+SectionEnd
+
+; --> .xtl
+Section /o ".xtl (XTiger Library)" SecAssXTL
+  ReadRegStr $R0 HKCR ".xtl" ""
+  StrCmp $R0 "Amaya" allready_amaya no_amaya
+  no_amaya:
+    WriteRegStr HKCR ".xtl" "AM_OLD_VALUE" $R0
+  WriteRegStr HKCR ".xtl" "" "Amaya"
   allready_amaya:
 SectionEnd
 
@@ -503,6 +543,16 @@ Section "Uninstall"
   StrCmp $R0 "Amaya" 0 +3
     ReadRegStr $R0 HKCR ".xml" "AM_OLD_VALUE"
     WriteRegStr HKCR ".xml" "" $R0
+  ; --> .xtd
+  ReadRegStr $R0 HKCR ".xtd" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".xtd" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".xtd" "" $R0
+  ; --> .xtl
+  ReadRegStr $R0 HKCR ".xtl" ""
+  StrCmp $R0 "Amaya" 0 +3
+    ReadRegStr $R0 HKCR ".xtl" "AM_OLD_VALUE"
+    WriteRegStr HKCR ".xtl" "" $R0
 
 SectionEnd
 
