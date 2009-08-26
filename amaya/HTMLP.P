@@ -2425,8 +2425,8 @@ RULES
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         LineBreak: No;
-        Size: Enclosing * 60 %;
-        HorizRef: Enclosed . HRef - 0.3;
+        Size: Enclosing * 75 %;
+        HorizRef: Enclosed . HRef - 0.5;
         HorizPos: Left = Previous . Right;
         VertPos: HRef = Previous . HRef;
         IN Structure_view BEGIN
@@ -2450,8 +2450,8 @@ RULES
         CreateBefore(ElementName);
         CreateWith(VerticalLine);
         LineBreak: No;
-        Size: Enclosing * 60 %;
-        HorizRef: Enclosed . HRef + 0.4;
+        Size: Enclosing * 75 %;
+        HorizRef: Enclosed . HRef + 0.8;
         HorizPos: Left = Previous . Right;
         VertPos: HRef = Previous . HRef;
         IN Structure_view BEGIN
