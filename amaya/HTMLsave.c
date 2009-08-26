@@ -2504,9 +2504,12 @@ static int SaveLocalCopy (Document doc, View view, char *url,
               DocumentMeta[doc]->content_location)
               // add the default name
             strcat (pathname, DocumentMeta[doc]->content_location);
-          if (ask)
+         if (ask)
             {
               sprintf (msg, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), DocumentURLs[doc]);
+	      strcat (msg, "(");
+	      strcat (msg, AmayaLastHTTPErrorMsg);
+	      strcat (msg, ")");
               InitConfirm3L (doc, 1, msg, TtaGetMessage (AMAYA, AM_SAVING_FAILED),
                              pathname, TRUE);
             }
