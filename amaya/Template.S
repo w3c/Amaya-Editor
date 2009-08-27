@@ -49,7 +49,10 @@ STRUCT
   import (ATTR src = TEXT) = CONSTANT C_CR; {It is always empty}
 
   repeat ( ATTR title = TEXT; minOccurs = TEXT; maxOccurs = TEXT) = LIST OF (Repetition);
-  Repetition = TemplateObject - (repeat);
+  Repetition =  CASE OF
+    useEl;
+    useSimple;
+    END + (Comment\240, XMLPI);
 
   useEl (ATTR option = option_set, option_unset; title; types = TEXT;
          currentType = TEXT;  prompt = Yes_)
@@ -72,7 +75,7 @@ EXCEPT
   Comment\240:       ReturnCreateNL, NoSpellCheck, NoReplicate, NotAnElementNode;
   Comment_line:      Hidden, MarkupPreserve;
   useEl:             NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface;
-  component:         NewRoot;
+  component:         NewRoot, NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface;
   useSimple:         NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface;
   repeat:            NoReplicate, NoBreakByReturn, NoCreate, ClickableSurface;
   bag:               NoReplicate, NoBreakByReturn, NoCreate, ParagraphBreak, ClickableSurface;

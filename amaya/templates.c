@@ -1603,14 +1603,14 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
 #ifdef TEMPLATES
   ElementType     elType = event->elementType;
   Element         parent = event->element;
-  ElementType     parentType = TtaGetElementType(parent);
-  Element         ancestor, el, next;
+  ElementType     parentType = TtaGetElementType(parent), childType;
+  Element         ancestor, el, next, child;
   ElementType     ancestorType;
   SSchema         templateSSchema;
   XTigerTemplate  t;
   char           *types, *ptr, *name = NULL;
   int             len, view, i, doc = event->document;
-  ThotBool        b;
+  ThotBool        b, isInstance;
 
   if (event->info == 1)
     return FALSE;
@@ -1624,8 +1624,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   templateSSchema = TtaGetSSchema ("Template", doc);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
-  if (!IsTemplateInstanceDocument(doc))
-    return FALSE; // let Thot do the job
+  isInstance = IsTemplateInstanceDocument(doc);
 
   // Fisrt, test if in a xt:bag or in a base-element xt:use
   if (parentType.ElSSchema == templateSSchema)
@@ -1636,11 +1635,13 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   if (ancestor)
     {
       ancestorType = TtaGetElementType(ancestor);
+      if (ancestorType.ElTypeNum == Template_EL_component)
+        return FALSE; // let Thot do the job
       if (ancestorType.ElTypeNum == Template_EL_bag)
         {
           // only check the use child
           if (ancestor != parent)
-            return  FALSE; // let Thot do the job
+            return FALSE; // let Thot do the job
           if (elType.ElSSchema == templateSSchema &&
               (elType.ElTypeNum == Template_EL_useSimple ||
                elType.ElTypeNum == Template_EL_useEl))
@@ -1680,11 +1681,32 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
             return TRUE; // don't let Thot do the job
           if (ancestor != parent)
             return  (TtaIsReadOnly (parent) != 0); // let or not Thot do the job
-          types = GetAttributeStringValueFromNum (ancestor, Template_ATTR_currentType, NULL);
+          if (isInstance)
+            types = GetAttributeStringValueFromNum (ancestor, Template_ATTR_currentType, NULL);
+          else
+            types = GetAttributeStringValueFromNum (ancestor, Template_ATTR_types, NULL);
           b = Template_CanInsertElementInUse (doc, elType, types,
                                               parent, event->position);
           if (types && !b)
             {
+              child = TtaGetFirstChild (ancestor);
+              childType = TtaGetElementType(child);
+              if (childType.ElSSchema != templateSSchema ||
+                  childType.ElTypeNum != Template_EL_TemplateObject)
+                {
+                  parent = TtaGetParent (ancestor);
+                  elType = TtaGetElementType(parent);
+                  if (elType.ElSSchema == templateSSchema &&
+                      elType.ElTypeNum == Template_EL_repeat)
+                    {
+                      t = GetXTigerDocTemplate (doc);
+                      name = GetUsedTypeName (ancestor);
+                      DoReplicateUseElement (t, doc, 1, ancestor, parent, name);
+                      TtaFreeMemory (name);
+                    }
+                  return TRUE; // don't let Thot do the job
+                }
+
               // check with equivalent component
               name = (char *)GetXMLElementName (elType, doc);
               if (name)
@@ -2060,11 +2082,16 @@ void Template_CreateTextBox (Document doc, ThotBool createComp)
           if (selType.ElTypeNum == 1)
             {
               // request the element label
-              title = TtaGetMessage (AMAYA, AM_TEMPLATE_USESTRING);
               if (createComp)
-                label = TtaGetMessage (AMAYA, AM_NAME);
+                {
+                  label = TtaGetMessage (AMAYA, AM_NAME);
+                  title = TtaGetMessage (AMAYA, AM_TEMPLATE_NEWCOMP);
+                }
               else
-                label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
+                {
+                  label = TtaGetMessage (AMAYA, AM_TEMPLATE_LABEL);
+                  title = TtaGetMessage (AMAYA, AM_TEMPLATE_USESTRING);
+                }
               QueryStringFromUser(label, title, buffer, 32);
               if (buffer[0] == EOS)
                 // stop the creation
@@ -2768,6 +2795,7 @@ Element Template_CreateUseFromSelection (Document doc, int view, ThotBool create
 
   sstempl = TtaGetSSchema ("Template", doc);
   sshtml  = TtaGetSSchema ("HTML", doc);
+  buffer[0] = EOS;
   if (doc && TtaGetDocumentAccessMode(doc) && sstempl &&
       IsTemplateDocument(doc) && !IsTemplateInstanceDocument(doc))
     {
@@ -3033,11 +3061,13 @@ Element Template_CreateUseFromSelection (Document doc, int view, ThotBool create
                 TtaSetDisplayMode (doc, dispMode);
             }
         }
-      else if (lastChar < firstChar)
-        use = Template_CreateInlineUse (doc);
       else
-        Template_CreateTextBox (doc, createComp);
-
+        {
+          if (lastChar < firstChar && !createComp)
+            use = Template_CreateInlineUse (doc);
+          else
+            Template_CreateTextBox (doc, createComp);
+        }
       TtaSetStructureChecking (oldStructureChecking, doc);
       TtaCloseUndoSequence(doc);
     }

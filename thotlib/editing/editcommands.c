@@ -3156,7 +3156,10 @@ ThotBool InsertChar (int frame, CHAR_T c, int keyboard)
             {
               pAb = pViewSel->VsBox->BxAbstractBox;
               CloseTextInsertion ();
-              DeleteNextChar (frame, pAb->AbElement, TRUE);
+              if (pAb->AbElement &&
+                  pAb->AbElement->ElStructSchema &&
+                  strcmp (pAb->AbElement->ElStructSchema->SsName, "Template"))
+                DeleteNextChar (frame, pAb->AbElement, TRUE);
               pFrame->FrReady = TRUE;
             }
         }

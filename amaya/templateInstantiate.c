@@ -64,7 +64,7 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   useType = TtaGetElementType (child);
   use = TtaCopyElement (child, doc, doc, el);
   types = GetAttributeStringValueFromNum (child, Template_ATTR_types, NULL);
-  if (useType.ElTypeNum != Template_EL_useSimple)
+  if (IsTemplateInstanceDocument(doc) && useType.ElTypeNum != Template_EL_useSimple)
     TtaChangeElementType (use, Template_EL_useSimple);
   if (types)
     {

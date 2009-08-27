@@ -650,14 +650,17 @@ Element TemplateFindHead (Document doc)
   if (headType.ElSSchema == NULL)
     return NULL;
 
-  headType.ElTypeNum = Template_EL_head;
   root = TtaGetMainRoot (doc);
-  head = TtaSearchTypedElement (headType, SearchInTree, root);
+  elType = TtaGetElementType (root);
+  headType.ElTypeNum = Template_EL_head;
+  if (elType.ElSSchema == headType.ElSSchema)
+    head = root;
+  else
+    head = TtaSearchTypedElement (headType, SearchInTree, root);
   if (head == NULL)
     {
       // create the template head
       head = TtaNewElement (doc, headType);
-      elType = TtaGetElementType (root);
       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
         {
           elType.ElTypeNum = HTML_EL_HEAD;

@@ -2659,7 +2659,7 @@ ThotBool Template_CanInsertElementInUse (Document doc, ElementType type,
   Use it to test if a xt:component or a xt:use is used in a template.
   // Param validity must be tested by caller.
   ----------------------------------------------------------------------*/
-ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc,
+ThotBool Template_IsUsedComponentInSubtree (XTigerTemplate t, Document doc,
                                            Element elem, const char* name)
 {
 #ifdef TEMPLATES
@@ -2676,7 +2676,7 @@ ThotBool Template_IsUsedComponentInSubtree(XTigerTemplate t, Document doc,
 #endif /* TEMPLATE_DEBUG */
     {
       elType = TtaGetElementType(elem);
-      if(elType.ElTypeNum==Template_EL_union)
+      if (elType.ElTypeNum==Template_EL_union)
         {
           schema = TtaGetSSchema ("Template", doc);
           if(elType.ElSSchema == schema)

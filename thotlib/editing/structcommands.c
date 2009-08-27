@@ -3096,9 +3096,22 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
                                      typeNum, pSS, pSelDoc);
           if (ok && empty && !EmptyElement (pEl))
             empty = FALSE;
-          if (!ok && pEl->ElParent && pEl->ElParent->ElStructSchema &&
-			  !strcmp (pEl->ElParent->ElStructSchema->SsName, "Template"))
-			ok = TRUE;
+          if (pEl->ElTypeNumber == 1 && pEl->ElParent && (selHead || selTail))
+            // check the upper level
+            pParent = pEl->ElParent->ElParent;
+          else if (pEl->ElStructSchema &&
+                   !strcmp (pEl->ElStructSchema->SsName, "Template"))
+            pParent = NULL;
+          else
+            pParent = pEl->ElParent;
+          if (!ok && pParent && pParent->ElStructSchema &&
+              !strcmp (pParent->ElStructSchema->SsName, "Template"))
+            {
+              // let amaya check the validity
+              if (pParent = pEl->ElParent->ElParent)
+                pEl = pEl->ElParent;
+              ok = TRUE;
+            }
           ancestorRule = 0;
           if (!ok)
             /* si l'element a creer apparait dans le schema de structure

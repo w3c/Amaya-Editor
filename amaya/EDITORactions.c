@@ -2395,6 +2395,7 @@ ThotBool HTMLelementAllowed (Document doc)
   Element             el, ancestor, sibling;
   char               *s;
   int                 firstChar, lastChar;
+  ThotBool            within_use = FALSE;
 
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
@@ -2416,11 +2417,14 @@ ThotBool HTMLelementAllowed (Document doc)
       if (elType.ElTypeNum == Template_EL_component)
         {
           // no structure check within a template component
-          TtaSetStructureChecking (FALSE, doc);
+          if (!within_use)
+            TtaSetStructureChecking (FALSE, doc);
           ancestor = NULL;
         }
       else
         {
+          if (!within_use)
+            within_use = (elType.ElTypeNum == Template_EL_component);
           ancestor = TtaGetParent (ancestor);
           if (ancestor)
             {
