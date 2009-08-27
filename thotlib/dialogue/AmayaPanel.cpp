@@ -76,8 +76,8 @@ wxPanel()
 AmayaToolPanelBar::~AmayaToolPanelBar()
 {
   // Show or hide panel using env
-  unsigned int n;
-  for(n=0; n<m_items.GetCount(); n++)
+  unsigned int n, max = m_items.GetCount();
+  for (n = 0; n < max; n++)
     {
       delete m_items[n];
     }
@@ -130,8 +130,9 @@ bool AmayaToolPanelBar::AddPanel(AmayaToolPanel* panel)
 void AmayaToolPanelBar::LoadConfig()
 {
   // Show or hide panel using env
-  unsigned int n;
-  for(n=0; n<m_items.GetCount(); n++)
+  unsigned int n, max = m_items.GetCount();
+
+  for (n = 0; n < max; n++)
     {
       AmayaToolPanelItem* item = m_items[n];
       if (item)
@@ -148,8 +149,8 @@ void AmayaToolPanelBar::LoadConfig()
   ----------------------------------------------------------------------*/
 void AmayaToolPanelBar::SaveConfig()
 {
-  unsigned int n;
-  for(n=0; n<m_items.GetCount(); n++)
+  unsigned int n, max = m_items.GetCount();
+  for (n = 0; n < max; n++)
     {
       AmayaToolPanelItem* item = m_items[n];
       if(item)
@@ -175,8 +176,8 @@ void AmayaToolPanelBar::ShowHeader(bool bShow)
   ----------------------------------------------------------------------*/
 const AmayaToolPanelItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)const
 {
-  unsigned int n;
-  for (n = 0; n < m_items.GetCount(); n++)
+  unsigned int n, max = m_items.GetCount();
+  for (n = 0; n < max; n++)
     {
       AmayaToolPanelItem *item = m_items[n];
       if (item->GetPanel() == panel)
@@ -191,8 +192,8 @@ const AmayaToolPanelItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* pane
   ----------------------------------------------------------------------*/
 AmayaToolPanelItem* AmayaToolPanelBar::FindItem(const AmayaToolPanel* panel)
 {
-  unsigned int n;
-  for (n = 0; n < m_items.GetCount(); n++)
+  unsigned int n, max = m_items.GetCount();
+  for (n = 0; n < max; n++)
     {
       AmayaToolPanelItem *item = m_items[n];
       if (item->GetPanel() == panel)
@@ -248,11 +249,11 @@ bool AmayaToolPanelBar::IsExpanded(const AmayaToolPanel* panel)const
   ----------------------------------------------------------------------*/
 AmayaToolPanel* AmayaToolPanelBar::GetToolPanel(int type)
 {
-  unsigned int n;
-  for(n=0; n<m_items.GetCount(); n++)
+  unsigned int n, max = m_items.GetCount();
+  for (n = 0; n < max; n++)
     {
       AmayaToolPanelItem* item = m_items[n];
-      if(item->GetPanel()->GetToolPanelType()==type)
+      if (item->GetPanel()->GetToolPanelType() == type)
         {
           return item->GetPanel();
         }

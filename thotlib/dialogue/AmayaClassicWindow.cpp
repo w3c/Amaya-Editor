@@ -129,11 +129,10 @@ bool AmayaClassicWindow::Initialize()
       {
         // Create a AmayaPanel to contains commands shortcut
         m_pPanel = new AmayaToolPanelBar( m_pSplitterWindow, -1, wxDefaultPosition, wxDefaultSize,
-                                   wxTAB_TRAVERSAL
-                                   | wxRAISED_BORDER
-                                   | wxCLIP_CHILDREN );
+                                   wxTAB_TRAVERSAL |
+                                   wxRAISED_BORDER |
+                                   wxCLIP_CHILDREN );
         // Create the notebook
-//        m_pNotebook = new AmayaClassicNotebook( m_pSplitterWindow, wxID_ANY );
         m_pNotebook = new AmayaAdvancedNotebook( m_pSplitterWindow, wxID_ANY );
 
         ThotBool panel_opened;
