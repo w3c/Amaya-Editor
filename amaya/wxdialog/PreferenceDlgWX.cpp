@@ -1329,11 +1329,12 @@ void PreferenceDlgWX::UpdateTemplateList()
   wxString             value;
   Prop_Templates_Path *element = NULL;
   wxListBox           *box;
-  int                  i;
+  int                  i, max;
 
   FreeTemplateRepositoryList();
   box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  for (i = 0; i < (int)box->GetCount(); i++)
+  max = (int)box->GetCount();
+  for (i = 0; i < max; i++)
     {
     element = (Prop_Templates_Path*) AllocTemplateRepositoryListElement( (const char*) box->GetString(i).mb_str(*wxConvCurrent), element);
     if (i == 0)
@@ -1380,22 +1381,23 @@ void PreferenceDlgWX::OnTemplateAdd(wxCommandEvent& event)
 {
   wxString   path = XRCCTRL(*this, "wxID_TEXT_NEW_TEMPLATE", wxTextCtrl)->GetValue();
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_TEMPLATE_REPOSITORIES", wxListBox);
-  int        i;
+  int        i, max;
   
   if (path.IsEmpty())
     return;
-  for (i = 0; i < (int)box->GetCount(); i++)
+  max = (int)box->GetCount();
+  for (i = 0; i < max; i++)
     {
       box->GetString(i).mb_str(*wxConvCurrent);
       if (!strcmp (path.mb_str(wxConvUTF8), box->GetString(i).mb_str(wxConvUTF8)))
         {
           // this entry already exists
-          box->SetSelection(box->GetCount()-1);
+          box->SetSelection(max-1);
           return;
         }
     }
   box->Append(path);
-  box->SetSelection(box->GetCount()-1);
+  box->SetSelection(max-1);
 
   // Update the list of templates
   UpdateTemplateList();
@@ -1716,11 +1718,12 @@ void PreferenceDlgWX::UpdateRDFaNsList()
   Prop_RDFa            prop = GetProp_RDFa();
   Prop_RDFa_Path      *element = NULL;
   wxListBox           *box;
-  int                  i;
+  int                  i, max;
 
   FreeRDFaNSList(&(prop.FirstPath));
   box = XRCCTRL(*this, "wxID_LIST_NS", wxListBox);
-  for (i = 0; i < (int)box->GetCount(); i++)
+  max = (int)box->GetCount();
+  for (i = 0; i < max; i++)
     {
       element = (Prop_RDFa_Path*) AllocRDFaNsListElement( (const char*) box->GetString(i).mb_str(*wxConvCurrent), element);
     if (i == 0)
@@ -1735,22 +1738,23 @@ void PreferenceDlgWX::OnNSAdd(wxCommandEvent& event)
 {
   wxString   path = XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->GetValue();
   wxListBox *box = XRCCTRL(*this, "wxID_LIST_NS", wxListBox);
-  int        i;
+  int        i, max;
   
   if (path.IsEmpty())
     return;
-  for (i = 0; i < (int)box->GetCount(); i++)
+  max = (int)box->GetCount();
+  for (i = 0; i < max; i++)
     {
       box->GetString(i).mb_str(*wxConvCurrent);
       if (!strcmp (path.mb_str(wxConvUTF8), box->GetString(i).mb_str(wxConvUTF8)))
         {
           // this entry already exists
-          box->SetSelection(box->GetCount()-1);
+          box->SetSelection(max-1);
           return;
         }
     }
   box->Append(path);
-  box->SetSelection(box->GetCount()-1);
+  box->SetSelection(max-1);
   XRCCTRL(*this, "wxID_COMBOBOX_NEW_NS", wxComboBox)->SetValue( TtaConvMessageToWX("") );
 }
 
