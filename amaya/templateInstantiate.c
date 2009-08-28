@@ -112,7 +112,7 @@ Element Template_InsertBagChild (Document doc, Element sel, Element bag,
 {
 #ifdef TEMPLATES
   ElementType newElType, selType;
-  Element     use = NULL, el, dummy = NULL;
+  Element     use = NULL, el;
   SSchema     sstempl;
   int         start, end;
   ThotBool    open;
@@ -146,31 +146,29 @@ Element Template_InsertBagChild (Document doc, Element sel, Element bag,
           if (el == NULL && sel != bag)
             // force a selection
             TtaSelectElement (doc, sel);
+          GIType (decl->name, &newElType, doc);
+          el = TtaNewTree (doc, newElType, "");
           if (sel == bag)
             {
               // insert first an empty element
-              if (DocumentTypes[doc] == docHTML)
-                newElType.ElTypeNum = HTML_EL_Element;
-              else if (DocumentTypes[doc] == docMath)
-                newElType.ElTypeNum = MathML_EL_Construct;
-              else
-                newElType.ElTypeNum = XML_EL_XML_Element;
-              newElType.ElSSchema = TtaGetDocumentSSchema (doc);
-              dummy = TtaNewElement(doc, newElType);
-              TtaInsertFirstChild (&dummy, bag, doc);
-              TtaRegisterElementCreate (dummy, doc);
-              TtaSelectElement (doc, dummy);
+              TtaInsertFirstChild (&el, bag, doc);
+              TtaRegisterElementCreate (el, doc);
+              sel = TtaGetFirstChild (el);
+              if (sel == NULL)
+                sel = el;
+              TtaSelectElement (doc, sel);
             }
-          GIType (decl->name, &newElType, doc);
-          TtaInsertAnyElement (doc, before);
-          TtaExtendUndoSequence (doc);
-          TtaInsertElement (newElType, doc);
-          TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
-          if (dummy)
+          else
             {
-              TtaRegisterElementDelete (dummy, doc);
-              TtaDeleteTree (dummy, doc);
+              // insert the new element before or after
+              TtaInsertSibling (el, sel, before, doc);
+              TtaRegisterElementCreate (el, doc);
+              sel = TtaGetFirstChild (el);
+              if (sel == NULL)
+                sel = el;
+              TtaSelectElement (doc, sel);
             }
+          //TtaGiveFirstSelectedElement (doc, &sel, &start, &end);
         }
       else if (decl->nature == ComponentNat)
         {

@@ -54,6 +54,11 @@ extern void NewSelection ( Document doc,
                            Attribute attr,
                            int firstCharacter,
                            int lastCharacter );
+extern ThotBool GetDeferredSelection ( Document doc,
+                                       PtrElement *firstSel,
+                                       PtrElement *lastSel,
+                                       int *firstCharacter,
+                                       int *lastCharacter );
 extern void NewSelectionExtension ( Document doc,
                                     Element element,
                                     int lastCharacter );
@@ -117,6 +122,11 @@ extern void NewSelection ( Document doc,
                              Attribute attr,
                              int firstCharacter,
                              int lastCharacter );
+extern ThotBool GetDeferredSelection ( Document doc,
+                                         PtrElement *firstSel,
+                                         PtrElement *lastSel,
+                                         int *firstCharacter,
+                                         int *lastCharacter );
 extern void NewSelectionExtension ( Document doc,
                                       Element element,
                                       int lastCharacter );

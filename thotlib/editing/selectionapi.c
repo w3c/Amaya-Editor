@@ -123,7 +123,10 @@ void TtaSelectElement (Document document, Element selectedElement)
           }
         }
       else
-        NewSelection (document, selectedElement, NULL, 0, 0);
+        {
+          CancelSelection ();
+          NewSelection (document, selectedElement, NULL, 0, 0);
+        }
     }
 }
 

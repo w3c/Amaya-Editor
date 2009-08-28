@@ -2872,8 +2872,12 @@ ThotBool CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
   NSiblings = 0;
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
                             &lastChar))
-    return FALSE;
-  else if (pSelDoc != pDoc)
+    {
+      if (GetDeferredSelection (doc, &firstSel, &lastSel, &firstChar,
+                                &lastChar))
+        pSelDoc = pDoc;
+    }
+  if (pSelDoc != pDoc)
     /* the document asking for the creation of a new element is NOT the */
     /* document containing the current selection */
     return FALSE;

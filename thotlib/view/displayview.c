@@ -911,7 +911,6 @@ void RedisplayCommand (Document doc)
 }
 
 
-
 /*----------------------------------------------------------------------
   NewSelection
   ----------------------------------------------------------------------*/
@@ -927,6 +926,38 @@ void NewSelection (Document doc, Element element, Attribute attr,
   NewDocSelection[doc - 1].SDElemSel = element;
   NewDocSelection[doc - 1].SDFirstChar = firstCharacter;
   NewDocSelection[doc - 1].SDLastChar = lastCharacter;
+}
+
+/*----------------------------------------------------------------------
+  GetDeferredSelection
+  Return TRUE if there is a differed selection
+  ----------------------------------------------------------------------*/
+ThotBool GetDeferredSelection (Document doc, PtrElement *firstSel, PtrElement *lastSel,
+                               int *firstCharacter, int *lastCharacter)
+{
+  if (documentDisplayMode[doc - 1] == DeferredDisplay && NewDocSelection[doc - 1].SDSelActive)
+    {
+      *firstSel = (PtrElement) NewDocSelection[doc - 1].SDElemSel;
+      *firstCharacter = NewDocSelection[doc - 1].SDFirstChar;
+      if (NewDocSelection[doc - 1].SDElemExt)
+        {
+          // there is an extension
+          *lastCharacter = NewDocSelection[doc - 1].SDCharExt;
+          *lastSel = (PtrElement)NewDocSelection[doc - 1].SDElemExt;
+        }
+      else
+        {
+          *lastCharacter = NewDocSelection[doc - 1].SDLastChar;
+          *lastSel = (PtrElement) NewDocSelection[doc - 1].SDElemSel;
+        }
+      return TRUE;
+    }
+  else
+    {
+      *firstSel = *lastSel = NULL;
+      *firstCharacter = *lastCharacter = 0;
+      return FALSE;
+    }
 }
 
 /*----------------------------------------------------------------------
