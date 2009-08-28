@@ -55,6 +55,7 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   Element     use, parent; /* xt:use to insert.*/
   ElementType useType;  /* type of xt:use.*/
   char       *types = NULL;
+  ThotBool    isInstance;
 
   if (!TtaGetDocumentAccessMode (doc))
     return NULL;
@@ -64,7 +65,8 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   useType = TtaGetElementType (child);
   use = TtaCopyElement (child, doc, doc, el);
   types = GetAttributeStringValueFromNum (child, Template_ATTR_types, NULL);
-  if (IsTemplateInstanceDocument(doc) && useType.ElTypeNum != Template_EL_useSimple)
+  isInstance = IsTemplateInstanceDocument(doc);
+  if (isInstance && useType.ElTypeNum != Template_EL_useSimple)
     TtaChangeElementType (use, Template_EL_useSimple);
   if (types)
     {
@@ -80,7 +82,13 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
     TtaInsertSibling (use, child, TRUE, doc);
   // look for the enclosing target element
   parent = GetParentLine (use, useType.ElSSchema);
-  Template_InsertUseChildren(doc, use, decl, parent, TRUE);
+  if (isInstance)
+    Template_InsertUseChildren (doc, use, decl, parent, TRUE);
+  else
+    {
+      child = Template_FillEmpty (use,doc);
+      TtaSelectElement (doc, child);
+    }
   SetAttributeStringValueWithUndo (use, Template_ATTR_title, decl->name);
   SetAttributeStringValueWithUndo (use, Template_ATTR_currentType, decl->name);
   TtaRegisterElementCreate (use, doc);
@@ -869,6 +877,29 @@ Element InsertWithNotify (Element el, Element child, Element parent, Document do
   return el;
 }
 
+
+/*----------------------------------------------------------------------
+  Template_FillEmpty generates an empty contents
+  ----------------------------------------------------------------------*/
+Element Template_FillEmpty (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  Element         child;
+  ElementType     elType;
+
+  // generate a content
+  child = TtaGetFirstChild (el);
+  if (child == NULL)
+    {
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = Template_EL_TemplateObject;
+      child = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&child, el, doc);
+    }
+  return child;
+#endif /* TEMPLATES */
+  return NULL;
+}
 
 /*----------------------------------------------------------------------
   Template_InsertUseChildren

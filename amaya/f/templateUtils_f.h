@@ -46,6 +46,8 @@ extern void DumpSubtree ( Element el,
 extern char *SaveDocumentToNewDoc ( Document doc,
                                     Document newdoc,
                                     char* newpath );
+extern Element TemplateGetParentHead ( Element el,
+                                       Document doc );
 extern Element TemplateFindHead ( Document doc );
 
 #else /* __STDC__ */
@@ -90,6 +92,8 @@ extern void DumpSubtree ( Element el,
 extern char *SaveDocumentToNewDoc ( Document doc,
                                       Document newdoc,
                                       char* newpath );
+extern Element TemplateGetParentHead ( Element el,
+                                         Document doc );
 extern Element TemplateFindHead ( Document doc );
 
 #endif /* __STDC__ */

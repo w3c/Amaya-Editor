@@ -1332,12 +1332,12 @@ ThotBool OptionButtonClicked (NotifyElement *event)
           child = next;
         }
       while (next);
-      childType.ElSSchema = useType.ElSSchema;
-      childType.ElTypeNum = Template_EL_TemplateObject;
-      child = TtaNewElement (doc, childType);
-      TtaInsertFirstChild (&child, el, doc);
-      TtaRegisterElementCreate (child, doc);
-      TtaSetAccessRight (child, ReadOnly, doc);
+      child = Template_FillEmpty (el, doc);
+      if (child)
+        {
+          TtaRegisterElementCreate (child, doc);
+          TtaSetAccessRight (child, ReadOnly, doc);
+        }
       SetAttributeIntValue (el, Template_ATTR_option,
                             Template_ATTR_option_VAL_option_unset, TRUE);
     }
@@ -1704,6 +1704,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
                       DoReplicateUseElement (t, doc, 1, ancestor, parent, name);
                       TtaFreeMemory (name);
                     }
+                  TtaFreeMemory(types);
                   return TRUE; // don't let Thot do the job
                 }
 
@@ -2243,16 +2244,10 @@ void TemplateCreateImport (Document doc, View view)
             parent = selElem;
           else
             {
-              elType.ElSSchema = sstempl;
-              elType.ElTypeNum = Template_EL_head;
-              parent = TtaGetExactTypedAncestor (selElem, elType);
-              if (parent == NULL)
-                {
-                  elType.ElTypeNum = Template_EL_Template;
-                  parent = TtaGetExactTypedAncestor (selElem, elType);
-                }
+              parent = TemplateGetParentHead (selElem, doc);
               if (parent == NULL)
                 return;
+              elType.ElSSchema = sstempl;
               elType.ElTypeNum = Template_EL_component;
               prev = TtaGetExactTypedAncestor (selElem, elType);
             }
@@ -2436,10 +2431,8 @@ void TemplateCreateUnion (Document doc, View view)
           if (QueryUnionFromUser(proposed, NULL, &name, &types, TRUE))
             {
               TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
               head = TemplateFindHead(doc);
               sibling = TtaGetLastChild(head);
-
               unionType.ElSSchema = sstempl;
               unionType.ElTypeNum = Template_EL_union;
               unionEl = TtaNewElement(doc, unionType);
@@ -2929,14 +2922,7 @@ Element Template_CreateUseFromSelection (Document doc, int view, ThotBool create
                     TtaInsertFirstChild (&comp, parent, doc);
                   SetAttributeStringValue (comp, Template_ATTR_name, buffer);
                   // generate a content
-                  selElem = TtaGetFirstChild (comp);
-                  if (selElem == NULL)
-                    {
-                      selType.ElSSchema = sstempl;
-                      selType.ElTypeNum = Template_EL_TemplateObject;
-                      selElem = TtaNewElement (doc, selType);
-                    TtaInsertFirstChild (&selElem, comp, doc);
-                    }
+                  selElem = Template_FillEmpty (comp, doc);
                   TtaRegisterElementCreate (comp, doc);
                   TtaSelectElement (doc, selElem);
                   // register document modification

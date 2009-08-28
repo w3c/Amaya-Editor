@@ -34,6 +34,8 @@ extern Element InsertWithNotify ( Element el,
                                   Element child,
                                   Element parent,
                                   Document doc );
+extern Element Template_FillEmpty ( Element el,
+                                    Document doc );
 extern Element Template_InsertUseChildren ( Document doc,
                                             Element el,
                                             Declaration dec,
@@ -102,6 +104,8 @@ extern Element InsertWithNotify ( Element el,
                                     Element child,
                                     Element parent,
                                     Document doc );
+extern Element Template_FillEmpty ( Element el,
+                                      Document doc );
 extern Element Template_InsertUseChildren ( Document doc,
                                               Element el,
                                               Declaration dec,

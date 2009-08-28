@@ -638,7 +638,29 @@ char *SaveDocumentToNewDoc(Document doc, Document newdoc, char* newpath)
 }
 
 /*----------------------------------------------------------------------
- * Retrieve the xt:head element.
+  TemplateGetParentHead looks for the parent xt:head element
+  ----------------------------------------------------------------------*/
+Element TemplateGetParentHead (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  ElementType headType;
+  SSchema     schema;
+
+  schema = TtaGetSSchema ("Template", doc);
+  if (schema == TtaGetDocumentSSchema (doc))
+    return TtaGetMainRoot (doc);
+  if (schema == NULL)
+    // no template element in that document
+    return NULL;
+
+  headType.ElTypeNum = Template_EL_head;
+  return TtaGetExactTypedAncestor (el, headType);
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
+  TemplateFindHead looks for the xt:head element and creates it
+  if it doesn't exist.
   ----------------------------------------------------------------------*/
 Element TemplateFindHead (Document doc)
 {
