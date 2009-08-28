@@ -101,10 +101,11 @@ bool AmayaBaseToolBar::Realize()
 {
   wxArrayInt arr;
   unsigned int n;
-  
-  AmayaToolBarToolDefHashMap::iterator it;
+  AmayaToolBarToolDefHashMap::iterator it, last;
+
   // For each registered tool
-  for (it = m_map->begin(); it != m_map->end(); ++it )
+  last = m_map->end();
+  for (it = m_map->begin(); it != last; ++it )
   {
     // set the tooltip content
     if (it->second && it->second->tooltip_categ!=wxID_ANY &&
@@ -113,10 +114,11 @@ bool AmayaBaseToolBar::Realize()
          TtaGetMessage(it->second->tooltip_categ,it->second->tooltip_msg)));
   }
   
-  if(!m_bShowAllTools)
+  if (!m_bShowAllTools)
     {
-      wxToolBarToolsList::iterator iter;
-      for (iter = m_tools.begin(); iter != m_tools.end(); ++iter)
+      wxToolBarToolsList::iterator iter, tlast;
+      tlast = m_tools.end();
+      for (iter = m_tools.begin(); iter != tlast; ++iter)
       {
         wxToolBarToolBase *current = *iter;
         if(current)
@@ -125,23 +127,18 @@ bool AmayaBaseToolBar::Realize()
             AmayaToolBarToolDef* def = iter!=m_map->end()?iter->second:NULL; 
             if (def && def->action != NULL && def->action[0] != 0)
               {
-                if(!Prof_BelongTable(def->action))
-                  {
-                    arr.Add(current->GetId());
-                  }
+                if (!Prof_BelongTable(def->action))
+                  arr.Add(current->GetId());
               }        
           }
       }
     }
 
-  if(!wxToolBar::Realize())
+  if (!wxToolBar::Realize())
     return false;
   
-  for(n=0; n<arr.GetCount(); n++)
-    {
-      DeleteTool(arr[n]);
-    }
-  
+  for (n = 0; n < arr.GetCount(); n++)
+    DeleteTool(arr[n]);
   return true; 
 }
 

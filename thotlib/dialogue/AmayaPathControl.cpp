@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -230,13 +230,16 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
   dc.GetTextExtent(s_dots, &szDots.x, &szDots.y);
   szDots.x += 4;
   
-  int x = 0;
-  bool bIsFirst = true;
-  int y = (sz.y-m_height)/2;
+  int         x = 0;
+  int         y = (sz.y-m_height)/2;
+  bool        bIsFirst = true;
+  AmayaPathControlItem *data;
   wxAmayaPathControlItemListNode *node = m_items.GetLast();
+
   while (node)
     {
-      if (node->GetData()->rect.x >= 0)
+      data = node->GetData();
+      if (data->rect.x >= 0)
         {
           if (!bIsFirst)
             {
@@ -245,8 +248,8 @@ void AmayaPathControl::OnDraw(wxPaintEvent& event)
             }
           else
             bIsFirst = false;
-          node->GetData()->Draw(dc, node->GetData() == m_focused);
-          x += node->GetData()->rect.width;
+          data->Draw(dc, data == m_focused);
+          x += data->rect.width;
         }
       else if (bIsFirst)
         {
@@ -277,13 +280,15 @@ void AmayaPathControl::PreCalcPositions()
 
   int cx = 0;
   wxAmayaPathControlItemListNode *node;
+  AmayaPathControlItem *data;
   node = m_items.GetLast();
   while (node)
     {
       // compute the initial position for each node
-      node->GetData()->rect.x = cx;
-      node->GetData()->rect.y = y;
-      cx += node->GetData()->rect.width + szSep.x;    
+      data = node->GetData();
+      data->rect.x = cx;
+      data->rect.y = y;
+      cx += data->rect.width + szSep.x;    
       node = node->GetPrevious();
     }
 
@@ -295,15 +300,16 @@ void AmayaPathControl::PreCalcPositions()
       node = m_items.GetLast();
       while (node)
         {
-          cx = node->GetData()->rect.x - dx;
+          data = node->GetData();
+          cx = data->rect.x - dx;
           if (cx < szDots.x)
             // this node is not displayed
-            node->GetData()->rect.x = cx - szDots.x;
+            data->rect.x = cx - szDots.x;
           else
             {
               // adding p '/' before
               x += szSep.x;
-              node->GetData()->rect.x = x;
+              data->rect.x = x;
               x += node->GetData()->rect.width;
             }
           node = node->GetPrevious();
@@ -360,7 +366,7 @@ void AmayaPathControl::OnMouseMove(wxMouseEvent& event)
     wxAmayaPathControlItemListNode *node = m_items.GetLast();
     while(node!=NULL)
     {
-      if(node->GetData()->rect.x >= 0)
+      if (node->GetData()->rect.x >= 0)
       {
         if(pos.x >= node->GetData()->rect.x &&
 			pos.x <= node->GetData()->rect.x+node->GetData()->rect.width)

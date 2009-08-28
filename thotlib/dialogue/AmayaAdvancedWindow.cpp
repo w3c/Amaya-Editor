@@ -153,22 +153,23 @@ void AmayaAdvancedWindow::LoadConfig()
   AmayaNormalWindow::LoadConfig();
   ThotBool open;
   wxString str, name;
+  AmayaAdvanceToolPanelMap::iterator it, last;
 
   TtaGetEnvBoolean("OPEN_PANEL", &open);
   m_bShowPanels = open;
 
   str = TtaConvMessageToWX(TtaGetEnvString("AUI_DECORATION"));
-  if(!str.IsEmpty())
+  if (!str.IsEmpty())
     m_manager.LoadPerspective(str, false);
   
   // Load tool states and positions.
-  AmayaAdvanceToolPanelMap::iterator it;
-  for(it = m_panels.begin(); it!=m_panels.end(); ++it )
+  last = m_panels.end();
+  for (it = m_panels.begin(); it != last; ++it )
   {
     name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
     str = TtaConvMessageToWX(TtaGetEnvString((const char*)name.mb_str(wxConvUTF8)));
 
-    if(str.Trim().IsEmpty())
+    if (str.Trim().IsEmpty())
       str = it->second->GetDefaultAUIConfig();
     
     m_manager.LoadPaneInfo(str, m_manager.GetPane(it->second));
@@ -180,11 +181,11 @@ void AmayaAdvancedWindow::LoadConfig()
   }
 
   // Add toolbars to AUI
-  if(HaveToolBarBrowsing())
+  if (HaveToolBarBrowsing())
     m_manager.AddPane(GetToolBarBrowsing(), wxAuiPaneInfo().
                   Name(wxT("Browsing")).Caption(wxT("Browsing")).ToolbarPane().Top().
                   Gripper(false).Row(0).Floatable(false).PaneBorder(false).Layer(2));
-  if(HaveToolBarEditing())
+  if (HaveToolBarEditing())
     m_manager.AddPane(GetToolBarEditing(), wxAuiPaneInfo().
                   Name(wxT("Edition")).Caption(wxT("Edition")).ToolbarPane().Top().
                   Gripper(false).Row(1).Floatable(false).PaneBorder(false).Layer(1));
@@ -195,17 +196,17 @@ void AmayaAdvancedWindow::LoadConfig()
 
   // Add menu items
   wxMenuBar* bar = GetMenuBar();
-  if(bar)
+  if (bar)
     {
       wxMenu* menu = NULL;
       bar->FindItem(WindowTable[m_WindowId].MenuItemShowPanelID , &menu);
       if(menu)
         {
           menu->AppendSeparator();
-          for(it = m_panels.begin(); it!=m_panels.end(); ++it )
+          last = m_panels.end();
+          for(it = m_panels.begin(); it != last; ++it )
           {
             int id = ::wxNewId();
-            
             menu->AppendCheckItem(id, it->second->GetToolPanelName());
             menu->Check(id, it->second->IsShown());
             m_panelMenus[id] = it->second;
@@ -261,13 +262,14 @@ void AmayaAdvancedWindow::SaveConfig()
 {
   wxString str, name;
   wxArrayString arr;
-  unsigned int n;
+  unsigned int  n, max;
+  AmayaAdvanceToolPanelMap::iterator it, last;
   
   // Save tool states and positions.
-  AmayaAdvanceToolPanelMap::iterator it;
-  for (it = m_panels.begin(); it != m_panels.end(); ++it )
+  last =  m_panels.end();
+  for (it = m_panels.begin(); it != last; ++it )
   {
-    if(it->second)
+    if (it->second)
       {
         str = m_manager.SavePaneInfo(m_manager.GetPane(it->second));
         name = wxT("AUI_") + it->second->GetToolPanelConfigKeyName();
@@ -276,17 +278,15 @@ void AmayaAdvancedWindow::SaveConfig()
         str.Empty();
         
         // Filter each config variable
-        for(n=0; n<arr.GetCount(); n++)
+        max = arr.GetCount();
+        for ( n = 0; n < max; n++)
           {
             wxString &s = arr[n];
-            if(s.StartsWith(wxT("dir")) ||
+            if (s.StartsWith(wxT("dir")) ||
                 s.StartsWith(wxT("layer")) ||
                 s.StartsWith(wxT("row")) ||
-                s.StartsWith(wxT("pos"))
-               )
-              {
-                str += s + wxT(";");
-              }
+                s.StartsWith(wxT("pos")))
+              str += s + wxT(";");
           }
         
         TtaSetEnvString((const char*)name.mb_str(wxConvUTF8),
@@ -307,7 +307,7 @@ void AmayaAdvancedWindow::SaveConfig()
       while (tkz.HasMoreTokens())
         {
           wxString token = tkz.GetNextToken();
-          if(token.Find(wxT("name="))==wxNOT_FOUND)
+          if (token.Find(wxT("name="))==wxNOT_FOUND)
             str += wxT("|") + token;
         }
       if (str[0]==wxT('|'))
@@ -488,8 +488,9 @@ void AmayaAdvancedWindow::HideToolPanels()
 
   m_strPanelPerspective = m_manager.SavePerspective();
   
-  AmayaAdvanceToolPanelMap::iterator it;
-  for(it = m_panels.begin(); it!=m_panels.end(); ++it )
+  AmayaAdvanceToolPanelMap::iterator it, last;
+  last = m_panels.end();
+  for (it = m_panels.begin(); it != last; ++it )
   {
     wxAuiPaneInfo& pane = m_manager.GetPane(it->second);
     pane.Hide();
@@ -508,13 +509,13 @@ void AmayaAdvancedWindow::ShowToolPanels()
 {
   TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaAdvancedWindow::ShowToolPanels") );
 
-  AmayaAdvanceToolPanelMap::iterator it;
-  for(it = m_panels.begin(); it!=m_panels.end(); ++it )
+  AmayaAdvanceToolPanelMap::iterator it, last;
+  last = m_panels.end();
+  for(it = m_panels.begin(); it != last; ++it )
   {
     wxAuiPaneInfo& pane = m_manager.GetPane(it->second);
-    if(it->second)
-      if(it->second->IsShown())
-        pane.Show();
+    if (it->second && it->second->IsShown())
+      pane.Show();
   }
   m_manager.LoadPerspective(m_strPanelPerspective);
 //  m_manager.Update();
