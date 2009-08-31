@@ -478,6 +478,11 @@ extern void TtaShowElementMenu (Document doc, View view);
 extern void TtaRefreshElementMenu (Document doc, View view);
 
 /*----------------------------------------------------------------------
+  TtaRefreshActiveFrame force a refresh of window widgets
+  ----------------------------------------------------------------------*/
+extern void TtaRefreshActiveFrame ();
+
+/*----------------------------------------------------------------------
   TtaStringToClipboard
   ----------------------------------------------------------------------*/
 extern void TtaStringToClipboard (unsigned char *s, CHARSET encoding);

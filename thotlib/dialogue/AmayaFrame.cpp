@@ -650,7 +650,7 @@ void AmayaFrame::SetActive( bool active )
  // do nothing if the frame stat doesnt change
   //if (m_IsActive == active)
   //  return;
-	
+
   // Update the m_IsActive atribute
   m_IsActive = active;
 

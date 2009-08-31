@@ -37,9 +37,6 @@
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
-#ifdef _GTK
-#include <X11/Intrinsic.h>
-#endif /* _GTK */
 #include <locale.h>
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -80,15 +77,6 @@
   ----------------------------------------------------------------------*/
 ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
 {
-#ifdef _GTK
-   if (gtk_events_pending ())
-     {
-       ev = gtk_get_current_event ();
-       return TRUE;
-     }
-   else
-     return FALSE;
-#endif /* _GTK */
 #ifdef _WX
    return wxTheApp->Pending();
 #endif /* _WX */
@@ -110,12 +98,6 @@ void TtaHandleOneEvent (ThotEvent *ev)
       DispatchMessage (ev);
     }
 #endif /* _WINGUI */
-#ifdef _GTK
-  gtk_main_iteration_do (TRUE);
-  /*if (ev) gtk_main_do_event (ev);*/
-  /* a main loop iteration , not blocking */
-  /*  gtk_main_iteration_do (FALSE);*/
-#endif /* _GTK */
 #ifdef _WX
   wxTheApp->Dispatch();
 #endif /* _WX */
@@ -127,10 +109,6 @@ void TtaHandleOneEvent (ThotEvent *ev)
   ----------------------------------------------------------------------*/
 void TtaHandlePendingEvents ()
 {
-#ifdef _GTK
-   while (gtk_events_pending ()) 
-     gtk_main_iteration ();
-#endif /* _GTK */
 #ifdef _WX
    while (wxTheApp->Pending())
      wxTheApp->Dispatch ();
@@ -152,10 +130,10 @@ void TtaMainLoop ()
 
   UserErrorCode = 0;
   /* Sets the current locale according to the program environment */
-#if defined(_WX) || defined(_GTK)
+#ifdef _WX
   /* In order to get a "." even in a localised unix (ie: french becomes ",") */
   setlocale (LC_NUMERIC, "C");
-#endif /* _WX || _GTK */
+#endif /* _WX */
 #ifdef _WINGUI
   setlocale (LC_ALL, ".OCP");
   /* _setmbcp (_MB_CP_OEM); */
@@ -164,38 +142,26 @@ void TtaMainLoop ()
   if (CallEventType (&notifyEvt, TRUE))
     {
       /* The application is not able to start the editor => quit */
-#ifdef _GTK
-      gtk_exit (0);
-#endif /* _GTK */
       exit (0);
     }
 
   notifyEvt.event = TteInit; /* Sends the message Init.Post */
   CallEventType (&notifyEvt, FALSE);
 
-#if defined(_GTK) && defined(_GL)
-  /* First Time drawing (if we don't have focus)  */
-  while (gtk_events_pending ()) 
-    gtk_main_iteration ();
-  GL_DrawAll ();
-#endif /*_GTK && GL*/
-
-#if defined(_GTK) || defined(_WINGUI)
+#ifdef _WINGUI
   /* Loop wainting for the events */
   while (1)
     {
-#ifdef _WINGUI
       if (GetMessage (&ev, NULL, 0, 0))
-#endif  /* _WINGUI */
-	{
-	  TtaHandleOneEvent (&ev);
+        {
+          TtaHandleOneEvent (&ev);
 #ifdef _GL
-        /* buffer swapping, when needed*/
-	  GL_DrawAll ();
+          /* buffer swapping, when needed*/
+          GL_DrawAll ();
 #endif/*  _GL */
-	}
+        }
     }
-#endif /* #if defined(_GTK) || defined(_WINGUI) */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -207,18 +173,6 @@ ThotColor TtaGetMenuColor ()
    UserErrorCode = 0;
    return (ThotColor) BgMenu_Color;
 }
-
-#ifdef _GTK
-/*----------------------------------------------------------------------
-   TtaGetCurrentDisplay
-   Returns the current display descriptor.
-  ----------------------------------------------------------------------*/
-Display *TtaGetCurrentDisplay ()
-{
-   UserErrorCode = 0;
-   return TtDisplay;
-}
-#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------

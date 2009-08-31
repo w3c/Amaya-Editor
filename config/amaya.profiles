@@ -149,6 +149,7 @@ HelpAtW3C
 +tables
 +text-module
 +css-style
++doctype
 
 ################# XHTML-STRICT
 {XHTML 1.0 Strict}
@@ -173,6 +174,7 @@ HelpAtW3C
 +struct-module
 +text-module
 +css-style
++doctype
 
 ################# XHTML-BASIC
 {XHTML Basic}
@@ -187,6 +189,7 @@ HelpAtW3C
 +text-module
 +css-style
 &RemoveDeprecatedElements
++doctype
 
 ################# XHTML1.1
 {XHTML 1.1}
@@ -213,6 +216,7 @@ HelpAtW3C
 +text-module
 +ruby
 +css-style
++doctype
 
 ################# MathML
 {MathML}
@@ -220,6 +224,8 @@ HelpAtW3C
 +hypertext-module
 +maths
 +css-style
+&RemoveDoctype
+&AddDoctype
 
 ################# SVG
 {SVG}
@@ -229,6 +235,8 @@ HelpAtW3C
 +svg
 +css-style
 &CreateMath
+&RemoveDoctype
+&AddDoctype
 
 ################# Annot
 {Annot}

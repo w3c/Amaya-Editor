@@ -2679,11 +2679,11 @@ void PostInitView(Document doc, DocumentType docType, int visibility,
               TtaSetItemOff (doc, 1, Style, BDisableCSS);
               TtaSetItemOff (doc, 1, Style, BEnableCSS);
               TtaSetItemOff (doc, 1, Style, BRemoveCSS);
+              TtaSetMenuOff (doc, 1, Types);
             }
           TtaSetItemOff (doc, 1, Views, TShowMapAreas);
           TtaSetItemOff (doc, 1, Views, TShowTargets);
           TtaSetMenuOff (doc, 1, Doctype1);
-          TtaSetMenuOff (doc, 1, Types);
           TtaSetMenuOff (doc, 1, Links);
           if (DocumentTypes[doc] == docMath)
             TtaSetMenuOn (doc, 1, Views);

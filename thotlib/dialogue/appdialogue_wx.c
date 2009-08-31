@@ -523,14 +523,10 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
           // we must check that the menu has been found because
           // the contextual menu do not have a title
           if (top_menu_pos >= 0 && top_menu_pos < top_menu_count)
-            {
-              // it has been found, update it
-              p_menu_bar->EnableTop(top_menu_pos, (bool)pDoc->EnabledMenus[menu_id]);
-            }
+            // it has been found, update it
+            p_menu_bar->EnableTop(top_menu_pos, (bool)pDoc->EnabledMenus[menu_id]);
           else
-            {
-              wxASSERT_MSG(FALSE,_T("didn't find the top menu"));
-            }
+            wxASSERT_MSG(FALSE,_T("didn't find the top menu"));
         }
       return;
     }
@@ -550,10 +546,8 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
           // we must check that the menu has been found because the
           // contextual menu do not have a title
           if (top_menu_pos >= 0 && top_menu_pos < top_menu_count)
-            {
-              // it has been found, update it
-              p_menu_bar->EnableTop(top_menu_pos, (bool)pDoc->EnabledMenus[menu_id]);
-            }
+            // it has been found, update it
+            p_menu_bar->EnableTop(top_menu_pos, (bool)pDoc->EnabledMenus[menu_id]);
         }
       menu_id++;
     }
@@ -1001,6 +995,15 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position,
      wxWindowDisabler and it makes menus blinking */
   wxYield();
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  TtaRefreshActiveFrame force a refresh of window widgets
+  ----------------------------------------------------------------------*/
+void TtaRefreshActiveFrame ()
+{
+  if (FrameTable[ActiveFrame].WdFrame)
+    FrameTable[ActiveFrame].WdFrame->SetActive(TRUE);
 }
 
 /*----------------------------------------------------------------------

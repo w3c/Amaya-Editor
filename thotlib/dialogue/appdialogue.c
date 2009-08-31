@@ -910,7 +910,7 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 {
   Menu_Ctl           *ptrmenu, *ptrsmenu;
   Item_Ctl           *ptr, *sptr;
-  int                 profile, action, i, j, m = 0, res;
+  int                 profile, action, i, j, res;
 
   if (doc)
     {
@@ -918,7 +918,6 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
       profile = TtaGetDocumentProfile (doc);
       while (ptrmenu)
         {
-          m++;
           /* skip menus that concern another view */
           if (ptrmenu->MenuID != 0 /* skip menu File */ &&
               !ptrmenu->MenuAttr &&
@@ -967,11 +966,11 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
                      }
                   i++;
                 }
-              // refresh that menu
-              TtaRefreshTopMenuStats (doc, m);
             }
           ptrmenu = ptrmenu->NextMenu;
         }
+      // refresh all menus
+      TtaRefreshTopMenuStats (doc, 0);
     }
 }
 

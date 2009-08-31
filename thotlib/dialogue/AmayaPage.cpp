@@ -162,6 +162,7 @@ void AmayaPage::SetSelected( bool isSelected )
 void AmayaPage::RaisePage()
 {
   AmayaPageContainer * p_container = GetContainer();
+
   if (p_container)
     {
       // raise the notebook page

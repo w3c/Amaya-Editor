@@ -1063,6 +1063,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile,
 #endif /* _WX */
   UpdateEditorMenus (doc);
   UpdateContextSensitiveMenus (doc, 1);
+  TtaRefreshActiveFrame ();
 }
 
 /*----------------------------------------------------------------------
