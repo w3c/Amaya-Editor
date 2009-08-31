@@ -507,6 +507,7 @@ SetupAndPrint
 &CreateDefinitionDef
 &CreateList
 &CreateNumberedList
+&CreateNestedList
 
 [presentation-lite]
 &CreateHorizontalRule

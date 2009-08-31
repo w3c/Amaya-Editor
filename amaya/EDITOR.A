@@ -698,5 +698,7 @@ FUNCTIONS
   DoUpdateStrokeStatus,
   DoUpdateFillStatus,
   TtcNextSearchReplace,
-  StartACopyCommand;
+  StartACopyCommand,
+  IndentListItem,
+  UnindentListItem;
 END

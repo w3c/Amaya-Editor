@@ -2624,6 +2624,217 @@ void CreateMap (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  IndentListItem
+  ----------------------------------------------------------------------*/
+void IndentListItem (Document doc, View view)
+{
+  DisplayMode         dispMode;
+  ElementType         elType;
+  Element             el, last, item, child, sibling;
+  SSchema             sshtml;
+  int                 firstChar, lastChar, i;
+
+  sshtml  = TtaGetSSchema ("HTML", doc);
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  if (el && sshtml)
+    {
+      TtaGiveLastSelectedElement (doc, &last, &i, &lastChar);
+      // look for the enclosing list item
+      elType = TtaGetElementType (el);
+      if (elType.ElSSchema == sshtml &&
+          (elType.ElTypeNum == HTML_EL_Unnumbered_List ||
+           elType.ElTypeNum == HTML_EL_Numbered_List))
+        return;
+      if (elType.ElSSchema != sshtml ||
+          elType.ElTypeNum != HTML_EL_List_Item)
+        {
+          elType.ElSSchema = sshtml;
+          elType.ElTypeNum = HTML_EL_List_Item;
+          item = TtaGetExactTypedAncestor (el, elType);
+        }
+      else
+        item = el;
+      if (item == NULL)
+        return;
+
+      elType = TtaGetElementType (last);
+      if (last == el)
+        last = item;
+      else if (elType.ElSSchema != sshtml ||
+               elType.ElTypeNum != HTML_EL_List_Item)
+        {
+          elType.ElSSchema = sshtml;
+          elType.ElTypeNum = HTML_EL_List_Item;
+          last = TtaGetExactTypedAncestor (last, elType);
+          if (last == NULL)
+            return;
+        }
+      // locate a previous list item
+      sibling = item;
+      TtaPreviousSibling (&sibling);
+      if (sibling == NULL)
+        return;
+      // get the last children of the previous item
+      child = TtaGetFirstChild (sibling);
+      while (child)
+        {
+          sibling = child;
+          TtaNextSibling (&child);
+        }
+
+      /* stop displaying changes that will be made */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
+      // move selected list items into a new sub-list
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+      // create the sub-list
+      elType.ElTypeNum = HTML_EL_Unnumbered_List;
+      elType.ElSSchema = sshtml;
+      el = TtaNewElement (doc, elType);
+      TtaInsertSibling (el, sibling, FALSE, doc);
+      child = item;
+      sibling = NULL;
+      do
+        {
+          item = child;
+          TtaNextSibling (&child);
+          TtaRegisterElementDelete (item, doc);
+          TtaRemoveTree (item, doc);
+          if (sibling)
+            TtaInsertSibling (item, sibling, FALSE, doc);
+          else
+            TtaInsertFirstChild (&item, el, doc);
+          sibling = item;
+        }
+      while (item != last);
+      TtaRegisterElementCreate (el, doc);
+      TtaCloseUndoSequence (doc);
+      /* ask Thot to display changes made in the document */
+      TtaSetDisplayMode (doc, dispMode);
+      TtaSelectElement (doc, el);
+    }
+}
+
+/*----------------------------------------------------------------------
+  IndentListItem
+  ----------------------------------------------------------------------*/
+void UnindentListItem (Document doc, View view)
+{
+  DisplayMode         dispMode;
+  ElementType         elType;
+  Element             el, last, item, child, sibling, list;
+  SSchema             sshtml;
+  int                 firstChar, lastChar, i;
+  ThotBool            emptylist = FALSE;
+
+  sshtml  = TtaGetSSchema ("HTML", doc);
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  if (el && sshtml)
+    {
+      TtaGiveLastSelectedElement (doc, &last, &i, &lastChar);
+      // look for the enclosing list item
+      elType = TtaGetElementType (el);
+      if (elType.ElSSchema == sshtml &&
+          (elType.ElTypeNum == HTML_EL_Unnumbered_List ||
+           elType.ElTypeNum == HTML_EL_Numbered_List))
+          {
+            list = el;
+            emptylist = TRUE;
+            item = TtaGetFirstChild (el);
+            child = item;
+            while (child)
+              {
+                last = child;
+                TtaNextSibling (&child);
+              }
+          }
+      else
+        {
+          if (elType.ElSSchema != sshtml ||
+              elType.ElTypeNum != HTML_EL_List_Item)
+            {
+              elType.ElSSchema = sshtml;
+              elType.ElTypeNum = HTML_EL_List_Item;
+              item = TtaGetExactTypedAncestor (el, elType);
+            }
+          else
+            item = el;
+          if (item == NULL)
+            return;
+
+          elType = TtaGetElementType (last);
+          if (last == el)
+            last = item;
+          else if (elType.ElSSchema != sshtml ||
+                   elType.ElTypeNum != HTML_EL_List_Item)
+            {
+              elType.ElSSchema = sshtml;
+              elType.ElTypeNum = HTML_EL_List_Item;
+              last = TtaGetExactTypedAncestor (last, elType);
+              if (last == NULL)
+                return;
+            }
+          // locate a previous list item in the enclosing list
+          list = TtaGetParent (item);
+          child = item;
+          TtaPreviousSibling (&child);
+          emptylist = FALSE;
+          if (child == NULL)
+            {
+              child = last;
+              TtaNextSibling (&child);
+              if (child == NULL)
+                // the whole list will be removed
+                emptylist = TRUE;
+            }
+        }
+
+      elType.ElSSchema = sshtml;
+      elType.ElTypeNum = HTML_EL_List_Item;
+      sibling = TtaGetExactTypedAncestor (list, elType);
+      if (sibling)
+        TtaPreviousSibling (&sibling);
+      if (sibling == NULL)
+        // cannot unindent
+        return;
+
+      /* stop displaying changes that will be made */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+      child = item;
+      el = NULL;
+      do
+        {
+          item = child;
+          TtaNextSibling (&child);
+          TtaRegisterElementDelete (item, doc);
+          TtaRemoveTree (item, doc);
+          TtaInsertSibling (item, sibling, FALSE, doc);
+          TtaRegisterElementCreate (item, doc);
+          sibling = item;
+          if (el == NULL)
+            // first created item
+            el = item;
+        }
+      while (item != last);
+      if (emptylist)
+        {
+          TtaRegisterElementDelete (list, doc);
+          TtaDeleteTree (list, doc);
+        }
+      TtaCloseUndoSequence (doc);
+      /* ask Thot to display changes made in the document */
+      TtaSetDisplayMode (doc, dispMode);
+      TtaSelectElement (doc, el);
+      if (last != el)
+        TtaExtendSelection (doc, last, 0);
+    }
+}
+
+/*----------------------------------------------------------------------
   ReplaceEmptyItem checks if the created element is within an empty
   list item.
   Return true if the creation is already done or ignored
@@ -2645,7 +2856,7 @@ ThotBool ReplaceEmptyItem (int typeNum, Document doc)
       while (empty &&
              (elType.ElTypeNum != HTML_EL_List_Item || strcmp (s, "HTML")))
         {
-          // check if it's an empty text of an empty list item
+          // check if it's an empty content of an empty list item
           child = el;
           empty = FALSE;
           TtaPreviousSibling (&child);

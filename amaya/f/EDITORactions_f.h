@@ -98,7 +98,7 @@ extern void CreateDate ( Document doc,
                          View view );
 extern void CreateScript ( Document doc,
                            View view,
-                           ThotBool ExternalFile );
+                           ThotBool externalFile );
 extern ThotBool HTMLelementAllowed ( Document doc );
 extern ThotBool CreateHTMLelement ( int typeNum,
                                     Document doc );
@@ -118,6 +118,12 @@ extern void CreateHeading6 ( Document doc,
                              View view );
 extern void CreateMap ( Document doc,
                         View view );
+extern void IndentListItem ( Document doc,
+                             View view );
+extern void UnindentListItem ( Document doc,
+                               View view );
+extern ThotBool ReplaceEmptyItem ( int typeNum,
+                                   Document doc );
 extern void CreateList ( Document doc,
                          View view );
 extern void CreateNumberedList ( Document doc,
@@ -373,7 +379,7 @@ extern void CreateDate ( Document doc,
                            View view );
 extern void CreateScript ( Document doc,
                              View view,
-                             ThotBool ExternalFile );
+                             ThotBool externalFile );
 extern ThotBool HTMLelementAllowed ( Document doc );
 extern ThotBool CreateHTMLelement ( int typeNum,
                                       Document doc );
@@ -393,6 +399,12 @@ extern void CreateHeading6 ( Document doc,
                                View view );
 extern void CreateMap ( Document doc,
                           View view );
+extern void IndentListItem ( Document doc,
+                               View view );
+extern void UnindentListItem ( Document doc,
+                                 View view );
+extern ThotBool ReplaceEmptyItem ( int typeNum,
+                                     Document doc );
 extern void CreateList ( Document doc,
                            View view );
 extern void CreateNumberedList ( Document doc,
