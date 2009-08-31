@@ -2257,7 +2257,7 @@ void CreateDate (Document doc, View view)
 /*----------------------------------------------------------------------
   CreateScript
   ----------------------------------------------------------------------*/
-void CreateScript (Document doc, View view, ThotBool ExternalFile)
+void CreateScript (Document doc, View view, ThotBool externalFile)
 {
   SSchema             docSchema;
   ElementType         elType, headType;
@@ -2303,7 +2303,6 @@ void CreateScript (Document doc, View view, ThotBool ExternalFile)
     }
 
   TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-
   if (s == NULL || strcmp (s, "HTML") || elType.ElTypeNum == HTML_EL_HEAD)
     {
       /* cannot insert at the current position */
@@ -2318,8 +2317,7 @@ void CreateScript (Document doc, View view, ThotBool ExternalFile)
       /* create Script in the body if we are within an HTML document
          and within an HTML element */
       elType.ElTypeNum = HTML_EL_SCRIPT_;
-
-      if(ExternalFile)
+      if (externalFile)
         {
         /* insert a script element after the selected element */
         TtaInsertSibling (TtaNewElement (doc, elType), el, FALSE, doc);
@@ -2335,14 +2333,12 @@ void CreateScript (Document doc, View view, ThotBool ExternalFile)
 
   if (el)
     {
-
-      if(ExternalFile)
+      if (externalFile)
         {
         /* register new created elements */
         TtaRegisterElementCreate (el, doc);
         LinkAsJavascript = TRUE;
         SelectDestination (doc, el, FALSE, FALSE);
-        TtaCloseUndoSequence (doc);
         }
       else
         {
@@ -2367,8 +2363,6 @@ void CreateScript (Document doc, View view, ThotBool ExternalFile)
 
         /* register new created elements */
         TtaRegisterElementCreate (el, doc);
-        TtaCloseUndoSequence (doc);
-
         while (child)
           {
             el = child;
@@ -2379,7 +2373,6 @@ void CreateScript (Document doc, View view, ThotBool ExternalFile)
         else
           TtaSelectElement (doc, el);
         }
-
     }
   TtaCloseUndoSequence (doc);
 #ifdef _WX
@@ -2631,11 +2624,91 @@ void CreateMap (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  ReplaceEmptyItem checks if the created element is within an empty
+  list item.
+  Return true if the creation is already done or ignored
+  ----------------------------------------------------------------------*/
+ThotBool ReplaceEmptyItem (int typeNum, Document doc)
+{
+  ElementType         elType;
+  Element             el, prev, child;
+  char               *s;
+  int                 firstChar, lastChar;
+  ThotBool            result = FALSE, empty;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      empty = TtaGetElementVolume (el) == 0;
+      while (empty &&
+             (elType.ElTypeNum != HTML_EL_List_Item || strcmp (s, "HTML")))
+        {
+          // check if it's an empty text of an empty list item
+          child = el;
+          empty = FALSE;
+          TtaPreviousSibling (&child);
+          if (child == NULL)
+            {
+              child = el;
+              TtaNextSibling (&child);
+              if (child == NULL)
+                {
+                  el = TtaGetParent (el);
+                  elType = TtaGetElementType (el);
+                  s = TtaGetSSchemaName (elType.ElSSchema);
+                   empty = TRUE;
+                }
+            }
+        }
+      if (empty &&
+          elType.ElTypeNum == HTML_EL_List_Item && !strcmp (s, "HTML"))
+        {
+          prev = el;
+          TtaPreviousSibling (&prev);
+          if (prev)
+            {
+              // remove the empty list item
+              TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+              TtaRegisterElementDelete (el, doc);
+              TtaDeleteTree (el, doc);
+              child = TtaGetFirstChild (prev);
+              while (child)
+                {
+                  prev = child;
+                  TtaNextSibling (&child);
+                }
+              // create the sub-list
+              elType.ElTypeNum = typeNum;
+              child = TtaNewTree (doc, elType, "");
+              TtaInsertSibling (child, prev, FALSE, doc);
+              TtaRegisterElementCreate (child, doc);
+              TtaCloseUndoSequence (doc);
+              // select the new created element
+              while (child)
+                {
+                  el = child;
+                  child = TtaGetFirstChild (el);
+                }
+              if (child)
+                TtaSelectElement (doc, child);
+              else
+                TtaSelectElement (doc, el);
+            }
+          result = TRUE;          
+        }
+    }
+  return result;
+}
+
+/*----------------------------------------------------------------------
   CreateList
   ----------------------------------------------------------------------*/
 void CreateList (Document doc, View view)
 {
-  CreateHTMLelement (HTML_EL_Unnumbered_List, doc);
+  if (!ReplaceEmptyItem (HTML_EL_Unnumbered_List, doc))
+    CreateHTMLelement (HTML_EL_Unnumbered_List, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -2643,7 +2716,8 @@ void CreateList (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateNumberedList (Document doc, View view)
 {
-  CreateHTMLelement (HTML_EL_Numbered_List, doc);
+  if (!ReplaceEmptyItem (HTML_EL_Numbered_List, doc))
+    CreateHTMLelement (HTML_EL_Numbered_List, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -2651,7 +2725,8 @@ void CreateNumberedList (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateDefinitionList (Document doc, View view)
 {
-  CreateHTMLelement (HTML_EL_Definition_List, doc);
+  if (!ReplaceEmptyItem (HTML_EL_Definition_List, doc))
+    CreateHTMLelement (HTML_EL_Definition_List, doc);
 }
 
 /*----------------------------------------------------------------------
