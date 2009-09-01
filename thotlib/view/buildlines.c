@@ -2347,7 +2347,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           if (floatL)
             pLine->LiXMax = pBlock->BxW - pLine->LiXOrg + left;
             else
-              pLine->LiXMax = pBlock->BxW;
+              pLine->LiXMax = pBlock->BxW - indent;
           //if (pBlock->BxLeftFloat || pBlock->BxRightFloat)
           //  pLine->LiXMax += left;
           bottomR = pLine->LiYOrg;
