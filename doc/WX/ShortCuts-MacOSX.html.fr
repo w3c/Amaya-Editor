@@ -25,10 +25,10 @@ Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
 <h2>Raccourcis clavier d'Amaya pour Mac OSX</h2>
 
 <p>Amaya définit deux types de raccourcis clavier : les raccourcis clavier
-utilisant les modifieurs standard d'Apple (ex. Cmd+C pour copier la
-sélection) et des raccourcis utilisant des séquences (ex. Ctrl-t Ctrl-t pour
-créer une table). Comme les utilisateurs Mac OS X ne sont pas familiers avec
-des séquences de raccourcis dans les menus, seul les raccourcis standard sont
+utilisant les modifieurs standard d'Apple (ex. Cmd+C pour copier la sélection)
+et des raccourcis utilisant des séquences (ex. Ctrl-t Ctrl-t pour créer une
+table). Comme les utilisateurs Mac OS X ne sont pas familiers avec des
+séquences de raccourcis dans les menus, seul les raccourcis standard sont
 affichés par défaut. Pour afficher, vous devez sélectionner l'option
 <strong>Montrer tous les raccourcis</strong> dans le dialogue
 <strong>Préférences &gt; Général</strong> et relancer Amaya.</p>
@@ -150,6 +150,14 @@ affichés par défaut. Pour afficher, vous devez sélectionner l'option
     <tr>
       <td>Rechercher</td>
       <td>Cmd F</td>
+    </tr>
+    <tr>
+      <td>Items dans une sous-liste</td>
+      <td>Tab</td>
+    </tr>
+    <tr>
+      <td>Items dans la liste englobante</td>
+      <td>Shift Tab</td>
     </tr>
     <tr class="menu">
       <td colspan="2">Navigation dans la structure</td>

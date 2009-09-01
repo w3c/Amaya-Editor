@@ -258,7 +258,7 @@ comportement permet de créer très rapidement des structures emboîtées
 complexes.</p>
 
 <p>Considérez par exemple la structure suivante :</p>
-<ol>
+<ol style="color:#1e90ff">
   <li>Le premier item dans le plus haut niveau de la liste. 
     <p>Un paragraphe dans le premier item.</p>
   </li>
@@ -311,6 +311,53 @@ utile pour insérer un nouvel item avant le premier.</p>
 <p class="Note"><strong>Note :</strong> Dans le mode XML, cette utilisation de
 la touche <kbd>Entrée</kbd> ne s'applique pas seulement aux listes et aux
 paragraphes, mais à tous les éléments.</p>
+
+<p></p>
+
+<p class="ProcedureCaption">Pour déplacer des items de liste :</p>
+
+<p>La commande <kbd>Tab</kbd> permet de déplacer des items de liste dans une
+sous-liste à condition qu'il y ait un item de liste précédent. Par exemple,
+quand la sélection se trouve dans "<span style="color:#1e90ff">Le second
+item.</span>", la touche <kbd>Tab</kbd> engendrera la structure suivante :</p>
+<ol style="color:#1e90ff">
+  <li>Le premier item dans le plus haut niveau de la liste. 
+    <p>Un paragraphe dans le premier item.</p>
+    <ul>
+      <li>Le second item. 
+        <ol type="a">
+          <li>Le premier item dans la liste emboîtée.</li>
+          <li>Le second item dans la liste emboîtée.</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>Le dernier item dans la liste.</li>
+</ol>
+
+<p>La commande <kbd>Shift Tab</kbd> permet de déplacer des items de liste vers
+la liste englobante. Par exemple, quand la sélection se trouve dans "<span
+style="color:#1e90ff">Le premier item dans la liste emboîtée.</span>", la
+touche <kbd>Shift Tab</kbd> engendrera la structure suivante :</p>
+<ol style="color:#1e90ff">
+  <li>Le premier item dans le plus haut niveau de la liste. 
+    <p>Un paragraphe dans le premier item.</p>
+    <ul>
+      <li>Le second item. 
+        <ol type="a">
+        </ol>
+      </li>
+      <li>Le premier item dans la liste emboîtée.
+        <ol type="a">
+          <li>Le second item dans la liste emboîtée.</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>Le dernier item dans la liste.</li>
+</ol>
+
+<p></p>
 
 <h4 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h4>
 

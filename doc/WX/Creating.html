@@ -241,7 +241,7 @@ element at the next higher level in the document structure. This feature allows
 you to create complex, nested structures very quickly.</p>
 
 <p>As an example, consider the following structure:</p>
-<ol>
+<ol style="color:#1e90ff">
   <li>The first item in the list 
     <p>A paragraph in the first item</p>
   </li>
@@ -286,6 +286,51 @@ press the <kbd>Enter</kbd> key twice.</p>
 
 <p class="Note"><b>Note</b>:  In XML mode, this use of the <kbd>Enter</kbd> key
 does not apply only to lists and paragraphs, but to all elements.</p>
+
+<p></p>
+
+<p class="ProcedureCaption">To move down/up list items:</p>
+
+<p>The <kbd>Tab</kbd> command allows one to move down list items to a sub-list
+provided there is a previous item. As an example when the selection is within
+"<span style="color:#1e90ff">The second item in the list.</span>", pressing
+<kbd>Tab</kbd> will generate the following structure:</p>
+<ol style="color:#1e90ff">
+  <li>The first item in the list 
+    <p>A paragraph in the first item</p>
+    <ul>
+      <li>The second item in the list. 
+        <ol type="a">
+          <li>First item in the nested list.</li>
+          <li>Second item in the nested list.</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>Last item in the list</li>
+</ol>
+
+<p>The <kbd>Shift Tab</kbd> command allows one to move up list items to the
+enclosing list. As an example when the selection is within "<span
+style="color:#1e90ff">First item in the nested list.</span>", pressing
+<kbd>Shift Tab</kbd> will generate the following structure:</p>
+<ol style="color:#1e90ff">
+  <li>The first item in the list 
+    <p>A paragraph in the first item</p>
+    <ul>
+      <li>The second item in the list. 
+        <ol type="a">
+        </ol>
+      </li>
+      <li>First item in the nested list.
+        <ol type="a">
+          <li>Second item in the nested list.</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>Last item in the list</li>
+</ol>
 
 <h3 id="Delete">The Delete and Backspace keys</h3>
 

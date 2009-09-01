@@ -2723,7 +2723,7 @@ void UnindentListItem (Document doc, View view)
 {
   DisplayMode         dispMode;
   ElementType         elType;
-  Element             el, last, item, child, sibling, list;
+  Element             el, last, item, child, sibling, list, sublist;
   SSchema             sshtml;
   int                 firstChar, lastChar, i;
   ThotBool            emptylist = FALSE;
@@ -2793,8 +2793,6 @@ void UnindentListItem (Document doc, View view)
       elType.ElSSchema = sshtml;
       elType.ElTypeNum = HTML_EL_List_Item;
       sibling = TtaGetExactTypedAncestor (list, elType);
-      if (sibling)
-        TtaPreviousSibling (&sibling);
       if (sibling == NULL)
         // cannot unindent
         return;
@@ -2816,14 +2814,51 @@ void UnindentListItem (Document doc, View view)
           TtaRegisterElementCreate (item, doc);
           sibling = item;
           if (el == NULL)
-            // first created item
+            // register the first created item
             el = item;
         }
       while (item != last);
       if (emptylist)
         {
+          // delete the sub-list
           TtaRegisterElementDelete (list, doc);
           TtaDeleteTree (list, doc);
+        }
+      else if (child)
+        {
+          // create a new empty sublist with same attributes
+          sublist = TtaCopyTree (list, doc, doc, last);
+          sibling = TtaGetFirstChild (sublist);
+          do
+            {
+              item = sibling;
+              TtaNextSibling (&sibling);              
+              TtaRemoveTree (item, doc);
+            }
+          while (sibling);
+          item = TtaGetFirstChild (last);
+          while (item)
+            {
+              sibling = item;
+              TtaNextSibling (&item);
+            }
+          TtaInsertSibling (sublist, sibling, FALSE, doc);
+
+          // move also the end of the current sub-list
+          sibling = NULL;
+          do
+            {
+              item = child;
+              TtaNextSibling (&child);
+              TtaRegisterElementDelete (item, doc);
+              TtaRemoveTree (item, doc);
+              if (sibling)
+                TtaInsertSibling (item, sibling, FALSE, doc);
+              else
+                TtaInsertFirstChild (&item, sublist, doc);
+              sibling = item;
+            }
+          while (item);
         }
       TtaCloseUndoSequence (doc);
       /* ask Thot to display changes made in the document */
