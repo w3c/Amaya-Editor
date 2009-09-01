@@ -2031,7 +2031,7 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
     {
       /* look for and change references */
       pSave = FirstSavedElement;
-      while (pE)
+      while (pSave)
         {
           /* update references */
           //ChangeReferences (pSave->PeElement, &pSelDoc);

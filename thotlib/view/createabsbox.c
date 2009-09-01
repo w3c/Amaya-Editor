@@ -1838,7 +1838,7 @@ ThotBool ComputeListItemNumber (PtrAbstractBox pAb)
       /* get the parent element */
       pAsc = pAb->AbElement->ElParent;
       /* skip enclosing Template elements to find the real parent */
-      while (!strcmp (pAsc->ElStructSchema->SsName, "Template"))
+      while (pAsc && !strcmp (pAsc->ElStructSchema->SsName, "Template"))
         pAsc = pAsc->ElParent;
       pAttr = GetAttrElementWithException (ExcStartCounter, pAsc);
       if (pAttr && pAttr->AeAttrType == AtNumAttr)
