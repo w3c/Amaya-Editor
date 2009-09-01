@@ -1323,6 +1323,7 @@ void ChangeSelFrame (int frame)
       UpdateAttrMenu (LoadedDocument[doc-1], TRUE);
       // update the show errors
       TtaExecuteMenuAction ("UpdateShowError", doc, 1, FALSE);
+      TtaExecuteMenuAction ("UpdateStyleList", doc, 1, FALSE);
       GetCurrentSelection (&docsel, &first, &last, &firstChar, &lastChar);
       if (LoadedDocument[doc-1] != docsel)
         TtaSetStatusSelectedElement (doc, 1, NULL);
