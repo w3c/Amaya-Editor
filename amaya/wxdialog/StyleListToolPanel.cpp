@@ -54,6 +54,7 @@ BEGIN_EVENT_TABLE(StyleListToolPanel, AmayaToolPanel)
   EVT_UPDATE_UI(XRCID("wxID_BUTTON_ACTIVE_CSS"), StyleListToolPanel::OnUpdateActivateSheet)
   EVT_UPDATE_UI(XRCID("wxID_BUTTON_DESACTIVE_CSS"), StyleListToolPanel::OnUpdateDesactivateSheet)
   EVT_UPDATE_UI(XRCID("wxID_BUTTON_VIEW_CSS"), StyleListToolPanel::OnUpdateShowSheet)
+  EVT_LISTBOX_DCLICK( XRCID("wxID_CHECKLIST_CSS"), StyleListToolPanel::OnOpenSheet)
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -84,8 +85,10 @@ bool StyleListToolPanel::Create(wxWindow* parent, wxWindowID id, const wxPoint& 
   
   XRCCTRL(*this,"wxID_BUTTON_ADD_CSS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PANEL_CSS_ADD)));
   XRCCTRL(*this,"wxID_BUTTON_DEL_CSS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PANEL_CSS_REM)));
-  XRCCTRL(*this,"wxID_BUTTON_ACTIVE_CSS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PANEL_CSS_ACTIVE)));
-  XRCCTRL(*this,"wxID_BUTTON_DESACTIVE_CSS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PANEL_CSS_DISACTIVE)));
+  XRCCTRL(*this,"wxID_BUTTON_ACTIVE_CSS",wxBitmapButton)->Hide();
+  XRCCTRL(*this,"wxID_BUTTON_DESACTIVE_CSS",wxBitmapButton)->Hide();
+  //XRCCTRL(*this,"wxID_BUTTON_ACTIVE_CSS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PANEL_CSS_ACTIVE)));
+  //XRCCTRL(*this,"wxID_BUTTON_DESACTIVE_CSS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PANEL_CSS_DISACTIVE)));
   XRCCTRL(*this,"wxID_BUTTON_VIEW_CSS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PANEL_CSS_OPEN)));
   
   return true;
@@ -171,7 +174,7 @@ void StyleListToolPanel::Update(Document doc)
 void StyleListToolPanel::OnCheckSheet(wxCommandEvent& event)
 {
   int item = event.GetSelection();
-  if(item!=wxNOT_FOUND)
+  if (item != wxNOT_FOUND)
     {
       PInfoPtr pInfo = m_map[item];
       if (pInfo)
@@ -182,6 +185,26 @@ void StyleListToolPanel::OnCheckSheet(wxCommandEvent& event)
             MakeDisableCSS (m_doc, pInfo);
         }
     }  
+}
+
+/*----------------------------------------------------------------------
+  OnOpenSheet called when the user double click
+  ----------------------------------------------------------------------*/
+void StyleListToolPanel::OnOpenSheet( wxCommandEvent& event )
+{
+  Document   doc;
+  int        view;
+
+  int item = event.GetSelection();
+  if (item != wxNOT_FOUND)
+    {
+      TtaGetActiveView (&doc, &view);
+      PInfoPtr pInfo = m_map[item];
+      if (pInfo &&
+          (DocumentTypes[doc] != docSource || pInfo->PiCategory != CSS_DOCUMENT_STYLE))
+        MakeOpenCSS(m_doc, pInfo);
+    }
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------

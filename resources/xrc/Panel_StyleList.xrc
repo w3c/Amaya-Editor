@@ -30,13 +30,7 @@
             <flag>wxALL</flag>
             <border>2</border>
           </object>
-          <object class="sizeritem">
-            <object class="wxStaticLine">
-              <style>wxLI_VERTICAL</style>
-            </object>
-            <flag>wxALL|wxEXPAND</flag>
-            <border>8</border>
-          </object>
+          
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_BUTTON_ACTIVE_CSS">
               <bitmap>../icons/16x16/ok.png</bitmap>

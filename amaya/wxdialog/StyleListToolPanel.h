@@ -54,7 +54,7 @@ private:
   Document m_doc;
 
   void OnCheckSheet(wxCommandEvent& event);
-  
+  void OnOpenSheet( wxCommandEvent& event );
   void OnAddSheet(wxCommandEvent& event);
   void OnRemSheet(wxCommandEvent& event);
   void OnActivateSheet(wxCommandEvent& event);
