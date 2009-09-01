@@ -3226,10 +3226,24 @@ void UpdateNumbers (PtrElement pElBegin, PtrElement pElModif,
                     PtrDocument pDoc, ThotBool redisp)
 {
   int                 i;
+  PtrElement          pElB, pElM;
 
-  for (i = 1; i <= MAX_VIEW_DOC; i++)
-    pAbbBegin[i - 1] = NULL;
-  UpdateNum (pElBegin, pElModif, pDoc, redisp);
+  if (pElBegin && pElModif)
+    {
+      for (i = 1; i <= MAX_VIEW_DOC; i++)
+	pAbbBegin[i - 1] = NULL;
+      /* if pElBegin and/or pElModif are in the Template namespace,
+	 replace them by their first descendant that is not a Template element*/
+      pElB = pElBegin;
+      pElM = pElModif;
+      while (!strcmp (pElB->ElStructSchema->SsName, "Template") &&
+	     !pElB->ElTerminal && pElB->ElFirstChild)
+	pElB = pElB->ElFirstChild;
+      while (!strcmp (pElM->ElStructSchema->SsName, "Template") &&
+	     !pElM->ElTerminal && pElM->ElFirstChild)
+	pElM = pElM->ElFirstChild;
+      UpdateNum (pElB, pElM, pDoc, redisp);
+    }
 }
 
 /*----------------------------------------------------------------------

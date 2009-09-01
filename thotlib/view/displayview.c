@@ -400,7 +400,7 @@ void RedisplayNewElement (Document document,
       /* reaffiche les paves qui copient le nouvel element */
       RedisplayCopies (newElement, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
       /* reaffiche les numeros suivants qui changent */
-      UpdateNumbers (newElement, newElement, pDoc,
+      UpdateNumbers (NextElement(newElement), newElement, pDoc,
                      (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
     }
 }
