@@ -276,19 +276,17 @@ void AmayaAttributeToolPanel::SendDataToPanel( AmayaParams& p )
 {
   if (IsShown())
     {
-      DesactivatePanel();
-      switch ( (int)p.param1 )
+      if ( (int)(p.param1) == wxATTR_ACTION_LISTUPDATE)
         {
-        case wxATTR_ACTION_LISTUPDATE:
-          m_firstSel  = (PtrElement)p.param5;
-          m_lastSel   = (PtrElement)p.param6;
+          DesactivatePanel();
+          m_firstSel  = (PtrElement)(p.param5);
+          m_lastSel   = (PtrElement)(p.param6);
           m_firstChar = p.param7;
           m_lastChar  = p.param8;
           ShowAttributValue( wxATTR_PANEID_NONE );
-          SetupListValue((DLList)p.param2);
-          break;
+          SetupListValue ((DLList)(p.param2));
+          ActivePanel();
         }
-      ActivePanel();
     }
 }
 
@@ -522,7 +520,7 @@ void AmayaAttributeToolPanel::ShowAttributValue( wxATTR_PANEID type )
   for (i = 0; i < wxATTR_PANEID_MAX; i++)
     m_pSubpanelSizer->Show(m_subpanels[i], false );
   
-  if (type >= 0 && type<wxATTR_PANEID_MAX)
+  if (type >= 0 && type < wxATTR_PANEID_MAX)
     {
       m_pSubpanelSizer->Show( type, true );
       m_pCurrentlyEditedControl = m_subpanels[type]->GetEditionControl();
@@ -530,7 +528,7 @@ void AmayaAttributeToolPanel::ShowAttributValue( wxATTR_PANEID type )
       m_pSubpanelSizer->Layout();
       ShowAttributeBar(true);
     }
-  else
+  else if (m_pCurrentlyEditedControl)
     {
       m_pCurrentlyEditedControl = NULL;
       ShowAttributeBar(false);

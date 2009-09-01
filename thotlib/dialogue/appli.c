@@ -802,52 +802,46 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
           {
             ApplyDirectResize(box, frame, ctrlpt, x, y);
           }
-        else
+        else if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
           {
-            if ((thot_mod_mask & THOT_MOD_SHIFT) == THOT_MOD_SHIFT)
-              {
-                /* a selection extension */
-                TtaAbortShowDialogue ();
-                LocateSelectionInView (frame, x, y, 1, &Dragging);
+            /* a selection extension */
+            TtaAbortShowDialogue ();
+            LocateSelectionInView (frame, x, y, 1, &Dragging);
 #if !defined (_WINDOWS) && !defined (_MACOS)
-                FrameToView (frame, &document, &view);
-                DoCopyToClipboard (document, view, FALSE, TRUE);
+            FrameToView (frame, &document, &view);
+            DoCopyToClipboard (document, view, FALSE, TRUE);
 #endif /* _WINDOWS */
-
-		FrameRedraw (frame,
-			     FrameTable[frame].FrWidth,
-			     FrameTable[frame].FrHeight);
-		
-              }
+            FrameRedraw (frame,
+                         FrameTable[frame].FrWidth,
+                         FrameTable[frame].FrHeight);
+            
+          }
 #if !defined (_MACOS)
-            else if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
-              {	
-		ClickFrame = frame;
-		ClickX = x;
-		ClickY = y;
-		if (LocateSelectionInView (frame, ClickX, ClickY, 8, &Dragging))
-		  return FALSE;
-		/* open in a new tab */
-		FrameToView (frame, &document, &view);
-		TtaExecuteMenuAction ("FollowTheLinkNewTab", document, view, FALSE);
-              }
+        else if ((thot_mod_mask & THOT_MOD_CTRL) == THOT_MOD_CTRL)
+          {	
+            ClickFrame = frame;
+            ClickX = x;
+            ClickY = y;
+            if (LocateSelectionInView (frame, ClickX, ClickY, 8, &Dragging))
+              return FALSE;
+            /* open in a new tab */
+            FrameToView (frame, &document, &view);
+            TtaExecuteMenuAction ("FollowTheLinkNewTab", document, view, FALSE);
+          }
 #endif /* MACOS */
-            else
-              {
-                /* a simple selection */
-                ClickFrame = frame;
-                ClickX = x;
-                ClickY = y;
-                /* it's important to setup Dragging before the call of
-                   LocateSelectionInView because LocateSelectionInView will
-                   handle gui events (keyup) and Dragging variable
-                   * will not be unset => cause a infinit selection ! */
-                Dragging = TRUE;
-                if (LocateSelectionInView (frame, ClickX, ClickY, 2, &Dragging))
-                  {
-                  return FALSE;
-                  }
-             }
+        else if (ClickFrame != frame || ClickX != x || ClickY != y)
+          {
+            /* a simple selection */
+            ClickFrame = frame;
+            ClickX = x;
+            ClickY = y;
+            /* it's important to setup Dragging before the call of
+               LocateSelectionInView because LocateSelectionInView will
+               handle gui events (keyup) and Dragging variable
+               * will not be unset => cause a infinit selection ! */
+            Dragging = TRUE;
+            if (LocateSelectionInView (frame, ClickX, ClickY, 2, &Dragging))
+              return FALSE;
           }
       }
       break;

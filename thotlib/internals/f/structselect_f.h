@@ -74,7 +74,8 @@ extern void SelectElementWithEvent ( PtrDocument pDoc,
                                      ThotBool check );
 extern void SelectPositionWithEvent ( PtrDocument pDoc,
                                       PtrElement pEl,
-                                      int first );
+                                      int first,
+                                      ThotBool withDecoration );
 extern void SelectStringWithEvent ( PtrDocument pDoc,
                                     PtrElement pEl,
                                     int firstChar,
@@ -176,7 +177,8 @@ extern void SelectElementWithEvent ( PtrDocument pDoc,
                                        ThotBool check );
 extern void SelectPositionWithEvent ( PtrDocument pDoc,
                                         PtrElement pEl,
-                                        int first );
+                                        int first,
+                                        ThotBool withDecoration );
 extern void SelectStringWithEvent ( PtrDocument pDoc,
                                       PtrElement pEl,
                                       int firstChar,

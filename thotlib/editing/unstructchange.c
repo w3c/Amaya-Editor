@@ -1169,7 +1169,7 @@ void PasteCommand ()
                   strcmp (pSel->ElStructSchema->SsName, "SVG"))
                 pSel = LastLeaf (pSel);
               if (pSel && pSel->ElTypeNumber == CharString + 1)
-                SelectPositionWithEvent (pDoc, pSel, pSel->ElTextLength+1);
+                SelectPositionWithEvent (pDoc, pSel, pSel->ElTextLength+1, TRUE);
               else
                 SelectElementWithEvent (pDoc, pSel, TRUE, FALSE);
               SetDocumentModified (pDoc, TRUE, 20);
@@ -2830,7 +2830,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
                   {
                     /* set selection after the last character of the string */
                     SelectPositionWithEvent (pDoc, pSibling,
-                                             pSibling->ElTextLength + 1);
+                                             pSibling->ElTextLength + 1, FALSE);
                     /* simulate a backspace */
                     InsertChar (frame, '\177', -1);
                   }
