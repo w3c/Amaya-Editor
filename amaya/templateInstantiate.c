@@ -379,7 +379,11 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
             {
               child = TtaGetFirstChild (el);
               if (!strcmp (types, "string") || !strcmp (types, "number"))
-                AddPromptIndicator (el, doc);
+                {
+                  if (!loading)
+                    // don't apply to a loaded instance
+                    AddPromptIndicator (el, doc);
+                }
               else
                 {
                   // avoid to have a block element within a pseudo paragraph
