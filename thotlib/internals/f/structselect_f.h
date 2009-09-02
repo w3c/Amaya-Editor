@@ -80,7 +80,6 @@ extern void SelectStringWithEvent ( PtrDocument pDoc,
                                     PtrElement pEl,
                                     int firstChar,
                                     int lastChar );
-extern PtrAbstractBox GetParentGroup ( PtrAbstractBox pAb );
 extern ThotBool ChangeSelection ( int frame,
                                   PtrAbstractBox pAb,
                                   int rank,
@@ -183,7 +182,6 @@ extern void SelectStringWithEvent ( PtrDocument pDoc,
                                       PtrElement pEl,
                                       int firstChar,
                                       int lastChar );
-extern PtrAbstractBox GetParentGroup ( PtrAbstractBox pAb );
 extern ThotBool ChangeSelection ( int frame,
                                     PtrAbstractBox pAb,
                                     int rank,

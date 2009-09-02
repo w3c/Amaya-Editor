@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CustomQueryMenuInit ( Document document,
-                                  View view );
 extern void AnnotFilter ( Document document,
                           View view );
 extern RDFResourceP AnnotTypes ( Document document,
@@ -15,8 +13,6 @@ extern RDFResourceP AnnotTypes ( Document document,
 
 #else /* __STDC__ */
 
-extern void CustomQueryMenuInit ( Document document,
-                                    View view );
 extern void AnnotFilter ( Document document,
                             View view );
 extern RDFResourceP AnnotTypes ( Document document,

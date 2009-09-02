@@ -42,6 +42,7 @@
 #include "appli_f.h"
 #include "applicationapi_f.h"
 #include "boxselection_f.h"
+#include "buildboxes_f.h"
 #include "callback_f.h"
 #include "changepresent_f.h"
 #include "checkermenu_f.h"
@@ -3419,40 +3420,6 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar,
     }
 }
 
-/*----------------------------------------------------------------------
-  GetParentGroup returns the top enclosing IsGroup element or NULL
-  ----------------------------------------------------------------------*/
-PtrAbstractBox GetParentGroup (PtrAbstractBox pAb)
-{
-  PtrAbstractBox      pParent, pFound = NULL;
-  ThotBool            found;
-
-  /* check parents */
-  found = FALSE;
-  if (pAb == NULL)
-    return NULL;
-  if (pAb->AbElement == NULL || pAb->AbElement->ElStructSchema == NULL ||
-      strcmp (pAb->AbElement->ElStructSchema->SsName, "SVG"))
-    return NULL;
-  pParent = pAb->AbEnclosing;
-  while (pParent && !found)
-    {
-      if (pParent->AbElement &&
-          TypeHasException (ExcIsGroup, pParent->AbElement->ElTypeNumber,
-                            pParent->AbElement->ElStructSchema))
-        {
-          found = TRUE;
-          while (pParent)
-            {
-              pFound = pParent;
-              pParent = GetParentGroup (pParent);
-            }
-        }
-      else
-        pParent = pParent->AbEnclosing;
-    }
-  return (pFound);
-}
 
 /*----------------------------------------------------------------------
   ChangeSelection
@@ -3521,7 +3488,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   else if (view == 1)
     {
       // do we have to move the selection to an emclosing SVG group
-      pGroup = GetParentGroup (pAb);
+      pGroup = GetParentGroup (pAb->AbBox);
       if (pGroup)
         pAb = pGroup;
     }

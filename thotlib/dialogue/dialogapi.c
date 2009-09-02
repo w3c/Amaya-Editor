@@ -901,7 +901,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
                 index += count + 1;
               }
           }
-        }
     }
 #endif /* _WX */
 }
@@ -914,7 +913,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 #endif /* _WINGUI */
 #ifdef _WX
-     void TtaSetPulldownOff (int ref, ThotMenu parent)
+void TtaSetPulldownOff (int ref, ThotMenu parent)
 #endif /* _WX */
 {
 #ifndef _WX

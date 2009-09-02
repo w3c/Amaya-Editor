@@ -268,16 +268,6 @@ extern void ReplyToAnnotation ( Document doc,
                                 View view );
 extern void CustomQuery ( Document doc,
                           View view );
-extern void BookmarkFile ( Document doc,
-                           View view );
-extern void EditTopics ( Document doc,
-                         View view );
-extern void AddSeparator ( Document doc,
-                           View view );
-extern void ViewBookmarks ( Document doc,
-                            View view );
-extern void MoveItem ( Document doc,
-                       View view );
 extern void CopyLockInformation ( Document doc,
                                   View view );
 extern void LockUnlock ( Document doc,
@@ -549,16 +539,6 @@ extern void ReplyToAnnotation ( Document doc,
                                   View view );
 extern void CustomQuery ( Document doc,
                             View view );
-extern void BookmarkFile ( Document doc,
-                             View view );
-extern void EditTopics ( Document doc,
-                           View view );
-extern void AddSeparator ( Document doc,
-                             View view );
-extern void ViewBookmarks ( Document doc,
-                              View view );
-extern void MoveItem ( Document doc,
-                         View view );
 extern void CopyLockInformation ( Document doc,
                                     View view );
 extern void LockUnlock ( Document doc,

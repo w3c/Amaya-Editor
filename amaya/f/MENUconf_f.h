@@ -9,17 +9,11 @@
 extern void InitAmayaDefEnv ( void );
 extern int CleanDirSep ( char *name );
 extern int CleanFirstLastSpace ( char *name );
-extern void CacheConfMenu ( Document document,
-                            View view );
-extern void ProxyConfMenu ( Document document,
-                            View view );
 extern void GetGeneralConf ( void );
 extern void ValidateGeneralConf ( void );
 extern void SetGeneralConf ( void );
 extern void GetDefaultGeneralConf ( void );
 extern void GeneralConfMenu ( Document document,
-                              View view );
-extern void PublishConfMenu ( Document document,
                               View view );
 extern void GetEmailsConf ( void );
 extern void SetEmailsConf ( void );
@@ -30,8 +24,6 @@ extern void ApplyConfigurationChanges ( void );
 extern void GetDefaultBrowseConf ( void );
 extern void BrowseConfMenu ( Document document,
                              View view );
-extern void ColorConfMenu ( Document document,
-                            View view );
 extern void SetGeometryConf ( int document,
                               const char * view_name );
 extern void AnnotConfMenu ( Document document,
@@ -93,17 +85,11 @@ extern void InitConfMenu ( void );
 extern void InitAmayaDefEnv ( void );
 extern int CleanDirSep ( char *name );
 extern int CleanFirstLastSpace ( char *name );
-extern void CacheConfMenu ( Document document,
-                              View view );
-extern void ProxyConfMenu ( Document document,
-                              View view );
 extern void GetGeneralConf ( void );
 extern void ValidateGeneralConf ( void );
 extern void SetGeneralConf ( void );
 extern void GetDefaultGeneralConf ( void );
 extern void GeneralConfMenu ( Document document,
-                                View view );
-extern void PublishConfMenu ( Document document,
                                 View view );
 extern void GetEmailsConf ( void );
 extern void SetEmailsConf ( void );
@@ -114,8 +100,6 @@ extern void ApplyConfigurationChanges ( void );
 extern void GetDefaultBrowseConf ( void );
 extern void BrowseConfMenu ( Document document,
                                View view );
-extern void ColorConfMenu ( Document document,
-                              View view );
 extern void SetGeometryConf ( int document,
                                 const char * view_name );
 extern void AnnotConfMenu ( Document document,
