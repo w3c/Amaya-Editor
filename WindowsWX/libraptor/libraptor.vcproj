@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="libraptor"
 	ProjectGUID="{8CBB9A1D-AFA7-48A5-B60C-0AB2820F4065}"
+	RootNamespace="libraptor"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -42,7 +44,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\libwww\modules\r,..\..\..\redland\librdf,..\..\..\redland\raptor,..\..\..\libwww\modules\expat\lib"
-				PreprocessorDefinitions="_DEBUG;__STDC__;HAVE_STDLIB_H;HAVE_STDARG_H;WIN32;_WINDOWS;RAPTOR_INTERNAL"
+				PreprocessorDefinitions="__STDC__,HAVE_STDLIB_H,HAVE_STDARG_H,WIN32,_WINDOWS,RAPTOR_INTERNAL,LIBRDF_INTERNAL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
@@ -118,7 +120,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\libwww\modules\r,..\..\..\redland\librdf,..\..\..\redland\raptor,..\..\..\libwww\modules\expat\lib"
-				PreprocessorDefinitions="__STDC__;HAVE_STDLIB_H;HAVE_STDARG_H;WIN32;_WINDOWS;RAPTOR_INTERNAL;LIBRDF_INTERNAL"
+				PreprocessorDefinitions="_MBCS,__STDC__,HAVE_STDLIB_H,HAVE_STDARG_H,WIN32,_WINDOWS,RAPTOR_INTERNAL,LIBRDF_INTERNAL"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"

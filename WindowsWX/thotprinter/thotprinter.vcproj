@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="thotprinter"
 	ProjectGUID="{6A8ED8BB-526E-409B-A4FE-9730B16D1C15}"
+	RootNamespace="thotprinter"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -47,7 +49,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\amaya,..\..\amaya,..\..\amaya\f,..\..\..\libwww\Library\src,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\thotlib\include,..\..\..\wxWidgets\src\zlib"
-				PreprocessorDefinitions="__STDC__;_WIN_PRINT;PAGINEETIMPRIME;STDC_HEADERS;_SVG;_DEBUG;WIN32;_WINDOWS;_WINDOWS_DLL;_WINGUI;_WINGUI_WX"
+				PreprocessorDefinitions="__STDC__,_WIN_PRINT,PAGINEETIMPRIME,STDC_HEADERS,_SVG,_DEBUG,WIN32,_WINDOWS,_WINDOWS_DLL,_WINGUI,_WINGUI_WX"
 				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\Debug/thotprinter.pch"
 				AssemblerListingLocation=".\Debug/"
@@ -70,14 +72,17 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib"
+				AdditionalDependencies="wxjpeg.lib wxpng.lib wxzlib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib"
 				OutputFile=".\..\bin/thotprinter.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="..\..\..\wxWidgets\lib\vc_dll"
 				IgnoreDefaultLibraryNames="LIBCD.lib,LIBCMTD.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\bin/thotprinter.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\..\bin/thotprinter.lib"
 				TargetMachine="1"
 			/>
@@ -102,15 +107,12 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\bin"
+			OutputDirectory="..\bin"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
@@ -140,17 +142,19 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
+				Optimization="0"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\amaya,..\..\amaya,..\..\amaya\f,..\..\..\libwww\Library\src,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\thotlib\include,..\..\..\wxWidgets\src\zlib"
-				PreprocessorDefinitions="__STDC__;_WIN_PRINT;PAGINEETIMPRIME;STDC_HEADERS;_SVG;_DEBUG;WIN32;_WINDOWS;_WINDOWS_DLL;_WINGUI;_WINGUI_WX"
+				AdditionalIncludeDirectories="..\amaya,..\..\amaya,..\..\amaya\f,..\..\..\wxWidgets\src\zlib,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\thotlib\include,..\..\..\libwww\Library\src,..\..\thotlib\internals\h"
+				PreprocessorDefinitions="__STDC__,_WIN_PRINT,PAGINEETIMPRIME,STDC_HEADERS,_SVG,_DEBUG,WIN32,_WINDOWS,_WINDOWS_DLL,_WINGUI,_WINGUI_WX"
 				StringPooling="true"
 				RuntimeLibrary="2"
+				StructMemberAlignment="4"
 				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/thotprinter.pch"
 				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
+				ObjectFile="..\bin/thotprinter.dll"
+				ProgramDataBaseFileName="..\bin/thotprinter.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -167,14 +171,17 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				LinkLibraryDependencies="true"
 				AdditionalDependencies="odbc32.lib odbccp32.lib"
-				OutputFile=".\..\bin/thotprinter.dll"
+				OutputFile="..\bin/thotprinter.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="LIBC.lib,LIBCMT.lib"
 				ProgramDatabaseFile=".\..\bin/thotprinter.pdb"
 				SubSystem="2"
-				ImportLibrary=".\..\bin/thotprinter.lib"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="..\bin/thotprinter.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -189,16 +196,13 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\..\bin/thotprinter.bsc"
+				OutputFile="..\bin/thotprinter.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -208,6 +212,10 @@
 	<References>
 	</References>
 	<Files>
+		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
 		<File
 			RelativePath="..\..\Amaya\css.c"
 			>

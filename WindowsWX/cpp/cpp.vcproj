@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="cpp"
 	ProjectGUID="{A59D8BDF-4264-49C1-905F-E4DA784CC4C5}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -78,6 +79,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\bin/cpp.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\..\bin/cpp.lib"
 				TargetMachine="1"
 			/>
@@ -100,9 +103,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -173,6 +173,8 @@
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\..\bin/cpp.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\..\bin/cpp.lib"
 				TargetMachine="1"
 			/>
@@ -195,9 +197,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

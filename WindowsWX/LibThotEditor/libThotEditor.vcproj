@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="libThotEditor"
 	ProjectGUID="{A1B2A6CB-D4CC-4479-9783-A87B82AE2338}"
+	RootNamespace="libThotEditor"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -42,7 +44,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswu,..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\contrib\include,..\..\libpng\zlib,..\..\..\wxWidgets\src\jpeg,..\..\..\wxWidgets\src\tiff,..\..\..\wxWidgets\src\png,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\amaya,..\..\..\freetype\include"
+				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswu,..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\contrib\include,,..\..\..\wxWidgets\src\zlib,..\..\..\wxWidgets\src\jpeg,..\..\..\wxWidgets\src\tiff,..\..\..\wxWidgets\src\png,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\amaya,..\..\..\freetype\include"
 				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;__WXMSW__;UNICODE;STDC_HEADERS;XMD_H;THOT_TOOLTIPS;_WINDOWS;_GL;WIN32;WINVER=0x400;wxUSE_GUI=1;_WX;WXUSINGDLL"
 				StringPooling="false"
 				RuntimeLibrary="2"
@@ -115,8 +117,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswud,..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\contrib\include,..\..\libpng\zlib,..\..\..\wxWidgets\src\jpeg,..\..\..\wxWidgets\src\tiff,..\..\..\wxWidgets\src\png,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\amaya,..\..\..\freetype\include"
-				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;__WXMSW__;UNICODE;STDC_HEADERS;XMD_H;_STIX;_FONTCONFIG;_GLANIM;THOT_TOOLTIPS;_SVGLIB;_SVGANIM;_WINDOWS;_GL;WIN32;WINVER=0x400;wxUSE_GUI=1;_WX;WXUSINGDLL"
+				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswud,..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\contrib\include,,..\..\..\wxWidgets\src\zlib,..\..\..\wxWidgets\src\jpeg,..\..\..\wxWidgets\src\tiff,..\..\..\wxWidgets\src\png,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\amaya,..\..\..\freetype\include"
+				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;__WXMSW__;UNICODE,_UNICODE;STDC_HEADERS;XMD_H;_STIX;_FONTCONFIG;_GLANIM,_GLTRANSFORMATION;THOT_TOOLTIPS;_SVGLIB;_SVGANIM;_WINDOWS;_GL;WIN32;WINVER=0x400;wxUSE_GUI=1;_WX;WXUSINGDLL"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\Debug/libThotEditor.pch"
@@ -127,6 +129,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -239,6 +242,10 @@
 			</FileConfiguration>
 		</File>
 		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaActionEvent.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaAddPointEvtHandler.cpp"
 			>
 			<FileConfiguration
@@ -259,6 +266,14 @@
 					PreprocessorDefinitions=""
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaAdvancedNotebook.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaAdvancedWindow.cpp"
+			>
 		</File>
 		<File
 			RelativePath="..\..\thotlib\base\AmayaApp.cpp"
@@ -371,6 +386,14 @@
 			</FileConfiguration>
 		</File>
 		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaClassicNotebook.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaClassicWindow.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaColorButton.cpp"
 			>
 		</File>
@@ -397,6 +420,14 @@
 			</FileConfiguration>
 		</File>
 		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaCreatePathEvtHandler.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaCreateShapeEvtHandler.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaDialog.cpp"
 			>
 			<FileConfiguration
@@ -417,6 +448,18 @@
 					PreprocessorDefinitions=""
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaEditPathEvtHandler.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaEditShapeEvtHandler.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaElementPanel.cpp"
+			>
 		</File>
 		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaExplorerPanel.cpp"
@@ -483,6 +526,10 @@
 					PreprocessorDefinitions=""
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaHelpWindow.cpp"
+			>
 		</File>
 		<File
 			RelativePath="..\..\thotlib\base\AmayaLogDebug.cpp"
@@ -574,28 +621,6 @@
 		</File>
 		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaNormalWindow.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\..\thotlib\dialogue\AmayaNotebook.cpp"
 			>
 			<FileConfiguration
 				Name="Release|Win32"
@@ -885,6 +910,18 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaSVGPanel.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaTemplatePanel.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaTipOfTheDay.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaToolBar.cpp"
 			>
 			<FileConfiguration
@@ -905,6 +942,10 @@
 					PreprocessorDefinitions=""
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\AmayaTransformEvtHandler.cpp"
+			>
 		</File>
 		<File
 			RelativePath="..\..\thotlib\dialogue\AmayaWindow.cpp"
@@ -1113,6 +1154,10 @@
 					CompileAs="2"
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\..\thotlib\dialogue\archives.c"
+			>
 		</File>
 		<File
 			RelativePath="..\..\thotlib\tree\attributeapi.c"
@@ -2601,30 +2646,6 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="..\..\thotlib\dialogue\keyboards.c"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-					CompileAs="2"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-					CompileAs="2"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
 			RelativePath="..\..\thotlib\tree\labelalloc.c"
 			>
 			<FileConfiguration
@@ -2671,6 +2692,10 @@
 					CompileAs="2"
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\libThotEditor.rc"
+			>
 		</File>
 		<File
 			RelativePath="..\..\thotlib\base\logdebug.c"
@@ -3391,6 +3416,10 @@
 					CompileAs="2"
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\resource.h"
+			>
 		</File>
 		<File
 			RelativePath="..\..\thotlib\document\schemas.c"

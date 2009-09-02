@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="amaya"
 	ProjectGUID="{834DA8CB-1085-449B-9102-1E559EE64865}"
+	RootNamespace="amaya"
 	AssemblyReferenceSearchPaths="&quot;..\..\Mesa\lib&quot;"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -49,7 +51,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../libpng/zlib,..\..\wxWidgets\lib\vc_dll\mswu,.\,..\..\wxWidgets\include,..\..\wxWidgets\contrib\include,..\..\wxWidgets\src\jpeg,..\..\wxWidgets\src\tiff,..\..\wxWidgets\src\png,..\..\freetype\include,..\..\libwww\modules\expat\lib,..\thotlib\internals\h,..\thotlib\internals\var,.\amaya,..\amaya,..\amaya\f,..\thotlib\include,..\..\libwww\Library\src,..\thotlib\internals\f,..\annotlib,..\annotlib\f,..\davlib\h,..\davlib\f,..\davlib\tree\h"
+				AdditionalIncludeDirectories="..\..\wxWidgets\src\zlib,..\..\wxWidgets\lib\vc_dll\mswu,.\,..\..\wxWidgets\include,..\..\wxWidgets\contrib\include,..\..\wxWidgets\src\jpeg,..\..\wxWidgets\src\tiff,..\..\wxWidgets\src\png,..\..\freetype\include,..\..\libwww\modules\expat\lib,..\thotlib\internals\h,..\thotlib\internals\var,.\amaya,..\amaya,..\amaya\f,..\thotlib\include,..\..\libwww\Library\src,..\thotlib\internals\f,..\annotlib,..\annotlib\f,..\davlib\h,..\davlib\f,..\davlib\tree\h"
 				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;STDC_HEADERS;XMD_H;EXPAT_PARSER;XML_DTD;XML_NS;_SVG;TEMPLATES;THOT_TOOLTIPS;ANNOTATIONS;XML_GENERIC;DAV;__WXMSW__;WINVER=0x0400;UNICODE;_WINDOWS;_GL;WIN32;_WX;wxUSE_GUI=1;WXUSINGDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -84,6 +86,8 @@
 				IgnoreDefaultLibraryNames="LIBC.lib;LIBCMT.lib"
 				ProgramDatabaseFile=".\bin/amaya.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -105,9 +109,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -147,8 +148,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../libpng/zlib,..\..\wxWidgets\lib\vc_dll\mswud,.\,..\..\wxWidgets\include,..\..\wxWidgets\contrib\include,..\..\wxWidgets\src\jpeg,..\..\wxWidgets\src\tiff,..\..\wxWidgets\src\png,..\..\freetype\include,..\..\libwww\modules\expat\lib,..\thotlib\internals\h,..\thotlib\internals\var,.\amaya,..\amaya,..\amaya\f,..\thotlib\include,..\..\libwww\Library\src,..\thotlib\internals\f,..\annotlib,..\annotlib\f,..\davlib\h,..\davlib\f,..\davlib\tree\h"
-				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;STDC_HEADERS;XMD_H;EXPAT_PARSER;XML_DTD;XML_NS;_SVG;TEMPLATES;THOT_TOOLTIPS;ANNOTATIONS;XML_GENERIC;DAV;__WXMSW__;WINVER=0x0400;UNICODE;_WINDOWS;_GL;WIN32;_WX;wxUSE_GUI=1;WXUSINGDLL"
+				AdditionalIncludeDirectories="..\..\wxWidgets\lib\vc_dll\mswud,.\,..\..\wxWidgets\include,..\..\wxWidgets\contrib\include,..\..\wxWidgets\src\jpeg,..\..\wxWidgets\src\tiff,..\..\wxWidgets\src\png,..\..\wxWidgets\src\zlib,..\..\freetype\include,..\..\libwww\modules\expat\lib,..\thotlib\internals\h,..\thotlib\internals\var,.\amaya,..\amaya,..\amaya\f,..\thotlib\include,..\..\libwww\Library\src,..\..\libwww\Library\src\SSL,..\thotlib\internals\f,..\annotlib,..\annotlib\f,..\davlib\h,..\davlib\f,..\davlib\tree\h,..\..\wxWidgets\build\wince\missing"
+				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;STDC_HEADERS;XMD_H;EXPAT_PARSER;XML_DTD;XML_NS;_SVG;TEMPLATES;THOT_TOOLTIPS;ANNOTATIONS;XML_GENERIC;DAV;__WXMSW__;WINVER=0x0400;UNICODE;_UNICODE,_WINDOWS;_GL;WIN32;_WX;wxUSE_GUI=1;WXUSINGDLL"
 				IgnoreStandardIncludePath="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -178,15 +179,17 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseLibraryDependencyInputs="false"
-				AdditionalDependencies="glu32.lib opengl32.lib wxbase28ud_xml.lib wxmsw28ud_gl.lib wxmsw28ud_xrc.lib wxmsw28ud_adv.lib wxmsw28ud_core.lib wxbase28ud.lib wxbase28ud_net.lib freetype2110_D.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="wxjpeg.lib wxpng.lib wxzlib.lib wxmsw28ud_aui.lib wxbase28ud_xml.lib wxmsw28ud_gl.lib wxmsw28ud_xrc.lib wxmsw28ud_adv.lib wxmsw28ud_core.lib wxbase28ud.lib wxbase28ud_net.lib freetype2110_D.lib ssleay32.lib libeay32.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib"
 				OutputFile=".\bin/amaya.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\wxWidgets\lib\vc_dll;..\..\Mesa\lib;..\..\freetype\objs"
+				AdditionalLibraryDirectories="..\..\wxWidgets\lib\vc_dll;..\..\freetype\objs,..\..\openssl\out32"
 				IgnoreDefaultLibraryNames="LIBCD.lib;LIBCMTD.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\bin/amaya.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -208,9 +211,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -313,28 +313,6 @@
 			</File>
 			<File
 				RelativePath="..\amaya\wxdialog\DocInfoDlgWX.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\amaya\wxdialog\EnumListDlgWX.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -471,50 +449,6 @@
 			</File>
 			<File
 				RelativePath="..\amaya\wxdialog\MakeIdDlgWX.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\amaya\wxdialog\NewTemplateDocDlgWX.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\amaya\wxdialog\NumDlgWX.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -779,28 +713,6 @@
 			</File>
 			<File
 				RelativePath="..\amaya\wxdialog\StyleDlgWX.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\amaya\wxdialog\TextDlgWX.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -1518,30 +1430,6 @@
 		</File>
 		<File
 			RelativePath="..\amaya\insertelem.c"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-					CompileAs="2"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					AdditionalIncludeDirectories=""
-					PreprocessorDefinitions=""
-					CompileAs="2"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\amaya\libmanag.c"
 			>
 			<FileConfiguration
 				Name="Release|Win32"

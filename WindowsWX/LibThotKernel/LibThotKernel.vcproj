@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="LibThotKernel"
 	ProjectGUID="{C054A2D1-4418-4C48-9083-BC42F401C335}"
+	RootNamespace="LibThotKernel"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -41,11 +43,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswud,..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\contrib\include,..\..\libpng\zlib,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\..\freetype\include"
+				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswud,..\,..\..\..\wxWidgets\include,,..\..\..\wxWidgets\src\zlib,..\..\..\wxWidgets\contrib\include,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\..\freetype\include"
 				PreprocessorDefinitions="__WXMSW__;WINVER=0x0400;UNICODE;XMD_H;STDC_HEADERS;NODISPLAY;_WINDOWS_COMPILERS;_SVGLIB;_SVGANIM;_WINDOWS;_GL;WIN32;_WX;wxUSE_GUI=1;WXUSINGDLL"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\Debug/LibThotKernel.pch"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough=""
+				PrecompiledHeaderFile="..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\src\zlib,..\..\..\wxWidgets\contrib\include,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\..\freetype\include"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -115,12 +119,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswu,..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\contrib\include,..\..\libpng\zlib,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\..\freetype\include"
+				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswud,..\,..\..\..\wxWidgets\include,,..\..\..\wxWidgets\src\zlib,..\..\..\wxWidgets\contrib\include,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\..\freetype\include"
 				PreprocessorDefinitions="__WXMSW__;WINVER=0x0400;UNICODE;XMD_H;STDC_HEADERS;NODISPLAY;_WINDOWS_COMPILERS;_SVGLIB;_SVGANIM;_WINDOWS;_GL;WIN32;_WX;wxUSE_GUI=1;WXUSINGDLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/LibThotKernel.pch"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile="..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\src\zlib,..\..\..\wxWidgets\contrib\include,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\..\freetype\include"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
