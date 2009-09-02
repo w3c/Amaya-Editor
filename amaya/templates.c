@@ -2124,6 +2124,7 @@ void Template_CreateTextBox (Document doc, ThotBool createComp)
                       if (!open)
                         TtaCloseUndoSequence (doc);
                       TtaSelectElement (doc, use);
+		      TtaSetDocumentModified (doc);
                     }
                 }
               else if (GenerateInlineElement (Template_EL_useSimple, sstempl, 0, "", TRUE))
@@ -2179,6 +2180,7 @@ void Template_CreateTextBox (Document doc, ThotBool createComp)
                         }
                       if (!open)
                         TtaCloseUndoSequence (doc);
+		      TtaSetDocumentModified (doc);
                     }
                 }
               TtaSetStructureChecking (oldStructureChecking, doc);
