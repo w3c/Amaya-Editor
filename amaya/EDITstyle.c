@@ -2005,11 +2005,7 @@ void CreateClass (Document doc, View view)
         InitConfirm (doc, 1, TtaGetMessage (LIB, TMSG_SEL_CLASS));
       else
         {
-          NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
-          TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
-                          TtaGetMessage (LIB, TMSG_SEL_CLASS),
-                          NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
-  
+          NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);  
           /* preselect the entry corresponding to the class of the element. */
           if (!strcmp (schName, "MathML"))
             attrType.AttrTypeNum = MathML_ATTR_class;

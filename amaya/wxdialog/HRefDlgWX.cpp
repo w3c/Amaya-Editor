@@ -82,10 +82,10 @@ HRefDlgWX::HRefDlgWX( int ref, wxWindow* parent, const wxString & title,
   SetAutoLayout( TRUE );
   XRCCTRL(*this, "wxID_DELETE", wxButton)->Show(!LinkAsCSS);
   
-  // set te cursor to the end
-  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection (0, -1);
   // give focus to ...
   XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetFocus();
+  // set te cursor to the end
+  XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetSelection (0, -1);
 }
 
 /*----------------------------------------------------------------------

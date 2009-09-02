@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -42,13 +42,6 @@
 #include "winsys.h"
 #include "wininclude.h"
 #endif /* _WINGUI */
-
-#ifdef _GTK
-#include <gdk/gdkx.h>
-#include "gtk-functions.h" /* GTK prototype */
-extern int        appArgc;
-extern char**     appArgv;
-#endif /* _GTK */
 
 #ifdef _WX
 #include "AmayaFrame.h"
@@ -493,62 +486,6 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
 }
 #endif /* _WINGUI */
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef _GTK
-static ThotBool ConfirmMessageGTK (ThotWidget w, ThotWidget MsgBox)
-{
-  gtk_widget_hide (MsgBox);
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  Callback inits a form.
-  ----------------------------------------------------------------------*/
-static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
-{
-  int                 ent;
-  struct E_List      *adbloc;
-  struct Cat_Context *catalogue;
-
-  /* Affiche le formulaire */
-  if (parentCatalogue->Cat_Widget)
-    {
-      /*** Allume les sous-widgets du formulaire ***/
-      adbloc = parentCatalogue->Cat_Entries;
-      /* Le premier bloc contient les boutons de la feuille de saisie */
-      adbloc = adbloc->E_Next;
-      ent = 1;
-      while (adbloc->E_ThotWidget[ent])
-        {
-          /* Il faut sauter les widgets des RowColumns */
-          if (adbloc->E_Free[ent] == 'N')
-            catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
-          /* Faut-il passer au bloc suivant ? */
-          ent++;
-          if (ent >= C_NUMBER)
-            {
-              ent = 0;
-              if (adbloc->E_Next == NULL)
-                break;
-              else
-                adbloc = adbloc->E_Next;
-            }
-        }
-      w = parentCatalogue->Cat_Widget;
-      if (PopShell)
-        {
-          gtk_window_set_position (GTK_WINDOW (PopShell), GTK_WIN_POS_MOUSE);
-          gtk_widget_show_all (PopShell);
-        }
-      else
-        {
-          gtk_window_set_position (GTK_WINDOW (w), GTK_WIN_POS_MOUSE);
-          gtk_widget_show_all (GTK_WIDGET(w));
-        }
-    }
-}
-#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   warning handler                                                    
@@ -583,16 +520,6 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
   PopShell = 0;
   /* Pas encore de reference attribuee */
   FirstFreeRef = 0;
-}
-
-/*----------------------------------------------------------------------
-  InitDialogueFont initializes the dialogue font
-  ----------------------------------------------------------------------*/
-void InitDialogueFont ()
-{
-#ifdef _GTK
-  DefaultFont = DialogFont;
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -716,10 +643,6 @@ int DestContenuMenu (struct Cat_Context *catalogue)
       if (catalogue->Cat_Type == CAT_LABEL)
         {
           /* Recupere le widget parent du widget detruit */
-#ifdef _GTK
-          w = GTK_WIDGET(catalogue->Cat_Widget)->parent;
-          gtk_widget_destroy (catalogue->Cat_Widget);
-#endif /* _GTK */
 #ifdef _WINGUI
           w = GetParent (catalogue->Cat_Widget);
           DestroyWindow (w);
@@ -743,14 +666,6 @@ int DestContenuMenu (struct Cat_Context *catalogue)
                   w = GetParent (adbloc->E_ThotWidget[ent]);
                 DestroyWindow (adbloc->E_ThotWidget[ent]);
 #endif  /* _WINGUI */
-#ifdef _GTK
-                if (w == 0 && ent)
-                  w = GTK_WIDGET(adbloc->E_ThotWidget[ent])->parent;
-                
-                /* Libere les widgets */
-                gtk_widget_hide (GTK_WIDGET(adbloc->E_ThotWidget[ent]));
-                gtk_widget_destroy (GTK_WIDGET(adbloc->E_ThotWidget[ent]));
-#endif /* _GTK */
 #ifdef _WX
                 /* nothing is done here because the menu items widgets are destroyed later */
 #endif /* _WX */
@@ -808,16 +723,12 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
   register int        ent;
   int                 eindex, i;
   ThotBool            rebuilded;
-#if defined (_WINGUI) || defined (_GTK) || defined(_WX)
+#if defined (_WINGUI) || defined(_WX)
   char                menu_item [1024];
   char                equiv_item [255];
-#ifdef _GTK
-  GtkWidget          *table;
-  ThotWidget          wlabel;
-#endif /* _GTK */
 
   equiv_item[0] = 0;
-#endif /* _WINGUI || _GTK || defined(_WX) */
+#endif /* _WINGUI || _WX */
   if (ref == 0)
     {
       TtaError (ERR_invalid_reference);
@@ -852,13 +763,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _WINGUI
           menu = parent;
 #endif  /* _WINGUI */
-#ifdef _GTK
-          menu = gtk_menu_new ();
-          /* 
-             peut -�tre rajouter une bouton pour d�tacher le menu ?
-             se fait avec gtk_menu_set_tearoff_state;
-          */
-#endif /* _GTK */
         }
       else
         menu = (ThotMenu) catalogue->Cat_Widget;
@@ -876,19 +780,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
         /* it's a simple button not a pull-down */
         return;
 #endif  /* _WINGUI */
-#ifdef _GTK 
-      if (number == 0)
-        {
-          /* it's a simple button not a pull-down */
-          if (parent)
-            {
-              gtk_widget_show_all (parent);
-              ConnectSignalGTK (GTK_OBJECT(parent), "activate",
-                                GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
-            }
-          return;
-        }
-#endif /* _GTK */
 
       /*** Create the menu title ***/
       if (title)
@@ -961,36 +852,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
                       AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
                     adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #endif  /* _WINGUI */
-#ifdef _GTK
-                    sprintf (menu_item, "%s", &text[index + 1]);
-                    /* \t doesn't mean anything to gtk... to we align ourself*/
-                    if (equiv_item && equiv_item[0] != EOS)
-                      {
-                        strcat (menu_item, "  ");
-                        w = gtk_menu_item_new ();
-                        table = gtk_table_new (1, 3, FALSE);    
-                        gtk_container_add (GTK_CONTAINER (w), table);  
-                        wlabel = gtk_label_new (menu_item);
-                        /*(that's left-justified, right is 1.0, center is 0.5).*/
-                        /*gtk_label don't seem to like table cell...so*/
-                        gtk_misc_set_alignment (GTK_MISC(wlabel), 0.0 , 0); 
-                        gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);
-                        gtk_widget_show (wlabel);
-                        gtk_label_set_justify (GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
-                        wlabel = gtk_label_new (equiv_item);
-                        gtk_misc_set_alignment (GTK_MISC(wlabel), 1.0, 0); 
-                        gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);
-                        gtk_widget_show (wlabel);
-                        gtk_widget_show (table);
-                      }
-                    else
-                      w = gtk_menu_item_new_with_label (menu_item);
-                    ConnectSignalGTK (GTK_OBJECT(w),  "activate",
-                                      GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);	
-                    gtk_widget_show (w);
-                    gtk_menu_append (GTK_MENU (menu), w);
-                    adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                   }
                 else if (text[index] == 'T')
                   /*__________________________________________ Creation d'un toggle __*/
@@ -1007,38 +868,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
                     AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
                     adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #endif /* _WINGUI */
-#ifdef _GTK
-                    /* \t doesn't mean anything to gtk... to we align ourself*/
-                    sprintf (menu_item, "%s", &text[index + 1]);
-                    if (equiv_item && equiv_item[0] != EOS)
-                      {
-                        strcat (menu_item, "  ");
-                        w = gtk_check_menu_item_new ();
-                        table = gtk_table_new (1, 3, FALSE);    
-                        gtk_container_add (GTK_CONTAINER (w), table);  
-                        wlabel = gtk_label_new (menu_item);
-                        /*(that's left-justified, right is 1.0, center is 0.5).*/
-                        /*gtk_label don't seem to like table cell...so*/
-                        gtk_misc_set_alignment (GTK_MISC(wlabel), 0.0 , 0); 
-                        gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
-                        gtk_widget_show (wlabel);
-                        gtk_label_set_justify (GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
-                        wlabel = gtk_label_new (equiv_item);
-                        gtk_misc_set_alignment (GTK_MISC(wlabel), 1.0, 0); 
-                        gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
-                        gtk_widget_show (wlabel);
-                        gtk_widget_show (table);
-                      }
-                    else
-                      w = gtk_check_menu_item_new_with_label (menu_item);
-                    gtk_widget_show_all (w);
-                    gtk_menu_append (GTK_MENU (menu),w);
-                    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
-                    gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
-                    ConnectSignalGTK (GTK_OBJECT(w), "activate",
-                                      GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
-                    adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                   }
                 else if (text[index] == 'M')
                   /*_______________________________________ Creation d'un sous-menu __*/
@@ -1050,13 +879,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
                     AppendMenu (menu, MF_POPUP, (UINT) w, &text[index + 1]);
                     adbloc->E_ThotWidget[ent] = w;
 #endif /* _WINGUI */
-#ifdef _GTK
-                    sprintf (menu_item, "%s", &text[index + 1]);
-                    w = gtk_menu_item_new_with_label (menu_item);
-                    gtk_widget_show_all (w);
-                    gtk_menu_append (GTK_MENU (menu),w);
-                    adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                   }
                 else if (text[index] == 'S')
                   /*_________________________________ Creation d'un separateur __*/
@@ -1065,12 +887,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
                     AppendMenu (menu, MF_SEPARATOR, 0, NULL);
                     adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
 #endif  /* _WINGUI */
-#ifdef _GTK
-                    w = gtk_menu_item_new ();
-                    gtk_widget_show_all (w);
-                    gtk_menu_append (GTK_MENU (menu),w); 
-                    adbloc->E_ThotWidget[ent] = w;		 
-#endif /* _GTK */
                   }
                 else
                   /*____________________________________ Une erreur de construction __*/
@@ -1085,29 +901,21 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
                 index += count + 1;
               }
           }
-      /* Attache le pull-down menu au widget passe en parametre */
-      if (parent && !rebuilded)
-        {	  
-#ifdef _GTK
-          gtk_menu_item_set_submenu (GTK_MENU_ITEM (parent), menu);
-          gtk_object_set_data (GTK_OBJECT(menu), "MenuItem", (gpointer)parent);
-          gtk_widget_show_all (parent);
-#endif /* _GTK */
         }
     }
 #endif /* _WX */
 }
 
-#if defined(_GTK) || defined (_WINGUI) || defined(_WX)
+#if defined (_WINGUI) || defined(_WX)
 /*----------------------------------------------------------------------
   TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
 #ifdef _WINGUI
 void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 #endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
      void TtaSetPulldownOff (int ref, ThotMenu parent)
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WX */
 {
 #ifndef _WX
   struct Cat_Context *catalogue;
@@ -1124,13 +932,6 @@ void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
       catalogue = CatEntry (ref);
       if (catalogue == NULL)
         TtaError (ERR_invalid_reference);
-#ifdef _GTK
-      else if (catalogue->Cat_Widget)
-        {
-          gtk_widget_set_sensitive (GTK_WIDGET(parent), FALSE);
-          gtk_widget_show_all (GTK_WIDGET(parent));
-        }
-#endif /* _GTK */
 #ifdef _WINGUI
       frame = GetMainFrameNumber (owner);
       EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_GRAYED);
@@ -1146,9 +947,9 @@ void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 #ifdef _WINGUI
 void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 #endif /* _WINGUI */
-#if defined (_GTK) || defined(_WX)
+#ifdef _WX
      void TtaSetPulldownOn (int ref, ThotMenu parent)
-#endif /* #if defined (_GTK) || defined(_WX) */
+#endif /* _WX */
 {
 #ifndef _WX
   struct Cat_Context *catalogue;
@@ -1169,10 +970,6 @@ void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
       else if (catalogue->Cat_Widget)
         {
           menu = catalogue->Cat_Widget;
-#ifdef _GTK
-          gtk_widget_set_sensitive (GTK_WIDGET(parent), TRUE);
-          gtk_widget_show_all (GTK_WIDGET(parent));
-#endif /* _GTK */
 #ifdef _WINGUI
           frame = GetMainFrameNumber (owner);
           EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_ENABLED);
@@ -1182,7 +979,7 @@ void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
     }
 #endif /* _WX */
 }
-#endif /* #if defined(_GTK) || defined (_WINGUI) || defined(_WX) */
+#endif /* _WINGUI || _WX */
 
 /*----------------------------------------------------------------------
   TtaNewPopup cre'e un pop-up menu :                                 
@@ -1200,7 +997,7 @@ void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
                   char *text, char *equiv, char button)
 {
-#if defined (_GTK) || defined(_WINGUI)
+#ifdef _WINGUI
   register int        count;
   register int        index;
   register int        ent;
@@ -1209,23 +1006,9 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
   ThotBool            rebuilded;
   struct Cat_Context *catalogue;
   struct E_List      *adbloc;
-#ifdef _WINGUI
   HMENU               menu;
   HMENU               w;
   int                 nbOldItems, ndx;
-#endif /* _WINGUI */
-#ifdef _GTK
-  GtkWidget          *table;
-  ThotWidget          wlabel;
-  char                menu_item [1024];
-  char                equiv_item [255];
-  ThotWidget          menu;
-  ThotWidget          w;
-#endif /* _GTK */
-
-#ifdef _GTK
-  equiv_item[0] = 0;
-#endif /* _GTK */
   if (ref == 0)
     {
       TtaError (ERR_invalid_reference);
@@ -1250,18 +1033,9 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
           else
             TtaDestroyDialogue (ref);
         }
-#ifdef _GTK
-      menu = gtk_menu_new ();
-      ConnectSignalGTK (GTK_OBJECT (menu), "delete_event",
-                        GTK_SIGNAL_FUNC (formKillGTK), (gpointer) catalogue);
-      ConnectSignalGTK (GTK_OBJECT (menu), "unmap_event",
-                        GTK_SIGNAL_FUNC (formKillGTK), (gpointer) catalogue);
-#endif /* _GTK */
       if (!rebuilded)
         {
-#ifdef _WINGUI
           menu = CreatePopupMenu ();
-#endif /* _WINGUI */
           catalogue->Cat_Widget = menu;
           catalogue->Cat_Ref = ref;
           catalogue->Cat_ParentWidget = (ThotWidget)parent; /* remember the parent widget for the callback */
@@ -1283,29 +1057,23 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
             button = catalogue->Cat_Button;
         }
       catalogue->Cat_Data = -1;
-#ifdef _WINGUI
       if (parent)
         WIN_AddFrameCatalogue (parent, catalogue);
-#endif /* _WINGUI */
       
       /*** Cree le titre du menu ***/
       if (title)
         {
           if (!rebuilded)
             {
-#ifdef _WINGUI
               adbloc->E_ThotWidget[0] = (ThotWidget) 0;
               adbloc->E_ThotWidget[1] = (ThotWidget) 0;
-#endif /* _WINGUI */
             }
         }
       /* Cree les differentes entrees du menu */
-#ifdef _WINGUI
       nbOldItems = GetMenuItemCount (menu);
       for (ndx = 0; ndx < nbOldItems; ndx ++)
         if (!DeleteMenu (menu, ref + ndx, MF_BYCOMMAND))
           DeleteMenu (menu, ndx, MF_BYPOSITION);
-#endif /* _WINGUI */
       
       i = 0;
       index = 0;
@@ -1337,122 +1105,33 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
                 /* Note l'accelerateur */
                 if (equiv)
                   {
-#ifdef _GTK
-                    if (&equiv[eindex] != EOS)
-                      strcpy (equiv_item, &equiv[eindex]); 
-#endif /* _GTK */
                     eindex += strlen (&equiv[eindex]) + 1;
                   }
                 if (text[index] == 'B')
                   /*__________________________________________ Creation d'un bouton __*/
                   {
-#ifdef _WINGUI
                     AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
                     adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-#endif /* _WINGUI */
-#ifdef _GTK
-                    sprintf (menu_item, "%s", &text[index + 1]);
-                    /* \t doesn't mean anything to gtk... to we align ourself*/
-                    if (equiv_item && equiv_item[0] != EOS)
-                      {
-                        strcat (menu_item, "  ");
-                        w = gtk_menu_item_new ();
-                        table = gtk_table_new (1, 3, FALSE);    
-                        gtk_container_add (GTK_CONTAINER (w), table);  
-                        wlabel = gtk_label_new(menu_item);
-                        /*(that's left-justified, right is 1.0, center is 0.5).*/
-                        /*gtk_label don't seem to like table cell...so*/
-                        gtk_misc_set_alignment(GTK_MISC(wlabel), 0.0 , 0); 
-                        gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
-                        gtk_widget_show (wlabel);
-                        gtk_label_set_justify(GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
-			
-                        wlabel = gtk_label_new(equiv_item);
-                        gtk_misc_set_alignment(GTK_MISC(wlabel), 1.0, 0); 
-                        gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
-                        gtk_widget_show (wlabel);
-                        gtk_widget_show (table);
-                      }
-                    else
-                      w = gtk_menu_item_new_with_label (menu_item);
-                    ConnectSignalGTK (GTK_OBJECT(w), "activate",
-                                      GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);	
-                    gtk_widget_show (w);
-                    gtk_menu_append (GTK_MENU (menu), w);
-                    adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                   }
                 else if (text[index] == 'T')
                   /*__________________________________________ Creation d'un toggle __*/
                   {
-#ifdef _WINGUI
                     AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
                     adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-#endif  /* _WINGUI */
-#ifdef _GTK
-                    /* \t doesn't mean anything to gtk... to we align ourself*/
-                    sprintf (menu_item, "%s", &text[index + 1]);
-                    if (equiv_item && equiv_item[0])
-                      {
-                        strcat (menu_item, "  ");
-                        w = gtk_check_menu_item_new ();
-                        table = gtk_table_new (1, 3, FALSE);    
-                        gtk_container_add (GTK_CONTAINER (w), table);  
-                        wlabel = gtk_label_new(menu_item);
-                        /*(that's left-justified, right is 1.0, center is 0.5).*/
-                        /*gtk_label don't seem to like table cell...so*/
-                        gtk_misc_set_alignment(GTK_MISC(wlabel), 0.0 , 0); 
-                        gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
-                        gtk_widget_show (wlabel);
-                        gtk_label_set_justify(GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
-			
-                        wlabel = gtk_label_new(equiv_item);
-                        gtk_misc_set_alignment(GTK_MISC(wlabel), 1.0, 0); 
-                        gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
-                        gtk_widget_show (wlabel);
-                        gtk_widget_show (table);
-                      }
-                    else
-                      w = gtk_check_menu_item_new_with_label (menu_item);
-                    gtk_widget_show_all (w);
-                    gtk_menu_append (GTK_MENU (menu), w);
-                    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
-                    gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
-                    ConnectSignalGTK (GTK_OBJECT(w), "activate",
-                                      GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
-                    adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                   }
                 else if (text[index] == 'M')
                   /*_______________________________________ Creation d'un sous-menu __*/
                   {
                     /* En attendant le sous-menu on cree un bouton */
-#ifdef _WINGUI
                     w = (HMENU) CreateMenu ();
                     AppendMenu (menu, MF_POPUP, (UINT) w, (LPCTSTR) (&text[index + 1]));
                     adbloc->E_ThotWidget[ent] = (ThotWidget) w;
-#endif  /* _WINGUI */
-#ifdef _GTK
-                    sprintf (menu_item, "%s", &text[index + 1]);
-                    w = gtk_menu_item_new_with_label (menu_item);
-                    gtk_widget_show_all (w);
-                    gtk_menu_append (GTK_MENU (menu),w);
-                    adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                   }
                 else if (text[index] == 'S')
                   /*_________________________________ Creation d'un separateur __*/
                   {
-#ifdef _WINGUI
                     AppendMenu (menu, MF_SEPARATOR, 0, NULL);
                     adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-#endif /* _WINGUI */
-#ifdef _GTK
-                    w = gtk_menu_item_new ();
-                    gtk_widget_show_all (w);
-                    gtk_menu_append (GTK_MENU (menu),w); 
-                    adbloc->E_ThotWidget[ent] = w;		 
-#endif /* _GTK */
                   }
                 else
                   /*____________________________________ Une erreur de construction __*/
@@ -1467,7 +1146,7 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
               }
           }
     }
-#endif /* #if defined (_GTK) || defined(_WINGUI)  */
+#endif /* _WINGUI  */
 }
 
 /*----------------------------------------------------------------------
@@ -1503,17 +1182,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
   HWND                menu;
   HWND                listBox;
 #endif /* _WINGUI */
-#ifdef _GTK
-  char                menu_item [1024];
-  GtkWidget          *gtklist;
-  GtkWidget          *scr_window = NULL;
-  GtkWidget          *event_box;
-  GtkWidget          *first = NULL;
-  GList              *glist = NULL;
-  GtkWidget          *table;
-  ThotWidget          wlabel;  
-  ThotWidget          menu;  
-#endif  /* _GTK */
 
 #ifdef _WX
   char                menu_item [1024];
@@ -1597,47 +1265,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 #ifdef _WX
       menu = (ThotWindow)new AmayaPopupList( parent, ref );
 #endif /* _WX */
-#ifdef _GTK      
-      menu =  gtk_window_new (GTK_WINDOW_POPUP);
-      /* signals */
-      ConnectSignalGTK (GTK_OBJECT (menu),
-                        "destroy",
-                        GTK_SIGNAL_FUNC (formKillGTK),
-                        (gpointer) catalogue);
-      /* properties */
-      gtk_window_set_policy (GTK_WINDOW (menu), TRUE, TRUE, FALSE);
-      gtk_container_border_width (GTK_CONTAINER (menu), 0);
-      gtk_window_set_position (GTK_WINDOW (menu), GTK_WIN_POS_MOUSE);
-      gtk_widget_set_events (menu, GDK_KEY_PRESS_MASK | GDK_LEAVE_NOTIFY_MASK);
-      /* create the event box that will be associated with it */
-      event_box = gtk_event_box_new ();
-      gtk_container_add (GTK_CONTAINER (menu), event_box);
-      gtk_widget_show (event_box);
-      /* properties */
-      gtk_widget_realize (event_box);
-      /* change the cursor when we're inside the popup */
-      {
-        GdkCursor *cursor;
-        cursor = gdk_cursor_new (GDK_TOP_LEFT_ARROW);
-        gdk_window_set_cursor (event_box->window, cursor);
-        gdk_cursor_destroy (cursor);
-      }
-      /* create the scrolled window that will contain the list widget */
-      scr_window = gtk_scrolled_window_new (NULL, NULL);
-      gtk_widget_show (scr_window);
-      /* set the widget size */
-      /* (experience shows that GTK doesn't report a good font height ! Multiplying
-         it by two fixes a bit the problem)  */
-      width = (width) * (gdk_char_width (DialogFont, 'm'));
-      height = height * 2 * (gdk_char_height (DialogFont, 'M'));
-      gtk_widget_set_usize (scr_window, width, height);
-      GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->hscrollbar, GTK_CAN_FOCUS);
-      GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->vscrollbar, GTK_CAN_FOCUS);
-      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scr_window), GTK_POLICY_AUTOMATIC,
-                                      GTK_POLICY_AUTOMATIC);
-      /* add the scrwindow to its container */
-      gtk_container_add (GTK_CONTAINER (event_box), scr_window);
-#endif /* _GTK */
       catalogue->Cat_Widget = menu;
       catalogue->Cat_Ref = ref;
       catalogue->Cat_Type = CAT_SCRPOPUP;
@@ -1713,61 +1340,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
                 ((AmayaPopupList*)menu)->Append(i, TtaConvMessageToWX(menu_item));
                 w = (ThotWidget) i;
 #endif /* _WX */
-#ifdef _GTK        
-                sprintf (menu_item, "%s", &text[index + 1]);
-                /* \t doesn't mean anything to gtk... to we align ourself*/
-                if (equiv_item && equiv_item[0] != EOS)
-                  {
-                    strcat (menu_item, "  ");
-                    w = gtk_menu_item_new ();
-                    table = gtk_table_new (1, 3, FALSE);    
-                    gtk_container_add (GTK_CONTAINER (w), table);  
-                    wlabel = gtk_label_new(menu_item);
-                    /*(that's left-justified, right is 1.0, center is 0.5).*/
-                    /*gtk_label don't seem to like table cell...so*/
-                    gtk_misc_set_alignment(GTK_MISC(wlabel), 0.0 , 0); 
-                    gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
-                    gtk_widget_show (wlabel);
-                    gtk_label_set_justify(GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
-			
-                    wlabel = gtk_label_new(equiv_item);
-                    gtk_misc_set_alignment(GTK_MISC(wlabel), 1.0, 0); 
-                    gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
-                    gtk_widget_show (wlabel);
-                    gtk_widget_show (table);
-			
-                  }
-                else
-                  w = gtk_list_item_new_with_label (menu_item);
-		    
-                if (!first)
-                  first = w;
-		    
-                /* memorize the parent window */
-                gtk_object_set_data (GTK_OBJECT (w), 
-                                     "window", 
-                                     (gpointer) menu);
-		    
-                /* for debugging, memorize the widget name */
-                gtk_object_set_data (GTK_OBJECT (w), 
-                                     "item", (gpointer) 
-                                     (TtaStrdup (menu_item)));
-
-
-                /* get the key press */
-                gtk_signal_connect (GTK_OBJECT (w), "key_press_event",
-                                    GTK_SIGNAL_FUNC (scr_popup_key_press),
-                                    (gpointer ) catalogue);
-
-                /* get the click */
-		    
-                ConnectSignalGTK (GTK_OBJECT (w), 
-                                  "button-press-event",
-                                  GTK_SIGNAL_FUNC (scr_popup_button_press),
-                                  (gpointer) catalogue);
-                gtk_widget_show (w);
-                glist = g_list_append (glist, w);
-#endif /* _GTK */
               }
             else
               /*____________________________________ Une erreur de construction __*/
@@ -1789,57 +1361,6 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
   /* remember the catalogue */
   SetProp (menu, "ref", (HANDLE) ref);      
 #endif /* _WINGUI */
-#ifdef _GTK     
-  if (menu && glist)
-    {
-      gtklist = gtk_list_new ();
-      gtk_list_append_items (GTK_LIST (gtklist), glist);
-
-      /* allow multiple items to be selected */
-      if (multipleOptions)
-        gtk_list_set_selection_mode (GTK_LIST (gtklist), GTK_SELECTION_MULTIPLE);
-
-      /* store the value of the gtklist and the menu inside the popup object (we will
-         use them later in the popup callback) */
-      gtk_object_set_data (GTK_OBJECT (menu), 
-                           "window", (gpointer) menu);
-      gtk_object_set_data (GTK_OBJECT (menu), 
-                           "gtklist", (gpointer) gtklist);
-      /* We'll use enter notify events to figure out when to transfer
-       * the grab to the list
-       */
-      gtk_widget_set_events (gtklist, 
-                             GDK_ALL_EVENTS_MASK);
-	  
-      gtk_signal_connect (GTK_OBJECT (menu), "event",
-                          GTK_SIGNAL_FUNC (ListEventGTK), 
-                          (gpointer)catalogue);
-
-      /* add the gtk list to the scr window */
-      gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scr_window), gtklist);
-      /* tie the scrolling of the list to the scrolled window */
-      gtk_container_set_focus_hadjustment (GTK_CONTAINER (gtklist),
-                                           gtk_scrolled_window_get_hadjustment
-                                           (GTK_SCROLLED_WINDOW (scr_window)));
-      gtk_container_set_focus_vadjustment (GTK_CONTAINER (gtklist),
-                                           gtk_scrolled_window_get_vadjustment
-                                           (GTK_SCROLLED_WINDOW (scr_window)));
-      /* give the focus to the gtklist */
-      gtk_window_set_focus (GTK_WINDOW (menu), GTK_WIDGET (first));
-      /* show everything */
-      gtk_grab_add (menu);
-      GTK_LIST (gtklist)->drag_selection = TRUE;
-      gdk_pointer_grab (menu->window, TRUE,
-                        (GdkEventMask) (
-                                        GDK_BUTTON_PRESS_MASK |
-                                        GDK_BUTTON_RELEASE_MASK |
-                                        GDK_POINTER_MOTION_MASK ),
-                        NULL, NULL, GDK_CURRENT_TIME);
-      gtk_widget_grab_focus (menu);
-      gdk_keyboard_grab (menu->window, TRUE, GDK_CURRENT_TIME);
-      gtk_widget_show (GTK_WIDGET (gtklist)); 
-    }
-#endif /* _GTK */
 }
 
 #ifndef _WX
@@ -1868,9 +1389,6 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
 #ifdef _WINGUI
   row = GetParent (w);
 #endif  /* _WINGUI */
-#ifdef _GTK
-  row = GTK_WIDGET(w->parent);
-#endif /* _GTK */
   /*** Recherche une entree libre dans le formulaire ***/
   while ((*adbloc)->E_ThotWidget[*entry])
     {
@@ -1891,14 +1409,6 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
   /* Faut-il ajouter un nouveau Row-Column ? */
   if (*index % catalogue->Cat_FormPack == 0)
     {
-#ifdef _GTK
-      if (catalogue->Cat_in_lines)
-        w = gtk_hbox_new (FALSE, 5);
-      else
-        w = gtk_vbox_new (FALSE, 5);
-     	gtk_widget_show_all (GTK_WIDGET(w));
-      gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), TRUE, TRUE, 0);
-#endif /* _GTK */
       (*adbloc)->E_ThotWidget[*entry] = w;
       (*adbloc)->E_Free[*entry] = 'X';
       (*index)++;
@@ -1932,118 +1442,6 @@ static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
 void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
                      int number, ThotIcon * icons, ThotBool horizontal)
 {
-#ifdef _GTK
-  int                 i;
-  int                 ent;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-  struct E_List      *adbloc;
-  ThotWidget          menu;
-  ThotWidget          w;
-  ThotWidget          row;
-  ThotWidget          tmpw;
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  catalogue = CatEntry (ref);
-  menu = 0;
-  if (catalogue == NULL)
-    TtaError (ERR_cannot_create_dialogue);
-  else if (catalogue->Cat_Widget)
-    TtaError (ERR_invalid_reference);
-  else
-    {
-      catalogue->Cat_React = TRUE;
-      parentCatalogue = CatEntry (ref_parent);
-      /*__________________________________ Le catalogue parent n'existe pas __*/
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      else if (parentCatalogue->Cat_Widget == 0)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      /*_________________________________________ Sous-menu d'un formulaire __*/
-      else if (parentCatalogue->Cat_Type == CAT_FORM
-               || parentCatalogue->Cat_Type == CAT_SHEET
-               || parentCatalogue->Cat_Type == CAT_DIALOG)
-        {
-          w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-          menu = gtk_vbox_new (FALSE, 0);
-          gtk_widget_show_all (menu);
-          gtk_container_add (GTK_CONTAINER(w), menu);	     
-          catalogue->Cat_Ref = ref;
-          catalogue->Cat_Type = CAT_FMENU;
-          catalogue->Cat_Data = -1;
-          catalogue->Cat_Widget = menu;
-          catalogue->Cat_PtParent = parentCatalogue;
-          adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-          adbloc->E_Free[ent] = 'N';
-          catalogue->Cat_EntryParent = i;
-          adbloc = NewEList ();
-          catalogue->Cat_Entries = adbloc;
-        }
-      /*** Cree le titre du sous-menu ***/
-      if (title)
-        {
-          /* add a label */
-          w = gtk_label_new (title);
-          gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
-          gtk_widget_show_all (w);
-          if (w->style->font == NULL ||
-              w->style->font->type != GDK_FONT_FONTSET)
-            w->style->font = DefaultFont;
-          /*	     gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);*/
-          gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
-          adbloc->E_ThotWidget[0] = w;
-	     
-          /* add a separator */
-          w = gtk_hseparator_new ();
-          gtk_widget_show_all (w);
-          gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
-          adbloc->E_ThotWidget[1] = w;
-        }
-
-      if (horizontal)
-        row = gtk_hbox_new (FALSE, 0);
-      else
-        row = gtk_vbox_new (FALSE, 0);
-      gtk_widget_show_all (row);
-      gtk_container_add (GTK_CONTAINER(menu), row);
-      i = 0;
-      ent = 2;
-      while (i < number)
-        {
-          /* Faut-il changer de bloc d'entrees ? */
-          if (ent >= C_NUMBER)
-            {
-              adbloc->E_Next = NewEList ();
-              adbloc = adbloc->E_Next;
-              ent = 0;
-            }
-          /* On ne traite que des entrees de type bouton */
-          adbloc->E_Type[ent] = 'B';
-          adbloc->E_Free[ent] = 'Y';
-          tmpw = gtk_pixmap_new (((ThotIcon)icons[i])->pixmap, ((ThotIcon )icons[i])->mask);
-          w = gtk_button_new ();
-          gtk_container_add (GTK_CONTAINER (w), tmpw);
-          gtk_widget_show_all (w);
-          gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
-          /* Connecte the clicked acton to the button */
-          ConnectSignalGTK (GTK_OBJECT(w), "clicked",
-                            GTK_SIGNAL_FUNC(/*CallRadioGTK*/CallIconButtonGTK), (gpointer)catalogue);
-          adbloc->E_ThotWidget[ent] = w;
-          i++;
-          ent++;
-        }
-    }
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -2079,19 +1477,12 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   int                 i;
   int                 ent;
   ThotBool            rebuilded;
-#if defined (_WINGUI) || defined (_GTK)
+#ifdef _WINGUI
   char                menu_item [1024];
   char                equiv_item [255];
-#ifdef _GTK
-  GtkWidget          *table;
-  ThotWidget          wlabel;
-  GSList             *GSListTmp = NULL;
-  ThotWidget          tmpw;
-  GtkStyle *current_style;
-#endif /* _GTK */
 
   equiv_item[0] = EOS;
-#endif /* _WINGUI || _GTK */
+#endif /* _WINGUI */
   if (ref == 0)
     {
       TtaError (ERR_invalid_reference);
@@ -2140,11 +1531,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _WINGUI
               menu = w;
 #endif  /* _WINGUI */
-#ifdef _GTK
-              menu = gtk_vbox_new (FALSE, 0);
-              gtk_widget_show_all (menu);
-              gtk_container_add (GTK_CONTAINER(w), menu);
-#endif /* _GTK */
               catalogue->Cat_Ref = ref;
               catalogue->Cat_Type = CAT_FMENU;
               catalogue->Cat_Data = -1;
@@ -2165,32 +1551,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
           /*** Cree le titre du sous-menu ***/
           if (title)
             {
-#ifdef _GTK
-              if (!rebuilded)
-                {
-                  /* add a label */
-                  w = gtk_label_new (title);
-                  gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
-                  gtk_widget_show_all (w);
-                  if (w->style->font == NULL ||
-                      w->style->font->type != GDK_FONT_FONTSET)
-                    w->style->font = DefaultFont;
-                  gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
-                  gtk_widget_set_name (w, "Dialogue");
-                  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
-                  adbloc->E_ThotWidget[0] = w;
-		  
-                  /* add a separator */
-                  w = gtk_hseparator_new ();
-                  gtk_widget_show_all (w);
-                  gtk_widget_set_name (w, "Dialogue");
-                  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
-                  adbloc->E_ThotWidget[1] = w;
-                }
-              else if (adbloc->E_ThotWidget[0])
-                /* update the title */
-                gtk_label_set_text (GTK_LABEL(adbloc->E_ThotWidget[0]), title);
-#endif /* _GTK */
 #ifdef _WINGUI
               if (!rebuilded)
                 {
@@ -2201,13 +1561,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
             }
           if (!rebuilded)
             {
-#ifdef _GTK
-              /* create a new vbox */
-              row = gtk_vbox_new (FALSE, 1);
-              gtk_widget_show_all (GTK_WIDGET(row));
-              gtk_widget_set_name (GTK_WIDGET(row), "Dialogue");
-              gtk_box_pack_start (GTK_BOX(menu), GTK_WIDGET(row), FALSE, FALSE, 0);
-#endif /* _GTK */
             }
           else
             /* Sinon on recupere le widget parent des entrees */
@@ -2218,9 +1571,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
           index = 0;
           eindex = 0;
           ent = 2;
-#ifdef _GTK
-          GSListTmp = NULL;
-#endif /* _GTK */
           while (i < number)
             {
               count = strlen (&text[index]);	/* Longueur de l'intitule */
@@ -2238,26 +1588,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
                   /* On ne traite que des entrees de type bouton */
                   adbloc->E_Type[ent] = 'B';
                   adbloc->E_Free[ent] = 'Y';
-#ifdef _GTK
-                  /* create a radiolist (not using gtk radio group
-                     as it implies always a default value.)*/
-                  w = gtk_check_button_new ();	
-                  gtk_widget_show_all (GTK_WIDGET(w));
-                  tmpw = gtk_label_new (&text[index + 1]);
-                  gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
-                  gtk_widget_show_all (tmpw);
-                  current_style = gtk_style_copy (gtk_widget_get_style (tmpw));
-                  if (current_style->font == NULL ||
-                      current_style->font->type != GDK_FONT_FONTSET)
-                    current_style->font = DefaultFont;
-                  gtk_widget_set_style(tmpw, current_style);
-                  gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
-                  gtk_container_add (GTK_CONTAINER(w), tmpw);
-                  gtk_object_set_data (GTK_OBJECT(w), "Label", (gpointer)tmpw);
-                  gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
-                  ConnectSignalGTK (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC(CallRadioGTK), (gpointer)catalogue);
-                  adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
 #ifdef _WINGUI
                   WIN_AddFrameCatalogue (w, catalogue);
                   adbloc->E_ThotWidget[ent] = w;
@@ -2296,11 +1626,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
                     {
                       /* Cree un sous-menu d'un menu */
                       w = parentCatalogue->Cat_Widget;
-#ifdef _GTK
-                      /* Cree un sous-menu d'un menu */
-                      menu = gtk_menu_new ();
-                      menu->style->font=DefaultFont;
-#endif /* _GTK */
                       catalogue->Cat_Button = button;
                       catalogue->Cat_Data = -1;
                       /* Memorise l'entree decalee de 2 pour le widget titre */
@@ -2317,11 +1642,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
                       if (!IsMenu (catalogue->Cat_Widget))
                         catalogue->Cat_Widget = w;
 #endif /* _WINGUI */
-#ifdef _GTK
-                      /* assign the submenu to the menu bar*/
-                      gtk_widget_show_all (w);
-                      gtk_menu_item_set_submenu (GTK_MENU_ITEM (w), menu);
-#endif /* _GTK */
                       adbloc->E_Free[ent] = 'N';
                       adbloc = NewEList ();
                       catalogue->Cat_Entries = adbloc;
@@ -2354,19 +1674,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
                   adbloc->E_ThotWidget[1] = w;
                 }
 #endif /* _WINGUI */
-#ifdef _GTK
-              if (!rebuilded)
-                {
-                  w = gtk_menu_item_new_with_label (title);
-                  gtk_widget_show_all (w);
-                  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
-                  adbloc->E_ThotWidget[0] = w;
-                  w = gtk_hseparator_new ();
-                  gtk_widget_show_all (w);
-                  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
-                  adbloc->E_ThotWidget[1] = w;
-                }
-#endif /* _GTK */
             }
 
           /* Cree les differentes entrees du sous-menu */
@@ -2419,39 +1726,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
                         AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
                       adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #endif  /* _WINGUI */
-#ifdef _GTK
-                      sprintf (menu_item, "%s", &text[index + 1]);
-                      /* \t doesn't mean anything to gtk... to we align ourself*/
-                      if (equiv_item && equiv_item[0] != EOS)
-                        {
-                          strcat (menu_item, "  ");
-                          w = gtk_menu_item_new ();
-                          table = gtk_table_new (1, 3, FALSE);    
-                          gtk_container_add (GTK_CONTAINER (w), table);  
-                          wlabel = gtk_label_new(menu_item);
-                          /*(that's left-justified, right is 1.0, center is 0.5).*/
-                          /*gtk_label don't seem to like table cell...so*/
-                          gtk_misc_set_alignment(GTK_MISC(wlabel), 0.0 , 0); 
-                          gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
-                          gtk_widget_show (wlabel);
-                          gtk_label_set_justify(GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
-			  
-                          wlabel = gtk_label_new(equiv_item);
-                          gtk_misc_set_alignment(GTK_MISC(wlabel), 1.0, 0); 
-                          gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
-                          gtk_widget_show (wlabel);
-                          gtk_widget_show (table);
-                        }
-                      else
-                        w = gtk_menu_item_new_with_label (menu_item);
-                      /*w->style = gtk_style_copy (w->style);
-                        w->style->font=DefaultFont;*/
-                      gtk_widget_show_all (w);
-                      gtk_menu_append (GTK_MENU (menu),w);
-                      ConnectSignalGTK (GTK_OBJECT(w), "activate",
-                                        GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
-                      adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                     }
                   else if (text[index] == 'T')
                     {
@@ -2469,53 +1743,10 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
                       adbloc->E_ThotWidget[ent + 1] = (ThotWidget) -1;
                       /* WIN_AddFrameCatalogue (FrMainRef [currentFrame], catalogue); */
 #endif  /* _WINGUI */
-#ifdef _GTK
-                      /* create a check menu */
-                      /* \t doesn't mean anything to gtk... to we align ourself*/
-                      sprintf (menu_item, "%s", &text[index + 1]);
-                      if (equiv_item && equiv_item[0] != EOS)
-                        {
-                          strcat (menu_item, "  ");
-                          w = gtk_check_menu_item_new ();
-                          table = gtk_table_new (1, 3, FALSE);    
-                          gtk_container_add (GTK_CONTAINER (w), table);  
-                          wlabel = gtk_label_new(menu_item);
-                          /*(that's left-justified, right is 1.0, center is 0.5).*/
-                          /*gtk_label don't seem to like table cell...so*/
-                          gtk_misc_set_alignment(GTK_MISC(wlabel), 0.0 , 0); 
-                          gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
-                          gtk_widget_show (wlabel);
-                          gtk_label_set_justify(GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
-                          wlabel = gtk_label_new(equiv_item);
-                          gtk_misc_set_alignment(GTK_MISC(wlabel), 1.0, 0); 
-                          gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
-                          gtk_widget_show (wlabel);
-                          gtk_widget_show (table);
-                        }
-                      else
-                        w = gtk_check_menu_item_new_with_label (menu_item);
-                      gtk_widget_show_all (w);
-                      gtk_menu_append (GTK_MENU (menu), w);
-                      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
-                      adbloc->E_ThotWidget[ent] = w;
-                      ConnectSignalGTK (GTK_OBJECT(w), "activate",
-                                        GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);		      
-#endif /* _GTK */
                     }
                   else if (text[index] == 'M')
                     {
                       /*_________________________________ Appel d'un sous-menu __*/
-#ifdef _GTK
-                      w = gtk_menu_item_new_with_label (&text[index + 1]);
-                      gtk_widget_show_all (w);
-                      current_style = gtk_style_copy(gtk_widget_get_style(w));
-                      if (current_style->font == NULL ||
-                          current_style->font->type != GDK_FONT_FONTSET)
-                        current_style->font = DefaultFont;
-                      gtk_widget_set_style(w, current_style);
-
-                      adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                     }
                   else if (text[index] == 'S')
                     {
@@ -2524,17 +1755,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
                       AppendMenu (w, MF_SEPARATOR, 0, NULL);
                       adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
 #endif  /* _WINGUI */
-#ifdef _GTK
-                      w =  gtk_menu_item_new ();
-                      current_style = gtk_style_copy(gtk_widget_get_style(w));
-                      if (current_style->font == NULL ||
-                          current_style->font->type != GDK_FONT_FONTSET)
-                        current_style->font = DefaultFont;
-                      gtk_widget_set_style(w, current_style);
-                      gtk_widget_show_all (w);
-                      gtk_menu_append (GTK_MENU (menu),w);
-                      adbloc->E_ThotWidget[ent] = w;
-#endif /* _GTK */
                     }
                   else
                     {
@@ -2556,316 +1776,6 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 }
 
 /*----------------------------------------------------------------------
-  TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : 
-  The parameter ref donne la re'fe'rence du catalogue.               
-  The parameter val de'signe l'entre'e se'lectionne'e.               
-  ----------------------------------------------------------------------*/
-void TtaSetMenuForm (int ref, int val)
-{
-#ifdef _GTK
-  register int        i;
-  register int        ent;
-  ThotBool            visible;
-  struct E_List      *adbloc;
-  intptr_t            id_toggled;
-  struct Cat_Context *catalogue;
-
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget == 0)
-    TtaError (ERR_invalid_reference);
-  else
-    {
-      /* Si ce n'est pas un sous-menu de formulaire */
-      if (catalogue->Cat_Type != CAT_FMENU)
-        {
-          TtaError (ERR_invalid_reference);
-          return;
-        }
-
-      /* Est-ce que le sous-menu est actuellement affiche */
-      if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
-        visible = TRUE;
-      else
-        {
-          visible = FALSE;
-          gtk_widget_show_all (catalogue->Cat_Widget);
-        }
-
-      /* Positionnement de la valeur de chaque entree */
-      adbloc = catalogue->Cat_Entries;
-      ent = 0;
-      i = 2;			/* decalage de 2 pour le widget titre */
-      while (adbloc)
-        {
-          while (i < C_NUMBER)
-            {
-              if (adbloc->E_ThotWidget[i] == 0)
-                i = C_NUMBER;
-              else if (ent == val)
-                {
-                  id_toggled  = (intptr_t) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
-                                                                "toggled");
-                  gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
-                                            id_toggled);
-                  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
-                                                TRUE);
-                }
-              else
-                {
-                  id_toggled  = (intptr_t) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
-                                                                "toggled");
-                  gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
-                                            id_toggled);
-                  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
-                                                FALSE);
-                }
-              i++;
-              ent++;
-            }
-          /* Passe au bloc suivant */
-          adbloc = adbloc->E_Next;
-          i = 0;
-        }
-
-      adbloc = catalogue->Cat_Entries;
-      ent = 0;
-      i = 2;			/* decalage de 2 pour le widget titre */
-      while (adbloc)
-        {
-          while (i < C_NUMBER)
-            {
-              if (adbloc->E_ThotWidget[i] == 0)
-                i = C_NUMBER;
-              else
-                {
-                  id_toggled  = (intptr_t) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
-                                                                "toggled");
-                  gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
-                                              id_toggled); 
-                }
-              i++;
-              ent++;
-            }
-          /* Passe au bloc suivant */
-          adbloc = adbloc->E_Next;
-          i = 0;
-        }		
-      if (!visible)
-        gtk_widget_hide (catalogue->Cat_Widget);
-
-      /* La selection de l'utilisateur est desactivee */
-      catalogue->Cat_Data = val;
-    }
-#endif /* _GTK */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewToggleMenu cre'e un sous-menu a` choix multiples :           
-  The parameter ref donne la re'fe'rence pour l'application.         
-  The parameter ref_parent identifie le formulaire pe`re.            
-  The parameter title donne le titre du catalogue.                   
-  The parameter number indique le nombre d'entre'es dans le menu.    
-  The parameter text contient la liste des intitule's du catalogue.  
-  Chaque intitule' commence par un caracte`re qui donne le type de   
-  l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
-  S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
-  des entre'es du menu.                                              
-  Quand le parame`tre react est vrai, tout changement de se'lection  
-  dans le sous-menu est imme'diatement signale' a` l'application.    
-  ----------------------------------------------------------------------*/
-void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
-                       char *text, char *equiv, ThotBool react)
-{
-#if defined(_GTK)
-  register int        count;
-  register int        index;
-  int                 eindex;
-  int                 i;
-  int                 ent;
-  ThotBool            rebuilded;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-  struct E_List      *adbloc;
-  ThotWidget          menu;
-  ThotWidget          w;
-  ThotWidget          row;
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_cannot_create_dialogue);
-  else
-    {
-      catalogue->Cat_React = react;
-      /* Faut-il detruire le catalogue precedent ? */
-      rebuilded = FALSE;
-      if (catalogue->Cat_Widget)
-        {
-          if (catalogue->Cat_Type == CAT_TMENU)
-            {
-              DestContenuMenu (catalogue);	/* Modification du catalogue */
-              rebuilded = TRUE;
-            }
-          else
-            /* Modification du catalogue */
-            TtaDestroyDialogue (ref);
-        }
-      /*======================================> Recherche le catalogue parent */
-      if (!rebuilded)
-        parentCatalogue = CatEntry (ref_parent);
-      else
-        parentCatalogue = catalogue->Cat_PtParent;
-      /*__________________________________ Le catalogue parent n'existe pas __*/
-      if (parentCatalogue == NULL)
-        TtaError (ERR_invalid_parent_dialogue);
-      else if (parentCatalogue->Cat_Widget == 0)
-        TtaError (ERR_invalid_parent_dialogue);
-      /*_________________________________________ Sous-menu d'un formulaire __*/
-      else if (parentCatalogue->Cat_Type == CAT_FORM
-               || parentCatalogue->Cat_Type == CAT_SHEET
-               || parentCatalogue->Cat_Type == CAT_DIALOG)
-        {
-          if (!rebuilded)
-            {
-              w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-              /* create a new vbox to contain the toggle buttons */
-              menu = gtk_vbox_new (FALSE, 1);
-              gtk_widget_show_all (menu);
-              gtk_widget_set_name (menu, "Dialogue");
-              gtk_container_add (GTK_CONTAINER(w), menu);
-              catalogue->Cat_Ref = ref;
-              catalogue->Cat_Type = CAT_TMENU;
-              catalogue->Cat_Widget = menu;
-              catalogue->Cat_PtParent = parentCatalogue;
-              adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
-              adbloc->E_Free[ent] = 'N';
-              catalogue->Cat_EntryParent = i;
-              /* prepare le nouveau catalogue */
-              adbloc = NewEList ();
-              catalogue->Cat_Entries = adbloc;
-            }
-          else
-            {
-              menu = catalogue->Cat_Widget;
-              adbloc = catalogue->Cat_Entries;
-            }
-          /*** Cree le titre du sous-menu ***/
-          if (title)
-            {
-              if (!rebuilded)
-                {
-                  /* new label for the title */
-                  w = gtk_label_new (title);
-                  gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
-                  gtk_widget_show_all (w);
-                  gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
-                  gtk_widget_set_name (w, "Dialogue");
-                  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
-                  adbloc->E_ThotWidget[0] = w;
-		      
-                  /* new separator */
-                  w = gtk_hseparator_new ();
-                  gtk_widget_show_all (w);
-                  gtk_widget_set_name (w, "Dialogue");
-                  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
-                  adbloc->E_ThotWidget[1] = w;
-                }
-              else if (adbloc->E_ThotWidget[0])
-                gtk_label_set_text (GTK_LABEL(adbloc->E_ThotWidget[0]), title);
-            }
-          if (!rebuilded)
-            {
-              /* create a new vbox for the list */
-              row = gtk_vbox_new (FALSE, 1);
-              gtk_widget_set_name (GTK_WIDGET(row), "Dialogue");
-              gtk_widget_show_all (GTK_WIDGET(row));
-              gtk_box_pack_start (GTK_BOX(menu), GTK_WIDGET(row),  FALSE, FALSE, 0);
-            }
-          else
-            /* Sinon on recupere le widget parent des entrees */
-            row = catalogue->Cat_XtWParent;
-	     
-          /* note le nombre d'entrees du toggle */
-          catalogue->Cat_Data = number;	/* recouvre Cat_XtWParent */
-          i = 0;
-          index = 0;
-          eindex = 0;
-          ent = 2;		/* decalage de 2 pour le widget titre */
-          while (i < number)
-            {
-              count = strlen (&text[index]);	/* Longueur de l'intitule */
-              /* S'il n'y a plus d'intitule -> on arrete */
-              if (count == 0)
-                {
-                  number = i;
-
-                  /* note le nombre d'entrees du toggle */
-                  catalogue->Cat_Data = number;
-                  TtaError (ERR_invalid_parameter);
-                  return;
-                }
-              else
-                {
-                  /* Faut-il changer de bloc d'entrees ? */
-                  if (ent >= C_NUMBER)
-                    {
-                      adbloc->E_Next = NewEList ();
-                      adbloc = adbloc->E_Next;
-                      ent = 0;
-                    }
-                  /* E_Free est utilise pour marquer les entrees selectionnes */
-                  /* Intialement les entrees sont non selectionnees */
-                  adbloc->E_Free[ent] = 'N';
-
-                  /* Note l'accelerateur */
-                  if (equiv)
-                    eindex += strlen (&equiv[eindex]) + 1;
-
-                  /* On accepte toggles, boutons et separateurs */
-                  if (text[index] == 'B' || text[index] == 'T')
-                    /*____________________________________ Creation d'un bouton __*/
-                    {
-                      adbloc->E_Type[ent] = 'B';
-                      /* add a check button to the list */
-                      w = gtk_check_button_new_with_label (&text[index + 1]);
-                      gtk_widget_show_all (GTK_WIDGET(w));
-                      gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
-                      ConnectSignalGTK (GTK_OBJECT(w), 
-                                        "toggled", 
-                                        GTK_SIGNAL_FUNC (CallToggleGTK), 
-                                        (gpointer)catalogue);
-                      adbloc->E_ThotWidget[ent] = w;
-                    }
-                  else if (text[index] == 'S')
-                    /*_______________________________ Creation d'un separateur __*/
-                    {
-                      adbloc->E_Type[ent] = 'S';
-                      /* add a separator to the list */
-                      w = gtk_hseparator_new ();
-                      gtk_widget_show_all (w);
-                      gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-                      adbloc->E_ThotWidget[ent] = w;
-                    }
-           
-                  i++;
-                  index += count + 1;
-                  ent++;
-                }
-            }
-        }
-      else
-        TtaError (ERR_invalid_parameter);
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
   TtaSetToggleMenu fixe la selection dans un toggle-menu :           
   The parameter ref donne la re'fe'rence du catalogue.               
   The parameter val de'signe l'entre'e se'lectionne'e (-1 pour       
@@ -2876,9 +1786,6 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 #ifdef _WINGUI 
 void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #endif  /* _WINGUI */
-#if defined(_GTK)
-     void TtaSetToggleMenu (int ref, int val, ThotBool on)
-#endif /* #if defined(_GTK) */
 {
 #ifdef _WINGUI 
   struct Cat_Context *catalogue;
@@ -2945,125 +1852,6 @@ void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
         }
     }
 #endif /* _WINGUI  */
-
-#if defined(_GTK)
-  ThotWidget          w;
-  register int        i;
-  register int        ent;
-  ThotBool            visible;
-  ThotBool            done;
-  struct E_List      *adbloc;
-  struct Cat_Context *catalogue;
-
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget == 0)
-    TtaError (ERR_invalid_reference);
-  else
-    {
-      /* Si ce n'est pas un menu sous-menu */
-      if (catalogue->Cat_Type != CAT_TMENU
-          && catalogue->Cat_Type != CAT_MENU
-          && catalogue->Cat_Type != CAT_PULL
-          && catalogue->Cat_Type != CAT_POPUP
-          && catalogue->Cat_Type != CAT_SCRPOPUP)
-        {
-          TtaError (ERR_invalid_reference);
-          return;
-        }
-      else if (catalogue->Cat_Type == CAT_TMENU && val > catalogue->Cat_Data)
-        {
-          /* ce n'est pas une entree du toggle */
-          TtaError (ERR_invalid_reference);
-          return;
-        }  
-      /* Est-ce que le sous-menu est actuellement affiche */
-      else if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
-        visible = TRUE;
-      else
-        {
-          visible = FALSE;
-          if (catalogue->Cat_Type != CAT_SCRPOPUP)
-            gtk_widget_show_all (catalogue->Cat_Widget);
-        }
-
-      /* Positionnement de la valeur de chaque entree */
-      adbloc = catalogue->Cat_Entries;
-      ent = 0;
-      i = 2;			/* decalage de 2 pour le widget titre */
-      done = FALSE;
-      while (adbloc && !done)
-        {
-          while (i < C_NUMBER)
-            {
-              /* S'il n'y a pas de bouton  */
-              if (adbloc->E_ThotWidget[i] == 0)
-                i = C_NUMBER;
-              /* C'est une entree qu'il faut initialiser */
-              else if (ent == val || val == -1)
-                {
-                  if (catalogue->Cat_Type != CAT_TMENU && adbloc->E_Type[i] != 'T')
-                    {
-                      /* ce n'est pas une entree du toggle */
-                      TtaError (ERR_invalid_reference);
-                      return;
-                    }
-                  else
-                    {
-                      w = adbloc->E_ThotWidget[i];
-                      if (on)
-                        /* Bouton allume */
-                        {
-                          /* attribut active is set to the good value */
-                          if (catalogue->Cat_Type == CAT_TMENU)
-                            {
-                              RemoveSignalGTK (GTK_OBJECT(w), "toggled");
-                              gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), TRUE);
-                              ConnectSignalGTK (GTK_OBJECT(w), "toggled",
-                                                GTK_SIGNAL_FUNC (CallMenuGTK), 
-                                                (gpointer) catalogue);
-                            }
-                          /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = TRUE; */
-                          else if (catalogue->Cat_Type == CAT_SCRPOPUP)
-                            {
-                              RemoveSignalGTK (GTK_OBJECT(w), "select");
-                              gtk_list_item_select (GTK_LIST_ITEM (w));
-                              ConnectSignalGTK (GTK_OBJECT(w), "select",
-                                                GTK_SIGNAL_FUNC (CallMenuGTK), 
-                                                (gpointer) catalogue);
-                            }
-                          else
-                            GTK_CHECK_MENU_ITEM(w)->active = TRUE;
-                        }
-                      else
-                        /* Etat initial du bouton : eteint */
-                        {
-                          /* attribut active is set to the good value */
-                          if (catalogue->Cat_Type == CAT_TMENU)
-                            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), FALSE);
-                          /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = FALSE; */
-                          else
-                            GTK_CHECK_MENU_ITEM(w)->active = FALSE;
-                        }
-                    }
-                  adbloc->E_Free[i] = 'N';  /* La valeur est la valeur initiale */
-                  done = TRUE;
-                  break;
-                }
-              /* Sinon l'entree garde son etat precedent  */
-              i++;
-              ent++;
-            }
-          /* Passe au bloc suivant */
-          adbloc = adbloc->E_Next;
-          i = 0;
-        }
-
-      if (!visible && catalogue->Cat_Type != CAT_SCRPOPUP)
-        gtk_widget_hide (catalogue->Cat_Widget);
-    }
-#endif /* #if defined(_GTK) */
 }
 #endif /* _WX */
 
@@ -3116,10 +1904,6 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
       else
         {
           w = adbloc->E_ThotWidget[ent];
-#ifdef _GTK
-          gtk_label_set_text (GTK_LABEL(w), text);
-          gtk_widget_show_all (w);
-#endif /* _GTK */
         }
     }
 }
@@ -3140,12 +1924,6 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 #ifdef _WINGUI
   HMENU               menu;
 #endif /* _WINGUI */
-#ifdef _GTK
-  ThotWidget          w;
-  struct E_List      *adbloc;
-  int                 ent;
-  ThotWidget          tmpw;
-#endif /* _GTK */
 
   if (ref == 0)
     {
@@ -3194,63 +1972,6 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
         else
           p_menu->Enable( ref + entry, FALSE );
 #endif /* _WX */
-
-#ifdef _GTK
-      /* Recherche l'entree dans le menu ou sous-menu */
-      adbloc = catalogue->Cat_Entries;
-      ent = entry + 2;	/* decalage de 2 pour le widget titre */
-      while (ent >= C_NUMBER)
-        {
-          if (adbloc->E_Next == NULL)
-            {
-              TtaError (ERR_invalid_parameter);
-              return;
-            }
-          else
-            adbloc = adbloc->E_Next;
-          ent -= C_NUMBER;
-        }
-      
-      if (adbloc->E_ThotWidget[ent] == 0)
-        TtaError (ERR_invalid_parameter);
-      else
-        {
-          w = adbloc->E_ThotWidget[ent];
-          /* if the widget is a FORM sub menu, then it is a radiolist
-             the label font must be change, and not the radiolist font. 
-             REM: the label could be show with gtk_object_get_data */
-          if (catalogue->Cat_Type == CAT_FMENU)
-            tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(w), "Label"));
-          else
-            tmpw = w;
-          if (fontname)
-            {
-              /* load the new font */
-              tmpw->style->font = (GdkFont *)gdk_font_load (fontname);
-              /*		 gdk_font_ref ((GdkFont *)(w->style->font));*/
-              if(tmpw->style->font == NULL)
-                tmpw->style->font = DefaultFont;
-            }
-          else
-            /* keep the default font*/
-            tmpw->style->font = DefaultFont;
-          /* On interprete un changement de couleur comme un set_sensitive */
-          if ((int) color != -1)
-            gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
-          else
-            gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
-    
-          /* Faut-il activer ou desactiver le Callback */
-          if (activate != -1)
-            {
-              if (activate)
-                gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
-              else
-                gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
-            }
-          gtk_widget_show_all (GTK_WIDGET(w));
-        }
-#endif /* _GTK */
     }
 #endif /* _WX */
 }
@@ -3327,10 +2048,6 @@ static int DestForm (int ref)
                 ClearChildren (catalogue);
             }
 
-#ifdef _GTK
-          gtk_widget_destroy (catalogue->Cat_Widget);
-#endif /* _GTK */
-
 #ifdef _WX
           if (catalogue->Cat_Type == CAT_DIALOG)
             if (catalogue->Cat_Widget)
@@ -3387,18 +2104,6 @@ void TtaUnmapDialogue (int ref)
     return;
   else if (catalogue->Cat_Widget == 0)
     return;
-
-#ifdef _GTK
-  else if (GTK_WIDGET_VISIBLE(catalogue->Cat_Widget))
-    {    
-      /* Traitement particulier des formulaires */
-      /*      if (catalogue->Cat_Type == CAT_FORM
-              || catalogue->Cat_Type == CAT_SHEET
-              || catalogue->Cat_Type == CAT_DIALOG)*/
-      gtk_widget_hide (GTK_WIDGET(catalogue->Cat_Widget));
-    }
-#endif /* _GTK */
-
 #ifdef _WX
   /* hide the widget */
   if (catalogue->Cat_Type == CAT_DIALOG)
@@ -3515,11 +2220,6 @@ void TtaDestroyDialogue (int ref)
           /* C'est surement une destruction de formulaire */
           if (DestForm (ref))
             TtaError (ERR_invalid_reference);
-#ifdef _GTK
-          if (PopShell && GTK_IS_WIDGET (PopShell))
-            gtk_widget_destroy (GTK_WIDGET (PopShell));
-          PopShell = 0;
-#endif /* _GTK */
 #ifdef _WX
           /* TODO : a faire qd on aura porte les dialogues */
 #endif /* #ifdef _WX */
@@ -3534,11 +2234,6 @@ void TtaDestroyDialogue (int ref)
       /* Libere les blocs des entrees */
       FreeEList (catalogue->Cat_Entries);
       catalogue->Cat_Entries = NULL;
-#ifdef _GTK
-      if (catalogue->Cat_Type != CAT_PULL)
-        gtk_widget_destroy (GTK_WIDGET(catalogue->Cat_Widget));
-#endif /* _GTK */
-
 #ifdef _WX
       if (catalogue->Cat_Type == CAT_DIALOG || catalogue->Cat_Type == CAT_SCRPOPUP)
         if (catalogue->Cat_Widget)
@@ -3578,23 +2273,19 @@ void TtaChangeFormTitle (int ref, char *title)
     TtaError (ERR_invalid_reference);
   else
     {
-#ifdef _GTK
-      /* Set the window title with GTK */
-      gdk_window_set_title(GTK_WIDGET(catalogue->Cat_Widget)->window, title);
-#endif /* _GTK */
 #ifdef _WX
       /* TODO: a faire qd on aura porte les dialogues */
-#endif /* #ifdef _WX */
+#endif /* _WX */
     }
 }
 
 /*----------------------------------------------------------------------
   TtaSetDefaultButton
-  Defines the default result for the GTK event Double-click.
+  Defines the default result.
   ----------------------------------------------------------------------*/
 void TtaSetDefaultButton (int ref, int button)
 {
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
   struct Cat_Context *catalogue;
 
   if (ref)
@@ -3603,1908 +2294,7 @@ void TtaSetDefaultButton (int ref, int button)
       if (catalogue)
         catalogue->Cat_Default = (unsigned char) button;
     }
-#endif /* #if defined(_GTK) || defined(_WX) */
-}
-
-#ifndef _WX
-/*----------------------------------------------------------------------
-  NewSheet
-  ----------------------------------------------------------------------*/
-static void NewSheet (int ref, ThotWidget parent, char *title, int number,
-                      char *text, ThotBool horizontal, int package,
-                      char button, int dbutton, int cattype)
-{
-#ifdef _GTK
-  int                 ent;
-  int                 index;
-  int                 count;
-  struct Cat_Context *catalogue;
-  struct E_List      *adbloc;
-  ThotWidget          form;
-  ThotWidget          w;
-  char               *ptr = NULL;
-  ThotWidget          tmpw;
-  ThotWidget          row;
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_cannot_create_dialogue);
-  else
-    {
-      /* Est-ce que le catalogue existe deja ? */
-      if (catalogue->Cat_Widget)
-        TtaDestroyDialogue (ref);	/* Reconstruction du catalogue */
-      /* Recherche le widget parent */
-      if (MainShell == 0 && parent == 0)
-        {
-          PopShell = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-          gtk_widget_realize (PopShell);
-          gtk_window_set_title (GTK_WINDOW (PopShell), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-          gtk_widget_set_uposition (GTK_WIDGET (PopShell), ShowX, ShowY);
-          gtk_container_set_border_width (GTK_CONTAINER (PopShell), 10);
-          ConnectSignalGTK (GTK_OBJECT (PopShell),
-                            "destroy",
-                            GTK_SIGNAL_FUNC (DeletePopShell),
-                            (gpointer)NULL);
-        }
-      /*________________________________________________ Feuillet principal __*/
-      else
-        {
-          /* Il n'y a pas de menu parent */
-          catalogue->Cat_PtParent = NULL;
-          catalogue->Cat_EntryParent = 0;
-        }
-
-      /* No focus in sub-menus */
-      catalogue->Cat_Focus = FALSE;
-      /* Cree la fenetre du formulaire */
-      if (parent)
-        w = parent;
-      else if (MainShell == 0)
-        w = PopShell;
-      else
-        w = MainShell;
-
-      /* Creation of the window */
-      if (w == PopShell)
-        form = PopShell;
-      else
-        {
-          form = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-          gtk_widget_realize (GTK_WIDGET (form));	
-          gtk_window_set_title (GTK_WINDOW (form), title);
-          gtk_window_set_position (GTK_WINDOW (form), GTK_WIN_POS_MOUSE);
-          ConnectSignalGTK (GTK_OBJECT(form), "delete_event",
-                            GTK_SIGNAL_FUNC (formKillGTK), (gpointer) catalogue);
-        }
-      gtk_container_set_border_width (GTK_CONTAINER (form), 10);
-
-      catalogue->Cat_Ref = ref;
-      catalogue->Cat_Type = cattype;
-      catalogue->Cat_Button = button;
-      catalogue->Cat_FormPack = package + 1;
-      catalogue->Cat_Widget = form;
-      /* Cree le contenu initial du feuillet */
-      adbloc = NewEList ();	/* Un bloc supplementaire pour les boutons */
-      catalogue->Cat_Entries = adbloc;
-      adbloc->E_Next = NewEList ();
-      adbloc = adbloc->E_Next;
-
-      /* Create the vbox for button & other vbox or hbox*/
-      row = gtk_vbox_new (FALSE, 5);
-      gtk_widget_show_all (row);
-      gtk_container_add(GTK_CONTAINER(form), row);
-      /* Create hbox or vbox in the row */
-      if (horizontal)
-        w = gtk_vbox_new (FALSE, 5);
-      else
-        w = gtk_hbox_new (FALSE, 5);
-      gtk_widget_show_all (GTK_WIDGET(w));
-      gtk_box_pack_start (GTK_BOX(row), w,  TRUE, TRUE, 0);
-      /* Create hbox or vbox in the last w */
-      catalogue->Cat_in_lines = (int) horizontal;
-      if (horizontal)
-        tmpw = gtk_hbox_new (FALSE, 5);
-      else
-        tmpw = gtk_vbox_new (FALSE, 5);
-      gtk_widget_show_all (tmpw);
-      gtk_box_pack_start (GTK_BOX(w), tmpw,  TRUE, TRUE, 0);
-      w = tmpw;
-      adbloc->E_ThotWidget[0] = w;
-      adbloc->E_Free[0] = 'X';
-      if (number < 0)
-        /* il n'y a pas de boutons a engendrer */
-        return;
-
-      /* Create the hbox for buttons */
-      tmpw = gtk_hbox_new (FALSE, 5);
-      gtk_widget_show_all (tmpw);
-      gtk_widget_set_name (tmpw, "Dialogue");
-      gtk_box_pack_start (GTK_BOX(row), tmpw, FALSE, FALSE, 0);
-      row=tmpw;
-      adbloc = catalogue->Cat_Entries;
-      if (cattype == CAT_SHEET)
-        ent = 1;
-      else if (cattype == CAT_FORM)
-        {
-          /*** Cree le bouton de confirmation du formulaire ***/
-          ent = 1;
-          w = gtk_button_new_with_label (TtaGetMessage(LIB, TMSG_LIB_CONFIRM));
-          GTK_WIDGET_SET_FLAGS (GTK_WIDGET (w), GTK_CAN_DEFAULT);
-          gtk_widget_show_all (GTK_WIDGET (w));
-          gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-          ConnectSignalGTK (GTK_OBJECT(w), "clicked",
-                            GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer) catalogue);
-          gtk_widget_grab_default (GTK_WIDGET (w));
-          adbloc->E_ThotWidget[1] = w;
-        }
-      else
-        ent = 0;
-      /*** Cree les autres boutons du feuillet ***/
-      index = 0;
-      while (ent < C_NUMBER && ent <= number && text)
-        {
-          count = strlen (&text[index]);	/* Longueur de l'intitule */
-          /* S'il n'y a plus d'intitule -> on arrete */
-          if (count == 0)
-            ent = number;
-          else
-            {
-              if (ent == 0)
-                /* Le premier bouton remplace le bouton QUIT */
-                ptr = &text[index];
-              else
-                {
-                  w = gtk_button_new_with_label (&text[index]);
-                  GTK_WIDGET_SET_FLAGS (GTK_WIDGET (w), GTK_CAN_DEFAULT);
-                  gtk_widget_show_all (GTK_WIDGET (w));
-                  gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
-                  ConnectSignalGTK (GTK_OBJECT(w), "clicked",
-                                    GTK_SIGNAL_FUNC (CallSheetGTK),
-                                    (gpointer) catalogue);
-                  gtk_widget_grab_default (GTK_WIDGET(w));
-                  adbloc->E_ThotWidget[ent] = w;
-                }
-              if (index == 0 && number > 0)
-                gtk_widget_grab_default (GTK_WIDGET(w));
-            }
-          index += count + 1;
-          ent++;
-        }
-      if (cattype == CAT_SHEET || cattype == CAT_FORM)
-        /*** Cree le bouton QUIT ***/
-        switch (dbutton)
-          {
-          case D_CANCEL:
-            w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_CANCEL));
-            GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
-            gtk_widget_show_all (w);
-            gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
-            break;
-          case D_DONE:
-            w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_DONE));
-            GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
-            gtk_widget_show_all (w);
-            gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
-            break;
-          case D_DISCARD:
-            w = gtk_button_new_with_label(TtaGetMessage (LIB, TMSG_DISCARD));
-            GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
-            gtk_widget_show_all (w);
-            gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 5);
-            break;
-          }
-      else
-        {
-          w = gtk_button_new_with_label(ptr);
-          GTK_WIDGET_SET_FLAGS (GTK_WIDGET (w), GTK_CAN_DEFAULT);
-          gtk_widget_show_all (GTK_WIDGET (w));
-          gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 5);
-        }
-      gtk_widget_show_all (GTK_WIDGET (w));
-      ConnectSignalGTK (GTK_OBJECT (w), "clicked",
-                        GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer)catalogue);
-      /* Range le bouton dans le 1er bloc de widgets */
-      adbloc->E_ThotWidget[0] = w;
-    }
-#endif /* _GTK */
-}
 #endif /* _WX */
-
-/*----------------------------------------------------------------------
-  TtaNewForm cre'e un formulaire :                                   
-  The parameter ref donne la reference et parent le ThotWidget pe're 
-  Si parent est nul, le menu est attache a la fenetre MainWindow.          
-  Le parame'tre title donne le titre du catalogue.            
-  The parameter horizontal indique que le formulaire est compose' en 
-  lignes (TRUE) ou en colonnes (FALSE).                              
-  The parameter package donne le facteur de blocage du formulaire    
-  (nombre d'entre'es par ligne ou par colonne).                      
-  Le parame'tre button indique le bouton de la souris qui active le  
-  menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
-  ----------------------------------------------------------------------*/
-void TtaNewForm (int ref, ThotWidget parent, char *title,
-                 ThotBool horizontal, int package, char button, int dbutton)
-{
-#if defined(_GTK)
-  NewSheet (ref, parent, title, 0, NULL, horizontal, package,
-            button, dbutton, CAT_FORM);
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewSheet cre'e un feuillet de commande :                        
-  le parameter ref donne la reference et parent le ThotWidget pe're 
-  Si parent est nul, le menu est attache a la fenetre MainWindow.          
-  The parameter title donne le titre du catalogue.            
-  The parameter number indique le nombre de boutons ajoute's au      
-  bouton 'QUIT' mis par de'faut.                                     
-  The parameter text contient la liste des intitule's des boutons    
-  ajoute's au bouton 'QUIT'.                                         
-  Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.
-  The parameter horizontal indique que le formulaire est compose' en 
-  lignes (TRUE) ou en colonnes (FALSE).                              
-  The parameter package donne le facteur de blocage du formulaire    
-  (nombre d'entre'es par ligne ou par colonne).                      
-  The parameter button indique le bouton de la souris qui active le  
-  menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
-  ----------------------------------------------------------------------*/
-void TtaNewSheet (int ref, ThotWidget parent, char *title, int number,
-                  char *text, ThotBool horizontal, int package,
-                  char button, int dbutton)
-{
-#if defined(_GTK)
-  NewSheet (ref, parent, title, number, text, horizontal, package,
-            button, dbutton, CAT_SHEET);
-#endif /* #if defined(_GTK) */
-}
-
-
-/*----------------------------------------------------------------------
-  TtaNewDialogSheet cre'e un feuillet de dialogue :                  
-  The parameter ref donne la reference et parent le ThotWidget pe're 
-  Si parent est nul, le menu est attache a la fenetre MainWindow.          
-  The parameter title donne le titre du catalogue.            
-  The parameter number indique le nombre de boutons ajoute's au      
-  bouton 'QUIT' mis par de'faut.                                     
-  The parameter text contient la liste des intitule's des boutons    
-  ajoute's au bouton 'QUIT'.                                         
-  Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.
-  The parameter horizontal indique que le formulaire est compose' en 
-  lignes (TRUE) ou en colonnes (FALSE).                              
-  The parameter package donne le facteur de blocage du formulaire    
-  (nombre d'entre'es par ligne ou par colonne).                      
-  The parameter button indique le bouton de la souris qui active le  
-  menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
-  ----------------------------------------------------------------------*/
-void TtaNewDialogSheet (int ref, ThotWidget parent, char *title,
-                        int number, char *text, ThotBool horizontal,
-                        int package, char button)
-{
-#if defined(_GTK)
-  NewSheet (ref, parent, title, number - 1, text, horizontal, package,
-            button, D_DONE, CAT_DIALOG);
-#endif /* defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaAttachForm attache le catalogue au formulaire ou au feuillet    
-  dont il de'pend. Les catalogues sont cre'e's attache's.            
-  ----------------------------------------------------------------------*/
-void TtaAttachForm (int ref)
-{
-#if defined(_GTK)
-  int                 entry;
-  struct E_List      *adbloc;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget == 0)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Type != CAT_FMENU
-           && catalogue->Cat_Type != CAT_TMENU
-           && catalogue->Cat_Type != CAT_TEXT
-           && catalogue->Cat_Type != CAT_LABEL
-           && catalogue->Cat_Type != CAT_TREE
-           && catalogue->Cat_Type != CAT_COMBOBOX
-           && catalogue->Cat_Type != CAT_INT
-           && catalogue->Cat_Type != CAT_SELECT)
-    TtaError (ERR_invalid_reference);
-  else
-    {
-      /* Attache le catalogue au formulaire designe */
-      parentCatalogue = catalogue->Cat_PtParent;
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      /* Recherche l'entree du menu qui lui correspond */
-      adbloc = parentCatalogue->Cat_Entries;
-      entry = catalogue->Cat_EntryParent;
-
-      /* Saute au bloc qui contient l'entree recherchee */
-      while (entry >= C_NUMBER)
-        {
-          if (adbloc->E_Next == NULL)
-            {
-              TtaError (ERR_invalid_parameter);
-              return;
-            }
-          else
-            adbloc = adbloc->E_Next;
-          entry -= C_NUMBER;
-        }
-      if (adbloc->E_Free[entry] == 'Y')
-        {
-          /* marque que le sous-menu est attache */
-          adbloc->E_Free[entry] = 'N';
-          if ( GTK_WIDGET_VISIBLE(parentCatalogue->Cat_Widget) )
-            gdk_window_raise (GTK_WIDGET(catalogue->Cat_Widget)->window);
-        }
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaDetachForm detache le catalogue au formulaire ou au feuillet    
-  dont il de'pend. Les catalogues sont cre'e's attache's.            
-  ----------------------------------------------------------------------*/
-void TtaDetachForm (int ref)
-{
-#if defined(_GTK)
-  int                 entry;
-  struct E_List      *adbloc;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget == 0)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Type != CAT_FMENU
-           && catalogue->Cat_Type != CAT_TMENU
-           && catalogue->Cat_Type != CAT_TEXT
-           && catalogue->Cat_Type != CAT_LABEL
-           && catalogue->Cat_Type != CAT_TREE
-           && catalogue->Cat_Type != CAT_COMBOBOX
-           && catalogue->Cat_Type != CAT_INT
-           && catalogue->Cat_Type != CAT_SELECT)
-    TtaError (ERR_invalid_reference);
-  else
-    {
-      /* Detache le catalogue du formulaire designe */
-      parentCatalogue = catalogue->Cat_PtParent;
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      /* Recherche l'entree du menu qui lui correspond */
-      adbloc = parentCatalogue->Cat_Entries;
-      entry = catalogue->Cat_EntryParent;
-      /* Saute au bloc qui contient l'entree recherchee */
-      while (entry >= C_NUMBER)
-        {
-          if (adbloc->E_Next == NULL)
-            {
-              TtaError (ERR_invalid_parameter);
-              return;
-            }
-          else
-            adbloc = adbloc->E_Next;
-          entry -= C_NUMBER;
-        }
-      if (adbloc->E_Free[entry] == 'N')
-        {
-          /* marque que le sous-menu est detache */
-          adbloc->E_Free[entry] = 'Y';
-
-          if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
-            gtk_widget_hide (catalogue->Cat_Widget);
-        }
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewSizedSelector creates a selector of a given width in a dialogue form:
-  The parameter ref donne la re'fe'rence pour l'application.
-  The parameter title donne le titre du catalogue.             
-  The parameter number donne le nombre d'intitule's.          
-  The parameter text contient la liste des intitule's.   
-  The parameter height donne le nombre d'intitule's visibles a` la
-  fois (hauteur de la fenetree^tre de visualisation).
-  The parameter label ajoute un choix supple'mentaire a` la liste
-  des choix possibles. Ce choix est affiche' se'pare'ment et donc
-  mis en e'vidence. 
-  The parameter withText indique s'il faut creer une zone texte.
-  Quand le parame`tre react est vrai, tout changement de se'lection
-  dans le se'lecteur est imme'diatement signale' a` l'application.
-  ----------------------------------------------------------------------*/
-void TtaNewSizedSelector (int ref, int ref_parent, char *title,
-                          int number, char *text, int width, int height,
-                          char *label, ThotBool withText, ThotBool react)
-{
-#if defined(_GTK)
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-  GList              *item = NULL;
-  ThotWidget          tmpw, tmpw2;
-  int                 ent;
-  int                 index;
-  int                 i;
-  ThotWidget          row;
-  ThotWidget          w;
-  struct E_List      *adbloc;
-  ThotBool            rebuilded;
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  catalogue = CatEntry (ref);
-  rebuilded = FALSE;
-  if (catalogue == NULL)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  /* Faut-il detruire le catalogue precedent ? */
-  else if (catalogue->Cat_Widget)
-    {
-      /* Si c'est une mise a jour du selecteur */
-      if (catalogue->Cat_Type == CAT_SELECT && (withText != catalogue->Cat_SelectList))
-        rebuilded = TRUE;
-      else
-        TtaDestroyDialogue (ref);	/* Modification du catalogue */
-    }
-  /*______________________________ Regarde si le catalogue parent existe __*/
-  if (!rebuilded)
-    {
-      parentCatalogue = CatEntry (ref_parent);
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      else if (parentCatalogue->Cat_Widget == 0)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      else if (parentCatalogue->Cat_Type != CAT_FORM
-               && parentCatalogue->Cat_Type != CAT_SHEET
-               && parentCatalogue->Cat_Type != CAT_DIALOG)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      catalogue->Cat_PtParent = parentCatalogue;
-    }
-  else
-    parentCatalogue = catalogue->Cat_PtParent;
-  /* Avec ou sans zone texte */
-  catalogue->Cat_SelectList = !withText;
-  catalogue->Cat_React = react;
-
-  /* Ici on ajoute les entrees au selecteur */
-  if (number == 0)
-    {
-      /* Create a blank selector, item is a GList which contain all Label entry */
-      tmpw = gtk_list_item_new();
-      tmpw2 = gtk_label_new (" ");
-      gtk_misc_set_alignment (GTK_MISC (tmpw2), 0.0, 0.5);
-      gtk_widget_show_all (GTK_WIDGET (tmpw));
-      gtk_widget_show_all (GTK_WIDGET (tmpw2));
-      gtk_label_set_justify (GTK_LABEL (tmpw2), GTK_JUSTIFY_LEFT);
-      gtk_container_add (GTK_CONTAINER (tmpw), tmpw2);
-      gtk_object_set_data (GTK_OBJECT(tmpw), "ListElementLabel", (gpointer) tmpw2);
-      item = g_list_append (item, tmpw);
-      number = 1;
-    }
-  else
-    {
-      /* Cree les differentes entrees du selecteur */
-      i = 0;
-      index = 0;
-      while (i < number && text[index] != EOS)
-        {
-          /* Create a blank selector, item is a GList which contain all Label entry */
-          tmpw = gtk_list_item_new();
-          tmpw2 = gtk_label_new (&text[index]);
-          gtk_misc_set_alignment (GTK_MISC (tmpw2), 0.0, 0.5);
-          gtk_widget_show_all (GTK_WIDGET (tmpw));
-          gtk_widget_show (GTK_WIDGET (tmpw2));
-          gtk_label_set_justify (GTK_LABEL (tmpw2), GTK_JUSTIFY_LEFT);
-          gtk_container_add (GTK_CONTAINER (tmpw), tmpw2);
-          /* put a reference of the label into the list widget */
-          gtk_object_set_data (GTK_OBJECT(tmpw), "ListElementLabel", (gpointer) tmpw2);
-          /* add the new item to the GList */
-          item = g_list_append (item, tmpw);
-          i++;
-          index += strlen (&text[index]) + 1;	/* Longueur de l'intitule */
-        }
-      number = i;
-    }
-
-  /* Faut-il simplement mettre a jour le selecteur ? */
-  if (rebuilded)
-    {
-      /* On met a jour le titre du selecteur */
-      if (catalogue->Cat_Title && title)
-        {
-          /* update the title label */
-          gtk_label_set_text (GTK_LABEL(catalogue->Cat_Title),title);
-          gtk_widget_show (GTK_WIDGET(catalogue->Cat_Title));
-        }
-      /* On met a jour le label attache au bouton du selecteur */
-      if (catalogue->Cat_SelectLabel && label)
-        {
-          /* update the selector label*/
-          gtk_label_set_text (GTK_LABEL(gtk_object_get_data (GTK_OBJECT(catalogue->Cat_SelectLabel),"ButtonLabel")), label);
-          gtk_widget_show (GTK_WIDGET (catalogue->Cat_SelectLabel));
-        }
-      /* On met a jour le selecteur (catalogue->Cat_Entries) */
-      catalogue->Cat_ListLength = number;
-      w = (ThotWidget) catalogue->Cat_Entries;
-      /* delete the old list elements */
-      if ((intptr_t)gtk_object_get_data(GTK_OBJECT(w), "GList") > 0)
-        gtk_list_clear_items (GTK_LIST (w), 0, (intptr_t)gtk_object_get_data(GTK_OBJECT (w), "GList"));
-      /* add the new list elements */
-      gtk_list_append_items (GTK_LIST(w), item);
-      /* update the number of list element */
-      gtk_object_set_data(GTK_OBJECT(w), "GList", (gpointer)g_list_length (item));
-      gtk_widget_show (GTK_WIDGET(w));
-    }
-  else
-    {
-      /*_______________________________________ C'est un nouveau formulaire __*/
-      w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-      row = gtk_vbox_new (FALSE, 0);
-      gtk_widget_show (row);
-      gtk_widget_set_name (row, "Dialogue");
-      gtk_container_add (GTK_CONTAINER (w), row);
-      catalogue->Cat_Ref = ref;
-      catalogue->Cat_Type = CAT_SELECT;
-      catalogue->Cat_ListLength = number;
-      catalogue->Cat_Widget = row;
-      adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
-      adbloc->E_Free[ent] = 'N';
-      catalogue->Cat_EntryParent = i;
-      catalogue->Cat_Title = 0;
-      /*** Cree le titre du selecteur ***/
-      if (title)
-        {
-          w = gtk_label_new (title);
-          gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
-          gtk_widget_show (w);
-          w->style->font=DefaultFont;
-          gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-          catalogue->Cat_Title = w;
-        }
-      /*** Cree le label attache au selecteur ***/
-      if (label)
-        {
-          w = gtk_button_new ();
-          gtk_widget_show (w);
-          w->style->font=DefaultFont;
-          tmpw = gtk_label_new (label);
-          gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
-          gtk_widget_show(tmpw);
-          gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
-          gtk_object_set_data(GTK_OBJECT(w), "ButtonLabel", 	   
-                              (gpointer)tmpw);
-          gtk_container_add(GTK_CONTAINER(w),GTK_WIDGET(tmpw));
-          gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-          ConnectSignalGTK (GTK_OBJECT(w), "clicked",
-                            GTK_SIGNAL_FUNC (CallLabel), (gpointer)catalogue);
-          catalogue->Cat_SelectLabel = w;
-        }
-      else
-        catalogue->Cat_SelectLabel = 0;
-
-      if (catalogue->Cat_SelectList)
-        {
-          /* A simple list */
-          /* Create a scrolled window to control the gtklist & gtklist contain the items */
-          tmpw = gtk_scrolled_window_new (NULL, NULL);
-          gtk_widget_show (tmpw);
-          tmpw->style->font=DefaultFont;
-          gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tmpw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-          gtk_box_pack_start (GTK_BOX(row), tmpw, TRUE, TRUE, 0);
-          gtk_widget_set_usize (tmpw, width, height*30);
-          w = gtk_list_new ();
-          /* tie the scrolling of the list to the scrolled window */
-          gtk_container_set_focus_hadjustment (GTK_CONTAINER (w),
-                                               gtk_scrolled_window_get_hadjustment 
-                                               (GTK_SCROLLED_WINDOW (tmpw)));
-          gtk_container_set_focus_vadjustment (GTK_CONTAINER (w),
-                                               gtk_scrolled_window_get_vadjustment 
-                                               (GTK_SCROLLED_WINDOW (tmpw)));
-          gtk_widget_show (GTK_WIDGET(w));
-          gtk_list_set_selection_mode (GTK_LIST(w),GTK_SELECTION_SINGLE);
-          gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(tmpw),w);
-          gtk_list_append_items (GTK_LIST(w), item);
-          gtk_object_set_data (GTK_OBJECT(w), "GList", (gpointer)g_list_length(item));
-          gtk_widget_show_all (tmpw);
-          if (react)
-            {
-              ConnectSignalGTK (GTK_OBJECT(w), "selection_changed",
-                                GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
-              ConnectSignalGTK (GTK_OBJECT(w), "button_release_event",
-                                GTK_SIGNAL_FUNC (CallTextEnterGTK),  (gpointer)catalogue);
-            }
-        }
-      else
-        {
-          /* A list and a text entry zone */
-          tmpw = gtk_scrolled_window_new (NULL, NULL);
-          gtk_widget_show (tmpw);
-          tmpw->style->font=DefaultFont;
-          gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (tmpw),
-                                          GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-          gtk_box_pack_start (GTK_BOX(row), tmpw, TRUE, TRUE, 0);
-          gtk_widget_set_usize (tmpw, width, height*30);
-          w = gtk_list_new ();
-          /* tie the scrolling of the list to the scrolled window */
-          gtk_container_set_focus_hadjustment (GTK_CONTAINER (w),
-                                               gtk_scrolled_window_get_hadjustment 
-                                               (GTK_SCROLLED_WINDOW (tmpw)));
-          gtk_container_set_focus_vadjustment (GTK_CONTAINER (w),
-                                               gtk_scrolled_window_get_vadjustment 
-                                               (GTK_SCROLLED_WINDOW (tmpw)));
-          gtk_widget_show (GTK_WIDGET(w));
-          gtk_list_set_selection_mode (GTK_LIST(w), GTK_SELECTION_SINGLE);
-          gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(tmpw),w);
-          gtk_list_append_items (GTK_LIST(w), item);
-          gtk_object_set_data (GTK_OBJECT(w), "GList", (gpointer)g_list_length(item));
-          gtk_widget_show_all (tmpw);
-          /* on connecte le changement de selection pour mettre a jour la zone text */
-          ConnectSignalGTK (GTK_OBJECT(w), "selection_changed",
-                            GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
-          ConnectSignalGTK (GTK_OBJECT(w), "button_press_event",
-                            GTK_SIGNAL_FUNC (CallTextEnterGTK),  (gpointer)catalogue);
-          tmpw = gtk_entry_new ();
-          gtk_widget_show (tmpw);
-          if (tmpw->style->font == NULL ||
-              tmpw->style->font->type != GDK_FONT_FONTSET)
-            tmpw->style->font = DefaultFont;
-          gtk_box_pack_start (GTK_BOX(row), tmpw, FALSE, FALSE, 0);
-          gtk_object_set_data (GTK_OBJECT(w), "EntryZone", (gpointer)tmpw);
-          if (react)
-            ConnectSignalGTK (GTK_OBJECT(tmpw), "changed",
-                              GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
-        }
-      if (!catalogue->Cat_Focus)
-        {
-          /* first entry in the form */
-          gtk_widget_grab_focus (GTK_WIDGET(w));
-          catalogue->Cat_Focus = TRUE;
-        }
-      /* Conserve le widget du selecteur dans l'entree Cat_Entries */
-      catalogue->Cat_Entries = (struct E_List *) w;
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewSelector creates a selector in a dialogue form:
-  The parameter ref donne la re'fe'rence pour l'application.
-  The parameter title donne le titre du catalogue.             
-  The parameter number donne le nombre d'intitule's.          
-  The parameter text contient la liste des intitule's.   
-  The parameter height donne le nombre d'intitule's visibles a` la
-  fois (hauteur de la fenetree^tre de visualisation).
-  The parameter label ajoute un choix supple'mentaire a` la liste
-  des choix possibles. Ce choix est affiche' se'pare'ment et donc
-  mis en e'vidence. 
-  The parameter withText indique s'il faut creer une zone texte.
-  Quand le parame`tre react est vrai, tout changement de se'lection
-  dans le se'lecteur est imme'diatement signale' a` l'application.
-  ----------------------------------------------------------------------*/
-void TtaNewSelector (int ref, int ref_parent, char *title, int number,
-                     char *text, int height, char *label,
-                     ThotBool withText, ThotBool react)
-{
-#if defined(_GTK)
-  TtaNewSizedSelector (ref, ref_parent, title, number, text, 0, height,
-                       label, withText, react);
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaActiveSelector rend actif le  se'lecteur.                       
-  ----------------------------------------------------------------------*/
-void TtaActiveSelector (int ref)
-{
-#if defined(_GTK)
-  ThotWidget          w;
-  struct Cat_Context *catalogue;
-
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget == 0)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Type != CAT_SELECT)
-    TtaError (ERR_invalid_reference);
-  else
-    {
-      w = (ThotWidget) catalogue->Cat_Entries;
-      gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
-      gtk_widget_show (GTK_WIDGET(w));
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaDesactiveSelector rend non actif le  se'lecteur.                        
-  ----------------------------------------------------------------------*/
-void TtaDesactiveSelector (int ref)
-{
-#if defined(_GTK)
-  ThotWidget          w;
-  struct Cat_Context *catalogue;
-
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget == 0)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Type != CAT_SELECT)
-    TtaError (ERR_invalid_reference);
-  else
-    {
-      w = (ThotWidget) catalogue->Cat_Entries;
-      gtk_widget_show (GTK_WIDGET(w));
-      gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaSetSelector initialise l'entre'e et/ou le texte du se'lecteur : 
-  The parameter ref donne la re'fe'rence du catalogue.               
-  The parameter entry positif ou nul donne l'index de l'entre'e      
-  se'lectionne'e.                                                    
-  The parameter text donne le texte si entry vaut -1.                
-  ----------------------------------------------------------------------*/
-void TtaSetSelector (int ref, int entry, const char *text)
-{
-#if defined(_GTK)
-  ThotWidget          wt;
-  ThotWidget          select;
-  struct Cat_Context *catalogue;
-
-  catalogue = CatEntry (ref);
-  wt = 0;
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget)
-    {
-      /* Recupere le widget du selecteur */
-      select = (ThotWidget) catalogue->Cat_Entries;
-      if (catalogue->Cat_Type != CAT_SELECT)
-        {
-          TtaError (ERR_invalid_reference);
-          return;
-        }
-
-      if (!catalogue->Cat_SelectList)
-        {
-          wt = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT(select), "EntryZone"));
-          /* Si le selecteur est reactif */
-          if (catalogue->Cat_React)
-            RemoveSignalGTK (GTK_OBJECT(wt), "changed");  
-        }
-      else if (catalogue->Cat_React)
-        {
-          RemoveSignalGTK (GTK_OBJECT(select), "selection_changed"); 
-          RemoveSignalGTK (GTK_OBJECT(select), "button_press_event"); 
-        }
-
-      if (entry >= 0 && entry < catalogue->Cat_ListLength)
-        gtk_list_select_item (GTK_LIST(select), entry);
-      else if (catalogue->Cat_SelectList)
-        gtk_list_unselect_all (GTK_LIST(select));
-      else
-        {
-          /* Initialise le champ texte */
-          if (catalogue->Cat_ListLength)
-            gtk_list_unselect_all (GTK_LIST(select));
-          if (!text)
-            gtk_entry_set_text (GTK_ENTRY (wt), "");
-          else
-            gtk_entry_set_text (GTK_ENTRY (wt), text);
-        }
-
-      /* Si le selecteur est reactif */
-      if (catalogue->Cat_React)
-        {
-          if (catalogue->Cat_SelectList)
-            {
-              ConnectSignalGTK (GTK_OBJECT(select),"selection_changed"
-                                , GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
-              ConnectSignalGTK (GTK_OBJECT(select), "button_press_event",
-                                GTK_SIGNAL_FUNC (CallTextEnterGTK),
-                                (gpointer)catalogue);
-            }
-          else
-            ConnectSignalGTK (GTK_OBJECT(wt),"changed",
-                              GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
-        }
-    }
-#endif /* #if defined(_GTK) */
-}
-
-#ifndef _WX
-/*----------------------------------------------------------------------
-  NewLabel
-  Common code for both TtaNewLabel and TtaNewPaddedLabel.
-  ----------------------------------------------------------------------*/
-static void NewLabel (int ref, int ref_parent, char *text, int padding)
-{
-#if defined(_GTK)
-  ThotWidget          tmpw;
-  int                 width, height;
-  int                 i;
-  int                 ent;
-  int                 rebuilded;
-  struct E_List      *adbloc;
-  ThotWidget          w;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  /*   title_string = 0;*/
-  catalogue = CatEntry (ref);
-  rebuilded = 0;
-  if (catalogue == NULL)
-    {
-      TtaError (ERR_cannot_create_dialogue);
-      return;
-    }
-  else if (catalogue->Cat_Widget && catalogue->Cat_Type == CAT_LABEL)
-    {
-      /* Modification du catalogue */
-      w = catalogue->Cat_Widget;
-      gtk_widget_show (w);
-      gtk_label_set_text (GTK_LABEL (w), text);	
-    }
-  else
-    {
-      if (catalogue->Cat_Widget)
-        /* Le catalogue est a reconstruire completement */
-        TtaDestroyDialogue (ref);
-      /*======================================> Recherche le catalogue parent */
-      parentCatalogue = CatEntry (ref_parent);
-      /*__________________________________ Le catalogue parent n'existe pas __*/
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      else if (parentCatalogue->Cat_Widget == 0)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      /*_________________________________________ Sous-menu d'un formulaire __*/
-      else if (parentCatalogue->Cat_Type != CAT_FORM
-               && parentCatalogue->Cat_Type != CAT_SHEET
-               && parentCatalogue->Cat_Type != CAT_DIALOG)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      else if (text == NULL)
-        {
-          TtaError (ERR_invalid_parameter);
-          return;
-        }
-      /* Recupere le widget parent */
-      w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-      tmpw = gtk_label_new (text);
-      gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
-      gtk_widget_show (GTK_WIDGET(tmpw));
-      tmpw->style->font=DefaultFont;
-      gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
-      i = strlen (text);
-      if (padding != 0 && i < padding)
-        {
-          i = padding;
-          width = i * (gdk_char_width (DialogFont, 'm'));
-          /* seems that 1 tells GTK to compute its own values */
-          height = 1;
-          gtk_widget_set_usize (tmpw, width, height);
-        }
-      gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
-      /* on fou les couleurs (A FAIRE)*/
-      gtk_widget_set_name (tmpw, "Dialogue");
-      w=tmpw;
-      catalogue->Cat_Widget = w;
-      catalogue->Cat_Ref = ref;
-      catalogue->Cat_Type = CAT_LABEL;
-      catalogue->Cat_PtParent = parentCatalogue;
-      adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-      adbloc->E_Free[ent] = 'N';
-      catalogue->Cat_EntryParent = i;
-      catalogue->Cat_Entries = NULL;
-    }
-#endif /* #if defined(_GTK) */
-}
-#endif /* _WX */
-
-/*----------------------------------------------------------------------
-  TtaNewLabel cre'e un intitule' constant dans un formulaire :       
-  The parameter ref donne la re'fe'rence du catalogue.               
-  The parameter text donne l'intitule'.                              
-  ----------------------------------------------------------------------*/
-void TtaNewLabel (int ref, int ref_parent, const char *text)
-{
-#if defined(_GTK)
-  NewLabel (ref, ref_parent, text, 0);
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewPaddedLabel cre'e un intitule' constant dans un formulaire :       
-  The parameter ref donne la re'fe'rence du catalogue.               
-  The parameter text donne l'intitule'.        
-  Padding says how many extra characters to add if the text is inferior
-  to it.                      
-  ----------------------------------------------------------------------*/
-void TtaNewPaddedLabel (int ref, int ref_parent, char *text, int padding)
-{
-#if defined(_GTK)
-  NewLabel (ref, ref_parent, text, padding);
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewTextForm creates a dialogue element to input text:   
-  Parameter ref gives the Thot reference.
-  Parameter title gives the dialogue title.
-  Parameters width and height give the box size. 
-  If the parameter react is TRUE, any change in the input box generates a
-  callback to the application.
-  ----------------------------------------------------------------------*/
-void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
-                     int height, ThotBool react)
-{
-#if defined(_GTK)
-  int                 ent;
-  int                 i;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-  struct E_List      *adbloc;
-  ThotWidget          w;
-  ThotWidget          row;
-  ThotWidget          tmpw;
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_cannot_create_dialogue);
-  else
-    {
-      catalogue->Cat_React = react;
-      /* Faut-il detruire le catalogue precedent ? */
-      if (catalogue->Cat_Widget)
-        DestForm (ref);	/* Modification du catalogue */
-      /*======================================> Recherche le catalogue parent */
-      parentCatalogue = CatEntry (ref_parent);
-      /*__________________________________ Le catalogue parent n'existe pas __*/
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      else if (parentCatalogue->Cat_Widget == 0)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      /*_______________________ Le catalogue parent n'est pas un formulaire __*/
-      else if (parentCatalogue->Cat_Type != CAT_FORM
-               && parentCatalogue->Cat_Type != CAT_SHEET
-               && parentCatalogue->Cat_Type != CAT_DIALOG)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      /*_____________________________________________________________ Sinon __*/
-      else
-        {
-          /* adjust the height size */
-          if (height < 2)
-            height = 1;
-
-          /* Cree a l'interieur Row-Column du formulaire */
-          row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-          /* create the vbox for all the elements */
-          tmpw = gtk_vbox_new (FALSE, 0);
-          gtk_widget_show (GTK_WIDGET(tmpw));
-          if (tmpw->style->font == NULL ||
-              tmpw->style->font->type != GDK_FONT_FONTSET)
-            tmpw->style->font = DefaultFont;
-          gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
-          row = tmpw;
-          /* Create the label title */
-          if (title)
-            {
-              w = gtk_label_new (title);
-              gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
-              gtk_widget_show (GTK_WIDGET(w));
-              w->style->font=DefaultFont;
-              gtk_widget_set_name (w, "Dialogue");
-              gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 2);
-            }	
-          /* new text widget added into the row widget */
-          if (height == 1)
-            w = gtk_entry_new ();
-          else
-            w = gtk_text_new (NULL, NULL);
-          gtk_widget_show (w);
-          w->style->font=DefaultFont;
-          gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 2);
-          /* assigne the good size for the widget */
-          if (width == 0)
-            gtk_widget_set_usize (GTK_WIDGET(w),
-                                  10*gdk_char_width (DefaultFont, 'n'),
-                                  10+height*gdk_char_height (DefaultFont, '|'));
-          else
-            gtk_widget_set_usize (GTK_WIDGET(w),
-                                  (width)*gdk_char_width (DefaultFont, 'n'),
-                                  10+height*gdk_char_height (DefaultFont, '|'));
-
-          /* extra things to do for the textedit */
-          if (height > 1)
-            {
-              gtk_text_set_editable (GTK_TEXT(w), TRUE);
-              gtk_text_set_word_wrap (GTK_TEXT(w), TRUE);
-            }
-
-          if (!parentCatalogue->Cat_Focus)
-            {
-              /* first entry in the form */
-              gtk_widget_grab_focus (GTK_WIDGET(w));
-              parentCatalogue->Cat_Focus = TRUE;
-            }
-          /* if the widget is reactive */
-          if (react)
-            ConnectSignalGTK (GTK_OBJECT(w), "changed",
-                              GTK_SIGNAL_FUNC (CallTextChangeGTK), (gpointer)catalogue); 
-          /* report Enter to the form */
-          ConnectSignalGTK (GTK_OBJECT(w), "activate",
-                            GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer) parentCatalogue);
-
-          catalogue->Cat_Ref = ref;
-          catalogue->Cat_Type = CAT_TEXT;
-          /* L'entree Cat_Entries contient le numero du widget texte */
-          catalogue->Cat_Entries = (struct E_List *) w;
-          catalogue->Cat_Widget = row;
-          catalogue->Cat_PtParent = parentCatalogue;
-          adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
-          adbloc->E_Free[ent] = 'N';
-          catalogue->Cat_EntryParent = i;
-        }
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewPwdForm creates a dialogue element to input password text:   
-  Parameter ref gives the Thot reference.
-  Parameter title gives the dialogue title.
-  Parameters width and height give the box size. 
-  If the parameter react is TRUE, any change in the input box generates a
-  callback to the application.
-  ----------------------------------------------------------------------*/
-void TtaNewPwdForm (int ref, int ref_parent, char *title, int width,
-                    int height, ThotBool react)
-{
-#ifdef _GTK
-  struct Cat_Context *catalogue;
-
-  TtaNewTextForm (ref, ref_parent, title, width, height, react);
-  catalogue = CatEntry (ref);
-  gtk_entry_set_visibility (GTK_ENTRY(catalogue->Cat_Entries), FALSE);
-#endif /* GTK */
-}
-/*----------------------------------------------------------------------
-  TtaSetTextForm initialise une feuille de saisie de texte :         
-  The parameter ref donne la re'fe'rence du catalogue.               
-  The parameter text donne la valeur initiale.                       
-  ----------------------------------------------------------------------*/
-void TtaSetTextForm (int ref, char *text)
-{
-#if defined(_GTK)
-  struct Cat_Context *catalogue;
-  ThotWidget          w;
-
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget == 0)
-    TtaError (ERR_invalid_reference);
-  else if (text == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Type != CAT_TEXT)
-    TtaError (ERR_invalid_reference);
-  else 
-    {
-      w = (ThotWidget) catalogue->Cat_Entries;
-      /* Si la feuille de saisie est reactive */
-      if (catalogue->Cat_React)
-        RemoveSignalGTK (GTK_OBJECT(w), "changed");  
-      if (GTK_IS_ENTRY (w))
-        gtk_entry_set_text (GTK_ENTRY (w), text);
-      else 
-        gtk_text_insert (GTK_TEXT(w), NULL, NULL, NULL, text, -1);
-      /*gtk_editable_select_region(GTK_EDITABLE(w), 0, -1);*/
-      if (catalogue->Cat_React)
-        ConnectSignalGTK (GTK_OBJECT(w), "changed",
-                          GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewNumberForm cre'e une feuille de saisie de nombre :           
-  The parameter ref donne la re'fe'rence pour l'application.         
-  The parameter ref_parent identifie le formulaire pe`re.            
-  The parameter title donne le titre du catalogue.                   
-  Les parame`tres min et max fixent les bornes valides du nombre.    
-  Quand le parame`tre react est vrai, tout changement dans           
-  la feuille de saisie est imme'diatement signale' a` l'application. 
-  ----------------------------------------------------------------------*/
-void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
-                       int max, ThotBool react)
-{
-#if defined(_GTK)
-  int                 ent;
-  int                 i;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-  struct E_List      *adbloc;
-  ThotWidget          tmpw;
-  ThotWidget          w;
-  ThotWidget          row;
-  char                bounds[100];
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return;
-    }
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_cannot_create_dialogue);
-  else
-    {
-      catalogue->Cat_React = react;
-
-      /* Faut-il detruire le catalogue precedent ? */
-      if (catalogue->Cat_Widget)
-        DestForm (ref);	/* Modification du catalogue */
-
-      /*======================================> Recherche le catalogue parent */
-      parentCatalogue = CatEntry (ref_parent);
-      /*__________________________________ Le catalogue parent n'existe pas __*/
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      else if (parentCatalogue->Cat_Widget == 0)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      /*_______________________ Le catalogue parent n'est pas un formulaire __*/
-      else if (parentCatalogue->Cat_Type != CAT_FORM
-               && parentCatalogue->Cat_Type != CAT_SHEET
-               && parentCatalogue->Cat_Type != CAT_DIALOG)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return;
-        }
-      /*_____________________________________________________________ Sinon __*/
-      else
-        {
-          row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-          /* add a vbox to contain the elements */
-          tmpw = gtk_vbox_new (FALSE, 0);
-          gtk_widget_show (tmpw);
-          gtk_widget_set_name (tmpw, "Dialogue");
-          gtk_container_add (GTK_CONTAINER(row), tmpw);
-          row=tmpw;
-       
-          catalogue->Cat_Widget = row;
-          catalogue->Cat_PtParent = parentCatalogue;
-          adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
-          adbloc->E_Free[ent] = 'N';
-          catalogue->Cat_EntryParent = i;
-          catalogue->Cat_Ref = ref;
-          catalogue->Cat_Type = CAT_INT;
-          /* Alloue un bloc pour ranger les widgets scale et text*/
-          adbloc = NewEList ();
-          catalogue->Cat_Entries = adbloc;
-          /*** Cree le titre du sous-menu ***/
-          if (title)
-            {
-              /* add a title label */
-              w = gtk_label_new (title);
-              gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
-              gtk_widget_show (w);
-              gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
-              gtk_widget_set_name (w, "Dialogue");
-              gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-            }
-          /* Cree une feuille de saisie d'un nombre */
-          if (min < max)
-            {
-              /* Note les bornes de l'echelle */
-              sprintf (bounds, "(%d", min);
-              strcat (&bounds[strlen (bounds)], "..");
-              sprintf (&bounds[strlen (bounds)], "%d)", max);
-              catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) min;
-              catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) max;
-              ent = max;
-            }
-          else
-            {
-              /* Note les bornes de l'echelle */
-              sprintf (bounds, "%d", max);
-              strcat (&bounds[strlen (bounds)], "..");
-              sprintf (&bounds[strlen (bounds)], "%d", min);
-              catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) max;
-              catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) min;
-              ent = min;
-            }
-       
-          /* a new label for the title */
-          w = gtk_label_new (bounds);
-          gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
-          gtk_widget_show (GTK_WIDGET(w));
-          if (w->style->font == NULL ||
-              w->style->font->type != GDK_FONT_FONTSET)
-            w->style->font = DefaultFont;
-          gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
-          gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-
-          /* a new text entry which contain an empty text */
-          bounds[0] = EOS;
-          w = gtk_entry_new ();
-          gtk_widget_set_usize (GTK_WIDGET(w),
-                                gdk_string_width (DefaultFont, bounds),
-                                8+gdk_char_height(DefaultFont, '|'));
-          gtk_widget_show (w);
-          gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-          gtk_entry_set_text (GTK_ENTRY (w), bounds);
-          if (catalogue->Cat_React)
-            ConnectSignalGTK (GTK_OBJECT(w), "changed", GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
-          catalogue->Cat_Entries->E_ThotWidget[1] = w;
-        }
-    }
-#endif /* #if defined(_GTK) */
-}
-
-/*----------------------------------------------------------------------
-  TtaSetNumberForm fixe le contenu de la feuille de saisie de texte :        
-  The parameter ref donne la re'fe'rence du catalogue.               
-  The parameter val donne la valeur initiale.                        
-  ----------------------------------------------------------------------*/
-void TtaSetNumberForm (int ref, int val)
-{
-#if defined(_GTK)
-  char              text[10];
-  int                 lg;
-  ThotWidget          wtext;
-  struct Cat_Context *catalogue;
-
-  catalogue = CatEntry (ref);
-  if (catalogue == NULL)
-    TtaError (ERR_invalid_reference);
-  else if (catalogue->Cat_Widget == 0)
-    TtaError (ERR_invalid_reference);
-  else
-    {
-      if (catalogue->Cat_Type != CAT_INT)
-        {
-          TtaError (ERR_invalid_reference);
-          return;
-        }
-      /* Est-ce une valeur valide ? */
-      if (val < (intptr_t) catalogue->Cat_Entries->E_ThotWidget[2]
-          || val > (intptr_t) catalogue->Cat_Entries->E_ThotWidget[3])
-        {
-          TtaError (ERR_invalid_reference);
-          return;
-        }
-      wtext = catalogue->Cat_Entries->E_ThotWidget[1];
-      /* Desactive la procedure de Callback */
-      if (catalogue->Cat_React)
-        RemoveSignalGTK (GTK_OBJECT(wtext), "changed");  
-      sprintf (text, "%d", val);
-      gtk_entry_set_text (GTK_ENTRY (wtext), text);
-      lg = strlen (text);
-      /* Reactive la procedure de Callback */
-      if (catalogue->Cat_React)
-        ConnectSignalGTK (GTK_OBJECT(wtext), "changed", GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
-    }
-#endif /* #if defined(_GTK) */
-}
-
-
-#ifdef _GTK
-typedef void Treecbf (ThotWidget w, ThotBool state, void *user_data);
-
-/*----------------------------------------------------------------------
-  TreeRecUnselectCBF
-  Clears all selected entries in tree thru a cbf function, except
-  for node_skip.
-  ----------------------------------------------------------------------*/
-static void TreeRecUnselectCBF (GtkCTree *tree, GtkCTreeNode *node, gpointer data)
-{
-  GtkCTreeNode *node_skip =  GTK_CTREE_NODE (data);
-  Treecbf  *cbf;
-  void *user_data;
-
-  if (node != node_skip) 
-    {
-      cbf = (Treecbf *) gtk_object_get_data (GTK_OBJECT(tree), "cbf");
-      user_data = gtk_ctree_node_get_row_data (tree, node);
-      gtk_ctree_unselect (GTK_CTREE (tree), GTK_CTREE_NODE (node));
-      if (cbf)
-        (*cbf) ((ThotWidget) node, FALSE, user_data);
-    }
-}
-
-/*----------------------------------------------------------------------
-  TreeItemSelect
-  Invokes the user callback if registred and gives the selected/
-  deselected state
-  ----------------------------------------------------------------------*/
-static ThotBool TreeItemSelect (GtkCTree *tree, GtkCTreeNode *node, gint col,
-                                gpointer data)
-{
-  Treecbf  *cbf;
-  void *user_data;
-  ThotBool state; 
-  gpointer has_control, has_multiple;
-
-  /* for some strange reason, we get col == -1 when doing a recursive operation.
-     Ignoring this seems to work well. */
-  if (col == -1)
-    return FALSE;
-
-  /* we can't assign state directly because gpointer > ThotBool. We do
-     an arithmetic comparition instead */
-  state = (data == 0) ? FALSE : TRUE;
-  
-  cbf = (Treecbf *) gtk_object_get_data (GTK_OBJECT(tree), "cbf");
-  user_data = gtk_ctree_node_get_row_data (tree, node);
-
-  has_multiple = gtk_object_get_data (GTK_OBJECT (tree), "multiple");
-  if (has_multiple)
-    has_control = gtk_object_get_data (GTK_OBJECT (tree), "control");
-
-  if (has_multiple && !has_control)
-    {
-      /* remove all the previous selections */
-      gtk_clist_freeze (GTK_CLIST (tree));
-      /* clear all the entries except the one that generated the event */
-      gtk_ctree_post_recursive (GTK_CTREE (tree), NULL, 
-                                GTK_CTREE_FUNC (TreeRecUnselectCBF), (gpointer) node);
-      gtk_clist_thaw (GTK_CLIST (tree));
-    }
-  if (cbf)
-    (*cbf) ((ThotWidget) node, state, user_data);
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
-  TreeItemKeyPress
-  Detects if a control or F2 multiple selection modifier key is being
-  used in the tree widget. If this is the case, it stores this state
-  inside the tree widget.
-  ----------------------------------------------------------------------*/
-static ThotBool TreeItemKeyPress (ThotWidget w, GdkEventKey *ev,
-                                  gpointer data)
-{
-  ThotBool state; 
-
-  if (!GTK_IS_CTREE (w)
-      || (ev->type != GDK_KEY_PRESS && ev->type != GDK_KEY_RELEASE))
-    return FALSE;
-
-  if (ev->keyval == GDK_Control_L || ev->keyval == GDK_F2)
-    {
-      /* we can't assign state directly because gpointer > ThotBool. We do
-         an arithmetic comparition instead */
-      /* update the state indicator */
-      state = (data == 0) ? FALSE : TRUE;
-      if (state)
-        {
-          gtk_object_set_data (GTK_OBJECT(w), "control", (gpointer) 1);
-        }
-      else
-        {
-          gtk_object_remove_data (GTK_OBJECT(w), "control");
-        }
-    }
-  return FALSE;
-}
-
-/*----------------------------------------------------------------------
-  TreeFocus
-  Detects if the widget has lost focus and if yes, removes the
-  "control key pressed" state from the widget.
-  ----------------------------------------------------------------------*/
-static ThotBool TreeFocus (ThotWidget w, GdkEventFocus *ev,
-                           gpointer data)
-{
-  ThotBool state; 
-  
-  /* we can't assign state directly because gpointer > ThotBool. We do
-     an arithmetic comparition instead */
-  state = (data == 0) ? FALSE : TRUE;
-
-  if (!state)
-    {
-      /* delete the state indicator */
-      gtk_object_remove_data (GTK_OBJECT(w), "control");
-    }
-
-  return FALSE;
-}
-#endif /* GTK */
-
-/*----------------------------------------------------------------------
-  TtaClearTree
-  Clears (destroys) the contents of a tree created with TtaNewTreeForm.
-  Returns the identifier of the tree widget.
-  ----------------------------------------------------------------------*/
-ThotWidget TtaClearTree (ThotWidget tree)
-     /* add some tree stuff here */
-{
-  ThotWidget tree_widget = NULL;
-#ifdef _GTK
-  GList *children;
-
-  if (!tree || !GTK_IS_SCROLLED_WINDOW (tree))
-    return NULL;
-
-  /* get the viewport */
-  children = gtk_container_children (GTK_CONTAINER (tree));
-  if (!children)
-    return NULL;
-
-  /* get the tree */
-  tree_widget = GTK_WIDGET(children->data);
-  g_list_free (children);
-
-  if (tree_widget && GTK_IS_CTREE (tree_widget))
-    gtk_clist_clear (GTK_CLIST (tree_widget));
-  else
-    return NULL;
-#endif /* _GTK */
-  return (tree_widget);
-}
-
-/*----------------------------------------------------------------------
-  TtaAddTreeItem
-  parent points to the parent of the tree. If it's NULL, it's
-  the first item.
-  sibling points to the immediate sibling of this item. If it's NULL
-  the item will be added as the first child of parent.
-  item_label gives the text that will be visible on the widget.
-  selected and expanded gives info on how to display the item.
-  user_data is what the user wants to feed to the callback function.
-  Returns the reference of the new widget.
-  ----------------------------------------------------------------------*/
-ThotWidget TtaAddTreeItem (ThotWidget tree, ThotWidget parent,
-                           ThotWidget sibling, char *item_label, 
-                           ThotBool selected, ThotBool expanded, 
-                           void *user_data)
-{
-  ThotWidget tree_item = NULL;
-#ifdef _GTK
-  gchar *ctree_label[1];
-
-  ctree_label[0]= (item_label) ?  (gchar *) item_label : (gchar *) "";
-  tree_item = (ThotWidget) gtk_ctree_insert_node ((GtkCTree *) tree,
-                                                  (GtkCTreeNode *) parent,
-                                                  (GtkCTreeNode *) sibling,
-                                                  ctree_label,
-                                                  5,
-                                                  NULL,
-                                                  NULL,
-                                                  NULL,
-                                                  NULL,
-                                                  FALSE,
-                                                  expanded);
-
-  if (selected)
-    {
-      RemoveSignalGTK (GTK_OBJECT(tree), "tree_select_row");
-      gtk_ctree_select (GTK_CTREE(tree), GTK_CTREE_NODE(tree_item));
-      ConnectSignalGTK (GTK_OBJECT (tree), "tree_select_row",
-                        GTK_SIGNAL_FUNC (TreeItemSelect), (gpointer) TRUE);
-    }
-
-  /* memorize client data */
-  gtk_ctree_node_set_row_data (GTK_CTREE (tree),
-                               GTK_CTREE_NODE(tree_item), 
-                               (gpointer) user_data);
-#endif /* _GTK */
-  return (tree_item);
-}
-
-
-/*----------------------------------------------------------------------
-  TtaNewTreeForm
-  The parameter ref gives the catalog reference
-  The paramet ref_parent gives the parents reference
-  The parameter label gives the form's label
-  The parameter multiple says if mutliple selections are allowed inside
-  the tree.
-  The Parameter callback gives the callback function.
-  Returns the pointer of the widget that was created or NULL.
-  ----------------------------------------------------------------------*/
-ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, 
-                           ThotBool multiple, void *callback)
-{
-  ThotWidget          tree = NULL;
-
-#ifdef _GTK
-  /* general stuff, move it up when adding win32 */
-  int                 i;
-  int                 ent;
-  int                 width, height;
-  int                 rebuilded;
-  struct E_List      *adbloc;
-  ThotWidget          w, tmpw;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-  /* end of general info */
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return NULL;
-    }
-
-  catalogue = CatEntry (ref);
-  rebuilded = 0;
-  if (catalogue == NULL)
-    {
-      TtaError (ERR_cannot_create_dialogue);
-      return NULL;
-    }
-  else if (catalogue->Cat_Widget && catalogue->Cat_Type == CAT_TREE)
-    {
-      /* Modification du catalogue */
-      w = catalogue->Cat_Widget;
-      gtk_widget_show_all (w);
-      if (label)
-        gtk_label_set_text (GTK_LABEL (w), label);	
-    }
-  else
-    {
-      if (catalogue->Cat_Widget)
-        /* Le catalogue est a reconstruire completement */
-        TtaDestroyDialogue (ref);
-      /*======================================> Recherche le catalogue parent */
-      parentCatalogue = CatEntry (ref_parent);
-      /*__________________________________ Le catalogue parent n'existe pas __*/
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return NULL;
-        }
-      else if (parentCatalogue->Cat_Widget == 0)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return NULL;
-        }
-      /*_________________________________________ Sous-menu d'un formulaire __*/
-      else if (parentCatalogue->Cat_Type != CAT_FORM
-               && parentCatalogue->Cat_Type != CAT_SHEET
-               && parentCatalogue->Cat_Type != CAT_DIALOG)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return NULL;
-        }
-      /* Recupere le widget parent */
-      w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-      /* this is necessary for getting the key release anywhere on the widget,
-         even if the pointer is elsewhere */
-      if (parentCatalogue && parentCatalogue->Cat_Widget)
-        gtk_widget_add_events (GTK_WIDGET(parentCatalogue->Cat_Widget), 
-                               GDK_KEY_RELEASE_MASK);
-      if (label)
-        {
-          tmpw = gtk_label_new (label);
-          gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
-          tmpw->style->font=DefaultFont;
-          gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
-          gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
-          gtk_widget_set_name (tmpw, "Dialogue");
-        }
-       
-      /* add some tree stuff here */
-      {
-        GtkWidget *scrolled_window;
-	 
-        scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-        gtk_scrolled_window_set_policy
-          (GTK_SCROLLED_WINDOW(scrolled_window),
-           GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-        gtk_box_pack_start (GTK_BOX(w), scrolled_window,
-                            TRUE, TRUE, 0);
-        /*
-          How to say this?
-          GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scrolled_window), GTK_CAN_FOCUS);
-        */
-        w = scrolled_window;
-        /* make it at least 6 lines high and 15 chars long */
-        width = 1;
-        /* width =  150 * (gdk_char_width (DialogFont, 'm')); */
-        height = 10 * (gdk_char_height (DialogFont, 'M'));
-        gtk_widget_set_usize (GTK_WIDGET(w), width, height);
-        gtk_widget_show (w);
-
-        tree = gtk_ctree_new (1, 0);
-        gtk_clist_set_selection_mode (GTK_CLIST(tree),
-                                      (multiple) ? GTK_SELECTION_MULTIPLE :
-                                      GTK_SELECTION_SINGLE);
-        /* set  all the extra events we want */
-        if (multiple)
-          {
-            gtk_object_set_data (GTK_OBJECT(tree), "multiple", (gpointer) 1);
-            gtk_widget_add_events (GTK_WIDGET(tree), GDK_KEY_RELEASE_MASK);
-            ConnectSignalGTK (GTK_OBJECT (tree),  "key_press_event",
-                              GTK_SIGNAL_FUNC (TreeItemKeyPress), (gpointer) TRUE);
-            ConnectSignalGTK (GTK_OBJECT (tree),  "key_release_event",
-                              GTK_SIGNAL_FUNC (TreeItemKeyPress), (gpointer) FALSE);
-            ConnectSignalAfterGTK (GTK_OBJECT (tree),  "focus_in_event",
-                                   GTK_SIGNAL_FUNC (TreeFocus), (gpointer) TRUE);
-            ConnectSignalAfterGTK (GTK_OBJECT (tree),  "focus_out_event",
-                                   GTK_SIGNAL_FUNC (TreeFocus), (gpointer) FALSE);
-          }
-        ConnectSignalAfterGTK (GTK_OBJECT (tree), "tree_select_row",
-                               GTK_SIGNAL_FUNC (TreeItemSelect), (gpointer) TRUE);
-        ConnectSignalAfterGTK (GTK_OBJECT (tree), "tree_unselect_row",
-                               GTK_SIGNAL_FUNC (TreeItemSelect), (gpointer) FALSE);
-
-        /* make it be auto-sort, but I probably want to do this elsewhere  */
-        gtk_clist_set_sort_type (GTK_CLIST (tree), GTK_SORT_ASCENDING);
-        gtk_clist_set_auto_sort (GTK_CLIST (tree), TRUE);
-        gtk_container_add (GTK_CONTAINER (w), 
-                           GTK_WIDGET (tree));
-        gtk_widget_show (tree);
-      }	 
-      if (!parentCatalogue->Cat_Focus)
-        {
-          /* first entry in the form */
-          gtk_widget_grab_focus (GTK_WIDGET(tree));
-          parentCatalogue->Cat_Focus = TRUE;
-        }
-      catalogue->Cat_Widget = w;
-      catalogue->Cat_Ref = ref;
-      catalogue->Cat_Type = CAT_TREE;
-      catalogue->Cat_PtParent = parentCatalogue;
-      adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-      adbloc->E_Free[ent] = 'N';
-      catalogue->Cat_EntryParent = i;
-      catalogue->Cat_Entries = NULL;
-      /* memorize the callback */
-      gtk_object_set_data (GTK_OBJECT(tree),
-                           "cbf", 
-                           (gpointer) callback);
-    }
-#endif /* GTK */
-  return tree;
-}
-
-/*----------------------------------------------------------------------
-  TtaInitComboBox
-  Initializes the labels in a combo box.
-  The parameter w points to a combo box widget.
-  The parameter nb_items says how many items are in the list
-  The parametes item_labels gives the list of labels.
-  ----------------------------------------------------------------------*/
-void TtaInitComboBox (ThotWidget w, int nb_items, char *item_labels[])
-{
-#ifdef _GTK
-  int i;
-  GtkCombo  *combo;
-  GtkWidget *item;
-
-  if (!w || !GTK_IS_COMBO (w) || nb_items == 0 || !item_labels)
-    return;
-  
-  combo = GTK_COMBO (w);
-
-  /* clear the precedent list */
-  gtk_list_clear_items (GTK_LIST (combo->list), 0, -1);
-  /* make a new one */
-  /* initialize it */
-  for (i=0; i < nb_items; i++)
-    {
-      item = gtk_list_item_new_with_label (item_labels[i]);
-      gtk_widget_show (item);
-      gtk_container_add (GTK_CONTAINER (combo->list), item);
-    }
-#endif /* _GTK */
-}
-
-/*----------------------------------------------------------------------
-  TtaNewComboBox
-  The parameter ref gives the catalog reference
-  The parameter ref_parent gives the parents reference
-  The parameter label gives the form's label
-  The Parameter callback gives the callback function.
-  Returns the pointer of the widget that was created or NULL.
-  ----------------------------------------------------------------------*/
-ThotWidget TtaNewComboBox (int ref, int ref_parent, char *label,
-                           ThotBool react)
-{
-  ThotWidget          w = NULL;
-
-#ifdef _GTK
-  /* general stuff, move it up when adding win32 */
-  int                 i;
-  int                 ent;
-  int                 rebuilded;
-  struct E_List      *adbloc;
-  ThotWidget          tmpw;
-  struct Cat_Context *catalogue;
-  struct Cat_Context *parentCatalogue;
-  /* end of general info */
-
-  if (ref == 0)
-    {
-      TtaError (ERR_invalid_reference);
-      return NULL;
-    }
-
-  catalogue = CatEntry (ref);
-  rebuilded = 0;
-  if (catalogue == NULL)
-    {
-      TtaError (ERR_cannot_create_dialogue);
-      return NULL;
-    }
-  else if (catalogue->Cat_Widget && catalogue->Cat_Type == CAT_COMBOBOX)
-    {
-      /* Modification du catalogue */
-      w = catalogue->Cat_Widget;
-      gtk_widget_show_all (w);
-      if (label)
-        gtk_label_set_text (GTK_LABEL (w), label);	
-    }
-  else
-    {
-      if (catalogue->Cat_Widget)
-        /* Le catalogue est a reconstruire completement */
-        TtaDestroyDialogue (ref);
-      /*======================================> Recherche le catalogue parent */
-      parentCatalogue = CatEntry (ref_parent);
-      /*__________________________________ Le catalogue parent n'existe pas __*/
-      if (parentCatalogue == NULL)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return NULL;
-        }
-      else if (parentCatalogue->Cat_Widget == 0)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return NULL;
-        }
-      /*_________________________________________ Sous-menu d'un formulaire __*/
-      else if (parentCatalogue->Cat_Type != CAT_FORM
-               && parentCatalogue->Cat_Type != CAT_SHEET
-               && parentCatalogue->Cat_Type != CAT_DIALOG)
-        {
-          TtaError (ERR_invalid_parent_dialogue);
-          return NULL;
-        }
-      /* Recupere le widget parent */
-      w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-      /* this is necessary for getting the key release anywhere on the widget,
-         even if the pointer is elsewhere */
-      if (parentCatalogue && parentCatalogue->Cat_Widget)
-        gtk_widget_add_events (GTK_WIDGET(parentCatalogue->Cat_Widget), 
-                               GDK_KEY_RELEASE_MASK);
-      if (label)
-        {
-          tmpw = gtk_label_new (label);
-          gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
-          tmpw->style->font=DefaultFont;
-          gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
-          gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
-          gtk_widget_set_name (tmpw, "Dialogue");
-        }
-       
-      {
-        GtkCombo *combo;
-        combo = GTK_COMBO (gtk_combo_new ());
-
-        gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(combo),
-                            TRUE, TRUE, 0);
-
-        /* 
-        ** set up the behavior for the combo box 
-        */
-
-        /* use arrows to select entries */
-        gtk_combo_set_use_arrows (combo, TRUE);
-        gtk_combo_set_use_arrows_always (combo, TRUE);
-
-        /* use arrows to select entries */
-        gtk_combo_set_case_sensitive (combo, TRUE);
-        gtk_combo_set_value_in_list (combo, TRUE, FALSE);
-	 
-        gtk_widget_show (GTK_WIDGET (combo));
-
-        /* connect the signals we're interested in */
-        ConnectSignalGTK (GTK_OBJECT(combo->entry), "changed",
-                          GTK_SIGNAL_FUNC(ComboBoxGTK), (gpointer) catalogue);
-        w = GTK_WIDGET (combo);
-      }	 
-      if (!parentCatalogue->Cat_Focus)
-        {
-          /* first entry in the form */
-          gtk_widget_grab_focus (GTK_WIDGET(GTK_COMBO(w)->entry));
-          parentCatalogue->Cat_Focus = TRUE;
-        }
-      catalogue->Cat_Widget = w;
-      catalogue->Cat_Ref = ref;
-      catalogue->Cat_Type = CAT_COMBOBOX;
-      catalogue->Cat_PtParent = parentCatalogue;
-      catalogue->Cat_React = react;
-      adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-      adbloc->E_Free[ent] = 'N';
-      catalogue->Cat_EntryParent = i;
-      catalogue->Cat_Entries = NULL;
-    }
-#endif /* GTK */
-
-  return w;
 }
 
 /*----------------------------------------------------------------------
@@ -5512,7 +2302,7 @@ ThotWidget TtaNewComboBox (int ref, int ref_parent, char *label,
   ----------------------------------------------------------------------*/
 void TtaAbortShowDialogue ()
 {
-#if defined(_WX)
+#ifdef _WX
   if (ShowReturn == 1)
     {
       /* Debloque l'attente courante */
@@ -5524,32 +2314,6 @@ void TtaAbortShowDialogue ()
         }
     }
 #endif /* _WX */
-
-#if defined(_GTK)
-  if (ShowReturn == 1)
-    {
-      /* Debloque l'attente courante */
-      ShowReturn = 0;
-      /* Invalide le menu ou formulaire courant */
-      if (ShowCat  && ShowCat->Cat_Widget)
-        {
-          if (GTK_WIDGET_VISIBLE(ShowCat->Cat_Widget))
-            {
-              /* Traitement particulier des formulaires */
-              if (ShowCat->Cat_Type == CAT_FORM
-                  || ShowCat->Cat_Type == CAT_SHEET
-                  || ShowCat->Cat_Type == CAT_DIALOG)
-                {
-                  if (ShowCat->Cat_Widget->parent)
-                    gtk_widget_hide (GTK_WIDGET(ShowCat->Cat_Widget->parent));
-                  CallSheetGTK (None, ShowCat);
-                }
-              else
-                gtk_widget_hide (GTK_WIDGET(ShowCat->Cat_Widget));
-            }
-        }
-    }
-#endif /* #if defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -5615,17 +2379,19 @@ void TtaShowDialogue (int ref, ThotBool remanent, ThotBool move)
               ShowCat = catalogue;
             }
 	  
-          wxPoint pos = wxGetMousePosition();
-          wxDisplaySize(&display_width_px, &display_height_px);
-          catalogue->Cat_Widget->GetSize (&width, &height);
-          if (pos.x + width > display_width_px)
-            pos.x = display_width_px - width;
-          if (pos.y + height > display_height_px)
-            pos.x = display_height_px - height;
-	  if (move)
-	    {
-	      catalogue->Cat_Widget->Move(pos);
-	    }
+	      if (move)
+		  {
+            wxPoint pos = wxGetMousePosition();
+            wxDisplaySize(&display_width_px, &display_height_px);
+            catalogue->Cat_Widget->GetSize (&width, &height);
+            if (pos.x + width > display_width_px)
+              pos.x = display_width_px - width;
+            if (pos.y + height > display_height_px)
+              pos.x = display_height_px - height;
+			pos.x -= 4;
+			pos.y -= 4;
+	        catalogue->Cat_Widget->Move(pos);
+		  } 
           catalogue->Cat_Widget->Show();
           catalogue->Cat_Widget->Raise();
         }
@@ -5692,9 +2458,9 @@ void TtaWaitShowProcDialogue ()
       DispatchMessage (&event);
     }
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
   TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) | _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -5710,14 +2476,14 @@ void TtaWaitShowDialogue ()
   TranslateMessage (&event);
   DispatchMessage (&event);
 #endif  /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
   /* a TtaWaitShowDialogue pending */
   CurrentWait = 1;
   while (ShowReturn == 1)
     TtaHandleOneEvent (&event);
   /* Fin de l'attente */
   CurrentWait = 0;
-#endif /* _GTK || _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

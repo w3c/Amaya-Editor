@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 2000-2008
+ *  (c) COPYRIGHT MIT and INRIA, 2000-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -80,158 +80,6 @@ typedef struct _typeSelector
   RDFResourceP type;
 } TypeSelector;
 
-#ifdef _GTK
-/*----------------------------------------------------------------------
-  CustomQueryCallbackDialog
-  callback of the annot custom query menu
-  ----------------------------------------------------------------------*/
-static void CustomQueryCallbackDialog (int ref, int typedata, char *data)
-{
-  long int                 val;
-
-  if (ref == -1)
-    {
-      /* removes the custom query menu */
-      TtaDestroyDialogue (CustomQueryBase + CustomQueryMenu);
-    }
-  else
-    {
-      /* has the user changed the options? */
-      val = (long int) data;
-      switch (ref - CustomQueryBase)
-        {
-        case CustomQueryMenu:
-          switch (val) 
-            {
-            case 0:
-              TtaDestroyDialogue (ref);
-              break;
-            case 1:
-              /* apply */
-              SetAnnotCustomQuery (CustomQueryFlag);
-              SetAnnotAlgaeText (AlgaeText);
-              TtaFreeMemory (AlgaeText);
-              TtaDestroyDialogue (ref);
-              break;
-            case 2:
-              /* get default */
-              CustomQueryFlag = FALSE;
-              TtaFreeMemory (AlgaeText);
-              AlgaeText = NULL;
-              TtaSetTextForm (CustomQueryBase + mFreeText, "");
-              TtaSetMenuForm (CustomQueryBase + mExpertMode, 0);
-              break;
-
-            default:
-              break;
-            }
-          break;
-
-        case mUser1 :
-          break;
-	
-        case mUser2 :
-          break;
-
-        case mBtime :
-          break;
-
-        case mEtime :
-          break;
-
-        case mExpertMode :
-          if (val == 0)
-            CustomQueryFlag = FALSE;
-          else
-            CustomQueryFlag = TRUE;
-          break;
-
-        case mFreeText :
-          if (data)
-            AlgaeText = TtaStrdup (data);
-          else
-            {
-              TtaFreeMemory (AlgaeText);
-              AlgaeText = NULL;
-            }
-          break;
-	  
-        default:
-          break;
-        }
-    }
-}
-#endif /* _GTK */
-
-/*----------------------------------------------------------------------
-  CustomQueryMenuInit
-  Build and display the Query Menu dialog box and prepare for input.
-  ----------------------------------------------------------------------*/
-void CustomQueryMenuInit (Document document, View view)
-{
-#ifdef _GTK
-  int              i;
-  char          *ptr;
-
-  /* initialize the base if it hasn't yet been done */
-  if (!CustomQueryBase)
-    CustomQueryBase = TtaSetCallback ((Proc)CustomQueryCallbackDialog, 
-                                      MAX_QUERYCONFMENU_DLG);
-
-  /* Create the dialogue form */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-
-  TtaNewSheet (CustomQueryBase + CustomQueryMenu,
-               TtaGetViewFrame (document, view),
-               "Query Customization Menu",
-               2, s, FALSE, 10, 'L', D_DONE);
-
-  /* create the radio buttons for choosing a selector */
-  i = 0;
-  strcpy (&s[i], "BUse standard query");
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], "BUse free algae query with the following text");
-
-  TtaNewSubmenu (CustomQueryBase + mExpertMode,
-                 CustomQueryBase + CustomQueryMenu,
-                 0,
-                 "Query type",
-                 2,
-                 s,
-                 NULL,
-                 0,
-                 TRUE);
-  TtaNewTextForm (CustomQueryBase + mFreeText,
-                  CustomQueryBase + CustomQueryMenu,
-                  "(%u stands for the URL of the document that's being browsed)",
-                  70,
-                  5,
-                  TRUE);
-
-  /* initialize the menu */
-  ptr = GetAnnotAlgaeText ();
-  if (ptr)
-    {
-      AlgaeText = TtaStrdup (ptr);
-      TtaSetTextForm (CustomQueryBase + mFreeText, AlgaeText);
-    }
-  else
-    AlgaeText = NULL;
-   
-  CustomQueryFlag = GetAnnotCustomQuery ();
-  TtaSetMenuForm (CustomQueryBase + mExpertMode, (CustomQueryFlag) ? 1 : 0);
-
-  /* display the menu */
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (CustomQueryBase + CustomQueryMenu, TRUE, TRUE);
-#else /* _GTK */
-  /* function not implemented yet */
-  InitInfo ("", TtaGetMessage(LIB, TMSG_NOT_AVAILABLE));
-#endif /* _GTK */
-}
 
 /**************************************************
  ** 
@@ -345,14 +193,6 @@ static void BuildAnnotFilterSelector (Document doc, SelType selector)
   TtaNewScrollPopup (AnnotFilterBase + AnnotFilterMenu, TtaGetViewFrame (doc, 1),
                      NULL, nb_entries, s, NULL, FALSE, 'L');
 #endif /* _WX */
-#ifdef _GTK
-  /* Fill in the form  */
-  TtaNewSelector (AnnotFilterBase + mFilterSelector, 
-                  AnnotFilterBase + AnnotFilterMenu,
-                  NULL,
-                  nb_entries, s, 5,
-                  NULL, TRUE, TRUE);
-#endif /* _GTK */
 }
 
 /*---------------------------------------------------------------
@@ -527,9 +367,6 @@ static void ChangeAnnotVisibility (Document doc, SelType selector,
     AnnotSelItem[0] = ' ';
   else
     AnnotSelItem[0] = ' ';
-#ifndef _WINGUI
-  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, AnnotSelItem);
-#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -624,9 +461,6 @@ static void DocAnnotVisibility (Document document, View view, ThotBool show)
   BuildAnnotFilterSelector (document, AnnotSelType);
   /* and clear the selector text */
   AnnotSelItem[0] = EOS;
-#ifndef _WINGUI
-  TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
-#endif /* !_WINGUI */
 }
 
 #ifdef _WINGUI
@@ -839,7 +673,6 @@ static void AnnotFilterCallbackDialog (int ref, int typedata, char * data)
               AnnotSelType = (SelType) val;
               AnnotSelItem[0] = EOS;
               BuildAnnotFilterSelector (AnnotFilterDoc, (SelType)val);
-              TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
             }
           break;
 
@@ -882,58 +715,11 @@ void AnnotFilter (Document document, View view)
 
   /* Create the dialogue form */
 #ifndef _WINGUI
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_HIDE));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_SHOW_ALL));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_HIDE_ALL));
-
-  TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
-               TtaGetViewFrame (document, view),
-               TtaGetMessage (AMAYA, AM_AFILTER), 4, s, TRUE, 2, 'L', 
-               D_DONE);
-  
-  /* an empty text */
-  TtaNewLabel (AnnotFilterBase + mAnnotFilterEmpty1,
-               AnnotFilterBase + AnnotFilterMenu,
-               "                 ");
-
-  /* the * = filter message */
-  TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
-               AnnotFilterBase + AnnotFilterMenu,
-               TtaGetMessage (AMAYA, AM_AFILTER_HELP));
-	       
-  /* create the radio buttons for choosing a selector */
-  s[0] = 'B';
-  i = 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYAUTHOR));
-  i += strlen (&s[i]) + 1;
-  s[i] = 'B';
-  i++;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYTYPE));
-  i += strlen (&s[i]) + 1;
-  s[i] = 'B';
-  i++;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYSERVER));
-
-  TtaNewSubmenu (AnnotFilterBase + mSelectFilter, 
-                 AnnotFilterBase + AnnotFilterMenu,
-                 0,
-                 TtaGetMessage (AMAYA, AM_AFILTER_OPTIONS),
-                 3,
-                 s,
-                 NULL,
-                 0,
-                 TRUE);
 
   /* display the selectors */
   BuildAnnotFilterSelector (document, BY_AUTHOR);
 
   /* choose the BY_AUTHOR radio button */
-  TtaSetMenuForm (AnnotFilterBase + mSelectFilter, 0);
 #endif /* !_WINGUI */
 
   /* display the menu */

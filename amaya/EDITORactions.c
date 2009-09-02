@@ -6242,63 +6242,8 @@ void ReplyToAnnotation (Document doc, View view)
 void CustomQuery (Document doc, View view)
 {
 #ifdef ANNOTATIONS
-  CustomQueryMenuInit (doc, view);
+  //CustomQueryMenuInit (doc, view);
 #endif /* ANNOTATIONS */
-}
-
-/*----------------------------------------------------------------------
-  BookmarkFile
-  Bookmarks a file
-  ----------------------------------------------------------------------*/
-void BookmarkFile (Document doc, View view)
-{
-#ifdef BOOKMARKS
-  BM_CreateBM (doc, view);
-#endif /* BOOKMARKS */
-}
-
-/*----------------------------------------------------------------------
-  EditTopics
-  Edit Bookmark Topics
-  ----------------------------------------------------------------------*/
-void EditTopics (Document doc, View view)
-{
-#ifdef BOOKMARKS
-  BM_CreateTopic (doc, view);
-#endif /* BOOKMARKS */
-}
-
-/*----------------------------------------------------------------------
-  AddSeparator
-  Edit Bookmark Topics
-  ----------------------------------------------------------------------*/
-void AddSeparator (Document doc, View view)
-{
-#ifdef BOOKMARKS
-  BM_CreateSeparator (doc, view);
-#endif /* BOOKMARKS */
-}
-
-/*----------------------------------------------------------------------
-  ViewBookmarks
-  Opens the Amaya bookmarks window
-  ----------------------------------------------------------------------*/
-void ViewBookmarks (Document doc, View view)
-{
-#ifdef BOOKMARKS
-  BM_ViewBookmarks (0, 0, FALSE);
-#endif /* BOOKMARKS */
-}
-
-/*----------------------------------------------------------------------
-  MoveItem
-  Moves a previously copied bookmark item in the bookmark view
-  ----------------------------------------------------------------------*/
-void MoveItem (Document doc, View view)
-{
-#ifdef BOOKMARKS
-  BM_MoveHandler (doc, view);
-#endif /* BOOKMARKS */
 }
 
 /*------------ Begin: WebDAV Modifications by Manuele Kirsch -----------*/

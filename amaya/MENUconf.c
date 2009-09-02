@@ -567,9 +567,6 @@ static void ValidateCacheConf (void)
 #else /* _WINDOWS */
   change += NormalizeDirName (GProp_Cache.CacheDirectory, "/libwww-cache");
 #endif /* _WINDOWS */
-
-  if (change)
-  TtaSetTextForm (CacheBase + mCacheDirectory, GProp_Cache.CacheDirectory);
 }
 
 /*----------------------------------------------------------------------
@@ -705,66 +702,6 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
     }
 }
 
-/*----------------------------------------------------------------------
-  CacheConfMenu
-  Build and display the Conf Menu dialog box and prepare for input.
-  ----------------------------------------------------------------------*/
-void CacheConfMenu (Document document, View view)
-{
-  int              i;
-
-  /* Create the dialogue form */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_FLUSH_CACHE_BUTTON));
-  TtaNewSheet (CacheBase + CacheMenu, 
-               TtaGetViewFrame (document, view),
-               TtaGetMessage (AMAYA, AM_CACHE_MENU),
-               3, s, FALSE, 6, 'L', D_DONE);
-
-  sprintf (s, "B%s%cB%s%cB%s%cB%s",
-           TtaGetMessage (AMAYA, AM_ENABLE_CACHE), EOS, 
-           TtaGetMessage (AMAYA, AM_CACHE_PROT_DOCS), EOS,
-           TtaGetMessage (AMAYA, AM_DISCONNECTED_MODE), EOS,
-           TtaGetMessage (AMAYA, AM_IGNORE_EXPIRES));
-  TtaNewToggleMenu (CacheBase + mCacheOptions,
-                    CacheBase + CacheMenu,
-                    NULL,
-                    4,
-                    s,
-                    NULL,
-                    TRUE);
-  TtaNewTextForm (CacheBase + mCacheDirectory,
-                  CacheBase + CacheMenu,
-                  TtaGetMessage (AMAYA, AM_CACHE_DIR),
-                  40,
-                  1,
-                  TRUE);
-  TtaNewNumberForm (CacheBase + mCacheSize,
-                    CacheBase + CacheMenu,
-                    TtaGetMessage (AMAYA, AM_CACHE_SIZE),
-                    1,
-                    100,
-                    TRUE);
-  TtaNewNumberForm (CacheBase + mMaxCacheFile,
-                    CacheBase + CacheMenu,
-                    TtaGetMessage (AMAYA, AM_CACHE_ENTRY_SIZE),
-                    1,
-                    5,
-                    TRUE);
-
-  /* reset the modified flag */
-  CacheStatus = 0;
-  /* load and display the current values */
-  GetCacheConf ();
-  /* display the menu */
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (CacheBase + CacheMenu, TRUE, TRUE);
-}
-
 
 /*********************
  ** Proxy configuration menu
@@ -809,18 +746,6 @@ static void GetDefaultProxyConf ()
                        &(GProp_Proxy.ProxyDomainIsOnlyProxy));
 }
 
-/*----------------------------------------------------------------------
-  RefreshProxyMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-static void RefreshProxyMenu ()
-{
-  /* set the menu entries to the current values */
-  TtaSetTextForm (ProxyBase + mHttpProxy, GProp_Proxy.HttpProxy);
-  TtaSetTextForm (ProxyBase + mProxyDomain, GProp_Proxy.ProxyDomain);
-  TtaSetMenuForm (ProxyBase + mToggleProxy,GProp_Proxy. ProxyDomainIsOnlyProxy);
-}
-
 
 /*----------------------------------------------------------------------
   ProxyCallbackDialog
@@ -855,7 +780,6 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
               break;
             case 2:
               GetDefaultProxyConf ();
-              RefreshProxyMenu ();
               /* always signal this as modified */
               ProxyStatus |= AMAYA_PROXY_RESTART;
               break;
@@ -897,63 +821,6 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
           break;
         }
     }
-}
-
-
-/*----------------------------------------------------------------------
-  ProxyConfMenu
-  Build and display the Conf Menu dialog box and prepare for input.
-  ----------------------------------------------------------------------*/
-void         ProxyConfMenu (Document document, View view)
-{
-  int              i;
-
-  /* Create the dialogue form */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-
-  TtaNewSheet (ProxyBase + ProxyMenu, 
-               TtaGetViewFrame (document, view),
-               TtaGetMessage (AMAYA, AM_PROXY_MENU),
-               2, s, FALSE, 6, 'L', D_DONE);
-
-  TtaNewTextForm (ProxyBase + mHttpProxy,
-                  ProxyBase + ProxyMenu,
-                  TtaGetMessage (AMAYA, AM_HTTP_PROXY),
-                  20,
-                  1,
-                  TRUE);
-  TtaNewTextForm (ProxyBase + mProxyDomain,
-                  ProxyBase + ProxyMenu,
-                  TtaGetMessage (AMAYA, AM_PROXY_DOMAIN),
-                  20,
-                  1,
-                  TRUE);
-  TtaNewLabel (GeneralBase + mProxyDomainInfo, ProxyBase + ProxyMenu,
-               TtaGetMessage (AMAYA, AM_PROXY_DOMAIN_INFO));
-  sprintf (s, "T%s%cT%s", 
-           TtaGetMessage (AMAYA, AM_DONT_PROXY_DOMAIN), EOS,
-           TtaGetMessage (AMAYA, AM_ONLY_PROXY_DOMAIN));
-  TtaNewSubmenu (ProxyBase + mToggleProxy,
-                 ProxyBase + ProxyMenu,
-                 0,
-                 NULL,
-                 2,
-                 s,
-                 NULL,
-                 0 /* no maxlength */,
-                 TRUE);
-
-  /* reset the modified flag */
-  ProxyStatus = 0;
-  /* load and display the current values */
-  GetProxyConf ();
-  RefreshProxyMenu ();
-  /* display the menu */
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (ProxyBase + ProxyMenu, TRUE, TRUE);
 }
 
 
@@ -1047,8 +914,6 @@ void ValidateGeneralConf (void)
       GetDefEnvString ("LANG", &(GProp_General.DialogueLang[0]));
       change++;
     }
-  if (change)
-    TtaSetTextForm (GeneralBase + mDialogueLang, GProp_General.DialogueLang);
 }
 
 /*----------------------------------------------------------------------
@@ -1421,13 +1286,6 @@ static void BuildCharsetSelector (void)
   /* Set the default charset to utf-8 if it doesn't exist */
   if (CurrentCharset == -1)
     CurrentCharset = i_default;
-
-  /* Fill in the charset form  */
-  TtaNewSizedSelector (PublishBase + mCharsetSelector, PublishBase + PublishMenu,
-                       TtaGetMessage (AMAYA, AM_DEFAULT_CHARSET), nbcharset,
-                       ((i < 2) ? (char *)"" : BufMenu), 3, 2, NULL, FALSE, FALSE);
-  if (nbcharset)
-    TtaSetSelector (PublishBase + mCharsetSelector, CurrentCharset, NULL);
   strcpy (NewCharset, GProp_Publish.CharsetType);
 }
 
@@ -1519,60 +1377,6 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
           break;
         }
     }
-}
-
-/*----------------------------------------------------------------------
-  PublishConfMenu
-  Build and display the Browsing Editing conf Menu dialog box and prepare 
-  for input.
-  ----------------------------------------------------------------------*/
-void PublishConfMenu (Document document, View view)
-{
-  int              i;
-
-  /* Create the dialogue form */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-
-  TtaNewSheet (PublishBase + PublishMenu, 
-               TtaGetViewFrame (document, view),
-               TtaGetMessage (AMAYA, AM_PUBLISH_MENU),
-               2, s, FALSE, 11, 'L', D_DONE);
-  sprintf (s, "B%s%cB%s%cB%s", 
-           TtaGetMessage (AMAYA, AM_USE_XHTML_MIMETYPE), EOS,
-           TtaGetMessage (AMAYA, AM_USE_ETAGS), EOS, 
-           TtaGetMessage (AMAYA, AM_VERIFY_PUT));
-  /* load the current values */
-  GetPublishConf ();
-  /* Build the charset selector */
-  BuildCharsetSelector ();
-  TtaNewToggleMenu (PublishBase + mTogglePublish,
-                    PublishBase + PublishMenu,
-                    NULL,
-                    3,
-                    s,
-                    NULL,
-                    FALSE);
-  TtaNewTextForm (PublishBase + mDefaultName,
-                  PublishBase + PublishMenu,
-                  TtaGetMessage (AMAYA, AM_DEFAULT_NAME),
-                  20,
-                  1,
-                  FALSE);
-  TtaNewTextForm (PublishBase + mSafePutRedirect,
-                  PublishBase + PublishMenu,
-                  TtaGetMessage (AMAYA, AM_SAFE_PUT_REDIRECT),
-                  20,
-                  1,
-                  FALSE);
-  /* reset the modified flag */
-  SafePutStatus = 0;
-
-  /* display the menu */
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (PublishBase + PublishMenu, TRUE, TRUE);
 }
 
 /**********************
@@ -1932,19 +1736,6 @@ static void SetColorConf (void)
   TtaUpdateEditorColors ();
 }
 
-/*----------------------------------------------------------------------
-  RefreshColorMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-static void RefreshColorMenu ()
-{
-  TtaSetTextForm (ColorBase + mFgColor, GProp_Color.FgColor);
-  TtaSetTextForm (ColorBase + mBgColor, GProp_Color.BgColor);
-  TtaSetTextForm (ColorBase + mBgSelColor, GProp_Color.BgSelColor);
-  TtaSetTextForm (ColorBase + mFgSelColor, GProp_Color.FgSelColor);
-  TtaSetTextForm (ColorBase + mMenuFgColor, GProp_Color.MenuFgColor);
-  TtaSetTextForm (ColorBase + mMenuBgColor, GProp_Color.MenuBgColor);
-}
 
 /*----------------------------------------------------------------------
   callback of the color configuration menu
@@ -1975,7 +1766,6 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
               break;
             case 2:
               GetDefaultColorConf ();
-              RefreshColorMenu ();
               break;
             default:
               break;
@@ -1985,75 +1775,6 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
           break;
         }
     }
-}
-
-/*----------------------------------------------------------------------
-  ColorConfMenu
-  Build and display the Conf Menu dialog box and prepare for input.
-  ----------------------------------------------------------------------*/
-void         ColorConfMenu (Document document, View view)
-{
-  int              i;
-
-  /* Create the dialogue form */
-  i = 0;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-  i += strlen (&s[i]) + 1;
-  strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-
-  TtaNewSheet (ColorBase + ColorMenu, 
-               TtaGetViewFrame (document, view),
-               TtaGetMessage (LIB, TMSG_COLORS),
-               2, s, TRUE, 2, 'L', D_DONE);
-  /* first col */
-  TtaNewTextForm (ColorBase + mFgColor,
-                  ColorBase + ColorMenu,
-                  TtaGetMessage (AMAYA, AM_DOC_FG_COLOR),
-                  25,
-                  1,
-                  FALSE);   
-  TtaNewTextForm (ColorBase + mBgColor,
-                  ColorBase + ColorMenu,
-                  TtaGetMessage (AMAYA, AM_DOC_BG_COLOR),
-                  25,
-                  1,
-                  FALSE);   
-  /* second col */
-  TtaNewTextForm (ColorBase + mFgSelColor,
-                  ColorBase + ColorMenu,
-                  TtaGetMessage (AMAYA, AM_FG_SEL_COLOR),
-                  25,
-                  1,
-                  FALSE);   
-  TtaNewTextForm (ColorBase + mBgSelColor,
-                  ColorBase + ColorMenu,
-                  TtaGetMessage (AMAYA, AM_BG_SEL_COLOR),
-                  25,
-                  1,
-                  FALSE);   
-  /* third col */
-  TtaNewTextForm (ColorBase + mMenuFgColor,
-                  ColorBase + ColorMenu,
-                  TtaGetMessage (AMAYA, AM_MENU_FG_COLOR),
-                  25,
-                  1,
-                  FALSE);   
-  TtaNewTextForm (ColorBase + mMenuBgColor,
-                  ColorBase + ColorMenu,
-                  TtaGetMessage (AMAYA, AM_MENU_BG_COLOR),
-                  25,
-                  1,
-                  FALSE);
-
-  TtaNewLabel (ColorBase + mColorEmpty1, ColorBase + ColorMenu,
-               TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE));
- 
-  /* load and display the current values */
-  GetColorConf ();
-  RefreshColorMenu ();
-  /* display the menu */
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (ColorBase + ColorMenu, TRUE, TRUE);
 }
 
 
