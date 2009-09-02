@@ -1566,7 +1566,19 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
           else if (elType.ElTypeNum == HTML_EL_SCRIPT_)
             attrType.AttrTypeNum = HTML_ATTR_script_src;
           else
+		  {
+            /* The anchor element must have an HREF attribute */
+            /* create an attribute PseudoClass = link */
+            attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+            attr = TtaGetAttribute (element, attrType);
+            if (attr == NULL)
+			{
+                attr = TtaNewAttribute (attrType);
+                TtaAttachAttribute (element, attr, doc);
+			}
+            TtaSetAttributeText (attr, "link", element, doc);
             attrType.AttrTypeNum = HTML_ATTR_HREF_;
+		  }
         }
 #ifdef _SVG
       else if (isSVG)
@@ -2103,7 +2115,6 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
         }
       if (created)
         {
-          TtaSetDialoguePosition ();
           TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE, TRUE);
         }
 #endif /* _WX */
@@ -2658,21 +2669,6 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
       else
         /* Select the destination */
         SelectDestination (doc, anchor, FALSE, FALSE);
-      /* The anchor element must have an HREF attribute */
-      /* create an attribute PseudoClass = link */
-      s = TtaGetSSchemaName (elType.ElSSchema);	  
-      if (!strcmp (s, "HTML"))
-        {
-          attrType.AttrSSchema = elType.ElSSchema;
-          attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-          attr = TtaGetAttribute (anchor, attrType);
-          if (attr == NULL)
-            {
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (anchor, attr, doc);
-            }
-          TtaSetAttributeText (attr, "link", anchor, doc);
-        }
     }
   TtaCloseUndoSequence (doc);
 }
