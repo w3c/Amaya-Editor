@@ -1782,7 +1782,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 #ifdef TEMPLATES
   Document       doc = event->document;
   Element        el = event->element;
-  Element        xtEl, parent = NULL, sibling;
+  Element        xtEl, parent = NULL, sibling, next, child;
   ElementType    xtType, elType;
   SSchema        templateSSchema;
   XTigerTemplate t;
@@ -1810,6 +1810,29 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
       sibling = TtaGetFirstChild (el);
       xtEl = el;
       TtaOpenUndoSequence (doc, el, el, 0, 0);
+      if (elType.ElTypeNum == Template_EL_repeat)
+        {
+          // keep the first item
+          elType = TtaGetElementType (sibling);          
+          if (elType.ElTypeNum == Template_EL_useSimple)
+            {
+              // replace it by an empty use element
+              child = TtaGetFirstChild (sibling);
+              do
+                {
+                  next = child;
+                  TtaNextSibling (&next);
+                  TtaRegisterElementDelete(child, doc);
+                  TtaDeleteTree (child, doc);
+                  child = next;
+                }
+              while (next);
+              child = Template_FillEmpty (sibling, doc);
+              TtaChangeTypeOfElement (sibling, doc, Template_EL_useEl);
+              TtaRegisterElementTypeChange (sibling, Template_EL_useSimple, doc);
+            }
+          TtaNextSibling (&sibling);
+        }
       while (sibling)
         {
           el = sibling;
@@ -1817,7 +1840,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
           TtaRegisterElementDelete (el, doc);
           TtaDeleteTree (el, doc);
         }
-      if (elType.ElTypeNum == Template_EL_repeat)
+      if (xtType.ElTypeNum == Template_EL_repeat)
         {
           // regenerate the minimum of instances
           parent = GetParentLine (xtEl, templateSSchema);
@@ -1858,22 +1881,52 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
                 return TRUE; // cannot delete
             }
 
+          TtaOpenUndoSequence (doc, el, el, 0, 0);
           xtEl = TtaGetParent (el);
           xtType = TtaGetElementType (xtEl);
           if (xtType.ElSSchema == templateSSchema &&
-              (xtType.ElTypeNum == Template_EL_repeat ||
-               xtType.ElTypeNum == Template_EL_bag))
+              xtType.ElTypeNum == Template_EL_repeat)
+            {
+              // check if the repeat becomes empty
+              elType = TtaGetElementType (el);
+              sibling = el;
+              TtaNextSibling (&sibling);
+              if (sibling == NULL)
+                {
+                  // there is no next element
+                  sibling = el;
+                  TtaPreviousSibling (&sibling);
+                }
+              if (sibling)
+                {
+                  // delete the use within a bag or a repeat
+                  TtaRegisterElementDelete (el, doc);
+                  TtaDeleteTree (el, doc);
+                }
+              else if (elType.ElTypeNum == Template_EL_useSimple)
+                {
+                  // keep an empty use element
+                  child = TtaGetFirstChild (el);
+                  do
+                    {
+                      next = child;
+                      TtaNextSibling (&next);
+                      TtaRegisterElementDelete(child, doc);
+                      TtaDeleteTree (child, doc);
+                      child = next;
+                    }
+                  while (next);
+                  child = Template_FillEmpty (el, doc);
+                  TtaChangeTypeOfElement (el, doc, Template_EL_useEl);
+                  TtaRegisterElementTypeChange (el, Template_EL_useSimple, doc);
+                }
+            }
+          else if (xtType.ElSSchema == templateSSchema &&
+                   xtType.ElTypeNum == Template_EL_bag)
             {
               // delete the use within a bag or a repeat
-              TtaOpenUndoSequence (doc, el, el, 0, 0);
               TtaRegisterElementDelete (el, doc);
               TtaDeleteTree (el, doc);
-            }
-          if (xtType.ElTypeNum == Template_EL_repeat)
-            {
-              // regenerate the minimum of instances
-              parent = GetParentLine (xtEl, templateSSchema);
-              InstantiateRepeat (t, xtEl, doc, parent, TRUE);
             }
           TtaCloseUndoSequence (doc);
           TtaSelectElement (doc, xtEl);

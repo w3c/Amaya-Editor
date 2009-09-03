@@ -1367,6 +1367,10 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
 
   //We must have minOccurs children
   child = TtaGetFirstChild (el);
+  if (!child)
+    //Error : a repeat must have at least one child which will be the model
+    return;
+  
   for (childrenCount = 0; child; TtaNextSibling(&child))
     //TODO : Check that every child is valid
     childrenCount ++;
@@ -1374,6 +1378,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
   if (childrenCount > maxVal)
     //Error : too many children!
     return;  
+
 
   if (parentLine)
     // display the element in line
