@@ -1,10 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
 /*
  * Initialization functions and button functions of Amaya application.
  *
@@ -55,7 +55,7 @@ static struct _SubDoc  *SubDocs = NULL;
 static char             PSfile[MAX_PATH];
 static char             PPrinter[MAX_PATH];
 static char            *DocPrintURL;
-static Document		      DocPrint;
+static Document		DocPrint;
 static int              PaperPrint;
 static int              ManualFeed = PP_OFF;
 static int              Orientation;
@@ -99,7 +99,6 @@ void  RedisplayDocument(Document doc, View view)
   TtaShowElement (doc, view, el, distance);
 }
 
-
 /*----------------------------------------------------------------------
   RegisterSubDoc adds a new entry in SubDoc table.
   ----------------------------------------------------------------------*/
@@ -125,7 +124,6 @@ static void RegisterSubDoc (Element el, char *url)
       last->SDnext = entry;
     }
 }
-
 
 /*----------------------------------------------------------------------
   SearchSubDoc searches whether a document name is registered or not
@@ -173,7 +171,6 @@ static void FreeSubDocTable ()
     }
   SubDocs = NULL;
 }
-
 
 /*----------------------------------------------------------------------
   SetInternalLinks
@@ -1119,7 +1116,6 @@ static Element MoveDocumentBody (Element el, Document destDoc,
   return (div);
 }
 
-
 /*----------------------------------------------------------------------
   CloseMakeBook
   ----------------------------------------------------------------------*/
@@ -1136,7 +1132,6 @@ static void CloseMakeBook (Document document)
   DocBook = 0;
   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 }
-
 
 /*----------------------------------------------------------------------
   GetIncludedDocuments_callback finishes the GetIncludedDocuments procedure
@@ -1313,7 +1308,6 @@ static ThotBool GetIncludedDocuments (Element el, Element link,
     }
   return (found);
 }
-
 
 /*----------------------------------------------------------------------
   MakeBook
@@ -1510,24 +1504,20 @@ void ReadAsSHIFT_JIS (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  SectionNumbering generates numbers for all HTML Hi elements after
+  SectionNumbering generates numbers for all HTML H* elements after
   the current position.
   ----------------------------------------------------------------------*/
 void SectionNumbering (Document doc, View view)
 {
-  Element             el, new_, child;
+  Element             root, el, new_, child;
   DisplayMode         dispMode;
   SSchema             HTMLschema;
   ElementType         elType, childType, searchedType1, searchedType2;
   ElementType         searchedType3, searchedType4, searchedType5;
   Language            lang;
   char                s[MAX_LENGTH], n[20], *text;
-  int                 nH2, nH3, nH4, nH5, nH6, length, i;
-  ThotBool            closeUndo, change = FALSE;
-
-  /* check if there is HTML Hi elements and if the current position is
-     within a HTML Body element */
-  dispMode = TtaGetDisplayMode (doc);
+  int                 nH1, nH2, nH3, nH4, nH5, nH6, length, i;
+  ThotBool            closeUndo, manyH1, change = FALSE;
 
   /* check if there is any HTML element within the document */
   HTMLschema = TtaGetSSchema ("HTML", doc);
@@ -1535,6 +1525,7 @@ void SectionNumbering (Document doc, View view)
     /* no HTML element */
     return;
 
+  dispMode = TtaGetDisplayMode (doc);
   if (TtaHasUndoSequence (doc))
     closeUndo = FALSE;
   else
@@ -1543,18 +1534,78 @@ void SectionNumbering (Document doc, View view)
       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
     }
 
-  el = TtaGetMainRoot (doc);
+  /* check if there are more than one HTML H1 element */
+  manyH1 = FALSE;
+  root = TtaGetMainRoot (doc);
+  elType.ElSSchema = HTMLschema;
+  elType.ElTypeNum = HTML_EL_H1;
+  el = TtaSearchTypedElement (elType, SearchForward, root);
+  if (el)
+    {
+      if (TtaSearchTypedElement (elType, SearchForward, el))
+	/* there are at least 2 H1 elements in the document */
+	manyH1 = TRUE;
+      else
+	/* there is 1 and only 1 H1 in the document */
+	{
+	  /* remove its section number if it has one */
+          /* look for the first leaf child */
+          child = el;
+	  do
+	    {
+	      child = TtaGetFirstChild (child);
+	      if (child)
+		childType = TtaGetElementType (child);
+	    }
+	  while (child && !TtaIsLeaf (childType) &&
+		 childType.ElSSchema == HTMLschema);
+          if (child && childType.ElSSchema == HTMLschema &&
+              childType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	    /* the first leaf is a text unit */
+            {
+              /* check the text contents */
+              length = TtaGetTextLength (child) + 1;
+              text = (char *)TtaGetMemory (length);
+              TtaGiveTextContent (child, (unsigned char *)text, &length, &lang);
+              /* remove the old number */
+              i = 0;
+              while (isdigit (text[i]) || text[i] == '.')
+                i++;
+              // remove extra spaces
+              while (text[i] == SPACE)
+                i++;
+              TtaRegisterElementReplace (child, doc);
+              TtaSetTextContent (child, (unsigned char *)&text[i],
+				 Latin_Script, doc);
+              TtaFreeMemory (text);
+              change = TRUE;
+            }
+	}
+    }
+
   searchedType1.ElSSchema = HTMLschema;
-  searchedType1.ElTypeNum = HTML_EL_H2;
   searchedType2.ElSSchema = HTMLschema;
-  searchedType2.ElTypeNum = HTML_EL_H3;
   searchedType3.ElSSchema = HTMLschema;
-  searchedType3.ElTypeNum = HTML_EL_H4;
   searchedType4.ElSSchema = HTMLschema;
-  searchedType4.ElTypeNum = HTML_EL_H5;
   searchedType5.ElSSchema = HTMLschema;
-  searchedType5.ElTypeNum = HTML_EL_H6;
-  nH2 = nH3 = nH4 = nH5 = nH6 = 0;
+  if (manyH1)
+    {
+      searchedType1.ElTypeNum = HTML_EL_H1;
+      searchedType2.ElTypeNum = HTML_EL_H2;
+      searchedType3.ElTypeNum = HTML_EL_H3;
+      searchedType4.ElTypeNum = HTML_EL_H4;
+      searchedType5.ElTypeNum = HTML_EL_H5;
+    }
+  else
+    {
+      searchedType1.ElTypeNum = HTML_EL_H2;
+      searchedType2.ElTypeNum = HTML_EL_H3;
+      searchedType3.ElTypeNum = HTML_EL_H4;
+      searchedType4.ElTypeNum = HTML_EL_H5;
+      searchedType5.ElTypeNum = HTML_EL_H6;
+    }
+  nH1 = nH2 = nH3 = nH4 = nH5 = nH6 = 0;
+  el = root;
   while (el)
     {
       el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
@@ -1567,49 +1618,101 @@ void SectionNumbering (Document doc, View view)
           s[0] = EOS;
           switch (elType.ElTypeNum)
             {
+            case HTML_EL_H1:
+	      nH1++;
+	      nH2 = nH3 = nH4 = nH5 = nH6 = 0;
+              sprintf (s, "%d.", nH1);
+	      break;
             case HTML_EL_H2:
               nH2++;
               nH3 = nH4 = nH5 = nH6 = 0;
-              sprintf (s, "%d.", nH2);
+	      if (manyH1)
+		{
+		  if (nH1)
+		    sprintf (s, "%d.", nH1);
+		  sprintf (n, "%d.", nH2);
+		  strcat (s, n);
+		}
+	      else
+		sprintf (s, "%d.", nH2);
               break;
             case HTML_EL_H3:
               nH3++;
               nH4 = nH5 = nH6 = 0;
-              if (nH2)
-                sprintf (s, "%d.", nH2);
-              sprintf (n, "%d.", nH3);
-              strcat (s, n);
+	      if (manyH1)
+		{
+		  if (nH1)
+		    sprintf (s, "%d.", nH1);
+		  if (nH2)
+		    {
+		      sprintf (n, "%d.", nH2);
+		      strcat (s, n);
+		    }
+		}
+	      else
+		{
+		  if (nH2)
+		    sprintf (s, "%d.", nH2);
+		}
+	      sprintf (n, "%d.", nH3);
+	      strcat (s, n);
               break;
             case HTML_EL_H4:
               nH4++;
               nH5 = nH6 = 0;
-              if (nH2)
-                sprintf (s, "%d.", nH2);
-              if (nH3)
-                {
-                  sprintf (n, "%d.", nH3);
-                  strcat (s, n);
-                }
-              sprintf (n, "%d.", nH4);
-              strcat (s, n);
+	      if (manyH1)
+		{
+		  if (nH1)
+		    sprintf (s, "%d.", nH1);
+		  if (nH2)
+		    {
+		      sprintf (n, "%d.", nH2);
+		      strcat (s, n);
+		    }
+		}
+	      else
+		{
+		  if (nH2)
+		    sprintf (s, "%d.", nH2);
+		}
+	      if (nH3)
+		{
+		  sprintf (n, "%d.", nH3);
+		  strcat (s, n);
+		}
+	      sprintf (n, "%d.", nH4);
+	      strcat (s, n);
               break;
             case HTML_EL_H5:
               nH5++;
               nH6 = 0;
-              if (nH2)
-                sprintf (s, "%d.", nH2);
-              if (nH3)
-                {
-                  sprintf (n, "%d.", nH3);
-                  strcat (s, n);
+	      if (manyH1)
+		{
+		  if (nH1)
+		    sprintf (s, "%d.", nH1);
+		  if (nH2)
+		    {
+		      sprintf (n, "%d.", nH2);
+		      strcat (s, n);
+		    }
                 }
-              if (nH4)
-                {
-                  sprintf (n, "%d.", nH4);
-                  strcat (s, n);
-                }
-              sprintf (n, "%d.", nH5);
-              strcat (s, n);
+	      else
+		{
+		  if (nH2)
+		    sprintf (s, "%d.", nH2);
+		}
+	      if (nH3)
+		{
+		  sprintf (n, "%d.", nH3);
+		  strcat (s, n);
+		}
+	      if (nH4)
+		{
+		  sprintf (n, "%d.", nH4);
+		  strcat (s, n);
+		}
+	      sprintf (n, "%d.", nH5);
+	      strcat (s, n);
               break;
             case HTML_EL_H6:
               nH6++;
@@ -1646,7 +1749,8 @@ void SectionNumbering (Document doc, View view)
                   child = TtaGetFirstChild (child);
                   childType = TtaGetElementType (child);
                 }
-              while (!TtaIsLeaf (childType) && childType.ElSSchema == HTMLschema);
+              while (!TtaIsLeaf (childType) &&
+		     childType.ElSSchema == HTMLschema);
             }
           if (child && childType.ElSSchema == HTMLschema &&
               childType.ElTypeNum == HTML_EL_TEXT_UNIT)
