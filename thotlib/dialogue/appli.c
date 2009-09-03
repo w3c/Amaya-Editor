@@ -65,6 +65,7 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
 #include "thotcolor_tv.h"
+#include "select_tv.h"
 #include "attrmenu.h"
 
 #include "AmayaWindow.h"
@@ -829,7 +830,8 @@ ThotBool FrameButtonDownCallback (int frame, int thot_button_id,
             TtaExecuteMenuAction ("FollowTheLinkNewTab", document, view, FALSE);
           }
 #endif /* MACOS */
-        else if (ClickFrame != frame || ClickX != x || ClickY != y)
+        else if (!SelPosition ||
+                 ClickFrame != frame || ClickX != x || ClickY != y)
           {
             /* a simple selection */
             ClickFrame = frame;

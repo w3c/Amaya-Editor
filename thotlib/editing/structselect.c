@@ -117,6 +117,7 @@ void InitSelection ()
   FirstSelectedColumn = NULL;
   LastSelectedColumn = NULL;
   WholeColumnSelected = FALSE;
+  SelPosition = FALSE;
 }
 
 
