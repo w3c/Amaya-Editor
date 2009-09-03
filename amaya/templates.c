@@ -1067,7 +1067,10 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
       if (Template_CanInsertRepeatChild (repeatEl))
         {
           firstEl = TtaGetFirstChild (repeatEl);
-          listtypes = Template_GetListTypes (t, firstEl);
+          if (firstEl)
+            listtypes = Template_GetListTypes (t, firstEl);
+          else
+            listtypes = Template_GetListTypes (t, repeatEl);
           if (listtypes)
             {
 #ifdef TEMPLATE_DEBUG
@@ -1778,97 +1781,105 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 {
 #ifdef TEMPLATES
   Document       doc = event->document;
-  Element        elem = event->element;
-  Element        xtElem, parent = NULL, sibling;
+  Element        el = event->element;
+  Element        xtEl, parent = NULL, sibling;
   ElementType    xtType, elType;
-  char          *type;
-  Declaration    dec;
   SSchema        templateSSchema;
   XTigerTemplate t;
-  ThotBool       selparent = FALSE;
 
   if (event->info==1)
     return FALSE;
 
-  if (!TtaGetDocumentAccessMode(event->document))
+  if (!TtaGetDocumentAccessMode(doc))
     return TRUE;
+  if (!IsTemplateInstanceDocument (doc))
+    return FALSE; // If template or library, pass to specialized functions.
 
-  templateSSchema = TtaGetSSchema ("Template", event->document);
+  templateSSchema = TtaGetSSchema ("Template", doc);
   if (templateSSchema == NULL)
     return FALSE; // let Thot do the job
 
   t = GetXTigerDocTemplate(doc);
-  if (Template_IsTemplate(t)||Template_IsLibrary(t))
-    return FALSE; // If template or library, pass to specialized functions.
-
-  xtElem = GetFirstTemplateParentElement(elem);
-  if (xtElem)
+  elType = TtaGetElementType (el);
+  xtEl = GetFirstTemplateParentElement (el);
+  if (elType.ElSSchema == templateSSchema &&
+      (elType.ElTypeNum == Template_EL_repeat ||
+       elType.ElTypeNum == Template_EL_bag))
     {
-      xtType = TtaGetElementType(xtElem);
+      // clean up the content of the bag or repeat
+      sibling = TtaGetFirstChild (el);
+      xtEl = el;
+      TtaOpenUndoSequence (doc, el, el, 0, 0);
+      while (sibling)
+        {
+          el = sibling;
+          TtaNextSibling (&sibling);
+          TtaRegisterElementDelete (el, doc);
+          TtaDeleteTree (el, doc);
+        }
+      if (elType.ElTypeNum == Template_EL_repeat)
+        {
+          // regenerate the minimum of instances
+          parent = GetParentLine (xtEl, templateSSchema);
+          InstantiateRepeat (t, xtEl, doc, parent, TRUE);
+        }
+      TtaCloseUndoSequence (doc);
+      TtaSelectElement (doc, xtEl);
+    }
+  else if (xtEl)
+    {
+      xtType = TtaGetElementType (xtEl);
       if (xtType.ElTypeNum==Template_EL_bag)
+        return FALSE; // xt:bag always allow remove children.
+      else
         {
-          elType = TtaGetElementType(elem);
-          if (elType.ElSSchema==templateSSchema &&
-              (elType.ElTypeNum==Template_EL_useSimple ||
-               elType.ElTypeNum==Template_EL_useEl))
+          // look for the enclosing use
+          if (elType.ElSSchema != templateSSchema)
             {
-              // Remove element manually.
-              TtaOpenUndoSequence(doc, elem, elem, 0, 0);
-              TtaRegisterElementDelete(elem, doc);
-              TtaDeleteTree(elem, doc);
-              TtaCloseUndoSequence(doc);
-              return TRUE;
+              // check if the element is alone
+              sibling = el;
+              TtaNextSibling (&sibling);
+              while (sibling == NULL)
+                {
+                  // there is no next element
+                  sibling = el;
+                  TtaPreviousSibling (&sibling);
+                  if (parent == xtEl)
+                    break;
+                  if (sibling == NULL)
+                    {
+                      el = parent;
+                      parent = TtaGetParent (el);
+                      sibling = el;
+                      TtaNextSibling (&sibling);
+                    }
+                }
+              if (sibling)
+                return TRUE; // cannot delete
             }
-          else
-            return FALSE; // xt:bag always allow remove children.
-        }
-      else if (xtType.ElTypeNum == Template_EL_useSimple ||
-               xtType.ElTypeNum == Template_EL_useEl)
-        {
-          parent = TtaGetParent(elem);
-          if (xtElem != parent)
-            {
-              type = GetAttributeStringValueFromNum (xtElem, Template_ATTR_currentType, NULL);
-              dec = Template_GetDeclaration(t, type);
-              TtaFreeMemory (type);
 
-              if (dec && dec->nature == XmlElementNat)
-                // Can remove only if the current type is a target element.
-                return FALSE;
-              else
-                return TRUE;
-            }
-        }
-      else if (xtType.ElTypeNum == Template_EL_repeat)
-        {
-          sibling = TtaGetSuccessor (elem);
-          if (sibling == NULL)
+          xtEl = TtaGetParent (el);
+          xtType = TtaGetElementType (xtEl);
+          if (xtType.ElSSchema == templateSSchema &&
+              (xtType.ElTypeNum == Template_EL_repeat ||
+               xtType.ElTypeNum == Template_EL_bag))
             {
-              // there is no next element
-              sibling = TtaGetPredecessor (elem);
-              if (sibling == NULL)
-                selparent = TRUE;
+              // delete the use within a bag or a repeat
+              TtaOpenUndoSequence (doc, el, el, 0, 0);
+              TtaRegisterElementDelete (el, doc);
+              TtaDeleteTree (el, doc);
             }
-          TtaRegisterElementDelete (elem, doc);
-          TtaDeleteTree (elem, doc);
-          parent = GetParentLine (xtElem, templateSSchema);
-          InstantiateRepeat (t, xtElem, doc, parent, TRUE);
-          if (selparent)
-            // look for the new sibling
-            sibling = TtaGetFirstChild (parent);
-          if (sibling)
-            TtaSelectElement(doc, sibling);
-          else
-            TtaSelectElement(doc, parent);
-          return TRUE;
+          if (xtType.ElTypeNum == Template_EL_repeat)
+            {
+              // regenerate the minimum of instances
+              parent = GetParentLine (xtEl, templateSSchema);
+              InstantiateRepeat (t, xtEl, doc, parent, TRUE);
+            }
+          TtaCloseUndoSequence (doc);
+          TtaSelectElement (doc, xtEl);
         }
     }
-
-  //TODO Test if current element is use or repeat.
-  // Because if an element is delete and it is the unique child of its parent,
-  // the parent intends to destroy itself.
-
-  return TRUE;
+  return TRUE; // don't let thot do something
 #else /* TEMPLATES */
   return FALSE;
 #endif /* TEMPLATES */
@@ -2471,7 +2482,7 @@ void Template_ModifyUnionElement(Document doc, Element unionEl)
   XTigerTemplate t = GetXTigerDocTemplate(doc);
   SSchema        sstempl = TtaGetSSchema ("Template", doc);
   ElementType    unionType;
-  char          *proposed, *checked, *name, *types=NULL;
+  char          *proposed, *checked, *name, *types = NULL;
 
   if (doc && unionEl && t && sstempl)
     {

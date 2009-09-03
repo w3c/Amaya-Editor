@@ -433,7 +433,12 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
                           TtaAttachAttribute (el, att, doc);
                         }
                       if (otherType.ElTypeNum == 1)
-                        TtaSetAttributeText (att, "string", el, doc);
+                        {
+                          if (strstr (types, "string"))
+                            TtaSetAttributeText (att, "string", el, doc);
+                          else
+                            TtaSetAttributeText (att, "number", el, doc);
+                        }
                       else
                         {
                           name = (char *)GetXMLElementName (otherType, doc);
@@ -1312,7 +1317,7 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
     }
   else
     {
-      minVal = 0;
+      minVal = 1;
       curVal = 1;
     }
 
@@ -1362,10 +1367,6 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
 
   //We must have minOccurs children
   child = TtaGetFirstChild (el);
-  if (!child)
-    //Error : a repeat must have at least one child which will be the model
-    return;
-  
   for (childrenCount = 0; child; TtaNextSibling(&child))
     //TODO : Check that every child is valid
     childrenCount ++;
@@ -1373,7 +1374,6 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
   if (childrenCount > maxVal)
     //Error : too many children!
     return;  
-
 
   if (parentLine)
     // display the element in line

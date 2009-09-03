@@ -33,6 +33,8 @@ VIEWS
 #define COMMENT_Style Italics
 #define COMMENT_Weight Normal
 #define COMMENT_Color DarkGreen3
+#define TYPE_Color DarkGrey2
+#define ACTIVE_Color DarkYellow2
 
    
 DEFAULT
@@ -333,6 +335,18 @@ BOXES
 		 END;
 	 END;
 
+ ActiveLine: BEGIN
+	 Content: Graphics 'W';
+	 Visibility: 0;
+	 IN Structure_view BEGIN
+		 VertPos: Top = Creator . Top;
+		 Height: Creator . Height;
+		 Width: 1.1;
+		 LineWeight: 2 px;
+		 Visibility: TAG_Visibility;  Foreground: ACTIVE_Color;
+		 END;
+	 END;
+
  VerticalLine: BEGIN
 	 Content: Graphics 'W';
 	 Visibility: 0;
@@ -457,6 +471,7 @@ BOXES
   TypeMark: BEGIN
     Visibility: 0;
     Content: Graphics 'L';
+    Background: Creator =;
     IN Structure_view BEGIN
       MarginTop: 6 px;
       MarginBottom: 6 px;
@@ -466,7 +481,6 @@ BOXES
       Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
       Visibility: ATTR_Visibility;  Foreground: White;
       Height: 10 px;
-      Background: DarkGrey2;
       FillPattern: backgroundcolor;
       ShowBox;
       END;
@@ -474,6 +488,7 @@ BOXES
   TypeValue: BEGIN
     Visibility: 0;
     Content: (AttributeValue);
+    Background: Creator =;
     IN Structure_view BEGIN
       MarginTop: 2 px;
       MarginBottom: 2 px;
@@ -485,7 +500,6 @@ BOXES
       {Width: 30 px min;}
       Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
       Visibility: ATTR_Visibility;  Foreground: White;
-      Background: DarkGrey2;
       FillPattern: backgroundcolor;
       ShowBox;
       END;
@@ -850,33 +864,36 @@ RULES
 
   attribute:
 		BEGIN
-#ifdef INSTANCE
 		Visibility: 0;
-#else
-		Visibility: 10;
 	  CreateBefore(ElementName);
 	  CreateWith(VerticalLine);
   	IN Structure_view BEGIN
+#ifndef INSTANCE
   	  Visibility: Enclosing =;
 		  HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	    Width: Enclosing . Width - STRUCT_INDENT;
 		  VertPos: Top = Previous . Bottom;
-		  END;
 #endif
+		  END;
 	 END;
 
   bag:
 		BEGIN
 	  CreateFirst(BagButton);
-#ifndef INSTANCE
+#if INSTANCE
+    {Background: ACTIVE_Color;}
+    Background: DarkYellowGreen1;
+    FillPattern: nopattern;
+  	CreateWith(ActiveLine);
+#else
     CreateBefore(ElementName);
     Background : LightGreen4;
     FillPattern: backgroundcolor;
     ShowBox; 
-#endif
   	CreateWith(VerticalLine);
+#endif
     Width: auto{Enclosing . Width};
-    Height: auto{Enclosing . Height};
+    Height: 10 px min;
     LineBreak: No;
     Display: Block;
     VertPos: Top = 			Previous AnyElem . Bottom;
@@ -916,16 +933,26 @@ RULES
   useEl:	
 		BEGIN
 #ifdef INSTANCE
-    if  NOT immediately within repeat AND NOT immediately within bag
+    if  NOT immediately within repeat AND NOT immediately within bag BEGIN
       CreateFirst(UseButton);
-    if immediately within repeat
+      CreateWith(ActiveLine);
+      Background: TYPE_Color;
+      END;
+    if immediately within repeat BEGIN
       CreateAfter(RepeatUse);
-    if immediately within bag
+      CreateWith(VerticalLine);
+      Background: ACTIVE_Color;
+      END;
+    if immediately within bag BEGIN
       CreateAfter(BagUse);
+      CreateWith(VerticalLine);
+      Background: ACTIVE_Color;
+      END;
+    FillPattern: nopattern;
 #else
     CreateBefore(ElementName);
-#endif
     CreateWith(VerticalLine);
+#endif
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
     VertPos: Top = Previous AnyElem . Bottom;
@@ -967,21 +994,30 @@ RULES
   useSimple:	
     BEGIN
 #ifdef INSTANCE
-    if immediately within repeat
+    if  NOT immediately within repeat AND NOT immediately within bag BEGIN
+      CreateWith(VerticalLine);
+      Background: TYPE_Color;
+      END;
+    if immediately within repeat BEGIN
       CreateAfter(RepeatUse);
-    if immediately within bag
+      CreateWith(ActiveLine);
+      Background: ACTIVE_Color;
+      END;
+    if immediately within bag BEGIN
       CreateAfter(BagUse);
+      CreateWith(ActiveLine);
+      Background: ACTIVE_Color;
+      END;
+    FillPattern: nopattern;
 #else
     CreateBefore(ElementName);
+    CreateWith(VerticalLine);
     Background : LightBlue4;
     FillPattern: backgroundcolor;
     ShowBox;
 #endif
-    CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     Height: auto{Enclosing . Height};
-    {LineBreak: No;}
-    {Display: CSSInline;}
     VertPos: Top = Previous AnyElem. Bottom;
     HorizPos: Left = Enclosing . Left;
     if NOT immediately within useEl AND NOT immediately within useSimple BEGIN
@@ -1021,14 +1057,19 @@ RULES
   repeat:
 	  BEGIN
     CreateFirst(RepeatButton);
-    CreateWith(VerticalLine);
     Width: auto{Enclosing . Width};
     {LineBreak: No;}
     Display: Block;
     VertPos: Top = Previous AnyElem . Bottom;
     MarginTop	: 3 px;
     HorizPos: Left = Enclosing . Left; 
-#ifndef INSTANCE
+#ifdef INSTANCE
+    {Background: ACTIVE_Color;}
+    Background: DarkGold1;
+    FillPattern: nopattern;
+    CreateWith(ActiveLine);
+#else
+    CreateWith(VerticalLine);
     CreateBefore(ElementName);
     BorderTopWidth:  2 pt;
     BorderLeftWidth:  2 pt;

@@ -459,7 +459,8 @@ void UnknownTemplateNameSpace (ParserData *context, Element *unknownEl,
   ----------------------------------------------------------------------*/
 void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
 {
-  AttributeType	attrType;
+  AttributeType	 attrType;
+  char          *checked, *string, *number;
   int            attrKind;
 
   TtaGiveAttributeType  (attr, &attrType, &attrKind);
@@ -467,6 +468,23 @@ void TemplateAttributeComplete (Attribute attr, Element el, Document doc)
     {
     case Template_ATTR_name:
       CheckUniqueName (el, doc, attr, attrType);
+      break;
+    case Template_ATTR_types:
+      // check the validity of block or inline level
+      checked = GetAttributeStringValueFromNum(el, Template_ATTR_includeAt, NULL);
+      if (checked)
+        {
+          string = strstr (checked, "string");
+          number = strstr (checked, "number");
+          if ((string || number) && strstr (checked, " "))
+            {
+              // invalid association
+              XmlParseError (errorParsing,
+                             (unsigned char *)"string or number not allowed there",
+                             TtaGetElementLineNumber(el));
+            }
+          TtaFreeMemory (checked);
+        }
       break;
     default:
       break;
