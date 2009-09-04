@@ -334,6 +334,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\amaya\wxdialog\FontDlgWX.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\amaya\wxdialog\HRefDlgWX.cpp"
 				>
 				<FileConfiguration
@@ -448,6 +452,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\amaya\wxdialog\ListNSDlgWX.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\amaya\wxdialog\MakeIdDlgWX.cpp"
 				>
 				<FileConfiguration
@@ -468,6 +476,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\amaya\wxdialog\MetaDlgWX.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\amaya\wxdialog\ObjectDlgWX.cpp"
@@ -732,6 +744,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\amaya\wxdialog\StyleListToolPanel.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\amaya\wxdialog\TitleDlgWX.cpp"
@@ -1487,6 +1503,10 @@
 					CompileAs="2"
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath="..\amaya\Mathedit_parser.cpp"
+			>
 		</File>
 		<File
 			RelativePath="amaya\MathMLAPP.c"
