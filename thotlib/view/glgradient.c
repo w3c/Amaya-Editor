@@ -633,7 +633,7 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
       y1 = gradient->gradY1;
       y2 = gradient->gradY2;
       /* length of the diagonal */
-      len = (int)sqrt (width * width + height * height) + 1;
+      len = (int)sqrt ((float)(width * width + height * height)) + 1;
     }
   else
     /* gradientUnits = objectBoundingBox */
@@ -650,7 +650,7 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
 	  yRatio = (double)width / (double)height;
 	  a = (gradient->gradY2 - gradient->gradY1) * width;
 	  b = (gradient->gradX1 - gradient->gradX2) * width;
-          len = (int)sqrt (width * width * 2) + 1;/* length of the diagonal */
+          len = (int)sqrt ((float) (width * width * 2)) + 1;/* length of the diagonal */
 	}
       else
 	{
@@ -662,7 +662,7 @@ static unsigned char *FillLinearGradientImage (Gradient *gradient,
 	  yRatio = 1;
 	  a = (gradient->gradY2 - gradient->gradY1) * height;
 	  b = (gradient->gradX1 - gradient->gradX2) * height;
-	  len = (int)sqrt (height * height * 2) + 1;/* length of the diagonal */
+	  len = (int)sqrt ((float)(height * height * 2)) + 1;/* length of the diagonal */
 	}
     }
   c = (-b * y1) - (a * x1);
@@ -822,7 +822,7 @@ static unsigned char *FillRadialGradientImage (Gradient *gradient,
 	bxPix = (int)(bx * height);
 	byPix = (int)(by * height);
       }
-  length = ((int)sqrt (bxPix*bxPix + byPix*byPix) + 1);
+  length = ((int)sqrt ((float)(bxPix*bxPix + byPix*byPix)) + 1);
   gradStart = 0;
   gradEnd = (int)gradLength;
 
@@ -843,7 +843,7 @@ static unsigned char *FillRadialGradientImage (Gradient *gradient,
 	/* distance of current pixel from the center */
 	dx = (int)((i - cxPix) * xRatio);
 	dy = (int)((j - cyPix) * yRatio);
-	dist = (int)sqrt (dx*dx + dy*dy);
+	dist = (int)sqrt ((float)(dx*dx + dy*dy));
         beamPix = line + delta + dist * 4;
         *p0++ = *beamPix++;
         *p0++ = *beamPix++;
