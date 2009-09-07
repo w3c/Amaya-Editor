@@ -11,8 +11,7 @@
 
 #include "AHTURLTools_f.h"
 #include "HTMLsave_f.h"
-
-
+#include "templateUtils_f.h"
 #include <stdarg.h>
 
 /*----------------------------------------------------------------------
@@ -39,6 +38,44 @@ const char *GetSchemaFromDocType (DocumentType docType)
     }
 #endif // TEMPLATES
 	return "HTML";
+}
+
+/*----------------------------------------------------------------------
+  IsUseInstantiated
+  Return TRUE if the use must be instantiated
+  ----------------------------------------------------------------------*/
+ThotBool IsUseInstantiated (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  Element       parent;
+  ElementType	  elType, parentType;
+  int           option;
+  ThotBool      opt;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == Template_EL_useEl &&
+      elType.ElSSchema &&
+      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "Template"))
+    {
+      parent = TtaGetParent (el);
+      parentType = TtaGetElementType (parent);
+      if (parentType.ElTypeNum == Template_EL_repeat &&
+          parentType.ElSSchema == elType.ElSSchema &&
+          el == TtaGetFirstChild (parent))
+        {
+          // check if the minOccurs of the repeat is 0
+          option = GetMinOccurence (parent, doc);
+          opt = option != 0;
+        }
+      else
+        {
+          option = GetAttributeIntValueFromNum (el, Template_ATTR_option);
+          opt = (option == 0 || option == Template_ATTR_option_VAL_option_set);
+        }
+  return opt;
+    }
+#endif /* TEMPLATES */
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -91,6 +128,35 @@ void SetAttributeStringValueWithUndo (Element el, int att, char* value)
 #endif /* TEMPLATES */
 }
 
+
+/*----------------------------------------------------------------------
+  GetMinOccurence returns the minOccurs value
+----------------------------------------------------------------------*/
+int GetMinOccurence (Element el, Document doc)
+{
+  int            minVal = 1;
+#ifdef TEMPLATES
+  AttributeType  minType;
+  Attribute      minAtt;
+  char          *text;
+
+  // Get minOccurs
+  minType.AttrSSchema = TtaGetElementType (el).ElSSchema;
+  minType.AttrTypeNum = Template_ATTR_minOccurs;
+  minAtt = TtaGetAttribute (el, minType);
+  if (minAtt)
+    {
+      text = GetAttributeStringValue(el, minAtt, NULL);
+      if (text)
+        {
+          minVal = atoi(text);
+          TtaFreeMemory(text);
+        }
+    }
+#endif /* TEMPLATES */
+  return minVal;
+}
+
 /*----------------------------------------------------------------------
 Returns the value of a string attribute without copy it
 ----------------------------------------------------------------------*/
@@ -112,8 +178,6 @@ void GiveAttributeStringValueFromNum (Element el, int att, char* buff, int* sz)
     *sz = size;
 #endif /* TEMPLATES */
 }
-
-
 
 /*----------------------------------------------------------------------
   Returns the value of a string attribute or NULL
@@ -190,9 +254,6 @@ void SetAttributeIntValue (Element el, int att, int value, ThotBool undo)
     TtaRegisterAttributeReplace(attribute, el, doc);
 #endif /* TEMPLATES */
 }
-
-
-
 
 /*----------------------------------------------------------------------
 Returns the value of a string attribute

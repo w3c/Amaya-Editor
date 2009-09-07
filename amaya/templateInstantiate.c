@@ -36,6 +36,108 @@
 #endif /* TEMPLATES */
 
 
+/*----------------------------------------------------------------------
+  Template_FillEmpty removes current children and generates an empty
+  child.
+  The parameter el must be a use element.
+  Returns a pointer to the empty child.
+  ----------------------------------------------------------------------*/
+Element Template_FillEmpty (Element el, Document doc, ThotBool withUndo)
+{
+#ifdef TEMPLATES
+  Element         child, next, parent;
+  ElementType     elType, childType, parentType;
+
+  // generate a content
+  child = TtaGetFirstChild (el);
+  elType = TtaGetElementType (el);
+  if (child)
+    {
+      childType = TtaGetElementType (child);
+      if (childType.ElSSchema == elType.ElSSchema &&
+          childType.ElTypeNum == Template_EL_TemplateObject)
+        // already empty
+        return child;
+      // remove current children
+      do
+        {
+          next = child;
+          TtaNextSibling (&next);
+          if (withUndo)
+            TtaRegisterElementDelete(child, doc);
+          TtaDeleteTree (child, doc);
+          child = next;
+        }
+      while (next);
+      child = NULL;
+    }
+  if (child == NULL)
+    {
+      childType.ElTypeNum = Template_EL_TemplateObject;
+      childType.ElSSchema = elType.ElSSchema;
+      child = TtaNewElement (doc, childType);
+      TtaInsertFirstChild (&child, el, doc);
+      TtaSetAccessRight (child, ReadOnly, doc);
+      if (withUndo)
+        TtaRegisterElementCreate (child, doc);
+    }
+
+  if (elType.ElTypeNum == Template_EL_useSimple)
+    {
+      parent = TtaGetParent (el);
+      parentType = TtaGetElementType (parent);
+      if (parentType.ElSSchema == elType.ElSSchema &&
+          parentType.ElTypeNum == Template_EL_repeat)
+        {
+          // mark the element as un empty element
+          TtaChangeTypeOfElement (el, doc, Template_EL_useEl);
+          TtaRegisterElementTypeChange (el, Template_EL_useSimple, doc);
+        }
+    }
+  return child;
+#endif /* TEMPLATES */
+  return NULL;
+}
+
+
+/*----------------------------------------------------------------------
+  CleanUpRepeat cleans up a repeat
+  ----------------------------------------------------------------------*/
+void CleanUpRepeat (Element el, Document doc, ThotBool withUndo)
+{
+#ifdef TEMPLATES
+  Element        child, next, parent;
+  int            minVal, count = 0;
+  XTigerTemplate t;
+
+  minVal = GetMinOccurence (el, doc);
+  child =  TtaGetFirstChild (el);
+  if (minVal == 0)
+    {
+      // clean up but keep the first use
+      Template_FillEmpty (child, doc, withUndo);
+      TtaNextSibling (&child);
+    }
+  // remove other children
+  while (child)
+    {
+      next = child;
+      TtaNextSibling (&next);
+      count++;
+      if (count > minVal)
+        {
+          if (withUndo)
+            TtaRegisterElementDelete(child, doc);
+          TtaDeleteTree (child, doc);
+        }
+      child = next;
+    }
+  // regenerate the minimum of children
+  parent = GetParentLine (el, TtaGetElementType (el).ElSSchema);
+  t = GetXTigerDocTemplate(doc);
+  InstantiateRepeat (t, el, doc, parent, withUndo, TRUE);
+#endif /* TEMPLATES */
+}
 
 /*----------------------------------------------------------------------
   Template_InsertRepeatChildAfter
@@ -51,9 +153,9 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
                                          Declaration decl, Element elPrev)
 {
 #ifdef TEMPLATES
-  Element     child; /* First xt:use of the repeat.*/
-  Element     use, parent; /* xt:use to insert.*/
-  ElementType useType;  /* type of xt:use.*/
+  Element     child;
+  Element     use, parent;
+  ElementType useType;
   char       *types = NULL;
   ThotBool    isInstance;
 
@@ -64,9 +166,11 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
   child = TtaGetFirstChild (el);
   useType = TtaGetElementType (child);
   use = TtaCopyElement (child, doc, doc, el);
+  isInstance = IsTemplateInstanceDocument (doc);
+
   types = GetAttributeStringValueFromNum (child, Template_ATTR_types, NULL);
-  isInstance = IsTemplateInstanceDocument(doc);
   if (isInstance && useType.ElTypeNum != Template_EL_useSimple)
+    // insert an instantiate use
     TtaChangeElementType (use, Template_EL_useSimple);
   if (types)
     {
@@ -75,6 +179,7 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
     }
   else
     SetAttributeStringValueWithUndo (use, Template_ATTR_types, decl->name);
+
   /* insert it */
   if (elPrev)
     TtaInsertSibling (use, elPrev, FALSE, doc);
@@ -86,12 +191,21 @@ Element Template_InsertRepeatChildAfter (Document doc, Element el,
     Template_InsertUseChildren (doc, use, decl, parent, TRUE);
   else
     {
-      child = Template_FillEmpty (use,doc);
+      child = Template_FillEmpty (use,doc, FALSE);
       TtaSelectElement (doc, child);
     }
   SetAttributeStringValueWithUndo (use, Template_ATTR_title, decl->name);
   SetAttributeStringValueWithUndo (use, Template_ATTR_currentType, decl->name);
   TtaRegisterElementCreate (use, doc);
+
+  if (isInstance && useType.ElTypeNum != Template_EL_useSimple)
+    {
+      // delete the first empty use element
+      TtaRegisterElementDelete(child, doc);
+      TtaDeleteTree (child, doc);
+    }
+  // add needed prompt attributes
+  AddPromptIndicatorInSubtree (use, doc);
   return use;
 #else /* TEMPLATES */
   return NULL;
@@ -298,9 +412,7 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
   Element       next, child = NULL, savedInline, prev, parent = NULL;
   ElementType   elType, otherType;
   Declaration   dec;
-  int           option;
   char         *name, *types;
-  ThotBool      opt;
 
   if (!t || !el)
     return parentLine;
@@ -450,10 +562,12 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
             }
           if (child == NULL)
             {
-              option = GetAttributeIntValueFromNum (el, Template_ATTR_option);
-              opt = (option == 0 || option == Template_ATTR_option_VAL_option_set);
-              if (opt)
-                InstantiateUse (t, el, doc, parentLine, FALSE);
+              if (IsUseInstantiated (el, doc))
+                // complete the use
+                InstantiateUse (t, el, doc, parentLine, FALSE, loading);
+              else
+                // keep the use empty
+                Template_FillEmpty (el, doc, FALSE);
             }
           else
             {
@@ -467,7 +581,7 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
             InstantiateAttribute (t, el, doc);
           break;
         case Template_EL_repeat :
-          InstantiateRepeat (t, el, doc, parentLine, FALSE);
+          InstantiateRepeat (t, el, doc, parentLine, FALSE, loading);
           break;
         default :
           break;
@@ -884,30 +998,6 @@ Element InsertWithNotify (Element el, Element child, Element parent, Document do
   return el;
 }
 
-
-/*----------------------------------------------------------------------
-  Template_FillEmpty generates an empty contents
-  ----------------------------------------------------------------------*/
-Element Template_FillEmpty (Element el, Document doc)
-{
-#ifdef TEMPLATES
-  Element         child;
-  ElementType     elType;
-
-  // generate a content
-  child = TtaGetFirstChild (el);
-  if (child == NULL)
-    {
-      elType = TtaGetElementType (el);
-      elType.ElTypeNum = Template_EL_TemplateObject;
-      child = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&child, el, doc);
-    }
-  return child;
-#endif /* TEMPLATES */
-  return NULL;
-}
-
 /*----------------------------------------------------------------------
   Template_InsertUseChildren
   Insert children to a xt:use
@@ -1145,6 +1235,41 @@ void AddPromptIndicator (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  AddPromptIndicatorInSubtree
+  ----------------------------------------------------------------------*/
+void AddPromptIndicatorInSubtree (Element el, Document doc)
+{
+#ifdef TEMPLATES
+  Element             child;
+  ElementType         elType;
+  char               *types;
+
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      types = GetAttributeStringValueFromNum (el, Template_ATTR_types, NULL);
+      if (types &&
+          (!strcmp (types, "string") || !strcmp (types, "number")))
+        AddPromptIndicator (el, doc);
+      else
+        {
+          child = el;
+          while (child)
+            {
+              child = TtaSearchTypedElementInTree (elType, SearchForward, el, child);
+              TtaFreeMemory (types);
+              types = GetAttributeStringValueFromNum (child, Template_ATTR_types, NULL);
+              if (types &&
+                  (!strcmp (types, "string") || !strcmp (types, "number")))
+                AddPromptIndicator (child, doc);
+            }
+        }
+      TtaFreeMemory (types);
+    }
+#endif /* TEMPLATES */
+}
+
+/*----------------------------------------------------------------------
   Template_SetInline manages inline elements
   registerUndo says if changes must be registered
   ----------------------------------------------------------------------*/
@@ -1184,19 +1309,20 @@ void Template_SetInline (Element el, SSchema sstempl, Document doc, ThotBool reg
 
 /*----------------------------------------------------------------------
   InstantiateUse intantiate the use element el.
+  Parameter loading is TRUE when the document is not already loaded.
   The parentLine parameter points to the enclosing line if any.
   ----------------------------------------------------------------------*/
 Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
-                        Element parentLine, ThotBool registerUndo)
+                        Element parentLine, ThotBool registerUndo, ThotBool loading)
 {
 #ifdef TEMPLATES
   Element          child = NULL;
   ElementType      elType;
   Declaration      dec;
-  int              size, nbitems, i, option;
+  int              size, nbitems, i;
   struct menuType  *items;
   char             *types;
-  ThotBool          oldStructureChecking, hidden;
+  ThotBool          oldStructureChecking;
 
   if (!t)
     return NULL;
@@ -1209,6 +1335,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
       TtaFreeMemory (types);
       return NULL;
     }
+
   if (!strcmp (types, "string") || !strcmp (types, "number"))
     {
       child = TtaGetFirstChild (el);
@@ -1217,7 +1344,8 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
           child = Template_GetNewSimpleTypeInstance(doc);
           child = InsertWithNotify (child, NULL, el, doc);
         }
-      AddPromptIndicator (el, doc);
+      if (!loading)
+        AddPromptIndicator (el, doc);
     }
   else
     {
@@ -1225,14 +1353,7 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
       // No structure checking
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (FALSE, doc);
-      hidden = ElementIsOptional (el);
-      if (hidden)
-        {
-          // check the current option value
-          option = GetAttributeIntValueFromNum (el, Template_ATTR_option);
-          hidden = (option == Template_ATTR_option_VAL_option_unset);
-        }
-      if (nbitems == 1 || !hidden)
+      if (nbitems == 1 || IsUseInstantiated (el, doc))
         /* only one type in the "types" attribute */
         {
           dec = Template_GetDeclaration (t, items[0].label);
@@ -1244,14 +1365,11 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
               if (registerUndo)
                 TtaRegisterElementTypeChange (el, Template_EL_useEl, doc);
             }
+          if (!loading)
+            AddPromptIndicatorInSubtree (el, doc);
         }
       else
-        {
-          // insert almost a pseudo element
-          elType.ElTypeNum = Template_EL_TemplateObject;
-          child = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&child, el, doc);
-        }
+        Template_FillEmpty (el, doc, FALSE);
 
       for (i = 0; i < nbitems; i++)
         TtaFreeMemory(items[i].label);
@@ -1275,51 +1393,31 @@ Element InstantiateUse (XTigerTemplate t, Element el, Document doc,
   InstantiateRepeat
   Check for min and max param and validate xt:repeat element content.
   @param registerUndo True to register undo creation sequences.
+  Parameter loading is TRUE when the document is not already loaded.
   The parentLine parameter points to the enclosing line if any.
   ----------------------------------------------------------------------*/
 void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
-                        Element parentLine, ThotBool registerUndo)
+                        Element parentLine, ThotBool registerUndo, ThotBool loading)
 {
 #ifdef TEMPLATES
   Element        child, newChild;
   ElementType    newElType;
-  Attribute      minAtt,  maxAtt;
-  AttributeType  minType, maxType;
+  Attribute      maxAtt;
+  AttributeType  maxType;
   char          *text, *types = NULL, *title = NULL;
-  int            curVal, minVal,  maxVal;
+  int            minVal, maxVal;
   int            childrenCount;
 
   if (!t)
     return;
 
-  //Preparing types
-  minType.AttrSSchema = TtaGetSSchema (TEMPLATE_SCHEMA_NAME, doc);
-  minType.AttrTypeNum = Template_ATTR_minOccurs;
-  maxType.AttrSSchema =  minType.AttrSSchema;
+  // Preparing types
+  newElType = TtaGetElementType(el);
+  maxType.AttrSSchema =  newElType.ElSSchema;
   maxType.AttrTypeNum = Template_ATTR_maxOccurs;
-  newElType.ElSSchema = minType.AttrSSchema;
-  //Get minOccurs and maxOccurs attributes
-  minAtt = TtaGetAttribute (el, minType);
+  // Get minOccurs and maxOccurs attributes
   maxAtt = TtaGetAttribute (el, maxType);
-  //Get the values
-  if (minAtt)
-    {
-      text = GetAttributeStringValue(el, minAtt, NULL);
-      if (text)
-        {
-          minVal = atoi(text);
-          TtaFreeMemory(text);
-          curVal = minVal;
-        }
-      else
-        //Error : Attribute with no value
-        return;
-    }
-  else
-    {
-      minVal = 1;
-      curVal = 1;
-    }
+  minVal = GetMinOccurence (el, doc);;
 
   if (maxAtt)
     {
@@ -1339,22 +1437,11 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
   else
     maxVal = INT_MAX;
 
-  text = (char*)TtaGetMemory(MAX_LENGTH);
-  //Create non existing min max attributes
-  if (minAtt == NULL)
-    {      
-      minAtt = TtaNewAttribute (minType);
-      sprintf (text, "%d", minVal);
-      TtaAttachAttribute (el, minAtt, doc);
-      TtaSetAttributeText (minAtt, text, el, doc);
-      if (registerUndo)
-        TtaRegisterAttributeCreate (minAtt, el, doc);
-    }
-
   if (maxAtt == NULL)
     {  
       maxAtt = TtaNewAttribute (maxType);
-      if (maxVal < INT_MAX)
+      text = (char*)TtaGetMemory(MAX_LENGTH);
+       if (maxVal < INT_MAX)
         sprintf(text, "%d", maxVal);
       else
         sprintf (text, "*");
@@ -1362,8 +1449,8 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
       TtaSetAttributeText (maxAtt, text, el, doc);
       if (registerUndo)
         TtaRegisterAttributeCreate (maxAtt, el, doc);
+      TtaFreeMemory (text);
     }
-  TtaFreeMemory(text);
 
   //We must have minOccurs children
   child = TtaGetFirstChild (el);
@@ -1382,20 +1469,20 @@ void InstantiateRepeat (XTigerTemplate t, Element el, Document doc,
 
   if (parentLine)
     // display the element in line
-    Template_SetInline (el, minType.AttrSSchema, doc, registerUndo);
+    Template_SetInline (el, newElType.ElSSchema, doc, registerUndo);
 
   child = TtaGetLastChild(el);
   types = GetAttributeStringValueFromNum (child, Template_ATTR_types, NULL);
   title = GetAttributeStringValueFromNum (child, Template_ATTR_title, NULL);
   newElType.ElTypeNum = Template_EL_useEl;
-  while (childrenCount < curVal)
+  while (childrenCount < minVal)
     {
       newChild = TtaNewElement (doc, newElType);
       // Insert it
       TtaInsertSibling (newChild, child, FALSE, doc);
       SetAttributeStringValueWithUndo (newChild, Template_ATTR_types, types);
       SetAttributeStringValueWithUndo (newChild, Template_ATTR_title, title);
-      InstantiateUse (t, newChild, doc, parentLine, TRUE);
+      InstantiateUse (t, newChild, doc, parentLine, TRUE, loading);
       
       if (registerUndo)
         TtaRegisterElementCreate (newChild, doc);

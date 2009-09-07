@@ -748,7 +748,7 @@ void UseCreated (NotifyElement *event)
     }
   // look for the enclosing target element
   parent = GetParentLine (parent, templateSSchema);
-  InstantiateUse (t, el, doc, parent, TRUE);
+  InstantiateUse (t, el, doc, parent, TRUE, FALSE);
 #endif /* TEMPLATES */
 }
 
@@ -1275,7 +1275,7 @@ ThotBool UseSimpleButtonClicked (NotifyElement *event)
 ThotBool OptionButtonClicked (NotifyElement *event)
 {
 #ifdef TEMPLATES
-  Element         el, child, next, parent;
+  Element         el, child, parent;
   ElementType     useType, childType;
   Document        doc;
   XTigerTemplate  t;
@@ -1319,34 +1319,20 @@ ThotBool OptionButtonClicked (NotifyElement *event)
 
       // look for the enclosing target element
       parent = GetParentLine (el, useType.ElSSchema);
-      InstantiateUse (t, el, doc, parent, TRUE);
+      InstantiateUse (t, el, doc, parent, TRUE, FALSE);
       SetAttributeIntValue (el, Template_ATTR_option,
                             Template_ATTR_option_VAL_option_set, TRUE);
     }
   else
     /* remove the content of the "use" element */
     {
-      do
-        {
-          next = child;
-          TtaNextSibling (&next);
-          TtaRegisterElementDelete(child, doc);
-          TtaDeleteTree (child, doc);
-          child = next;
-        }
-      while (next);
-      child = Template_FillEmpty (el, doc);
-      if (child)
-        {
-          TtaRegisterElementCreate (child, doc);
-          TtaSetAccessRight (child, ReadOnly, doc);
-        }
+      child = Template_FillEmpty (el, doc, TRUE);
       SetAttributeIntValue (el, Template_ATTR_option,
                             Template_ATTR_option_VAL_option_unset, TRUE);
     }
   child = TtaGetFirstChild (el);
   TtaSelectElement (doc, child);
-  TtaCloseUndoSequence(doc);
+  TtaCloseUndoSequence (doc);
   TtaSetDocumentModified (doc);
   return TRUE; /* don't let Thot perform normal operation */
 #endif /* TEMPLATES */
@@ -1383,7 +1369,7 @@ void Template_FillFromDocument (Document doc)
           Template_FixAccessRight (t, root, doc);
           TtaUpdateAccessRightInViews (doc, root);
           // Parse template to fill structure and remove extra data
-          ParseTemplate (t, root, doc, NULL, FALSE);
+          ParseTemplate (t, root, doc, NULL, TRUE);
         }
 #ifdef TEMPLATE_DEBUG
       else if (t->state & templLibraryFlag)
@@ -1773,6 +1759,7 @@ ThotBool TemplateElementWillBeCreated (NotifyElement *event)
   return FALSE;
 }
 
+
 /*----------------------------------------------------------------------
   TemplateElementWillBeDeleted
   Processed when an element will be deleted in a template context.
@@ -1782,12 +1769,12 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
 #ifdef TEMPLATES
   Document       doc = event->document;
   Element        el = event->element;
-  Element        xtEl, parent = NULL, sibling, next, child;
+  Element        xtEl, parent = NULL, sibling;
   ElementType    xtType, elType;
   SSchema        templateSSchema;
   XTigerTemplate t;
 
-  if (event->info==1)
+  if (event->info == 1)
     return FALSE;
 
   if (!TtaGetDocumentAccessMode(doc))
@@ -1803,36 +1790,21 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
   elType = TtaGetElementType (el);
   xtEl = GetFirstTemplateParentElement (el);
   if (elType.ElSSchema == templateSSchema &&
-      (elType.ElTypeNum == Template_EL_repeat ||
-       elType.ElTypeNum == Template_EL_bag))
+      elType.ElTypeNum == Template_EL_repeat)
+    {
+      TtaOpenUndoSequence (doc, el, el, 0, 0);
+      CleanUpRepeat (el, doc, TRUE);
+      TtaCloseUndoSequence (doc);
+      TtaSelectElement (doc, el);
+      TtaSetDocumentModified (doc);
+    }
+  else if (elType.ElSSchema == templateSSchema &&
+           elType.ElTypeNum == Template_EL_bag)
     {
       // clean up the content of the bag or repeat
       sibling = TtaGetFirstChild (el);
       xtEl = el;
       TtaOpenUndoSequence (doc, el, el, 0, 0);
-      if (elType.ElTypeNum == Template_EL_repeat)
-        {
-          // keep the first item
-          elType = TtaGetElementType (sibling);          
-          if (elType.ElTypeNum == Template_EL_useSimple)
-            {
-              // replace it by an empty use element
-              child = TtaGetFirstChild (sibling);
-              do
-                {
-                  next = child;
-                  TtaNextSibling (&next);
-                  TtaRegisterElementDelete(child, doc);
-                  TtaDeleteTree (child, doc);
-                  child = next;
-                }
-              while (next);
-              child = Template_FillEmpty (sibling, doc);
-              TtaChangeTypeOfElement (sibling, doc, Template_EL_useEl);
-              TtaRegisterElementTypeChange (sibling, Template_EL_useSimple, doc);
-            }
-          TtaNextSibling (&sibling);
-        }
       while (sibling)
         {
           el = sibling;
@@ -1840,14 +1812,9 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
           TtaRegisterElementDelete (el, doc);
           TtaDeleteTree (el, doc);
         }
-      if (xtType.ElTypeNum == Template_EL_repeat)
-        {
-          // regenerate the minimum of instances
-          parent = GetParentLine (xtEl, templateSSchema);
-          InstantiateRepeat (t, xtEl, doc, parent, TRUE);
-        }
       TtaCloseUndoSequence (doc);
       TtaSelectElement (doc, xtEl);
+      TtaSetDocumentModified (doc);
     }
   else if (xtEl)
     {
@@ -1903,23 +1870,10 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
                   TtaRegisterElementDelete (el, doc);
                   TtaDeleteTree (el, doc);
                 }
-              else if (elType.ElTypeNum == Template_EL_useSimple)
-                {
-                  // keep an empty use element
-                  child = TtaGetFirstChild (el);
-                  do
-                    {
-                      next = child;
-                      TtaNextSibling (&next);
-                      TtaRegisterElementDelete(child, doc);
-                      TtaDeleteTree (child, doc);
-                      child = next;
-                    }
-                  while (next);
-                  child = Template_FillEmpty (el, doc);
-                  TtaChangeTypeOfElement (el, doc, Template_EL_useEl);
-                  TtaRegisterElementTypeChange (el, Template_EL_useSimple, doc);
-                }
+              else
+                // keep an empty use element
+                Template_FillEmpty (el, doc, TRUE);
+              TtaSetDocumentModified (doc);
             }
           else if (xtType.ElSSchema == templateSSchema &&
                    xtType.ElTypeNum == Template_EL_bag)
@@ -1927,6 +1881,7 @@ ThotBool TemplateElementWillBeDeleted (NotifyElement *event)
               // delete the use within a bag or a repeat
               TtaRegisterElementDelete (el, doc);
               TtaDeleteTree (el, doc);
+              TtaSetDocumentModified (doc);
             }
           TtaCloseUndoSequence (doc);
           TtaSelectElement (doc, xtEl);
@@ -2988,7 +2943,7 @@ Element Template_CreateUseFromSelection (Document doc, int view, ThotBool create
                     TtaInsertFirstChild (&comp, parent, doc);
                   SetAttributeStringValue (comp, Template_ATTR_name, buffer);
                   // generate a content
-                  selElem = Template_FillEmpty (comp, doc);
+                  selElem = Template_FillEmpty (comp, doc, FALSE);
                   TtaRegisterElementCreate (comp, doc);
                   TtaSelectElement (doc, selElem);
                   // register document modification

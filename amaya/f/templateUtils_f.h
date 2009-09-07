@@ -7,12 +7,16 @@
 #ifdef __STDC__
 
 extern const char *GetSchemaFromDocType ( DocumentType docType );
+extern ThotBool IsUseInstantiated ( Element el,
+                                    Document doc );
 extern void SetAttributeStringValue ( Element el,
                                       int att,
                                       const char* value );
 extern void SetAttributeStringValueWithUndo ( Element el,
                                               int att,
                                               char* value );
+extern int GetMinOccurence ( Element el,
+                             Document doc );
 extern void GiveAttributeStringValueFromNum ( Element el,
                                               int att,
                                               char* buff,
@@ -53,12 +57,16 @@ extern Element TemplateFindHead ( Document doc );
 #else /* __STDC__ */
 
 extern const char *GetSchemaFromDocType ( DocumentType docType );
+extern ThotBool IsUseInstantiated ( Element el,
+                                      Document doc );
 extern void SetAttributeStringValue ( Element el,
                                         int att,
                                         const char* value );
 extern void SetAttributeStringValueWithUndo ( Element el,
                                                 int att,
                                                 char* value );
+extern int GetMinOccurence ( Element el,
+                               Document doc );
 extern void GiveAttributeStringValueFromNum ( Element el,
                                                 int att,
                                                 char* buff,

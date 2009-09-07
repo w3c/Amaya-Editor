@@ -2359,7 +2359,6 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   Element             first, last, el;
   Element             parag, child, anchor, ancestor;
   ElementType         elType, parentType;
-  AttributeType       attrType;
   Attribute           attr;
   DisplayMode         dispMode;
 #ifdef TEMPLATES
