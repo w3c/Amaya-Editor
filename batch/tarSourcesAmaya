@@ -12,7 +12,7 @@
 #
 
 # default parameters
-AMAYAVERSION="11.2"
+AMAYAVERSION="11.3"
 DEST=$HOME
 
 # Check argument number on the command line
@@ -79,6 +79,9 @@ ${LIBWWWDIR}/Library/src/vms/build_multinet.com \
 ${LIBWWWDIR}/Library/src/vms/descrip.mms \
 ${LIBWWWDIR}/Library/src/*.c \
 ${LIBWWWDIR}/Library/src/*.h \
+${LIBWWWDIR}/Library/src/SSL/Makefile* \
+${LIBWWWDIR}/Library/src/SSL/*.h \
+${LIBWWWDIR}/Library/src/SSL/*.c \
 ${LIBWWWDIR}/Library/src/windows/Makefile.am \
 ${LIBWWWDIR}/Library/src/windows/Makefile.in \
 ${LIBWWWDIR}/Library/src/windows/*.c \

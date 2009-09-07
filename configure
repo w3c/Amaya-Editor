@@ -13772,7 +13772,7 @@ fi
 
 # the wx version
 AMAYAWX_MAJVER=11
-AMAYAWX_MINVER=2
+AMAYAWX_MINVER=3
 AMAYAWX_SUBVER=0
 APP_MAJVER=$AMAYAWX_MAJVER
 APP_MINVER=$AMAYAWX_MINVER
@@ -14383,11 +14383,11 @@ if test "$with_system_libwww" != "yes" ; then
   BUILDLIBWWW="libwww"
   LIBWWW_CONFIG="libwww/libwww-config"
   LIBWWW_LDFLAGS="-L$CURRENT_PATH/libwww/Library/src/.libs -lwwwxml -lwwwzip -lwwwinit -lwwwapp -lwwwhtml -lwwwtelnet -lwwwnews -lwwwhttp -lwwwmime -lwwwgopher -lwwwftp -lwwwfile -lwwwdir -lwwwcache -lwwwstream -lwwwmux -lwwwtrans -lwwwcore -lwwwutils -lwwwdav \
-  -L$CURRENT_PATH/libwww/Library/src/SSL/.libs -lwwwssl \
+  -L$CURRENT_PATH/libwww/Library/src/SSL/.libs -lwwwssl\
   -L$CURRENT_PATH/libwww/modules/md5/.libs -lmd5 \
   -L$CURRENT_PATH/libwww/modules/expat/.libs -lexpat \
   -L/usr/lib -lssl -lcrypto"
-  LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww -I$CURRENT_PATH/../../libwww/modules/lib/expat -I$CURRENT_PATH/../../libwww/Library/src/SSL"
+  LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww -I$CURRENT_PATH/../../libwww/modules/lib/expat -I$CUURENT_PATH/../../libwww/Library/src/SSL"
 else
   LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
   LIBWWW_LDFLAGS="`$LIBWWW_CONFIG --libs`"
