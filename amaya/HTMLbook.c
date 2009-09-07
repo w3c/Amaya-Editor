@@ -1801,12 +1801,12 @@ void SectionNumbering (Document doc, View view)
 
 /*----------------------------------------------------------------------
   MakeToC generates a Table of Contents at the current position.
-  Looks for all HTML Hi elements after the current position.
+  Looks for all HTML H* elements after the current position.
   ----------------------------------------------------------------------*/
 void MakeToc (Document doc, View view)
 {
   Element             el, new_, *list, parent, copy, srce, child, prev, ancest;
-  Element             toc, lH2, lH3, lH4, lH5, lH6, item;
+  Element             root, toc, lH1, lH2, lH3, lH4, lH5, lH6, item;
   ElementType         elType, searchedType1, searchedType2;
   ElementType         searchedType3, searchedType4, searchedType5;
   ElementType         ulType, copyType;
@@ -1815,10 +1815,8 @@ void MakeToc (Document doc, View view)
   DisplayMode         dispMode;
   char               *s, *id, *value;
   int                 firstChar, i;
-  ThotBool            closeUndo, found;
+  ThotBool            closeUndo, found, manyH1;
 
-  /* check if there is HTML Hi elements and if the current position is
-     within a HTML Body element */
   dispMode = TtaGetDisplayMode (doc);
 
   /* get the insert point */
@@ -1854,20 +1852,21 @@ void MakeToc (Document doc, View view)
     /* the creation of an HTML element is not allowed here */
     return;
 
+  root = TtaGetMainRoot (doc);
+  elType.ElTypeNum = HTML_EL_H1;
+  manyH1 = FALSE;
+  lH1 = TtaSearchTypedElement (elType, SearchForward, root);
+  if (lH1)
+    {
+      if (TtaSearchTypedElement (elType, SearchForward, lH1))
+	/* there are at least 2 H1 elements in the document */
+	manyH1 = TRUE;
+    }
+
   attrType.AttrSSchema = elType.ElSSchema;
   ulType.ElSSchema = elType.ElSSchema;
   ulType.ElTypeNum = HTML_EL_Unnumbered_List;
-  searchedType1.ElSSchema = elType.ElSSchema;
-  searchedType1.ElTypeNum = HTML_EL_H2;
-  searchedType2.ElSSchema = elType.ElSSchema;
-  searchedType2.ElTypeNum = HTML_EL_H3;
-  searchedType3.ElSSchema = elType.ElSSchema;
-  searchedType3.ElTypeNum = HTML_EL_H4;
-  searchedType4.ElSSchema = elType.ElSSchema;
-  searchedType4.ElTypeNum = HTML_EL_H5;
-  searchedType5.ElSSchema = elType.ElSSchema;
-  searchedType5.ElTypeNum = HTML_EL_H6;
-  toc = lH2 = lH3 = lH4 = lH5 = lH6 = prev = NULL;
+  toc = lH1 = lH2 = lH3 = lH4 = lH5 = lH6 = prev = NULL;
   list = NULL;
   /* check if the insert point is already within a table of contents */
   ancest = el;
@@ -1938,9 +1937,31 @@ void MakeToc (Document doc, View view)
       TtaSetDocumentModified (doc);
     }
 
+  searchedType1.ElSSchema = elType.ElSSchema;
+  searchedType2.ElSSchema = elType.ElSSchema;
+  searchedType3.ElSSchema = elType.ElSSchema;
+  searchedType4.ElSSchema = elType.ElSSchema;
+  searchedType5.ElSSchema = elType.ElSSchema;
+  if (manyH1)
+    {
+      searchedType1.ElTypeNum = HTML_EL_H1;
+      searchedType2.ElTypeNum = HTML_EL_H2;
+      searchedType3.ElTypeNum = HTML_EL_H3;
+      searchedType4.ElTypeNum = HTML_EL_H4;
+      searchedType5.ElTypeNum = HTML_EL_H5;
+    }
+  else
+    {
+      searchedType1.ElTypeNum = HTML_EL_H2;
+      searchedType2.ElTypeNum = HTML_EL_H3;
+      searchedType3.ElTypeNum = HTML_EL_H4;
+      searchedType4.ElTypeNum = HTML_EL_H5;
+      searchedType5.ElTypeNum = HTML_EL_H6;
+    }
+
   // keep in memory the current selected element
   ancest = el;
-  el = TtaGetMainRoot (doc);
+  el = root;
   while (el)
     {
       el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
@@ -2002,58 +2023,124 @@ void MakeToc (Document doc, View view)
 	      
               /* locate or generate the list */
               elType = TtaGetElementType (el);
-              if (elType.ElTypeNum == HTML_EL_H2)
+
+              if (elType.ElTypeNum == HTML_EL_H1)
                 {
                   parent = toc;
-                  lH3 = lH4 = lH5 = lH6 = NULL;
-                  list = &lH2;
+                  lH2 = lH3 = lH4 = lH5 = NULL;
+                  list = &lH1;
+                }
+	      else if (elType.ElTypeNum == HTML_EL_H2)
+                {
+		  if (manyH1)
+		    {
+		      if (lH1)
+			parent = TtaGetLastChild (lH1);
+		      else
+			parent = toc;
+		      lH3 = lH4 = lH5 = NULL;
+		      list = &lH2;
+		    }
+		  else
+		    {
+		      parent = toc;
+		      lH3 = lH4 = lH5 = lH6 = NULL;
+		      list = &lH2;
+		    }
                 }
               else if (elType.ElTypeNum == HTML_EL_H3)
                 {
-                  if (lH2)
-                    parent = TtaGetLastChild (lH2);
-                  else
-                    parent = toc;
-                  lH4 = lH5 = lH6 = NULL;
-                  list = &lH3;
+		  if (manyH1)
+		    {
+		      if (lH2)
+			parent =  TtaGetLastChild (lH2);
+		      else if (lH3)
+			parent =  TtaGetLastChild (lH3);
+		      else
+			parent = toc;
+		      lH4 = lH5 = NULL;
+		      list = &lH3;
+		    }
+		  else
+		    {
+		      if (lH2)
+			parent = TtaGetLastChild (lH2);
+		      else
+			parent = toc;
+		      lH4 = lH5 = lH6 = NULL;
+		      list = &lH3;
+		    }
                 }
               else if (elType.ElTypeNum == HTML_EL_H4)
                 {
-                  if (lH3)
-                    parent =  TtaGetLastChild (lH3);
-                  else if (lH2)
-                    parent =  TtaGetLastChild (lH2);
-                  else
-                    parent = toc;
-                  lH5 = lH6 = NULL;
-                  list = &lH4;
+		  if (manyH1)
+		    {
+		      if (lH3)
+			parent =  TtaGetLastChild (lH3);
+		      else if (lH2)
+			parent =  TtaGetLastChild (lH2);
+		      else if (lH1)
+			parent =  TtaGetLastChild (lH1);
+		      else
+			parent = toc;
+		      lH5 = NULL;
+		      list = &lH4;
+		    }
+		  else
+		    {
+		      if (lH3)
+			parent =  TtaGetLastChild (lH3);
+		      else if (lH2)
+			parent =  TtaGetLastChild (lH2);
+		      else
+			parent = toc;
+		      lH5 = lH6 = NULL;
+		      list = &lH4;
+		    }
                 }
               else if (elType.ElTypeNum == HTML_EL_H5)
                 {
-                  if (lH4)
-                    parent =  TtaGetLastChild (lH4);
-                  else if (lH3)
-                    parent =  TtaGetLastChild (lH3);
-                  else if (lH2)
-                    parent =  TtaGetLastChild (lH2);
-                  else
-                    parent = toc;
-                  lH6 = NULL;
-                  list = &lH5;
+		  if (manyH1)
+		    {
+		      if (lH4)
+			parent =  TtaGetLastChild (lH4);
+		      else if (lH3)
+			parent =  TtaGetLastChild (lH3);
+		      else if (lH2)
+			parent =  TtaGetLastChild (lH2);
+		      else if (lH1)
+			parent =  TtaGetLastChild (lH1);
+		      else
+			parent = toc;
+		      list = &lH5;
+		    }
+		  else
+		    {
+		      if (lH4)
+			parent =  TtaGetLastChild (lH4);
+		      else if (lH3)
+			parent =  TtaGetLastChild (lH3);
+		      else if (lH2)
+			parent =  TtaGetLastChild (lH2);
+		      else
+			parent = toc;
+		      lH6 = NULL;
+		      list = &lH5;
+		    }
                 }
               else if (elType.ElTypeNum == HTML_EL_H6)
                 {
-                  if (lH5)
-                    parent =  TtaGetLastChild (lH5);
-                  else if (lH4)
-                    parent =  TtaGetLastChild (lH4);
-                  else if (lH3)
-                    parent =  TtaGetLastChild (lH3);
-                  else if (lH2)
-                    parent =  TtaGetLastChild (lH2);
-                  else
-                    parent = toc;
-                  list = &lH6;
+		  if (lH5)
+		    parent =  TtaGetLastChild (lH5);
+		  else if (lH4)
+		    parent =  TtaGetLastChild (lH4);
+		  else if (lH3)
+		    parent =  TtaGetLastChild (lH3);
+		  else if (lH2)
+		    parent =  TtaGetLastChild (lH2);
+		  else
+		    parent = toc;
+		  list = &lH6;
                 }
 
               if (*list == NULL)
