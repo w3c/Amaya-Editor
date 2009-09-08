@@ -139,39 +139,6 @@ static void DisplayWords (void)
         }
     }
 #endif /* _WINGUI */
-#ifdef _GTK
-  int                 i, indx, length;
-  char               *entry;
-  char                BufMenu[MAX_TXT_LEN];
-
-  /* recopie les propositions */
-  indx = 0;
-  /* commencer a 1 parce qu'en 0 il y a BadWord */
-  for (i = 1; (i <= NB_PROPOSALS && strcmp (ChkrCorrection[i], "$") != 0); i++)
-    {
-      entry = ChkrCorrection[i];
-      length = strlen (entry) + 1;
-      if (length + indx < MAX_TXT_LEN)
-        {
-          strcpy ((BufMenu) + indx, entry);
-          indx += length;
-        }
-    }
-  /* creer le selecteur dans la feuille de dialogue */
-  entry = ChkrCorrection[0];
-  /* remplir le formulaire CORRIGER */
-  /* attention i = nbpropositions + 1 (le mot errone) */
-  TtaNewSelector (SpellingBase + ChkrSelectProp,
-                  SpellingBase + ChkrFormCorrect,
-                  TtaGetMessage (LIB, TMSG_Correct), i - 1,
-                  ((i < 2) ? (char *)"" : BufMenu), 3, entry, TRUE, FALSE);
-  /* selectionner la proposition 0 dans le selecteur - si elle existe */
-  if (strcmp (ChkrCorrection[1], "$") != 0)
-    TtaSetSelector (SpellingBase + ChkrSelectProp, -1, ChkrCorrection[1]);
-  else
-    TtaSetSelector (SpellingBase + ChkrSelectProp, -1, "");
-  /* le formulaire est maintenant pret a etre affiche' */
-#endif /* _GTK */
 }
 
 
@@ -360,26 +327,6 @@ static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
   return TRUE;
 }
 #endif /* _WINGUI */
-#ifdef _GTK
-
-/*----------------------------------------------------------------------
-  UnsetEntryMenu
-  displays as non active the "ent" entry of the menu referenced by "ref".
-  ----------------------------------------------------------------------*/
-void UnsetEntryMenu (int ref, int ent)
-{
-  char                fontname[100];
-  char                text[20];
-
-  if (TtWDepth > 1)
-    TtaRedrawMenuEntry (ref, ent, NULL, InactiveB_Color, 0);
-  else
-    {
-      GetFontIdentifier ('L', 'T', 2, 11, (TypeUnit)1, text, fontname);
-      TtaRedrawMenuEntry (ref, ent, fontname, (ThotColor)-1, 0);
-    }
-}
-#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   TtcSpellCheck  active le formulaire de correction                
@@ -391,10 +338,6 @@ void TtcSpellCheck (Document doc, View view)
   int                 c1, cN;
   int                 i;
   ThotBool            ok;
-#ifdef _GTK
-  int                 indx;
-  char                BufMenu[MAX_TXT_LEN];
-#endif /* _GTK */
 #ifdef _WX
   ThotBool             created;
 #endif /* _WX */
@@ -421,96 +364,6 @@ void TtcSpellCheck (Document doc, View view)
   /* Document selectionne */
   ok = GetCurrentSelection (&pDocSel, &pEl1, &pElN, &c1, &cN);
 
-#ifdef _GTK
-  if (ChkrRange != NULL)
-    RemoveSpellForm ();
-  TtaDestroyDialogue (SpellingBase + ChkrFormCorrect);
-  /* creer la feuille de dialogue de CORRECTION */
-  /* attache'e au bouton Confirmer du formulaire (1) CORRIGER */
-  indx = 0;		   /* tous les boutons du dialogue de correction */
-  strcpy (&BufMenu[indx], TtaGetMessage (LIB, TMSG_Pass_Without));
-  indx += strlen(&BufMenu[indx]) + 1;
-  strcpy(&BufMenu[indx], TtaGetMessage(LIB, TMSG_Pass_With));
-  indx += strlen (&BufMenu[indx]) + 1;
-  strcpy (&BufMenu[indx], TtaGetMessage (LIB, TMSG_Replace_Without));
-  indx += strlen(&BufMenu[indx]) + 1;
-  strcpy (&BufMenu[indx], TtaGetMessage(LIB, TMSG_Replace_With));
-  /* ne pas afficher cette feuille maintenant */
-  TtaNewSheet (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view), 
-               TtaGetMessage (LIB, TMSG_Correct), 4, BufMenu, TRUE, 4, 'L',
-               D_DONE);
-  TtaSetDefaultButton (SpellingBase + ChkrFormCorrect, 3);
-
-  /* 2. proposals */
-  DisplayWords ();
-  /* 5. spellcheck options */
-  indx = 0;
-  sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_Capitals));
-  indx += strlen (&BufMenu[indx]) + 1;
-  sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_Arabics));
-  indx += strlen (&BufMenu[indx]) + 1;
-  sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_Romans));
-  indx += strlen (&BufMenu[indx]) + 1;
-  sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_Specials));
-  TtaNewToggleMenu (SpellingBase + ChkrMenuIgnore,
-                    SpellingBase + ChkrFormCorrect,
-                    TtaGetMessage (LIB, TMSG_Ignore),
-                    4, BufMenu, NULL, TRUE);
-
-  /* 3. Submenu search domain */
-  indx = 0;			/* Ou commencer la correction ? */
-  sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-  indx += strlen (&BufMenu[indx]) + 1;
-  sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-  indx += strlen (&BufMenu[indx]) + 1;
-  sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_AFTER_SEL));
-  indx += strlen (&BufMenu[indx]) + 1;
-  sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-  TtaNewSubmenu (SpellingBase + ChkrMenuOR, SpellingBase + ChkrFormCorrect, 0,
-                 TtaGetMessage (LIB, TMSG_What), 4, BufMenu, NULL, 0, FALSE);
-  TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);     /* apres la selection */
-  /* initial selection */
-  if (!ok || pDocSel != document)
-    {
-      /* pas de selection dans le document d'ou vient la commande */
-      UnsetEntryMenu (SpellingBase + ChkrMenuOR, 0);
-      UnsetEntryMenu (SpellingBase + ChkrMenuOR, 1);
-      UnsetEntryMenu (SpellingBase + ChkrMenuOR, 2);
-      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 3);
-    }
-  else
-    {
-      TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, (ThotColor)-1, 1);
-      TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, (ThotColor)-1, 1);
-      TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, (ThotColor)-1, 1);
-    }
-
-  /* 7. empty label */
-  TtaNewLabel (SpellingBase + ChkrCaptureNC,
-               SpellingBase + ChkrFormCorrect, " ");
-
-  /* 1. Current language */
-  TtaNewPaddedLabel (SpellingBase + ChkrLabelLanguage,
-                     SpellingBase + ChkrFormCorrect, " ", 20);
-
-  /* 4. label finished */
-  /*TtaNewPaddedLabel (SpellingBase + ChkrLabelNotFound,
-    SpellingBase + ChkrFormCorrect, " ", 20);*/
-
-  /* 6. list of special characters */
-  TtaNewTextForm (SpellingBase + ChkrSpecial, SpellingBase + ChkrFormCorrect,
-                  NULL, 20, 1, TRUE);
-  /*TtaSetTextForm (SpellingBase + ChkrSpecial, "@#$&+~");*/
-  TtaSetTextForm (SpellingBase + ChkrSpecial, RejectedChar);
-  /* initial values */
-  TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 0, IgnoreUppercase);
-  TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 1, IgnoreArabic);
-  TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 2, IgnoreRoman);
-  TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 3, IgnoreSpecial);
-
-  /* Et enfin, afficher le formulaire de CORRECTION */
-  TtaShowDialogue (SpellingBase + ChkrFormCorrect, TRUE, TRUE);
-#endif /* _GTK */
 
   /* Indique que c'est une nouvelle correction qui debute */
   FirstStep = TRUE;

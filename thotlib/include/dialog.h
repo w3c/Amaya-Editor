@@ -141,41 +141,6 @@ extern void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 			    int number, ThotIcon * icons, ThotBool horizontal);
 
 /*----------------------------------------------------------------------
-   TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : 
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
-   Le parame`tre val de'signe l'entre'e se'lectionne'e.               
-  ----------------------------------------------------------------------*/
-extern void TtaSetMenuForm (int ref, int val);
-
-/*----------------------------------------------------------------------
-   TtaNewToggleMenu cre'e un sous-menu a` choix multiples :           
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre ref_parent identifie le formulaire pe`re.            
-   Le parame`tre title donne le titre du catalogue.                   
-   Le parame`tre number indique le nombre d'entre'es dans le menu.    
-   Le parame`tre text contient la liste des intitule's du catalogue.  
-   Chaque intitule' commence par un caracte`re qui donne le type de   
-   l'entre'e et se termine par un caracte`re de fin de chai^ne \0.    
-   S'il n'est pas nul, le parame`tre equiv donne les acce'le'rateurs  
-   des entre'es du menu.                                              
-   Quand le parame`tre react est vrai, tout changement de se'lection  
-   dans le sous-menu est imme'diatement signale' a` l'application.    
-  ----------------------------------------------------------------------*/
-extern void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
-			      char *text, char *equiv, ThotBool react);
-
-#ifndef _WX
-/*----------------------------------------------------------------------
-   TtaSetToggleMenu fixe la selection dans un toggle-menu :           
-   Le parame`tre ref donne la re'fe'rence du catalogue.               
-   Le parame`tre val de'signe l'entre'e se'lectionne'e (-1 pour       
-   toutes les entre'es). Le parame`tre on indique que le bouton       
-   correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
-  ----------------------------------------------------------------------*/
-extern void TtaSetToggleMenu (int ref, int val, ThotBool on);
-#endif /* _WX */
-
-/*----------------------------------------------------------------------
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
    du menu de'signe' par sa re'fe'rence ref.                          
   ----------------------------------------------------------------------*/

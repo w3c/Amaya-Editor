@@ -1811,9 +1811,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
             i = 2;
           else
             i = 1;
-#ifdef _GTK
-          TtaSetMenuForm (NumMenuLineSpacing, i);
-#endif /* _GTK */
         }
       break;
     case NumMenuLineSpacing:	/* saisie de l'interligne par un menu */
@@ -1831,9 +1828,6 @@ void CallbackPresMenu (int ref, int val, char *txt)
 #ifdef _WINGUI
           WIN_OldLineSp = OldLineSp;
 #endif  /* _WINGUI */
-#ifdef _GTK
-          TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
-#endif /* _GTK */
         }
       break;
     case NumMenuStrokeStyle:
@@ -1964,12 +1958,6 @@ void TtcChangeGraphics (Document document, View view)
         {
           /* annule les etats memorises */
           ResetPresentMenus ();
-#ifdef _GTK
-          /* feuille de dialogue Presentation Graphiques */
-          TtaNewSheet (NumFormPresGraphics, TtaGetViewFrame (document, view), 
-                       TtaGetMessage (LIB, TMSG_GRAPHICS_PRES),
-                       1, TtaGetMessage (LIB, TMSG_APPLY), FALSE, 3, 'L', D_DONE);
-#endif /* _GTK */
 
 	     /* sous-menu style des traits */
           i = 0;
@@ -1983,11 +1971,6 @@ void TtcChangeGraphics (Document document, View view)
           TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0,
                          TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string,
                          NULL, 0, TRUE);
-          /* change la police des 3 premieres entrees du style des traits */
-#ifdef _GTK
-          for (i = 0; i < 3; i++)
-            TtaRedrawMenuEntry (NumMenuStrokeStyle, i, "icones", ThotColorNone, -1);
-#endif /* _GTK */
        
 	     /* initialise le sous-menu style des traits */
           ChngLineStyle = TRUE;
@@ -2009,22 +1992,11 @@ void TtcChangeGraphics (Document document, View view)
               break;
             }
        
-#ifdef _GTK
-          TtaSetMenuForm (NumMenuStrokeStyle, i - 1);
-          /* zone de saisie epaisseur des traits */
-          TtaNewNumberForm (NumZoneStrokeWeight, NumFormPresGraphics,
-                            TtaGetMessage (LIB, TMSG_LINE_WEIGHT), 0, 72, TRUE);
-#endif /* _GTK */
-
           ChngLineWeight = TRUE;
           StdLineWeight = FALSE;
           LineWeight = pAb->AbLineWeight;
           /* Toggle button Epaisseur des traits standard */
           sprintf (string, "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
-#ifdef _GTK
-          TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
-                            NULL, 1, string, NULL, TRUE);
-#endif /* _GTK */
 
 	     /* initialise la zone de saisie epaisseur des traits */
           if (pAb->AbLineWeightUnit == UnPoint)
@@ -2037,11 +2009,6 @@ void TtcChangeGraphics (Document document, View view)
               if ((currentFontSize * i) % 10 >= 5)
                 i++;
             }
-       
-#ifdef _GTK
-          TtaSetNumberForm (NumZoneStrokeWeight, i);
-#endif /* _GTK */
-
 	     /* selecteur motif de remplissage */
           nbItems = MakeMenuPattern (string, MAX_TXT_LEN);
           if (nbItems > 0)
@@ -2053,26 +2020,10 @@ void TtcChangeGraphics (Document document, View view)
               else
                 i = nbItems;
 
-#ifdef _GTK
-              TtaNewSelector (NumSelectPattern, NumFormPresGraphics,
-                              TtaGetMessage (LIB, TMSG_FILL_PATTERN),
-                              nbItems, string, i, NULL, TRUE, TRUE);
-              /* initialise le selecteur sur sa premiere entree */
-              TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, "");
-#endif /* _GTK */
             }
 
           /* Toggle buttons */
-#ifdef _GTK
-          i = 0;
-          sprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
-          TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
-                            NULL, 1, string, NULL, TRUE);
-#endif /* _GTK */
           DocModPresent = pDoc;
-#ifdef _GTK
-          TtaShowDialogue (NumFormPresGraphics, TRUE, TRUE);
-#endif /* _GTK */
         }
     }
 }
