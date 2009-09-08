@@ -13,13 +13,12 @@
 <body xml:lang="en" lang="en">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Printing.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="MakeBook.html" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="MakeBook.html" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
@@ -28,35 +27,41 @@ src="../../resources/icons/misc/right.png" /></a></p>
 
 <h2 id="Numbering">Numbering sections</h2>
 
-<p>Section headings (<code>h2</code> to <code>h6</code> elements) can be
-automatically numbered to reflect the document structure. </p>
+<p>Section headings (<code>h1</code> to <code>h6</code> elements) can be
+automatically numbered according to the document structure. </p>
 
-<p>The <code>h1</code> element is supposed to be the document title and is
-not numbered. Other headings receive a number that is computed according to
-their type and their position in the document structure. These numbers are
-generated in the document itself and numbers that were generated previously
-are removed, every time the <strong>Tools/Section numbering</strong> command
-is called.</p>
+<p>If there is only one <code>h1</code> element in the document, it is supposed
+to be the document title and it is not numbered. If there are several
+<code>h1</code> elements, they are considered as section headings and they are
+therefore numbered.</p>
+
+<p>Headings receive a number that is computed according to their type and their
+position in the document structure. These numbers are generated in the document
+itself and numbers that were generated previously are removed, every time the
+<strong>Tools/Section numbering</strong> command is called.</p>
 
 <h2 id="Table">Generating a table of contents</h2>
 
 <p>Command <strong>Tools/Add-Update table of contents</strong> collects all
-<code>h2</code> to <code>h6</code> elements in the document following the
-current selection and generates a table of contents at the current position.
-It updates the current table of contents if the selection is already within a
-table of contents.</p>
+section headings (<code>h1</code> to <code>h6</code> elements) that follow the
+current position and it generates a table of contents at the current position.
+The command updates the current table of contents if the selection is already
+within a table of contents.</p>
+
+<p>If there is only one <code>h1</code> element in the document, it is not
+taken into account for the table of contents.</p>
 
 <p>This command adds:</p>
 <ul>
-  <li>An <code>id</code> attribute to each <code>h2</code> to <code>h6</code>
+  <li>An <code>id</code> attribute to each <code>h1</code> to <code>h6</code>
     element which does not have this attribute.</li>
   <li>A division (with a <code>class="toc"</code> attribute) that contains
-    nested unnumbered lists (<code>ul</code>) at the current position. You
-    can use the <code>class</code> attribute to set a particluar style to
-    your tables of contents.</li>
-  <li>A list item (<code>li</code>) for each <code>h2</code> to
-    <code>h6</code> element including a link which points to the
-    corresponding element in the document. 
+    nested unnumbered lists (<code>ul</code>) at the current position. You can
+    use this <code>class</code> attribute to set a particluar style to your
+    tables of contents.</li>
+  <li>A list item (<code>li</code>) for each <code>h1</code> to <code>h6</code>
+    element including a link which points to the corresponding element in the
+    document. 
     <p>The link element contains a copy of the <code>h<em>n</em></code>
     element. If the <code>h<em>n</em></code> element is numbered, this number
     is also copied.</p>

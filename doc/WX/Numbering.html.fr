@@ -12,49 +12,53 @@
 <body xml:lang="fr" lang="fr">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Printing.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="MakeBook.html.fr" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="MakeBook.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="PageBody" id="Section">
 <h2 id="roter">Numéroter les sections</h2>
 
-<p>Les en-têtes de section (éléments <code>h2</code> à <code>h6</code>)
-peuvent être automatiquement numérotées pour refléter la structure du
-document. </p>
+<p>Les en-têtes de section (éléments <code>h1</code> à <code>h6</code>) peuvent
+être automatiquement numérotées en fonction de la structure du document. </p>
 
-<p>L'élément <code>h1</code> est supposé être le titre du document et il
-n'est pas numéroté. Toutes les autres en-têtes (<code>h2</code> à
-<code>h6</code>) reçoivent un numéro calculé en fonction de leur type et de
-leur position dans la structure du document. Ces numéros sont introduits dans
-le document et les numéros produits précédemment sont retirés chaque fois que
-la commande <strong>Outils/Numéroter les sections</strong> est appelée.</p>
+<p>S'il n'y a qu'un élément <code>h1</code> dans le document, il est supposé
+être le titre du document et il n'est pas numéroté. S'il y a plusieurs éléments
+<code>h1</code>, ils sont considérés comme des titres de sections et sont
+numérotés.</p>
+
+<p>Les en-têtes (<code>h1</code> à <code>h6</code>) reçoivent un numéro calculé
+en fonction de leur type et de leur position dans la structure du document. Ces
+numéros sont introduits dans le document et les numéros produits précédemment
+sont retirés chaque fois que la commande <strong>Outils/Numéroter les
+sections</strong> est appelée.</p>
 
 <h2 id="Engendrer">Engendrer la table des matières</h2>
 
-<p>La commande <strong>Outils/Ajouter-Actualiser la table des
-matières</strong> collecte tous les élément <code>h2</code> à <code>h6</code>
-qui suivent la sélection courante pour engendrer une table des matières à la
-position courante. Cette table remplace la version courante quand la
-sélection est déjà dans une table des matières.</p>
+<p>La commande <strong>Outils/Ajouter-Actualiser la table des matières</strong>
+collecte tous les éléments <code>h1</code> à <code>h6</code> qui suivent la
+sélection courante pour engendrer une table des matières à la position
+courante. Cette table remplace la version courante quand la sélection est déjà
+dans une table des matières.</p>
+
+<p>S'il n'y a qu'un élément <code>h1</code> dans le document, il n'est pas pris
+en compte dans la table des matières.</p>
 
 <p>Cette commande ajoute :</p>
 <ul>
-  <li>Un attribut <code>id</code> à chaque élément <code>h2</code> à
+  <li>Un attribut <code>id</code> à chaque élément <code>h1</code> à
     <code>h6</code> qui n'a pas cet attribut.</li>
   <li>Une division (avec une valeur d'attribut <code>class="toc"</code>) qui
     contient un emboîtement de listes non numérotées (<code>ul</code>) à la
-    position courante. Vous pouvez utiliser l'attribut <code>class</code>
+    position courante. Vous pouvez utiliser cet attribut <code>class</code>
     pour associer un style à vos tables des matières.</li>
-  <li>Un item de liste (<code>li</code>) pour chaque élément <code>h2</code>
-    à <code>h6</code> avec un lien vers l'élément correspondant dans le
-    document. 
+  <li>Un item de liste (<code>li</code>) pour chaque élément <code>h1</code> à
+    <code>h6</code> avec un lien vers l'élément correspondant dans le document. 
     <p>Le contenu du lien est la copie du contenu de l'élément
     <code>h<em>n</em></code>. Si l'élément <code>h<em>n</em></code> est
     numéroté, ce numéro est également copié.</p>
