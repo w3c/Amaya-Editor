@@ -210,8 +210,6 @@ public:
   // these 2 atributes are used to remember the type of views on each frames
   wxString           m_FirstViewType;
   wxString           m_SecondViewType;
-  
-
   char               m_LastOpenViewName[50];
 };
 

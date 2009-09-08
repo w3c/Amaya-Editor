@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -406,7 +406,6 @@ AmayaSplittablePage::AmayaSplittablePage( wxWindow * p_parent_window,
 
   // initialize the last open view name
   strcpy(m_LastOpenViewName, "Formatted_view");
-
   SetAutoLayout(TRUE);
 }
 
@@ -753,22 +752,19 @@ void AmayaSplittablePage::DoSplitUnsplit(int mode)
 
   if (!m_pSplitterWindow->IsSplit())
     {
-      // TODO: montrer la meme vue que la premiere frame
-      if ( !strcmp(m_LastOpenViewName, "Formatted_view") )
+      if ( !strcmp(m_LastOpenViewName, "Links_view") )
+        TtaExecuteMenuAction ("ShowLinks", document, view, FALSE);
+      else if ( !strcmp(m_LastOpenViewName, "Alternate_view") )
+        TtaExecuteMenuAction ("ShowAlternate", document, view, FALSE);
+      else if ( !strcmp(m_LastOpenViewName, "Table_of_contents") )
+        TtaExecuteMenuAction ("ShowToC", document, view, FALSE);
+      else
         {
           if (mode == wxSPLIT_HORIZONTAL)
             TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
           else // if ( !strcmp(m_LastOpenViewName, "Structure_view") )
             TtaExecuteMenuAction ("ShowStructure", document, view, FALSE); 
         }
-      else if ( !strcmp(m_LastOpenViewName, "Links_view") )
-        TtaExecuteMenuAction ("ShowLinks", document, view, FALSE);
-      else if ( !strcmp(m_LastOpenViewName, "Alternate_view") )
-        TtaExecuteMenuAction ("ShowAlternate", document, view, FALSE);
-      else if ( !strcmp(m_LastOpenViewName, "Table_of_contents") )
-        TtaExecuteMenuAction ("ShowToC", document, view, FALSE);
-      else // if ( !strcmp(m_LastOpenViewName, "Structure_view") )
-        TtaExecuteMenuAction ("ShowStructure", document, view, FALSE); 
     }
   else
     {
