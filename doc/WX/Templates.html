@@ -36,12 +36,13 @@ language.</p>
 <p>In a template, the skeleton document contains some statements, expressed in
 the XTiger language (eXtensible Templates for Interactive Guided Editing of
 Resources), that specify how this minimal document can evolve and grow, while
-keeping in line with the intended type of the final document. Documents
-produced from this skeleton following the XTiger statements are called
-<em>instances</em> of the template. Some parts of the template may be frozen,
-if they have to appear in document instances as they are. Some parts may be
-changed when producing an instance document, some others may be added either
-freely or under some constraints.</p>
+keeping in line with the intended type of the final document.</p>
+
+<p>Documents produced from this skeleton following the XTiger statements are
+called <em>instances</em> of the template. Some parts of the template may be
+frozen, if they have to appear in document instances as they are. Some parts
+may be changed when producing an instance document, some others may be added
+either freely or under some constraints.</p>
 
 <p>The file containing a template must have a <code>.xtd</code> extension.</p>
 
@@ -59,20 +60,24 @@ provides a specific support for creating or updating templates.</p>
   <li>Create first a skeleton of the document instance (.html file) you want to
     generate.</li>
   <li>Select the Template (Tpl) tab of the <strong>Elements</strong> tool and
-    click on the first entry to generate a template (.xtd file) from that
-    document skeleton.</li>
-  <li>When a template document is selected, several entries of the Template
-    tool are available: 
+    click on the first "<em>Create template from current document</em>" entry
+    to generate a template (.xtd file) from that document skeleton.</li>
+  <li>You can also create a new empty XTiger library (.xtl file) with the
+    "<em>Create a library</em>" entry.</li>
+  <li>When a template document or a XTiger library is selected, several entries
+    of the Template tool are available: 
     <p></p>
     <ul>
-      <li>The <em>Create and use a component</em> entry generates a
+      <li>The "<em>Create a component</em>" entry generates a
         <code>component</code> that will be displayed in the <code>head</code>
-        of the template document. The current content of the selection becomes
-        the content of the component. 
-        <p>A <code>use</code> element that allows one to insert that component
-        is created at the current position of the document. The selection must
-        be valid (a set of complete elements or a string). The command asks the
-        user for the <code>component</code> name. That name must be unique.</p>
+        of the template document. 
+        <p>If the selection is not empty, the current selected content becomes
+        the content of the component. A <code>use</code> element is created at
+        the current position of the document to say that the component is
+        inserted at that position. The selection must be valid (a set of
+        complete elements or a string). The command asks the user for the
+        <code>component</code> name. That name must be unique and is used to
+        display the document structure of template instances.</p>
         <p class="Note"><strong>Note:</strong> The content of the component
         won't be edited in template instances. The user has to insert
         <code>use</code> and/or <code>bag</code> elements inside the component
@@ -80,87 +85,107 @@ provides a specific support for creating or updating templates.</p>
         or after the creation of the component.</p>
         <p></p>
       </li>
-      <li>The <em>Create and repeat a component</em> entry generates a
-        <code>component</code> that will be displayed in the <code>head</code>
-        of the template document and a <code>use</code> element inside a
-        <code>repeat</code> element. That command is a shortcut of the
-        <em>Create and use a component</em> and <em>Repeat the current use</em>
-        commands. 
+      <li>The "<em>Create a new types union</em>" entry generates a
+        <code>union</code> element which defines a new type as a choice between
+        several basic types (<code>number</code>, <code>string</code>), or
+        several elements from the target language (div, h1, h2, p, ...) and
+        <code>component</code> names. The current selection has no effect. The
+        command asks the user for the <code>union</code> name. That name must
+        be unique. 
         <p></p>
       </li>
-      <li>The <em>Create a new types union</em> entry generates a
-        <code>union</code> which defines a new type as a choice between several
-        basic types (<code>number</code>, <code>string</code>), elements from
-        the target language (div, h1, h2, p, ...), or <code>component</code>
-        names. The current selection has no effect. The command asks the user
-        for the <code>union</code> name. That name must be unique. 
+      <li>The "<em>Import a library</em>" entry generates a <code>import</code>
+        element that inserts library declarations at the position. 
         <p></p>
       </li>
-      <li>The <em>Create a text area</em> entry generates a <code>use</code>
-        element that includes a string. The command asks the user for a label.
-        That label is free and is used for the selection path displayed in the
-        status bar. The selection must be string and becomes the initial value
-        of the use element. 
+      <li>The "<em>Create a text area</em>" entry generates a <code>use</code>
+        element that allows one to insert a string in template instances. The
+        command asks the user for a <em>label</em>. That label is free and is
+        used to display the document structure of template instances. The
+        selection must be string that becomes the <em>initial value</em> of the
+        <code>use</code> element. 
         <p></p>
       </li>
-      <li>The <em>Use a component or an element</em> entry is used to generate
-        a new <code>use</code>. 
-        <p>If the selection is empty, un dialog proposes the list of elements
-        that can be inserted at that position and asks the user for the label
-        to be associated with the new use element. A <code>use</code> element
-        is generated with an empty content.</p>
+      <li>The "<em>Use a component or an element</em>" entry generates a new
+        <code>use</code> element. 
+        <p>If the selection is empty, an dialog proposes the list of elements
+        or components that can be inserted at that position and asks the user
+        for the <em>label</em> associated with the <code>use</code> element (as
+        the previous entry). A <code>use</code> element is generated with an
+        empty content.</p>
         <p>If an element of the target language (div, h1, h2, p, ...) is
-        selected, a <code>use</code> element that allows one to insert this
-        element type is generated at that position. The selected element
-        becomes the initial content of the use element. The command only asks
-        the user for a label.</p>
+        selected, the <code>use</code> element will allow one to insert this
+        element type at that position. The selected element becomes the
+        <em>initial content</em> of the <code>use</code> element. The command
+        only asks the user for a <em>label</em>.</p>
         <p></p>
       </li>
-      <li>The <em>Repeat the current use</em> entry is used to generate a
+      <li>The "<em>Repeat the current use</em>" entry generates a
         <code>repeat</code> of the current selected <code>use</code> element.
-        The command asks the user for a label. That label is free and is used
-        for the selection path displayed in the status bar. 
+        The command asks the user for a <em>label</em>. That label is free and
+        is used to note the repeat element in the document structure of
+        template instances. 
         <p></p>
       </li>
-      <li>The <em>Create a free editing box</em> entry generates a
-        <code>bag</code> element. The command asks the user for a label. That
-        label is free and is used for the selection path displayed in the
-        status bar.</li>
+      <li>The "<em>Create and repeat a component</em>" entry generates at the
+        same times a <code>use</code> element inside a <code>repeat</code>
+        element. 
+        <p></p>
+      </li>
+      <li>The "<em>Create a free editing box"</em> entry generates a
+        <code>bag</code> element. The command asks the user for a
+        <em>label</em>. That label is free and is used to display the document
+        structure of template instances. 
+        <p>The <code>bag</code> element allows several inserts of any element
+        of the target language and components defined in the template
+        (<code>types="any"</code>). The user has to edit the <code>types</code>
+        attribute with the <em>Attributes</em> panel to modify that default
+        value.</p>
+      </li>
+      <li>The "Create attribute control" entry generates a
+        <code>attribute</code> element (not available yet).</li>
     </ul>
   </li>
-  <li>The created template can stored anywhere, in your local file system or
-    remotely.</li>
+  <li>The created template or XTiger library can stored anywhere, in your local
+    file system or remotely.</li>
 </ul>
 
 <h3 id="Visualizin">Visualizing template elements</h3>
 
-<p>When a document instance is displayed, Amaya shows the XTiger elements under
-the form of colored frames that enclose XHTML elements.</p>
+<p>When a template is displayed, Amaya shows the XTiger elements under the form
+of colored frames that surround XHTML elements.</p>
 <ul>
-  <li>A <code>use</code> element is shown as a dashed blue box</li>
-  <li>A <code>bag</code> element is shown as a dashed green box</li>
-  <li>A <code>repeat</code> element is shown as a box with a <img
-    alt="Repeat icon" src="../../resources/icons/16x16/TEMPLATE_repeat.png"
-    width="16" height="16" /> on the top left</li>
-  <li>The <code>attribute</code> element is not displayed in the main view, as
-    it only impacts the <strong>Attributes</strong> tool.</li>
+  <li>The <code>head</code> element which includes <code>component</code>,
+    <code>union</code>, and <code>import</code> elements is displayed with a
+    grey background.</li>
+  <li>The <em>name</em> of <code>component</code> and <code>union</code>
+    elements is displayed on the top of them.</li>
+  <li>A <code>use</code> element is displayed is a box a dashed blue frame.
+    When its content is a text, the box has a blue background.</li>
+  <li>A <code>bag</code> element is a box with a light green background and a
+    dashed green frame.</li>
+  <li>A <code>repeat</code> element is a box with a <img alt="Repeat icon"
+    src="../../resources/icons/16x16/TEMPLATE_repeat.png" width="16"
+    height="16" /> icon on the top left.</li>
+  <li>The <code>attribute</code> element is not displayed in the Formatted
+  view.</li>
 </ul>
 
-<p>The XTiger elements can also be seen in the structure view. Open this view
-with the <strong>Show structure</strong> entry of the <strong>Views</strong>
-menu. In the structure view, XTiger elements are displayed in gold, while the
-XHTML elements are in blue. XTiger elements are also shown in the Source view,
-but with no special color.</p>
+<p>XTiger elements can also be seen in the <em>Structure view</em> (open this
+view with the <strong>Show structure</strong> entry of the
+<strong>Views</strong> menu). In the Structure view, XTiger elements are
+displayed in gold, while the XHTML elements are in blue. XTiger elements are
+also shown in the Source view, but with no special color.</p>
 
 <p>Another way to understand the nesting of XTiger elements with XHTML elements
 is the <strong>selection path</strong> displayed in the status bar of the
 window (at the bottom of the window). There, you can see the list of all
 elements in the structure of the document from the root element to the current
-selection. It is updated every time the selection is changed. In this path,
-XTiger elements are displayed in gold and XHTML elements in black. For XTiger
-elements, it is not the name of the element that is displayed there
-(<code>use</code>, <code>bag</code>, <code>repeat</code>) but the label of
-these elements, as declared in the template.</p>
+selection. It is updated every time the selection changes. In this path, XTiger
+elements are displayed in gold and XHTML elements in black. For XTiger
+elements, it is not the element name (<code>use</code>, <code>bag</code>,
+<code>repeat</code>) but the <em>label</em> of these elements, as declared in
+the template.</p>
 
 <h3 id="Selecting">Selecting templates</h3>
 
@@ -169,17 +194,20 @@ Amaya web site at <a
 href="http://www.w3.org/Amaya/Templates/">http://www.w3.org/Amaya/Templates/</a></p>
 
 <p>To ease selection among your favorite templates, there is a
-<strong>Templates</strong> section in the Preferences dialogue
+<strong>Templates</strong> section in the preferences dialogue
 (<strong>Edit/Preferences</strong>, or <strong>amaya/Preferences</strong> under
 Mac OS X). Use it to register the templates that Amaya proposes when you create
-a new document. When registering a local template, you can call a file browser
-with the browse button to locate and select the files to be added to the list.
-You can also enter the URI of remote templates in the input area below the
-list. Use the buttons on the right side of the list to remove a template or to
-change the order of templates in the list.</p>
+a new document. </p>
 
-<p>Registering templates in this list is not mandatory. When you create a new
-document instance, you can also choose a template that is not in that list.</p>
+<p>When registering a local template, you use the file browser (browse button)
+to locate and select the files to be added to the list. You can also enter the
+URI of remote templates in the input area below the list. Use buttons on the
+right side of the list to remove a template or to change the order of templates
+in the list.</p>
+
+<p>Registering templates in this list is recommended but not mandatory. When
+you create a new document instance, you can also choose a template that is not
+in that list.</p>
 
 <h3 id="Creating">Creating an instance document</h3>
 
@@ -198,9 +226,52 @@ href="Document.html">dialogue</a>  where you can select:</p>
 
 <h3 id="Editing">Editing an instance document</h3>
 
+<p>When a template instance is created or opened, Amaya displays side by side
+the <em>Formatted view</em> and the <em>Structure view</em> of the document.</p>
+
+<p>In the <em>Formatted view</em>:</p>
+
 <p>Editing is allowed only inside the <code>repeat</code>, <code>use</code>,
 and <code>bag</code> elements, i.e. within the colored dashed boxes. The rest
 of the document is the fixed part of the template and can not be modified.</p>
+<ul>
+  <li>Areas where the user can edit are surrounded with colored frames: 
+    <ul>
+      <li>A blue frame surrounds an area where the user can insert text
+        (<code>use</code> elements).</li>
+      <li>A green frame surrounds an area where the user can insert elements or
+        strings (<code>bag</code> elements).</li>
+    </ul>
+  </li>
+  <li><strong style="color:#7f7f7f">+</strong> buttons allow the user to
+    display a pop-up menu and insert one of new elements proposed in the menu
+    at the current position (in <code>repeat</code> or <code>bag</code>
+    elements).</li>
+  <li>The <code>attribute</code> elements only impact the
+    <strong>Attributes</strong> panel.</li>
+</ul>
+
+<p>In the <em>Structure view</em>: </p>
+<ul>
+  <li>Labels of XTiger elements are displayed over a colored background: 
+    <ul>
+      <li>A grey background for inactive <code>use</code> elements</li>
+      <li>A gold background for active <code>use</code> elements</li>
+      <li>A light gold background for active <code>repeat</code> elements</li>
+      <li>A light green background for active <code>bag</code> elements</li>
+    </ul>
+  </li>
+  <li>With active elements, 
+    <ul>
+      <li>A click on the label, or the top half of the attached vertical line,
+        displays a pop-up menu that allows the user to insert a new proposed
+        element before.</li>
+      <li>A click on the bottom half of the attached vertical line displays a
+        pop-up menu that allows the user to insert a new proposed element
+      after.</li>
+    </ul>
+  </li>
+</ul>
 
 <h4 id="Editing1">Editing in a <code>repeat</code> element</h4>
 
@@ -209,14 +280,13 @@ structure or you can delete one. This is controlled by the template, which may
 impose a minimum and/or a maximum number of occurrences of the repeated
 structure.</p>
 
-<p>When creating new occurrences of the repeated structure is allowed, <strong
-style="color:#1e90ff">+</strong> icons are displayed at locations where you are
-allowed to create new occurrences. When you click on these icons, you get a
-pop-up menu that tells you what can be inserted at that position. By clicking
-in that pop-up menu, you create a new occurrence of the corresponding type. In
-some cases the template offers only one type of occurrence. The pop-up menu
-then contains a single entry, to clearly state what will be created. If you
-click outside the menu, nothing is created.</p>
+<p>When creating a new occurrence of the repeated structure is allowed, <strong
+style="color:#1e90ff"><span style="color:#7f7f7f">+</span></strong> icons are
+displayed at locations where you are allowed to create it. When you click on
+these icons, you get a pop-up menu that tells you what can be inserted at that
+position. In some cases the template offers only one type of occurrence. The
+pop-up menu then contains a single entry, to clearly state what will be
+created. If you click outside the menu, nothing is created.</p>
 
 <p>Another way to create new occurrences of the repeated structure is to select
 an existing occurrence, or to put the caret at the end of an occurrence, and to
@@ -245,9 +315,9 @@ structure is generated and you can freely edit its content.</p>
 the types specified by the template. When you want to insert a XHTML element,
 do it the usual way provided this type is allowed by the template. It may
 happen that some elements are not allowed by the template. The allowed elements
-are listed in the <strong>Insert</strong> and <strong>Append</strong> submenus
-of the contextual menu. The available template <em>components</em> are also
-listed in the <strong>Insert</strong> and <strong>Append</strong> submenus of
+are listed in the <strong>Insert</strong> and <strong>Append</strong> sub-menus
+of the contextual menu. The available <code>component</code> elements are also
+listed in the <strong>Insert</strong> and <strong>Append</strong> sub-menus of
 the contextual menu.</p>
 </div>
 </body>
