@@ -6085,6 +6085,7 @@ void DoDeleteAnchor (Document doc, View view, ThotBool noCallback)
       if (anchor == AttrHREFelement)
         AttrHREFelement = NULL;
       TtaDeleteTree (anchor, doc);
+      TtaSetStatus (doc, 1, " ", NULL);
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
     }

@@ -2030,8 +2030,9 @@ void FollowTheLinkNewTab (Document doc, View view)
 
 /*----------------------------------------------------------------------
   DisplayUrlAnchor displays the url when an anchor is selected
+  Return TRUE if an anchor is selected
   ----------------------------------------------------------------------*/
-static void DisplayUrlAnchor (Element element, Document doc)
+ThotBool DisplayUrlAnchor (Element element, Document doc)
 {
   Attribute           HrefAttr, titleAttr;
   Element             anchor, ancestor;
@@ -2053,7 +2054,7 @@ static void DisplayUrlAnchor (Element element, Document doc)
         {
           /* Get the URL */
           TtaGiveTextAttributeValue (HrefAttr, utf8value, &length);
-	  utf8value[MAX_LENGTH / 4] = EOS;
+          utf8value[MAX_LENGTH / 4] = EOS;
           url = (char *)TtaConvertMbsToByte ((unsigned char *)utf8value,
                                              TtaGetDefaultCharset ());
           TtaFreeMemory (utf8value);
@@ -2110,8 +2111,10 @@ static void DisplayUrlAnchor (Element element, Document doc)
           TtaFreeMemory (pathname);
           TtaFreeMemory (documentname);
           TtaFreeMemory (url);
+          return TRUE;
         }
     }
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -4043,7 +4046,8 @@ void SelectionChanged (NotifyElement *event)
         {
           // update the XML list
           UpdateXmlElementListTool (el, doc);
-          TtaSetStatus (doc, 1, "  ", NULL);
+          if (!DisplayUrlAnchor (el, doc))
+            TtaSetStatus (doc, 1, "  ", NULL);
 #ifdef TEMPLATES
           if (!TtaIsTextInserting ())
             // no current text insertion

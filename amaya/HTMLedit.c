@@ -1802,7 +1802,8 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
       AttrHREFundoable = FALSE;
     }
   TtaSetDocumentModified (doc);
-  TtaSetStatus (doc, 1, " ", NULL);
+  DisplayUrlAnchor (element, doc);
+  //TtaSetStatus (doc, 1, " ", NULL);
   // update the attributes panel
   TtaUpdateAttrMenu (doc);
 }

@@ -52,6 +52,8 @@ extern void FollowTheLinkNewWin ( Document doc,
                                   View view );
 extern void FollowTheLinkNewTab ( Document doc,
                                   View view );
+extern ThotBool DisplayUrlAnchor ( Element element,
+                                   Document doc );
 extern void DoAction ( Document doc,
                        View view );
 extern ThotBool AcceptTab ( NotifyOnTarget *event );
@@ -147,6 +149,8 @@ extern void FollowTheLinkNewWin ( Document doc,
                                     View view );
 extern void FollowTheLinkNewTab ( Document doc,
                                     View view );
+extern ThotBool DisplayUrlAnchor ( Element element,
+                                     Document doc );
 extern void DoAction ( Document doc,
                          View view );
 extern ThotBool AcceptTab ( NotifyOnTarget *event );
