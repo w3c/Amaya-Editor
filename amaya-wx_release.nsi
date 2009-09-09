@@ -352,17 +352,17 @@ Section "Amaya" SecAmaya
   WriteRegStr HKCR ".mml" "" "MML"
   WriteRegStr HKCR ".html" "" "HTML"
   WriteRegStr HKCR ".htm" "" "HTM"
-  WriteRegStr HKCR "XTD\Shell\Action2" "" "edit"
+  WriteRegStr HKCR "XTD\Shell\Action2" "" "Edit with Amaya"
   WriteRegStr HKCR "XTD\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "XTL\Shell\Action2" "" "edit"
+  WriteRegStr HKCR "XTL\Shell\Action2" "" "Edit with Amaya"
   WriteRegStr HKCR "XTL\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "SVG\Shell\Action2" "" "edit"
+  WriteRegStr HKCR "SVG\Shell\Action2" "" "Edit with Amaya"
   WriteRegStr HKCR "SVG\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "MML\Shell\Action2" "" "edit"
+  WriteRegStr HKCR "MML\Shell\Action2" "" "Edit with Amaya"
   WriteRegStr HKCR "MML\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "HTML\Shell\Action2" "" "edit"
+  WriteRegStr HKCR "HTML\Shell\Action2" "" "Edit with Amaya"
   WriteRegStr HKCR "HTML\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "HTM\Shell\Action2" "" "edit"
+  WriteRegStr HKCR "HTM\Shell\Action2" "" "Edit with Amaya"
   WriteRegStr HKCR "HTM\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
 SectionEnd
 
