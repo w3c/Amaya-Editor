@@ -45,7 +45,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\..\wxWidgets\lib\vc_dll\mswu,..\,..\..\..\wxWidgets\include,..\..\..\wxWidgets\contrib\include,,..\..\..\wxWidgets\src\zlib,..\..\..\wxWidgets\src\jpeg,..\..\..\wxWidgets\src\tiff,..\..\..\wxWidgets\src\png,..\..\thotlib\include,..\..\thotlib\internals\h,..\..\thotlib\internals\f,..\..\thotlib\internals\var,..\..\amaya,..\..\..\freetype\include"
-				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;__WXMSW__;UNICODE;STDC_HEADERS;XMD_H;THOT_TOOLTIPS;_WINDOWS;_GL;WIN32;WINVER=0x400;wxUSE_GUI=1;_WX;WXUSINGDLL"
+				PreprocessorDefinitions="WWW_WIN_DLL;SOCKS;__WXMSW__;UNICODE,_UNICODE;STDC_HEADERS;XMD_H;_STIX;_FONTCONFIG;_GLANIM,_GLTRANSFORMATION;THOT_TOOLTIPS;_SVGLIB;_SVGANIM;_WINDOWS;_GL;WIN32;WINVER=0x400;wxUSE_GUI=1;_WX;WXUSINGDLL"
 				StringPooling="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="false"
@@ -55,6 +55,7 @@
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
+				CompileAs="2"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

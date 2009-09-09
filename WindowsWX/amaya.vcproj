@@ -78,11 +78,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glu32.lib opengl32.lib wxbase28u_xml.lib wxmsw28u_gl.lib wxmsw28u_xrc.lib wxmsw28u_adv.lib wxmsw28u_core.lib wxbase28u.lib wxbase28u_net.lib freetype2110.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="wxjpeg.lib wxpng.lib wxzlib.lib wxmsw28u_aui.lib wxbase28u_xml.lib wxmsw28u_gl.lib wxmsw28u_xrc.lib wxmsw28u_adv.lib wxmsw28u_core.lib wxbase28u.lib wxbase28u_net.lib freetype2110.lib ssleay32.lib libeay32.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib"
 				OutputFile=".\bin/amaya.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\wxWidgets\lib\vc_dll;..\..\Mesa\lib;..\..\freetype\objs"
+				AdditionalLibraryDirectories="..\..\wxWidgets\lib\vc_dll;..\..\Mesa\lib;..\..\freetype\objs;..\..\openssl\out32"
 				IgnoreDefaultLibraryNames="LIBC.lib;LIBCMT.lib"
 				ProgramDatabaseFile=".\bin/amaya.pdb"
 				SubSystem="2"
