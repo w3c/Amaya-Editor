@@ -405,7 +405,7 @@ AmayaSplittablePage::AmayaSplittablePage( wxWindow * p_parent_window,
   m_pSplitterWindow->Initialize( m_DummyPanel );
 
   // initialize the last open view name
-  strcpy(m_LastOpenViewName, "Formatted_view");
+  //strcpy(m_LastOpenViewName, "Formatted_view");
   SetAutoLayout(TRUE);
 }
 
@@ -526,7 +526,7 @@ AmayaFrame *AmayaSplittablePage::AttachFrame (AmayaFrame *p_frame, int position,
   SetAutoLayout(TRUE);
 
   // remember the last open view
-  strcpy(m_LastOpenViewName, FrameTable[p_frame->GetFrameId()].FrViewName);
+  //strcpy(m_LastOpenViewName, FrameTable[p_frame->GetFrameId()].FrViewName);
 
   // return the old frame : needs to be manualy deleted ..
   return oldframe;
@@ -752,6 +752,7 @@ void AmayaSplittablePage::DoSplitUnsplit(int mode)
 
   if (!m_pSplitterWindow->IsSplit())
     {
+#ifdef IV
       if ( !strcmp(m_LastOpenViewName, "Links_view") )
         TtaExecuteMenuAction ("ShowLinks", document, view, FALSE);
       else if ( !strcmp(m_LastOpenViewName, "Alternate_view") )
@@ -759,6 +760,7 @@ void AmayaSplittablePage::DoSplitUnsplit(int mode)
       else if ( !strcmp(m_LastOpenViewName, "Table_of_contents") )
         TtaExecuteMenuAction ("ShowToC", document, view, FALSE);
       else
+#endif
         {
           if (mode == wxSPLIT_HORIZONTAL)
             TtaExecuteMenuAction ("ShowSource", document, view, FALSE);
@@ -770,8 +772,8 @@ void AmayaSplittablePage::DoSplitUnsplit(int mode)
     {
 	  FrameToView(TtaGiveActiveFrame(), &document, &view);
     // remember the last open view
-    if (FrameTable[view].FrViewName)
-    strcpy(m_LastOpenViewName, FrameTable[view].FrViewName);
+    //if (FrameTable[view].FrViewName)
+    //strcpy(m_LastOpenViewName, FrameTable[view].FrViewName);
 	  TtaExecuteMenuAction("Synchronize", document, view, TRUE);
 
 	  if(m_pBottomFrame)
