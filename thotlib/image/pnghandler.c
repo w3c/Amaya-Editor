@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -120,16 +120,17 @@ static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *
 			       int *ncolors, int *cpp, ThotColorStruct **colrs,
 			       int *bg, ThotBool *withAlpha, ThotBool *grayScale)
 {
-  png_structp png_ptr;
-  png_infop info_ptr;
-  png_byte pbSig[8];
-  png_uint_32 ulChannels;
-  png_uint_32 ulRowBytes;
-  png_byte **ppbRowPointers;
-  unsigned char *pixels;
-  unsigned int i, j, passes;
-  int iBitDepth, iColorType;
-  double dGamma;
+  png_structp     png_ptr;
+  png_infop       info_ptr;
+  png_byte        pbSig[8];
+  png_uint_32     ulChannels;
+  png_uint_32     ulRowBytes;
+  png_byte      **ppbRowPointers;
+  unsigned char  *pixels;
+  unsigned int    i, j, passes;
+  unsigned long   lw, lh;
+  int             iBitDepth, iColorType;
+  double          dGamma;
 
     /* Checks the eight byte PNG signature*/
     fread (pbSig, 1, 8, pfFile);
@@ -150,15 +151,14 @@ static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *
       }   
     if (setjmp (png_ptr->jmpbuf))
       {
-	/* Free all of the memory associated with the png_ptr and info_ptr */
-	png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)NULL);
-	return NULL;
+        /* Free all of the memory associated with the png_ptr and info_ptr */
+        png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)NULL);
+        return NULL;
       }
     png_init_io (png_ptr, pfFile);
     png_set_sig_bytes (png_ptr, 8);
     png_read_info (png_ptr, info_ptr);
-    png_get_IHDR(png_ptr, info_ptr, (unsigned long *) width, 
-		 (unsigned long *) height, 
+    png_get_IHDR(png_ptr, info_ptr, &lw, &lh, 
 		 &iBitDepth,
 		 &iColorType, NULL, NULL, NULL);	
    /* if less than 8 bits /channels => 8 bits / channels*/
@@ -195,24 +195,23 @@ static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *
     /* Update the png in order to reach ou out pixels sprcification*/
     png_read_update_info (png_ptr, info_ptr);
     /* get again width, height and the new bit-depth and color-type*/
-    png_get_IHDR (png_ptr, info_ptr, (unsigned long *) width, 
-		  (unsigned long *) height, 
+    png_get_IHDR (png_ptr, info_ptr, &lw, &lh, 
 		  &iBitDepth, 
 		  &iColorType, 
 		  NULL, NULL, NULL);
     /* row_bytes is the width x number of channels => the length of a line */
     ulRowBytes = png_get_rowbytes (png_ptr, info_ptr);
     ulChannels = png_get_channels (png_ptr, info_ptr);
-    pixels = (png_byte *) TtaGetMemory (ulRowBytes * (*height) * sizeof(png_byte));
+    pixels = (png_byte *) TtaGetMemory (ulRowBytes * lh * sizeof(png_byte));
     /* Row pointers give a pointer on each line */
-    ppbRowPointers = (png_bytepp) TtaGetMemory  ((*height) * sizeof(png_bytep));
+    ppbRowPointers = (png_bytepp) TtaGetMemory  (lh * sizeof(png_bytep));
     /* Opengl Texture inversion */   
-    for (i = 0; i < (*height); i++)
-      ppbRowPointers[i] = pixels + ((*height) - (i+1)) * ulRowBytes;    
+    for (i = 0; i < lh; i++)
+      ppbRowPointers[i] = pixels + ((lh - (i+1)) * ulRowBytes * sizeof(png_byte));    
     png_start_read_image (png_ptr); 
     /* depending on interlacing, reading the data*/
     for (i = 0; i < passes; i++)
-      for (j = 0; j < (*height); j++)
+      for (j = 0; j < lh; j++)
         png_read_row (png_ptr, ppbRowPointers[j], NULL);
     png_read_end(png_ptr, NULL);
     TtaFreeMemory (ppbRowPointers);
@@ -221,6 +220,8 @@ static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *
     //png_read_destroy (png_ptr, info_ptr, (png_info*) NULL);
     /* Free all of the memory associated with the png_ptr and info_ptr */
     png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)NULL);
+    *width = (unsigned int)lw;
+    *height = (unsigned int)lh;
     return pixels;
 }
 
