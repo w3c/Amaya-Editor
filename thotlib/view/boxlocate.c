@@ -528,7 +528,7 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                     }
                 }
 
-              /* the document can be reloaded */
+              /* reinitialize pAb as the document could be reloaded */
               pAb = pFrame->FrAbstractBox;
               nChars = 0;
               GetClickedBox (&pBox, &pFlow, pAb, frame, x, y, Y_RATIO, &nChars);
@@ -537,10 +537,9 @@ ThotBool LocateSelectionInView (int frame, int x, int y, int button,
                 {
                   el = pBox->BxAbstractBox->AbElement;
 
-                  if(FrameTable[frame].FrView == 1 &&
-                     drag != NULL && el &&
-                     el->ElLeafType != LtText &&
-                     el->ElParent && IsSVGComponent(el->ElParent))
+                  if (FrameTable[frame].FrView == 1 && el &&
+                      el->ElLeafType != LtText &&
+                      el->ElParent && IsSVGComponent(el->ElParent))
                     {
                       /* click on an SVG element. Does the user want to
                          move it ? */
