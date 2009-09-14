@@ -1094,6 +1094,12 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
         urlRef = css->localName;
     }
   LoadRemoteStyleSheet (url, doc, link, urlRef, tempURL, tempfile);
+  if (!TtaFileExist (tempfile))
+    {
+    // cannot load the style sheet
+      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+      return;
+    }
   css = SearchCSS (doc, tempURL, link, &pInfo);
   if (css == NULL ||
       (import && !css->import))
