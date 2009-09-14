@@ -218,13 +218,16 @@ void PolySplit2 (double a1, double b1, double a2, double b2,
    double               x1, y1, x2, y2, x3, y3, x4, y4;
    double               sx1, sy1, sx2, sy2;
    double               tx1, ty1, tx2, ty2, xmid, ymid;
+  ThotPath             *path = (ThotPath *) mesh;  
 
    stack_deep = 0;
    PushStack (a1, b1, a2, b2, a3, b3, a4, b4);
 
    while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
      {
-	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
+	if ((fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE) ||
+      path->nsize >= 800000)
+    // no more than 500 000 points in the same polyline
 	   MeshNewPoint (x1, y1, mesh);
 	else
 	  {

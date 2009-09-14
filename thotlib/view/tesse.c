@@ -108,14 +108,14 @@ void *GetNewMesh ()
   ThotPath        *path;
   int             c;
   
-  path = (ThotPath*)TtaGetMemory (sizeof(ThotPath));
+  path = (ThotPath*) TtaGetMemory (sizeof(ThotPath));
   path->maxpoints = ALLOC_POINTS; 
   path->maxcont = ALLOC_POINTS; 
-  c = path->maxpoints * sizeof(ThotDblePoint); 
-  path->npoints = (ThotDblePoint*)TtaGetMemory (c); 
+  c = path->maxpoints * sizeof (ThotDblePoint); 
+  path->npoints = (ThotDblePoint*) TtaGetMemory (c); 
   memset (path->npoints, 0, c);   
   c = path->maxcont * sizeof(int); 
-  path->ncontour = (int*)TtaGetMemory (c);
+  path->ncontour = (int *) TtaGetMemory (c);
   memset (path->ncontour, 0, c);   
   path->nsize = 0;    
   path->cont = 0;    
@@ -174,9 +174,9 @@ void CountourCountAdd (void *v_path)
   int             *tmp;
 
   tmp = NULL;
-  path = (ThotPath *) v_path;  
+  path = (ThotPath *) v_path;
   if (path->nsize > 0)
-    {      
+    {
       if (path->cont >= (path->maxcont-1))
         {
           size = path->maxcont + ALLOC_POINTS;
