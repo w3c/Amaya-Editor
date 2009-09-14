@@ -1659,7 +1659,7 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
   DisplayFrame (frame);
 #ifdef _GL
   /* not sure it's the right place */
-  GL_Swap (frame);
+  //GL_Swap (frame);
 #endif /* _GL */
   SelPosition = saveSelPosition; // restore original value
 }
@@ -2044,9 +2044,10 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
                 if (ThotLocalActions[T_chsplit] != NULL)
                   (*(Proc1)ThotLocalActions[T_chsplit]) ((void *)pDoc);
 #ifdef _WX
-          // update the status bar and style panel
-          if (withDecoration)
-            DecorationAfterSeletion (TRUE);
+           if ( !TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
+             // update the status bar and style panel
+             if (withDecoration)
+               DecorationAfterSeletion (TRUE);
 #endif /* _WX */
         }
     }
