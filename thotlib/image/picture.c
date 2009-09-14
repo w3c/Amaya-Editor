@@ -2813,7 +2813,7 @@ void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 
   /* Picture didn't load (corrupted, don't exists...)
      or format isn't supported*/
-  if (imageDesc->PicPixmap == None &&
+  if (imageDesc->PicPixmap == None && imageDesc->PicFileName == NULL &&
 	  !glIsTexture (imageDesc->TextureBind))
     {
       if (PictureLogo == None)
