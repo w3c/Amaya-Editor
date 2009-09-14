@@ -94,7 +94,6 @@ END_EVENT_TABLE()
 
   // Give focus to first text control
   //XRCCTRL(*this, "wxID_SEARCH_FOR_TXT", wxTextCtrl)->SetFocus();
-
   Layout();
   
   SetAutoLayout( TRUE );
@@ -130,6 +129,8 @@ void SearchDlgWX::OnConfirmButton( wxCommandEvent& event )
     XRCCTRL(*this, "wxID_SEARCH_COMPLETE", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_NOT_FOUND) ));
   else
     XRCCTRL(*this, "wxID_SEARCH_COMPLETE", wxStaticText)->SetLabel(TtaConvMessageToWX( "" ));
+  // Give focus to first text control
+  XRCCTRL(*this, "wxID_OK", wxTextCtrl)->SetFocus();
 }
 
 /*----------------------------------------------------------------------

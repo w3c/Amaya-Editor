@@ -196,6 +196,9 @@ void Clear (int frame, int width, int height, int x, int y)
       bottom = FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin;
       if (bottom > y+height)
 	{
+#ifdef DEBUG_MAC
+printf ("Clear x=%d, y=%d w=%d h=%d\n",x,y,width,height);
+#endif /* DEBUG_MAC */
 	  GL_SetClipping (x, bottom - (y + height), width, height);
 #ifdef _GL_COLOR_DEBUG
 	  {
@@ -706,12 +709,19 @@ void GL_Swap (int frame)
 #ifdef _GL_DEBUG
         TTALOGDEBUG_1( TTA_LOG_DRAW, _T("GL_Swap: frame=%d"), frame );
 #endif /* _GL_DEBUG */
+#ifdef DEBUG_MAC
+printf ("GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
         FrameTable[frame].WdFrame->SwapBuffers();
       }
 
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
     }
+#ifdef _GL_DEBUG
+  else
+printf ("NO GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
 }
 
 /*----------------------------------------------------------------------

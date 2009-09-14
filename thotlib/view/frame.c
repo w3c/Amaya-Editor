@@ -2186,6 +2186,9 @@ ThotBool RedrawFrameTop (int frame, int scroll)
       if (GL_prepare (frame))
         {
 #endif /* _GL */
+#ifdef DEBUG_MAC
+printf ("RedrawFrameTop frame=%d scroll=%d\n",frame,scroll);
+#endif /* DEBUG_MAC */
           pFrame->FrYOrg -= scroll;
 #ifdef _GL
           SyncBoundingboxes (pFrame->FrAbstractBox, 0, -scroll, frame,
@@ -2316,12 +2319,20 @@ ThotBool RedrawFrameTop (int frame, int scroll)
             }
 #ifdef _GL
           GL_realize (frame);
+#ifdef DEBUG_MAC
+printf ("<========RedrawFrameTop\n");
+#endif /* DEBUG_MAC */
         }
-#endif /* _GL */ 
+#endif /* _GL */
     }
   else
+    {
     /* The modified area is not visible */
+#ifdef DEBUG_MAC
+printf ("**** NO RedrawFrameTop\n");
+#endif /* DEBUG_MAC */
     DefClip (frame, 0, 0, 0, 0);
+    }
   return toadd;
 }
 
@@ -2375,6 +2386,9 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       if (GL_prepare (frame))
         {
 #endif /*_GL*/
+#ifdef DEBUG_MAC
+printf ("RedrawFrameBottom frame=%d scroll=%d\n",frame,scroll);
+#endif /* DEBUG_MAC */
           pFrame->FrYOrg += scroll;
 #ifdef _GL
           SyncBoundingboxes (pFrame->FrAbstractBox, 0, scroll, frame,
@@ -2527,11 +2541,17 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
         }
 #ifdef _GL 
       GL_realize (frame);
+#ifdef DEBUG_MAC
+printf ("<========RedrawFrameBottom\n");
+#endif /* DEBUG_MAC */
     }
 #endif /* _GL */
   else
     {
       /* Nothing to draw */
+#ifdef DEBUG_MAC
+printf ("**** NO RedrawFrameBottom\n");
+#endif /* DEBUG_MAC */
 #if defined(_WINGUI) && !defined(_WIN_PRINT)
       WIN_GetDeviceContext (frame);
 #endif /* __WINGUI && !_WINT_PRINT */
@@ -2576,6 +2596,9 @@ void DisplayFrame (int frame)
           /* clean the frame */
           GetSizesFrame (frame, &w, &h);
           Clear (frame, w, h, 0, 0);
+#ifdef _GL
+          GL_Swap (frame);
+#endif /* _GL */
         } 
     }
 }
