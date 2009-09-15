@@ -2259,17 +2259,26 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
         thot_keysym = WXK_NEXT;
 #endif /* _MACOS */
       
-      wxWindow *       p_win_focus         = wxWindow::FindFocus();
-      wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
-      wxSplitterWindow * p_splitter        = wxDynamicCast(p_win_focus, wxSplitterWindow);
-      wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
-      wxScrollBar *    p_scrollbar         = wxDynamicCast(p_win_focus, wxScrollBar);
+      wxWindow *p_win_focus = wxWindow::FindFocus();
+      wxGLCanvas *p_gl_canvas = wxDynamicCast(p_win_focus, wxGLCanvas);
+      wxSplitterWindow *p_splitter = wxDynamicCast(p_win_focus, wxSplitterWindow);
+      wxNotebook *p_notebook = wxDynamicCast(p_win_focus, wxNotebook);
+      wxScrollBar *p_scrollbar = wxDynamicCast(p_win_focus, wxScrollBar);
+      wxTextCtrl *p_text_ctrl = wxDynamicCast(p_win_focus, wxTextCtrl);
+      wxComboBox *p_combo_box = wxDynamicCast(p_win_focus, wxComboBox);
+      wxSpinCtrl *p_spinctrl = wxDynamicCast(p_win_focus, wxSpinCtrl);
       
       if (p_win_focus)
         TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
       else
         TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
-              
+    
+      if ((p_text_ctrl || p_combo_box || p_spinctrl) &&
+	  (thot_keysym == WXK_RETURN || thot_keysym == WXK_TAB))
+        {
+	  return FALSE;
+	}
+
       /* do not allow special key outside the canvas */
       if (!p_gl_canvas && !p_splitter && !p_notebook &&
           !p_scrollbar && proceed_key)
