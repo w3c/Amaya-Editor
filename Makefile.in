@@ -23,7 +23,7 @@ bindir = @bindir@
 
 srcdir	= $(THOTDIR)
 
-default : tools gl @BUILDWXWIDGETS@ @BUILDRAPTOR@ @BUILDLIBWWW@ thotlib batch amaya_prog print_prog
+default : tools gl @BUILDWXWIDGETS@ @BUILDLIBWWW@ @BUILDRAPTOR@ thotlib batch amaya_prog print_prog
 
 amaya : tools thotlib amaya_prog print_prog
 
