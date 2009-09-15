@@ -702,10 +702,9 @@ void GL_Swap (int frame)
 {
   if (frame >= 0 && frame < MAX_FRAME && SwapOK[frame] && NeedRedraw (frame))
     {
-      glDisable (GL_SCISSOR_TEST);
-
       if (FrameTable[frame].WdFrame)
       {
+      glDisable (GL_SCISSOR_TEST);
 #ifdef _GL_DEBUG
         TTALOGDEBUG_1( TTA_LOG_DRAW, _T("GL_Swap: frame=%d"), frame );
 #endif /* _GL_DEBUG */
@@ -713,10 +712,9 @@ void GL_Swap (int frame)
 printf ("GL_Swap frame=%d\n",frame);
 #endif /* DEBUG_MAC */
         FrameTable[frame].WdFrame->SwapBuffers();
-      }
-
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
+      }
     }
 #ifdef _GL_DEBUG
   else
