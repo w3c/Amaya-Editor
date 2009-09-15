@@ -627,6 +627,8 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
      # we use a static version of freetype lib for mac osx
      # ** search for includes (freetype.h)
      for ac_dir in               \
+         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/include/  \
          /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/include/  \
@@ -653,6 +655,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
      done
      # ** search for binary (libfreetype.a)
      for ac_dir in               \
+         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/lib/  \

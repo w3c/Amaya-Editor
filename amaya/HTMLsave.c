@@ -797,7 +797,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
     {
       SaveAsHTML = FALSE;
       SaveAsXML = FALSE;
-      SaveAsText = TRUE;
+      SaveAsText = FALSE;
     }
   else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat)
     {
