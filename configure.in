@@ -250,7 +250,7 @@ else
   fi
 fi
 
-# check if wxWidgets debug is enable
+# check if wxWidgets debug is enabled
 AC_ARG_WITH(wxdebug,              [  --with-wxdebug          compiles wxWidgets with debuging options ])
 if test "$with_wxdebug" = "yes" ; then
   with_wxdebug="yes"
@@ -627,10 +627,10 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
      # we use a static version of freetype lib for mac osx
      # ** search for includes (freetype.h)
      for ac_dir in               \
-         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/include/  \
-         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/include/freetype2/  \
-         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/include/  \
-         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.6.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.6.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.5.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.5.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/include/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/include/  \
@@ -655,8 +655,8 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
      done
      # ** search for binary (libfreetype.a)
      for ac_dir in               \
-         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/lib/  \
-         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.6.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.5.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/lib/  \

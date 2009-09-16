@@ -13528,7 +13528,7 @@ else
   fi
 fi
 
-# check if wxWidgets debug is enable
+# check if wxWidgets debug is enabled
 
 # Check whether --with-wxdebug was given.
 if test "${with_wxdebug+set}" = set; then
@@ -14179,10 +14179,10 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
      # we use a static version of freetype lib for mac osx
      # ** search for includes (freetype.h)
      for ac_dir in               \
-         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/include/  \
-         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/include/freetype2/  \
-         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/include/  \
-         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.6.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.6.sdk/usr/X11R6/include/freetype2/  \
+         /Developer/SDKs/MacOSX10.5.sdk/usr/X11R6/include/  \
+         /Developer/SDKs/MacOSX10.5.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/include/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/include/freetype2/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/include/  \
@@ -14207,8 +14207,8 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
      done
      # ** search for binary (libfreetype.a)
      for ac_dir in               \
-         /Developer/SDKs/MacOSX10.1.6.sdk/usr/X11R6/lib/  \
-         /Developer/SDKs/MacOSX10.1.5.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.6.sdk/usr/X11R6/lib/  \
+         /Developer/SDKs/MacOSX10.5.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/lib/  \
