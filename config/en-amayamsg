@@ -47,7 +47,7 @@
 45 %s not saved
 46 English system errors messages
 47 An anchor cannot contain these elements
-48 Cannot create an anchor within an anchor
+48 Impossible to create one anchors in an anchor 
 49 Sorry, no GET support yet for URLs of this type: %s
 50 Sorry, no PUT support yet for URLs of this type: %s
 51 This version of Amaya does not support this feature
@@ -184,7 +184,7 @@
 178 Menu background color
 179 Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
 180 List of preferred languages like "en, fr":
-181 These changes won't be effective until Amaya is restarted
+181 These changes will be effective at next start.
 182 Allow automatic PUT redirections to these domains
 183 Ignore style sheets
 184 Transform type
