@@ -34,6 +34,9 @@ extern char *GetAttributeStringValue ( Element el,
                                        Attribute attribute,
                                        int* sz );
 extern char *GetAncestorComponentName ( Element *el );
+extern ThotBool AllowAttributeEdit ( Element el,
+                                     Document doc,
+                                     char *name );
 extern Element GetFirstEditableElement ( Element el );
 extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                               Element parent,
@@ -84,6 +87,9 @@ extern char *GetAttributeStringValue ( Element el,
                                          Attribute attribute,
                                          int* sz );
 extern char *GetAncestorComponentName ( Element *el );
+extern ThotBool AllowAttributeEdit ( Element el,
+                                       Document doc,
+                                       char *name );
 extern Element GetFirstEditableElement ( Element el );
 extern ThotBool TemplateCanInsertFirstChild ( ElementType elementType,
                                                 Element parent,

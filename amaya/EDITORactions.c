@@ -5933,9 +5933,6 @@ void  CreateOrChangeLink (Document doc, View view)
     return;
   UseLastTarget = FALSE;
   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
-  if (TtaIsReadOnly (el))
-    /* the selected element is read-only */
-    return;
 
   if (el != NULL)
     {
@@ -5950,9 +5947,23 @@ void  CreateOrChangeLink (Document doc, View view)
               && (elType.ElTypeNum != SVG_EL_a || strcmp (s, "SVG"))
 #endif /* _SVG */
               )
-            /* it's not an anchor */
-            el = NULL;
+            {
+              /* it's not an anchor */
+              if (TtaIsReadOnly (el))
+                /* the selected element is read-only */
+                return;
+              el = NULL;
+            }
+          else if (TtaIsReadOnly (el))
+           {
+             if (!IsTemplateInstanceDocument (doc) ||
+                 (!strcmp (s, "HTML") && !AllowAttributeEdit (el, doc, "href")) ||
+                 (!strcmp (s, "SVG") && !AllowAttributeEdit (el, doc, "xlink:href")))
+               /* the selected element is read-only */
+               return;
+            }
         }
+
       if (el == NULL)
         {
           /* The link element is a new created one */

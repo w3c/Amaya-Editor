@@ -195,7 +195,6 @@ char *GetAttributeStringValueFromNum (Element el, int att, int* sz)
 	attribute = TtaGetAttribute(el, attType);
 	if (attribute == NULL)
     return NULL;
-
 	size = TtaGetTextAttributeLength (attribute);
 	aux = (char*) TtaGetMemory (size+1);
 	TtaGiveTextAttributeValue (attribute, aux, &size);
@@ -217,13 +216,15 @@ int GetAttributeIntValueFromNum (Element el, int att)
   AttributeType attType;
   Attribute     attribute;
 
-  attType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+  attType.AttrSSchema = TtaGetElementType (el).ElSSchema;
   attType.AttrTypeNum = att;
-  attribute = TtaGetAttribute(el, attType);
-
-  return TtaGetAttributeValue(attribute);
+  attribute = TtaGetAttribute (el, attType);
+  if (attribute)
+    return TtaGetAttributeValue (attribute);
+  else
+    return 0;
 #else
-  return NULL;
+  return 0;
 #endif /* TEMPLATES */
 }
 
@@ -299,6 +300,53 @@ char *GetAncestorComponentName (Element *el)
   return NULL;
 }
 
+/*----------------------------------------------------------------------
+  AllowAttributeEdit returns TRUE if the template allows the user to edit
+  the attribute
+  ----------------------------------------------------------------------*/
+ThotBool AllowAttributeEdit (Element el, Document doc, char *name)
+{
+#ifdef TEMPLATES
+  Element      child;
+  ElementType  childType;
+  char         *value;
+  int           val;
+  ThotBool      ok;
+
+  if (name == NULL || *name == EOS)
+    return FALSE;
+  child = TtaGetFirstChild (el);
+  while (child)
+    {
+      childType = TtaGetElementType (child);
+      if (childType.ElTypeNum == Template_EL_attribute &&
+          !strcmp (TtaGetSSchemaName(childType.ElSSchema) , "Template"))
+        {
+          value = GetAttributeStringValueFromNum (child, Template_ATTR_ref_name, NULL);
+          ok = (value && !strcmp (value, name));
+          TtaFreeMemory (value);
+          if (ok)
+            {
+              val = GetAttributeIntValueFromNum (el, Template_ATTR_useAt);
+              if (val == Template_ATTR_useAt_VAL_prohibited)
+                return FALSE;
+              value = GetAttributeStringValueFromNum (child, Template_ATTR_fixed, NULL);
+              if (value)
+                {
+                  TtaFreeMemory (value);
+                  return FALSE;
+                }
+              return ok;
+            }
+          else
+            TtaNextSibling(&child);
+        }
+      else
+        return FALSE;
+    }
+#endif /* TEMPLATES */
+  return FALSE;
+}
 
 /*----------------------------------------------------------------------
 GetFirstEditableElement
