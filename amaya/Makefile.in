@@ -483,7 +483,6 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	(if test "@srcdir@" != "" -a "@srcdir@" != "." -a \
 	         "@srcdir@" != "../amaya" ; then \
 	    $(CP) @srcdir@/EDITOR.A . ; \
-	    $(CP) @srcdir@/xpm/logo.xpm . ; \
 	fi)
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(ALL_AMAYA_OPTIONS) EDITOR.A
