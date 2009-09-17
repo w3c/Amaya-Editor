@@ -14207,8 +14207,6 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
      done
      # ** search for binary (libfreetype.a)
      for ac_dir in               \
-         /Developer/SDKs/MacOSX10.6.sdk/usr/X11R6/lib/  \
-         /Developer/SDKs/MacOSX10.5.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.2.8.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.3.0.sdk/usr/X11R6/lib/  \
          /Developer/SDKs/MacOSX10.4u.sdk/usr/X11R6/lib/  \
@@ -14738,8 +14736,10 @@ EXTRA_INCLUDES=
 # on macosx, this file is not at the right place
 if test "$AMAYAOS" = "MACOSX" ; then
 for ac_dir in               \
-  /Developer/SDKs/MacOSX10.1.5.sdk/usr/include/objc/   \
-  /Developer/SDKs/MacOSX10.1.5.sdk/usr/include/sys/    \
+  /Developer/SDKs/MacOSX10.6.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.6.sdk/usr/include/sys/    \
+  /Developer/SDKs/MacOSX10.5.sdk/usr/include/objc/   \
+  /Developer/SDKs/MacOSX10.5.sdk/usr/include/sys/    \
   /Developer/SDKs/MacOSX10.2.8.sdk/usr/include/objc/   \
   /Developer/SDKs/MacOSX10.2.8.sdk/usr/include/sys/    \
   /Developer/SDKs/MacOSX10.3.0.sdk/usr/include/objc/   \
