@@ -72,6 +72,7 @@ static Func     MathMoveBackwardCursorFunction = NULL;
 #include "buildlines_f.h"
 #include "callback_f.h"
 #include "content_f.h"
+#include "displayview_f.h"
 #include "editcommands_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
@@ -1760,6 +1761,8 @@ void TtaStringToClipboard (unsigned char *s, CHARSET encoding)
 
 /*----------------------------------------------------------------------
   DoCopyToClipboard
+  When force is TRUE, the clipboard could be set empty.
+  primary is TRUE when a drag is done
   ----------------------------------------------------------------------*/
 void DoCopyToClipboard (Document doc, View view, ThotBool force, ThotBool primary)
 {
@@ -1826,10 +1829,10 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
   PtrAbstractBox      pAb;
   CHAR_T              c;
   int                 first, last;
-  int                 doc, i;
+  int                 doc, i, view;
   ThotBool            isSep;
 
-  doc = FrameTable[frame].FrDoc;
+  FrameToView (frame, &doc, &view);
   pAb = pBox->BxAbstractBox;
   if (frame >= 1 && doc > 0 && index >= 0)
     {
@@ -1868,10 +1871,9 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
             SelectStringInAttr (pDoc, pAb, first, last, TRUE);
           else
             SelectString (pDoc, pAb->AbElement, first, last);
-#ifndef _WINDOWS
-          if (inClipboard)
-            ClipboardLength = CopyXClipboard (&Xbuffer, pAb->AbDocView);
-#endif /* _WINDOWS */
+#if !defined(_WINDOWS) && !defined(_MACOS)
+          DoCopyToClipboard (doc, view, FALSE, TRUE);
+#endif /* _WINDOWS && _MACOS */
         }
     }
 }
