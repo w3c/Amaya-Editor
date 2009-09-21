@@ -288,8 +288,8 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return FALSE;
 
-  if (Current_Expose)
-	  return FALSE;
+   if (Current_Expose)
+     return FALSE;
   Current_Expose = TRUE;
   pFrame = &ViewFrameTable[frame - 1];
 #ifdef _GL

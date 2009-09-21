@@ -1515,9 +1515,9 @@ void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
 
       /*Hardware rendering faster than Reading pixel from buffer
         (here glcopypixels)*/
-      if (glMatroxBUG (frame, xf, yf, width, height))
-        {
-          /* FrameTable[frame].DblBuffNeedSwap = TRUE; */
+      if (!Software_Mode)
+	{
+	  DefClip (frame, -1, -1, -1, -1);
           return;
         }
 
@@ -1586,19 +1586,6 @@ ThotBool glhard()
 #else /* _MACOS */
   return (!Software_Mode);
 #endif /* _MACOS */
-}
-
-/*----------------------------------------------------------------------
-  glMatroxBUG: expose without a drawing make black swapbuffer...
-  ----------------------------------------------------------------------*/
-int glMatroxBUG (int frame, int x, int y, int width, int height)
-{
-  if (!Software_Mode)
-    {
-      DefClip (frame, -1, -1, -1, -1/*x, y, width+x, y+height*/);
-      return 1;      
-    }
-  return 0;
 }
 
 /*----------------------------------------------------------------------
