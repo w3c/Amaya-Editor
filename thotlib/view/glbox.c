@@ -17,10 +17,6 @@
   #include <windows.h>
 #endif /* _WINGUI */
 
-#ifdef _GTK
-#include <gtkgl/gtkglarea.h>
-#endif /* _GTK */
-
 #ifdef _WX
   #include "wx/wx.h"
   #include "wx/glcanvas.h"
@@ -134,10 +130,6 @@ void SetMainWindowBackgroundColor (int frame, int color)
   /* to be sure that the frame is the current one when drawing its background */
   GL_prepare(frame);
 #endif /* _GL */
-#ifdef _GTK
-  update_bg_colorGTK (frame, color);
-#endif /*_GTK*/
-
   GL_Background[frame] = color;
   if (color != -1)
     TtaGiveThotRGB (color, &red, &green, &blue);
@@ -166,10 +158,6 @@ void ResetMainWindowBackgroundColor (int frame)
   /* to be sure that the frame is the current one when drawing its background */
   GL_prepare(frame);
 #endif /* _GL */
-#ifdef _GTK
-  update_bg_colorGTK (frame, color);
-#endif /*_GTK*/
-
   if (color != -1)
       TtaGiveThotRGB (color, &red, &green, &blue);
   else
@@ -716,10 +704,6 @@ printf ("GL_Swap frame=%d\n",frame);
       FrameTable[frame].DblBuffNeedSwap = FALSE;
       }
     }
-#ifdef _GL_DEBUG
-  else
-printf ("NO GL_Swap frame=%d\n",frame);
-#endif /* DEBUG_MAC */
 }
 
 /*----------------------------------------------------------------------
@@ -727,6 +711,9 @@ printf ("NO GL_Swap frame=%d\n",frame);
   ----------------------------------------------------------------------*/
 void GL_SwapStop (int frame)
 {
+#ifdef _GL_DEBUG
+printf ("************************ STOP frame=%d\n",frame);
+#endif /* DEBUG_MAC */
   SwapOK[frame] = FALSE;
 }
 /*----------------------------------------------------------------------
@@ -742,6 +729,9 @@ ThotBool GL_SwapGet (int frame)
   ----------------------------------------------------------------------*/
 void GL_SwapEnable (int frame)
 {
+#ifdef _GL_DEBUG
+printf ("************************ ENABLE frame=%d\n",frame);
+#endif /* DEBUG_MAC */
   SwapOK[frame] = TRUE;
 }
 #endif /* _GL */

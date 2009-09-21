@@ -302,10 +302,10 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
      They will see the Speed problem...*/
   if (GL_prepare (frame))
     {
-      /* prevent flickering*/
-      GL_SwapStop (frame);
       if ( g_NeedRedisplayAllTheFrame[frame] || glhard() || GetBadCard() )
         {
+          /* prevent flickering*/
+          GL_SwapStop (frame);
           // we need to recalculate the glcanvas only once : after the RESIZE event
           // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
           // (it appends only on some hardware opengl implementations on Linux)
@@ -316,12 +316,11 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
           y += pFrame->FrYOrg;
           DefClip (frame, x, y, x + w, y + h);
           RedrawFrameBottom (frame, 0, NULL);
+          GL_SwapEnable (frame);
+          // display the backbuffer
+          GL_Swap (frame);
         }
-   
-      // display the backbuffer
-      GL_SwapEnable (frame);
-      GL_Swap (frame);
-    }
+     }
 #else /* _GL */
   x += pFrame->FrXOrg;
   y += pFrame->FrYOrg;
@@ -379,7 +378,7 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
       GLResize (new_width, new_height, 0, 0);
       DefClip (frame, -1, -1, -1, -1);
       FrameRedraw (frame, new_width, new_height);
-      GL_SwapEnable (frame);
+      //GL_SwapEnable (frame);
       GL_Swap (frame);
 
       //#if !defined(_MACOS) && !defined(_WINDOWS)
@@ -388,7 +387,6 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
       // (it appends only on some hardware opengl implementations on Linux)
       g_NeedRedisplayAllTheFrame[frame] = TRUE;
       //#endif /* !defined(_MACOS) && !defined(_WINDOWS) */
-
     }
   /* Ok now allow next UpdateScrollbar to hide/show scrollbars 
    * At this point, UpdateScrollbar is not more called, so infinite loop cannot apend */
@@ -1102,36 +1100,24 @@ ThotBool FrameMouseWheelCallback( int frame, int thot_mod_mask,
       /* wheel mice up*/
       FrameToView (frame, &document, &view);
       if (thot_mod_mask & THOT_MOD_CTRL)
-        {
-          /* if CTRL is down then zoom */
-          ZoomOut (document, view);	   
-        }
+        /* if CTRL is down then zoom */
+        ZoomOut (document, view);	   
       else if (thot_mod_mask & THOT_MOD_SHIFT)
-        {
-          HorizontalScroll (frame, -39, 1);
-        }
+        HorizontalScroll (frame, -39, 1);
       else
-        { 
-          VerticalScroll (frame, -39, 1);
-        }
+        VerticalScroll (frame, -39, 1);
     }
   else
     {
       /* wheel mice down */
       FrameToView (frame, &document, &view); 
       if (thot_mod_mask & THOT_MOD_CTRL)
-        {
-          /* if CTRL is down then zoom */
-          ZoomIn (document, view);
-        }
+        /* if CTRL is down then zoom */
+        ZoomIn (document, view);
       else if (thot_mod_mask & THOT_MOD_SHIFT)
-        {
-          HorizontalScroll (frame, 39, 1);          
-        }
+        HorizontalScroll (frame, 39, 1);          
       else
-        {
-          VerticalScroll (frame, 39, 1);
-        }
+        VerticalScroll (frame, 39, 1);
     }
   return TRUE;
 }

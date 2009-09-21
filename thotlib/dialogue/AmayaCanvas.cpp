@@ -314,7 +314,7 @@ void AmayaCanvas::OnMouseWheel( wxMouseEvent& event )
                            direction,
                            delta,
                            event.GetX(), event.GetY() );
-  GL_Swap( frame );
+  //GL_Swap( frame );
 }
 
 /*----------------------------------------------------------------------

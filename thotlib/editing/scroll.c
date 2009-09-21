@@ -66,7 +66,7 @@ void VerticalScroll (int frame, int delta, int selection)
           CloseTextInsertion ();
           srcbox = pAb->AbBox;
           /* Limites du scroll */
-          if (srcbox != NULL)
+          if (srcbox)
             {
               /* A priori pas de paves ajoutes */
               add = FALSE;
@@ -145,11 +145,11 @@ void VerticalScroll (int frame, int delta, int selection)
                     /* On reprend la nouvelle */
                     /* On reallume la selection deja visualisee */
                   }
-            }
 #ifdef _GL
-          /* to be sure the scrolled page has been displayed */
-          GL_Swap( frame );
+	      /* to be sure the scrolled page has been displayed */
+	      GL_Swap( frame );
 #endif /* _GL */
+            }
         }
     }
 }
