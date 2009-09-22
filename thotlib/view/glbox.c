@@ -184,9 +184,6 @@ void Clear (int frame, int width, int height, int x, int y)
       bottom = FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin;
       if (bottom > y+height)
 	{
-#ifdef DEBUG_MAC
-printf ("Clear x=%d, y=%d w=%d h=%d\n",x,y,width,height);
-#endif /* DEBUG_MAC */
 	  GL_SetClipping (x, bottom - (y + height), width, height);
 #ifdef _GL_COLOR_DEBUG
 	  {
@@ -711,9 +708,6 @@ printf ("GL_Swap frame=%d\n",frame);
   ----------------------------------------------------------------------*/
 void GL_SwapStop (int frame)
 {
-#ifdef _GL_DEBUG
-printf ("************************ STOP frame=%d\n",frame);
-#endif /* DEBUG_MAC */
   SwapOK[frame] = FALSE;
 }
 /*----------------------------------------------------------------------
@@ -729,9 +723,6 @@ ThotBool GL_SwapGet (int frame)
   ----------------------------------------------------------------------*/
 void GL_SwapEnable (int frame)
 {
-#ifdef _GL_DEBUG
-printf ("************************ ENABLE frame=%d\n",frame);
-#endif /* DEBUG_MAC */
   SwapOK[frame] = TRUE;
 }
 #endif /* _GL */
