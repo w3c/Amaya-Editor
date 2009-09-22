@@ -172,8 +172,8 @@ case $target_os in
   aix*)       AMAYAOS="LINUX" ;;
   cygwin*)    AMAYAOS="WINDOWS" ;;
   darwin*)    AMAYAOS="MACOSX" ;;
-  freebsd2*)  AMAYAOS="LINUX" ;;
-  freebsd*)   AMAYAOS="LINUX" ;;
+  freebsd2*)  AMAYAOS="FREEBSD" ;;
+  freebsd*)   AMAYAOS="FREEBSD" ;;
   hpux*)      AMAYAOS="LINUX" ;;
   irix*)      AMAYAOS="LINUX" ;;
   linuxaout*) AMAYAOS="LINUX" ;;
@@ -183,8 +183,8 @@ case $target_os in
   openbsd*)   AMAYAOS="LINUX" ;;
   osf[12]*)   AMAYAOS="LINUX" ;;
   osf*)       AMAYAOS="LINUX" ;;
-  solaris2*)  AMAYAOS="LINUX" ;;
-  sunos4*)    AMAYAOS="LINUX" ;;
+  solaris2*)  AMAYAOS="FREEBSD" ;;
+  sunos4*)    AMAYAOS="FREEBSD" ;;
   ultrix*)    AMAYAOS="LINUX" ;;
 esac
 AC_SUBST(AMAYAOS)
@@ -198,6 +198,7 @@ case $AMAYAOS in
   LINUX)       OS_OPTIONS="-D_UNIX" ;;
   WINDOWS)     OS_OPTIONS="-D_WINDOWS" ;; # not tested (cygwin or mingw)
   MACOSX)      OS_OPTIONS="-D_UNIX -D_MACOS" ;;
+  FREEBSD)     OS_OPTIONS="-D_UNIX -D_FREEBSD" ;;
 esac
 
 dnl

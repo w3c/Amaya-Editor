@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1999-2005
+ *  (c) COPYRIGHT INRIA, 1999-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -433,7 +433,7 @@ CHARSET TtaGetLocaleCharset ()
 	}
    }
 #else /* _WINDOWS */
-#ifndef _MACOS
+#if !defined(_MACOS) && !defined(_FREEBSD)
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
       char *buffer;
@@ -441,7 +441,7 @@ CHARSET TtaGetLocaleCharset ()
       if (buffer != NULL)
         LocaleSystemCharset = TtaGetCharset(buffer);
     }
-#endif /* _MACOS */
+#endif /* _MACOS && _FREEBSD */
   if ((LocaleSystemCharset == UNSUPPORTED_CHARSET) ||
       (LocaleSystemCharset == UNDEFINED_CHARSET))
 #if defined (_MACOS) && defined (_WX) 
