@@ -147,6 +147,9 @@ void VerticalScroll (int frame, int delta, int selection)
                   }
 #ifdef _GL
 	      /* to be sure the scrolled page has been displayed */
+#ifdef DEBUG_MAC
+printf ("VerticalScroll:GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
 	      GL_Swap( frame );
 #endif /* _GL */
             }
@@ -225,6 +228,9 @@ void HorizontalScroll (int frame, int delta, int selection)
               UpdateScrollbars (frame);
             }
 #ifdef _GL
+#ifdef DEBUG_MAC
+printf ("HorizontalScroll:GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
           /* to be sure the scrolled page has been displayed */
           GL_Swap( frame );
 #endif /* _GL */
@@ -656,6 +662,9 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent,
     {
       RedrawFrameBottom (frame, dy, NULL);
 #ifdef _GL
+#ifdef DEBUG_MAC
+printf ("ShowBox:GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
       /* to be sure the scrolled page has been displayed */
       GL_Swap (frame);
 #endif /* _GL */

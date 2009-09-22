@@ -2187,7 +2187,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
         {
 #endif /* _GL */
 #ifdef DEBUG_MAC
-printf ("RedrawFrameTop frame=%d scroll=%d\n",frame,scroll);
+printf ("========>RedrawFrameTop frame=%d ymin=%d ymax=%d\n",frame,ymin,ymax);
 #endif /* DEBUG_MAC */
           pFrame->FrYOrg -= scroll;
 #ifdef _GL
@@ -2387,7 +2387,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
         {
 #endif /*_GL*/
 #ifdef DEBUG_MAC
-printf ("RedrawFrameBottom frame=%d scroll=%d\n",frame,scroll);
+printf ("========>RedrawFrameBottom frame=%d ymin=%d ymax=%d\n",frame,ymin,ymax);
 #endif /* DEBUG_MAC */
           pFrame->FrYOrg += scroll;
 #ifdef _GL
@@ -2586,9 +2586,15 @@ void DisplayFrame (int frame)
           RedrawFrameBottom (frame, 0, NULL);	  
           /* recompute scrolls */
           CheckScrollingWidthHeight (frame);
-          UpdateScrollbars (frame);
 #ifdef _GL
-          GL_Swap (frame);
+          if (FrameTable[frame].SwapOK)
+            {
+              UpdateScrollbars (frame);
+#ifdef DEBUG_MAC
+printf ("DisplayFrame:GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
+              GL_Swap (frame);
+            }
 #endif /* _GL */
         }
       else

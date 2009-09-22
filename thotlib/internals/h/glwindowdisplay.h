@@ -18,8 +18,6 @@ void GL_SetupPixelFormat (HDC hDC);
 
 #endif /*_WINGUI*/
 
-int glMatroxBUG (int frame, int x, int y, int width, int height);
-
 /* Drawing */
 void InitDrawing (int style, int thick, int fg);
 

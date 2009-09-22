@@ -317,9 +317,12 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
           DefClip (frame, x, y, x + w, y + h);
           RedrawFrameBottom (frame, 0, NULL);
           GL_SwapEnable (frame);
-          // display the backbuffer
-          GL_Swap (frame);
         }
+      // display the backbuffer
+#ifdef DEBUG_MAC
+printf ("FrameExposeCallback:GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
+      GL_Swap (frame);
      }
 #else /* _GL */
   x += pFrame->FrXOrg;
@@ -374,12 +377,18 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
   if (GL_prepare( frame))
     {
       /* prevent flickering*/
-      //GL_SwapStop (frame);
-      GLResize (new_width, new_height, 0, 0);
-      DefClip (frame, -1, -1, -1, -1);
-      FrameRedraw (frame, new_width, new_height);
-      //GL_SwapEnable (frame);
-      GL_Swap (frame);
+      if ( g_NeedRedisplayAllTheFrame[frame] || glhard() || GetBadCard() )
+        GLResize (new_width, new_height, 0, 0);
+      else
+        {
+          DefClip (frame, -1, -1, -1, -1);
+          FrameRedraw (frame, new_width, new_height);
+          //GL_SwapEnable (frame);
+#ifdef DEBUG_MAC
+printf ("FrameResizedCallback:GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
+          GL_Swap (frame);
+        }
 
       //#if !defined(_MACOS) && !defined(_WINDOWS)
       // we need to recalculate the glcanvas after the RESIZE event

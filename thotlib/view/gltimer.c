@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,14 +15,9 @@
  *
  */
 #ifdef _GL
-
 #ifdef _WINGUI
 #include <windows.h>
 #endif /* _WINGUI*/
-
-#ifdef _GTK
-#include <gtkgl/gtkglarea.h>
-#endif /* _GTK */
 
 #ifdef _WX
 #include "wx/wx.h"
@@ -327,6 +322,9 @@ ThotBool GL_DrawAll ()
                                   }
                               }
                             GL_SwapEnable (frame);
+#ifdef DEBUG_MAC
+printf ("GL_DrawAll:GL_Swap frame=%d\n",frame);
+#endif /* DEBUG_MAC */
                             GL_Swap (frame);  
                           }
 #ifdef _GL_DEBUG

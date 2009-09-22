@@ -116,9 +116,6 @@ static ThotBool NotFeedBackMode = TRUE;
 /* background color*/
 static int      GL_Background[MAX_FRAME];
 
-/*Control When swapping applies*/
-static ThotBool SwapOK[MAX_FRAME];
-
 /*----------------------------------------------------------------------
   SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
@@ -129,8 +126,8 @@ void SetMainWindowBackgroundColor (int frame, int color)
 #ifdef _GL
   /* to be sure that the frame is the current one when drawing its background */
   GL_prepare(frame);
-#endif /* _GL */
   GL_Background[frame] = color;
+#endif /* _GL */
   if (color != -1)
     TtaGiveThotRGB (color, &red, &green, &blue);
   else
@@ -170,7 +167,7 @@ void ResetMainWindowBackgroundColor (int frame)
   glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
   TTALOGDEBUG_5( TTA_LOG_DRAW, _T("glClearColor CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3],frame);
 #endif /* _GL_COLOR_DEBUG */
-} 
+}
 
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
@@ -197,27 +194,6 @@ void Clear (int frame, int width, int height, int x, int y)
 	}
     }
 }
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static ThotBool NeedRedraw (int frame)
-{
-  ViewFrame          *pFrame;
-
-  if (frame > 0)
-    {
-      pFrame = &ViewFrameTable[frame - 1];
-      if (pFrame->FrReady && pFrame->FrAbstractBox && 
-	  pFrame->FrAbstractBox->AbElement)
-	return TRUE;
-      else
-	return FALSE;
-    }
-  return TRUE;
-}
-
-
 
 #ifdef _WINGUI 
 /*----------------------------------------------------------------------
@@ -620,40 +596,10 @@ void GL_SetupPixelFormat (HDC hDC)
   else
     SetSoftware_Mode (FALSE);/*ICD installable client driver*/
 }
+#endif /*_WINGUI*/
 
 /*----------------------------------------------------------------------
-  BackBufferRegionSwapping
-  We copy region content of the back buffer on the exposed region 
-  => opengl region buffer swapping 
-  ----------------------------------------------------------------------*/
-void GL_BackBufferRegionSwapping (int x, int y, int width, int height, 
-				  int Totalheight)
-{  
-#ifndef _WINGUI
-  /* copy form bottom to top
-     so we must add height and 
-     invert y */
-  y = y + height;
-  glRasterPos2i (x, y);
-  glDrawBuffer (GL_FRONT); 
-  y =  Totalheight - y;
-  glCopyPixels (x, y, width, height, GL_COLOR);  
-  glDrawBuffer (GL_BACK);
-  glFlush ();
-#else /* _WINGUI*/
-  static PFNGLADDSWAPHINTRECTWINPROC p = 0;
-	  
-  if (p == 0)
-    p = (PFNGLADDSWAPHINTRECTWINPROC) wglGetProcAddress ("glAddSwapHintRectWIN");
-
-  (*p) (x, y, x+width, y+height);
-  SwapBuffers (GL_Windows[ActiveFrame]);
-#endif /*_WINGUI*/
-}
-
-#endif /*_WINGUI*/
-/*----------------------------------------------------------------------
-  GL_NotInFeedbackMode: if all openGL operations are permitted or not.		    
+  GL_NotInFeedbackMode: if all openGL operations are permitted or not.
   ----------------------------------------------------------------------*/
 ThotBool GL_NotInFeedbackMode ()
 {
@@ -667,15 +613,12 @@ ThotBool GL_prepare (int frame)
 {  
   if (frame >= 0 && frame < MAX_FRAME && NotFeedBackMode)
     {
-#ifdef _TESTSWAP
-      FrameTable[frame].DblBuffNeedSwap = TRUE;
-#endif /*_TESTSWAP*/
+      //#ifdef _TESTSWAP
+      //FrameTable[frame].DblBuffNeedSwap = TRUE;
+      //#endif /*_TESTSWAP*/
 
     if (FrameTable[frame].WdFrame)
-    {
       return FrameTable[frame].WdFrame->SetCurrent();
-    }
-
     }
   return FALSE;
 }
@@ -685,21 +628,23 @@ ThotBool GL_prepare (int frame)
   ----------------------------------------------------------------------*/
 void GL_Swap (int frame)
 {
-  if (frame >= 0 && frame < MAX_FRAME && SwapOK[frame] && NeedRedraw (frame))
+  if (frame >= 0 && frame < MAX_FRAME &&
+      ViewFrameTable[frame - 1].FrReady &&
+      ViewFrameTable[frame - 1].FrAbstractBox &&
+      FrameTable[frame].SwapOK &&
+      FrameTable[frame].WdFrame && FrameTable[frame].FrDoc &&
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
     {
-      if (FrameTable[frame].WdFrame)
-      {
       glDisable (GL_SCISSOR_TEST);
 #ifdef _GL_DEBUG
-        TTALOGDEBUG_1( TTA_LOG_DRAW, _T("GL_Swap: frame=%d"), frame );
+      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("GL_Swap: frame=%d"), frame );
 #endif /* _GL_DEBUG */
 #ifdef DEBUG_MAC
-printf ("GL_Swap frame=%d\n",frame);
+printf ("=====>Swap frame=%d\n",frame);
 #endif /* DEBUG_MAC */
-        FrameTable[frame].WdFrame->SwapBuffers();
+      FrameTable[frame].WdFrame->SwapBuffers();
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
-      }
     }
 }
 
@@ -708,14 +653,17 @@ printf ("GL_Swap frame=%d\n",frame);
   ----------------------------------------------------------------------*/
 void GL_SwapStop (int frame)
 {
-  SwapOK[frame] = FALSE;
+#ifdef DEBUG_MAC
+printf ("************************ STOP frame=%d\n",frame);
+#endif /* DEBUG_MAC */
+  FrameTable[frame].SwapOK = FALSE;
 }
 /*----------------------------------------------------------------------
   GL_SwapGet : 
   ----------------------------------------------------------------------*/
 ThotBool GL_SwapGet (int frame)
 {
-  return SwapOK[frame];
+  return FrameTable[frame].SwapOK;
 }
 
 /*----------------------------------------------------------------------
@@ -723,7 +671,10 @@ ThotBool GL_SwapGet (int frame)
   ----------------------------------------------------------------------*/
 void GL_SwapEnable (int frame)
 {
-  SwapOK[frame] = TRUE;
+#ifdef DEBUG_MAC
+printf ("************************ ENABLE frame=%d\n",frame);
+#endif /* DEBUG_MAC */
+  FrameTable[frame].SwapOK = TRUE;
 }
 #endif /* _GL */
 

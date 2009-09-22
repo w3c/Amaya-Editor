@@ -45,12 +45,13 @@ typedef struct _Frame_Ctl {
   ThotBool   CheckedButton_Panel_XHTML[MAX_BUTTON]; /* Checked XHTML panel buttons           */  
   
 #ifdef _GL
-  ThotBool   DblBuffNeedSwap;
   void       *Animated_Boxes;
   double     BeginTime;
   double     LastTime;
-  ThotBool   Anim_play;  
-  ThotBool   Scroll_enabled;  
+  ThotBool   DblBuffNeedSwap;
+  ThotBool   Anim_play;
+  ThotBool   Scroll_enabled;  /* Control when scroll applies */
+  ThotBool   SwapOK;          /* Control when swapping applies */
 #endif /*_GL*/
 
 } Frame_Ctl;

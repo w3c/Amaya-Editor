@@ -59,6 +59,7 @@
 #include "docs_f.h"
 #include "editcommands_f.h"
 #include "exceptions_f.h"
+#include "glwindowdisplay.h"
 #include "frame_f.h"
 #include "memory_f.h"
 #include "presrules_f.h"
@@ -140,15 +141,21 @@ void GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum)
 void RedisplayDocViews (PtrDocument pDoc)
 {
   DisplayMode       displayMode;
-  int                 i;
+  int                 i, frame;
 
   displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
   if (displayMode == DisplayImmediately)
     {
       for (i = 0; i < MAX_VIEW_DOC; i++)
         if (pDoc->DocView[i].DvPSchemaView > 0)
-          /* open view */
-          DisplayFrame (pDoc->DocViewFrame[i]);
+          {
+            /* open view */
+            frame = pDoc->DocViewFrame[i];
+#ifdef _GL
+            GL_SwapEnable (frame);
+#endif /* _GL */
+            DisplayFrame (frame);
+          }
     }
 }
 
