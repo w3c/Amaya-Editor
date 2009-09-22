@@ -117,7 +117,7 @@ extern void ZoomOut (Document document, View view);
 // This flag is used to recalculate the glcanvas after a RESIZE event
 // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
 // (it appends only on some hardware opengl implementations on Linux)
-static ThotBool g_NeedRedisplayAllTheFrame[MAX_FRAME];
+//static ThotBool g_NeedRedisplayAllTheFrame[MAX_FRAME];
 #endif /* _GL */
 
 
@@ -302,14 +302,14 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
      They will see the Speed problem...*/
   if (GL_prepare (frame))
     {
-      if ( g_NeedRedisplayAllTheFrame[frame] || glhard() || GetBadCard() )
+//      if ( g_NeedRedisplayAllTheFrame[frame] || glhard() || GetBadCard() )
         {
           /* prevent flickering*/
           GL_SwapStop (frame);
           // we need to recalculate the glcanvas only once : after the RESIZE event
           // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
           // (it appends only on some hardware opengl implementations on Linux)
-          g_NeedRedisplayAllTheFrame[frame] = FALSE;
+          //g_NeedRedisplayAllTheFrame[frame] = FALSE;
           
           // refresh the invalide frame content
           x += pFrame->FrXOrg;
@@ -377,24 +377,20 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
   if (GL_prepare( frame))
     {
       /* prevent flickering*/
-      if ( g_NeedRedisplayAllTheFrame[frame] || glhard() || GetBadCard() )
-        GLResize (new_width, new_height, 0, 0);
-      else
-        {
-          DefClip (frame, -1, -1, -1, -1);
-          FrameRedraw (frame, new_width, new_height);
-          //GL_SwapEnable (frame);
+      GLResize (new_width, new_height, 0, 0);
+      DefClip (frame, -1, -1, -1, -1);
+      FrameRedraw (frame, new_width, new_height);
+      GL_SwapEnable (frame);
 #ifdef DEBUG_MAC
 printf ("FrameResizedCallback:GL_Swap frame=%d\n",frame);
 #endif /* DEBUG_MAC */
-          GL_Swap (frame);
-        }
+      GL_Swap (frame);
 
       //#if !defined(_MACOS) && !defined(_WINDOWS)
       // we need to recalculate the glcanvas after the RESIZE event
       // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
       // (it appends only on some hardware opengl implementations on Linux)
-      g_NeedRedisplayAllTheFrame[frame] = TRUE;
+      //g_NeedRedisplayAllTheFrame[frame] = TRUE;
       //#endif /* !defined(_MACOS) && !defined(_WINDOWS) */
     }
   /* Ok now allow next UpdateScrollbar to hide/show scrollbars 

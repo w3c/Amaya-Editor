@@ -322,9 +322,6 @@ ThotBool GL_DrawAll ()
                                   }
                               }
                             GL_SwapEnable (frame);
-#ifdef DEBUG_MAC
-printf ("GL_DrawAll:GL_Swap frame=%d\n",frame);
-#endif /* DEBUG_MAC */
                             GL_Swap (frame);  
                           }
 #ifdef _GL_DEBUG
