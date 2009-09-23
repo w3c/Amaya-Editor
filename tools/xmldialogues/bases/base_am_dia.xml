@@ -1171,6 +1171,10 @@
 	<message xml:lang="nl">Andere tabbladen sluiten</message>
 	<message xml:lang="uk">Закрити решту панелей</message>
 </label>
+<label define="BUndoCloseTab">
+	<message xml:lang="en">Undo Close tab</message>
+	<message xml:lang="fr">Restaurer l'onglet</message>
+</label>
 <label define="BCCloseTab">
 	<message xml:lang="en">Close tab</message>
 	<message xml:lang="fr">Fermer l'onglet</message>

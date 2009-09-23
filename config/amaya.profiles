@@ -294,6 +294,7 @@ RefreshTab
 RefreshAllTabs
 CloseOtherTabs
 AmayaCloseTab
+UndoCloseTab
 AmayaCloseWindow
 AmayaClose
 TtcCopySelection

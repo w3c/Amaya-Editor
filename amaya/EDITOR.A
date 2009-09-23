@@ -93,6 +93,8 @@ MENUS
 	Context_ button:BRefreshAllTabs -> RefreshAllTabs;
 	Context_ button:BCloseOtherTabs -> CloseOtherTabs;
 	Context_ Separator;
+	Context_ button:BUndoCloseTab -> UndoCloseTab;
+	Context_ Separator;
 	Context_ button:BCCloseTab -> AmayaCloseTab;
 
         DocContext_ button:BFollowTheLink -> FollowTheLink;

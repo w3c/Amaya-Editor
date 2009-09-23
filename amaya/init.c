@@ -6779,6 +6779,8 @@ void FreeAmayaStructures ()
       FreeMathML();
       /* free svg allocations */
       FreeSVG ();
+      /* free last opened tab */
+      FreeLastClosedTab ();
 #ifdef ANNOTATIONS
       XPointer_bufferFree ();
       ANNOT_Quit ();

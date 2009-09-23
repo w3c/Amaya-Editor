@@ -75,6 +75,9 @@ extern void UpdateTitle ( Element el,
                           Document doc );
 extern void CloseLogs ( Document doc );
 extern void FocusChanged ( Document doc );
+extern void FreeLastClosedTab ( void );
+extern void UndoClosedTab ( Document doc,
+                            View view );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc,
@@ -172,6 +175,9 @@ extern void UpdateTitle ( Element el,
                             Document doc );
 extern void CloseLogs ( Document doc );
 extern void FocusChanged ( Document doc );
+extern void FreeLastClosedTab ( void );
+extern void UndoClosedTab ( Document doc,
+                              View view );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc,

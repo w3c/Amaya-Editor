@@ -108,6 +108,8 @@ static ThotBool     Follow_exclusive = FALSE;
 static ThotBool     Refresh_exclusive = FALSE;
 static ThotBool     SelectionChanging = FALSE;
 static ThotBool     GoToSection = FALSE;
+/* last closed tab */
+static char        *LastClosedTab = NULL;
 
 /*----------------------------------------------------------------------
   CharNum_IN_Line
@@ -2793,6 +2795,35 @@ void FocusChanged (Document doc)
 }
 
 /*----------------------------------------------------------------------
+  Free the last closed tab
+  ----------------------------------------------------------------------*/
+void FreeLastClosedTab ()
+{
+  if (LastClosedTab != NULL)
+    {
+      TtaFreeMemory (LastClosedTab);
+      LastClosedTab = NULL;
+    }
+}
+
+/*----------------------------------------------------------------------
+  UndoCloseTab
+  Undo the last closed tab
+  ----------------------------------------------------------------------*/
+void UndoCloseTab (Document doc, View view)
+{
+  if (LastClosedTab != NULL)
+    {
+      DontReplaceOldDoc = TRUE;
+      InNewWindow       = FALSE;
+      GetAmayaDoc (LastClosedTab, NULL, doc, doc,
+		   CE_ABSOLUTE, FALSE, NULL, NULL);
+      TtaFreeMemory (LastClosedTab);
+      LastClosedTab = NULL;
+    }
+}
+
+/*----------------------------------------------------------------------
   FreeDocumentResource
   ----------------------------------------------------------------------*/
 void FreeDocumentResource (Document doc)
@@ -2833,6 +2864,27 @@ void FreeDocumentResource (Document doc)
         }
       /* remove the document from the auto save list */
       RemoveAutoSavedDoc (doc);
+
+      /* Save the last closed document */
+      if (DocumentTypes[doc] == docHTML ||
+	  DocumentTypes[doc] == docCSS ||
+	  DocumentTypes[doc] == docMath ||
+	  DocumentTypes[doc] == docSVG ||
+	  DocumentTypes[doc] == docXml ||
+	  DocumentTypes[doc] == docCSS)
+	{
+	  if (LastClosedTab != NULL)
+	    {
+	      TtaFreeMemory (LastClosedTab);
+	      LastClosedTab = NULL;
+	    }
+	  if (DocumentURLs[doc] != NULL)
+	    {
+	      LastClosedTab  = (char *)TtaGetMemory (strlen (DocumentURLs[doc]) + 1);
+	      strcpy (LastClosedTab, DocumentURLs[doc]);
+	    }
+	}
+
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
       if (DocumentMeta[doc])
