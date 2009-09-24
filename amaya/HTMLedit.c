@@ -1264,17 +1264,15 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                                 {
                                   // add the element into the new in_line
                                   TtaPreviousSibling (&sibling);
-                                  if (sibling == NULL)
-                                    {
-                                      sibling = el;
-                                      TtaNextSibling (&sibling);
-                                      before = TRUE;
-                                    }
-                                  if (sibling == NULL)
-                                    TtaInsertSibling (in_line, el, FALSE, doc);
                                   TtaRegisterElementDelete (el, doc);
                                   TtaRemoveTree (el, doc);
-                                  TtaInsertFirstChild (&el, in_line, doc);
+				  child = TtaGetLastChild (in_line);
+				  if (child)
+				    TtaInsertSibling (el, in_line, FALSE, doc);
+				  else
+				    TtaInsertFirstChild (&el, in_line, doc);
+				  if (!doit)
+				    TtaRegisterElementCreate (el, doc);
                                 }
                               if (doit)
                                 {
@@ -1292,6 +1290,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                                 TtaInsertSibling (in_line, sibling, before, doc);
                               else if (parent)
                                 TtaInsertFirstChild (&in_line, parent, doc);
+			      doit = FALSE;
                               /* generate the attribute */
                               if (attrType.AttrTypeNum != 0)
                                 {
