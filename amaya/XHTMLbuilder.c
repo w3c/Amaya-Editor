@@ -277,9 +277,9 @@ void AddRowsColumns (Element el, Document doc)
 void XhtmlElementComplete (ParserData *context, Element el, int *error)
 {
   Document       doc;   
-  ElementType    elType, newElType, childType;
-  Element        child, desc, leaf, prev, next, last,
-    elFrames, lastFrame, lastChild, parent, picture, content, legend;
+  ElementType    elType, newElType, childType, parentType;
+  Element        child, desc, leaf, prev, next, last;
+  Element        elFrames, lastFrame, lastChild, parent, picture, content, legend;
   Attribute      attr;
   AttributeType  attrType;
   SSchema        htmlSchema;
@@ -287,18 +287,45 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   char           *text;
   char           lastChar[2];
   char           *name1, *data;
+  char           msgBuffer[MaxMsgLength];
   int            typenum, length;
   ThotBool       isImage, isInline, clean;
 
   *error = 0;
   doc = context->doc;
-
   elType = TtaGetElementType (el);
   htmlSchema = elType.ElSSchema;
   childType.ElSSchema = NULL;
   isInline = IsXMLElementInline (elType, doc);
   newElType.ElSSchema = elType.ElSSchema;
-
+  if (!IsCharacterLevelType (elType))
+    {
+      // check the validity of the XHTML structure
+      parent = TtaGetParent (el);
+      parentType = TtaGetElementType (parent);
+      if (parentType.ElSSchema == elType.ElSSchema &&
+          (parentType.ElTypeNum == HTML_EL_Paragraph ||
+           parentType.ElTypeNum == HTML_EL_H1 ||
+           parentType.ElTypeNum == HTML_EL_H2 ||
+           parentType.ElTypeNum == HTML_EL_H3 ||
+           parentType.ElTypeNum == HTML_EL_H4 ||
+           parentType.ElTypeNum == HTML_EL_H5 ||
+           parentType.ElTypeNum == HTML_EL_H6 ||
+           parentType.ElTypeNum == HTML_EL_Preformatted||
+           parentType.ElTypeNum == HTML_EL_Address))
+        {
+          name1 = TtaStrdup ( TtaGetElementTypeName(elType));
+          if (name1)
+            {
+              sprintf (msgBuffer, "A <%s> element cannot be a child of <%s> element",
+                       name1, TtaGetElementTypeName(parentType));
+              XmlParseError (errorParsing,  (unsigned char *)msgBuffer,
+                             TtaGetElementLineNumber(el));
+              TtaFreeMemory (name1);
+            }
+          name1 = NULL;
+        }
+    }
   if (elType.ElTypeNum == HTML_EL_ins ||
       elType.ElTypeNum == HTML_EL_del)
     {
@@ -350,7 +377,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
     if (elType.ElTypeNum != HTML_EL_Comment_ &&
         elType.ElTypeNum != HTML_EL_ASP_element &&
         elType.ElTypeNum != HTML_EL_XMLPI &&
-	elType.ElTypeNum != HTML_EL_SCRIPT_)
+        elType.ElTypeNum != HTML_EL_SCRIPT_)
       BlockInCharLevelElem (el);
 
   typenum = elType.ElTypeNum;
