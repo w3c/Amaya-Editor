@@ -299,6 +299,9 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   isInline = IsXMLElementInline (elType, doc);
   newElType.ElSSchema = elType.ElSSchema;
   if (!IsCharacterLevelType (elType) &&
+      elType.ElTypeNum != HTML_EL_IFRAME &&
+      elType.ElTypeNum != HTML_EL_map &&
+      elType.ElTypeNum != HTML_EL_MAP &&
       elType.ElTypeNum != HTML_EL_SCRIPT_ &&
       elType.ElTypeNum != HTML_EL_Comment_ &&
       elType.ElTypeNum != HTML_EL_XMLPI)
