@@ -298,7 +298,10 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
   childType.ElSSchema = NULL;
   isInline = IsXMLElementInline (elType, doc);
   newElType.ElSSchema = elType.ElSSchema;
-  if (!IsCharacterLevelType (elType))
+  if (!IsCharacterLevelType (elType) &&
+      elType.ElTypeNum != HTML_EL_SCRIPT_ &&
+      elType.ElTypeNum != HTML_EL_Comment_ &&
+      elType.ElTypeNum != HTML_EL_XMLPI)
     {
       // check the validity of the XHTML structure
       parent = TtaGetParent (el);
