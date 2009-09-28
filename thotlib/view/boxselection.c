@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2008
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -92,9 +92,7 @@ void ClearViewSelMarks (int frame)
         ClearAbstractBoxSelection (pFrame->FrAbstractBox);
       pFrame->FrSelectOneBox = FALSE;
       pFrame->FrSelectionBegin.VsBox = NULL;
-      pFrame->FrSelectionBegin.VsLine = NULL;
       pFrame->FrSelectionEnd.VsBox = NULL;
-      pFrame->FrSelectionEnd.VsLine = NULL;
     }
 }
 
@@ -123,9 +121,7 @@ void ClearViewSelection (int frame)
           pAb2 = pBox2->BxAbstractBox;
           pFrame->FrSelectOneBox = FALSE;
           pFrame->FrSelectionBegin.VsBox = NULL;
-          pFrame->FrSelectionBegin.VsLine = NULL;
           pFrame->FrSelectionEnd.VsBox = NULL;
-          pFrame->FrSelectionEnd.VsLine = NULL;
 
           /* ready to un/display the current selection */
           if (pBox1 == pBox2)
