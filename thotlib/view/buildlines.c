@@ -2239,7 +2239,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           if (ml < 0)
             pLine->LiXOrg += ml;
           if (mr < 0)
-            pLine->LiXOrg+= mr;
+            pLine->LiXOrg += mr;
           if (pLine->LiYOrg + orgY < by)
             pLine->LiYOrg = by - orgY;
           bottomL = by + bh - orgY;
@@ -3763,8 +3763,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
                   /* update the main box */
                   pBox->BxNexChild = NULL;
                   pBox->BxType = BoComplete;
-		  if (ibox1->BxPrevious != pBox)
-                    pBox->BxPrevious = ibox1->BxPrevious;
+                  pBox->BxPrevious = ibox1->BxPrevious;
                   /* transmit the current position */
                   pBox->BxXOrg = ibox1->BxXOrg;
                   pBox->BxYOrg = ibox1->BxYOrg;
@@ -3879,7 +3878,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 #ifdef _GL
 #ifdef DEBUG_MAC
 if (ibox1->DisplayList)
- printf ( "RemoveBreaks : glIsList=%s (pose prb sur certaines machines)\n", glIsList (ibox1->DisplayList) ? "yes" : "no" );
+ printf ( "GLBUG - RemoveBreaks : glIsList=%s (pose prb sur certaines machines)\n", glIsList (ibox1->DisplayList) ? "yes" : "no" );
 #endif /* DEBUG_MAC */
                       if (glIsList (ibox1->DisplayList))
                         {
@@ -3905,26 +3904,21 @@ if (ibox1->DisplayList)
                       if (pBox->BxRMargin > 0)
                         pBox->BxWidth += pBox->BxRMargin;
                       pBox->BxNSpaces += nspace;
-		      /* Update the chain of leaf boxes */
-		      if (pBox->BxType == BoScript)
-			{
-			  if (pNextBox && pNextBox != pBox &&
-			      pNextBox->BxType == BoScript &&
-			      pNextBox->BxAbstractBox == pBox->BxAbstractBox)
-			    pBox->BxNexChild = pNextBox;
-			  else
-			    pBox->BxNexChild = NULL;
-			}
                     }
-		  if (pNextBox != pBox)
-		    {
-		      // Should be always TRUE
-		      pBox->BxNext = pNextBox;
-		      if (pNextBox)
-			pNextBox->BxPrevious = pBox;
-		      else
-			pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
-		    }
+                  /* Update the chain of leaf boxes */
+                  if (pBox->BxType == BoScript)
+                    {
+                      if (pNextBox && pNextBox->BxType == BoScript &&
+                          pNextBox->BxAbstractBox == pBox->BxAbstractBox)
+                        pBox->BxNexChild = pNextBox;
+                      else
+                        pBox->BxNexChild = NULL;
+                    }
+                  pBox->BxNext = pNextBox;
+                  if (pNextBox)
+                    pNextBox->BxPrevious = pBox;
+                  else
+                    pFrame->FrAbstractBox->AbBox->BxPrevious = pBox;
                 }
             }
         }
@@ -4781,7 +4775,6 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
           pLine->LiFirstPiece = NULL;
         }
       RemoveBreaks (box, frame, removed, changeSelectBegin, changeSelectEnd);
-      /* update the lines chaining */
       if (pLine->LiPrevious)
         pBox->BxLastLine = pLine->LiPrevious;
       else
@@ -4798,15 +4791,20 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
           FreeLine (pLine);
           pLine = pNextLine;
         }
+      /* Liberation des boites de coupure suivantes */
+      if (box)
+        {
+          if (box->BxType == BoScript && box->BxNexChild)
+            /* get the next child */
+            box = box->BxNexChild;
+          else
+            box = GetNextBox (box->BxAbstractBox, frame);
+        }      /* update the lines chaining */
     }
   else if (pBox->BxAbstractBox && pBox->BxAbstractBox->AbFirstEnclosed)
-    // it coud be a new block element
+    // it could be a new block element
     box = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
-      
-  /* Liberation des boites de coupure suivantes */
-  while (box && box->BxType == BoGhost &&
-	 box->BxAbstractBox && box->BxAbstractBox->AbFirstEnclosed)
-    box = box->BxAbstractBox->AbFirstEnclosed->AbBox;
+
   while (box)
     {
       RemoveBreaks (box, frame, removed,
