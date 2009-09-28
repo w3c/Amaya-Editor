@@ -317,8 +317,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
            parentType.ElTypeNum == HTML_EL_H4 ||
            parentType.ElTypeNum == HTML_EL_H5 ||
            parentType.ElTypeNum == HTML_EL_H6 ||
-           parentType.ElTypeNum == HTML_EL_Preformatted||
-           parentType.ElTypeNum == HTML_EL_Address))
+           parentType.ElTypeNum == HTML_EL_Preformatted))
         {
           name1 = TtaStrdup ( TtaGetElementTypeName(elType));
           if (name1)

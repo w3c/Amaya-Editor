@@ -15,24 +15,27 @@
 
 <div id="header">
 <ul id="links">
-  <li><a href="http://www.w3.org/Amaya">Web Site</a></li>
+  <li><a href="http://www.w3.org/Amaya">Homepage</a></li>
   <li><a href="http://www.w3.org">W3C</a></li>
   <li><a href="http://wam.inrialpes.fr/index.en.html">INRIA</a></li>
   <li><a href="http://palette.ercim.org/">Palette</a></li>
 </ul>
 
-<h1 id="title">Amaya [11]</h1>
+<h1 id="title">Amaya [11<ins>.3</ins>]</h1>
+
+<p>Dieser Artikel ist eine Übersetzung eines <a
+href="AmayaPage_WX.html">fremdsprachigen Artikels</a> vom 31. Januar 2009</p>
+<hr />
 </div>
 
 <div id="logo">
 <svg:svg height="150px" width="230px">
   <svg:title>Amaya logo</svg:title>
   <svg:g transform="translate(143,98)">
-    <svg:ellipse rx="66px" ry="45px"
-		 style="fill: #edf3ff; stroke: #edf3ff">
+    <svg:ellipse rx="66px" ry="45px" style="fill: #edf3ff; stroke: #edf3ff">
       <svg:animateTransform attributeName="transform" attributeType="XML"
-			    type="scale" from="0" to="1" begin="0s"
-			    dur="6s" fill="freeze"/>
+                        type="scale" from="0" to="1" begin="0s" dur="6s"
+                        fill="freeze"/>
     </svg:ellipse>
   </svg:g>
   <svg:g transform="rotate(-30,100,150)">
@@ -95,18 +98,23 @@
 </div>
 
 <div id="intro" class="section">
-<p>Amaya ist ein Web-Client, der sowohl als Browser als auch als
-Autorenwerkzeug dient. Amaya wurde vom <a href="http://www.w3.org/">W3C</a> und
-<a href="http://www.inria.fr/">INRIA</a> entworfen in der Absicht, neue
-Web-Technologien zu demonstrieren und Anwender bei der Erstellung korrekter
-Webseiten zu unterstützen.</p>
+<p>Amaya ist ein Webclient, der sowohl als Browser als auch als Autorenwerkzeug
+dient. Amaya wurde vom <a href="http://www.w3.org/">W3C</a> und <a
+href="http://www.inria.fr/index.en.html">INRIA</a> mit der primären Absicht
+entwickelt, neue Web-Technologien zu demonstrieren und Anwendern bei der
+Erstellung gültiger Webseiten zu unterstützen. Dank des europäischen
+Projekts <a href="http://palette.ercim.org/">Palette</a> (RP6) ist Amaya 11
+wesentlich einfacher durch die neue Benutzeroberfläche und seine innovatives
+Vorlageneigenschaften-System zu bedienen.</p>
 
-<p>Mit Amaya können Sie umfangreiche Webseiten mit Formularen, Tabellen, sowie
-den fortgeschrittensten Eigenschaften von <acronym
-title="Hypertext Markup Language">XHTML bearbeiten</acronym>. Sie können
-komplexe <a href="../doc/WX/Math.html">mathematische Ausdrücke</a> in
-Webseiten schreiben und editieren. Sie können Dokumente mit Cascading Style
-Sheets gestalten.</p>
+<p>Mit Amaya können Sie umfangreiche Webseiten, mit Formularen, Tabellen,
+sowie erweiterten Funktionen von <acronym
+title="Extensible HyperText Markup Language (erweiterbare HTML)">XHTML</acronym>
+bearbeiten. Sie können komplexe <a href="../doc/WX/Math.html">mathematische
+Ausdrücke</a> und <a href="../doc/WX/SVG.html">Grafiken</a> in Webseiten
+erstellen und bearbeiten. Sie können Ihre Dokumente mit <a
+href="http://www.w3.org/Style/CSS/">Cascading Style Sheets</a> (CSS)
+gestalten.  </p>
 </div>
 
 <div class="body">
@@ -114,23 +122,35 @@ Sheets gestalten.</p>
 <div class="column">
 
 <div class="section">
-<h2>Main news</h2>
+<h2>Neue Funktionen</h2>
 
-<p>News from version 10 :</p>
+<p>Wichtige Änderungen seit Version <del>10</del><ins>11.2</ins></p>
 <ul>
-  <li>Possibility to create and edit document templates from document
-  skeletons</li>
-  <li>More facilities to edit template instances</li>
-  <li>The first version of an integrated editor for SVG graphic schemas</li>
-  <li>The support of semantic information within web pages (RDFa)</li>
-  <li>Direct resizing of images</li>
+  <li><ins>Das https-Protokoll wird nun unterstützt</ins></li>
+  <li><del>Erstellen und Bearbeiten von Dokumentvorlagen aus Dokumentstruktur
+    möglich</del></li>
+  <li><del>Weitere Einrichtungen, um Vorlageninstanzen zu bearbeiten</del></li>
+  <li><del>Die erste Version mit integrierten Editor für SVG
+    Grafik-Schemata</del><ins>Neuer Vorlageneditor: Erstellung von
+    XTiger-Bibliotheken, Komponenten, Einfuhren usw..</ins></li>
+  <li><del>Die Unterstützung semantischer Informationen innerhalb von
+    Webseiten (RDFa)</del></li>
+  <li><del>Direktes skalieren von Bildern</del></li>
+  <li><ins>Automatisches öffnen der Struktur-Ansicht für
+    Vorlageninstanzen</ins></li>
+  <li><ins>Windows-Installation: Fügt einen "Bearbeiten mit Amaya"-Eintrag
+    für die Dateien ein, die Amaya berarbeiten kann</ins></li>
+  <li><ins>Die vertikale Teilung öffnet die Struktur-, die horizontale Teilung
+    die Quelltext-Ansicht</ins></li>
+  <li><ins>Ein Doppelklick auf ein Element der Liste der
+    Stylesheets-Symbolleiste öffnet das Stylesheet </ins></li>
 </ul>
 </div>
 
 <div class="section">
-<h2>Advanced features</h2>
+<h2>Erweiterte Funktionen</h2>
 
-<p>Embedded MathML and SVG:</p>
+<p>MathML und SVG:</p>
 
 <div id="mathml_svg">
 <svg:svg height="250" width="250">
@@ -203,46 +223,58 @@ Sheets gestalten.</p>
 <div class="main">
 
 <div class="section">
-<h2>Haben Sie schon gewusst?</h2>
+<h2>Wussten Sie schon?</h2>
 <dl>
-  <dt>Wählen sie Ihr Profil</dt>
-    <dd><p>Verschiedene Amayaprofile sind vorhanden um die Menüeinträge und
-      Werkzeugleisten Ihren Wünschen anzupassen. Dabei kann jede Werkzeugtafel
-      links, rechts oder benutzerdefiniert positioniert werden (vgl.
-      Einstellungen).</p>
-    </dd>
-  <dt>Amaya ist ein Struktureditor</dt>
-    <dd>Mit der F2-Taste (oder Escape) können Sie eine Teilstruktur
-      auswählen. Editierfunktionen (kopieren, einfügen, Attribute bearbeiten,
-      etc.) operieren dann auf den Elementen dieser Struktur.</dd>
-  <dt>Dokumente können in verschiedenen synchronen Ansichten bearbeitet
+  <dt>Wählen Sie Ihr Profil</dt>
+    <dd>Amaya kann an die Einstellungen des Benutzer angepasst werden: 5
+      verschiedene Profile werden zur Bearbeitung bereitgestellt, um Menüs und
+      Bedienfelder auf Ihre Bedürfnisse anzupassen. Bedienfelder können am
+      linken oder rechten Rand des Fensters angezeigt werden, und jedes
+      Bedienfeld kann angepasst (siehe Bearbeiten / Einstellungen) werden. </dd>
+  <dt>Amaya ist ein strukturierter Editor</dt>
+    <dd>Mit der F2- oder Esc-Taste können Sie das übergeordnete Element in
+      der Dokumentstruktur auswählen, um Bearbeitungsfunktionen (Kopieren,
+      Einfügen, Attribute usw.) auf das richtige Element anzuwenden.</dd>
+  <dt>Dokumente können durch verschiedene synchronisierte Ansichten bearbeitet
   werden</dt>
-    <dd>Über das Menü <i>Ansicht</i> können Sie eine Strukturansicht,
-      Quelltextansicht, etc. öffnen. Ein Klick auf die untere rote Linie
-      öffnet oder schließt eine zweite Ansicht.</dd>
-  <dt>Dokumente können direkt auf einem Server veröffentlicht werden</dt>
-    <dd>Mit der http PUT Methode können Sie auf einen Server schreiben,
-      vorausgesetzt Sie besitzen die notwendigen Rechte.</dd>
-  <dt>Verknüpfungen können mit einem enfachen Klick erzeugt werden</dt>
-    <dd>Klicken Sie einfach direkt auf das Verknüpfungsziel, um eine
-      Verknüpfung zu erzeugen (wählen Sie <i>Verknüpfungsziele anzeigen</i>,
-      um mögliche Verknüpfungsziele zu sehen).</dd>
-  <dt>Amaya bietet einfache Kommandos für komplexe Funktionen</dt>
-    <dd>wie Abschnittsnummerierung, Erstellen von Inhaltsverzeichnissen,
-      Einfügen von Zeitstempeln, Strukturtransformationen.</dd>
+    <dd>Im Menü Ansicht können Sie die Strukturansicht, die Quelltextansicht,
+      etc. öffnen. Doppelklicken Sie einfach auf die Linie am unteren oder auf
+      der rechten Seite des Dokuments, um eine zusätzliche Ansicht zu öffnen
+      oder zu schließen.</dd>
+  <dt>Dokumente können direkt auf Remoteservern veröffentlicht werden</dt>
+    <dd>Durch die http PUT-Methode können Sie eine Webseite auf einem
+      Remoteserver speichern, sofern Sie dazu berechtigt sind. Es ist so
+      einfach wie das Dokument lokal zu speichern</dd>
+  <dt>Links können mit einem einzigen Klick erstellt werden</dt>
+    <dd>Um einen Verweis zu erstellen, müssen Sie nur Ihr Ziel anklicken
+      (siehe <code>Ansicht / Anker einblenden</code> um Verweise
+    anzuzeigen).</dd>
+  <dt>Amaya bietet erweiterte Befehle</dt>
+    <dd>... wie z. B. Abschnittsnummerierung, Inhaltverzeichnis erstellen,
+      Einfügen eines Zeitstempels, Struktur Transformation (siehe Menü
+      "Extras")</dd>
 </dl>
 </div>
 </div>
 </div>
 
-<p class="bottom section">Sie dürfen diese Software und die dazugehörende
-Dokumentation für beliebige Zwecke und ohne jedwede Gebühr verwenden,
-kopieren, verändern, und verbreiten. Voraussetzung hierfür ist, dass der
-vollständige Text des <a
+<p class="bottom section" style="font-size: smaller;">Es wird die Genehmigung
+erteilt, diese Software und zugehörige Dokumentation für einen beliebigen
+Zweck und ohne Gebühr oder Lizenz, unter der Voraussetzung, dass in
+<strong>allen</strong> Kopien der vollständige Text der <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
-title="Massachusetts Institute of Technology">MIT</acronym> and INRIA
-Copyright-Vermerks</a> in <strong>allen</strong> Kopien der Software und der
-Dokumentation, sowie allen Teilen davon, inklusive Änderungen, die Sie
-vorgenommen haben, enthalten ist.</p>
+title="Massachusetts Institute of Technology">MIT</acronym>- und
+INRIA-Copyright-Anweisung</a>, einschließlich der von Ihnen gemachten
+Änderungen angezeigt wird, kopiert, bearbeitet und vertreiben werden darf. </p>
+
+<p class="bottom section" style="font-size: smaller;">Permission to use, copy,
+modify, and distribute this software and its documentation for any purpose and
+without fee or royalty is hereby granted, provided that the full text of the <a
+href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
+title="Massachusetts Institute of Technology">MIT</acronym> and INRIA Copyright
+Statement</a> appears with <strong>all</strong> copies of the software and
+documentation or portions thereof, including modifications that you make.</p>
+
+<p></p>
 </body>
 </html>
