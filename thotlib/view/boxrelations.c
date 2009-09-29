@@ -785,14 +785,14 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 
       /* left margin */
       if (pBox->BxType == BoCell || pBox->BxType == BoRow ||
-          (pAb->AbLeftMargin >= 0 && (pAb->AbFloat != 'N' || ExtraAbFlow (pAb, frame))))
+          (pAb->AbLeftMargin >= 0 && ExtraAbFlow (pAb, frame)))
         pBox->BxLMargin = 0;
       else if (pAb->AbLeftMarginUnit != UnAuto)
         pBox->BxLMargin = GetPixelValue (pAb->AbLeftMargin, pAb->AbLeftMarginUnit, dim,
                                          pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* right margin */
       if (pBox->BxType == BoCell || pBox->BxType == BoRow ||
-          (pAb->AbRightMargin >= 0 && (pAb->AbFloat != 'N' || ExtraAbFlow (pAb, frame))))
+          (pAb->AbRightMargin >= 0 && ExtraAbFlow (pAb, frame)))
         pBox->BxRMargin = 0;
       else if (pAb->AbRightMarginUnit != UnAuto)
         pBox->BxRMargin = GetPixelValue (pAb->AbRightMargin, pAb->AbRightMarginUnit, dim,
@@ -919,7 +919,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
           /* top margin */
           if (pBox->BxType == BoCell || pBox->BxType == BoCellBlock ||
               pBox->BxType == BoRow ||
-              (pAb->AbTopMargin >= 0 && (pAb->AbFloat != 'N' || ExtraAbFlow (pAb, frame))))
+              (pAb->AbTopMargin >= 0 && pAb->AbFloat != 'N'))
             pBox->BxTMargin = 0;
           else if (pAb->AbTopMarginUnit != UnAuto)
             pBox->BxTMargin = GetPixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit, dim,
@@ -952,7 +952,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
           /* bottom margin */
           if (pBox->BxType == BoCell || pBox->BxType == BoCellBlock ||
               pBox->BxType == BoRow ||
-              (pAb->AbBottomMargin >= 0 && (pAb->AbFloat != 'N' || ExtraAbFlow (pAb, frame))))
+              (pAb->AbBottomMargin >= 0 && pAb->AbFloat != 'N'))
             pBox->BxBMargin = 0;
           else if (pAb->AbBottomMarginUnit != UnAuto)
             pBox->BxBMargin = GetPixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit, dim,
