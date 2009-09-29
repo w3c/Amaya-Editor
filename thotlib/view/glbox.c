@@ -635,13 +635,11 @@ void GL_Swap (int frame)
       FrameTable[frame].WdFrame && FrameTable[frame].FrDoc &&
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
     {
+      glFlush ();
       glDisable (GL_SCISSOR_TEST);
 #ifdef _GL_DEBUG
       TTALOGDEBUG_1( TTA_LOG_DRAW, _T("GL_Swap: frame=%d"), frame );
 #endif /* _GL_DEBUG */
-#ifdef DEBUG_MAC
-printf ("=====>Swap frame=%d\n",frame);
-#endif /* DEBUG_MAC */
       FrameTable[frame].WdFrame->SwapBuffers();
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
@@ -653,9 +651,6 @@ printf ("=====>Swap frame=%d\n",frame);
   ----------------------------------------------------------------------*/
 void GL_SwapStop (int frame)
 {
-#ifdef DEBUG_MAC
-printf ("************************ STOP frame=%d\n",frame);
-#endif /* DEBUG_MAC */
   FrameTable[frame].SwapOK = FALSE;
 }
 /*----------------------------------------------------------------------
@@ -671,9 +666,6 @@ ThotBool GL_SwapGet (int frame)
   ----------------------------------------------------------------------*/
 void GL_SwapEnable (int frame)
 {
-#ifdef DEBUG_MAC
-printf ("************************ ENABLE frame=%d\n",frame);
-#endif /* DEBUG_MAC */
   FrameTable[frame].SwapOK = TRUE;
 }
 #endif /* _GL */
