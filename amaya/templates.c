@@ -258,7 +258,10 @@ ThotBool CheckPromptIndicator (Element el, Document doc)
           att = TtaGetAttribute (parent, attrType);
           if (att)
             {
-              TtaSelectElement (doc, el);
+              if (TtaGetElementVolume (el) == 0)
+                TtaSelectElement (doc, parent);
+              else
+                TtaSelectElement (doc, el);
               return TRUE;
             }
         }

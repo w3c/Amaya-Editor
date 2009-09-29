@@ -492,6 +492,12 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
               child = TtaGetFirstChild (el);
               if (!strcmp (types, "string") || !strcmp (types, "number"))
                 {
+                  if (child == NULL)
+                    {
+                      elType.ElTypeNum = Template_EL_TEXT_UNIT;
+                      child = TtaNewElement (doc, elType);
+                      TtaInsertFirstChild (&child, el, doc);
+                    }
                   if (!loading)
                     // don't apply to a loaded instance
                     AddPromptIndicator (el, doc);
