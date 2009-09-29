@@ -2964,14 +2964,14 @@ static char *ParseCSSWhiteSpace (Element element, PSchema tsch,
   ptr = cssRule;
   if (!strncasecmp (cssRule, "normal", 6))
     cssRule += 6;
-  else if (!strncasecmp (cssRule, "pre", 3))
-    cssRule += 3;
-  else if (!strncasecmp (cssRule, "nowrap", 6))
-    cssRule += 6;
   else if (!strncasecmp (cssRule, "pre-wrap", 8))
     cssRule += 8;
   else if (!strncasecmp (cssRule, "pre-line", 8))
     cssRule += 8;
+  else if (!strncasecmp (cssRule, "pre", 3))
+    cssRule += 3;
+  else if (!strncasecmp (cssRule, "nowrap", 6))
+    cssRule += 6;
   else if (!strncasecmp (cssRule, "inherit", 7))
     cssRule += 7;
   else
