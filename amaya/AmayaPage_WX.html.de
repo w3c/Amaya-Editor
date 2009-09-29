@@ -21,7 +21,7 @@
   <li><a href="http://palette.ercim.org/">Palette</a></li>
 </ul>
 
-<h1 id="title">Amaya [11<ins>.3</ins>]</h1>
+<h1 id="title">Amaya [11.3]</h1>
 
 <p>Dieser Artikel ist eine Übersetzung eines <a
 href="AmayaPage_WX.html">fremdsprachigen Artikels</a> vom 31. Januar 2009</p>
@@ -124,26 +124,18 @@ gestalten.  </p>
 <div class="section">
 <h2>Neue Funktionen</h2>
 
-<p>Wichtige Änderungen seit Version <del>10</del><ins>11.2</ins></p>
+<p>Wichtige Änderungen seit Version 11.2</p>
 <ul>
-  <li><ins>Das https-Protokoll wird nun unterstützt</ins></li>
-  <li><del>Erstellen und Bearbeiten von Dokumentvorlagen aus Dokumentstruktur
-    möglich</del></li>
-  <li><del>Weitere Einrichtungen, um Vorlageninstanzen zu bearbeiten</del></li>
-  <li><del>Die erste Version mit integrierten Editor für SVG
-    Grafik-Schemata</del><ins>Neuer Vorlageneditor: Erstellung von
-    XTiger-Bibliotheken, Komponenten, Einfuhren usw..</ins></li>
-  <li><del>Die Unterstützung semantischer Informationen innerhalb von
-    Webseiten (RDFa)</del></li>
-  <li><del>Direktes skalieren von Bildern</del></li>
-  <li><ins>Automatisches öffnen der Struktur-Ansicht für
-    Vorlageninstanzen</ins></li>
-  <li><ins>Windows-Installation: Fügt einen "Bearbeiten mit Amaya"-Eintrag
-    für die Dateien ein, die Amaya berarbeiten kann</ins></li>
-  <li><ins>Die vertikale Teilung öffnet die Struktur-, die horizontale Teilung
-    die Quelltext-Ansicht</ins></li>
-  <li><ins>Ein Doppelklick auf ein Element der Liste der
-    Stylesheets-Symbolleiste öffnet das Stylesheet </ins></li>
+  <li>Das https-Protokoll wird nun unterstützt</li>
+  <li>Neuer Vorlageneditor: Erstellung von XTiger-Bibliotheken, Komponenten,
+    Einfuhren usw..</li>
+  <li>Automatisches öffnen der Struktur-Ansicht für Vorlageninstanzen</li>
+  <li>Windows-Installation: Fügt einen "Bearbeiten mit Amaya"-Eintrag für die
+    Dateien ein, die Amaya berarbeiten kann</li>
+  <li>Die vertikale Teilung öffnet die Struktur-, die horizontale Teilung die
+    Quelltext-Ansicht</li>
+  <li>Ein Doppelklick auf ein Element der Liste der Stylesheets-Symbolleiste
+    öffnet das Stylesheet </li>
 </ul>
 </div>
 
