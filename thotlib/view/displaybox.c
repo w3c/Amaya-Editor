@@ -1932,7 +1932,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       nbcar = 0;
       psW = 0; /* width used to justify a PostScript string */
       xpos = x; /* position of the new displayed character */
-      while (charleft > 0)
+      while (charleft > 0 && adbuff)
         {
           /* handle each char in the buffer */
           while ((rtl && indbuff >= indmax) || (!rtl && indbuff <= indmax))

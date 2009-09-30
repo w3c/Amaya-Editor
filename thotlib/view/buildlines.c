@@ -2979,6 +2979,24 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     still = FALSE;
                 }
             }
+          else if ((pNextBox->BxType == BoBlock ||
+                    pNextBox->BxType == BoFloatBlock))
+            {
+              /* don't try to split this box */
+              toCut = FALSE;
+              pBox = pNextBox;
+              pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
+              if (pNextBox && pNextBox->BxAbstractBox->AbLeafType == LtText &&
+                  pNextBox->BxNChars == pNextBox->BxNSpaces)
+                // include the empty box in the line
+                pBox = pNextBox;
+              else
+                {
+                pNextBox = pBox;
+                toCut = TRUE;
+                }
+              still = FALSE;
+            }
           else
             {
               /* We need to split that box or a previous one */
@@ -3333,12 +3351,15 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
       GetLeftRightPaddings (box, pBlock, &pl, &pr);
       if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxContentWidth)
         w = box->BxMaxWidth + ml + box->BxLBorder + box->BxRBorder + pl + pr;
-      else if (/*(box->BxType == BoFloatBlock || box->BxType == BoBlock) &&*/ box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
-        w = box->BxMinWidth + ml + box->BxLBorder + box->BxRBorder + pl + pr;
+#ifdef IV
+      else if (box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+        {
+          w = pBlock->BxW * box->BxAbstractBox->AbWidth.DimValue / 100;
+          w += ml + box->BxLBorder + box->BxRBorder + pl + pr;
+        }
+#endif
       else
-        w = box->BxWidth - mr;
-      if (mr < 0)
-        w += mr;
+        w = box->BxWidth;
       if (minx1 < w)
         minx1 = w;
       if (box->BxXOrg + w - x > x1)
@@ -3358,12 +3379,15 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
       GetLeftRightPaddings (box, pBlock, &pl, &pr);
       if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxContentWidth)
         w = box->BxMaxWidth + box->BxLBorder + ml + box->BxRBorder + pl + pr;
-      else if (/*(box->BxType == BoFloatBlock || box->BxType == BoBlock) &&*/ box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
-        w = box->BxMinWidth + box->BxLBorder + ml + box->BxRBorder + pl + pr;
+#ifdef IV
+      else if (box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+        {
+          w = pBlock->BxW * box->BxAbstractBox->AbWidth.DimValue / 100;
+          w += ml + box->BxLBorder + box->BxRBorder + pl + pr;
+        }
+#endif
       else
-        w = box->BxWidth - ml;
-      if (ml < 0)
-        w += ml;
+        w = box->BxWidth;
       if (minx2 < w)
         minx2 = w;
       if (box->BxXOrg + w > x + pBlock->BxMaxWidth + x2)
