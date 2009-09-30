@@ -198,11 +198,16 @@ bool AmayaURLGrabberConnection::OnPoke(const wxString &topic, const wxString &it
   if (/*topic == m_Owner.m_AcceptedTopic &&*/ m_Owner.m_pURLOpenCallback)
     {
       /* copy the possible url argument */
-      char buffer[MAX_LENGTH];
+      char buffer[MAX_LENGTH], *ptr = NULL;
       if (data)
         {
           strncpy( buffer, (const char*)data, MAX_LENGTH - 1);
           buffer[MAX_LENGTH - 1] = EOS;
+          // sometimes the url is dupplicated
+          if (!strncmp (buffer, "file://", 7))
+            ptr = strstr (&buffer[7], "/file");
+          if (ptr)
+            *ptr = EOS;
         }
       else
         buffer[0] = EOS;
