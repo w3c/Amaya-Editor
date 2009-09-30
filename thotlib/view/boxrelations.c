@@ -2634,6 +2634,43 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pDimAb->DimValue = -1;
                 }
             }
+#ifdef IV
+          else if (horizRef && pDimAb->DimUnit == UnAuto &&
+                   pAb->AbFloat != 'N')
+            {
+              /* the width depends on the contents but the contents
+               depends on the enclosing */
+              pChildAb = pAb->AbFirstEnclosed;
+              {
+                i = 0;
+                while (pChildAb)
+                  {
+                    if (pChildAb->AbWidth.DimUnit == UnPercent &&
+                        pChildAb->AbFloat != 'N')
+                      i += pChildAb->AbWidth.DimValue;
+                    pChildAb = pChildAb->AbNext;
+                  }
+                if (i > 0)
+                  {
+                    pDimAb->DimUnit = UnPercent;
+                    pDimAb->DimValue = i;
+                  }
+              }
+            }
+#endif
+          else if (horizRef && pDimAb->DimUnit == UnPercent && pParentAb &&
+                   pParentAb->AbFloat != 'N' &&
+                   pParentAb->AbWidth.DimAbRef == NULL &&
+                   pParentAb->AbWidth.DimValue == -1)
+            {
+              // the box width is a percent of the enclosing box
+              // but the width of the enclosing box depends on the contents
+              while (pParentAb->AbEnclosing &&
+                     (pParentAb->AbWidth.DimUnit == UnAuto ||
+                      (pParentAb->AbWidth.DimAbRef == NULL &&
+                       pParentAb->AbWidth.DimValue == -1)))
+                pParentAb = pParentAb->AbEnclosing;
+            }
           else if (!horizRef && pDimAb->DimAbRef &&
                    pDimAb->DimUnit != UnAuto &&
                    pDimAb->DimAbRef == pParentAb &&
