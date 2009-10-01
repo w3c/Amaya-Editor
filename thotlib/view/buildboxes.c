@@ -2757,6 +2757,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
              pAb->AbTopBorder == 0 && pAb->AbBottomBorder == 0)) &&
            !pAb->AbWidth.DimIsPosition &&
            pAb->AbWidth.DimValue <= 0 &&
+           pAb->AbDisplay != 'B' &&
            /* a positioned box cannot be a ghost */
            !extraflow &&
            pAb->AbFirstEnclosed &&
