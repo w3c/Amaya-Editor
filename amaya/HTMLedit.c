@@ -1263,16 +1263,18 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                               else
                                 {
                                   // add the element into the new in_line
+                                  if (parent == NULL)
+                                    parent = TtaGetParent (el);
                                   TtaPreviousSibling (&sibling);
                                   TtaRegisterElementDelete (el, doc);
                                   TtaRemoveTree (el, doc);
-				  child = TtaGetLastChild (in_line);
-				  if (child)
-				    TtaInsertSibling (el, in_line, FALSE, doc);
-				  else
-				    TtaInsertFirstChild (&el, in_line, doc);
-				  if (!doit)
-				    TtaRegisterElementCreate (el, doc);
+                                  child = TtaGetLastChild (in_line);
+                                  if (child)
+                                    TtaInsertSibling (el, in_line, FALSE, doc);
+                                  else
+                                    TtaInsertFirstChild (&el, in_line, doc);
+                                  if (!doit)
+                                    TtaRegisterElementCreate (el, doc);
                                 }
                               if (doit)
                                 {
