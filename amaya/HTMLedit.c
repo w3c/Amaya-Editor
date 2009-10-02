@@ -627,7 +627,8 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
   If the selection is within a style element and the element type is
   a span adds the data into the style element.
   -----------------------------------------------------------------------*/
-ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const char * data, ThotBool replace)
+ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
+                                const char * data, ThotBool replace)
 {
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
   Element         last, parent, enclose, selected;
@@ -1205,6 +1206,14 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                             }
                           else if (in_line)
                             {
+                              if (doit)
+                                {
+                                  // should we change the selection
+                                  if (el == lastSel)
+                                    lastSel = in_line;
+                                  if (el == firstSel)
+                                    firstSel = in_line;
+                                }
                               if (doit && (selpos || inside))
                                 {
                                   // empty selection or block selection
@@ -1263,9 +1272,16 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                               else
                                 {
                                   // add the element into the new in_line
-                                  if (parent == NULL)
-                                    parent = TtaGetParent (el);
-                                  TtaPreviousSibling (&sibling);
+                                  if (doit)
+                                    {
+                                      // the in_line element must be inserted
+                                      if (parent == NULL)
+                                        parent = TtaGetParent (el);
+                                      // get the previous sibling
+                                      sibling = el;
+                                      TtaPreviousSibling (&sibling);
+                                       before = FALSE;
+                                    }
                                   TtaRegisterElementDelete (el, doc);
                                   TtaRemoveTree (el, doc);
                                   child = TtaGetLastChild (in_line);
@@ -1276,14 +1292,6 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                                   if (!doit)
                                     TtaRegisterElementCreate (el, doc);
                                 }
-                              if (doit)
-                                {
-                                  // should we change the selection
-                                  if (el == lastSel)
-                                    lastSel = in_line;
-                                  if (el == firstSel)
-                                    firstSel = in_line;
-                                }
                             }
 
                           if (doit && in_line)
@@ -1292,7 +1300,6 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType, const cha
                                 TtaInsertSibling (in_line, sibling, before, doc);
                               else if (parent)
                                 TtaInsertFirstChild (&in_line, parent, doc);
-			      doit = FALSE;
                               /* generate the attribute */
                               if (attrType.AttrTypeNum != 0)
                                 {
