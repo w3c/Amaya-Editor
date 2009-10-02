@@ -2475,9 +2475,10 @@ static PtrAbstractBox GetEnclosingBlock (PtrAbstractBox pAb, PtrAbstractBox bloc
     return block;
 
   pRefBlock = pAb->AbEnclosing;
-  while (pRefBlock != block &&
-         pRefBlock->AbBox->BxType == BoGhost &&
-         pRefBlock->AbDisplay != 'B')
+  //if (skipGhost)
+  //  while (pRefBlock != block && pRefBlock->AbBox->BxType == BoGhost)
+  //    pRefBlock = pRefBlock->AbEnclosing;
+  while (pRefBlock != block && pRefBlock->AbDisplay != 'B')
     pRefBlock = pRefBlock->AbEnclosing;
   return pRefBlock;
 }
@@ -2526,10 +2527,10 @@ static ThotBool Checknewblock (PtrBox pBox, PtrBox pNextBox, PtrBox pBlock, int 
         pNextBox->BxType == BoTable)))
     /* only one compound block by line */
     return TRUE;
-  if (pBox->BxAbstractBox->AbFloat == 'N' &&
-      !ExtraFlow (pBox, frame) &&
-      pNextBox->BxAbstractBox->AbFloat == 'N' &&
-      !ExtraFlow (pNextBox, frame))
+/*   if (pBox->BxAbstractBox->AbFloat == 'N' && */
+/*       !ExtraFlow (pBox, frame) && */
+/*       pNextBox->BxAbstractBox->AbFloat == 'N' && */
+/*       !ExtraFlow (pNextBox, frame)) */
     {
       // get current and next block
       nextBlock = pBlock->BxAbstractBox;
