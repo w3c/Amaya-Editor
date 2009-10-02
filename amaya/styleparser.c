@@ -7044,15 +7044,25 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
                   ctxt->pseudo = PbAfter;
                   specificity += 1;
                 }
-	      else if (!strncmp (deb, "target", 6))
+              else if (!strncmp (deb, "target", 6))
                 {
-		  if (warn)
+                  if (warn)
                    CSSPrintError ("Warning: \":target\" is CSS3 syntax",
                                    NULL);
                   specificity += 1;
                   DoApply = FALSE;
                 }
-	      else
+              else if (!strncmp (deb, "not", 3) ||
+                       !strncmp (deb, "only", 4) ||
+                       !strncmp (deb, "last", 4))
+                {
+                  if (warn)
+                   CSSPrintError ("Warning: Not supported CSS3 syntax",
+                                   NULL);
+                  specificity += 1;
+                  DoApply = FALSE;
+                }
+              else
                 {
                   CSSPrintError ("Invalid pseudo-element", deb);
                   DoApply = FALSE;
