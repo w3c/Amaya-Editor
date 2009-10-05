@@ -1,38 +1,38 @@
 # encoding= utf8
 0 X11 hiba: %s\n
-1 Megerősítés
-2 Nincs ábécéfájl
+1 Megerősít
+2 Nincs ABC-fájl
 3 Az új nézet nem válthatja fel a régit
-4 Összegyeztethetetlen leírók. %s újrafordítása
-5 Végzetes huba: a betűkészlet nem található
-6 A memória megtelt
-7 Végzetes hiba: Nem lehet csatlakozni X-hez
-8 A nézet módosult létrehozása előtt
-9 Szabályok tábla megtelt.
+4 Inkompatíbilis sémák. %s újrafordítása
+5 Végzetes hiba: a betűtípusok nem találhatók
+6 Kevés a memória
+7 Végzetes hiba: nem lehet csatlakozni X-hez
+8 A nézet létrehozása előtt módosult
+9 A szabály-tábla megtelt.
 10 Érvénytelen fájl: %s.STR
 11 Érvénytelen fájl: %s.PRS
-12 Dokumentum %s nyomtatása
-13 Disposition
+12 A %s dokumentum kinyomtatva
+13 Diszpozíció
 14 1 oldal/lap
 15 2 oldal/lap
 16 4 oldal/lap
 17 %s
-18 kevés a memória
+18 Kevés a memória
 19 *** Amaya: helyreállíthatatlan hiba ***
-20 A módosult dokumentumok (ha van) mentése
+20 A módosult dokumentumok (ha van) mentésre kerülnek
 21 Érvénytelen .TRA fájl: %s
-22 %s érvénytelen testvére ennek: %s (%s)
-23 %s érvénytelen utóda ennek az elődnek: %s (%s)
-24 %s, oldal %d
+22 %s érvénytelen testvére %s  (%s)
+23 %s érvénytelen gyermeke %snek (%s)
+24 %s, %d oldal
 25 Nyelv
 26 Attribútumok
-27 Szabványos bemutató
+27 Alap megjelenítés
 28 Alkalmaz
 29 Karakterek
 30 Aláhúzás
 31 Grafika
 32 Formátum
-33 Alap
+33 Alapértelemett
 34 Igazítás
 35 Behúzás
 36 Nyomtatás folyamatban
@@ -41,13 +41,13 @@
 39 Beállítások
 40 A4
 41 US
-42 Papírfajta
+42 Lapméret
 43 Bezár
-44 Mappák
-45 A dokumentum (%s) már létezik. Felülírjuk?
-46 Szöveg színének beállítása
-47 Háttér színének beállítása
-48 Betűkészlet
+44 Könyvtárak
+45 A %s dokumentum már létezik. Felülírja?
+46 Szövegszín beállítása
+47 Háttérszín beállítása
+48 Betűtípus
 49 Normál
 50 Félkövér
 51 Dőlt
@@ -57,23 +57,23 @@
 55 Normál
 56 Aláhúzott
 57 Áthúzott
-58 Betűméret
-59 Behúzás csökkentése
-60 Egyes sortávolság
-61 Közepes sortávolság
-62 Kettős sortávolság
+58 Méret
+59 Behúzás megszüntetése
+60 Egyszeres sortávolság
+61 Másfélszeres sortávolság
+62 Kétszeres sortávolság
 63 Dokumentum mentése
 64 Bezárás mentés nélkül
-65 Karakter stílus
+65 Karakter-stílus
 66 Színek
-67 **Elements
+67 Elemek
 68 Törlés
 69 Kimenet
 70 PostScript fájl
 71 Nyomtató
-72 Keresés
-73 Ignore case
-74 Csere
+72 Keresés:
+73 Eset figyelmen kívül hagyása
+74 Csere erre:
 75 Csere
 76 Nincs csere
 77 Csere kérésre
@@ -83,161 +83,161 @@
 81 Kijelölésben
 82 Kijelölés után
 83 A teljes dokumentumban
-84 Ne cseréljen
+84 Csere mellőzése
 85 bezárás előtt
 86 Dokumentum bezárása
 87 Matematikai szimbólumok
 88 Grafika
-89 Latin ábécé
-90 Görög ábécé
+89 Latin ABC
+90 Görög ABC
 91 Mentés
 92 Szöveg
 93 Grafika
-94 szimbólum
+94 Szimbólum
 95 Kép
-96 XML
+96 XML elem
 97 után
 98 előtt
 99 körül
-100 Include
+100 Beleértve
 101 Beilleszt
 102 létrehozni
-103 Beilleszt
-104 Lapdobás
-105 Nyelvi elem
+103 Beszúr
+104 Oldaltörés
+105 Az elem nyelve
 106 Örökölt nyelv:
-107 nem található
-108 Keresés helye
+107 Nem található
+108 Keresés helye:
 109 Keresés
 110 Csak olvasható elem
-111 Nincs mit cserélni
-112 Szabványos karakterek
-113 Szabványos grafika
-114 Szabványos formátum
-115 Szabványos elhelyezkedés
+111 Semmi sem cserélhető
+112 Standard karakterek
+113 Alapvető grafika
+114 Alapvető formátum
+115 Alapvető geometria
 116 pt
-117 Sor stílus
-118 Sor magasság
-119 Kitöltési mintázat
-120 Osztás
-121 Objektum típus
-122 Ugrás oldalszámra:
+117 Vonalstílus
+118 Vonalvastagság
+119 Kitöltő mintázat
+120 Felosztás
+121 Objektumtípus
+122 Ugrás oldalra:
 123 Bármely
 124 Keresendő attribútum
 125 Keresendő típus
-126 Natures
+126 Természetes
 127 Név
 128 Érték
-129 Attribútum érték
+129 Attribútum-érték
 130 Ismeretlen attribútum
-131 Mégsem
-132 HIba a PostScript fordításban
-133 A parancsot visszautasította a sorkezelő "%s"
+131 Mégse
+132 Hiba a PostScript fordításban
+133 A parancsot visszautasította a  "%s" spooler
 134 "%s" nem hozható létre
 135 Felülvonás
-136 Dokumentum formátum
+136 Dokumentum-formátum
 137 Attribútum eltávolítása
-138 Háttérszín
-139 Szín
-140 Adjon meg egy általános XML szerkezetet
+138 Válasszon háttérszínt
+139 Válasszon szövegszínt
+140 Válasszon egy általános XML struktúrát
 141 Ellenőrzés
-142 Keresés/Kihagyás
+142 Keresés/kihagyás
 143 Csere (+ dic)
 144 Csere és következő
 145 Másik nyelv
-146 Kihagyás (+ dic)
+146 Felvétel a szótárba (+ dic)
 147 ha tartalmazza:
-148 Szóellenőrző...
-149 római számok
-150 Kihagyandó
+148 Heyesírás-ellenőrzés ...
+149 Római számok
+150 Figyelmen kívül hagy
 151 csupa nagybetűs szavak
 152 számokat tartalmazó szavak
-153 Parameter fájl hiba
-154 Nincs billentyűzet fájl
-155 A dokumentum szótár nem menthető
-156 Ezt az érvénytelen szót (%s) elutasította a szótár
-157 Szó (%s) hozzáadva a dokumentum szótárhoz
-158 Szóellenőrzés vége
-159 Szóellenőrzés megszakadt
-160 Adjon meg egy dokumentumot
-161 Dokumentum szótár mentve: %s
-162 Ebben a változatban nem elérhető
-163 Dokkoló rögzítése/úsztatása
+153 Fájlhiba
+154 Nincs billentyűzet-fájl
+155 A dokumentum-szótár nem menthető
+156 A %s érvénytelen szót  a szótár elutasította
+157 A %s szó hozzáadva a dokumentum szótárához
+158 Helyesírás-ellenőrzés vége
+159 Helyesírás-ellenőrzés megszakítva
+160 Válasszon dokumentumot
+161 Dokumentum-szótár mentve: %s
+162 Ebben a verzióban nem elérhető
+163 Paletta engedélyezése/letiltása
 164 Eszközök
-165 Kötelező attribútum, nem távolítható el
-166 Frissítés
+165 Kötelező attribútum, nem eltávolítható
+166 Frissít
 167 Balra zárt
 168 Jobbra zárt
 169 Középre zárt
 170 Sorkizárt
 171 Osztály alkalmazása
-172 Adja meg az osztályt vagy álosztályt
+172 Osztály vagy álosztály kiválasztása
 173 Kijelöl
 174 Kihagy
-175 Matematika
-176 Egyéb
+175 Matematikai operátorok
+176 Egyéb jelek
 177 Bináris műveletek
-178 Bináris műveletek vagy negálás
-179 Műveletek
-180 Görög ábécé (nagybetűs)
+178 Bináris műveletek negáltjai
+179 Műveleti jelek
+180 Görög ABC (nagybetűs)
 181 Nyilak
 182 Különleges karakterek
 183 Átvitel megszakítása
 184 Előző dokumentum
 185 Következő dokumentum
-186 Újratöltés
+186 Frissítés
 187 Mentés
-188 Mentés
+188 Mind mentése
 189 Új dokumentum...
 190 Dokumentum megnyitása
 191 Nyomtatás
 192 Keresés
 193 Kezdőlap
-194 Hangsúlyozott On/Off
-195 Vastag On/Off
-196 Kód On/Off
-197 Kép beillesztése
-198 1. szint
-199 2. szint
-200 3. szint
-201 4. szint
+194 Kiemelt szöveg
+195 Hangsúlyozott szöveg
+196 Forráskód
+197 Kép beszúrása/cseréje
+198 Címsor (1. szint)
+199 Címsor (2. szint)
+200 Címsor (3. szint)
+201 Címsor (4. szint)
 202 &Bekezdés
-203 Listajeles lista
-204 Számozott lista
-205 Meghatározás lista
-206 Kapocs
+203 Felsorolás
+204 Számozás
+205 Definíciós lista
+206 Hivatkozás
 207 Táblázat
-208 %d lap bezárására készül. Valóban folytatni kívánja?
+208 %d lap bezárására készül. Valóban folytatja?
 209 Figyelmeztessen több lap bezárásakor
 210 Lapok bezárása
-211 Nincs hiba
-212 Elemzési hibák mutatása
+211 Nem található hiba
+212 Kódhibák mutatása
 213 Dobozok
-214 Felosztás
-215 Célpont
-216 &Beillesztés On/Off
-217 &Törlés On/Off
-218 &Alsó index On/Off
-219 Felső index On/Off
-220 Szócikk
-221 Meghatározás
+214 div
+215 Cél
+216 &Beillesztett szöveg
+217 &Törölt szöveg
+218 &Alsó index
+219 Felső index
+220 Kifejezés
+221 Definíció
 222 Objektum
 223 Stílus
-224 Fájl
+224 Fájlok
 225 Vízszintes felosztás
 226 Függőleges felosztás
-227 Eszközsor mutatása
+227 Eszközsor
 228 Visszavonás
 229 Újra
 230 Kivágás
 231 Másolás
 232 Beillesztés
-233 Szóelemző
-234 Különböző szerkezetek
-235 Relációk, rendek és logika
+233 Helyesírás ellenőrzése
+234 Válogatott matematikai jelek
+235 Relációs, rendezési és logikai jelek
 236 Halmazok és függvények
-237 Számelmélet, műveletek, komplexek és állandók
-238 Analízis, lineáris algebra és statisztika
+237 Aritmetikai műveletek, konstansok
+238 Analízis, lineáris algebra, statisztika
 239 Trigonometria és logaritmusok
 240 Nagyítás
 241 Kicsinyítés
@@ -245,133 +245,133 @@
 243 XML
 244 Szöveg
 245 Nincs korábbi dokumentum
-246 Elem kijelölése kattintással
-247 Szerkesztési mód váltása kattintással
-248 Egyesítés
-249 Shrink &horizontal extend
-250 Shrink &vertical extend
-251 Sor &beillesztése
+246 Kattintson egy elemre annak kijelöléséhez
+247 Kattintson a szerkesztő mód váltásához
+248 Cellák egyesítése
+249 Vízszintes összevonás
+250 Függőleges összevonás
+251 Sor &beszúrása
 252 Sor &hozzáadása
-253 Oszlop be&illesztése
+253 Oszlop be&szúrása
 254 Oszlop hozzá&adása
 255 A nap tippje
 256 Tipp mutatása a program indulásakor
-257 **Previous tip
+257 Előző tipp
 258 Következő tipp
-259 Tudta-e..
-260 **Close
-261 Az Amaya testreszabható: öt különböző profilban különböző menü- készletek és panelkészlet áll rendelkezésére. Lásd a Beállításokban.
-262 A panelek az ablak bal vagy jobb szélére helyezhetők, vagy akár panelenként beállíthatók. Lásd a Beállításokban.
-263 Az F2 vagy Esc billentyűvel kijelölhetjük a szerkezeti elem elődelemét, amivel ezután szerkesztési műveletek (másolás, beillesztés, tulajdonságok stb.) végezhetők.
-264 Két dokumentumot egymás mellé vagy alá helyezhetünk, ha az egyiket fülénél fogva a nyitva lévő másik dokumentum keretéhez húzzuk.
-265 Egyedi módban a panelek húzásásal megváltoztatható a sorrendjük, vagy lebegővé tehetők.
-266 Egyedi módban mindkét oldalon több paneltárat is készíthetünk a panelek húzásával.
-267 A szerkesztési mód (Szöveg/XML) váltása az állapotsorban lévő hasonló feliratú gombra kattintva is lehetséges.
-268 Ha az állapotsorban piros gomb látható, rákattintva megkapjuk a hibákat.
-269 Kijelölhetjük az aktuális kijelölés valamely elődelemét, ha az állapotsorban annak a nevére kattintunk.
-270 A dokumentumfüleken lévő nyíl gomb megnyásakor megjelenő menü segítségével átválthatunk másik fülre.
-271 **If you enable "Show Targets" in the "Views" menu, targets are displayed in formatted view. This is convenient for the creation of link: a target can be chosen by clicking on it.
-272 **When you rotate an SVG object, the center is indicated by a cross. You can use the mouse to move it.
-273 **Basic SVG shapes have handles that can be used to edit them. Blue triangles or green square allow to change their size. For <rect/> element, red circles give a control on radius of rounded corners.
-274 **For SVG drawing, lines are created with a precision of 15� if you press the shift button. It is useful when you want to draw straight lines.
-275 **When you resize an image or an SVG object, pressing the shift button allows to preserve aspect ratio.
-276 **Use Edit>Preferences>Dialogue Language to choose the language of the user interface.
+259 Tudta?
+260 Bezár
+261 Az Amaya igény szerint testreszabható: öt profilt kínál különféle menükkel és panelekkel. Lásd a Beállításokban az Általános résznél.
+262 A panelek az ablak bal vagy jobb szélén is megjeleníthetők, vagy akár egyesével is testreszabhatók. Lásd a Beállításokban.
+263 Az F2 vagy Esc billentyűvel a dokumentum-szerkezetben kijelölhető a szülőelem, így a megfelelő elemmel egyszerűen végezhetők szerkesztő funkciók (másolás, beillesztés, attribútumok módosítása, stílus-váltás stb.).
+264 Az ablakban két dokumentum egymás mellett is megjeleníthető a dokumentum lapfülének a megjelenített dokumentum bal vgy jobb oldalára történő vonszolásával.
+265 Testreszabás üzemmódban a panelek sorrendje vonszolással megváltoztatható, illetve a panelek lebegővé tehetők.
+266 Testreszabás üzemmódban a panelek az ablak mindkét szélére egyszerű vonszolással áthelyezhetők.
+267 A szöveges és XML szerkesztési módok között a jobb alsó sarok megfelelő gombjára történő kattintással válthatunk.
+268 A jobb alsó sarokban esetlegesen megjelenő vörös gomb hibákat jelez, melyek a gombra való kattintással megtekinthetők.
+269 Az aktuális kijelölés szülőeleme az ablak alján látható elérés-vezérlőn a megfelelő névre történő kattintással is kijelölhető.
+270 Lapfülváltás a lapfülvezérlő jobb oldalán látható nyíl gombbal előhívható lenyílólistával is történhet.
+271 A "Hivatkozott objektumok" "Nézet" menüben történő engedélyezésével a hivatkozott objektumok formázottan jelennek meg. Ez hivatkozások létrehozásakor kényelmes, hiszen a cél a rá való kattintással kijelölhető.
+272 SVG objektum forgatásakor a középpontot egy kereszt jelöli, mely egérrel mozgatható.
+273 Az egyszerű SVG alakzatok fogantyúikkal szerkeszthetők. A kék háromszögekkel vagy a zöld négyszögekkel átméretezhetők. A <rect/> elem esetén a vörös körökkel a sarkok lekerekítésének sugara határozható meg.
+274 SVG grafikáknál a vonalak 15°-os pontossággal rajzolhatók a Shift billentyű lenyomásával. Egyenesek rajzolásánál hasznos funkció.
+275 Kép vagy SVG objektum átméretezésekor a Shift billentyű nyomva tartásával az oldalarányok megőrizhetők.
+276 A Szerkesztés > Beállítások > Nyelv átállításával módosítható a felhasználói interfész nyelve.
 277 Klasszikus
 278 Modern
-279 Téma nélkül
-280 **Title/Description
-281 **Generate a description
-282 **Square
-283 **Rounded Square
-284 **Rectangle
-285 **Rounded rectangle
-286 **Diamond
-287 **Parallelogram
-288 **Trapezium
-289 **Equilateral triangle
-290 **Isosceles triangle
-291 **Right triangle
-292 **Circle
-293 **Ellipse
-294 **Line
-295 **Arrow
-296 **Double Arrow
-297 **Zigzag
-298 **Group
-299 **Ungroup
-300 **Bring to front
-301 **Send to back
-302 **One level up
-303 **One level down
-304 **90� left
-305 **90� right
-306 **Rotate
-307 **Vertical symmetry
-308 **Horizontal symmetry
-309 **Scale
-310 **Skew
-311 **Move
-312 **Align bottom
-313 **Align center
-314 **Align left
-315 **Align middle
-316 **Align right
-317 **Align top
-318 **Distribute bottom
-319 **Distribute center
-320 **Distribute left
-321 **Distribute middle
-322 **Distribute right
-323 **Distribute top
-324 **Distribute vertical spacing
-325 **Distribute horizontal spacing
-326 **Closed Bezier curve
-327 **Bezier curve
-328 **Polyline
-329 **Polygon
-330 **Foreign Object
-331 **Image
-332 **SVG Canvas
-333 **Text
-334 **Cone
-335 **Cube
-336 **Cylinder
-337 **Octahedron
-338 **Parallelepiped
-339 **Pyramid
-340 **Beaker
-341 **Funnel
-342 **Bunsen burner
-343 **Buchner flask
-344 **Boiling flask
-345 **Burette
-346 **Erlenmeyer flask
-347 **Test tube
-348 **Pipette
-349 **Rectangular
-350 **Rounded rectangular
-351 **Round
-352 **Scream
-353 **Thought
-354 **Capacitor
-355 **Power source
-356 **Diode
-357 **Ground Point
-358 **Inductor
-359 **LED
-360 **Op-amp
-361 **Resistor
-362 **Switch
-363 **Transistor
-364 **Voltage source
-365 **Zener diode
-366 **Pentagon
-367 **Hexagon
-368 **Heptagon
-369 **Octogon
-370 **Star (4 branches)
-371 **Star (5 branches)
-372 **Star (6 branches)
+279 Téma nélküli megjelenítés
+280 Cím/leírás
+281 Leírás generálása
+282 Négyzet
+283 Lekerekített sarkú négyzet
+284 Téglalap
+285 Lekerekített sarkú téglalap
+286 Rombusz
+287 Paralelogramma
+288 Trapéz
+289 Egyenlő oldalú háromszög
+290 Egyenlő szárú háromszög
+291 Derékszögű háromszög
+292 Kör
+293 Ellipszis
+294 Egyenes
+295 Nyíl
+296 Kétirányú nyíl
+297 Cikk-cakk
+298 Csoportba foglal
+299 Csoportbontás
+300 Előrehoz
+301 Hátraküld
+302 Előrébb hoz
+303 Hátrébb küld
+304 Forgatás 90°-kal az óramutató járásával ellentétesen
+305 Forgatás 90°-kal az óramutató járásával megegyezően
+306 Forgatás
+307 Függőleges tükrözés
+308 Vízszintes tükrözés
+309 Átméretezés
+310 Torzítás
+311 Áthelyez
+312 Igazítás alulra
+313 Igazítás középre
+314 Igazítás balra
+315 Igazítás függőlegesen középre
+316 Igazítás jobbra
+317 Igazítás felülre
+318 Elosztás lent
+319 Elosztás középen
+320 Elosztás balra
+321 Elosztás függőlegesen középre
+322 Elosztás jobbra
+323 Elosztás fent
+324 Függőleges térköz elosztása
+325 Vízszintes térköz elosztása
+326 Zárt Bezier-görbe
+327 Bezier-görbe
+328 Egyenes-lánc
+329 Sokszög
+330 Külső objektum
+331 Kép
+332 SVG vászon
+333 Szöveg
+334 Kúp
+335 Kocka
+336 Henger
+337 Oktaéder
+338 Paralelepipedon
+339 Gúla
+340 Mérőpohár
+341 Tölcsér
+342 Bunsen-égő
+343 Buchner-kémcső
+344 Forraló kémcső
+345 Büretta
+346 Erlenmeyer kémcső
+347 Tesztcső
+348 Pipetta
+349 Négyszögletes
+350 Kerekített négyszögletes
+351 Kerek
+352 Sikoly
+353 Gondolat
+354 Kondenzátor
+355 Áramforrás
+356 Dióda
+357 Jelföld
+358 Induktor
+359 LED
+360 Műveleti erősítő
+361 Ellenállás
+362 Kapcsoló
+363 Tranzisztor
+364 Feszültségforrás
+365 Zener-dióda
+366 Ötszög
+367 Hatszög
+368 Hétszög
+369 Nyolcszög
+370 Négyágú csillag
+371 Ötágú csillag
+372 Hatágú csillag
 373 AND
 374 NAND
 375 OR
@@ -379,50 +379,50 @@
 377 XOR
 378 XNOR
 379 NOT
-380 **Cross
-381 **Frame
-382 **Ring
-383 **Cloud
-384 **Scroll
-385 **Sun
-386 **Lightning_Bolt
-387 **Moon
-388 **Smiley
-389 **Heart
-390 **Flower
-391 **Prohibited
-392 **Pentagon
-393 **2-Way Rounded Arrow
-394 **3-Way Arrow Callout
-395 **3-Way Arrow
-396 **4-Way_Arrow_Callout
-397 **4-Way Arrow
-398 **Chevron
-399 **Circular Arrow
-400 **Corner Arrow
-401 **Corner Double Arrow Callout
-402 **Corner Double Arrow
-403 **Double Arrow Callout
-404 **Double Arrow
-405 **Notched Arrow
-406 **Rounded Arrow
-407 **Simple Arrow Callout
-408 **Simple Arrow
-409 **Split Arrow
-410 **S-Shape Arrow
-411 **Striped Arrow
-412 Sablon létrehozása a jelenlegi dokumentum alapján
+380 Kereszt
+381 Keret
+382 Gyűrű
+383 Felhő
+384 Pergamen
+385 Nap
+386 Villámcsapás
+387 Hold
+388 Mosolykód
+389 Szív
+390 Virág
+391 Tiltott
+392 Ötoldalú nyíl
+393 Kétirányú íves nyíl
+394 Háromágú fix szélességű nyíl
+395 Háromágú nyíl
+396 Négyágú fix szélességű nyíl
+397 Négyágú nyíl
+398 Fej nélküli nyíl
+399 Íves nyíl
+400 Saroknyíl
+401 Elágazó fix szélességű nyíl
+402 Kéirányú saroknyíl
+403 Kétirányú fix szélességű nyíl
+404 Kétirányú nyíl
+405 Bemetszett végű nyíl
+406 Hajtott nyíl
+407 Fix szélességű nyíl
+408 Egyszerű nyíl
+409 Elágazó nyíl
+410 S-alakú nyíl
+411 Szaggatott végű nyíl
+412 Sablon létrehozása az aktuális dokumentumból
 413 Szövegdoboz létrehozása
 414 Komponens vagy elem használata
-415 Komponens létrehozása és használata
-416 Jelenlegi használat ismétlése
-417 Komponens létrehozása és ismétlése
-418 Szabad szerkesztésű szövegdoboz létrehozása
-419 Új típus unió létrehozása
+415 Komponens létrehozása
+416 Aktuális használat ismétlése
+417 Használat létrehozása és ismétlése
+418 Tetszőleges szövegdoboz
+419 Új típus-unió
 420 Könyvtár létrehozása
-421 **Import a library
-422 Bezárás felnyíl billentyűvel
-423 Bezárás duplakattintással
+421 Könyvtár importálása
+422 Bezárás felfele nyíl billentyűvel
+423 Bezárás dupla kattintással
 424 Bezárás kattintással
 425 Zárolt erőforrás
 426 Nem zárolt erőforrás

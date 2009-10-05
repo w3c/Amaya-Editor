@@ -49,7 +49,7 @@
 	<message xml:lang="pt">Abrir</message>
 	<message xml:lang="fi">Avaa</message>
 	<message xml:lang="ru">Открыть</message>
-	<message xml:lang="hu">megnyitás</message>
+	<message xml:lang="hu">Megnyitás</message>
 	<message xml:lang="ka">გახსნა</message>
 	<message xml:lang="cn">打开</message>
 	<message xml:lang="tw">打開</message>
@@ -68,7 +68,7 @@
 	<message xml:lang="fi">Uusi MathML dokumentti</message>
 	<message xml:lang="tr">Yeni MathML dosyası</message>
 	<message xml:lang="ru">Новый MathML документ</message>
-	<message xml:lang="hu">Új MathML dokumentum...</message>
+	<message xml:lang="hu">Új MathML dokumentum</message>
 	<message xml:lang="ka">ახალი MathML
 დოკუმენტი...</message>
 	<message xml:lang="cn">新建 MathML 文档</message>
@@ -88,7 +88,7 @@
 	<message xml:lang="fi">Uusi SVG dokumentti</message>
 	<message xml:lang="tr">Yeni SVG dosyası</message>
 	<message xml:lang="ru">Новый SVG документ</message>
-	<message xml:lang="hu">Új SVG dokumentum...</message>
+	<message xml:lang="hu">Új SVG dokumentum</message>
 	<message xml:lang="ka">ახალი SVG
 დოკუმენტი...</message>
 	<message xml:lang="cn">新建 SVG 文档</message>
@@ -108,7 +108,7 @@
 	<message xml:lang="fi">Uusi CSS tyylitiedosto</message>
 	<message xml:lang="tr">Yeni CSS düz dizayn</message>
 	<message xml:lang="ru">Новая каскадная таблица стилей CSS</message>
-	<message xml:lang="hu">Új CSS stíluslap...</message>
+	<message xml:lang="hu">Új CSS stíluslap</message>
 	<message xml:lang="ka">ახალი CSS სტილების
 ცხრილი...</message>
 	<message xml:lang="cn">新建 CSS 样式表</message>
@@ -200,7 +200,7 @@
 	<message xml:lang="es">Clic</message>
 	<message xml:lang="pt">Clique</message>
 	<message xml:lang="ru">Щёлкнуть</message>
-	<message xml:lang="hu">kattintás</message>
+	<message xml:lang="hu">Kattintás</message>
 	<message xml:lang="ka">წკაპი</message>
 	<message xml:lang="cn">点击</message>
 	<message xml:lang="tw">點擊</message>
@@ -354,7 +354,7 @@
 	<message xml:lang="pt">Buscando %s</message>
 	<message xml:lang="fi">Noudetaan %s</message>
 	<message xml:lang="ru">Устанавливается соединение с %s</message>
-	<message xml:lang="hu">Fetching %s</message>
+	<message xml:lang="hu">%s töltése</message>
 	<message xml:lang="ka">მიღება - %s</message>
 	<message xml:lang="cn">Fetching %s</message>
 	<message xml:lang="tw">Fetching %s</message>
@@ -373,7 +373,7 @@
 	<message xml:lang="pt">Não é possível carregar %s</message>
 	<message xml:lang="fi">Ei voida ladata %s</message>
 	<message xml:lang="ru">Невозможно загрузить %s</message>
-	<message xml:lang="hu">Nem betölthető: %s</message>
+	<message xml:lang="hu">%s nem betölthető</message>
 	<message xml:lang="ka">ვერ იტვირთება - %s</message>
 	<message xml:lang="cn">无法加载 %s</message>
 	<message xml:lang="tw">無法加載 %s</message>
@@ -411,7 +411,7 @@
 	<message xml:lang="pt">Selecionar o destino</message>
 	<message xml:lang="fi">Valitse kohde</message>
 	<message xml:lang="ru">Выберите цель</message>
-	<message xml:lang="hu">Jelölje ki a célpontot</message>
+	<message xml:lang="hu">Cél kiválasztása</message>
 	<message xml:lang="ka">სამიზნის არჩევა</message>
 	<message xml:lang="cn">选择目标</message>
 	<message xml:lang="tw">選擇目標</message>
@@ -430,7 +430,7 @@
 	<message xml:lang="pt">Destino inválido</message>
 	<message xml:lang="fi">Kelpaamaton kohde</message>
 	<message xml:lang="ru">Неправильная цель</message>
-	<message xml:lang="hu">Érvénytelen célpont</message>
+	<message xml:lang="hu">Érvénytelen cél</message>
 	<message xml:lang="ka">მცდარი სამიზნე</message>
 	<message xml:lang="cn">无效目标</message>
 	<message xml:lang="tw">無效目標</message>
@@ -449,7 +449,7 @@
 	<message xml:lang="pt">Inserir a URI ou procurar</message>
 	<message xml:lang="fi">Syötä URL tai selaa</message>
 	<message xml:lang="ru">Введите URI или выполните просмотр</message>
-	<message xml:lang="hu">Adja meg az URI-t vagy tallózzon oda</message>
+	<message xml:lang="hu">Adja meg az URI-t vagy tallózzon</message>
 	<message xml:lang="ka">მიუთითეთ მისამართი
 ან მოიძიეთ</message>
 	<message xml:lang="cn">插入 URI 或浏览文件</message>
@@ -526,7 +526,7 @@ menteni?</message>
 	<message xml:lang="pt">Redirecionando busca de %s</message>
 	<message xml:lang="fi">Noudetaan välitetysti %s</message>
 	<message xml:lang="ru">Перенаправление соединения на %s</message>
-	<message xml:lang="hu">Redirection fetching of %s</message>
+	<message xml:lang="hu">%s töltés átirányítása</message>
 	<message xml:lang="ka">მიღების
 გადამისამართება - %s</message>
 	<message xml:lang="cn">Redirection fetching of %s</message>
@@ -566,7 +566,7 @@ menteni?</message>
 	<message xml:lang="pt">Não é possível criar arquivo local %s</message>
 	<message xml:lang="fi">Ei voida luoda paikallista tiedostoa %s</message>
 	<message xml:lang="ru">Невозможно создать локальный файл %s</message>
-	<message xml:lang="hu">Nem létrehozható helyi fájl: %s</message>
+	<message xml:lang="hu">A %s helyi fájl nem hozható létre</message>
 	<message xml:lang="ka">ვერ იქმნება
 ლოკალური ფაილი %s</message>
 	<message xml:lang="cn">无法创建本地文件 %s</message>
@@ -586,7 +586,7 @@ menteni?</message>
 	<message xml:lang="pt">Não é possível criar diretorio %s</message>
 	<message xml:lang="fi">Ei voida luoda hakemistoa %s</message>
 	<message xml:lang="ru">Невозможно создать директорию %s</message>
-	<message xml:lang="hu">Nem létrehozható mappa: %s</message>
+	<message xml:lang="hu">A %s könyvtár nem hozható létre</message>
 	<message xml:lang="ka">ვერ იქმნება დასტა
 %s</message>
 	<message xml:lang="cn">无法创建目录 %s</message>
@@ -606,7 +606,7 @@ menteni?</message>
 	<message xml:lang="pt">Esperando por soquete livre</message>
 	<message xml:lang="fi">Odotetaan vapaata rajapintaa</message>
 	<message xml:lang="ru">Ожидание свободного сокета</message>
-	<message xml:lang="hu">Várakozás szabad szoftvercsatornára</message>
+	<message xml:lang="hu">Várakozás szabad csatolóra</message>
 	<message xml:lang="ka">თავისუფალი ფოსოს
 მოლოდინი</message>
 	<message xml:lang="cn">正在等待可用的 socket</message>
@@ -626,7 +626,7 @@ menteni?</message>
 	<message xml:lang="pt">Lendo %s</message>
 	<message xml:lang="fi">Luetaan %s</message>
 	<message xml:lang="ru">Выполняется чтение %s</message>
-	<message xml:lang="hu">Olvasás: %s</message>
+	<message xml:lang="hu">%s olvasása</message>
 	<message xml:lang="ka">კითხვა - %s</message>
 	<message xml:lang="cn">正在读取 %s</message>
 	<message xml:lang="tw">正在讀取 %s</message>
@@ -645,7 +645,7 @@ menteni?</message>
 	<message xml:lang="pt">Gravando %s</message>
 	<message xml:lang="fi">Kirjoitetaan %s</message>
 	<message xml:lang="ru">Выполняется запись %s</message>
-	<message xml:lang="hu">Írás: %s</message>
+	<message xml:lang="hu">%s írása</message>
 	<message xml:lang="ka">ჩაწერა - %s</message>
 	<message xml:lang="cn">正在写入 %s</message>
 	<message xml:lang="tw">正在寫入 %s</message>
@@ -684,7 +684,7 @@ menteni?</message>
 	<message xml:lang="pt">Contactando %s</message>
 	<message xml:lang="fi">Yhdistetään %s</message>
 	<message xml:lang="ru">Соединение с %s</message>
-	<message xml:lang="hu">Csatlakozás: %s</message>
+	<message xml:lang="hu">Csatlakozás %s hoszthoz</message>
 	<message xml:lang="ka">კონტაქტი - %s</message>
 	<message xml:lang="cn">正在连接 %s</message>
 	<message xml:lang="tw">正在連接 %s</message>
@@ -703,7 +703,7 @@ menteni?</message>
 	<message xml:lang="pt">Pesquisando %s</message>
 	<message xml:lang="fi">Etsitään %s</message>
 	<message xml:lang="ru">Поиск в %s</message>
-	<message xml:lang="hu">Keresés: %s</message>
+	<message xml:lang="hu">%s keresése</message>
 	<message xml:lang="ka">ძებნა - %s</message>
 	<message xml:lang="cn">正在搜寻 %s</message>
 	<message xml:lang="tw">正在搜尋 %s</message>
@@ -781,7 +781,7 @@ menteni?</message>
 	<message xml:lang="pt">Falha de autorização para %s</message>
 	<message xml:lang="fi">Tunnistus epäonnistui %s</message>
 	<message xml:lang="ru">Процесс авторизации для %s прерван</message>
-	<message xml:lang="hu">Hitelesítési hiba: %s</message>
+	<message xml:lang="hu">%s hitelesítése sikertelen</message>
 	<message xml:lang="ka">ავტორიზების პროცესი
 შეწყდა - %s</message>
 	<message xml:lang="cn">身份验证失败 %s</message>
@@ -801,7 +801,7 @@ menteni?</message>
 	<message xml:lang="pt">%s carregado mas não há dados disponíveis</message>
 	<message xml:lang="fi">%s ladattu, mutta ei luettavissa</message>
 	<message xml:lang="ru">%s загружен, но данные недоступны</message>
-	<message xml:lang="hu">%s betöltve, de nincs adat</message>
+	<message xml:lang="hu">%s betöltve, de nincs elérhető adat</message>
 	<message xml:lang="ka">%s ჩამოიტვირთა,
 მაგრამ მონაცემები
 მიუწვდომელია</message>
@@ -851,7 +851,7 @@ novamente mais tarde.</message>
 uudelleen.</message>
 	<message xml:lang="ru">%s на данный момент недоступен. Попробуйте позже.</message>
 	<message xml:lang="hu">%s jelenleg nem elérhető. Kérjük, próbálja
-később</message>
+később!</message>
 	<message xml:lang="ka">%s ამ დროისთვის
 მიუწვდომელია. სცადეთ
 მოგვიანებით.</message>
@@ -910,7 +910,7 @@ később</message>
 	<message xml:lang="pt">Não é possível salvar em: %s</message>
 	<message xml:lang="fi">Ei voida tallentaa: %s</message>
 	<message xml:lang="ru">Невозможно сохранить в: %s</message>
-	<message xml:lang="hu">Nem menthető ide: %s</message>
+	<message xml:lang="hu">%s nem menthető</message>
 	<message xml:lang="ka">შეუძლებელია შენახვა
 აქ: %s</message>
 	<message xml:lang="cn">无法保存: %s</message>
@@ -930,7 +930,7 @@ később</message>
 	<message xml:lang="pt">Mensagens de erro do sistema em português</message>
 	<message xml:lang="fi">Englantilaisen järjestelmän virhesanomat.</message>
 	<message xml:lang="ru">Английские системные сообщения об ошибках</message>
-	<message xml:lang="hu">Angol nyelvű rendszerhiba üzenetek</message>
+	<message xml:lang="hu">Magyar nyelvű hibaüzenetek</message>
 	<message xml:lang="ka">სისტემის შეცდომების
 ინგლისურენოვანი
 შეტყობინებები</message>
@@ -953,7 +953,7 @@ içeremez</message>
 	<message xml:lang="fi">Linkin kohde ei voi sisältää näitä
 elementtejä</message>
 	<message xml:lang="ru">Якорь не может содержать эти элементы</message>
-	<message xml:lang="hu">Egy horgony nem tartalmazhatja ezeket az
+	<message xml:lang="hu">Egy referenciapont nem tartalmazhatja ezeket az
 elemeket</message>
 	<message xml:lang="ka">ღუზა არ შეიძლება ამ
 ელემენტებს შეიცავდეს</message>
@@ -979,7 +979,7 @@ tanımı yer alamaz</message>
 âncora</message>
 	<message xml:lang="fi">Ei voida luoda kohdetta kohteen sisälle</message>
 	<message xml:lang="ru">Невозможно создать якорь внутри якоря</message>
-	<message xml:lang="hu">Horgonyon belül nem létesíthető horgony</message>
+	<message xml:lang="hu">Referenciapontok nem ágyazhatók egymásba</message>
 	<message xml:lang="ka">შეუძლებელია
 ღუზაშივე ღუზის შექმნა</message>
 	<message xml:lang="cn">无法在 anchor 中创建 anchor</message>
@@ -1006,7 +1006,7 @@ tipo: %s</message>
 tipo: %s</message>
 	<message xml:lang="fi">Tälle URL:lle ei ole vielä GET-tukea: %s</message>
 	<message xml:lang="ru">Для URL-ов вида: %s метод GET не поддерживается</message>
-	<message xml:lang="hu">Az ilyen típusú URL-ekhez még nincs GET támogatás:
+	<message xml:lang="hu">Az alábbi típusú URL-ekhez még nincs GET támogatás:
 %s</message>
 	<message xml:lang="ka">%s ტიპის
 მისამართებისთვის GET
@@ -1035,7 +1035,7 @@ tipo: %s</message>
 tipo: %s</message>
 	<message xml:lang="fi">Tälle URL:lle ei ole vielä PUT-tukea:: %s</message>
 	<message xml:lang="ru">Для URL-ов вида: %s метод PUT не поддерживается</message>
-	<message xml:lang="hu">Az ilyen típusú URL-ekhez még nincs PUT támogatás:
+	<message xml:lang="hu">Az alábbi típusú URL-ekhez még nincs PUT támogatás:
 %s</message>
 	<message xml:lang="ka">%s ტიპის
 მისამართებისთვის PUT
@@ -1065,7 +1065,7 @@ facilidade</message>
 	<message xml:lang="fi">Amayan tämä versio ei tue vielä tätä
 ominaisuutta</message>
 	<message xml:lang="ru">Текущая версия Amaya не поддерживает эту возможность</message>
-	<message xml:lang="hu">Az Amaya jelen változata nem támogatja ezt</message>
+	<message xml:lang="hu">Az Amaya jelen változata nem támogatja ezt a tulajdonságot</message>
 	<message xml:lang="ka">Amaya-ს მიმდინარე
 ვერსიაში ეს შესაძლებლობა
 რეალიზებული არაა</message>
@@ -1087,7 +1087,7 @@ funkciu</message>
 	<message xml:lang="pt">Terminada a gravação de %s</message>
 	<message xml:lang="fi">Kirjoitus valmis %s</message>
 	<message xml:lang="ru">Запись %s завершена</message>
-	<message xml:lang="hu">Írás befejezve: %s</message>
+	<message xml:lang="hu">%s írása befejeződött</message>
 	<message xml:lang="ka">ჩაწერა დასრულდა -
 %s</message>
 	<message xml:lang="cn">结束写入 %s</message>
@@ -1107,7 +1107,7 @@ funkciu</message>
 	<message xml:lang="pt">Não foi possível normalizar %s</message>
 	<message xml:lang="fi">Ei voinut normalisoida %s</message>
 	<message xml:lang="ru">Невозможно нормализовать %s</message>
-	<message xml:lang="hu">Normalizálás nem lehetséges: %s</message>
+	<message xml:lang="hu">%s nem normalizálható</message>
 	<message xml:lang="ka">ვერ ნორმალიზდება -
 %s</message>
 	<message xml:lang="cn">无法标准化 %s</message>
@@ -1132,7 +1132,7 @@ werden</message>
 temporários %s</message>
 	<message xml:lang="fi">Ei voinut luoda väliaikaista hakemistoa %s</message>
 	<message xml:lang="ru">Невозможно создать временную файловую директорию %s</message>
-	<message xml:lang="hu">Az ideiglenes mappa nem hozható létre: %s</message>
+	<message xml:lang="hu">A %s ideiglenes mappa nem hozható létre</message>
 	<message xml:lang="ka">დროებითი ფაილების
 დასტა %s ვერ იქმნება</message>
 	<message xml:lang="cn">无法创建临时文件夹 %s</message>
@@ -1158,8 +1158,7 @@ selección</message>
 seleção</message>
 	<message xml:lang="fi">Valintaa ei voi muuntaa</message>
 	<message xml:lang="ru">К выбранному не применялось никакого преобразования</message>
-	<message xml:lang="hu">A kijelölésre nem alkalmazható
-átalakítás</message>
+	<message xml:lang="hu">A kijelölésre nem alkalmazható átalakítás</message>
 	<message xml:lang="ka">მონიშნულის
 გარდაქმნა ვერ მოხერხდება</message>
 	<message xml:lang="cn">所选区域无法应用变换</message>
@@ -1202,8 +1201,7 @@ hatası</message>
 	<message xml:lang="pt">Erro de sintaxe no arquivo HTML.trans linha %s</message>
 	<message xml:lang="fi">ohjelmavirhe HTML.trans rivillä %s</message>
 	<message xml:lang="ru">синтаксическая ошибка в файле HTML.trans, строка %s</message>
-	<message xml:lang="hu">Szintaktikai hiba a HTML.trans fájl alábbi sorában:
-%s</message>
+	<message xml:lang="hu">Szintaktikai hiba a HTML.trans fájl %s sorában</message>
 	<message xml:lang="ka">HTML.trans ფაილის
 სინტაქსური შეცდომა, სტრიქონი
 %s</message>
@@ -1225,7 +1223,7 @@ hatası</message>
 	<message xml:lang="pt">Matemática</message>
 	<message xml:lang="fi">Matematiikka</message>
 	<message xml:lang="ru">Математика</message>
-	<message xml:lang="hu">Matematika</message>
+	<message xml:lang="hu">MathML</message>
 	<message xml:lang="ka">მათემატიკა</message>
 	<message xml:lang="cn">Maths</message>
 	<message xml:lang="tw">Maths</message>
@@ -1244,7 +1242,7 @@ hatası</message>
 	<message xml:lang="pt">Gráficos</message>
 	<message xml:lang="fi">Grafiikka</message>
 	<message xml:lang="ru">Графика</message>
-	<message xml:lang="hu">Grafika</message>
+	<message xml:lang="hu">SVG grafika</message>
 	<message xml:lang="ka">გრაფიკა</message>
 	<message xml:lang="cn">图形</message>
 	<message xml:lang="tw">圖形</message>
@@ -1290,8 +1288,7 @@ einloggen:</message>
 	<message xml:lang="tr">Lütfen kendinizi \'%s\' alanı, \'%s\'servör için
 resmileştirin</message>
 	<message xml:lang="ru">Пройдите идентификацию для области \'%s\' на сервере \'%s\'</message>
-	<message xml:lang="hu">Kérjük, hitelesítsen a(z) \'%s\' tartomány \'%s\
-kiszolgálóján'</message>
+	<message xml:lang="hu">Kérjük, hitelesítse a(z) \'%s\' tartományt a \'%s\ kiszolgálón'</message>
 	<message xml:lang="ka">გაიარეთ
 აუთენტიფიკაცია არისთვის \'%s\'
 სერვერზე \'%s\'</message>
@@ -1353,7 +1350,7 @@ kiszolgálóján'</message>
 	<message xml:lang="fi">Muokkain/Selain</message>
 	<message xml:lang="tr">Editör/Tarayıcı</message>
 	<message xml:lang="ru">Редактор/Браузер</message>
-	<message xml:lang="hu">Szerkesztő/Böngésző</message>
+	<message xml:lang="hu">Szerkesztő/böngésző</message>
 	<message xml:lang="ka">რედაქტორი/ბროუზერი</message>
 	<message xml:lang="cn">编辑器/浏览器</message>
 	<message xml:lang="tw">編輯器/瀏覽器</message>
@@ -1373,8 +1370,7 @@ não respondeu</message>
 	<message xml:lang="fi">Pyynnön aikakatkaisu - Palvelin ei vastaa.</message>
 	<message xml:lang="tr">Zaman dolmuştur - servör cevap vermedi</message>
 	<message xml:lang="ru">Время ожидания истекло - сервер не ответил</message>
-	<message xml:lang="hu">Kérés időtúllépés - a kiszolgáló nem
-válaszolt</message>
+	<message xml:lang="hu">Kérés időtúllépés - a kiszolgáló nem válaszolt</message>
 	<message xml:lang="ka">მოთხოვნას ვადა
 გაუვიდა - სერვერი არ
 პასუხობს</message>
@@ -1396,7 +1392,7 @@ neodpovedá</message>
 	<message xml:lang="fi">%s on jo olemassa. Korvataanko?</message>
 	<message xml:lang="tr">%s mevcuttur. Yazıyı zorlayalımmı?</message>
 	<message xml:lang="ru">%s уже существует. Перезаписать его?</message>
-	<message xml:lang="hu">%s már létezik. Felülírjuk?</message>
+	<message xml:lang="hu">%s már létezik. Felülírja?</message>
 	<message xml:lang="ka">%s უკვე არსებობს.
 გადავაწერო ზემოდან?</message>
 	<message xml:lang="cn">%s 已存在, 覆盖吗?</message>
@@ -1416,7 +1412,7 @@ neodpovedá</message>
 	<message xml:lang="fi">%s on muuttunut. Korvataanko?</message>
 	<message xml:lang="tr">%s değişti. Yazıyı zorlayalımmı?</message>
 	<message xml:lang="ru">%s был изменён. Перезаписать его?</message>
-	<message xml:lang="hu">%s megváltozott. Felülírjuk?</message>
+	<message xml:lang="hu">%s megváltozott. Felülírja?</message>
 	<message xml:lang="ka">%s შეიცვალა.
 გადავაწერო ზემოდან?</message>
 	<message xml:lang="cn">%s 已改变, 覆盖吗?</message>
@@ -1493,7 +1489,7 @@ neodpovedá</message>
 	<message xml:lang="de">Folgende Datei/en ebenfalls speichern?</message>
 	<message xml:lang="tr">Bi sonraki görüntülerde kayıt edilecektir</message>
 	<message xml:lang="ru">Сохранять изображения при последующих сохранениях?</message>
-	<message xml:lang="hu">A mentés az alábbi képeket is menti?</message>
+	<message xml:lang="hu">A mentés további fájlokra is vonatkozik?</message>
 	<message xml:lang="ka">შენახვისას შემდეგი
 გამოსახულებებიც
 დავიმახსოვრო?</message>
@@ -1514,7 +1510,7 @@ neodpovedá</message>
 	<message xml:lang="pt">Falha ao salvar na URL</message>
 	<message xml:lang="fi">URL:n tallennus epäonnistui</message>
 	<message xml:lang="ru">Неудачная попытка сохранения на URL</message>
-	<message xml:lang="hu">Az URL-be mentés nem sikerült</message>
+	<message xml:lang="hu">Az URL-re mentés nem sikerült</message>
 	<message xml:lang="ka">შენახვა შეწყდა
 მისამართზე</message>
 	<message xml:lang="cn">保存到URL失败</message>
@@ -1613,7 +1609,7 @@ neodpovedá</message>
 	<message xml:lang="pt">Diretório de imagens</message>
 	<message xml:lang="fi">Kuvahakemisto</message>
 	<message xml:lang="ru">Директория изображений</message>
-	<message xml:lang="hu">Képek mappája</message>
+	<message xml:lang="hu">Képek könyvtára</message>
 	<message xml:lang="ka">გამოსახულებების
 დასტა</message>
 	<message xml:lang="cn">图片路径</message>
@@ -1748,7 +1744,7 @@ neodpovedá</message>
 	<message xml:lang="pt">Editor/navegador do W3C para a web</message>
 	<message xml:lang="fi">W3C:n Internetin muokkain/selain</message>
 	<message xml:lang="ru">Редактор/браузер от W3C's</message>
-	<message xml:lang="hu">W3C Web szerkesztő/böngészője</message>
+	<message xml:lang="hu">A W3C honlapszerkesztő-böngészője</message>
 	<message xml:lang="ka">W3C-ს ვებ
 რედაქტორი/ბროუზერი</message>
 	<message xml:lang="cn">W3C的网页编辑器/浏览器</message>
@@ -1769,8 +1765,7 @@ neodpovedá</message>
 	<message xml:lang="tr">Sorularınızı www-amaya@w3.org adreine
 gönderin</message>
 	<message xml:lang="ru">(письма направляйте на www-amaya@w3.org)</message>
-	<message xml:lang="hu">(küldje el emailben a www-amaya@w3.org
-címre)</message>
+	<message xml:lang="hu">(problémáit, észrevételeit a www-amaya@w3.org címre küldheti)</message>
 	<message xml:lang="ka">(წერილები გაგზავნეთ
 მისამართით www-amaya@w3.org)</message>
 	<message xml:lang="cn">(mail issues to www-amaya@w3.org)</message>
@@ -1798,8 +1793,7 @@ Keio)</message>
 	<message xml:lang="fi">Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM,
 Keio)</message>
 	<message xml:lang="ru">Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM, Keio)</message>
-	<message xml:lang="hu">Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM,
-Keio)</message>
+	<message xml:lang="hu">Copyright © 1994-%s INRIA és W3C® (MIT, ERCIM, Keio)\n Magyar változat: Leslie F. Sikos</message>
 	<message xml:lang="ka">Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM,
 Keio)</message>
 	<message xml:lang="cn">Copyright © 1994-%s INRIA et W3C® (MIT, ERCIM,
@@ -1851,8 +1845,7 @@ caracteres</message>
 	<message xml:lang="fi">Ei voi käsitellä osoitteita joissa on enemmän kuin
 %s merkkiä</message>
 	<message xml:lang="ru">Невозможно обработать URL-ы имеющие более чем %s символов</message>
-	<message xml:lang="hu">%s karakternél hosszabb URL-ek nem
-kezelhetők</message>
+	<message xml:lang="hu">%s karakternél hosszabb URL-ek nem kezelhetők</message>
 	<message xml:lang="ka">შეუძლებელია %s-ზე მეტ
 სიმბოლოიანი მისამართების
 დამუშავება</message>
@@ -1874,7 +1867,7 @@ znakov</message>
 	<message xml:lang="pt">Somente o tipo padrão é permitido</message>
 	<message xml:lang="fi">Vain oletus sallittu</message>
 	<message xml:lang="ru">Разрешён только тип принятый по умолчанию</message>
-	<message xml:lang="hu">Csak az alaptípus támogatott</message>
+	<message xml:lang="hu">Csak az alapértelmezett típus engedélyezett</message>
 	<message xml:lang="ka">დასაშვებია მხოლოდ
 ნაგულისხმები ტიპი</message>
 	<message xml:lang="cn">只允许默认类型</message>
@@ -1895,7 +1888,7 @@ fatto</message>
 	<message xml:lang="pt">Atualização de enlaces: %s%% foi tratado</message>
 	<message xml:lang="fi">Linkkien päivitys: %s%% onnistui</message>
 	<message xml:lang="ru">Обновление ссылок: выполнено %s%%</message>
-	<message xml:lang="hu">Kapcsok frissítése: %s%% kész</message>
+	<message xml:lang="hu">Hivatkozások frissítése: %s%% kész</message>
 	<message xml:lang="ka">ბმების განახლება:
 დასრულდა %s%%</message>
 	<message xml:lang="cn">链接更新: %s% 已完成</message>
@@ -1916,7 +1909,7 @@ ukončené</message>
 	<message xml:lang="pt">Nada novo a ser salvo</message>
 	<message xml:lang="fi">Ei mitään tallennettavaa</message>
 	<message xml:lang="ru">Нет ничего нового для сохранения</message>
-	<message xml:lang="hu">Nincs menteni való</message>
+	<message xml:lang="hu">Nincs új menteni való</message>
 	<message xml:lang="ka">შესანახად ახალი
 არაფერია</message>
 	<message xml:lang="cn">无任何更新被保存</message>
@@ -1936,9 +1929,8 @@ ukončené</message>
 	<message xml:lang="pt">Repetir-y</message>
 	<message xml:lang="fi">toista-y</message>
 	<message xml:lang="ru">повторять по оси y</message>
-	<message xml:lang="hu">ismétlés-y</message>
-	<message xml:lang="ka">გამეორება y
-ღერძზე</message>
+	<message xml:lang="hu">Függőleges ismétlés (repeat-y)</message>
+	<message xml:lang="ka">გამეორება y ღერძზე</message>
 	<message xml:lang="cn">repeat-y</message>
 	<message xml:lang="tw">repeat-y</message>
 	<message xml:lang="sk">Opakovať zvislo</message>
@@ -1976,7 +1968,7 @@ ukončené</message>
 	<message xml:lang="pt">%d requisições pendentes</message>
 	<message xml:lang="fi">%d selvittämätön pyyntö</message>
 	<message xml:lang="ru">%d исходящих запроса</message>
-	<message xml:lang="hu">%d outstanding requests</message>
+	<message xml:lang="hu">%d még nem teljesített  kérés</message>
 	<message xml:lang="ka">%d მოთხოვნა</message>
 	<message xml:lang="cn">%d outstanding requests</message>
 	<message xml:lang="tw">%d outstanding requests</message>
@@ -2012,7 +2004,7 @@ ukončené</message>
 	<message xml:lang="it">Non salvare</message>
 	<message xml:lang="es">No guardar</message>
 	<message xml:lang="ru">Не сохранять</message>
-	<message xml:lang="hu">Ne mentse</message>
+	<message xml:lang="hu">Ne mentsen</message>
 	<message xml:lang="ka">შენახვის გარეშე</message>
 	<message xml:lang="cn">不保存</message>
 	<message xml:lang="tw">不保存</message>
@@ -2031,7 +2023,7 @@ ukončené</message>
 	<message xml:lang="pt">Não repetir</message>
 	<message xml:lang="fi">ei toistoa</message>
 	<message xml:lang="ru">не повторять</message>
-	<message xml:lang="hu">ismétlés nélkül</message>
+	<message xml:lang="hu">Ismétlés nélkül (no-repeat)</message>
 	<message xml:lang="ka">გამეორების
 გარეშე</message>
 	<message xml:lang="cn">no-repeat</message>
@@ -2053,8 +2045,7 @@ kaydediyorum:</message>
 	<message xml:lang="fi">Dokumentilla ei ole nimeä. Tallennetaan
 nimellä:</message>
 	<message xml:lang="ru">Документ не имеет имени. Сохранить как:</message>
-	<message xml:lang="hu">A dokumentumnak nincs neve. Mentés az következő
-néven:</message>
+	<message xml:lang="hu">A dokumentumnak nincs neve. Mentés az következő néven:</message>
 	<message xml:lang="ka">დოკუმენტი უსახელოა.
 შენახვა:</message>
 	<message xml:lang="cn">文档尚未命名, 保存至:</message>
@@ -2094,7 +2085,7 @@ néven:</message>
 	<message xml:lang="pt">Erro desconhecido ao salvar a URL %s</message>
 	<message xml:lang="fi">Tuntematon virhe tallennettaessa URL:ää %s</message>
 	<message xml:lang="ru">При сохранении на URL %s произошла неизвестная ошибка</message>
-	<message xml:lang="hu">Ismeretlen hiba az URL mentése közben: %s</message>
+	<message xml:lang="hu">Ismeretlen hiba a %s URL mentése közben</message>
 	<message xml:lang="ka">უცნობი შეცდომა
 მისამართის შენახვისას - %s</message>
 	<message xml:lang="cn">保存 URL 时发生未知错误: %s</message>
@@ -2138,7 +2129,7 @@ servidor</message>
 	<message xml:lang="fi">Pääsy tietoon %s on kielletty palvelimen
 toimesta</message>
 	<message xml:lang="ru">Доступ к %s запрещён сервером</message>
-	<message xml:lang="hu">A hozzáférést a kiszolgáló megtagadta: %s</message>
+	<message xml:lang="hu">A %-shez való hozzáférést a kiszolgáló megtagadta</message>
 	<message xml:lang="ka">%s-ის წვდომა სერვერის
 მხრიდან აკრძალულია</message>
 	<message xml:lang="cn">访问 %s 已被服务器禁止</message>
@@ -2243,8 +2234,7 @@ petición</message>
 requisição</message>
 	<message xml:lang="fi">Palvelin ei ymmärrä pyyntöä</message>
 	<message xml:lang="ru">Сервер не понимает синтаксис запроса</message>
-	<message xml:lang="hu">A kiszolgáló nem tudja értelmezni a kérés
-szintakszisát</message>
+	<message xml:lang="hu">A kiszolgáló nem tudja értelmezni a kérés szintaktikáját</message>
 	<message xml:lang="ka">სერვერი ვერ ხვდება
 მოთხოვნის სინტაქსს</message>
 	<message xml:lang="cn">服务器无法解析请求</message>
@@ -2266,8 +2256,7 @@ devolver</message>
 devolver</message>
 	<message xml:lang="fi">Palvelimella ei ole uudempaa tietoa</message>
 	<message xml:lang="ru">Сервер не имеет новой информации для ответа</message>
-	<message xml:lang="hu">A kiszolgálónak nincs új visszaküldhető
-adata</message>
+	<message xml:lang="hu">A kiszolgálónak nincs új visszaküldhető adata</message>
 	<message xml:lang="ka">სერვერს ახალი
 საპასუხო ინფორმაცია არ
 გააჩნია</message>
@@ -2289,7 +2278,7 @@ odpoveď</message>
 	<message xml:lang="pt">Este método não é permitido</message>
 	<message xml:lang="fi">Tämä menettely on kielletty</message>
 	<message xml:lang="ru">Этот метод не разрешён</message>
-	<message xml:lang="hu">Ez a mód tiltott</message>
+	<message xml:lang="hu">A mód nem engedélyezett</message>
 	<message xml:lang="ka">ეს მეთოდი
 დაუშვებელია</message>
 	<message xml:lang="cn">此方法被禁止</message>
@@ -2309,7 +2298,7 @@ odpoveď</message>
 	<message xml:lang="pt">Por favor autenticar para acessar %s</message>
 	<message xml:lang="fi">Tunnistus vaaditaan %s käsittelyyn</message>
 	<message xml:lang="ru">Для доступа к %s пройдите идентификацию</message>
-	<message xml:lang="hu">Kérjük, hitelesítsen: %s</message>
+	<message xml:lang="hu">Kérjük, hitelesítsen a %s-hez való hozzáféréshez</message>
 	<message xml:lang="ka">%s წვდომისთვის
 გაიარეთ აუთენტიფიკაცია</message>
 	<message xml:lang="cn">Please authenticate to access %s</message>
@@ -2329,7 +2318,7 @@ odpoveď</message>
 	<message xml:lang="pt">Verificando ...</message>
 	<message xml:lang="fi">Tarkistetaan ...</message>
 	<message xml:lang="ru">Проверка ...</message>
-	<message xml:lang="hu">Ellenőrzés ...</message>
+	<message xml:lang="hu">Ellenőrzés...</message>
 	<message xml:lang="ka">შემოწმება ...</message>
 	<message xml:lang="cn">正在验证 ...</message>
 	<message xml:lang="tw">正在驗證 ...</message>
@@ -2344,6 +2333,7 @@ odpoveď</message>
 	<message xml:lang="uk">Невдала спроба збереження в %s. Зберегти на диск?</message>
 	<message xml:lang="it">Vuoi una copia in locale?</message>
 	<message xml:lang="ru">Неудачная попытка сохранения в %s. Сохранить на диск?</message>
+	<message xml:lang="hu">Megtart egy helyi másolatot?</message>
 	<message xml:lang="nl">Opslaan naar %s mislukt. Opslaan op schijf?</message>
 </label>
 <label define="AM_SAVE_COMPARE_FAILED">
@@ -2358,8 +2348,7 @@ ignora?</message>
 	<message xml:lang="pt">A salvação em %s parece corrompida. Ignorar?</message>
 	<message xml:lang="fi">Tallenne %s vaikuttaa virheelliseltä, ohita?</message>
 	<message xml:lang="ru">Сохранение в %s вероятно выполнено с повреждениями. Игнорировать?</message>
-	<message xml:lang="hu">A mentés (%s) hibásnak mutatkozik, hagyjuk figyelmen
-kívül?</message>
+	<message xml:lang="hu">A mentés (%s) hibásnak mutatkozik, figyelmen kívül hagyja?</message>
 	<message xml:lang="ka">შენახვა აქ %s
 შესაძლოა არასრულია,
 გავაგრძელო?</message>
@@ -2381,8 +2370,7 @@ Ignorovať?</message>
 	<message xml:lang="pt">URL %s redirecionada para %s. Ignorar?</message>
 	<message xml:lang="fi">URL %s välitetään edelleen %s, ohita?</message>
 	<message xml:lang="ru">URL %s перенаправлен в %s. Игнорировать?</message>
-	<message xml:lang="hu">Az URL (%s) átirányítva ide: %s, hagyjuk figyelmen
-kívül?</message>
+	<message xml:lang="hu">Az URL (%s) átirányítva ide: %s,  figyelmen kívül hagyja?</message>
 	<message xml:lang="ka">მისამართი %s
 გადამისამართდა - %s,
 გავაგრძელო?</message>
@@ -2403,8 +2391,7 @@ kívül?</message>
 	<message xml:lang="pt">A recarga de %s falhou. Ignorar?</message>
 	<message xml:lang="fi">%s päivitys epäonnistui, ohita?</message>
 	<message xml:lang="ru">Неудачная попытка перезагрузки из %s. Игнорировать?</message>
-	<message xml:lang="hu">A(z) %s újratültése sikertelen, hagyjuk figyelmen
-kívül?</message>
+	<message xml:lang="hu">A(z) %s frissítése sikertelen, figyelmen kívül hagyja?</message>
 	<message xml:lang="ka">%s გადატვირთვა
 შეწყდა, გავაგრძელო?</message>
 	<message xml:lang="cn">重新载入 %s 失败, 忽略吗?</message>
@@ -2424,7 +2411,7 @@ kívül?</message>
 	<message xml:lang="pt">O servidor responde com um erro: %s</message>
 	<message xml:lang="fi">Palvelinvirhe: %s</message>
 	<message xml:lang="ru">Сервер сообщает об ошибке: %s</message>
-	<message xml:lang="hu">A kiszolgáló es hibát jelzett: %s</message>
+	<message xml:lang="hu">A kiszolgáló hibát jelzett: %s</message>
 	<message xml:lang="ka">სერვერი იტყობინება
 შეცდომას: %s</message>
 	<message xml:lang="cn">服务器报告了一个错误: %s</message>
@@ -2449,8 +2436,7 @@ petición</message>
 requisição</message>
 	<message xml:lang="fi">Palvelin ei tue tätä pyyntöä</message>
 	<message xml:lang="ru">Сервер не поддерживает этот метод запроса</message>
-	<message xml:lang="hu">A kiszolgáló nem támogatja ezt a kérési
-módot</message>
+	<message xml:lang="hu">A kiszolgáló nem támogatja ezt a kérési módot</message>
 	<message xml:lang="ka">მოთხოვნის ასეთ
 მეთოდს სერვერი არ
 ითვალისწინებს</message>
@@ -2547,7 +2533,7 @@ módot</message>
 	<message xml:lang="fi">Linkkiluettelo</message>
 	<message xml:lang="tr">Bağlantı tablosu</message>
 	<message xml:lang="ru">Таблица ссылок</message>
-	<message xml:lang="hu">Kapocsjegyzék</message>
+	<message xml:lang="hu">Hivatkozásjegyzék</message>
 	<message xml:lang="ka">ბმების ცხრილი</message>
 	<message xml:lang="cn">链接表格</message>
 	<message xml:lang="tw">鏈接表格</message>
@@ -2566,7 +2552,7 @@ módot</message>
 	<message xml:lang="pt">Modo repetiçao</message>
 	<message xml:lang="fi">Toistotila</message>
 	<message xml:lang="ru">Режим повтора</message>
-	<message xml:lang="hu">Ismétlési mód</message>
+	<message xml:lang="hu">Ismétlő mód</message>
 	<message xml:lang="ka">გამეორების
 რეჟიმი</message>
 	<message xml:lang="cn">重复模式</message>
@@ -2605,7 +2591,7 @@ módot</message>
 	<message xml:lang="pt">repetir-x</message>
 	<message xml:lang="fi">toista-x</message>
 	<message xml:lang="ru">повторять по оси x</message>
-	<message xml:lang="hu">ismétlés-x</message>
+	<message xml:lang="hu">Vízszintes ismétlés (repeat-x)</message>
 	<message xml:lang="ka">გამეორება x
 ღერძზე</message>
 	<message xml:lang="cn">repeat-x</message>
@@ -2632,8 +2618,7 @@ varmuuskopioidut dokumentit?</message>
 	<message xml:lang="tr">Son Amaya oturumu kötü bitmiştir. Değiştirilen
 dosyaları yüklemek istiyormusunuz?</message>
 	<message xml:lang="ru">Предыдущая сессия Amaya завершена некорректно. Хотите перезагрузить сохранённые копии документов?</message>
-	<message xml:lang="hu">Az Amaya előző futása hibával végződött.
-Betöltsük a dokumentumok biztonsági mentését?</message>
+	<message xml:lang="hu">Az Amaya előző futása hibával végződött. Betölti a dokumentumok biztonsági mentését?</message>
 	<message xml:lang="ka">Amaya-ს წინა სეანსი
 შეწყდა. გნებავთ დოკუმენტების
 ასლების კვლავ ჩატვირთვა?</message>
@@ -2658,7 +2643,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="fi">Tunnistus epäonnistui, Yritä uudelleen?</message>
 	<message xml:lang="tr">Resmileştirme hatasi. Tekrar?</message>
 	<message xml:lang="ru">Неудачная попытка идентификации. Повторить?</message>
-	<message xml:lang="hu">A hitelesítés sikertelen. Próbáljuk újra?</message>
+	<message xml:lang="hu">A hitelesítés sikertelen. Újra?</message>
 	<message xml:lang="ka">იდენტიფიკაცია არ
 შედგა. გავიმეორო?</message>
 	<message xml:lang="cn">身份验证失败, 重试吗?</message>
@@ -2679,7 +2664,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="fi">Toiminto välitetään. Haluatko jatkaa?</message>
 	<message xml:lang="tr">Operasion yönlendirilecek. Devam?</message>
 	<message xml:lang="ru">Операция будет перенаправлена. Продолжить?</message>
-	<message xml:lang="hu">A művelet át lesz irányítva. Folytassuk?</message>
+	<message xml:lang="hu">A művelet át lesz irányítva. Folytatja?</message>
 	<message xml:lang="ka">ოპერაცია
 გადამისამართდება.
 გავაგრძელო?</message>
@@ -2759,7 +2744,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="fi">Vuorottainen teksti</message>
 	<message xml:lang="tr">Yeniden yerleştirme metini</message>
 	<message xml:lang="ru">Альтернативный текст</message>
-	<message xml:lang="hu">Szövegváltozat</message>
+	<message xml:lang="hu">Alternatív szöveg</message>
 	<message xml:lang="ka">ალტერნატული
 ტექსტი</message>
 	<message xml:lang="cn">代替文本</message>
@@ -2779,7 +2764,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="fi">Vuorottainen teksti on välttämätön</message>
 	<message xml:lang="tr">Yeniden yerleştirme metini mecburdur</message>
 	<message xml:lang="ru">Альтернативный текст обязателен</message>
-	<message xml:lang="hu">A szövegváltozat is kötelező</message>
+	<message xml:lang="hu">Adjon meg egy alternatív szöveget</message>
 	<message xml:lang="ka">ალტერნატული ტექსტის
 მითითება აუცილებელია</message>
 	<message xml:lang="cn">必须使用代替文本</message>
@@ -2857,7 +2842,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="fi">Tyhjennä välimuisti</message>
 	<message xml:lang="tr">Gizli bölümü boşalt</message>
 	<message xml:lang="ru">Очистить кеш</message>
-	<message xml:lang="hu">A gyorstár kiírása</message>
+	<message xml:lang="hu">Gyorsítótár ürítése</message>
 	<message xml:lang="ka">ბუფერის განულება</message>
 	<message xml:lang="cn">Flush 缓冲区</message>
 	<message xml:lang="tw">Flush 緩沖區</message>
@@ -2876,7 +2861,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="fi">Välimuisti</message>
 	<message xml:lang="tr">Önbellekleme</message>
 	<message xml:lang="ru">Кеш</message>
-	<message xml:lang="hu">Gyorstár</message>
+	<message xml:lang="hu">Gyorsítótár</message>
 	<message xml:lang="ka">ბუფერი</message>
 	<message xml:lang="cn">缓存</message>
 	<message xml:lang="tw">緩存</message>
@@ -2895,7 +2880,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="fi">Käytä välimuistia</message>
 	<message xml:lang="tr">Gizli bölümün hızlandırmak</message>
 	<message xml:lang="ru">Включить кеширование</message>
-	<message xml:lang="hu">Gyorstár engedélyezése</message>
+	<message xml:lang="hu">Gyorsítótár engedélyezése</message>
 	<message xml:lang="ka">ბუფერის ჩართვა</message>
 	<message xml:lang="cn">启用缓存</message>
 	<message xml:lang="tw">啟用緩存</message>
@@ -2915,7 +2900,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="tr">Korunması gereken belgeleri gizli bölüme kayıt
 edin</message>
 	<message xml:lang="ru">Кешировать защищённые документы</message>
-	<message xml:lang="hu">A védett dokumentumok gyorstárazása</message>
+	<message xml:lang="hu">Védett dokumentumok gyorsítótárazása</message>
 	<message xml:lang="ka">დაცული დოკუმენტების
 ბუფერირება</message>
 	<message xml:lang="cn">缓存保护文档</message>
@@ -2955,7 +2940,7 @@ edin</message>
 	<message xml:lang="fi">Ohita vanhentumiset: header</message>
 	<message xml:lang="tr">Expires yazıyı önemsemeyin</message>
 	<message xml:lang="ru">Игнорировать Завершение-Expires: заголовка-header</message>
-	<message xml:lang="hu">A lejárat figyelmen kívül hagyása: header</message>
+	<message xml:lang="hu">A lejárat figyelmen kívül hagyása: címsor</message>
 	<message xml:lang="ka">ვადის გასვლის
 იგნორირება: თავსართი</message>
 	<message xml:lang="cn">忽略过期的 header</message>
@@ -2975,7 +2960,7 @@ edin</message>
 	<message xml:lang="fi">Välimuistin sijainti</message>
 	<message xml:lang="tr">Gizli bölümün repertuarı</message>
 	<message xml:lang="ru">Директория кеширования</message>
-	<message xml:lang="hu">Mappagyorstár</message>
+	<message xml:lang="hu">Gyorsítótár könyvtára</message>
 	<message xml:lang="ka">ბუფერის დასტა</message>
 	<message xml:lang="cn">缓存路径</message>
 	<message xml:lang="tw">緩存路徑</message>
@@ -2994,7 +2979,7 @@ edin</message>
 	<message xml:lang="fi">Välimuistin koko (Mb)</message>
 	<message xml:lang="tr">Gizli bölümün büyüklüğü (Mb)</message>
 	<message xml:lang="ru">Размер кеша (Мб)</message>
-	<message xml:lang="hu">Gyorstár mérete (Mb)</message>
+	<message xml:lang="hu">Gyorsítótár mérete (MB)</message>
 	<message xml:lang="ka">ბუფერის ზომა (მბ)</message>
 	<message xml:lang="cn">缓存大小 (Mb)</message>
 	<message xml:lang="tw">緩存大小 (Mb)</message>
@@ -3014,7 +2999,7 @@ edin</message>
 (Mb)</message>
 	<message xml:lang="tr">Gizli bölümün maksimum kapasitesi (Mb)</message>
 	<message xml:lang="ru">Ограничение размера элемента кеша (Мб)</message>
-	<message xml:lang="hu">Gyorstár bejegyzés méretkorlátja (Mb)</message>
+	<message xml:lang="hu">Gyorsítótár-bejegyzés méretkorlátja (MB)</message>
 	<message xml:lang="ka">ბუფერის ელემენტის
 ზომის ზღვარი (მბ)</message>
 	<message xml:lang="cn">缓存入口大小 (Mb)</message>
@@ -3053,7 +3038,7 @@ edin</message>
 	<message xml:lang="fi">HTTP välityspalvelin (e.g., www.w3.org:1234)</message>
 	<message xml:lang="tr">HTTP proxy (e.g., www.w3.org:1234)</message>
 	<message xml:lang="ru">HTTP proxy (напр., www.w3.org:1234)</message>
-	<message xml:lang="hu">HTTP proxy (pl., www.w3.org:1234)</message>
+	<message xml:lang="hu">HTTP proxy (pl. www.w3.org:1234)</message>
 	<message xml:lang="ka">HTTP პროქსი (მაგ.,
 www.w3.org:1234)</message>
 	<message xml:lang="cn">HTTP 代理 (例如 www.w3.org:1234)</message>
@@ -3076,7 +3061,7 @@ lists.w3.org)</message>
 lists.w3.org)</message>
 	<message xml:lang="tr">Proxy\'nin alan listesi (e.g., lists.w3.org)</message>
 	<message xml:lang="ru">Доменный список proxy (напр., lists.w3.org)</message>
-	<message xml:lang="hu">Proxy tartomány lista (pl., lists.w3.org)</message>
+	<message xml:lang="hu">Proxy tartománylista (pl. lists.w3.org)</message>
 	<message xml:lang="ka">პროქსის დომენების
 სია (მაგ., lists.w3.org)</message>
 	<message xml:lang="cn">代理域名列表 (e.g., lists.w3.org)</message>
@@ -3115,7 +3100,7 @@ lists.w3.org)</message>
 	<message xml:lang="fi">Aloitussivu</message>
 	<message xml:lang="tr">başlangıç sayfası</message>
 	<message xml:lang="ru">Начальная страница</message>
-	<message xml:lang="hu">Honlap</message>
+	<message xml:lang="hu">Kezdőlap</message>
 	<message xml:lang="ka">თავფურცელი</message>
 	<message xml:lang="cn">主页</message>
 	<message xml:lang="tw">主頁</message>
@@ -3134,7 +3119,7 @@ lists.w3.org)</message>
 	<message xml:lang="fi">Painikevihjeen viive (ms)</message>
 	<message xml:lang="tr">Bigi süresi (ms)</message>
 	<message xml:lang="ru">Задержка показа подсказки (мс)</message>
-	<message xml:lang="hu">Gyorstipp késleltetése (emp)</message>
+	<message xml:lang="hu">Gyorstipp késleltetése (ms)</message>
 	<message xml:lang="ka">მინიშნების ყოვნი
 (მწ)</message>
 	<message xml:lang="cn">提示延迟 (毫秒)</message>
@@ -3154,7 +3139,7 @@ lists.w3.org)</message>
 	<message xml:lang="fi">Kaksoisnapautuksen viive (ms)</message>
 	<message xml:lang="tr">Iki kere tıklama süresi(ms)</message>
 	<message xml:lang="ru">Задержка для двойного щелчка (мс)</message>
-	<message xml:lang="hu">Duplakattintás késleltetése (emp)</message>
+	<message xml:lang="hu">Duplakattintás késleltetése (ms)</message>
 	<message xml:lang="ka">ორმაგი წკაპის ყოვნი
 (მწ)</message>
 	<message xml:lang="cn">双击延迟 (毫秒)</message>
@@ -3174,7 +3159,7 @@ lists.w3.org)</message>
 	<message xml:lang="fi">Valikon fonttikoko</message>
 	<message xml:lang="tr">Yazıtipi ailesi büyüklüğü</message>
 	<message xml:lang="ru">Размер шрифта меню</message>
-	<message xml:lang="hu">A menü betűkészletének mérete</message>
+	<message xml:lang="hu">A menü betűmérete</message>
 	<message xml:lang="ka">მენიუს ფონტის
 ზომა</message>
 	<message xml:lang="cn">菜单字体大小</message>
@@ -3194,7 +3179,7 @@ lists.w3.org)</message>
 	<message xml:lang="fi">Fonttikoko</message>
 	<message xml:lang="tr">Karakterleri büyüt</message>
 	<message xml:lang="ru">Масштаб шрифта</message>
-	<message xml:lang="hu">Betűkészlet nagyítása</message>
+	<message xml:lang="hu">Betűnagyítás</message>
 	<message xml:lang="ka">ფონტის მასშტაბი</message>
 	<message xml:lang="cn">字体大小(%)</message>
 	<message xml:lang="tw">字體大小(%)</message>
@@ -3213,7 +3198,7 @@ lists.w3.org)</message>
 	<message xml:lang="fi">Kielikoodi</message>
 	<message xml:lang="tr">Yazıların dili</message>
 	<message xml:lang="ru">Язык интерфейса</message>
-	<message xml:lang="hu">Párbeszéd nyelve</message>
+	<message xml:lang="hu">Interfész nyelve</message>
 	<message xml:lang="ka">დიალოგური ენა</message>
 	<message xml:lang="cn">程序语言</message>
 	<message xml:lang="tw">程序語言</message>
@@ -3229,7 +3214,7 @@ lists.w3.org)</message>
 	<message xml:lang="de">Zeilen beim Einfügen erhalten</message>
 	<message xml:lang="es">Conservar líneas al pegar</message>
 	<message xml:lang="ru">При вставке сохранять исходное положение строк</message>
-	<message xml:lang="hu">Soronkénti beillesztés engedélyezése</message>
+	<message xml:lang="hu">Sorok megtartása beillesztéskor</message>
 	<message xml:lang="ka">ბწკარედული ჩასმის
 ჩართვა</message>
 	<message xml:lang="cn">启用行对行粘贴</message>
@@ -3246,7 +3231,7 @@ lists.w3.org)</message>
 	<message xml:lang="es">Generar copias de seguridad</message>
 	<message xml:lang="de">Sicherungsdateien anlegen</message>
 	<message xml:lang="ru">Создавать резервные копии файлов</message>
-	<message xml:lang="hu">Biztonsági mentések haszánlata</message>
+	<message xml:lang="hu">Biztonsági mentések használata</message>
 	<message xml:lang="ka">სამარაგო ფაილების
 შექმნა</message>
 	<message xml:lang="cn">生成备份文件</message>
@@ -3263,7 +3248,7 @@ lists.w3.org)</message>
 	<message xml:lang="de">Fenstereinstellungen beim Beenden speichern</message>
 	<message xml:lang="es">Guardar geometría al salir</message>
 	<message xml:lang="ru">Запоминать размер окна при выходе</message>
-	<message xml:lang="hu">Elhelyezkedés mentése kilépéskor</message>
+	<message xml:lang="hu">Ablakbeállítások mentése kilépéskor</message>
 	<message xml:lang="ka">სქემის შენახვა
 გამოსვლისას</message>
 	<message xml:lang="cn">退出前保存窗口位置</message>
@@ -3283,7 +3268,7 @@ lists.w3.org)</message>
 	<message xml:lang="fi">Näytä taustakuvat</message>
 	<message xml:lang="tr">Arka görüntülerini göster</message>
 	<message xml:lang="ru">Показывать изображения фона</message>
-	<message xml:lang="hu">Háttésképek mentése</message>
+	<message xml:lang="hu">Háttérképek megjelenítése</message>
 	<message xml:lang="ka">ფონის გამოსახულების
 ჩვენება</message>
 	<message xml:lang="cn">显示背景图片</message>
@@ -3323,7 +3308,7 @@ lists.w3.org)</message>
 	<message xml:lang="pt">Exibir endereço</message>
 	<message xml:lang="fi">Näytä osoite</message>
 	<message xml:lang="ru">Показывать адреса</message>
-	<message xml:lang="hu">Cím mutatása</message>
+	<message xml:lang="hu">Cím megjelenítése</message>
 	<message xml:lang="ka">მისამართების
 ჩვენება</message>
 	<message xml:lang="cn">显示 ADDRESS</message>
@@ -3343,7 +3328,7 @@ lists.w3.org)</message>
 	<message xml:lang="fi">Näytä kohteet</message>
 	<message xml:lang="tr">Hedefi göster</message>
 	<message xml:lang="ru">Показывать цели</message>
-	<message xml:lang="hu">Célpontok mutatása</message>
+	<message xml:lang="hu">Referenciapontok megjelenítése</message>
 	<message xml:lang="ka">სამიზნეების
 ჩვენება</message>
 	<message xml:lang="cn">显示目标</message>
@@ -3420,7 +3405,7 @@ lists.w3.org)</message>
 	<message xml:lang="tr">Bağlantıyı izlemek için iki kere
 tuşlayın</message>
 	<message xml:lang="ru">Открывать ссылку двойным щелчком</message>
-	<message xml:lang="hu">Kapcsokra ugrás duplakattintással</message>
+	<message xml:lang="hu">Hivatkozás aktiválása dupla kattintással</message>
 	<message xml:lang="ka">ბმა აქტივდება
 ორმაგი დაწკაპვით</message>
 	<message xml:lang="cn">双击跟踪链接</message>
@@ -3440,7 +3425,7 @@ tuşlayın</message>
 	<message xml:lang="fi">Julkaisu</message>
 	<message xml:lang="tr">Derleme</message>
 	<message xml:lang="ru">Публикация</message>
-	<message xml:lang="hu">Kiadás</message>
+	<message xml:lang="hu">Publikálás</message>
 	<message xml:lang="ka">გამოქვეყნება</message>
 	<message xml:lang="cn">发布</message>
 	<message xml:lang="tw">發布</message>
@@ -3502,7 +3487,7 @@ tuşlayın</message>
 	<message xml:lang="fi">Oletus nimi URL:lle jotka päättyvät '/'</message>
 	<message xml:lang="tr">'/'\'le biten URL\'leri öntanımlı isim</message>
 	<message xml:lang="ru">Принятое по умолчанию имя для URL-ов заканчивающихся символом '/'</message>
-	<message xml:lang="hu">Az URL-ek neve '/' jellel végződik</message>
+	<message xml:lang="hu">Az alapértelmezett URL-nevek '/' jellel végződnek</message>
 	<message xml:lang="ka">ნაგულისხმები სახელი
 მისამართებითვის რომლებიც
 მთავრდება '/'-ით</message>
@@ -3523,7 +3508,7 @@ tuşlayın</message>
 	<message xml:lang="fi">Geometria</message>
 	<message xml:lang="tr">Geometri</message>
 	<message xml:lang="ru">Геометрические размеры окна</message>
-	<message xml:lang="hu">Elhelyezkedés</message>
+	<message xml:lang="hu">Elrendezés</message>
 	<message xml:lang="ka">გეომეტრია</message>
 	<message xml:lang="cn">窗口位置</message>
 	<message xml:lang="tw">窗口位置</message>
@@ -3542,7 +3527,7 @@ tuşlayın</message>
 	<message xml:lang="fi">Tallenna nykyinen geometria</message>
 	<message xml:lang="tr">Yakın geometriyi kaydet</message>
 	<message xml:lang="ru">Сохранить текущие размеры</message>
-	<message xml:lang="hu">Jelenlegi elhelyezkedés mentése</message>
+	<message xml:lang="hu">Aktuális elrendezés mentése</message>
 	<message xml:lang="ka">მიმდინარე ზომების
 შენახვა</message>
 	<message xml:lang="cn">保存当前窗口位置</message>
@@ -3562,7 +3547,7 @@ tuşlayın</message>
 	<message xml:lang="fi">Palauta oletus geometria</message>
 	<message xml:lang="tr">Öntanımlı geometriye yeniden biçim ver</message>
 	<message xml:lang="ru">Восстановить размеры принятые по умолчанию</message>
-	<message xml:lang="hu">Alap elhelyezkedés visszaállítása</message>
+	<message xml:lang="hu">Alapértelmezett elrendezés visszaállítása</message>
 	<message xml:lang="ka">საწყისი ზომების
 აღდგენა</message>
 	<message xml:lang="cn">恢复默认窗口位置</message>
@@ -3589,8 +3574,7 @@ abrir.</message>
 	<message xml:lang="tr">Bu değişiklikler yeniden pencere açtığınızda
 gerçerli olurlar</message>
 	<message xml:lang="ru">Изменения вступят в силу после открытия нового окна.</message>
-	<message xml:lang="hu">A változások új ablak nyitásakor lépnek
-életbe</message>
+	<message xml:lang="hu">A változtatások új ablak nyitásakor lépnek életbe</message>
 	<message xml:lang="ka">Иცვლილებები ძალაში
 ახალი ფანჯრის გახსნის შემდეგ
 შევა.</message>
@@ -3612,7 +3596,7 @@ spustení programu.</message>
 	<message xml:lang="fi">Dokumentin piirtoväri</message>
 	<message xml:lang="tr">Belgenin ön-plan rengi</message>
 	<message xml:lang="ru">Цвет текста документа</message>
-	<message xml:lang="hu">Dokumentum színe</message>
+	<message xml:lang="hu">Dokumentum szövegszíne</message>
 	<message xml:lang="ka">დოკუმენტის ტექსტის
 ფერი</message>
 	<message xml:lang="cn">文档前景色</message>
@@ -3652,7 +3636,7 @@ spustení programu.</message>
 	<message xml:lang="fi">Valikon piirtoväri</message>
 	<message xml:lang="tr">Menünün ön-plan rengi</message>
 	<message xml:lang="ru">Цвет текста меню</message>
-	<message xml:lang="hu">Menü színe</message>
+	<message xml:lang="hu">Menü szövegszíne</message>
 	<message xml:lang="ka">მენიუს ტექსტის
 ფერი</message>
 	<message xml:lang="cn">菜单前景色</message>
@@ -3672,7 +3656,7 @@ spustení programu.</message>
 	<message xml:lang="fi">Valikon taustaväri</message>
 	<message xml:lang="tr">Menünün arka-plan rengi</message>
 	<message xml:lang="ru">Цвет фона меню</message>
-	<message xml:lang="hu">Menu háttérszíne</message>
+	<message xml:lang="hu">Menü háttérszíne</message>
 	<message xml:lang="ka">მენიუს ფონის
 ფერი</message>
 	<message xml:lang="cn">菜单背景色</message>
@@ -3704,9 +3688,7 @@ välimuistia.</message>
 geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya
 kullandınız</message>
 	<message xml:lang="ru">Невозможно выполнить кеширование. Вероятно неправильно задана директория кеша или другой Amaya использует кеш.</message>
-	<message xml:lang="hu">A gyorstár nem indítható. Érvénytelen gyorstár
-mappát adott meg, vagy az Amaya egy másik példánya használja a
-gyorstárat.</message>
+	<message xml:lang="hu">A gyorsítótár nem indítható. Érvénytelen a gyorsítótár-könyvtár vagy az Amaya egy másik példánya használja a gyorsítótárat.</message>
 	<message xml:lang="ka">ბუფერი ვერ იხსნება.
 შესაძლოა სხვა დასტაა
 მითითებული ან მას სხვა Amaya
@@ -3741,8 +3723,7 @@ en&quot;:</message>
 	<message xml:lang="tr">Istenilen dillerin listesi (mesela &quot;en,
 fr&quot;):</message>
 	<message xml:lang="ru">Список предпочитаемых языков "ru, en, fr":</message>
-	<message xml:lang="hu">Kedvenc nyelvek listája, például &quot;hu, en,
-fr&quot;:</message>
+	<message xml:lang="hu">Preferált nyelvek listája, például &quot;hu, en, fr&quot;:</message>
 	<message xml:lang="ka">უპირატესი ენების სი.
 მაგ., &quot;ka, en, fr&quot;:</message>
 	<message xml:lang="cn">语言偏好 (如 &quot;en, fr&quot;):</message>
@@ -3769,8 +3750,7 @@ uudelleenkäynnistämisen jälkeen.</message>
 	<message xml:lang="tr">Bu değişiklikler yeniden Amaya\'yı açtığınız
 taktirde geçerli olurlar</message>
 	<message xml:lang="ru">Изменения вступят в силу только после перезапуска Amaya</message>
-	<message xml:lang="hu">Ezek a változások nem lépnek életbe, míg újra nem
-indítja az Amayát</message>
+	<message xml:lang="hu">A változások érvényesítéséhez újra kell indítani az Amayát.</message>
 	<message xml:lang="ka">ცვლილებები ძალაში
 Amaya-ს გადატვირთვის შემდეგ
 შევა</message>
@@ -3799,8 +3779,7 @@ domaineissa</message>
 	<message xml:lang="tr">Bu alanlarda PUT otomatik olarak yeniden
 yönlerdirmesini kabul edin</message>
 	<message xml:lang="ru">Разрешить автоматические PUT перенаправления на эти домены</message>
-	<message xml:lang="hu">Önműködő PUT átirányítások engedélyezése
-ehhez a tartományhoz</message>
+	<message xml:lang="hu">Automatikus PUT átirányítások engedélyezése ehhez a tartományhoz</message>
 	<message xml:lang="ka">ამ დომენებისთვის
 ავტომატური PUT
 გადამისამართების
@@ -3862,8 +3841,7 @@ tieto domény</message>
 	<message xml:lang="fi">(erota syötteet välilyönnein)</message>
 	<message xml:lang="tr">Her Enter\'ü boşlukla değiştirin</message>
 	<message xml:lang="ru">(записи разделяются пробелом)</message>
-	<message xml:lang="hu">(az egyes tételeket szóközzel válasszuk
-el)</message>
+	<message xml:lang="hu">(tagolás szóközzel)</message>
 	<message xml:lang="ka">(თითოეული ჩანაწერის
 ხარეთი გამოყოფა)</message>
 	<message xml:lang="cn">(以空格分隔域名)</message>
@@ -3905,7 +3883,7 @@ domaineihin</message>
 domaineihin</message>
 	<message xml:lang="tr">Bu alanlarda sadece Proxy\'yi kullanın</message>
 	<message xml:lang="ru">Использовать proxy только для этих доменов</message>
-	<message xml:lang="hu">Csak ezekhez a tartományokhoz van proxy</message>
+	<message xml:lang="hu">Proxy csak az alábbi tartományokhoz használandó</message>
 	<message xml:lang="ka">პროქსის მხოლოდ ამ
 დომენებისთვის გამოყენება</message>
 	<message xml:lang="cn">仅对这些域名启用代理</message>
@@ -3925,7 +3903,7 @@ domaineihin</message>
 	<message xml:lang="fi">Henkilön nimi</message>
 	<message xml:lang="tr">Karakterin ismi</message>
 	<message xml:lang="ru">Имя символа</message>
-	<message xml:lang="hu">Karakter neve</message>
+	<message xml:lang="hu">Karakternév</message>
 	<message xml:lang="ka">სიმბოლოს სახელი</message>
 	<message xml:lang="cn">字符名称</message>
 	<message xml:lang="tw">字符名稱</message>
@@ -3944,7 +3922,7 @@ domaineihin</message>
 	<message xml:lang="fi">Amaya käyttäjän hakemisto</message>
 	<message xml:lang="tr">Kullanıyıcı repertuarı</message>
 	<message xml:lang="ru">Директория пользователя Amaya</message>
-	<message xml:lang="hu">Amaya felhasználói mappa</message>
+	<message xml:lang="hu">Amaya felhasználói könyvtár</message>
 	<message xml:lang="ka">Amaya-ს მომხმარებლის
 დასტა</message>
 	<message xml:lang="cn">Amaya 用户目录</message>
@@ -3964,7 +3942,7 @@ domaineihin</message>
 	<message xml:lang="fi">Väliaikaisten tiedostojen hakemisto</message>
 	<message xml:lang="tr">Süreli repertuarı</message>
 	<message xml:lang="ru">Временная директория</message>
-	<message xml:lang="hu">Ideiglenes mappa</message>
+	<message xml:lang="hu">Ideiglenes fájlok könyvtára</message>
 	<message xml:lang="ka">დროებითი დასტა</message>
 	<message xml:lang="cn">临时目录</message>
 	<message xml:lang="tw">臨時目錄</message>
@@ -3983,7 +3961,7 @@ domaineihin</message>
 	<message xml:lang="fi">Käytä palettia</message>
 	<message xml:lang="tr">Palet (palette)</message>
 	<message xml:lang="ru">Использовать палитру</message>
-	<message xml:lang="hu">Dokkoló használata</message>
+	<message xml:lang="hu">Paletta használata</message>
 	<message xml:lang="ka">პალიტრის
 გამოყენება</message>
 	<message xml:lang="cn">使用小面板</message>
@@ -4003,7 +3981,7 @@ domaineihin</message>
 	<message xml:lang="fi">Kieliasetukset</message>
 	<message xml:lang="tr">Ülke dilleri</message>
 	<message xml:lang="ru">Язык обсуждения</message>
-	<message xml:lang="hu">Language Negotiation</message>
+	<message xml:lang="hu">Nyelvek</message>
 	<message xml:lang="ka">მოლაპარაკების
 ენა</message>
 	<message xml:lang="cn">语言协商</message>
@@ -4042,7 +4020,7 @@ domaineihin</message>
 	<message xml:lang="pt">Enlace</message>
 	<message xml:lang="fi">Linkki</message>
 	<message xml:lang="ru">Ссылка</message>
-	<message xml:lang="hu">Kapocs</message>
+	<message xml:lang="hu">Hivatkozás</message>
 	<message xml:lang="ka">ბმა</message>
 	<message xml:lang="cn">Link</message>
 	<message xml:lang="tw">Link</message>
@@ -4061,8 +4039,7 @@ domaineihin</message>
 	<message xml:lang="fi">Käyttäjän huomautukset</message>
 	<message xml:lang="tr">Kullanıyıcı ismi</message>
 	<message xml:lang="ru">Автор аннотации и закладки</message>
-	<message xml:lang="hu">Felhasználó a jegyzetekhez és
-könyvjelzőkhöz</message>
+	<message xml:lang="hu">A jegyzetek és könyvjelzők felhasználója</message>
 	<message xml:lang="ka">ანოტაციისა და
 სანიშნის მომხმარებელი</message>
 	<message xml:lang="cn">注释和书签作者</message>
@@ -4082,7 +4059,7 @@ könyvjelzőkhöz</message>
 	<message xml:lang="fi">Postipalvelimen huomautukset</message>
 	<message xml:lang="tr">Dağıtım servörü</message>
 	<message xml:lang="ru">Сервер публикации аннотации (post)</message>
-	<message xml:lang="hu">Jegyzet fogadó kiszolgálója</message>
+	<message xml:lang="hu">Jegyzet-továbbító kiszolgáló</message>
 	<message xml:lang="ka">ანოტაციების საფოსტო
 (post) სერვერი</message>
 	<message xml:lang="cn">注释提交服务器</message>
@@ -4102,7 +4079,7 @@ könyvjelzőkhöz</message>
 	<message xml:lang="fi">Palvelimien merkinnät</message>
 	<message xml:lang="tr">Not servörü</message>
 	<message xml:lang="ru">Сервера аннотации</message>
-	<message xml:lang="hu">Jegyzet kiszolgálók</message>
+	<message xml:lang="hu">Jegyzet-kiszolgálók</message>
 	<message xml:lang="ka">ანოტაციების
 სერვერი</message>
 	<message xml:lang="cn">注释服务器</message>
@@ -4123,7 +4100,7 @@ locales</message>
 	<message xml:lang="fi">Lataa paikalliset merkinnät automaattisesti</message>
 	<message xml:lang="tr">Lokal notları otomatik olarak yükleyin</message>
 	<message xml:lang="ru">Автозагрузка локальных аннотаций</message>
-	<message xml:lang="hu">Helyi jegyzetek önműködő betöltése</message>
+	<message xml:lang="hu">Helyi jegyzetek automatikus betöltése</message>
 	<message xml:lang="ka">ლოკალური
 ანოტაციების
 თვითჩამოტვირთვა</message>
@@ -4146,7 +4123,7 @@ remote</message>
 	<message xml:lang="fi">Lataa etämerkinnät automaattisesti</message>
 	<message xml:lang="tr">Dıştan notları otomatik olarak yükleyin</message>
 	<message xml:lang="ru">Автозагрузка удалённых аннотаций</message>
-	<message xml:lang="hu">Távoli jegyzetek önműködő betöltése</message>
+	<message xml:lang="hu">Távoli jegyzetek automatikus betöltése</message>
 	<message xml:lang="ka">დაშორებული
 ანოტაციების
 თვითჩამოტვირთვა</message>
@@ -4174,8 +4151,7 @@ yhteydessä (etätyötä varten)</message>
 	<message xml:lang="tr">Amaya\'nın başlangıcında otomatik dıştan notları
 yüklemesini durdurun</message>
 	<message xml:lang="ru">Отключить автозагрузку удалённых аннотаций при каждом запуске операционной системы (автономная работа)</message>
-	<message xml:lang="hu">Minden indításkor a távoli jegyzetek önműködő
-betöltésének tiltása (szétkapcsolt munkához)</message>
+	<message xml:lang="hu">A távoli jegyzetek automatikus betöltésének tiltása minden indításkor (kapcsolat nélküli munka esetén)</message>
 	<message xml:lang="ka">დაწყებისას
 დაშორებული თვითჩამოტვირთვის
 ამორთვა (ავტონომიური
@@ -4198,7 +4174,7 @@ komentárov pri každom spustení (pre prácu offline)</message>
 	<message xml:lang="fi">Valintaväri</message>
 	<message xml:lang="tr">Renk seçimi</message>
 	<message xml:lang="ru">Цвет выбранного</message>
-	<message xml:lang="hu">Kijelölés színe</message>
+	<message xml:lang="hu">A kijelölés színe</message>
 	<message xml:lang="ka">მონიშნული ტექსტის
 ფერი</message>
 	<message xml:lang="cn">选择区域前景色</message>
@@ -4215,7 +4191,7 @@ komentárov pri každom spustení (pre prácu offline)</message>
 	<message xml:lang="es">Color de fondo texto selecc.:</message>
 	<message xml:lang="de">Hintergrundfarbe bei Markierungen</message>
 	<message xml:lang="ru">Цвет фона выбранного</message>
-	<message xml:lang="hu">Kijelölés háttérszíne</message>
+	<message xml:lang="hu">A kijelölés háttérszíne</message>
 	<message xml:lang="ka">მონიშნულის ფონის
 ფერი</message>
 	<message xml:lang="cn">选择区域背景色</message>
@@ -4235,7 +4211,7 @@ komentárov pri každom spustení (pre prácu offline)</message>
 	<message xml:lang="fi">Suunta</message>
 	<message xml:lang="tr">Yön</message>
 	<message xml:lang="ru">Ориентация</message>
-	<message xml:lang="hu">Tájolása</message>
+	<message xml:lang="hu">Tájolás</message>
 	<message xml:lang="ka">ორიენტაცია</message>
 	<message xml:lang="cn">Orientation</message>
 	<message xml:lang="tw">Orientation</message>
@@ -4287,7 +4263,7 @@ komentárov pri každom spustení (pre prácu offline)</message>
 	<message xml:lang="fr">Garder les espaces multiples</message>
 	<message xml:lang="es">Mantener espaciado múltiple</message>
 	<message xml:lang="de">Mehrfache Leerzeichen erhalten</message>
-	<message xml:lang="hu">Többszörös szóköz megtartása</message>
+	<message xml:lang="hu">Többszörös szóközök megtartása</message>
 	<message xml:lang="sk">Ponechať viacnásobné medzery</message>
 	<message xml:lang="it">Conserva gli spazi multipli</message>
 	<message xml:lang="ru">Пропускать множественные пробелы</message>
@@ -4319,7 +4295,7 @@ continuar</message>
 	<message xml:lang="de">Fataler Fehler - den Quellcode korrigieren, um fortzusetzen</message>
 	<message xml:lang="it">Errore fatale - Correggi il sorgente per
 continuare</message>
-	<message xml:lang="hu">Végzetes hiba - Javítsa ki a forráskódot</message>
+	<message xml:lang="hu">Végzetes hiba - A forráskód javítandó</message>
 	<message xml:lang="cn">Fatal error - Fix the source code to continue</message>
 	<message xml:lang="tw">Fatal error - Fix the source code to continue</message>
 	<message xml:lang="sk">Kritická chyba - Opravte zdrojový kód aby bolo
@@ -4338,8 +4314,7 @@ caracteres'</message>
 	<message xml:lang="de">'Datei/Zeichenkodierung' verwenden</message>
 	<message xml:lang="it">Prova la voce 'File/Forza codifica caratteri'</message>
 	<message xml:lang="ru">Перейдите к пункту меню Файл/Прочитать в кодировке.</message>
-	<message xml:lang="hu">Próbálja a 'Fájl/Kényszerített karakter kódolás'
-menüt</message>
+	<message xml:lang="hu">Próbálja a 'Fájl/Kódolás' menüt</message>
 	<message xml:lang="ka">მენიუდან 'ფაილი'
 სცადეთ ელემენტი 'კოდირების
 შერჩევა'</message>
@@ -4381,7 +4356,7 @@ kódovaním'</message>
 	<message xml:lang="fi">Dokumentin profiili:</message>
 	<message xml:lang="tr">Belgenin profili:</message>
 	<message xml:lang="ru">Тип документа:</message>
-	<message xml:lang="hu">Dokumentum profile:</message>
+	<message xml:lang="hu">Dokumentum-profil:</message>
 	<message xml:lang="ka">დოკუმენტის
 პროფილი:</message>
 	<message xml:lang="cn">Document profile:</message>
@@ -4407,8 +4382,7 @@ sintácticos</message>
 käännösvirheet</message>
 	<message xml:lang="tr">Hata - Görünümler &gt; Hataları göster bakın</message>
 	<message xml:lang="ru">Обнаружены ошибки. Выберите пункт меню Файл/Показать разбор ошибок.</message>
-	<message xml:lang="hu">Néhány elem/attribútum figyelmen kívül hagyva -
-see Fájl &gt; Elemzési hibák mutatása</message>
+	<message xml:lang="hu">Hibák észlelve - Lásd Nézet &gt; Kódhibák mutatása</message>
 	<message xml:lang="ka">შეცდომა - მენიუდან
 ნახეთ &quot;ფაილი'-'დამუშავებული
 შეცდომების ჩვენება'</message>
@@ -4439,7 +4413,7 @@ porAmaya</message>
 	<message xml:lang="tr">Bu belgenin kodlaması Amaya tarafından
 yapılamıyor</message>
 	<message xml:lang="ru">Кодировка этого документа не поддерживается в Amaya</message>
-	<message xml:lang="hu">Ezen dokumentum kódolását az Amaya nem
+	<message xml:lang="hu">A dokumentum által használt kódolást az Amaya nem
 támogatja</message>
 	<message xml:lang="ka">ამ დოკუმენტის
 კოდირება Amaya-ში
@@ -4471,8 +4445,7 @@ tyypin</message>
 	<message xml:lang="tr">Yazmak ve kaydetmek bu belgenin tipini
 değiştirir</message>
 	<message xml:lang="ru">Редактирование и сохранение этого документа изменит его тип</message>
-	<message xml:lang="hu">Ezen dokumentum szerkesztése és mentés
-megváltoztatja a dokumentum típusát</message>
+	<message xml:lang="hu">Ezen dokumentum szerkesztése és mentése megváltoztatja a dokumentum típusát</message>
 	<message xml:lang="ka">ამ დოკუმენტის
 რედაქტირება და შენახვა მის
 ტიპს შეცვლის</message>
@@ -5428,8 +5401,7 @@ kadonneen päivityksen ongelman</message>
 	<message xml:lang="tr">Bu belgeleri kayıt etmek güncelleştirme problemleri
 çıkara bilir</message>
 	<message xml:lang="ru">Сохранение этого примера может привести к проблеме потери обновления</message>
-	<message xml:lang="hu">Annak a példánynak a mentése frissítési
-problémákat okozhat</message>
+	<message xml:lang="hu">Ezen példány mentése a frissítések elvesztését okozhatja</message>
 	<message xml:lang="ka">ამ მაგალითსი
 შენახვამ შესაძლოა
 განახლების დაკარგვა
@@ -5478,7 +5450,7 @@ niektoré prvky a atribúty</message>
 	<message xml:lang="de">Sind Sie sicher?</message>
 	<message xml:lang="es">Por favor, confirme la operación</message>
 	<message xml:lang="ru">Подтвердите операцию</message>
-	<message xml:lang="hu">Kérjük, erősítse meg a műveletet</message>
+	<message xml:lang="hu">Hagyja jóvá a műveletet</message>
 	<message xml:lang="ka">გთხოვთ დაადასტუროთ
 ოპერაცია</message>
 	<message xml:lang="cn">Please confirm operation</message>
@@ -5506,8 +5478,7 @@ dokumenttien yhteydessä</message>
 	<message xml:lang="tr">XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li
 kullanın</message>
 	<message xml:lang="ru">Использовать тип MIME application/xhtml+xml для XHTML документов</message>
-	<message xml:lang="hu">Use the application/xhtml+xml MIME type for XHTML
-dokumentums</message>
+	<message xml:lang="hu">Az application/xhtml+xml MIME típus használata XHTML dokumentumokhoz</message>
 	<message xml:lang="ka">გამოიყენეთ application/xhtml+xml
 MIME ტიპი XHTML
 დოკუმენტებისთვის</message>
@@ -5528,7 +5499,7 @@ dokumenty</message>
 	<message xml:lang="de">Zeichensatz für neue Dokumente</message>
 	<message xml:lang="es">Juego de caracteres para nuevos documentos:</message>
 	<message xml:lang="ru">Кодировка для новых документов</message>
-	<message xml:lang="hu">Új dokumentumok karakterkészlete</message>
+	<message xml:lang="hu">Az új dokumentumok kódolása</message>
 	<message xml:lang="ka">კოდირება ახალი
 დოკუმენტებისთვის</message>
 	<message xml:lang="cn">新建文档的字符集</message>
@@ -5548,7 +5519,7 @@ dokumenty</message>
 	<message xml:lang="es">¡Bloqueo conseguido!</message>
 	<message xml:lang="tr">Kilitleme başarılı olmuştur!</message>
 	<message xml:lang="ru">Блокировка выполнена!</message>
-	<message xml:lang="hu">Zárolás sikeres!</message>
+	<message xml:lang="hu">Sikeres zárolás!</message>
 	<message xml:lang="ka">დაბლოკვა შედგა!</message>
 	<message xml:lang="cn">锁定成功!</message>
 	<message xml:lang="tw">鎖定成功!</message>
@@ -5567,7 +5538,7 @@ dokumenty</message>
 	<message xml:lang="es">¡Bloqueo fallido!</message>
 	<message xml:lang="tr">Kilitleme başarısız olmuştur!</message>
 	<message xml:lang="ru">Неудачная попытка блокировки!</message>
-	<message xml:lang="hu">Zárolás sikertelen!</message>
+	<message xml:lang="hu">Sikertelen zárolás!</message>
 	<message xml:lang="ka">დაბლოკვა არ
 შედგა!</message>
 	<message xml:lang="cn">锁定失败!</message>
@@ -5606,7 +5577,7 @@ dokumenty</message>
 	<message xml:lang="es">El documento %s bloqueado!</message>
 	<message xml:lang="tr">%s belgesi kilitlenmiştir!</message>
 	<message xml:lang="ru">Документ %s блокирован!</message>
-	<message xml:lang="hu">A dokumentum (%s) zárolva!</message>
+	<message xml:lang="hu">A %s dokumentum  zárolva!</message>
 	<message xml:lang="ka">დოკუმენტი %s
 დაბლოკილია!</message>
 	<message xml:lang="cn">文档 %s 已锁定!</message>
@@ -5653,7 +5624,7 @@ süresi %s)</message>
 	<message xml:lang="es">¿Sobreescribir la información de bloqueo?</message>
 	<message xml:lang="tr">Kilidi geçin?</message>
 	<message xml:lang="ru">Перезаписать информацию блокировки?</message>
-	<message xml:lang="hu">Felülírjuk a zárolási adatokat?</message>
+	<message xml:lang="hu">Felülírja a zárolási  adatokat?</message>
 	<message xml:lang="ka">გადავაწერო
 დაბლოკვის ინფორმაცია?</message>
 	<message xml:lang="cn">覆盖锁定信息?</message>
@@ -5673,7 +5644,7 @@ süresi %s)</message>
 	<message xml:lang="es">¿Copiar la información de bloqueo?</message>
 	<message xml:lang="tr">Kilit bilgilerini kaydet?</message>
 	<message xml:lang="ru">Копировать информацию блокировки?</message>
-	<message xml:lang="hu">Másoljuk a zárolási adatokat?</message>
+	<message xml:lang="hu">Másolja a zárolási  adatokat?</message>
 	<message xml:lang="ka">დავაკოპირო
 დაბლოკვის ინფორმაცია?</message>
 	<message xml:lang="cn">复制锁定信息?</message>
@@ -5694,8 +5665,7 @@ documento...&quot;</message>
 	<message xml:lang="es">Intenta desbloquear el documento antes...</message>
 	<message xml:lang="tr">Belgenin kilidini açmayı deneyin...</message>
 	<message xml:lang="ru">Сначала разблокируйте документ...</message>
-	<message xml:lang="hu">Előbb próbálja meg felszabadítani a
-dokumentumot...</message>
+	<message xml:lang="hu">Kísérlet a dokumentum zárolásának feloldására, mielőtt...</message>
 	<message xml:lang="ka">ჯერ დოკუმენტის
 დაბლოკვის მოხსნა სცადეთ...</message>
 	<message xml:lang="cn">Try to unlock the document before...</message>
@@ -5715,7 +5685,7 @@ dokumentumot...</message>
 	<message xml:lang="es">¡Desbloqueo conseguido!</message>
 	<message xml:lang="tr">Kilit açma başarılı olmuştur!</message>
 	<message xml:lang="ru">Разблокировка выполнена!</message>
-	<message xml:lang="hu">A felszabadítás sikeres!</message>
+	<message xml:lang="hu">Zárolás sikeresen feloldva!</message>
 	<message xml:lang="ka">დაბლოკვა
 მოხსნილია!</message>
 	<message xml:lang="cn">解锁成功!</message>
@@ -5736,7 +5706,7 @@ sucesso!</message>
 	<message xml:lang="es">¡Desbloqueo fallido!</message>
 	<message xml:lang="tr">Kilit açma başarısız olmuştur!</message>
 	<message xml:lang="ru">Неудачная попытка разблокировки!</message>
-	<message xml:lang="hu">A felszabadítás sikertelen!</message>
+	<message xml:lang="hu">A zárolás feloldása sikertelen!</message>
 	<message xml:lang="ka">დაბლოკვის მოხსნა
 ვერ მოხერხდა!</message>
 	<message xml:lang="cn">解锁失败!</message>
@@ -5756,7 +5726,7 @@ sucesso!</message>
 	<message xml:lang="es">Desbloqueando %s...</message>
 	<message xml:lang="tr">%s kilidini aç...</message>
 	<message xml:lang="ru">Выполняется разблокировка %s ...</message>
-	<message xml:lang="hu">%s felszabadítása...</message>
+	<message xml:lang="hu">%s zárolásának feloldása...</message>
 	<message xml:lang="ka">დაბლოკვის მოხსნა -
 %s...</message>
 	<message xml:lang="cn">解锁 %s...</message>
@@ -5776,7 +5746,7 @@ sucesso!</message>
 	<message xml:lang="es">El documento %s está desbloqueado!</message>
 	<message xml:lang="tr">%s belgenin kilidi açıldı!</message>
 	<message xml:lang="ru">Документ %s разблокирован!</message>
-	<message xml:lang="hu">A dokumentum (%s) felszabadítva!</message>
+	<message xml:lang="hu">A %s dokumentum zárolása feloldva!</message>
 	<message xml:lang="ka">დოკუმენტს %s დაბლოკვა
 მოეხსნა!</message>
 	<message xml:lang="cn">文档 %s 已解锁!</message>
@@ -5796,7 +5766,7 @@ sucesso!</message>
 	<message xml:lang="es">¿Desbloquear el documento?</message>
 	<message xml:lang="tr">Belgenin kilidini aç?</message>
 	<message xml:lang="ru">Разблокировать документ?</message>
-	<message xml:lang="hu">Felszabadítsuk a dokumentumot?</message>
+	<message xml:lang="hu">Feloldja a dokumentum zárolását?</message>
 	<message xml:lang="ka">მოიხსნას დოკუმენტის
 დაბლოკვა?</message>
 	<message xml:lang="cn">解锁文档吗?</message>
@@ -5868,8 +5838,7 @@ temporalmente. Inténtelo de nuevo más tarde...</message>
 	<message xml:lang="tr">Belgenin özellikleri şu an kullanamazsınız. Biraz
 sonra yeniden deneyin...</message>
 	<message xml:lang="ru">Свойства документа временно недоступны. Попробуйте позже...</message>
-	<message xml:lang="hu">A dokumentum tulajdonságai jelenleg nem elérhetők.
-Próbálja később...</message>
+	<message xml:lang="hu">A dokumentum tulajdonságai átmenetileg nem elérhetők. Próbálja meg  később...</message>
 	<message xml:lang="ka">დოკუმენტის
 პარამეტრები დროებით
 მიუწვდომელია. სცადეთ
@@ -5919,8 +5888,7 @@ tipo %s</message>
 	<message xml:lang="tr">Malesef, WebDav URL\'leri %s gibi
 desteklemiyor</message>
 	<message xml:lang="ru">Для URL-ов вида %s функция WebDAV не поддерживается</message>
-	<message xml:lang="hu">Az ilyen típusú (%s) URL-ekhez nincs WebDAV
-támogatás</message>
+	<message xml:lang="hu">Az ilyen típusú (%s) URL-ekhez nincs WebDAV támogatás</message>
 	<message xml:lang="ka">%s ტიპის
 მისამართებისთვის WebDAV არაა
 გათვალისწინებული</message>
@@ -5976,8 +5944,7 @@ locale</message>
 local</message>
 	<message xml:lang="tr">Kilidin lokal temelde silinmesi imkansızdır</message>
 	<message xml:lang="ru">Неудачная попытка удаления информации блокировки из локальной базы данных</message>
-	<message xml:lang="hu">A zárolási adatok helyi visszaállítása
-sikertelen</message>
+	<message xml:lang="hu">A zárolási adatok helyi eltávolítása sikertelen</message>
 	<message xml:lang="ka">დაბლოკვის
 ინფორმაციის ლოკალური
 ბაზიდან წაშლა ვერ
@@ -6004,7 +5971,7 @@ lokálneho zdroja</message>
 %s</message>
 	<message xml:lang="tr">Malesef bu operasion %s için yasaktır</message>
 	<message xml:lang="ru">Эта операция для %s не разрешена</message>
-	<message xml:lang="hu">Ez a művelet nem tiltott (%s)</message>
+	<message xml:lang="hu">A művelet nem engedélyezett %s számára</message>
 	<message xml:lang="ka">უკაცრავად, %s-თვის ეს
 ოპერაცია დაუშვებელია</message>
 	<message xml:lang="cn">Sorry, this operation is not allowed for %s</message>
@@ -6031,8 +5998,7 @@ suspendida</message>
 	<message xml:lang="tr">Operasion başarısız olmuştur! Neden: bağımlılık
 hatası</message>
 	<message xml:lang="ru">Неудачная попытка выполнения запроса! Причина: Неудачная попытка установления зависимости</message>
-	<message xml:lang="hu">A kérés sikertelen! Ok: sikertelen
-függőség</message>
+	<message xml:lang="hu">A kérés sikertelen! Ok: sikertelen függőség</message>
 	<message xml:lang="ka">მოთხოვნა არ
 შესრულდა! მიზეზი: არშემდგარი
 ურთიერთდამოკიდებულება</message>
@@ -6074,7 +6040,7 @@ nadväznosť</message>
 	<message xml:lang="es">¿Intentar de nuevo?</message>
 	<message xml:lang="tr">Yeniden dene?</message>
 	<message xml:lang="ru">Попробовать снова?</message>
-	<message xml:lang="hu">Újra próbálja?</message>
+	<message xml:lang="hu">Ismét megpróbálja?</message>
 	<message xml:lang="ka">კვლავ ვცადოთ?</message>
 	<message xml:lang="cn">再试一次?</message>
 	<message xml:lang="tw">再試一次?</message>
@@ -6112,7 +6078,7 @@ nadväznosť</message>
 	<message xml:lang="es">Referencia personal del usuario (URL):</message>
 	<message xml:lang="tr">Kullanıyıcının özel referansı (URL)</message>
 	<message xml:lang="ru">Персональная ссылка пользователя (URL)</message>
-	<message xml:lang="hu">User's personal reference (URL)</message>
+	<message xml:lang="hu">A felhasználó személyes hivatkozása (URL)</message>
 	<message xml:lang="ka">მონაწილის
 პერსონალური დამოწმება (URL)</message>
 	<message xml:lang="cn">用户个人参考 (URL)</message>
@@ -6132,7 +6098,7 @@ nadväznosť</message>
 	<message xml:lang="es">Lista de recursos WebDAV del usuario:</message>
 	<message xml:lang="tr">Kullanıyıcının referans listesi</message>
 	<message xml:lang="ru">Пользовательский список ресурсов WebDAV (URL URL)</message>
-	<message xml:lang="hu">User's WebDAV erőforrás listája</message>
+	<message xml:lang="hu">WebDAV oldalak listája</message>
 	<message xml:lang="ka">მონაწილის WebDAV
 რესურსების სია</message>
 	<message xml:lang="cn">用户 WebDAV 资源列表 </message>
@@ -6248,7 +6214,7 @@ nadväznosť</message>
 	<message xml:lang="es">Alcance del bloqueo</message>
 	<message xml:lang="tr">Kilit tipi</message>
 	<message xml:lang="ru">Показывать блокировку</message>
-	<message xml:lang="hu">Zárolás hatóköre</message>
+	<message xml:lang="hu">Zárolás hatásköre</message>
 	<message xml:lang="ka">დაბლოკვის
 მასშტაბი</message>
 	<message xml:lang="cn">锁定范围</message>
@@ -6268,7 +6234,7 @@ nadväznosť</message>
 	<message xml:lang="es">exclusivo</message>
 	<message xml:lang="tr">Uyuşmaz</message>
 	<message xml:lang="ru">Некоторым пользователям</message>
-	<message xml:lang="hu">kizárólagos</message>
+	<message xml:lang="hu">Kizárólagos</message>
 	<message xml:lang="ka">გამომრიცხველი</message>
 	<message xml:lang="cn">排除</message>
 	<message xml:lang="tw">排除</message>
@@ -6287,7 +6253,7 @@ nadväznosť</message>
 	<message xml:lang="es">compartido</message>
 	<message xml:lang="tr">paylaş</message>
 	<message xml:lang="ru">Всем пользователям</message>
-	<message xml:lang="hu">megosztott</message>
+	<message xml:lang="hu">Megosztott</message>
 	<message xml:lang="ka">საზიარო</message>
 	<message xml:lang="cn">共享</message>
 	<message xml:lang="tw">共享</message>
@@ -6306,7 +6272,7 @@ nadväznosť</message>
 	<message xml:lang="es">Conocimiento:</message>
 	<message xml:lang="tr">Bildiri</message>
 	<message xml:lang="ru">Оповещение</message>
-	<message xml:lang="hu">Tudomás</message>
+	<message xml:lang="hu">Értesítés</message>
 	<message xml:lang="ka">გაცნობიერება</message>
 	<message xml:lang="cn">Awarenees</message>
 	<message xml:lang="tw">Awarenees</message>
@@ -6349,8 +6315,7 @@ editado para definir una nueva posición clave...</message>
 	<message xml:lang="tr">Açılan belgede yeni anahtar durum tanımlamak için
 durum kürsörünü oynatın ...</message>
 	<message xml:lang="ru">Для определения новой ключевой позиции переместите курсор в другое место редактируемого документа...</message>
-	<message xml:lang="hu">Helyezze el az egérmutatót a szerkesztett
-dokumentumban az új kulcs megadásához...</message>
+	<message xml:lang="hu">Mozgassa a kurzort a szerkesztett dokumentumban az új kulcspozíció megadásához...</message>
 	<message xml:lang="ka">გადააადგილეთ
 კურსორი დოკუმენტში ახალი
 საკვანძო პოზიციის
@@ -6381,8 +6346,7 @@ definir la duración de la animación...</message>
 	<message xml:lang="tr">Anahtar durum tanımlaştı. Hareket zamanını
 tanımlamak için zaman kürsörünü oynatın...</message>
 	<message xml:lang="ru">Ключевая позиция определена. Передвигайте бегунок для задания длительности анимации...</message>
-	<message xml:lang="hu">A kulcshelyzet megadva. Mozgassa a csúszkát az
-animáció hosszának megadásához...</message>
+	<message xml:lang="hu">A kulcspozíció definiálva. Mozgassa a csúszkát az animáció hosszának meghatározásához...</message>
 	<message xml:lang="ka">საკვანძო პოზიცია
 განისაზღვრა. გადააადგილეთ
 ცოცია ანიმაციის
@@ -6408,7 +6372,7 @@ l'élément...</message>
 	<message xml:lang="es">Seleccione el color inicial del elemento...</message>
 	<message xml:lang="tr">Elemanın başlangıç rengini seçin</message>
 	<message xml:lang="ru">Выберите начальный цвет элемента...</message>
-	<message xml:lang="hu">Jelölje ki az elem kezdőszínét...</message>
+	<message xml:lang="hu">Jelölje ki az elem  kezdőszínét...</message>
 	<message xml:lang="ka">მიუთითეთ ელემენტის
 საწყისი ფერი...</message>
 	<message xml:lang="cn">Select starting color of element...</message>
@@ -6434,8 +6398,7 @@ definir la duración de la animación...</message>
 	<message xml:lang="tr">Başlangıç rengini seçin. Hareket zamanını
 tanımlamak için zaman kürsörünü oynatın...</message>
 	<message xml:lang="ru">Начальный цвет определён. Передвигайте бегунок для задания длительности анимации...</message>
-	<message xml:lang="hu">A kezdőszín megadva. Mozgassa a csúszkát az
-animáció hosszának megadásához...</message>
+	<message xml:lang="hu">A kezdőszín megadva. Mozgassa a csúszkát az animáció hosszának meghatározásához...</message>
 	<message xml:lang="ka">საწყისი ფერი
 განისაზღვრა. გადააადგილეთ
 ცოცია ანიმაციის
@@ -6460,7 +6423,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Seleccione color final...</message>
 	<message xml:lang="tr">Bitiş rengini seçin...</message>
 	<message xml:lang="ru">Выберите конечный цвет...</message>
-	<message xml:lang="hu">Jelölje ki az elem zárószínét...</message>
+	<message xml:lang="hu">Jelölje ki az elem szerkesztőszínét...</message>
 	<message xml:lang="ka">მიუთითეთ საბოლოო
 ფერი...</message>
 	<message xml:lang="cn">Select ending color...</message>
@@ -6479,7 +6442,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Animación definida.</message>
 	<message xml:lang="tr">Hareket tanımlaştı</message>
 	<message xml:lang="ru">Анимация задана.</message>
-	<message xml:lang="hu">Az animáció megadva.</message>
+	<message xml:lang="hu">Az animáció definiálva.</message>
 	<message xml:lang="ka">ანიმაცია
 განისაზღვრა.</message>
 	<message xml:lang="cn">Animation defined.</message>
@@ -6517,7 +6480,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Elemento sin atributo id</message>
 	<message xml:lang="tr">Tanımsız eleman</message>
 	<message xml:lang="ru">Элемент не имеет ID</message>
-	<message xml:lang="hu">ID nélküli elem</message>
+	<message xml:lang="hu">Azonosító nélküli elem</message>
 	<message xml:lang="ka">ელემენტი ID-ის
 გარეშე</message>
 	<message xml:lang="cn">Element without ID</message>
@@ -6534,7 +6497,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Crear atributos id</message>
 	<message xml:lang="de">ID hinzufügen</message>
 	<message xml:lang="ru">Добавить ID</message>
-	<message xml:lang="hu">ID hozzáadása</message>
+	<message xml:lang="hu">Azonosító megadása</message>
 	<message xml:lang="ka">ID-ის დამატება</message>
 	<message xml:lang="cn">添加 ID</message>
 	<message xml:lang="tw">添加 ID</message>
@@ -6550,7 +6513,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Borrar atributos id</message>
 	<message xml:lang="de">ID löschen</message>
 	<message xml:lang="ru">Удалить ID</message>
-	<message xml:lang="hu">ID eltávolítása</message>
+	<message xml:lang="hu">Azonosító eltávolítása</message>
 	<message xml:lang="ka">ID-ის წაშლა</message>
 	<message xml:lang="cn">删除 ID</message>
 	<message xml:lang="tw">刪除 ID</message>
@@ -6566,7 +6529,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Crear/Borrar atributos id</message>
 	<message xml:lang="de">IDs hinzufügen/löschen</message>
 	<message xml:lang="ru">Добавить/Удалить ID</message>
-	<message xml:lang="hu">ID-k hozzáadása/eltávolítása</message>
+	<message xml:lang="hu">Azonosítók hozzáadása/eltávolítása</message>
 	<message xml:lang="ka">ID-ების
 დამატება/წაშლა</message>
 	<message xml:lang="cn">添加/删除 ID</message>
@@ -6666,7 +6629,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Propiedades de marcador</message>
 	<message xml:lang="de">Eigenschaften der Lesezeichen</message>
 	<message xml:lang="ru">Свойства закладки</message>
-	<message xml:lang="hu">Könyvjelző tulajdonságai</message>
+	<message xml:lang="hu">A könyvjelző tulajdonságai</message>
 	<message xml:lang="ka">სანიშნეების
 პარამეტრები</message>
 	<message xml:lang="cn">书签属性</message>
@@ -6683,7 +6646,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Propiedades de tema</message>
 	<message xml:lang="de">Eigenschaften der Überschriften</message>
 	<message xml:lang="ru">Свойства темы</message>
-	<message xml:lang="hu">Téma tulajdonságai</message>
+	<message xml:lang="hu">A téma tulajdonságai</message>
 	<message xml:lang="ka">თემის
 პარამეტრები</message>
 	<message xml:lang="cn">主题属性</message>
@@ -6700,7 +6663,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Jerarquía de temas:</message>
 	<message xml:lang="de">Themenhierarchie:</message>
 	<message xml:lang="ru">Иерархия темы:</message>
-	<message xml:lang="hu">Téma szerkezete:</message>
+	<message xml:lang="hu">A téma hierarchiája:</message>
 	<message xml:lang="ka">თემის იერარქია:</message>
 	<message xml:lang="cn">Topic hierarchy:</message>
 	<message xml:lang="tw">Topic hierarchy:</message>
@@ -6735,7 +6698,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Enlace al recurso:</message>
 	<message xml:lang="de">Rückrufe:</message>
 	<message xml:lang="ru">Повторные вызовы:</message>
-	<message xml:lang="hu">Recalls:</message>
+	<message xml:lang="hu">Visszahívások:</message>
 	<message xml:lang="ka">ხელმეორე
 გამოძახებები:</message>
 	<message xml:lang="cn">Recalls:</message>
@@ -6770,7 +6733,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Creado:</message>
 	<message xml:lang="de">Erstellt am:</message>
 	<message xml:lang="ru">Создано:</message>
-	<message xml:lang="hu">Kelt:</message>
+	<message xml:lang="hu">Létrehozva:</message>
 	<message xml:lang="ka">თარიღი:</message>
 	<message xml:lang="cn">创建:</message>
 	<message xml:lang="tw">創建:</message>
@@ -6786,7 +6749,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Última modificación:</message>
 	<message xml:lang="de">Letzte Änderung:</message>
 	<message xml:lang="ru">Дата изменения:</message>
-	<message xml:lang="hu">Utolsó módosítás:</message>
+	<message xml:lang="hu">Utoljára módosítva:</message>
 	<message xml:lang="ka">ბოლო განახლება:</message>
 	<message xml:lang="cn">最后更改:</message>
 	<message xml:lang="tw">最后更改:</message>
@@ -6818,7 +6781,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Por favor, seleccione un elemento</message>
 	<message xml:lang="de">Bitte ein Element auswählen</message>
 	<message xml:lang="ru">Выберите элемент</message>
-	<message xml:lang="hu">Adjon meg egy elemet</message>
+	<message xml:lang="hu">Válasszon ki egy elemet</message>
 	<message xml:lang="ka">გთხოვთ შეარჩიოთ
 ელემენტი</message>
 	<message xml:lang="cn">Please select an element</message>
@@ -6835,7 +6798,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="es">Todos las hojas de estilo</message>
 	<message xml:lang="de">Alle CSS</message>
 	<message xml:lang="ru">Все каскадные таблицы стилей CSS</message>
-	<message xml:lang="hu">Minden CSS</message>
+	<message xml:lang="hu">Az összes CSS</message>
 	<message xml:lang="ka">ყველა CSS</message>
 	<message xml:lang="cn">所有 CSS 样式表</message>
 	<message xml:lang="tw">所有 CSS 樣式表</message>
@@ -6855,8 +6818,7 @@ element\n</message>
 &lt;%s&gt;\n</message>
 	<message xml:lang="de">CSS-Regeln, die für &lt;%s&gt; gelten\n</message>
 	<message xml:lang="ru">Правила каскадной таблицы стилей CSS применённые к элементу &lt;%s>\n</message>
-	<message xml:lang="hu">CSS stílus szabályok alkalmazása a(z) &lt;%s&gt;
-elemre\n</message>
+	<message xml:lang="hu">A CSS stílusszabályok alkalmazva a(z) &lt;%s&gt; elemre\n</message>
 	<message xml:lang="ka">CSS სტილის წესები
 გამოყენებულია &lt;%s&gt;
 ელემენტისთვის\n</message>
@@ -6880,8 +6842,7 @@ código fuente. Para editarlo, active el enlace.\n</message>
 	<message xml:lang="de">Farbige Linien sind Verweise, die durch einen Doppel-
 (oder Einfach-)klick aktiviert wurden.\n</message>
 	<message xml:lang="ru">Покрашенные линии являются ссылками и активируются при двойном (или одинарном) щелчке по ним\n</message>
-	<message xml:lang="hu">A kék sorok dupla (vagy egyszeres) kattintással
-aktiválható kapcsok\n</message>
+	<message xml:lang="hu">A kék egyenesek dupla (vagy egyszeres) kattintással aktiválható hivatkozások\n</message>
 	<message xml:lang="ka">ლურჯი ხაზები ბმას
 წარმოადგენს და აქტივირდება
 ორმაგი (ან ერთმაგი)
@@ -6920,8 +6881,7 @@ aktiválható kapcsok\n</message>
 	<message xml:lang="es">No hay regla de estilo para este elemento</message>
 	<message xml:lang="de">Für dieses Element ist keine Formatvorlage vorhanden</message>
 	<message xml:lang="ru">К этому элементу не применяются никакие правила стиля</message>
-	<message xml:lang="hu">Ehhez az elemhez nem tartokzik stílus
-szabály</message>
+	<message xml:lang="hu">Ehhez az elemhez nem tartozik stílusszabály</message>
 	<message xml:lang="ka">ამ ელემენტისთვის
 სტილის წესი არ არსებობს</message>
 	<message xml:lang="cn">No style rule for this element</message>
@@ -6943,8 +6903,7 @@ seleccionelo antes.</message>
 auswählen</message>
 	<message xml:lang="it">Nessuna posizione di inserimenti definita. Selezionala
 prima</message>
-	<message xml:lang="hu">Nincs beillesztési hely megadva. Jelöljn ki
-egyet</message>
+	<message xml:lang="hu">Nincs definiálva beszúrási pozíció. Jelöljön ki egyet</message>
 	<message xml:lang="ka">Fამატების წერტილი არ
 განსაზღვრულა. ჯერ უნდა
 შეირჩეს</message>
@@ -6964,7 +6923,7 @@ first</message>
 	<message xml:lang="de">Dokumentinformation</message>
 	<message xml:lang="it">Informazioni sul documento</message>
 	<message xml:lang="ru">Информация о документе</message>
-	<message xml:lang="hu">Dokumentum adatai</message>
+	<message xml:lang="hu">Dokumentum-adatok</message>
 	<message xml:lang="ka">დოკუმენტის
 ინფორმაცია</message>
 	<message xml:lang="cn">Document information</message>
@@ -6981,7 +6940,7 @@ first</message>
 	<message xml:lang="de">Dokumenttyp</message>
 	<message xml:lang="it">Tipo di documento</message>
 	<message xml:lang="ru">Тип документа</message>
-	<message xml:lang="hu">Dokumentum típus</message>
+	<message xml:lang="hu">Dokumentum-típus</message>
 	<message xml:lang="ka">დოკუმენტის ტიპი</message>
 	<message xml:lang="cn">Document Type</message>
 	<message xml:lang="tw">Document Type</message>
@@ -7013,7 +6972,7 @@ first</message>
 	<message xml:lang="de">Zeichensatz</message>
 	<message xml:lang="it">Charset</message>
 	<message xml:lang="ru">Кодировка</message>
-	<message xml:lang="hu">karakterkészlet</message>
+	<message xml:lang="hu">Kódolás</message>
 	<message xml:lang="ka">კოდირება</message>
 	<message xml:lang="cn">字符集</message>
 	<message xml:lang="tw">字符集</message>
@@ -7029,7 +6988,7 @@ first</message>
 	<message xml:lang="de">Inhaltslänge</message>
 	<message xml:lang="it">Content Length</message>
 	<message xml:lang="ru">Длина содержания</message>
-	<message xml:lang="hu">Tartalom hossza</message>
+	<message xml:lang="hu">A tartalom hossza</message>
 	<message xml:lang="ka">შიგთავსის სიგრძე</message>
 	<message xml:lang="cn">Content Length</message>
 	<message xml:lang="tw">Content Length</message>
@@ -7045,7 +7004,7 @@ first</message>
 	<message xml:lang="de">Inhaltsort</message>
 	<message xml:lang="it">Content Location</message>
 	<message xml:lang="ru">Расположение содержания</message>
-	<message xml:lang="hu">Tartalom helye</message>
+	<message xml:lang="hu">A tartalom helye</message>
 	<message xml:lang="ka">შიგთავსის
 ადგილმდებარეობა</message>
 	<message xml:lang="cn">Content Location</message>
@@ -7115,7 +7074,7 @@ first</message>
 	<message xml:lang="es">Carpeta</message>
 	<message xml:lang="de">Ordner</message>
 	<message xml:lang="it">Directory</message>
-	<message xml:lang="hu">Mappa</message>
+	<message xml:lang="hu">Könyvtár</message>
 	<message xml:lang="ka">დასტა</message>
 	<message xml:lang="ru">Директория</message>
 	<message xml:lang="cn">目录</message>
@@ -7147,7 +7106,7 @@ first</message>
 	<message xml:lang="es">Reemplazar actual</message>
 	<message xml:lang="de">Aktuelle Seite ersetzen</message>
 	<message xml:lang="it">Sostituisci l'attuale</message>
-	<message xml:lang="hu">Jelenlegi cseréje</message>
+	<message xml:lang="hu">A jelenlegi cseréje</message>
 	<message xml:lang="ka">მიმდინარის
 შეცვლა</message>
 	<message xml:lang="ru">Заменить уже открытый документ</message>
@@ -7199,7 +7158,7 @@ first</message>
 	<message xml:lang="es">Formato de fecha ISO</message>
 	<message xml:lang="de">ISO-Datumsformat</message>
 	<message xml:lang="it">Formato ISO per la data</message>
-	<message xml:lang="hu">Dátum ISO formátuma</message>
+	<message xml:lang="hu">A dátum ISO formátuma</message>
 	<message xml:lang="ka">თარიღის ISO
 ფორმატი</message>
 	<message xml:lang="ru">ISO формат даты (гггг-мм-дд)</message>
@@ -7216,7 +7175,7 @@ first</message>
 	<message xml:lang="es">Ubicación de nuevos documentos</message>
 	<message xml:lang="de">Dateipfad für neue Dokumente</message>
 	<message xml:lang="it">Locazione per i nuovi documenti</message>
-	<message xml:lang="hu">Dokumentumok új helye</message>
+	<message xml:lang="hu">Új dokumentumok helye</message>
 	<message xml:lang="ka">ახალი დოკუმენტის
 ადგილმდებარეობა</message>
 	<message xml:lang="ru">Расположение новых документов</message>
@@ -7251,7 +7210,7 @@ first</message>
 	<message xml:lang="de">Warnen, wenn mehrere Registerkarten geschlossen werden
 sollen</message>
 	<message xml:lang="it">Avviso quando si chiudono pi tab</message>
-	<message xml:lang="hu">Több lap bezárásakor figyelmeztetés</message>
+	<message xml:lang="hu">Figyelmeztetés több lap bezárása esetén</message>
 	<message xml:lang="ka">გაფრთხილება
 რამდენიმე დაფის
 დახურვისას</message>
@@ -7269,8 +7228,7 @@ sollen</message>
 	<message xml:lang="es">Número máximo de URLs en el historial</message>
 	<message xml:lang="de">Maximale Anzahl an URLs im Verlauf</message>
 	<message xml:lang="it">Numero massimo di URL storicizzati</message>
-	<message xml:lang="hu">URL-ek legnagyobb száma az
-előzménylistában</message>
+	<message xml:lang="hu">Az URL-ek maximális száma az előzménylistában</message>
 	<message xml:lang="ka">ისტორიაში
 მისამართების მაქსიმალური
 ოდენობა</message>
@@ -7305,7 +7263,7 @@ előzménylistában</message>
 	<message xml:lang="it">Mostra tutti gli shortcut</message>
 	<message xml:lang="es">Mostrar todos los atajos</message>
 	<message xml:lang="it">Locazione per aprire documenti</message>
-	<message xml:lang="hu">Minden gyorsbillentyű mutatása</message>
+	<message xml:lang="hu">Az összes gyorsbillentyű megjelenítése</message>
 	<message xml:lang="de">Alle Tastaturkürzel anzeigen</message>
 	<message xml:lang="ka">თარგი</message>
 	<message xml:lang="ru">Показывать все ярлыки</message>
@@ -7356,7 +7314,7 @@ hodnota)</message>
 	<message xml:lang="fr">Enregistrer le document sous...</message>
 	<message xml:lang="it">Salva il documento come...</message>
 	<message xml:lang="es">Guardar como...</message>
-	<message xml:lang="hu">Dokumentum mentése másként...</message>
+	<message xml:lang="hu">A dokumentum mentése másként...</message>
 	<message xml:lang="de">Dokument speichern unter...</message>
 	<message xml:lang="ka">ამ დოკუმენტის
 შენახვა როგორც...</message>
@@ -7456,8 +7414,7 @@ type</message>
 	<message xml:lang="es">La selección no debe cruzar un elemento de este
 tipo</message>
 	<message xml:lang="de">Die Auswahl sollte kein Element dieses Typs kreuzen</message>
-	<message xml:lang="hu">A kijelölés nem érinthet ilyen típusú
-elemet</message>
+	<message xml:lang="hu">A kijelölés nem keresztezhet ilyen típusú elemet</message>
 	<message xml:lang="it">La selezione non può attraversare un elemento di
 questo tipo</message>
 	<message xml:lang="ru">Выбранное, не должно пересекаться с элементом этого типа</message>
@@ -7474,7 +7431,7 @@ typu</message>
 	<message xml:lang="fr">Pas d'en-tête trouvé</message>
 	<message xml:lang="es">No hay encabezado</message>
 	<message xml:lang="de">Keine Überschrift gefunden</message>
-	<message xml:lang="hu">No heading found</message>
+	<message xml:lang="hu">Nem található címsor</message>
 	<message xml:lang="it">Nessun titolo</message>
 	<message xml:lang="ru">Не найдено никаких заголовков</message>
 	<message xml:lang="cn">No heading found</message>
@@ -7490,7 +7447,7 @@ typu</message>
 	<message xml:lang="es">Guardar de todas formas</message>
 	<message xml:lang="de">Dennoch speichern</message>
 	<message xml:lang="it">Salva comunque</message>
-	<message xml:lang="hu">Mentés így is</message>
+	<message xml:lang="hu">Mentés mindenképpen</message>
 	<message xml:lang="cn">强制保存</message>
 	<message xml:lang="tw">強制保存</message>
 	<message xml:lang="sk">Napriek tomu uložiť</message>
@@ -7505,7 +7462,7 @@ typu</message>
 	<message xml:lang="es">Servidor no encontrado</message>
 	<message xml:lang="de">Der Host konnte nicht gefunden werden</message>
 	<message xml:lang="it">Non posso trovare l'host</message>
-	<message xml:lang="hu">Az állomás nem található</message>
+	<message xml:lang="hu">A hoszt nem található</message>
 	<message xml:lang="cn">无法定位主机</message>
 	<message xml:lang="tw">無法定位主機</message>
 	<message xml:lang="sk">Neviem lokalizovať hostiteľa</message>
@@ -7536,8 +7493,7 @@ typu</message>
 	<message xml:lang="de">Es besteht ein Konflikt mit dem aktuellen Status der
 Ressource</message>
 	<message xml:lang="it">Conflitto con lo stato attuale della risorsa</message>
-	<message xml:lang="hu">Ellentmondás az erőforrás jelenlegi
-állapotával</message>
+	<message xml:lang="hu">Ellentmondás az erőforrás jelenlegi állapotával</message>
 	<message xml:lang="cn">与当前资源的状态冲突</message>
 	<message xml:lang="tw">與當前資源的狀態沖突</message>
 	<message xml:lang="sk">Konflikt so súčasným stavom zdroja</message>
@@ -7635,8 +7591,7 @@ Ressource</message>
 	<message xml:lang="fr">Nombre maximal d'occurrences atteint</message>
 	<message xml:lang="es">Número máximo de ocurrencias alcanzado</message>
 	<message xml:lang="de">Maximale Anzahl des Auftretens erreicht</message>
-	<message xml:lang="hu">Elértük az előfordulások legnagyobb
-számát</message>
+	<message xml:lang="hu">Az előfordulások legnagyobb száma elérve</message>
 	<message xml:lang="sk">Maximálny počet dosiahnutých výskytov</message>
 	<message xml:lang="it">Raggiunto il massimo numero di occorrenze</message>
 	<message xml:lang="ru">Максимально разрешённое число случаев</message>
@@ -7649,8 +7604,7 @@ számát</message>
 	<message xml:lang="fr">Nombre minimum d'occurrences atteint</message>
 	<message xml:lang="es">Número mínimo de ocurrencias alcanzado</message>
 	<message xml:lang="de">Minimal Anzahl des Auftretens wurde erreicht</message>
-	<message xml:lang="hu">Elértük az előfordulások legkisebb
-számát</message>
+	<message xml:lang="hu">Az előfordulások legkisebb száma elérve</message>
 	<message xml:lang="sk">Manimálny počet dosiahnutých výskytov</message>
 	<message xml:lang="it">Raggiunto il minimo numero di occorrenze</message>
 	<message xml:lang="ru">Минимально разрешённое число случаев</message>
@@ -7663,7 +7617,7 @@ számát</message>
 	<message xml:lang="fr">Vérifier les IDs dupliqués</message>
 	<message xml:lang="es">Verificar los IDs duplicados</message>
 	<message xml:lang="de">Doppelter IDs überprüfen</message>
-	<message xml:lang="hu">Többszörös azonosító ellenőrzése</message>
+	<message xml:lang="hu">Ellenőrizze a duplikált azonosítókat</message>
 	<message xml:lang="sk">Kontrolovať duplicitné ID</message>
 	<message xml:lang="it">Controllo ID duplicati</message>
 	<message xml:lang="ru">Проверять на дублирование ID</message>
@@ -7677,8 +7631,7 @@ számát</message>
 MathML</message>
 	<message xml:lang="es">Agregar la hoja xsl para los elementos MathML</message>
 	<message xml:lang="de">xsl-Stylesheet für MathML Elemente hinzufügen</message>
-	<message xml:lang="hu">Adja hozzá az xsl stíluslapot a MathML
-elemekhez</message>
+	<message xml:lang="hu">Az XSL stíluslap megadása a MathML elemekhez</message>
 	<message xml:lang="sk">Pridať XSL štýly pre prvky jazyka MathML</message>
 	<message xml:lang="it">Aggiungi il foglio di stile xsl per gli elementi
 MathML</message>
@@ -7707,8 +7660,7 @@ affiché</message>
 	<message xml:lang="es">Seleccionar la manera cuya el operador debe ser
 visualizado</message>
 	<message xml:lang="de">Art auswählen, wie der Operator angezeigt werden muss</message>
-	<message xml:lang="hu">Válassza ki a műveleti jel megjelenítési
-módját</message>
+	<message xml:lang="hu">Válassza ki a műveleti jel megjelenítési módját</message>
 	<message xml:lang="sk">Vyberte spôsob akým budú operátory
 zobrazené</message>
 	<message xml:lang="it">Scegli il modo in cui l'operatore viene
@@ -7723,7 +7675,7 @@ visualizzato</message>
 	<message xml:lang="fr">Insérer une intégrale</message>
 	<message xml:lang="es">Insertar una integral</message>
 	<message xml:lang="de">Integral einfügen</message>
-	<message xml:lang="hu">Integrál beillesztése</message>
+	<message xml:lang="hu">Integrál beszúrása</message>
 	<message xml:lang="sk">Vložiť integrál</message>
 	<message xml:lang="it">Inserisci un integrale</message>
 	<message xml:lang="ru">Вставить интеграл</message>
@@ -7764,8 +7716,7 @@ fermant</message>
 	<message xml:lang="es">Seleccionar los símbolos arbriendos, separadores y
 cerrandos</message>
 	<message xml:lang="de">Öffnen-, Trennen- und Schließen-Symbole auswählen</message>
-	<message xml:lang="hu">Válassza ki a nyitó, elválasztó és záró
-jeleket</message>
+	<message xml:lang="hu">Válassza ki a nyitó, elválasztó és lezáró jeleket</message>
 	<message xml:lang="sk">Vyberte otvoriť, oddelovače a ukončenie
 symbolov</message>
 	<message xml:lang="it">Scegli simboli di apertura, separazione e
@@ -7793,7 +7744,7 @@ chiusura</message>
 	<message xml:lang="fr">Nombre de coordonnées</message>
 	<message xml:lang="es">Número de coordenadas</message>
 	<message xml:lang="de">Anzahl der Koordinaten</message>
-	<message xml:lang="hu">Coordináták száma</message>
+	<message xml:lang="hu">Koordináták száma</message>
 	<message xml:lang="sk">Počet koordinátov</message>
 	<message xml:lang="it">Numero di coordinate</message>
 	<message xml:lang="ru">Число координат</message>
@@ -7845,7 +7796,7 @@ chiusura</message>
 	<message xml:lang="fr">Degré</message>
 	<message xml:lang="es">Grado</message>
 	<message xml:lang="de">Grad</message>
-	<message xml:lang="hu">Rend</message>
+	<message xml:lang="hu">Fok</message>
 	<message xml:lang="sk">Stupeň voľnosti</message>
 	<message xml:lang="it">Grado della variabile</message>
 	<message xml:lang="ru">Степень</message>
@@ -7858,7 +7809,7 @@ chiusura</message>
 	<message xml:lang="fr">Degré de la variable numéro %d</message>
 	<message xml:lang="es">Grado de la variable %d</message>
 	<message xml:lang="de">Grad der Variable mit Nummer %d</message>
-	<message xml:lang="hu">A változó rendje (%d)</message>
+	<message xml:lang="hu">A %d változó foka</message>
 	<message xml:lang="sk">Počet stupňov voľnosti premenných %d</message>
 	<message xml:lang="it">Grado della variable numero %d</message>
 	<message xml:lang="ru">Степень числа переменной %d</message>
@@ -7887,7 +7838,7 @@ chiusura</message>
 	<message xml:lang="it">Copia le risorse (stili, script, ...)</message>
 	<message xml:lang="ru">Копировать ресурсы (стили и сценарии)</message>
 	<message xml:lang="de">Bezugsquelle kopieren (Stile, Skripte, ...)</message>
-	<message xml:lang="hu">Erőforrások másolása (stílusok, szkriptek, ...)</message>
+	<message xml:lang="hu">Erőforrások másolása (stílusok, szkriptek ...)</message>
 	<message xml:lang="ja">リソース（スタイルとスクリプト）をコピー</message>
 	<message xml:lang="nl">Bronnen kopiëren (opmaakmodellen en scripts)</message>
 	<message xml:lang="uk">Копиювати ресурси (стабо й сценарії)</message>
@@ -7900,7 +7851,7 @@ chiusura</message>
 	<message xml:lang="it">Dove salvare le risorse</message>
 	<message xml:lang="ru">Место для сохранения ресурсов</message>
 	<message xml:lang="de">Dateipfad der Bezugsquellen</message>
-	<message xml:lang="hu">Hova mentsük az erőforrásokat</message>
+	<message xml:lang="hu">Hova mentendők az  erőforrások</message>
 	<message xml:lang="ja">リソースを保存する場所</message>
 	<message xml:lang="nl">Locatie voor opslaan bronnen</message>
 	<message xml:lang="uk">Місце для збереження ресурсів</message>
@@ -7913,7 +7864,7 @@ chiusura</message>
 	<message xml:lang="it">Dove salvare le immagini</message>
 	<message xml:lang="ru">Место для сохранения изображений</message>
 	<message xml:lang="de">Speicherort für Bilder</message>
-	<message xml:lang="hu">Hova mentsük a képeket</message>
+	<message xml:lang="hu">Hova mentendők a képek</message>
 	<message xml:lang="ja">画像を保存する場所</message>
 	<message xml:lang="nl">Locatie voor opslaan afbeeldingen</message>
 	<message xml:lang="uk">Місце для збереження зображень</message>
@@ -7952,7 +7903,7 @@ chiusura</message>
 	<message xml:lang="it">Email</message>
 	<message xml:lang="ru">Почта</message>
 	<message xml:lang="de">E-Mail</message>
-	<message xml:lang="hu">Elektronikus levél</message>
+	<message xml:lang="hu">E-mail</message>
 	<message xml:lang="ja">メール</message>
 	<message xml:lang="nl">E-mail</message>
 	<message xml:lang="uk">Пошта</message>
@@ -7965,8 +7916,7 @@ chiusura</message>
 	<message xml:lang="it">Parametri comuni per inviare messaggi:</message>
 	<message xml:lang="ru">Настройки почты:</message>
 	<message xml:lang="de">Grundeinstellungen für E-Mail:</message>
-	<message xml:lang="hu">Elektronikus levélküldés általános
-paraméterei:</message>
+	<message xml:lang="hu">E-mail küldésének általános paraméterei:</message>
 	<message xml:lang="ja">送信メールの共通パラメータ:</message>
 	<message xml:lang="nl">Gemeenschappelijke parameters voor het verzenden van e-mail:</message>
 	<message xml:lang="uk">Настройки пошти:</message>
@@ -7992,7 +7942,7 @@ paraméterei:</message>
 	<message xml:lang="it">Porta del server:</message>
 	<message xml:lang="ru">Порт сервера:</message>
 	<message xml:lang="de">Anschluss:</message>
-	<message xml:lang="hu">Kiszolgáló kapu:</message>
+	<message xml:lang="hu">Kiszolgáló portja:</message>
 	<message xml:lang="ja">サーバー　ポート:</message>
 	<message xml:lang="nl">Serverpoort:</message>
 	<message xml:lang="uk">Порт сервера:</message>
@@ -8005,7 +7955,7 @@ paraméterei:</message>
 	<message xml:lang="it">(25 per default)</message>
 	<message xml:lang="ru">(по умолчанию 25)</message>
 	<message xml:lang="de">(25 Voreinstellung)</message>
-	<message xml:lang="hu">(alapértelmezett: 25 )</message>
+	<message xml:lang="hu">(alapértelmezés: 25)</message>
 	<message xml:lang="ja">(デフォルトは25)</message>
 	<message xml:lang="nl">(standaard 25)</message>
 	<message xml:lang="uk">(за замовчуванням 25)</message>
@@ -8044,7 +7994,7 @@ paraméterei:</message>
 	<message xml:lang="it">Invia per email</message>
 	<message xml:lang="ru">Отправить по почте</message>
 	<message xml:lang="de">Per E-Mail versenden</message>
-	<message xml:lang="hu">Küldés elektronikus levélben</message>
+	<message xml:lang="hu">Küldés e-mailben</message>
 	<message xml:lang="ja">メールで送信</message>
 	<message xml:lang="nl">Per e-mail verzenden</message>
 	<message xml:lang="uk">Відправити поштою</message>
@@ -8070,7 +8020,7 @@ paraméterei:</message>
 	<message xml:lang="it">Invia come:</message>
 	<message xml:lang="ru">Отправить как:</message>
 	<message xml:lang="de">Senden als:</message>
-	<message xml:lang="hu">Küldi:</message>
+	<message xml:lang="hu">Küldés mint:</message>
 	<message xml:lang="ja">送信元:</message>
 	<message xml:lang="nl">Verzenden als:</message>
 	<message xml:lang="uk">Відправити як:</message>
@@ -8105,7 +8055,7 @@ paraméterei:</message>
 	<message xml:lang="en">Zip archive</message>
 	<message xml:lang="fr">Archive zip</message>
 	<message xml:lang="de">Zip Archiv</message>
-	<message xml:lang="hu">Zip-Archiv</message>
+	<message xml:lang="hu">ZIP-archívum</message>
 	<message xml:lang="es">Archivo zip</message>
 	<message xml:lang="it">Archivio Zip</message>
 	<message xml:lang="ja">ZIP, アーカイブ</message>
@@ -8119,7 +8069,7 @@ paraméterei:</message>
 	<message xml:lang="it">Non inviare</message>
 	<message xml:lang="ru">Не отправлять</message>
 	<message xml:lang="de">Nicht senden</message>
-	<message xml:lang="hu">Ne küldje</message>
+	<message xml:lang="hu">Ne küldje el</message>
 	<message xml:lang="ja">送信しない</message>
 	<message xml:lang="nl">Niet verzenden</message>
 	<message xml:lang="uk">Не відправляти</message>
@@ -8150,8 +8100,7 @@ nastaveniach.</message>
 nelle Preferenze</message>
 	<message xml:lang="ru">Адрес сервера и его порт должны быть указаны в настройках</message>
 	<message xml:lang="de">Die Serveradresse und der -anschluss müssen angegeben werden</message>
-	<message xml:lang="hu">A kiszolgáló címét és kapuját a
-Beállításoknál kell megadni</message>
+	<message xml:lang="hu">A kiszolgáló címét és portját meg kell adni a Beállításokban</message>
 	<message xml:lang="ja">[設定]でサーバとポートの設定をしてください</message>
 	<message xml:lang="nl">Het serveradres en de serverpoort moeten eerst in het menu Voorkeuren worden ingesteld.</message>
 	<message xml:lang="uk">Адреса сервера і його порт повинні биту вказані у настройках</message>
@@ -8177,7 +8126,7 @@ Beállításoknál kell megadni</message>
 	<message xml:lang="it">Messaggio alternativo di testo:</message>
 	<message xml:lang="ru">Альтернативное текстовое сообщение:</message>
 	<message xml:lang="de">Alternative textbasierte Nachricht:</message>
-	<message xml:lang="hu">Másik szövegüzenet:</message>
+	<message xml:lang="hu">Alternatív szöveges üzenet:</message>
 	<message xml:lang="ja">代替テキストメッセージ</message>
 	<message xml:lang="nl">Alternatief tekstbericht:</message>
 	<message xml:lang="uk">Альтернативне текстове повідомлення:</message>
@@ -8191,8 +8140,7 @@ Beállításoknál kell megadni</message>
 	<message xml:lang="ru">Сервер недоступен или не отвечает</message>
 	<message xml:lang="de">Der Server ist nicht erreichbar oder antwortet
 nicht</message>
-	<message xml:lang="hu">A kiszolgáló elérhetetlen vagy nem
-válaszol</message>
+	<message xml:lang="hu">A kiszolgáló nem elérhető vagy nem válaszol</message>
 	<message xml:lang="ja">サーバが接続されていないか、応答がありません</message>
 	<message xml:lang="nl">De server kan niet worden bereikt of reageert niet</message>
 	<message xml:lang="uk">Сервер недоступний або не відповідає</message>
@@ -8205,7 +8153,7 @@ válaszol</message>
 	<message xml:lang="it">Il server ha rifiutato il messaggio</message>
 	<message xml:lang="ru">Сервер отказал вам в соединении</message>
 	<message xml:lang="de">Der Server hat Sie nicht akzeptiert</message>
-	<message xml:lang="hu">A kiszolgáló elutasítja a kérést</message>
+	<message xml:lang="hu">A kiszolgáló elutasítja a kérését</message>
 	<message xml:lang="ja">サーバにアクセスを拒否されました</message>
 	<message xml:lang="nl">De server heeft het bericht afgewezen</message>
 	<message xml:lang="uk">Сервер відказав вам у з'єднанні</message>
@@ -8258,7 +8206,7 @@ malformattato</message>
 	<message xml:lang="it">Messaggio non inviato</message>
 	<message xml:lang="ru">Почта не отправлена</message>
 	<message xml:lang="de">E-Mail wurde nicht gesendet</message>
-	<message xml:lang="hu">Üzenet nincs elküldve</message>
+	<message xml:lang="hu">Az üzenet nincs elküldve</message>
 	<message xml:lang="ja">メールは送信されませんでした</message>
 	<message xml:lang="nl">Het bericht is niet verzonden</message>
 	<message xml:lang="uk">Пошту не відправлено</message>
@@ -8311,7 +8259,7 @@ heslo</message>
 	<message xml:lang="it">Ricorda le password per i siti</message>
 	<message xml:lang="ru">Запоминать пароли для сайтов</message>
 	<message xml:lang="de">Kennwort für Sites speichern</message>
-	<message xml:lang="hu">Jegyezze meg a weblapok jelszavait</message>
+	<message xml:lang="hu">Weblapok jelszavainak tárolása</message>
 	<message xml:lang="ja">サイトのパスワードを忘れないでください</message>
 	<message xml:lang="nl">Wachtwoorden voor websites bewaren</message>
 	<message xml:lang="uk">Запам'ятати паролі для сайтів</message>
@@ -8355,6 +8303,7 @@ documentos HTML+RDFa</message>
 	<message xml:lang="nl">XML-namespaces gemaakt voor nieuwe XHTML+RDFa documenten</message>
 	<message xml:lang="ja">新しいXHTML+RDFaドキュメントに対するXMLネームスペースを生成する</message>
 	<message xml:lang="ru">Пространства имен XML сгенерированы для новых XHTML+RDFa документов</message>
+	<message xml:lang="hu">XML névterek generálása új XHTML+RDFa dokumentumokhoz</message>
 	<message xml:lang="uk">Простори імен XML сгенеровано для нових XHTML+RDFa документів</message>
 </label>
 <label define="AM_RDFa_NEW_LABEL">
@@ -8371,6 +8320,7 @@ nuovo (syntax prefix=&quot;uri&quot;)</message>
 	<message xml:lang="nl">Selecteer een namespace in de volgende keuzelijst of voeg een nieuwe toe (syntaxis prefix="uri"):</message>
 	<message xml:lang="ja">下のリストでネームスペースを選択するか、あるいは新しいネームスペース（構文 prefix="uri"）を加える</message>
 	<message xml:lang="ru">Выберите просторантсво имен в списке ниже или добавьте новое (синтаксический префикс="uri")</message>
+	<message xml:lang="hu">Válasszon névteret a listából vagy adjon meg egy újat (szintaxis: prefix=&quot;URI&quot;)</message>
 	<message xml:lang="uk">Виберіть простір імен у списку нижче або додайте новий (синтаксичний префікс="uri")</message>
 </label>
 <label define="AM_JAVASCRIPT_CAN_NOT_BUILD">
@@ -8381,8 +8331,7 @@ objetos JavaScript/DOM</message>
 	<message xml:lang="fr">Une erreur s'est produite pendant la construction des
 objets javascript/DOM</message>
 	<message xml:lang="de">Beim Erstellen des Javascript/DOM-Objekts ist ein Fehler aufgetreten</message>
-	<message xml:lang="hu">Hiba a javascript/DOM objektum felépítése
-közben</message>
+	<message xml:lang="hu">Hiba a Javascript/DOM objektum felépítése során</message>
 	<message xml:lang="it">Si è verificato un errore mentre si caricavano oggetti
 di javascript/DOM</message>
 	<message xml:lang="ja">javascript/DOM オブジェクトのビルド中にエラーが発生しました</message>
@@ -8399,8 +8348,7 @@ abortará lo antes posible.</message>
 interrompu dès que possible. Veuillez ressayer ultérieurement.</message>
 	<message xml:lang="de">Ein Script wird immer noch ausgeführt, wird aber sobald wie
 möglich abgebrochen. Bitte versuchen Sie es später erneut</message>
-	<message xml:lang="hu">A szkript még fut, de amint lehet, megszakítjuk.
-Próbálja később.</message>
+	<message xml:lang="hu">A szkript még fut, de amint lehet, megszakításra kerül. Próbálja meg később.</message>
 	<message xml:lang="it">E' in esecuzione uno script che si cercherà di fermare
 prima possibile. Per favore prova più tardi.</message>
 	<message xml:lang="ja">スクリプトはまだ動いています。しかし、可能な限り早く停止させます。後で試してください。</message>
@@ -8415,8 +8363,7 @@ vista</message>
 	<message xml:lang="fr">Javascript/DOM ne peut être activé dans cette
 vue.</message>
 	<message xml:lang="de">Javascript/DOM kann in dieser Ansicht nicht aktiviert werden</message>
-	<message xml:lang="hu">A javascript/DOM nem engedélyezhető ebben a
-nézetben.</message>
+	<message xml:lang="hu">A Javascript/DOM ebben a nézetben nem engedélyezhető.</message>
 	<message xml:lang="it">Javascript/DOM non è disponibile in questa
 vista.</message>
 	<message xml:lang="ja">Javascript/DOM はこのビューで利用できません</message>
@@ -8429,7 +8376,7 @@ vista.</message>
 	<message xml:lang="es">Escriba un comando JavaScript:</message>
 	<message xml:lang="fr">Rentrez une commande javascript :</message>
 	<message xml:lang="de">Javascript-Befehl eingeben:</message>
-	<message xml:lang="hu">Adjon meg egy javascript parancsot:</message>
+	<message xml:lang="hu">Adjon meg egy Javascript parancsot:</message>
 	<message xml:lang="it">Inserisci un comando javascript:</message>
 	<message xml:lang="ja">javascript のコマンドを入力してください:</message>
 	<message xml:lang="nl">Geef een JavaScript-opdracht op:</message>
@@ -8441,8 +8388,7 @@ vista.</message>
 	<message xml:lang="es">El comando devolvió el valor: %s</message>
 	<message xml:lang="fr">La commande a retourné la valeur: %s</message>
 	<message xml:lang="de">Der Befehl gab den Wert zurück: %s</message>
-	<message xml:lang="hu">A parancs a következő értéket adta vissza:
-%s</message>
+	<message xml:lang="hu">A parancs a következő értéket adta vissza: %s</message>
 	<message xml:lang="it">Il comando riporta il valore: %s</message>
 	<message xml:lang="ja">コマンドはこの値を返しました: %s</message>
 	<message xml:lang="nl">De opdracht retourneerde de waarde: %s</message>
@@ -8470,8 +8416,7 @@ vista.</message>
 %s\nLine: %d\n\n%s</message>
 	<message xml:lang="de">SpiderMonkey gab folgenden Fehler zurück:\n\nDatei:
 %s\nZeile: %d\n\n%s</message>
-	<message xml:lang="hu">A SpiderMonkey a következő hibát adta
-vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
+	<message xml:lang="hu">A SpiderMonkey a következő hibát adta vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="it">SpiderMonkey riporta il seguente errore:\n\nFile:
 %s\nLine: %d\n\n%s</message>
 	<message xml:lang="ja">SpiderMonkey は次のエラーを返しました:\n\nファイル: %s\n行: %d\n\n%s</message>
@@ -8503,7 +8448,7 @@ vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="es">Personalizable</message>
 	<message xml:lang="fr">Paramétrable</message>
 	<message xml:lang="de">Anpassbar</message>
-	<message xml:lang="hu">Egyedi</message>
+	<message xml:lang="hu">Testreszabható</message>
 	<message xml:lang="it">Personalizzabile</message>
 	<message xml:lang="ja">カスタマイズ可能</message>
 	<message xml:lang="nl">Aanpasbaar</message>
@@ -8518,7 +8463,7 @@ vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="de">Erstellen</message>
 	<message xml:lang="pt">Create</message>
 	<message xml:lang="fi">Luo</message>
-	<message xml:lang="hu">Létrehozása</message>
+	<message xml:lang="hu">Létrehoz</message>
 	<message xml:lang="ja">作成</message>
 	<message xml:lang="nl">Maken</message>
 	<message xml:lang="ru">Создать</message>
@@ -8529,7 +8474,7 @@ vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="fr">Créer le lien en cliquant</message>
 	<message xml:lang="es">Crear el enlace haciendo clic en el destino</message>
 	<message xml:lang="de">Verweis durch anklicken erstellen</message>
-	<message xml:lang="hu">Kapocs létrehozása kattintással</message>
+	<message xml:lang="hu">Hivatkozás létrehozása kattintással</message>
 	<message xml:lang="it">Creare il collegamento con un click</message>
 	<message xml:lang="ja">クリックでリンクを作成</message>
 	<message xml:lang="nl">Koppeling maken door het doel aan te klikken</message>
@@ -8546,7 +8491,7 @@ vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="pt">Apagar âncora</message>
 	<message xml:lang="fi">Poista linkki</message>
 	<message xml:lang="ru">Удалить ссылку или цель</message>
-	<message xml:lang="hu">Horgony törlése</message>
+	<message xml:lang="hu">Hivatkozás törlése</message>
 	<message xml:lang="ka">ღუზის წაშლა</message>
 	<message xml:lang="cn">删除 anchor</message>
 	<message xml:lang="tw">刪除 anchor</message>
@@ -8620,7 +8565,7 @@ vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="fr">Position</message>
 	<message xml:lang="es">Posición</message>
 	<message xml:lang="de">Position</message>
-	<message xml:lang="hu">Helyzet</message>
+	<message xml:lang="hu">Pozíció</message>
 	<message xml:lang="it">Posizione</message>
 	<message xml:lang="ja">位置</message>
 	<message xml:lang="nl">Plaatsing:</message>
@@ -8645,7 +8590,7 @@ vissza:\n\nFájl: %s\nSor: %d\n\n%s</message>
 	<message xml:lang="es">Lista de hojas de estilo</message>
 	<message xml:lang="it">Elenco dei fogli di stile</message>
 	<message xml:lang="de">Liste der Stylesheets</message>
-	<message xml:lang="hu">Stíluslapok listája</message>
+	<message xml:lang="hu">Stíluslapok</message>
 	<message xml:lang="ja">スタイルシートのリスト</message>
 	<message xml:lang="nl">Opmaakmodellen</message>
 	<message xml:lang="ru">Список таблиц стилей</message>
@@ -8722,7 +8667,7 @@ sélectionnées</message>
 	<message xml:lang="fi">Amaya profiili:</message>
 	<message xml:lang="tr">Amaya profili:</message>
 	<message xml:lang="ru">Совет Amaya:</message>
-	<message xml:lang="hu">Amaya profile:</message>
+	<message xml:lang="hu">Amaya profil:</message>
 	<message xml:lang="cn">Amaya profile:</message>
 	<message xml:lang="tw">Amaya profile:</message>
 	<message xml:lang="sk">Profil Amaya:</message>
@@ -8737,7 +8682,7 @@ démarrage</message>
 	<message xml:lang="es">Mostrar &quot;Sugerencia del día&quot; al iniciar el
 programa</message>
 	<message xml:lang="de">&quot;Tipp des Tages&quot; bei Programmstart anzeigen</message>
-	<message xml:lang="hu">A nap tippje&quot; induláskor</message>
+	<message xml:lang="hu">&quot;A nap tippje&quot; induláskor</message>
 	<message xml:lang="ja">"今日のTips" を起動時に表示する</message>
 	<message xml:lang="it">Visualizza &quot;Il suggerimento del
 giorno&quot;</message>
@@ -8768,6 +8713,7 @@ utilisé:</message>
 usato:</message>
 	<message xml:lang="nl">De sjabloon bevat een of meerdere fouten en kan niet worden gebruikt.</message>
 	<message xml:lang="ru">Шаблон содержит ошибку(и), его нельзя использовать:</message>
+	<message xml:lang="hu">A sablon hibás, ezért nem kerül használatra:</message>
 	<message xml:lang="uk">Шаблон має помилку(и), його не можна використати:</message>
 </label>
 <label define="AM_CLOSE">
@@ -8779,6 +8725,7 @@ usato:</message>
 	<message xml:lang="it">Chiudi</message>
 	<message xml:lang="nl">Sluiten</message>
 	<message xml:lang="ru">Закрыть</message>
+	<message xml:lang="hu">Bezár</message>
 	<message xml:lang="uk">Закрити</message>
 </label>
 <label define="AM_TEMPLATE_ERR_MULTICOMP">
@@ -8792,6 +8739,7 @@ definiciones</message>
 multiple.</message>
 	<message xml:lang="nl">Component '%s' heeft een meervoudige definitie.</message>
 	<message xml:lang="ru">Компонент '%s' имеет множественное значение.</message>
+	<message xml:lang="hu">A '%s' komponens többször van definiálva.</message>
 	<message xml:lang="uk">Компонент '%s' має множинне значення.</message>
 </label>
 <label define="AM_TEMPLATE_ERR_BADLIB">
@@ -8804,6 +8752,7 @@ multiple.</message>
 caricata.</message>
 	<message xml:lang="nl">Bibliotheek '%s' kan niet worden geladen.</message>
 	<message xml:lang="ru">Библиотека '%s' не может быть загружена.</message>
+	<message xml:lang="hu">A '%s' könyvtár nem tölthető be.</message>
 	<message xml:lang="uk">Бібліотеку '%s' не може бути завантажено.</message>
 </label>
 <label define="AM_TEMPLATE_ERR_INSTANCE">
@@ -8820,6 +8769,7 @@ schema.</message>
 	<message xml:lang="ja">インスタンスドキュメントをテンプレートに変換することができません。</message>
 	<message xml:lang="nl">Een instantie van een sjabloon kan niet als sjabloon worden gebruikt.</message>
 	<message xml:lang="ru">Невозможно конввертировать настоящий документ в шаблон.</message>
+	<message xml:lang="hu">Egy dokumentum-példány nem konvertálható sablonná.</message>
 	<message xml:lang="uk">Неможливо конвертувати цей документ у шаблон.</message>
 </label>
 <label define="AM_TEMPLATE_ERR_TEMPLATE">
@@ -8831,6 +8781,7 @@ schema.</message>
 	<message xml:lang="ja">ドキュメントは既にテンプレートです</message>
 	<message xml:lang="nl">Het document is reeds een sjabloon</message>
 	<message xml:lang="ru">Этот документ уже является шаблоном</message>
+	<message xml:lang="hu">A dokumentum már sablon</message>
 	<message xml:lang="uk">Цей документ вже є шаблоном</message>
 </label>
 <label define="AM_TEMPLATE_ERR_CREATION">
@@ -8842,6 +8793,7 @@ schema.</message>
 	<message xml:lang="ja">テンプレート作成が失敗しました</message>
 	<message xml:lang="nl">De sjabloon kon niet gemaakt worden</message>
 	<message xml:lang="ru">Сбой во время создания шаблона</message>
+	<message xml:lang="hu">A sablon létrehozása sikertelen</message>
 	<message xml:lang="uk">Збій під час створення шаблону</message>
 </label>
 <label define="AM_TEMPLATE_USESTRING">
@@ -8853,6 +8805,7 @@ schema.</message>
 	<message xml:lang="ja">テキストエリア</message>
 	<message xml:lang="nl">Tekstveld</message>
 	<message xml:lang="ru">Текстовое поле</message>
+	<message xml:lang="hu">Szövegmező</message>
 	<message xml:lang="uk">Текстове поле</message>
 </label>
 <label define="AM_TEMPLATE_LABEL">
@@ -8864,6 +8817,7 @@ schema.</message>
 	<message xml:lang="ja">要素ラベル</message>
 	<message xml:lang="nl">Bijschrift voor element:</message>
 	<message xml:lang="ru">Метка элемента:</message>
+	<message xml:lang="hu">Elemcímke:</message>
 	<message xml:lang="uk">Мітка елементу:</message>
 </label>
 <label define="AM_TEMPLATE_BAGANY">
@@ -8875,6 +8829,7 @@ schema.</message>
 	<message xml:lang="ja">多要素区域</message>
 	<message xml:lang="nl">Verzamelveld</message>
 	<message xml:lang="ru">Область множеств</message>
+	<message xml:lang="hu">Multielemes zóna</message>
 	<message xml:lang="uk">Область множин</message>
 </label>
 <label define="AM_TEMPLATE_REPEATCOMP">
@@ -8886,6 +8841,7 @@ schema.</message>
 	<message xml:lang="ja">要素の繰り返し</message>
 	<message xml:lang="nl">Element herhalen</message>
 	<message xml:lang="ru">Повторить элемент</message>
+	<message xml:lang="hu">Elem ismétlése</message>
 	<message xml:lang="uk">Повторити елемент</message>
 </label>
 <label define="AM_TEMPLATE_NEWCOMP">
@@ -8897,6 +8853,7 @@ schema.</message>
 	<message xml:lang="nl">Nieuwe component</message>
 	<message xml:lang="ja">新しいコンポーネント</message>
 	<message xml:lang="ru">Новый компонент</message>
+	<message xml:lang="hu">Új komponens</message>
 	<message xml:lang="uk">Новий компонент</message>
 </label>
 <label define="AM_TEMPLATE_USEDCOMP_CANTREMOVE">
@@ -8910,6 +8867,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">コンポーネントは使用されていています、 あなたはそれを削除することができません。</message>
 	<message xml:lang="nl">De component is in gebruik en kan niet verwijderd worden.</message>
 	<message xml:lang="ru">Компонент используется, вы не можете удалить его.</message>
+	<message xml:lang="hu">A komponens használatban van, ezért nem távolítható el.</message>
 	<message xml:lang="uk">Компонент викоритовується, ви не можете видалити його.</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_TOP_LEFT">
@@ -8921,6 +8879,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">最も上の左角において</message>
 	<message xml:lang="nl">linksboven</message>
 	<message xml:lang="ru">в левом верхнем углу</message>
+	<message xml:lang="hu">a bal felső sarokban</message>
 	<message xml:lang="uk">в лівому верхньому кутку</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_BOTTOM_LEFT">
@@ -8932,6 +8891,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">最も下の左角において</message>
 	<message xml:lang="nl">linksonder</message>
 	<message xml:lang="ru">в левом нижнем углу</message>
+	<message xml:lang="hu">a bal alsó sarokban</message>
 	<message xml:lang="uk">в лівому нижньому кутку</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_LEFT">
@@ -8943,6 +8903,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">左手に</message>
 	<message xml:lang="nl">links</message>
 	<message xml:lang="ru">слева</message>
+	<message xml:lang="hu">bal oldalt</message>
 	<message xml:lang="uk">ліворуч</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_TOP_RIGHT">
@@ -8954,6 +8915,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">最も下の右角において</message>
 	<message xml:lang="nl">rechtsboven</message>
 	<message xml:lang="ru">в правом верхнем углу</message>
+	<message xml:lang="hu">a jobb felső sarokban</message>
 	<message xml:lang="uk">в правому верхньому кутку</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_BOTTOM_RIGHT">
@@ -8965,6 +8927,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">最も下の右角において</message>
 	<message xml:lang="nl">rechtsonder</message>
 	<message xml:lang="ru">в правом нижнем углу</message>
+	<message xml:lang="hu">a jobb alsó sarokban</message>
 	<message xml:lang="uk">в правому нижньому кутку</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_RIGHT">
@@ -8976,6 +8939,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">右手に</message>
 	<message xml:lang="nl">rechts</message>
 	<message xml:lang="ru">справа</message>
+	<message xml:lang="hu">jobb oldalt</message>
 	<message xml:lang="uk">праворуч</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_TOP">
@@ -8987,6 +8951,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">最も上に</message>
 	<message xml:lang="nl">boven</message>
 	<message xml:lang="ru">сверху</message>
+	<message xml:lang="hu">felül</message>
 	<message xml:lang="uk">зверху</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_BOTTOM">
@@ -8998,6 +8963,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">最も下に</message>
 	<message xml:lang="nl">onder</message>
 	<message xml:lang="ru">снизу</message>
+	<message xml:lang="hu">alul</message>
 	<message xml:lang="uk">знизу</message>
 </label>
 <label define="AM_SVG_ABSOLUTE_CENTER">
@@ -9009,6 +8975,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">中央に</message>
 	<message xml:lang="nl">in het midden</message>
 	<message xml:lang="ru">в центр</message>
+	<message xml:lang="hu">középen</message>
 	<message xml:lang="uk">у центр</message>
 </label>
 <label define="AM_SVG_RELATIVE_LEFT_ABOVE">
@@ -9020,6 +8987,7 @@ cancellarlo.</message>
 	<message xml:lang="nl">links en boven</message>
 	<message xml:lang="ja">左側上に</message>
 	<message xml:lang="ru">налево и вверх</message>
+	<message xml:lang="hu">balra fel</message>
 	<message xml:lang="uk">наліво і уверх</message>
 </label>
 <label define="AM_SVG_RELATIVE_LEFT_BELOW">
@@ -9031,6 +8999,7 @@ cancellarlo.</message>
 	<message xml:lang="nl">links en onder</message>
 	<message xml:lang="ja">左側下に</message>
 	<message xml:lang="ru">налево и вниз</message>
+	<message xml:lang="hu">balra le</message>
 	<message xml:lang="uk">наліво і униз</message>
 </label>
 <label define="AM_SVG_RELATIVE_LEFT">
@@ -9042,6 +9011,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">左側に</message>
 	<message xml:lang="nl">links van</message>
 	<message xml:lang="ru">налево от</message>
+	<message xml:lang="hu">balra ettől:</message>
 	<message xml:lang="uk">наліво от</message>
 </label>
 <label define="AM_SVG_RELATIVE_RIGHT_ABOVE">
@@ -9053,6 +9023,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">右側上に</message>
 	<message xml:lang="nl">rechts en boven</message>
 	<message xml:lang="ru">направо и вверх</message>
+	<message xml:lang="hu">jobbra fel</message>
 	<message xml:lang="uk">направо і уверх</message>
 </label>
 <label define="AM_SVG_RELATIVE_RIGHT_BELOW">
@@ -9064,6 +9035,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">右側下に</message>
 	<message xml:lang="nl">rechts en onder</message>
 	<message xml:lang="ru">направо и вниз</message>
+	<message xml:lang="hu">jobbra le</message>
 	<message xml:lang="uk">направо і униз</message>
 </label>
 <label define="AM_SVG_RELATIVE_RIGHT">
@@ -9075,6 +9047,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">右側に</message>
 	<message xml:lang="nl">rechts van</message>
 	<message xml:lang="ru">направо от</message>
+	<message xml:lang="hu">jobbra ettől:</message>
 	<message xml:lang="uk">направо от</message>
 </label>
 <label define="AM_SVG_RELATIVE_ABOVE">
@@ -9086,6 +9059,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">上に</message>
 	<message xml:lang="nl">boven</message>
 	<message xml:lang="ru">вверху</message>
+	<message xml:lang="hu">fölé</message>
 	<message xml:lang="uk">уверху</message>
 </label>
 <label define="AM_SVG_RELATIVE_BELOW">
@@ -9097,6 +9071,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">下に</message>
 	<message xml:lang="nl">onder</message>
 	<message xml:lang="ru">внизу</message>
+	<message xml:lang="hu">alá</message>
 	<message xml:lang="uk">унизу</message>
 </label>
 <label define="AM_SVG_RELATIVE_IN_FRONT_OF">
@@ -9108,6 +9083,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">前に</message>
 	<message xml:lang="nl">voor</message>
 	<message xml:lang="ru">перед</message>
+	<message xml:lang="hu">elé</message>
 	<message xml:lang="uk">перед</message>
 </label>
 <label define="AM_SVG_THERE_ARE">
@@ -9119,6 +9095,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">%dオブジェクトがいる：</message>
 	<message xml:lang="nl">Er zijn %d objecten:</message>
 	<message xml:lang="ru">Обнаружено %d объектов:</message>
+	<message xml:lang="hu"> %d objektum van:</message>
 	<message xml:lang="uk">Наявно %d об'єктів:</message>
 </label>
 <label define="AM_TEMPLATE_NEWUSE">
@@ -9129,6 +9106,7 @@ cancellarlo.</message>
 	<message xml:lang="it">Uso nuovo</message>
 	<message xml:lang="ja">新規の利用</message>
 	<message xml:lang="nl">Nieuw gebruik</message>
+	<message xml:lang="hu">Új használata</message>
 	<message xml:lang="ru">Новое использование</message>
 	<message xml:lang="uk">Нове використовування</message>
 </label>
@@ -9140,6 +9118,7 @@ cancellarlo.</message>
 	<message xml:lang="it">Uso opzionale</message>
 	<message xml:lang="ja">オプションの使用</message>
 	<message xml:lang="nl">Optioneel gebruik</message>
+	<message xml:lang="hu">Opcionális használat</message>
 	<message xml:lang="ru">Опциональное использование</message>
 	<message xml:lang="uk">Опціональне використовування</message>
 </label>
@@ -9152,6 +9131,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">ソースコードの色</message>
 	<message xml:lang="nl">Broncode kleuren</message>
 	<message xml:lang="ru">Исходный код цвета</message>
+	<message xml:lang="hu">Színes forráskód</message>
 	<message xml:lang="uk">Початковий код кольору</message>
 </label>
 <label define="AM_TEMPLATE_REPEATLABEL">
@@ -9163,6 +9143,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">繰り返しラベル:</message>
 	<message xml:lang="nl">Bijschrift voor herhaling:</message>
 	<message xml:lang="ru">Повторить метку:</message>
+	<message xml:lang="hu">Címke ismétlése:</message>
 	<message xml:lang="uk">Повторити мітку:</message>
 </label>
 <label define="AM_TEMPLATE_NEWUNION">
@@ -9174,6 +9155,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">新規の共用体</message>
 	<message xml:lang="nl">Nieuwe typenverbinding</message>
 	<message xml:lang="ru">Новое объединение</message>
+	<message xml:lang="hu">Új unió</message>
 	<message xml:lang="uk">Нове об'єднання</message>
 </label>
 <label define="AM_TEMPLATE_UNION">
@@ -9185,6 +9167,7 @@ cancellarlo.</message>
 	<message xml:lang="ja">共用体</message>
 	<message xml:lang="nl">Verbinding</message>
 	<message xml:lang="ru">Объединение</message>
+	<message xml:lang="hu">Unió</message>
 	<message xml:lang="uk">Об'єднання</message>
 </label>
 <label define="AM_TEMPLATE_UNIONNAME">
@@ -9195,6 +9178,7 @@ cancellarlo.</message>
 	<message xml:lang="it">Nome di l'unione:</message>
 	<message xml:lang="nl">Naam verbinding:</message>
 	<message xml:lang="ru">Имя объединения:</message>
+	<message xml:lang="hu">Unió neve:</message>
 	<message xml:lang="uk">Им'я об'єднання:</message>
 </label>
 <label define="AM_TEMPLATE_USE">
@@ -9205,6 +9189,7 @@ cancellarlo.</message>
 	<message xml:lang="nl">Elementen gebruiken</message>
 	<message xml:lang="it">Usa gli elementi</message>
 	<message xml:lang="ru">Использовать элементы</message>
+	<message xml:lang="hu">Elemek használata</message>
 	<message xml:lang="uk">Використовувати елементи</message>
 </label>
 <label define="AM_TEMPLATE_USELABEL">
@@ -9214,6 +9199,7 @@ cancellarlo.</message>
 	<message xml:lang="nl">Bijschrift</message>
 	<message xml:lang="it">Etichetta</message>
 	<message xml:lang="ru">Метка</message>
+	<message xml:lang="hu">Címke</message>
 	<message xml:lang="uk">Мітка</message>
 </label>
 <label define="AM_NEW_LIBRARY">
@@ -9238,6 +9224,7 @@ cancellarlo.</message>
 	<message xml:lang="en">Component name</message>
 	<message xml:lang="de">Komponente</message>
 	<message xml:lang="fr">Nom du composant</message>
+	<message xml:lang="hu">Komponensnév</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
