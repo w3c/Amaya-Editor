@@ -572,9 +572,10 @@ exemples.</p>
 <h4 id="Liste">Liste du domaine proxy</h4>
 
 <p>Donne une liste des domaines séparés par des espaces pour lesquels vous
-utilisez votre proxy. Par exemple : <pre><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code>
+utilisez votre proxy. Par exemple :</p>
+<pre><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code>
               ^--------------^----&gt; entrées séparées par des espaces</pre>
-Utilisez le menu pour spécifier si le proxy doit ou ne doit pas être utilisé
+<p>Utilisez le menu pour spécifier si le proxy doit ou ne doit pas être utilisé
 avec cette liste de domaines.</p>
 
 <h4 id="L632">Préférences des couleurs</h4>

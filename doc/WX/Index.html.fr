@@ -6,7 +6,7 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <title>Manuel d'utilisation d'Amaya</title>
   <style type="text/css">
-.name { background-color: #FFF6C1}
+ .name { background-color: #FFF6C1}
 body {background-color: #FFFFFF}</style>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -17,28 +17,25 @@ body {background-color: #FFFFFF}</style>
 <h1>Manuel d'utilisation d'Amaya</h1>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
-    <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
-  <dt><strong>Collaborateurs :</strong></dt>
-    <dd>Charles McCathieNevile, John Russell, Marja-Riitta Koivunen, Laurent
-      Carcone</dd>
+    <dd>Irène Vatton, Vincent Quint, José Kahan, Laurent Carcone</dd>
 </dl>
 <hr />
 
 <p> </p>
 
-<p>Ce manuel présente l'interface utilisateur d'Amaya. L'interface
-utilisateur sur votre machine peut-être un peu différente puisqu'elle
-dépend de la plateforme et la configuration choisie. Ce manuel n'est pas
-exhaustif, son but est simplement de vous aider à découvrir les principales
-caractéristiques du logiciel.</p>
+<p>Ce manuel présente l'interface utilisateur d'Amaya. L'interface utilisateur
+sur votre machine peut-être un peu différente puisqu'elle dépend de la
+plateforme et la configuration choisie. Ce manuel n'est pas exhaustif, son but
+est simplement de vous aider à découvrir les principales caractéristiques du
+logiciel.</p>
 
 <p>Ce document est organisé comme un livre. Vous pouvez utiliser la commande
 <strong><a href="MakeBook.html.fr#L1065">Outils/Construire un
 livre</a></strong> pour assembler et imprimer la totalité du manuel.</p>
 
 <p>De nombreuses commandes d'Amaya sont identiques à celles fournies par les
-traitements de texte classiques. Elles ne sont pas présentées ici. Seuls
-les aspects spécifiques d'Amaya sont décrits.</p>
+traitements de texte classiques. Elles ne sont pas présentées ici. Seuls les
+aspects spécifiques d'Amaya sont décrits.</p>
 </div>
 
 <div class="PageBody">
@@ -47,24 +44,21 @@ les aspects spécifiques d'Amaya sont décrits.</p>
     les formulaires</a></li>
   <li><a rel="Chapter" href="Views.html.fr#Views">Utiliser les vues d'un
     document</a></li>
-  <li><a rel="Chapter"
-  href="Selecting.html.fr#Selecting">Sélectionner</a></li>
+  <li><a rel="Chapter" href="Selecting.html.fr#Selecting">Sélectionner</a></li>
   <li><a href="Document.html.fr#Document" rel="Chapter">Créer et ouvrir des
     documents</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer des
     éléments</a></li>
   <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Éditer des
     attributs</a></li>
-  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Saisir du
-  texte</a></li>
+  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Saisir du texte</a></li>
   <li><a rel="Chapter" href="Templates.html.fr#modèles">Éditer avec des
     modèles</a></li>
   <li><a rel="Chapter" href="Changing.html.fr#Changing">Changer la structure
     d'un document</a></li>
   <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
     liens et des ancres</a></li>
-  <li><a rel="Chapter" href="Tables.html.fr#Editing">Éditer des
-  tables</a></li>
+  <li><a rel="Chapter" href="Tables.html.fr#Editing">Éditer des tables</a></li>
   <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Éditer des images
     et des zones actives</a></li>
   <li><a href="Math.html.fr#Math" rel="Chapter">Éditer des
@@ -79,8 +73,8 @@ les aspects spécifiques d'Amaya sont décrits.</p>
     remplacer du texte</a></li>
   <li><a rel="Chapter" href="SpellChecking.html.fr#Spell">Vérifier
     l'orthographe</a></li>
-  <li><a rel="Chapter" href="Publishing.html.fr#Saving">Enregistrer et
-    publier des documents</a></li>
+  <li><a rel="Chapter" href="Publishing.html.fr#Saving">Enregistrer et publier
+    des documents</a></li>
   <li><a href="WebDAV.html.fr#WebDAV" rel="Chapter">Coopérer</a></li>
   <li><a rel="Chapter" href="Printing.html.fr#Printing">Imprimer des
     documents</a></li>
@@ -91,19 +85,19 @@ les aspects spécifiques d'Amaya sont décrits.</p>
   <li><a rel="Chapter" href="Annotations.html.fr#Annotations">Annoter des
     documents</a></li>
   <li><a href="Configure.html.fr#Configuring" rel="Chapter">Configurer
-    Amaya</a></li>
+  Amaya</a></li>
   <li><a href="ShortCuts.html.fr#page_body" rel="Chapter">Définir des
     raccourcis clavier</a></li>
   <li><a href="Access.html.fr#Access" rel="Chapter">Produire des documents
     accessibles</a></li>
-  <li><a href="HTML-elements/HTML.html.fr#Intro" rel="Chapter">Une
-    introduction à HTML</a></li>
+  <li><a href="HTML-elements/HTML.html.fr#Intro" rel="Chapter">Une introduction
+    à HTML</a></li>
 </ul>
 
 <p> </p>
 <hr />
 
-<p class="policyfooter"><small>Copyright  ©  1994-2008 <a
+<p class="policyfooter"><small>Copyright  ©  1994-2009 <a
 href="http://www.inria.fr/">INRIA</a> and <a
 href="http://www.w3.org/">W3C</a><sup>®</sup> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
@@ -112,8 +106,7 @@ href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal_Disclaimer">liability,</a>
 <a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C_Trademarks">trademark</a>,
-<a
-href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
+<a href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
 use</a>and <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
 licensing</a>rules apply. Your interactions with this site are in accordance
