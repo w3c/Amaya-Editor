@@ -210,8 +210,22 @@ fonctionnalités disponibles à un instant donné est appelé un
 <em>profil</em>.</p>
 
 <p>Dans les préférences <strong>Générales</strong> un menu déroulant permet de
-choisir un profil (Lite, Lite+Math, etc.). Le profil choisi ne s'applique pas
+choisir un profil (Lite, Lite+Web, etc.). Le profil choisi ne s'applique pas
 immédiatement, mais seulement au prochain démarrage d'Amaya.</p>
+<ul>
+  <li>Le profil "<strong>Advanced</strong>" vous permet d'éditer n'importe quel
+    type de documents web (XHTML, MathML, SVG, CSS, XML, documents composés et
+    des modèles). Ce profil est recommandé. </li>
+  <li>Le profil "<strong>Lite</strong>" fournit le minimum de commandes
+    nécessaire pour éditer des documents XHTML très simples avec un minimum de
+    style CSS.</li>
+  <li>Le profil "<strong>Lite+Web</strong>" ajoute les commandes de
+  navigation.</li>
+  <li>Le profil "<strong>Lite+Web+CSS</strong>" ajoute les commandes de style
+    CSS avancées.</li>
+  <li>Le profil "<strong>Lite+Web+CSS+Math_Graphics</strong>" ajoute les
+    commandes d'édition MathML et SVG.</li>
+</ul>
 
 <h5 id="Position">Position des panneaux d'outils</h5>
 
@@ -281,7 +295,7 @@ sont conservées. Sinon les caractères « fin de ligne » sont remplacés par des
 espaces.</p>
 
 <p><strong>Garder les espaces multiples</strong>. Quand cette option est
-activée, Amaya engendre des espaces non séquables pour préserver les espaces
+activée, Amaya engendre des espaces non sécables pour préserver les espaces
 multiples insérés.</p>
 
 <p><strong>Produire des fichiers de sauvegarde</strong>. Si cette option est
@@ -381,7 +395,7 @@ négociation de la langue en code ISO pour les langues ci dessus
 (<strong>fr</strong>, <strong>en</strong>, ou <strong>ja</strong>) vous pouvez
 demander de façon transparente n'importe laquelle de ces versions.</p>
 
-<h4 id="L470"><a name="Publishing">Pré</a>férences de publication</h4>
+<h4 id="L470"><a name="Publishing">Préférences de publication</a></h4>
 
 <p>Ces Préférences vous permettent d'enregistrer vos préférences pour les ETAGS
 et pré-conditions, pour vérifier ou non chaque commande PUT avec une commande
@@ -575,6 +589,7 @@ exemples.</p>
 utilisez votre proxy. Par exemple :</p>
 <pre><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code>
               ^--------------^----&gt; entrées séparées par des espaces</pre>
+
 <p>Utilisez le menu pour spécifier si le proxy doit ou ne doit pas être utilisé
 avec cette liste de domaines.</p>
 
@@ -586,7 +601,7 @@ couleurs utilisées par Amaya pour visualiser la sélection courante.</p>
 <ul>
   <li><strong>Couleur du texte</strong> donne la couleur par défaut du premier
     plan des pages affichées.</li>
-  <li>C<strong>ouleur de fond donne la couleur</strong> par défaut de l'arrière
+  <li><strong>Couleur de fond donne la couleur</strong> par défaut de l'arrière
     plan des pages affichées.</li>
   <li><strong>Couleur du point d'insertion</strong> donne la couleur du premier
     plan qui montre la sélection quand elle est limitée à un point
