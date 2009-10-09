@@ -2262,14 +2262,13 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
   rb = - rb + pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
   /* Check if the changes affect the inside or the outside width */
   pAb->AbBox->BxHorizRef += lt;
-  inLine = pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost;
-  inLineFloat = (pAb->AbBox->BxType == BoFloatGhost);
+  inLine = pAb->AbBox->BxType == BoGhost && pAb->AbDisplay != 'B';
+  inLineFloat = pAb->AbBox->BxType == BoGhost && pAb->AbDisplay == 'B';
   if (inLine && !inLineFloat)
     {
       /* check the block type */
       pParent = pAb->AbEnclosing;
-      while (pParent->AbEnclosing && pParent->AbBox &&
-             pParent->AbBox->BxType == BoGhost)
+      while (pParent->AbEnclosing && pParent->AbBox && pParent->AbBox->BxType == BoGhost)
         pParent = pParent->AbEnclosing;
       inLineFloat = (pParent->AbBox->BxType == BoFloatBlock ||
                      pParent->AbBox->BxType == BoCellBlock);
@@ -2301,7 +2300,7 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
   lt = - lt + pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
   rb = - rb + pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
   /* Check if the changes affect the inside or the outside width */
-  if (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
+  if (inLine)
     TransmitMBP (pBox, pBox, frame, lt, rb, TRUE, inLineFloat, TRUE, TRUE);
   else if (lt != 0 || rb != 0)
     {
@@ -2784,7 +2783,12 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
     }
   else if (*inlineFloatC)
     {
-      if (pBox->BxType == BoCell)
+      if (pAb && pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
+          pAb->AbFloat == 'N' && !extraflow &&
+          (pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+           pAb->AbEnclosing->AbBox->BxType == BoGhost))
+        pBox->BxType = BoGhost;
+      else if (pBox->BxType == BoCell)
         pBox->BxType = BoCellBlock;
       else
         pBox->BxType = BoFloatBlock;

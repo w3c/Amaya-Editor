@@ -56,6 +56,7 @@ static ThotBool           NewInsert;
 #include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "boxmoves_f.h"
+#include "boxrelations_f.h"
 #include "boxlocate_f.h"
 #include "boxparams_f.h"
 #include "boxselection_f.h"

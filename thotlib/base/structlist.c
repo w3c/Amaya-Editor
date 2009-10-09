@@ -35,7 +35,7 @@ static PtrPSchema   pSc1;
 static int          DisplayedRuleCounter;
 
 #include "absboxes_f.h"
-#include "boxmoves_f.h"
+#include "boxrelations_f.h"
 #include "content_f.h"
 #include "createabsbox_f.h"
 #include "exceptions_f.h"

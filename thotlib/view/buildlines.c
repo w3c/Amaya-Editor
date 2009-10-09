@@ -209,44 +209,6 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void GetLeftRightMargins (PtrBox box, PtrBox pBlock, int *l, int *r)
-{
-  *l = 0;
-  *r = 0;
-  if (box && box->BxAbstractBox)
-    {
-      if (box->BxAbstractBox->AbLeftMarginUnit == UnPercent)
-        *l = pBlock->BxW * box->BxAbstractBox->AbLeftMargin / 100;
-      else
-        *l = box->BxLMargin;
-      if (box->BxAbstractBox->AbRightMarginUnit == UnPercent)
-        *r = pBlock->BxW * box->BxAbstractBox->AbRightMargin / 100;
-      else
-        *r = box->BxRMargin;
-    }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void GetLeftRightPaddings (PtrBox box, PtrBox pBlock, int *l, int *r)
-{
-  *l = 0;
-  *r = 0;
-  if (box && box->BxAbstractBox)
-    {
-      if (box->BxAbstractBox->AbLeftPaddingUnit == UnPercent)
-        *l = pBlock->BxW * box->BxAbstractBox->AbLeftPadding / 100;
-      else
-        *l = box->BxLPadding;
-      if (box->BxAbstractBox->AbRightPaddingUnit == UnPercent)
-        *r = pBlock->BxW * box->BxAbstractBox->AbRightPadding / 100;
-      else
-        *r = box->BxRPadding;
-    }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
 static void HandleNotInline (PtrBox pBlock, PtrLine pLine, int frame)
 {
   PtrBox              pBox, pBoxInLine, refBox;
@@ -561,7 +523,7 @@ static void Align (PtrBox pParentBox, PtrBox pBlock, PtrLine pLine, int frame,
   PtrBox              boxes[200];
   int                 baseline, x, delta = 0;
   int                 i, j, k, max, dx, dy;
-  int                 l = 0, r = 0;
+  int                 l = 0, r = 0, shift;
   ThotBool            rtl;
 
   if (pLine->LiFirstBox == NULL)
@@ -684,6 +646,7 @@ static void Align (PtrBox pParentBox, PtrBox pBlock, PtrLine pLine, int frame,
            pBox != pLine->LiLastPiece);
 
   /* Now handle included boxes */
+  shift = pBlock->BxW - pLine->LiXOrg - pLine->LiXMax;
   for (i = 0; i < max; i++)
     {
       if (rtl && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H' &&
@@ -1900,7 +1863,7 @@ static void AddAllBoxesInLine (PtrBox pBox, int frame, PtrBox pBlock,
           GetNextBox (pBox->BxAbstractBox, frame) == NULL)
         *full = FALSE;
 
-      /* coupe les blancs en fin de ligne pleine */
+      /* ignore spaces at the end of the line */
       if ((notComplete || *full) &&
           pBox->BxAbstractBox->AbLeafType == LtText &&
           pBox->BxNSpaces != 0)
@@ -2071,7 +2034,6 @@ static void SetClear (PtrBox box, ThotBool *clearL, ThotBool *clearR)
     }
 }
 
-
 /*----------------------------------------------------------------------
   InitLine computes the x,y position and the max width of the line pLine
   in the block of lines pBlock.
@@ -2091,8 +2053,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   PtrAbstractBox      pAb, pAbRef = NULL;
   PtrBox              box, orgBox = pBox;
   int                 bottomL = 0, bottomR = 0, y;
-  int                 orgX, orgY, width, by = 0, bh = 0;
-  int                 ft, fb, fl, fr, ml, mr;
+  int                 orgX, orgY, width, by = 0, bh = 0, bw;
   ThotBool            clearL, clearR;
   ThotBool            clearl, clearr;
   ThotBool            variable, newFloat, still;
@@ -2138,6 +2099,10 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
               box = NULL;
             }
         }
+
+      if (pBox == NULL && orgBox)
+        // only floated boxes are displayed in the block
+        pBox = orgBox;
       if (pBox)
         {
           pAb = pBox->BxAbstractBox;
@@ -2152,16 +2117,6 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     } 
   else
     pAb = NULL;
-
-  if (pBox == NULL && orgBox)
-    {
-      // only floated boxes are displayed in the block
-      pBox = orgBox;
-      pAb = pBox->BxAbstractBox;
-    }
-  GetLeftRightMargins (pBox, pBlock, &ml, &mr);
-  if (pAb && pAb->AbFloat != 'N')
-    ml = mr = 0;
 
   /* check if a clear is requested */
   SetClear (pBox, &clearl, &clearr);
@@ -2187,7 +2142,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     width = 0;
   else if (variable)
     {
-      width = pBox->BxMinWidth - ml - mr;
+      width = pBox->BxMinWidth;
       if (width == 0)
         {
         if (pBox->BxW > MIN_SPACE)
@@ -2197,11 +2152,11 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
         }
     }
   else if (pBox->BxType == BoTable)
-    width = pBox->BxMinWidth - ml - mr;
+    width = pBox->BxMinWidth;
   else if (!variable || pBox->BxW < MIN_SPACE)
     width = pBox->BxW;
   else if (pBox->BxMinWidth)
-    width = pBox->BxMinWidth - ml - mr;
+    width = pBox->BxMinWidth;
   else
     width = MIN_SPACE;
 
@@ -2230,8 +2185,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           else
             bh += floatL->BxTMargin;
           // get extra margins of floated box (XTiger boxes)
-          GetExtraMargins (floatL, frame, FALSE, &ft, &fb, &fl, &fr);
-          bh += floatL->BxTBorder + floatL->BxTPadding + floatL->BxH + floatL->BxBBorder + floatL->BxBPadding + ft + fb;
+          bh += floatL->BxTBorder + floatL->BxTPadding + floatL->BxH + floatL->BxBBorder + floatL->BxBPadding;
           if (pLine->LiYOrg < floatL->BxYOrg - orgY)
               // the line cannot start above the floated box
               pLine->LiYOrg = floatL->BxYOrg - orgY;
@@ -2243,12 +2197,15 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
             pLine->LiYOrg + pLine->LiHeight + orgY <= by + bh)))
         {
           /* line at the right of the current left float */
-          pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent - orgX;
-          if (floatL->BxLMargin > 0)
-            pLine->LiXOrg -= floatL->BxLMargin;
+          bw = floatL->BxWidth;
           // a negative right margin increases the line width
           if (floatL->BxRMargin < 0)
-            pLine->LiXOrg += floatL->BxRMargin;
+            bw += floatL->BxRMargin;
+          else
+            bw -= floatL->BxRMargin;
+          if (floatL->BxLMargin > 0)
+            bw -= floatL->BxLMargin;
+          pLine->LiXOrg = floatL->BxXOrg + bw + indent - orgX;
 
           if (pLine->LiYOrg + orgY < by)
             pLine->LiYOrg = by - orgY;
@@ -2270,7 +2227,8 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           if (pfloatL && floatL)
             {
               /* line at the right of a previous left float */
-              pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent - orgX;
+              //bw = floatL->BxWidth -  floatL->BxRMargin;
+              //pLine->LiXOrg = floatL->BxXOrg + bw + indent - orgX;
               bottomL = floatL->BxYOrg + floatL->BxHeight - orgY;
             }
           else
@@ -2299,8 +2257,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           else
             bh += floatR->BxTMargin;
           // get extra margins of floated box (XTiger boxes)
-          GetExtraMargins (floatR, frame, FALSE, &ft, &fb, &fl, &fr);
-          bh += floatR->BxTBorder + floatR->BxTPadding + floatR->BxH + floatR->BxBBorder + floatR->BxBPadding + ft + fb;
+          bh += floatR->BxTBorder + floatR->BxTPadding + floatR->BxH + floatR->BxBBorder + floatR->BxBPadding;
           if (pLine->LiYOrg < floatR->BxYOrg - orgY)
             // the line cannot start above the floated box
             pLine->LiYOrg = floatR->BxYOrg - orgY;
@@ -2316,7 +2273,6 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           // a negative left margin increases the line width
           if (floatR->BxLMargin < 0)
             pLine->LiXMax -= floatR->BxLMargin;
-
           bottomR = by + bh - orgY;
         }
       else if (floatR && pfloatR)
@@ -2336,7 +2292,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
           if (pfloatR)
             {
               /* line extended to the left edge of a previous right float */
-              pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg - orgX;
+              //pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg - orgX;
               bottomR = floatR->BxYOrg + floatR->BxHeight - orgY;
             }
           else
@@ -2361,6 +2317,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
             pLine->LiXMax = left + pBlock->BxW - pLine->LiXOrg;
         }
   
+      if (newFloat)
+        /* let SetFloat find the right position of this new floating box */
+        return;
       /* check if there is enough space between left and right floating boxes */
       if ((floatL || floatR) &&
           ((width > 0 && pLine->LiXMax < width) ||
@@ -2414,9 +2373,6 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
                 }
              }
 
-          if (newFloat)
-            /* let SetFloat find the right position of this new floating box */
-            return;
           /* by default */
           pLine->LiXOrg = left + indent;
           pLine->LiXMax = pBlock->BxW - indent;
@@ -2574,13 +2530,13 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                      PtrBox *floatL, PtrBox *floatR)
 {
   PtrTextBuffer       pNewBuff;
-  PtrAbstractBox      pAbRef;
+  PtrAbstractBox      pAbRef, pRefBlock;
   PtrBox              pBox, pNextBox, lastbox;
   int                 line_spaces;
   int                 width, breakWidth, w;
   int                 boxLength, nSpaces;
   int                 newIndex, wordWidth;
-  int                 xi, val, cutwidth;
+  int                 xi, val, cutwidth, shift;
   int                 maxLength, minWidth, ml, mr;
   int                 t = 0, b = 0, l = 0, r = 0;
   ThotBool            still, toCut, found, hyphenate;
@@ -2697,7 +2653,22 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
   while (still)
     {
       val = 0;
-      GetExtraMargins (pNextBox, frame, FALSE, &t, &b, &l, &r);
+      GetExtraMargins (pNextBox, frame, TRUE, &t, &b, &l, &r);
+      setinline = (pNextBox->BxAbstractBox->AbFloat == 'N' &&
+                   //(pNextBox->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost ||
+                   // pNextBox->BxAbstractBox->AbLeafType != LtCompound) &&
+                   !ExtraFlow (pNextBox, frame));
+      if (setinline)
+        {
+          pRefBlock = GetEnclosingBlock (pNextBox->BxAbstractBox, pBlock->BxAbstractBox);
+          if (pRefBlock != pBlock->BxAbstractBox && l > 0)
+            {
+              // compute the virtual position of the box
+              shift = l + left - pLine->LiXOrg;
+              pLine->LiXOrg += shift;
+              pLine->LiXMax -= shift;
+            }
+        }
       if (pNextBox->BxAbstractBox->AbLeafType == LtCompound)
         {
           /* check if the width depends on the block width */
@@ -2705,41 +2676,42 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
           if ((pAbRef == NULL &&
                pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent) ||
               (pAbRef &&
-               (pAbRef == pBlock->BxAbstractBox ||
-                pAbRef->AbBox->BxType == BoGhost ||
-                pAbRef->AbBox->BxType == BoFloatGhost)))
+               (pAbRef == pBlock->BxAbstractBox || pAbRef->AbBox->BxType == BoGhost)))
             {
               /* just to be sure the line structure is coherent */
               pLine->LiLastBox = pLine->LiFirstBox;
               if (!extensibleBlock)
                 {
-                  int shift = 0;
-                  setinline = (pNextBox->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost ||
-                               (pNextBox->BxAbstractBox->AbFloat == 'N' &&
-                               pNextBox->BxAbstractBox->AbClear != 'B' &&
-                               !ExtraFlow (pNextBox, frame)));
-                  if (setinline)
-                    val = pLine->LiXMax;
-                  else
-                    val = pBlock->BxW;
-                  GetLeftRightMargins (pNextBox, pBlock, &ml, &mr);
+                  // update parent ghost blocks if needed
                   GetLeftRightPaddings (pNextBox, pBlock, &l, &r);
+                  GetLeftRightMargins (pNextBox, pBlock, frame, &ml, &mr);
                   if (ml > 0 && setinline)
                     {
-                      //shift = pBlock->BxLMargin + pBlock->BxLPadding + pBlock->BxLBorder;
-                      if (pBlock->BxLeftFloat && pLine->LiXOrg - shift < ml)
+                      if (pBlock->BxLeftFloat && pLine->LiXOrg < ml)
                         // shift the box position
-                        l = ml + shift - pLine->LiXOrg;
-                    }
-                  if (mr > 0 && setinline)
+                        ml = ml - pLine->LiXOrg;
+                      else
+                        ml = 0;
+                     }
+                 if (mr > 0 && setinline)
                     {
                       shift = pBlock->BxW - pLine->LiXOrg - pLine->LiXMax;
                       if (pBlock->BxRightFloat && shift < mr)
                         // reduce the size of the box
-                        r = mr - shift;
+                        mr = mr - shift;
+                      else
+                        mr = 0;
                    }
-                  l += pNextBox->BxLBorder;
-                  r += pNextBox->BxRBorder;
+                  l += ml + pNextBox->BxLBorder;
+                  r += mr + pNextBox->BxRBorder;
+                  if (setinline && pNextBox->BxAbstractBox->AbClear != 'B')
+                    val = pLine->LiXMax;
+                  else if (pNextBox->BxAbstractBox->AbEnclosing &&
+                           pNextBox->BxAbstractBox->AbEnclosing->AbBox &&
+                           pNextBox->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost)
+                    val = pNextBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
+                  else
+                    val = pBlock->BxW;
                   if (pNextBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
                     {
                       // compute the external width
@@ -3358,22 +3330,36 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   while (pfloat && pfloat->FlBox)
     {
       box = pfloat->FlBox;
-      GetLeftRightMargins (box, pBlock, &ml, &mr);
+      GetLeftRightMargins (box, pBlock, frame, &ml, &mr);
       GetLeftRightPaddings (box, pBlock, &pl, &pr);
       if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxContentWidth)
-        w = box->BxMaxWidth + ml + box->BxLBorder + box->BxRBorder + pl + pr;
-      else if (box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+        w = box->BxMaxWidth + box->BxLBorder + box->BxRBorder + pl + pr;
+      else if (box->BxAbstractBox->AbWidth.DimUnit == UnPercent && extensibleblock)
         {
           // need to update the floated width
           propagateStatus = Propagate;
-          w = pBlock->BxW * box->BxAbstractBox->AbWidth.DimValue / 100;
+          if (box->BxAbstractBox->AbEnclosing &&
+              box->BxAbstractBox->AbEnclosing->AbBox &&
+              box->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost)
+            w = box->BxAbstractBox->AbEnclosing->AbBox->BxW;
+          else
+            w = pBlock->BxW;
+          w = w * box->BxAbstractBox->AbWidth.DimValue / 100;
           diff = w - box->BxW;
           w += box->BxLBorder + box->BxRBorder + pl + pr;
           ResizeWidth (box, pBlock, pBlock, diff, 0, 0, 0, frame, FALSE);
           Propagate = propagateStatus;
         }
       else
-        w = box->BxWidth;
+        {
+          w = box->BxWidth - mr;
+          if (box->BxAbstractBox->AbFloat == 'L' && ml >= 0)
+            w += ml;
+          else if (box->BxAbstractBox->AbFloat == 'R' && ml <= 0)
+            w += ml;
+          else
+            w -= ml;
+        }
       if (minx1 < w)
         minx1 = w;
       if (box->BxXOrg + w - x > x1)
@@ -3389,15 +3375,21 @@ static void UpdateBlockWithFloat (int frame, PtrBox pBlock,
   while (pfloat && pfloat->FlBox)
     {
       box = pfloat->FlBox;
-      GetLeftRightMargins (box, pBlock, &ml, &mr);
+      GetLeftRightMargins (box, pBlock, frame, &ml, &mr);
       GetLeftRightPaddings (box, pBlock, &pl, &pr);
       if ((box->BxType == BoFloatBlock || box->BxType == BoBlock) && box->BxContentWidth)
-        w = box->BxMaxWidth + box->BxLBorder + ml + box->BxRBorder + pl + pr;
+        w = box->BxMaxWidth + box->BxLBorder + box->BxRBorder + pl + pr;
       else if (box->BxAbstractBox->AbWidth.DimUnit == UnPercent)
         {
           // need to update the floated width
           propagateStatus = Propagate;
-          w = pBlock->BxW * box->BxAbstractBox->AbWidth.DimValue / 100;
+          if (box->BxAbstractBox->AbEnclosing &&
+              box->BxAbstractBox->AbEnclosing->AbBox &&
+              box->BxAbstractBox->AbEnclosing->AbBox->BxType == BoGhost)
+            w = box->BxAbstractBox->AbEnclosing->AbBox->BxW;
+          else
+            w = pBlock->BxW;
+          w = w * box->BxAbstractBox->AbWidth.DimValue / 100;
           diff = w - box->BxW;
           w += box->BxLBorder + box->BxRBorder + pl + pr;
           ResizeWidth (box, pBlock, pBlock, diff, 0, 0, 0, frame, FALSE);
@@ -3542,10 +3534,11 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
               int top, int bottom, int left, int right,
               PtrBox *floatL, PtrBox *floatR)
 {
+  PtrFloat            pFloat = NULL;
   PtrBox              boxPrevL, boxPrevR;
   PtrBox              pNextBox, prevBox;
   int                 x, y, w, minWidth, ret, h;
-  int                 orgX, orgY, bw, ml, mr, l, r;
+  int                 orgX, orgY, bw, ml, mr, shiftl = 0, shiftr = 0;
   ThotBool            clearl, clearr;
 
   boxPrevL = *floatL;
@@ -3559,28 +3552,26 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if (yAbs)
     orgY += pBlock->BxYOrg;
 
-  GetLeftRightMargins (box, pBlock, &ml, &mr);
-  if (box->BxAbstractBox && box->BxAbstractBox->AbWidth.DimUnit == UnPercent &&
-      box->BxAbstractBox->AbWidth.DimValue != 100)
+  ml = box->BxLMargin;
+  mr = box->BxRMargin;
+  bw = box->BxWidth; 
+  if (box->BxAbstractBox->AbFloat == 'L')
     {
-      GetLeftRightPaddings (box, pBlock, &l, &r);
-      bw = pBlock->BxW * box->BxAbstractBox->AbWidth.DimValue / 100
-        + box->BxLBorder + box->BxRBorder + l + r;
-      if (box->BxAbstractBox->AbFloat == 'L' && ml > 0)
-        bw += ml;
-      else if (box->BxAbstractBox->AbFloat == 'R' && ml < 0)
-        bw += ml;
+      bw -= mr; // ignore the right margin
+      if (ml < 0)
+        bw -= ml; // ignore the left margin
+      /* initial position */
+      x = left + orgX;
     }
   else
-    bw = box->BxWidth;
-
-  /* initial position */
-  if (box->BxAbstractBox->AbFloat == 'L')
-    /* left float */
-    x = left + orgX;
-  else
-    /* right float */
-    x = pBlock->BxWidth - right - bw + orgX;
+    {
+      if (ml > 0)
+        bw -= ml; // ignore the left margin
+      if (mr > 0)
+        bw -= mr; // ignore the positive right margin
+      /* initial position */
+      x = pBlock->BxWidth - right - bw + orgX;
+    }
 
   prevBox = GetPreviousBox (box->BxAbstractBox, frame);
   if (pLine)
@@ -3601,26 +3592,62 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       w = 0;
     }
 
-  if  (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
-       y + box->BxHeight >= boxPrevR->BxYOrg)
-    /* can be inserted next to this previous float ? */
-    w = boxPrevR->BxXOrg;
-  if  (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
-       y + box->BxHeight > boxPrevL->BxYOrg)
-    /* can be inserted next to this previous float ? */
-    w -= (boxPrevL->BxXOrg + boxPrevL->BxWidth - left - orgX);
+  if  (boxPrevR)
+    {
+      shiftr = boxPrevR->BxXOrg;
+      // a negative left margin increases the line width
+      if (boxPrevR->BxLMargin < 0)
+        shiftr -= boxPrevR->BxLMargin;
+      /* can be inserted next to this previous float ? */
+      if (y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
+          y + box->BxHeight >= boxPrevR->BxYOrg)
+        w = shiftr;
+    }
+  if  (boxPrevL)
+    {
+      shiftl = boxPrevL->BxWidth;
+      // a negative right margin increases the line width
+      if (boxPrevL->BxRMargin < 0)
+        shiftl += boxPrevL->BxRMargin;
+      else
+        shiftl -= boxPrevL->BxRMargin;
+      if (boxPrevL->BxLMargin > 0)
+        shiftl -= boxPrevL->BxLMargin;
+      /* can be inserted next to this previous float ? */
+      if (y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
+          y + box->BxHeight > boxPrevL->BxYOrg)
+        w -= (boxPrevL->BxXOrg + shiftl - left - orgX);
+    }
 
   /* check if a clear is requested */
   SetClear (box, &clearl, &clearr);
-  if (boxPrevL && clearl && y < boxPrevL->BxYOrg + boxPrevL->BxHeight)
+  if (boxPrevL && clearl)
     {
-      y = boxPrevL->BxYOrg + boxPrevL->BxHeight;
-      pLine->LiYOrg = y - orgY;
+      // make sure the float is displayed under previous left floats
+      pFloat = pBlock->BxLeftFloat;
+      while (pFloat)
+        {
+          if (y < pFloat->FlBox->BxYOrg + pFloat->FlBox->BxHeight)
+            y = pFloat->FlBox->BxYOrg + pFloat->FlBox->BxHeight;
+          if (pFloat->FlBox == boxPrevL)
+            pFloat = NULL;
+          else
+            pFloat = pFloat->FlNext;
+        }
     }
-  if (boxPrevR && clearr && y < boxPrevR->BxYOrg + boxPrevR->BxHeight)
+  if (boxPrevR && clearr)
     {
-      y = boxPrevR->BxYOrg + boxPrevR->BxHeight;
-      pLine->LiYOrg = y - orgY;
+      // make sure the float is displayed under previous right floats
+      pFloat = pBlock->BxRightFloat;
+      while (pFloat)
+        {
+          if (y < pFloat->FlBox->BxYOrg + pFloat->FlBox->BxHeight)
+            y = pFloat->FlBox->BxYOrg + pFloat->FlBox->BxHeight;
+          if (pFloat->FlBox == boxPrevR)
+            pFloat = NULL;
+          else
+            pFloat = pFloat->FlNext;
+        }
     }
 
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
@@ -3632,13 +3659,13 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
           if (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
               box->BxAbstractBox->AbFloat == 'L')
             {
-              x = boxPrevL->BxXOrg + boxPrevL->BxWidth;
+              x = shiftl;
               y = boxPrevL->BxYOrg;
             }
           else if (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight &&
                    box->BxAbstractBox->AbFloat == 'R')
             {
-              x = boxPrevR->BxXOrg - box->BxWidth;
+              x = shiftr - bw;
               y = boxPrevR->BxYOrg;
             }
         }
@@ -3651,7 +3678,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
                 {
                   if (boxPrevL->BxYOrg + boxPrevL->BxHeight >=
                       boxPrevR->BxYOrg + boxPrevR->BxHeight ||
-                      x + box->BxWidth <= boxPrevR->BxXOrg)
+                      x + bw <= shiftr)
                     {
                       /* display under the previous left floating box */
                       if (y < boxPrevL->BxYOrg + boxPrevL->BxHeight)
@@ -3668,7 +3695,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
                 {
                   if (boxPrevR->BxYOrg + boxPrevR->BxHeight >=
                       boxPrevL->BxYOrg + boxPrevL->BxHeight ||
-                      x <= boxPrevL->BxXOrg + boxPrevL->BxWidth)
+                      x <= shiftl)
                     {
                       /* display under the previous right floating box */
                       if (y < boxPrevR->BxYOrg + boxPrevR->BxHeight)
@@ -3687,7 +3714,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
           else if (y < boxPrevR->BxYOrg + boxPrevR->BxHeight)
             y = boxPrevR->BxYOrg + boxPrevR->BxHeight;
           /* following lines cannot be displayed above this box */
-          pLine->LiYOrg = y - orgY;
+          //pLine->LiYOrg = y - orgY;
         }
     }
 

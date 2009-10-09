@@ -8,14 +8,6 @@
 
 extern PtrBox GetNextBox ( PtrAbstractBox pAb,
                            int frame );
-extern void GetLeftRightMargins ( PtrBox box,
-                                  PtrBox pBlock,
-                                  int *l,
-                                  int *r );
-extern void GetLeftRightPaddings ( PtrBox box,
-                                   PtrBox pBlock,
-                                   int *l,
-                                   int *r );
 extern int FloatToInt ( float e );
 extern void ClearFloats ( PtrBox pBox );
 extern void ClearAFloat ( PtrAbstractBox pAb );
@@ -71,14 +63,6 @@ extern void EncloseInLine ( PtrBox pBox,
 
 extern PtrBox GetNextBox ( PtrAbstractBox pAb,
                              int frame );
-extern void GetLeftRightMargins ( PtrBox box,
-                                    PtrBox pBlock,
-                                    int *l,
-                                    int *r );
-extern void GetLeftRightPaddings ( PtrBox box,
-                                     PtrBox pBlock,
-                                     int *l,
-                                     int *r );
 extern int FloatToInt ( float e );
 extern void ClearFloats ( PtrBox pBox );
 extern void ClearAFloat ( PtrAbstractBox pAb );

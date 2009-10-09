@@ -23,6 +23,22 @@ extern void ComputeMBP ( PtrAbstractBox pAb,
                          int frame,
                          ThotBool horizRef,
                          ThotBool evalAuto );
+extern void GetExtraMargins ( PtrBox pBox,
+                              int frame,
+                              ThotBool blockMargin,
+                              int *t,
+                              int *b,
+                              int *l,
+                              int *r );
+extern void GetLeftRightMargins ( PtrBox box,
+                                  PtrBox pBlock,
+                                  int frame,
+                                  int *l,
+                                  int *r );
+extern void GetLeftRightPaddings ( PtrBox box,
+                                   PtrBox pBlock,
+                                   int *l,
+                                   int *r );
 extern ThotBool ComputePositioning ( PtrBox pBox,
                                      int frame );
 extern void ComputePosRelation ( AbPosition *rule,
@@ -74,6 +90,22 @@ extern void ComputeMBP ( PtrAbstractBox pAb,
                            int frame,
                            ThotBool horizRef,
                            ThotBool evalAuto );
+extern void GetExtraMargins ( PtrBox pBox,
+                                int frame,
+                                ThotBool blockMargin,
+                                int *t,
+                                int *b,
+                                int *l,
+                                int *r );
+extern void GetLeftRightMargins ( PtrBox box,
+                                    PtrBox pBlock,
+                                    int frame,
+                                    int *l,
+                                    int *r );
+extern void GetLeftRightPaddings ( PtrBox box,
+                                     PtrBox pBlock,
+                                     int *l,
+                                     int *r );
 extern ThotBool ComputePositioning ( PtrBox pBox,
                                        int frame );
 extern void ComputePosRelation ( AbPosition *rule,

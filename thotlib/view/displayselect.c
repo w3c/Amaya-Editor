@@ -25,7 +25,7 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 
-#include "boxmoves_f.h"
+#include "boxrelations_f.h"
 #include "boxpositions_f.h"
 #include "displayselect_f.h"
 #include "exceptions_f.h"
@@ -194,7 +194,7 @@ void DisplayPointSelection (int frame, PtrBox pBox, int pointselect,
         }
 
       /* selection points */
-      GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
+      GetExtraMargins (pBox, frame, TRUE, &t, &b, &l, &r);
       if (pEl->ElSystemOrigin)
         {
           leftX = pBox->BxLMargin + pBox->BxLBorder;

@@ -32,6 +32,7 @@
 #include "applicationapi_f.h"
 #include "boxlocate_f.h"
 #include "boxmoves_f.h"
+#include "boxrelations_f.h"
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "displayselect_f.h"

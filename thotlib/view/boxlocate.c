@@ -40,6 +40,7 @@
 #include "applicationapi_f.h"
 #include "appli_f.h"
 #include "boxmoves_f.h"
+#include "boxrelations_f.h"
 #include "boxlocate_f.h"
 #include "boxpositions_f.h"
 #include "boxselection_f.h"

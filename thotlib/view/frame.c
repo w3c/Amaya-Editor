@@ -37,6 +37,7 @@
 #include "appli_f.h"
 #include "boxlocate_f.h"
 #include "boxmoves_f.h"
+#include "boxrelations_f.h"
 #include "boxpositions_f.h"
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
@@ -707,7 +708,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   else
     {
       // the box is displayed on a set of lines
-      GetExtraMargins (from, frame, FALSE, &t, &b, &l, &r);
+      GetExtraMargins (from, frame, TRUE, &t, &b, &l, &r);
       t += from->BxTMargin;
       b += from->BxBMargin;
       bt = from->BxTBorder;
@@ -2186,9 +2187,6 @@ ThotBool RedrawFrameTop (int frame, int scroll)
       if (GL_prepare (frame))
         {
 #endif /* _GL */
-#ifdef DEBUG_MAC
-printf ("========>RedrawFrameTop frame=%d ymin=%d ymax=%d\n",frame,ymin,ymax);
-#endif /* DEBUG_MAC */
           pFrame->FrYOrg -= scroll;
 #ifdef _GL
           SyncBoundingboxes (pFrame->FrAbstractBox, 0, -scroll, frame,
@@ -2319,18 +2317,12 @@ printf ("========>RedrawFrameTop frame=%d ymin=%d ymax=%d\n",frame,ymin,ymax);
             }
 #ifdef _GL
           GL_realize (frame);
-#ifdef DEBUG_MAC
-printf ("<========RedrawFrameTop\n");
-#endif /* DEBUG_MAC */
         }
 #endif /* _GL */
     }
   else
     {
     /* The modified area is not visible */
-#ifdef DEBUG_MAC
-printf ("**** NO RedrawFrameTop\n");
-#endif /* DEBUG_MAC */
     DefClip (frame, 0, 0, 0, 0);
     }
   return toadd;
@@ -2386,9 +2378,6 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       if (GL_prepare (frame))
         {
 #endif /*_GL*/
-#ifdef DEBUG_MAC
-printf ("========>RedrawFrameBottom frame=%d ymin=%d ymax=%d\n",frame,ymin,ymax);
-#endif /* DEBUG_MAC */
           pFrame->FrYOrg += scroll;
 #ifdef _GL
           SyncBoundingboxes (pFrame->FrAbstractBox, 0, scroll, frame,
@@ -2541,17 +2530,11 @@ printf ("========>RedrawFrameBottom frame=%d ymin=%d ymax=%d\n",frame,ymin,ymax)
         }
 #ifdef _GL 
       GL_realize (frame);
-#ifdef DEBUG_MAC
-printf ("<========RedrawFrameBottom\n");
-#endif /* DEBUG_MAC */
     }
 #endif /* _GL */
   else
     {
       /* Nothing to draw */
-#ifdef DEBUG_MAC
-printf ("**** NO RedrawFrameBottom\n");
-#endif /* DEBUG_MAC */
 #if defined(_WINGUI) && !defined(_WIN_PRINT)
       WIN_GetDeviceContext (frame);
 #endif /* __WINGUI && !_WINT_PRINT */
@@ -2590,9 +2573,6 @@ void DisplayFrame (int frame)
           if (FrameTable[frame].SwapOK)
             {
               UpdateScrollbars (frame);
-#ifdef DEBUG_MAC
-printf ("DisplayFrame:GL_Swap frame=%d\n",frame);
-#endif /* DEBUG_MAC */
               GL_Swap (frame);
             }
 #endif /* _GL */

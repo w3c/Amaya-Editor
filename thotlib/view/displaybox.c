@@ -32,7 +32,7 @@
 #include "appdialogue_tv.h"
 #include "picture_tv.h" 
 
-#include "boxmoves_f.h"
+#include "boxrelations_f.h"
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
 #include "windowdisplay_f.h"
