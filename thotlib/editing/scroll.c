@@ -56,7 +56,7 @@ void VerticalScroll (int frame, int delta, int selection)
   PtrAbstractBox      pAb;
   ThotBool            add;
   
-  if (delta != 0)
+  if (delta != 0 && GL_prepare (frame))
     {
       pFrame = &ViewFrameTable[frame - 1];
       if (pFrame->FrReady && pFrame->FrAbstractBox)
@@ -174,7 +174,7 @@ void HorizontalScroll (int frame, int delta, int selection)
   PtrBox              srcbox;
   ViewFrame          *pFrame;
   
-  if (delta != 0)
+  if (delta != 0 && GL_prepare (frame))
     {
       pFrame = &ViewFrameTable[frame - 1];
       if (pFrame->FrReady && pFrame->FrAbstractBox != NULL)
@@ -658,7 +658,7 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent,
   /* Il faut realiser l'affichage par scroll ou par appel explicite */
   if (dy != 0)
     VerticalScroll (frame, dy, 1);
-  else
+  else if (GL_prepare (frame))
     {
       RedrawFrameBottom (frame, dy, NULL);
 #ifdef _GL

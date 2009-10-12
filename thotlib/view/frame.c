@@ -961,19 +961,23 @@ static ThotBool OriginSystemSet (PtrAbstractBox pAb, ViewFrame *pFrame,
   OriginSystemExit : pop from current matrix stack
   ----------------------------------------------------------------------*/
 static ThotBool OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame, 
+				  PtrBox *systemOriginRoot,
                                   int *oldXOrg, int *oldYOrg,
-                                  int clipXOfFirstCoordSys, int clipYOfFirstCoordSys)
+                                  int *clipXOfFirstCoordSys, int *clipYOfFirstCoordSys)
 {
   PtrBox              pBox;
   
   pBox = pAb->AbBox;
   if (!pAb->AbPresentationBox && pAb->AbBox && pAb->AbElement->ElSystemOrigin)
     {
-      if (clipXOfFirstCoordSys == pBox->BxClipX &&
-          clipYOfFirstCoordSys == pBox->BxClipY)
+      if (*clipXOfFirstCoordSys == pBox->BxClipX &&
+          *clipYOfFirstCoordSys == pBox->BxClipY)
         {
           pFrame->FrXOrg = *oldXOrg;
           pFrame->FrYOrg = *oldYOrg;
+	  *systemOriginRoot = NULL;
+	  *clipXOfFirstCoordSys = 0;
+	  *clipYOfFirstCoordSys = 0;
           pFrame->OldFrXOrg = 0;
           pFrame->OldFrYOrg = 0;
           return TRUE; // changed
@@ -1089,9 +1093,9 @@ void GetBoxTransformedCoord (PtrAbstractBox pAbSeeked, int frame,
               if (pAb != pFrame->FrAbstractBox && pAb->AbElement && pAb->AbBox &&
                   IfPopMatrix (pAb))
                 if (pAb->AbBox == systemOriginRoot)
-                  OriginSystemExit (pAb, pFrame, &oldXOrg, &oldYOrg, 
-                                    clipXOfFirstCoordSys, clipYOfFirstCoordSys);
-              
+		  OriginSystemExit (pAb, pFrame, &systemOriginRoot,
+				    &oldXOrg, &oldYOrg, 
+				    &clipXOfFirstCoordSys, &clipYOfFirstCoordSys);
               if (pAb == root)
                 /* all boxes are now managed: stop the loop */
                 pAb = pNext = NULL;
@@ -1902,8 +1906,9 @@ PtrBox DisplayAllBoxes (int frame, PtrFlow pFlow,
                                              y_min, y_max, not_in_feedback);
                   if (IfPopMatrix (pAb))
                     if (pAb->AbBox == systemOriginRoot)
-                      OriginSystemExit (pAb, pFrame, &xOrg, &yOrg, 
-                                        clipXOfFirstCoordSys, clipYOfFirstCoordSys);
+                      OriginSystemExit (pAb, pFrame, &systemOriginRoot,
+					&xOrg, &yOrg, 
+                                        &clipXOfFirstCoordSys, &clipYOfFirstCoordSys);
 
                   not_g_opacity_displayed = TRUE;
 #endif /* _GL */
@@ -2072,8 +2077,9 @@ void ComputeChangedBoundingBoxes (int frame)
                   if (pAb->AbDepth == plane)
                     OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
                   if (formatted && IfPopMatrix (pAb))
-                    OriginSystemExit (pAb, pFrame, &oldXOrg, &oldYOrg, 
-                                      clipXOfFirstCoordSys, clipYOfFirstCoordSys);
+                    OriginSystemExit (pAb, pFrame, &systemOriginRoot,
+				      &oldXOrg, &oldYOrg, 
+                                      &clipXOfFirstCoordSys, &clipYOfFirstCoordSys);
               
                   if (pAb == root)
                     /* all boxes are now managed: stop the loop */
