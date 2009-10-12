@@ -3255,7 +3255,7 @@ static void EndOfAttributeName (char *xmlName)
       CurrentParserCtxt = savParserCtxt;
       snprintf (msgBuffer, MaxMsgLength,
                "Namespace not supported for the attribute \"%s\"",
-               xmlName);
+               (char *)xmlName);
       XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
       /* Create an unknown attribute  */
       UnknownXmlAttribute (attrName, nsURI);
