@@ -3605,7 +3605,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     }
   if  (boxPrevL)
     {
-      shiftl = boxPrevL->BxWidth;
+      shiftl = boxPrevL->BxXOrg + boxPrevL->BxWidth;
       // a negative right margin increases the line width
       if (boxPrevL->BxRMargin < 0)
         shiftl += boxPrevL->BxRMargin;
@@ -3616,7 +3616,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       /* can be inserted next to this previous float ? */
       if (y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
           y + box->BxHeight > boxPrevL->BxYOrg)
-        w -= (boxPrevL->BxXOrg + shiftl - left - orgX);
+        w -= (shiftl - left - orgX);
     }
 
   /* check if a clear is requested */
