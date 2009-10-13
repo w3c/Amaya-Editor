@@ -2784,7 +2784,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
   else if (*inlineFloatC)
     {
       if (pAb && pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
-          pAb->AbFloat == 'N' && !extraflow &&
+          pAb->AbFloat == 'N' &&  pAb->AbPositioning == NULL &&
           (pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
            pAb->AbEnclosing->AbBox->BxType == BoGhost))
         pBox->BxType = BoGhost;
