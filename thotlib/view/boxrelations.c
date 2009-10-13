@@ -664,31 +664,26 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
            pAb->AbWidth.DimValue != -1))
         {
           /* percent and auto refer the enclosing box */
-          if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
-            dim = pBox->BxW;
-          else
+          if (pAb->AbLeafType == LtCompound &&
+              pAb->AbPositioning &&
+              (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+               pAb->AbPositioning->PnAlgorithm == PnFixed))
             {
-              if (pAb->AbLeafType == LtCompound &&
-                  pAb->AbPositioning &&
-                  (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
-                   pAb->AbPositioning->PnAlgorithm == PnFixed))
+              pRefAb = GetEnclosingViewport (pAb);
+              if (pRefAb == NULL)
+                pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
+              if (pRefAb && pRefAb->AbBox)
                 {
-                  pRefAb = GetEnclosingViewport (pAb);
-                  if (pRefAb == NULL)
-                    pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
-                  if (pRefAb && pRefAb->AbBox)
-                    {
-                      pParent = NULL;
-                      dim = pRefAb->AbBox->BxW;
-                    }
-                  else
-                    dim = pBox->BxW;
+                  pParent = NULL;
+                  dim = pRefAb->AbBox->BxW;
                 }
-              else if (pParent)
-                dim = pParent->BxW;
               else
                 dim = pBox->BxW;
             }
+          else if (pParent)
+            dim = pParent->BxW;
+          else
+            dim = pBox->BxW;
         }
       else
         dim = pBox->BxW;
@@ -787,36 +782,31 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
           pAb->AbTopBorderUnit == UnPercent ||
           pAb->AbBottomBorderUnit == UnPercent)
         {
-          if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
-            dim = pBox->BxH;
-          else
+          //#ifdef POSITIONING
+          if (pAb->AbLeafType == LtCompound &&
+              pAb->AbPositioning &&
+              (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+               pAb->AbPositioning->PnAlgorithm == PnFixed))
             {
-              //#ifdef POSITIONING
-              if (pAb->AbLeafType == LtCompound &&
-                  pAb->AbPositioning &&
-                  (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
-                   pAb->AbPositioning->PnAlgorithm == PnFixed))
+              pRefAb = GetEnclosingViewport (pAb);
+              if (pRefAb == NULL)
+                pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
+              if (pRefAb && pRefAb->AbBox)
                 {
-                  pRefAb = GetEnclosingViewport (pAb);
-                  if (pRefAb == NULL)
-                    pRefAb = ViewFrameTable[frame -1].FrAbstractBox;
-                  if (pRefAb && pRefAb->AbBox)
-                    {
-                      pParent = NULL;
-                      dim = pRefAb->AbBox->BxW;
-                    }
-                  else
-                    dim = pBox->BxW;
+                  pParent = NULL;
+                  dim = pRefAb->AbBox->BxH;
                 }
-              //#endif /* POSITIONING */
-              else if (pParent)
-                dim = pParent->BxW;
               else
-                dim = pBox->BxW;
+                dim = pBox->BxH;
             }
+          //#endif /* POSITIONING */
+          else if (pParent)
+            dim = pParent->BxH;
+          else
+            dim = pBox->BxH;
         }
       else
-        dim = pBox->BxW;
+        dim = pBox->BxH;
 
       if (pAb->AbLeafType == LtCompound && pAb->AbTruncatedHead)
         {
