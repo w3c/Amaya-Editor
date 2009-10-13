@@ -2052,7 +2052,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
   PtrFloat            pfloatL = NULL, pfloatR = NULL;
   PtrAbstractBox      pAb, pAbRef = NULL;
   PtrBox              box, orgBox = pBox;
-  int                 bottomL = 0, bottomR = 0, y;
+  int                 bottomL = 0, bottomR = 0, y, ml = 0, mr = 0;
   int                 orgX, orgY, width, by = 0, bh = 0, bw;
   ThotBool            clearL, clearR;
   ThotBool            clearl, clearr;
@@ -2138,11 +2138,18 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
     variable = TRUE;
 
   /* minimum width needed to format the line */
+  if (pBox && pAb && pAb->AbFloat == 'N')
+    {
+      if (pBox->BxLMargin > 0)
+        ml = pBox->BxLMargin;
+      if (pBox->BxRMargin > 0)
+        mr = pBox->BxRMargin;
+    }
   if (!pBox)
     width = 0;
   else if (variable)
     {
-      width = pBox->BxMinWidth;
+      width = pBox->BxMinWidth - ml - mr;
       if (width == 0)
         {
         if (pBox->BxW > MIN_SPACE)
@@ -2152,11 +2159,13 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
         }
     }
   else if (pBox->BxType == BoTable)
-    width = pBox->BxMinWidth;
+    // min width includes margins
+    width = pBox->BxMinWidth - ml - mr;
   else if (!variable || pBox->BxW < MIN_SPACE)
     width = pBox->BxW;
   else if (pBox->BxMinWidth)
-    width = pBox->BxMinWidth;
+    // min width includes margins
+    width = pBox->BxMinWidth - ml - mr;
   else
     width = MIN_SPACE;
 

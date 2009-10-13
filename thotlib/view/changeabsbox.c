@@ -27,6 +27,7 @@
 #include "absboxes_f.h"
 #include "attributes_f.h"
 #include "attrpresent_f.h"
+#include "boxpositions_f.h"
 #include "buildboxes_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
@@ -1181,6 +1182,7 @@ void ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast,
   PtrPRule            pRule;
   PtrPSchema          pSPR;
   PtrAttribute        pAttr;
+  int                 frame;
 
   /* cherche la pave minimum a reafficher a priori */
   if (pAbbLast == pAbbFirst)
@@ -1194,7 +1196,9 @@ void ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast,
   /* nouveaux paves */
   /* traite d'abord le pave englobant */
   pAbb = pAbbFirst->AbEnclosing;
-  if (pAbb != NULL)
+  // get the working frame
+  frame = pDoc->DocViewFrame[pAbb->AbDocView - 1];
+  if (pAbb)
     {
       /* il y a un pave englobant */
       pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertRef, FnAny, TRUE, &pAttr);
@@ -1210,20 +1214,22 @@ void ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast,
           pAbb->AbHorizRefChange = TRUE;
         }
       pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
-      if (IsNewPosOrDim (pAbb, pRule, pSPR, RlEnclosed, pDoc, pAttr))
+      if (!VertExtraAbFlow (pAbb, frame) &&
+          IsNewPosOrDim (pAbb, pRule, pSPR, RlEnclosed, pDoc, pAttr))
         {
           *pAbbReDisp = pAbb;
           pAbb->AbHeightChange = TRUE;
         }
       pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
-      if (IsNewPosOrDim (pAbb, pRule, pSPR, RlEnclosed, pDoc, pAttr))
+      if (!HorizExtraAbFlow (pAbb, frame) &&
+          IsNewPosOrDim (pAbb, pRule, pSPR, RlEnclosed, pDoc, pAttr))
         {
           *pAbbReDisp = pAbb;
           pAbb->AbWidthChange = TRUE;
         }
     }
   /* cherche dans les paves precedents */
-  if (pAbbFirst->AbPrevious != NULL)
+  if (pAbbFirst->AbPrevious)
     {
       pAbb = pAbbFirst->AbPrevious;
       do
@@ -1232,25 +1238,29 @@ void ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast,
             /* on ne traite pas les paves morts */
             {
               pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertPos, FnAny, TRUE, &pAttr);
-              if (IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
+              if (!VertExtraAbFlow (pAbb, frame) &&
+                  IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
                 {
                   *pAbbReDisp = pAbb->AbEnclosing;
                   pAbb->AbVertPosChange = TRUE;
                 }
               pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHorizPos, FnAny, TRUE, &pAttr);
-              if (IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
+              if (!HorizExtraAbFlow (pAbb, frame) &&
+                  IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
                 {
                   *pAbbReDisp = pAbb->AbEnclosing;
                   pAbb->AbHorizPosChange = TRUE;
                 }
               pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
-              if (IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
+              if (!VertExtraAbFlow (pAbb, frame) &&
+                  IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
                 {
                   *pAbbReDisp = pAbb->AbEnclosing;
                   pAbb->AbHeightChange = TRUE;
                 }
               pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
-              if (IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
+              if (!HorizExtraAbFlow (pAbb, frame) &&
+                  IsNewPosOrDim (pAbb, pRule, pSPR, RlNext, pDoc, pAttr))
                 {
                   *pAbbReDisp = pAbb->AbEnclosing;
                   pAbb->AbWidthChange = TRUE;
@@ -1258,10 +1268,10 @@ void ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast,
             }
           pAbb = pAbb->AbPrevious;
         }
-      while (pAbb != NULL);
+      while (pAbb);
     }
   /* cherche dans les paves suivants */
-  if (pAbbLast->AbNext != NULL)
+  if (pAbbLast->AbNext)
     {
       pAbb = pAbbLast->AbNext;
       do
@@ -1269,25 +1279,29 @@ void ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast,
           if (!pAbb->AbDead)
             {
               pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtVertPos, FnAny, TRUE, &pAttr);
-              if (IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
+              if (!VertExtraAbFlow (pAbb, frame) &&
+                  IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
                 {
                   *pAbbReDisp = pAbb->AbEnclosing;
                   pAbb->AbVertPosChange = TRUE;
                 }
               pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHorizPos, FnAny, TRUE, &pAttr);
-              if (IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
+              if (!HorizExtraAbFlow (pAbb, frame) &&
+                  IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
                 {
                   *pAbbReDisp = pAbb->AbEnclosing;
                   pAbb->AbHorizPosChange = TRUE;
                 }
               pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtHeight, FnAny, TRUE, &pAttr);
-              if (IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
+              if (!VertExtraAbFlow (pAbb, frame) &&
+                  IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
                 {
                   *pAbbReDisp = pAbb->AbEnclosing;
                   pAbb->AbHeightChange = TRUE;
                 }
               pRule = SearchRulepAb (pDoc, pAbb, &pSPR, PtWidth, FnAny, TRUE, &pAttr);
-              if (IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
+              if (!HorizExtraAbFlow (pAbb, frame) &&
+                  IsNewPosOrDim (pAbb, pRule, pSPR, RlPrevious, pDoc, pAttr))
                 {
                   *pAbbReDisp = pAbb->AbEnclosing;
                   pAbb->AbWidthChange = TRUE;
@@ -1295,7 +1309,7 @@ void ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast,
             }
           pAbb = pAbb->AbNext;
         }
-      while (pAbb != NULL);
+      while (pAbb);
     }
 }
 

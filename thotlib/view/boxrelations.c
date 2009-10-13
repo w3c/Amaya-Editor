@@ -2440,7 +2440,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             }
         }
     }
-
+  if (pAb->AbPositioning && horizRef &&
+      (pAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+       pAb->AbPositioning->PnAlgorithm == PnFixed))
+    printf ("Positioned box \n");
+  if (pParentAb && pParentAb->AbPositioning && horizRef &&
+      (pParentAb->AbPositioning->PnAlgorithm == PnAbsolute ||
+       pParentAb->AbPositioning->PnAlgorithm == PnFixed))
+    printf ("Inside positioned box \n");
 
   dx = dy = inx = iny = 0;
   if (pAb->AbLeafType == LtCompound)
@@ -2974,6 +2981,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                               pBox->BxContentWidth = TRUE;
                             }
                           else if (pParentAb->AbFloat != 'N' &&
+                                   !HorizExtraAbFlow (pParentAb, frame) &&
                                    pParentAb->AbWidth.DimUnit == UnAuto)
                             {
                               /* within a floated box -> content width */
