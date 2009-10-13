@@ -1876,8 +1876,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
   if (pAb == NULL)
     return;
   GetExtraMargins (pBox, frame, FALSE, &i, &j, &extraL, &extraR);
-if (!strcmp(pAb->AbElement->ElLabel,"L145"))
-    printf ("ResizeWidth w=%d+%d\n",pBox->BxW,delta);
   if (!pAb->AbMBPChange && delta)
     {
       if (pBox->BxLMargin > 0)
@@ -3579,10 +3577,16 @@ static void Shrink (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
           pChildBox = pChildAb->AbBox;
           if (!pChildAb->AbDead && pChildBox &&
               pChildAb->AbHorizEnclosing &&
+              pChildAb->AbFloat == 'N' &&
               !ExtraFlow (pChildBox, frame) &&
               pChildAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility &&
               pChildBox->BxXOrg + pChildBox->BxWidth > width)
-            width = pChildBox->BxXOrg + pChildBox->BxWidth;
+            {
+              if (pChildBox->BxXOrg + pChildBox->BxWidth > x + pBox->BxW)
+                width = x + pBox->BxW;
+              else
+                width = pChildBox->BxXOrg + pChildBox->BxWidth;
+            }
           pChildAb = pChildAb->AbNext;
         }
       width -= x;
