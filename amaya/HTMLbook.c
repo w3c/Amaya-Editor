@@ -1815,7 +1815,7 @@ void MakeToc (Document doc, View view)
   DisplayMode         dispMode;
   char               *s, *id, *value;
   int                 firstChar, i;
-  ThotBool            closeUndo, found, manyH1;
+  ThotBool            closeUndo, found, manyH1, extendUndo;
 
   dispMode = TtaGetDisplayMode (doc);
 
@@ -1847,7 +1847,13 @@ void MakeToc (Document doc, View view)
       if (strcmp (s, "HTML"))
         return;
     }
-
+  if (!TtaIsSelectionEmpty())
+    {
+      TtaInsertAnyElement (doc, TRUE);
+      extendUndo = TRUE;
+    }
+  else
+     extendUndo = FALSE;
   if (!HTMLelementAllowed (doc))
     /* the creation of an HTML element is not allowed here */
     return;
@@ -1859,8 +1865,8 @@ void MakeToc (Document doc, View view)
   if (lH1)
     {
       if (TtaSearchTypedElement (elType, SearchForward, lH1))
-	/* there are at least 2 H1 elements in the document */
-	manyH1 = TRUE;
+        /* there are at least 2 H1 elements in the document */
+        manyH1 = TRUE;
     }
 
   attrType.AttrSSchema = elType.ElSSchema;
@@ -1925,7 +1931,10 @@ void MakeToc (Document doc, View view)
   else
     {
       closeUndo = TRUE;
-      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+      if (extendUndo)
+        TtaExtendUndoSequence (doc);
+      else
+        TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
     }
 
   if (toc)
