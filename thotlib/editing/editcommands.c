@@ -491,7 +491,9 @@ static ThotBool CloseTextInsertionWithControl (ThotBool toNotify)
                       LastInsertThotWindow = frame;
                       pBox = NULL;
                     }
-                  else if (pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
+                  else if (pBox->BxType != BoGhost &&
+                           pBox->BxType != BoStructGhost &&
+                           pBox->BxType != BoFloatGhost)
                     pBox = NULL;
                 }
             }
@@ -1271,7 +1273,9 @@ void CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
                 pEl = pAb->AbElement;
                 if (pBox)
                   {
-                    if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost ||
+                    if (pBox->BxType == BoGhost ||
+                        pBox->BxType == BoStructGhost ||
+                        pBox->BxType == BoFloatGhost ||
                         (pEl &&
                          TypeHasException (ExcIsImg, pEl->ElTypeNumber, pEl->ElStructSchema)))
                       pAb = pAb->AbEnclosing;

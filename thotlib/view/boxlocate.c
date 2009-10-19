@@ -2075,7 +2075,9 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
             }
           return (NULL);
         }
-      else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+      else if (pBox->BxType == BoGhost ||
+               pBox->BxType == BoStructGhost ||
+               pBox->BxType == BoFloatGhost)
         /* dummy box */
         return (NULL);
       else if (pAb->AbLeafType == LtGraphics &&
@@ -2340,7 +2342,9 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
                   if (pLine  && pLine->LiPrevious)
                     {
                       box = pBox->BxAbstractBox->AbEnclosing->AbBox;
-                      while (box->BxType == BoGhost || box->BxType == BoFloatGhost)
+                      while (box->BxType == BoGhost ||
+                             box->BxType == BoStructGhost ||
+                             box->BxType == BoFloatGhost)
                         box = box->BxAbstractBox->AbEnclosing->AbBox;
 #ifdef _GL
                       if (pBox->BxBoundinBoxComputed)
@@ -2777,6 +2781,7 @@ static ThotBool CanBeResized (PtrAbstractBox pAb, int frame,
             pParentAb->AbBox->BxType == BoFloatBlock ||
             pParentAb->AbBox->BxType == BoCellBlock ||
             pParentAb->AbBox->BxType == BoGhost ||
+            pParentAb->AbBox->BxType == BoStructGhost ||
             pParentAb->AbBox->BxType == BoFloatGhost))
     /* text box displayed in block of lines */
     ok = FALSE;

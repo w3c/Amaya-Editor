@@ -377,7 +377,8 @@ static void OutOfPage (PtrAbstractBox pAb, int *height, ThotBool *isPageBreakCha
       if (pAb->AbVertEnclosing && pParentAb != NULL)
         {
           /* Le pere est sur la page ou hors de la page */
-          if (pParentAb->AbBox->BxType == BoGhost)
+          if (pParentAb->AbBox->BxType == BoGhost ||
+              pParentAb->AbBox->BxType == BoStructGhost)
             {
               if (!pParentAb->AbOnPageBreak)
                 OutOfPage (pParentAb, height, isPageBreakChanged);
@@ -507,7 +508,7 @@ static void SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table,
             {
               /* --- cas genenral ----------------------------------------- */
               /* Si la boite composee n'est pas eclatee */
-              if (pBox->BxType != BoGhost)
+              if (pBox->BxType != BoGhost && pBox->BxType != BoStructGhost)
                 {
                   /* Origine de la boite de coupure */
                   org = pBox->BxYOrg;
@@ -658,10 +659,12 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
         pChildBox = pChildAb->AbBox;
         if (pChildBox)
           {
-            ghost = pBox->BxType == BoGhost || pChildBox->BxType == BoGhost;
+            ghost = pBox->BxType == BoGhost || pBox->BxType == BoStructGhost ||
+              pChildBox->BxType == BoGhost || pChildBox->BxType == BoStructGhost;
             /* Decale boites englobees dont l'origine depend de l'englobante */
             /* La boite est coupee, on decale les boites de coupure */
-            if (pChildBox->BxType == BoSplit || pChildBox->BxType == BoMulScript)
+            if (pChildBox->BxType == BoSplit ||
+                pChildBox->BxType == BoMulScript)
               {
                 box1 = pChildBox->BxNexChild;
                 while (box1)
@@ -992,10 +995,10 @@ void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
                 }
             }
         }
-      else if (box->BxType == BoGhost)
+      else if (box->BxType == BoGhost || box->BxType == BoStructGhost)
         {
           /* check enclosed boxes */
-          while (box->BxType == BoGhost)
+          while (box->BxType == BoGhost || box->BxType == BoStructGhost)
             box = box->BxAbstractBox->AbFirstEnclosed->AbBox;
 	  
           if (box->BxType == BoSplit || box->BxType == BoMulScript)

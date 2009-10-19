@@ -700,7 +700,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
                               &width, &percent);
   pParent = table->AbEnclosing;
   parentWidth = pParent->AbBox->BxW;
-  if (pParent->AbBox->BxType == BoGhost)
+  if (pParent->AbBox->BxType == BoGhost || pParent->AbBox->BxType == BoStructGhost)
     {
       pLine = SearchLine (pBox, frame);
       if (pLine)
@@ -1210,6 +1210,7 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
                 {
                   parent = pParent->AbBox;
                   if (parent->BxType != BoGhost &&
+                      parent->BxType != BoStructGhost &&
                       parent->BxType != BoFloatGhost)
                     {
                       delta += parent->BxLBorder + parent->BxLPadding
@@ -2284,6 +2285,7 @@ void TtaUnlockTableFormatting ()
                   if (table && table->AbEnclosing->AbBox &&
                       table->AbEnclosing->AbBox->BxType == BoBlock ||
                       table->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+                      table->AbEnclosing->AbBox->BxType == BoStructGhost ||
                       table->AbEnclosing->AbBox->BxType == BoGhost)
                     {
                       if (table->AbBox)

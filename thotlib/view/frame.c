@@ -220,7 +220,9 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
   int                 x1, x2, y1, y2, k;
 
   k = 0;
-  if (pBox && pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  if (pBox && pBox->BxType == BoGhost ||
+      pBox->BxType == BoStructGhost ||
+      pBox->BxType == BoFloatGhost)
     {
       pAb = pBox->BxAbstractBox;
       /* get the first and last enclosed boxes */
@@ -233,9 +235,13 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
       while (last->AbNext && last->AbNext->AbBox)
         last = last->AbNext;
       
-      while (first->AbBox && first->AbBox->BxType == BoGhost && first->AbFirstEnclosed)
+      while (first->AbBox &&
+             (first->AbBox->BxType == BoGhost || first->AbBox->BxType == BoStructGhost) &&
+             first->AbFirstEnclosed)
         first = first->AbFirstEnclosed;
-      while (last->AbBox && last->AbBox->BxType == BoGhost && last->AbFirstEnclosed)
+      while (last->AbBox &&
+             (last->AbBox->BxType == BoGhost || last->AbBox->BxType == BoStructGhost) &&
+             last->AbFirstEnclosed)
         {
           last = last->AbFirstEnclosed;
           while (last->AbNext && last->AbNext->AbBox)
@@ -244,7 +250,8 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 
       // get horizontal limits
       pParent = pAb->AbEnclosing;
-      while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
+      while (pParent->AbBox &&
+             (pParent->AbBox->BxType == BoGhost || pParent->AbBox->BxType == BoStructGhost))
         pParent = pParent->AbEnclosing;
       x1 = pParent->AbBox->BxXOrg + pParent->AbBox->BxLMargin
         + pParent->AbBox->BxLBorder + pParent->AbBox->BxLPadding;
@@ -569,11 +576,14 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   pAb = pBox->BxAbstractBox;
   if (pAb)
     pEl = pAb->AbElement;
-  if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  if (pBox->BxType == BoGhost ||
+      pBox->BxType == BoStructGhost ||
+      pBox->BxType == BoFloatGhost)
     {
       /* check the block type to detect what border to apply */
       pParent = pAb->AbEnclosing;
-      while (pParent && pParent->AbBox && pParent->AbBox->BxType == BoGhost)
+      while (pParent && pParent->AbBox &&
+             (pParent->AbBox->BxType == BoGhost || pParent->AbBox->BxType == BoStructGhost))
         pParent = pParent->AbEnclosing;
       if (pParent == NULL || pParent->AbBox == NULL)
         return;
@@ -649,8 +659,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       yd = pBox->BxYOrg + t;
       height = pBox->BxHeight;
     }
-  else if (from->BxType == BoGhost &&
-           (pFrom->AbDisplay == 'B'/* || (pFrom->AbDisplay == 'U' && pFrom->AbInLine)*/))
+  else if (from->BxType == BoStructGhost)
     {
       // check if borders are displayed
       if (first)
@@ -671,7 +680,9 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
           if (pBox == pLine->LiLastBox || pBox == pLine->LiLastPiece)
             br = from->BxRBorder;
           pParent = pFrom->AbEnclosing;
-          while (pParent->AbBox && pParent->AbBox->BxType == BoGhost)
+          while (pParent->AbBox &&
+                 (pParent->AbBox->BxType == BoGhost ||
+                  pParent->AbBox->BxType == BoStructGhost))
             pParent = pParent->AbEnclosing;
           xd = pParent->AbBox->BxXOrg + pLine->LiXOrg - bl + shiftx;
           width = pLine->LiXMax + bl;

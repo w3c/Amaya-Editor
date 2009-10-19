@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1435,6 +1435,7 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
               /* regarde si les regles de dependance sont valides */
               if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
                 toMove = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
+                          pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                           pAb->AbEnclosing->AbBox->BxType != BoFloatGhost);
 	      
               if (toMove)
@@ -1584,6 +1585,7 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                            pParent->AbBox->BxType != BoFloatBlock &&
                            pParent->AbBox->BxType != BoCellBlock &&
                            pParent->AbBox->BxType != BoGhost &&
+                           pParent->AbBox->BxType != BoStructGhost &&
                            pParent->AbBox->BxType != BoFloatGhost &&
                            pParent->AbBox->BxType != BoCell &&
                            pParent->AbBox->BxType != BoColumn &&
@@ -1642,6 +1644,7 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
               /* check validity of dependencies */
               if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
                 toMove = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
+                          pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                           pAb->AbEnclosing->AbBox->BxType != BoFloatGhost);
 	      
               if (toMove)
@@ -1792,6 +1795,7 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                            pParent->AbBox->BxType == BoFloatBlock ||
                            pParent->AbBox->BxType == BoCellBlock ||
                            pParent->AbBox->BxType == BoGhost ||
+                           pParent->AbBox->BxType == BoStructGhost ||
                            pParent->AbBox->BxType == BoFloatGhost)
                     {
                       if (Propagate == ToAll &&
@@ -1919,6 +1923,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
           toMove = TRUE;
           if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
             toMove = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
+                      pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoBlock &&
                       pAb->AbEnclosing->AbBox->BxType != BoFloatBlock &&
@@ -2155,7 +2160,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                         // the current update should be stopped
                         return;
                 }
-              else if (pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
+              else if (pBox->BxType != BoGhost &&
+                       pBox->BxType != BoStructGhost &&
+                       pBox->BxType != BoFloatGhost)
                 {
                   pRefAb = pAb->AbFirstEnclosed;
                   while (pRefAb)
@@ -2460,7 +2467,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   ThotBool            notEmpty, toMove, isSysOrg;
   ThotBool            absoluteMove, externalRef;
   
-  if (pBox == NULL || pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  if (pBox == NULL /*|| pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost*/)
     return;
   /* check if the inside width, margins, borders, and paddings change */
   pAb = pBox->BxAbstractBox;
@@ -2513,6 +2520,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
           toMove = TRUE;
           if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
             toMove = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
+                      pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoBlock &&
                       pAb->AbEnclosing->AbBox->BxType != BoFloatBlock &&
@@ -2723,7 +2731,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                 YMoveAllEnclosed (pBox, orgTrans, frame);
             }
           else if (pAb->AbLeafType == LtCompound &&
-                   pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost &&
+                   pBox->BxType != BoGhost &&
+                   pBox->BxType != BoStructGhost &&
+                   pBox->BxType != BoFloatGhost &&
                    (absoluteMove || pAb->AbHeight.DimAbRef ||
                     pAb->AbHeight.DimValue >= 0))
             {
@@ -2827,6 +2837,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                       pBox->BxType == BoFloatBlock ||
                                       pBox->BxType == BoCellBlock ||
                                       pBox->BxType == BoGhost ||
+                                      pBox->BxType == BoStructGhost ||
                                       pBox->BxType == BoFloatGhost)
                                     {
                                       /* inherit from the line height */
@@ -2948,6 +2959,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                         pBox->BxType == BoCellBlock) &&
                        (pParent->AbBox->BxType == BoBlock ||
                         pParent->AbBox->BxType == BoGhost ||
+                        pParent->AbBox->BxType == BoStructGhost ||
                         pParent->AbBox->BxType == BoFloatBlock ||
                         pParent->AbBox->BxType == BoCellBlock))
                 /* Within a block of line */
@@ -3098,7 +3110,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   ThotBool            checkParent, isSysOrg;
   ThotBool            absoluteMove;
 
-  if (pBox == NULL || pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  if (pBox == NULL /*|| pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost*/)
     return;
   else
     pAb = pBox->BxAbstractBox;
@@ -3195,12 +3207,14 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
       checkParent = TRUE;
       if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
         checkParent = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
+                       pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                        pAb->AbEnclosing->AbBox->BxType != BoFloatGhost);
       
       if (pAb->AbNotInLine ||
           ((pAb->AbEnclosing &&  pAb->AbEnclosing->AbBox &&
             pAb->AbFloat == 'N' &&
             (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+             pAb->AbEnclosing->AbBox->BxType == BoStructGhost ||
              pAb->AbEnclosing->AbBox->BxType == BoFloatGhost ||
              pAb->AbEnclosing->AbBox->BxType == BoBlock ||
              pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
@@ -3220,6 +3234,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                   pRefAb = pRel->ReBox->BxAbstractBox;
                   if (pRefAb &&
                       pRel->ReBox->BxType != BoGhost &&
+                      pRel->ReBox->BxType != BoStructGhost &&
                       pRel->ReBox->BxType != BoFloatGhost &&
                       // don't move children of a new system origin
                       (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
@@ -3334,7 +3349,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   ThotBool            checkParent, isSysOrg;
   ThotBool            absoluteMove;
 
-  if (pBox == NULL || pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  if (pBox == NULL /*|| pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost*/)
     return;
   else
     pAb = pBox->BxAbstractBox;
@@ -3427,11 +3442,13 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
       checkParent = TRUE;
       if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
         checkParent = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
+                       pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                        pAb->AbEnclosing->AbBox->BxType != BoFloatGhost);
       if (pAb->AbNotInLine ||
           ((pAb->AbEnclosing &&  pAb->AbEnclosing->AbBox &&
             pAb->AbFloat == 'N' &&
             (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+             pAb->AbEnclosing->AbBox->BxType == BoStructGhost ||
              pAb->AbEnclosing->AbBox->BxType == BoFloatGhost ||
              pAb->AbEnclosing->AbBox->BxType == BoBlock ||
              pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
@@ -3451,6 +3468,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                   pRefAb = pRel->ReBox->BxAbstractBox;
                   if (pRefAb &&
                       pRel->ReBox->BxType != BoGhost &&
+                      pRel->ReBox->BxType != BoStructGhost &&
                       pRel->ReBox->BxType != BoFloatGhost &&
                       // don't move children of a new system origin
                       (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
@@ -3630,7 +3648,9 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
            pBox->BxType == BoRow)
     /* width of these elements is computed in tableH.c */
     return;
-  else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost ||
+  else if (pBox->BxType == BoGhost ||
+           //pBox->BxType == BoStructGhost ||
+           pBox->BxType == BoFloatGhost ||
            pBox->BxType == BoColumn)
     /* don't pack a column head or a ghost element */
     return;
@@ -3824,6 +3844,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                    pAb->AbEnclosing->AbBox->BxType != BoFloatBlock &&
                    pAb->AbEnclosing->AbBox->BxType != BoCellBlock &&
                    pAb->AbEnclosing->AbBox->BxType != BoGhost &&
+                   //pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                    pAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
                    !isExtra /* doesn't check enclosing of a positioned box */)
             WidthPack (pAb->AbEnclosing, pSourceBox, frame);
@@ -3876,7 +3897,9 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       pBox->BxType == BoFloatBlock || pBox->BxType == BoCellBlock)
     /* don't pack a block or a cell but transmit to enclosing box */
     HeightPack (pAb->AbEnclosing, pSourceBox, frame);
-  else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  else if (pBox->BxType == BoGhost ||
+           //pBox->BxType == BoStructGhost ||
+           pBox->BxType == BoFloatGhost)
     return;
   else if (pBox->BxContentHeight ||
            (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
@@ -4076,6 +4099,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                 YMoveAllEnclosed (pBox, -pBox->BxYOrg, frame);
             }
           else if (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+                   //pAb->AbEnclosing->AbBox->BxType == BoStructGhost ||
                    pAb->AbEnclosing->AbBox->BxType == BoFloatGhost ||
                    pAb->AbEnclosing->AbBox->BxType == BoBlock ||
                    pAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
@@ -4083,6 +4107,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
             {
               /* Il faut remonter au pave de mise en lignes */
               while (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+                     //pAb->AbEnclosing->AbBox->BxType == BoStructGhost ||
                      pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
                 pAb = pAb->AbEnclosing;
               EncloseInLine (pBox, frame, pAb->AbEnclosing);

@@ -716,6 +716,7 @@ static void MovingCommands (int code, Document doc, View view,
                       pEl = pBox->BxAbstractBox->AbElement;
                       if ((!extendSel && pViewSelEnd->VsBox &&
                            (pViewSelEnd->VsBox->BxType == BoGhost ||
+                            pViewSelEnd->VsBox->BxType == BoStructGhost ||
                             pViewSelEnd->VsBox->BxType == BoFloatGhost)) ||
                           (pBox->BxAbstractBox &&
                            pBox->BxAbstractBox->AbLeafType == LtCompound) ||

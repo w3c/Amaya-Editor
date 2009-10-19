@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -335,9 +335,12 @@ void GetClickedBox (PtrBox *result, PtrFlow *pFlow, PtrAbstractBox pRootAb,
                     {
                     if (active->AbBox == NULL)
                       active = NULL;
-                    else if (active->AbBox->BxType == BoGhost && d != 0)
+                    else if ((active->AbBox->BxType == BoGhost ||
+                              active->AbBox->BxType == BoStructGhost) &&
+                             d != 0)
                       active = NULL;	    
                     else if (active->AbBox->BxType != BoGhost &&
+                             active->AbBox->BxType != BoStructGhost &&
                              GetBoxDistance (active->AbBox, *pFlow, x, y, ratio, frame, &matchCell) != 0)
                       active = NULL;
                     }

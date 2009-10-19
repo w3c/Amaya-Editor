@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1179,7 +1179,9 @@ static int MoveCut (PtrDocument pDoc, PtrAbstractBox pAb, ThotBool NoBr1,
                 /* don't check if the element is truncated */
                 cutAbsBox = pAb->AbTruncatedHead;
               if (pAb->AbBox &&
-                  (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost))
+                  (pAb->AbBox->BxType == BoGhost ||
+                   pAb->AbBox->BxType == BoStructGhost ||
+                   pAb->AbBox->BxType == BoFloatGhost))
                 /* ignore the rule NoBreak1 */
                 cutAbsBox = TRUE;
               if (!cutAbsBox)
@@ -1212,7 +1214,9 @@ static int MoveCut (PtrDocument pDoc, PtrAbstractBox pAb, ThotBool NoBr1,
             /* don't check if the element is truncated */
             cutAbsBox = pAb->AbTruncatedHead;
           if (pAb->AbBox &&
-              (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost))
+              (pAb->AbBox->BxType == BoGhost ||
+               pAb->AbBox->BxType == BoStructGhost ||
+               pAb->AbBox->BxType == BoFloatGhost))
             /* ignore the rule NoBreak1 */
             cutAbsBox = TRUE;
           if (!cutAbsBox)
