@@ -601,14 +601,21 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent,
   pBox1 = pBox;
   pBlock = NULL;
   pLine = NULL;
-  if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  if (pBox->BxType == BoGhost ||
+      pBox->BxType == BoStructGhost ||
+      pBox->BxType == BoFloatGhost)
     {
-      while (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
+      while (pBox &&
+             (pBox->BxType == BoGhost ||
+              pBox->BxType == BoStructGhost ||
+              pBox->BxType == BoFloatGhost))
         pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
       if (!pBox)
         {
           pBox = pBox1;
-          while (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+          while (pBox->BxType == BoGhost ||
+                 pBox->BxType == BoStructGhost ||
+                 pBox->BxType == BoFloatGhost)
             pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
         }
       /* manage the line instead of the box itself */
@@ -778,6 +785,24 @@ void ShowSelectedBox (int frame, ThotBool active)
   if (pFrame->FrSelectionBegin.VsBox != NULL && pFrame->FrReady)
     {
       pBox = pFrame->FrSelectionBegin.VsBox;
+      if (pBox)
+        pAb = pBox->BxAbstractBox;
+      if (pBox &&
+          (pBox->BxType == BoGhost ||
+           pBox->BxType == BoStructGhost ||
+           pBox->BxType == BoFloatGhost))
+        {
+          // get the position of the fist visible box
+          while (pAb && pAb->AbBox &&
+                 (pAb->AbBox->BxType == BoGhost ||
+                  pAb->AbBox->BxType == BoStructGhost ||
+                  pAb->AbBox->BxType == BoFloatGhost))
+            pAb = pAb->AbFirstEnclosed;
+          if (pAb)
+            pBox = pAb->AbBox;
+          else
+            pBox = NULL;
+        }
       /* Check if almost one box is displayed */
       while (pBox && pBox->BxAbstractBox &&
              pBox->BxAbstractBox->AbVisibility < pFrame->FrVisibility)
@@ -788,19 +813,6 @@ void ShowSelectedBox (int frame, ThotBool active)
           else
             /* no box found */
             return;
-        }
-      if (pBox)
-        pAb = pBox->BxAbstractBox;
-      if (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoGhost))
-        {
-          // get the position of the fist visible box
-          while (pAb && pAb->AbBox &&
-                 (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoGhost))
-            pAb = pAb->AbFirstEnclosed;
-          if (pAb)
-            pBox = pAb->AbBox;
-          else
-            pBox = NULL;
         }
 
       // check the show of the SVG element instead of enclosed constructs
@@ -892,6 +904,7 @@ ThotBool IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
     return (FALSE);		/* pas de boite a tester */
   else if (pAb->AbVisibility < pFrame->FrVisibility ||
            pAb->AbBox->BxType == BoGhost ||
+           pAb->AbBox->BxType == BoStructGhost ||
            pAb->AbBox->BxType == BoFloatGhost)
     return (FALSE);		/* la boite n'est pas visible par definition */
   else
