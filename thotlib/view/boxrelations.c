@@ -877,7 +877,7 @@ void GetExtraMargins (PtrBox pBox, int frame, ThotBool blockMargin,
 {
   PtrAbstractBox      pAb, pNext, pPrev;
   PtrBox              box;
-  ThotBool            first = TRUE, last = TRUE, isExtra, isBlock;
+  ThotBool            first = TRUE, last = TRUE, isExtra;
 
   *t = *b = *l = *r = 0;
   if (pBox == NULL)
@@ -919,9 +919,8 @@ void GetExtraMargins (PtrBox pBox, int frame, ThotBool blockMargin,
                   pAb->AbBox->BxType == BoStructGhost))
             {
               box = pAb->AbBox;
-              isBlock = (box->BxType == BoStructGhost);
               /* add values if necessary */
-              if (!isBlock)
+              if (box->BxType != BoStructGhost)
                 {
                   if (first)
                     *l += box->BxLMargin + box->BxLBorder + box->BxLPadding;
@@ -933,7 +932,8 @@ void GetExtraMargins (PtrBox pBox, int frame, ThotBool blockMargin,
               else
                 {
                   // It's a ghost block
-                  if (blockMargin)
+                  if (blockMargin && pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
+                      pAb->AbEnclosing->AbBox->BxType != BoStructGhost)
                     {
                       if (*l > 0 && box->BxLMargin > 0)
                         {
@@ -1007,25 +1007,26 @@ void GetExtraMargins (PtrBox pBox, int frame, ThotBool blockMargin,
   ----------------------------------------------------------------------*/
 void GetLeftRightMargins (PtrBox box, PtrBox pBlock, int frame, int *l, int *r)
 {
+  PtrAbstractBox      pAb, parent;
 
   *l = *r = 0;
   if (box && box->BxAbstractBox)
     {
-      if (box->BxAbstractBox->AbLeftMarginUnit == UnPercent)
+      pAb = box->BxAbstractBox;
+      parent = pAb->AbEnclosing;
+      if (pAb->AbLeftMarginUnit == UnPercent)
         {
-          if (box->BxAbstractBox->AbEnclosing->AbBox &&
-              box->BxAbstractBox->AbEnclosing->AbBox->BxType == BoStructGhost)
-            box->BxLMargin = box->BxAbstractBox->AbEnclosing->AbBox->BxW * box->BxAbstractBox->AbLeftMargin / 100;
+          if (parent->AbBox && parent->AbBox->BxType == BoStructGhost)
+            box->BxLMargin = parent->AbBox->BxW * pAb->AbLeftMargin / 100;
           else
-            box->BxLMargin = pBlock->BxW * box->BxAbstractBox->AbLeftMargin / 100;
+            box->BxLMargin = pBlock->BxW * pAb->AbLeftMargin / 100;
         }
-      if (box->BxAbstractBox->AbRightMarginUnit == UnPercent)
+      if (pAb->AbRightMarginUnit == UnPercent)
         {
-          if (box->BxAbstractBox->AbEnclosing->AbBox &&
-              box->BxAbstractBox->AbEnclosing->AbBox->BxType == BoStructGhost)
-            box->BxRMargin = box->BxAbstractBox->AbEnclosing->AbBox->BxW * box->BxAbstractBox->AbRightMargin / 100;
+          if (parent->AbBox && parent->AbBox->BxType == BoStructGhost)
+            box->BxRMargin = parent->AbBox->BxW * pAb->AbRightMargin / 100;
           else
-            box->BxRMargin = pBlock->BxW * box->BxAbstractBox->AbRightMargin / 100;
+            box->BxRMargin = pBlock->BxW * pAb->AbRightMargin / 100;
         }
 
         *l = box->BxLMargin;
@@ -1039,17 +1040,43 @@ void GetLeftRightMargins (PtrBox box, PtrBox pBlock, int frame, int *l, int *r)
   ----------------------------------------------------------------------*/
 void GetLeftRightPaddings (PtrBox box, PtrBox pBlock, int *l, int *r)
 {
-  *l = 0;
-  *r = 0;
+  PtrAbstractBox      pAb, parent;
+
+  *l = *r = 0;
   if (box && box->BxAbstractBox)
     {
-      if (box->BxAbstractBox->AbLeftPaddingUnit == UnPercent)
-        box->BxLPadding = pBlock->BxW * box->BxAbstractBox->AbLeftPadding / 100;
-      if (box->BxAbstractBox->AbRightPaddingUnit == UnPercent)
-        box->BxRPadding = pBlock->BxW * box->BxAbstractBox->AbRightPadding / 100;
+      pAb = box->BxAbstractBox;
+      do
+        {
+          box = pAb->AbBox;
+          parent = pAb->AbEnclosing;
+          if (parent->AbBox && parent->AbBox->BxType == BoStructGhost)
+            {
+              if (pAb->AbLeftPaddingUnit == UnPercent)
+                box->BxLPadding = parent->AbBox->BxW * pAb->AbLeftPadding / 100;
+              if (pAb->AbRightPaddingUnit == UnPercent)
+                box->BxRPadding = parent->AbBox->BxW * pAb->AbRightPadding / 100;
+              // Include extra margins
+              if (box->BxType == BoStructGhost)
+                {
+                  *l += box->BxLMargin;
+                  *r += box->BxRMargin;
+                }
+              pAb = parent;
+           }
+          else
+            {
+              if (pAb->AbLeftPaddingUnit == UnPercent)
+                box->BxLPadding = pBlock->BxW * pAb->AbLeftPadding / 100;
+              if (pAb->AbRightPaddingUnit == UnPercent)
+                box->BxRPadding = pBlock->BxW * pAb->AbRightPadding / 100;
+              pAb = NULL;
+           }
 
-      *l = box->BxLPadding;
-      *r = box->BxRPadding;
+          *l += box->BxLPadding;
+          *r += box->BxRPadding;
+        }
+      while (pAb && pAb->AbBox && pAb->AbBox->BxType == BoStructGhost);
     }
 }
 

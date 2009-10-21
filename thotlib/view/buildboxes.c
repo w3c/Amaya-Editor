@@ -2719,7 +2719,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
     }
   pBox = pAb->AbBox;
   extraflow = ExtraAbFlow (pAb, frame);
-  if ((inLine || (inLineFloat && !dummyChild)) &&
+ if ((inLine || (inLineFloat /*&& !dummyChild*/)) &&
       (!*inlineFloatC ||
        (uniqueChild && pAb->AbLeftMargin == 0 && pAb->AbRightMargin == 0)) &&
       pAb->AbFloat == 'N' &&
@@ -5785,7 +5785,7 @@ void CheckScrollingWidthHeight (int frame)
   PtrBox              pBox, box;
   ViewFrame          *pFrame;
   int                 xmax, xorg, ymax;
-  int                 w, h;
+  int                 w, h, newmax;
 
   if  (AnyWidthUpdate)
     {
@@ -5809,57 +5809,48 @@ void CheckScrollingWidthHeight (int frame)
                   /* check if this box is displayed outside the document box */
 #ifdef _GL
                   if (pBox->BxBoundinBoxComputed)
-                    {
-                      if (pBox->BxClipX + pBox->BxClipW > xmax &&
-                          (pBox->BxType != BoPiece || pBox->BxNChars > 0))
-                        {
-                           /* ignoge boxes with absolute or fixed positions */
-                          pAb = GetEnclosingViewport (pBox->BxAbstractBox);
-                          if (pAb == NULL ||
-                              (pAb->AbPositioning &&
-                               pAb->AbPositioning->PnAlgorithm == PnRelative))
-                            {
-                              xmax = pBox->BxClipX + pBox->BxClipW;
-                              if (pBox->BxAbstractBox &&
-                                  pBox->BxAbstractBox->AbLeafType == LtText)
-                                {
-                                  pAb = pBox->BxAbstractBox->AbEnclosing;
-                                  while (pAb && pAb->AbBox &&
-                                         pAb->AbBox->BxType == BoGhost)
-                                    pAb = pAb->AbEnclosing;
-                                  if (pAb && pAb->AbBox &&
-                                      xmax < pAb->AbBox->BxClipX + pAb->AbBox->BxClipW)
-                                    xmax = pAb->AbBox->BxClipX + pAb->AbBox->BxClipW;
-                                }
-                              xmax += 4;
-                            }
-                        }
-                      // check if a positioned box is out of the document
-/*                       if (ExtraFlow (pBox, frame)) */
-/*                         { */
-/*                           if (ymax < pBox->BxClipY + pBox->BxClipH) */
-/*                             ymax = pBox->BxClipY + pBox->BxClipH; */
-/*                         } */
-                    }
+                    newmax = pBox->BxClipX + pBox->BxClipW;
                   else
 #endif /*  _GL */
+                    newmax = pBox->BxXOrg + pBox->BxWidth;
+                  if (pBox->BxAbstractBox->AbFloat == 'R' && pBox->BxRMargin < 0)
+                    newmax += pBox->BxRMargin;
+                  if (newmax > xmax &&
+                      (pBox->BxType != BoPiece || pBox->BxNChars > 0))
                     {
-                      if (pBox->BxXOrg + pBox->BxWidth > xmax &&
-                          (pBox->BxType != BoPiece || pBox->BxNChars > 0))
+                      /* ignoge boxes with absolute or fixed positions */
+                      pAb = GetEnclosingViewport (pBox->BxAbstractBox);
+                      if (pAb == NULL ||
+                          (pAb->AbPositioning &&
+                           pAb->AbPositioning->PnAlgorithm == PnRelative))
                         {
-                          /* ignoge boxes with absolute or fixed positions */
-                          pAb = GetEnclosingViewport (pBox->BxAbstractBox);
-                          if (pAb == NULL ||
-                              (pAb->AbPositioning &&
-                               pAb->AbPositioning->PnAlgorithm == PnRelative))
-                            xmax = pBox->BxXOrg + pBox->BxWidth;
+                          if (pBox->BxAbstractBox &&
+                              pBox->BxAbstractBox->AbLeafType == LtText)
+                            {
+                              pAb = pBox->BxAbstractBox->AbEnclosing;
+                              while (pAb && pAb->AbBox &&
+                                     (pAb->AbBox->BxType == BoGhost ||
+                                      pAb->AbBox->BxType == BoStructGhost ||
+                                      pAb->AbBox->BxType == BoFloatGhost))
+                                pAb = pAb->AbEnclosing;
+                              if (pAb && pAb->AbBox)
+                                {
+#ifdef _GL
+                                if (pAb->AbBox->BxBoundinBoxComputed)
+                                  newmax = pAb->AbBox->BxClipX + pAb->AbBox->BxClipW;
+                                else
+#endif /*  _GL */
+                                  newmax = pAb->AbBox->BxXOrg + pAb->AbBox->BxWidth;
+                                if (pAb->AbFloat == 'R' && pAb->AbBox->BxRMargin < 0)
+                                  newmax += pAb->AbBox->BxRMargin;
+                               }
+                              if (xmax < newmax)
+                                xmax = newmax;
+                            }
+                          else
+                            xmax = newmax;
+                          xmax += 4;
                         }
-                      // check if a positioned box is out of the document
-/*                       if (ExtraFlow (pBox, frame)) */
-/*                         { */
-/*                           if (ymax < pBox->BxYOrg + pBox->BxHeight) */
-/*                             ymax = pBox->BxYOrg + pBox->BxHeight; */
-/*                         } */
                     }
                   if (pBox->BxNext == box)
                     {
