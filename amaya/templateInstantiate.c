@@ -410,7 +410,7 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
   AttributeType attType;
   Attribute     att;
   Element       next, child = NULL, savedInline, prev, parent = NULL;
-  ElementType   elType, otherType;
+  ElementType   elType, otherType, parentType;
   Declaration   dec;
   char         *name, *types;
 
@@ -543,7 +543,17 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
                     }
                   else
                     {
-                      // therse is already a contents
+      if (IsTemplateInstanceDocument (doc))
+        {
+          // give a riority to the repeat button
+          parent = TtaGetParent (el);
+          parentType = TtaGetElementType (parent);
+          if (elType.ElTypeNum == Template_EL_useEl &&
+              parentType.ElSSchema == elType.ElSSchema &&
+              parentType.ElTypeNum == Template_EL_repeat)
+            TtaChangeTypeOfElement (el, doc, Template_EL_useSimple);
+        }
+                      // there is already a contents
                       attType.AttrTypeNum = Template_ATTR_currentType;
                       att = TtaGetAttribute (el, attType);
                       if (att == NULL)
