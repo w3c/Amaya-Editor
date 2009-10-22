@@ -543,6 +543,7 @@ Element ParseTemplate (XTigerTemplate t, Element el, Document doc,
                     }
                   else
                     {
+                      // therse is already a contents
                       attType.AttrTypeNum = Template_ATTR_currentType;
                       att = TtaGetAttribute (el, attType);
                       if (att == NULL)

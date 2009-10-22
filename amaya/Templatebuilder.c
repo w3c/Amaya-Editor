@@ -106,7 +106,8 @@ void TemplateEntityCreated (unsigned char *entityValue, Language lang,
   ----------------------------------------------------------------------*/
 ThotBool NeedAMenu (Element el, Document doc)
 {
-  ElementType	     elType;
+  Element          parent;
+  ElementType	     elType, parentType;
   Attribute        att;
   AttributeType    attributeType;
   XTigerTemplate   t;
@@ -165,6 +166,16 @@ ThotBool NeedAMenu (Element el, Document doc)
   if (elType.ElTypeNum == Template_EL_useEl ||
        elType.ElTypeNum == Template_EL_useSimple)
     {
+      if (IsTemplateInstanceDocument (doc))
+        {
+          // give a riority to the repeat button
+          parent = TtaGetParent (el);
+          parentType = TtaGetElementType (parent);
+          if (elType.ElTypeNum == Template_EL_useEl &&
+              parentType.ElSSchema == elType.ElSSchema &&
+              parentType.ElTypeNum == Template_EL_repeat)
+            res = FALSE;
+        }
       attributeType.AttrTypeNum = Template_ATTR_currentType;
       att = TtaGetAttribute (el, attributeType);
       if (att == NULL && !res)

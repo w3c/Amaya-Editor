@@ -1084,8 +1084,15 @@ ThotBool RepeatButtonClicked (NotifyElement *event)
               if (result)
                 {
                   if (event->position == 1)
-                    // force the insert before
-                    DoReplicateUseElement (t, doc, view, repeatEl, repeatEl, result);
+                    {
+                      // force the insert before
+                      if (el != repeatEl)
+                        TtaPreviousSibling (&el);
+                      if (el)
+                        DoReplicateUseElement (t, doc, view, el, repeatEl, result);
+                      else
+                        DoReplicateUseElement (t, doc, view, repeatEl, repeatEl, result);
+                    }
                   else
                     DoReplicateUseElement (t, doc, view, el, repeatEl, result);
                 }
