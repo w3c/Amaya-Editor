@@ -2741,7 +2741,12 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
       if (*inlineFloatC)
         pBox->BxType = BoFloatGhost;
       if (pAb->AbFirstEnclosed)
-        pBox->BxType = BoGhost;
+        {
+          if (dummyChild)
+             pBox->BxType = BoStructGhost;
+          else
+            pBox->BxType = BoGhost;
+        }
       /* this element can be split */
       *inlineChildren = inLine;
       *inlineFloatC = inLineFloat;

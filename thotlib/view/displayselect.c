@@ -945,6 +945,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, int t,
           /* holophrasted elements have no enclosing */
           pParentBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
           while (pParentBox->BxType == BoGhost ||
+                 pParentBox->BxType == BoStructGhost ||
                  pParentBox->BxType == BoFloatGhost)
             {
               pAb = pParentBox->BxAbstractBox;

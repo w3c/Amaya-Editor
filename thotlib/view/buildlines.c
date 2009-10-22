@@ -1801,7 +1801,7 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max, int l,
 /*----------------------------------------------------------------------
   AddBoxInLine adds a box in a line.
   ----------------------------------------------------------------------*/
-static void AddBoxInLine (PtrBox pBox, int frame, PtrLine pLine,
+static void AddBoxInLine (PtrBox pBox, int frame, PtrBox pBlock, PtrLine pLine,
                           int *descent, int *ascent)
 {
   int t, b, l, r;
@@ -1812,6 +1812,7 @@ static void AddBoxInLine (PtrBox pBox, int frame, PtrLine pLine,
   /* check if the line includes a compound box or an image */
   if (pBox->BxAbstractBox &&
       (pBox->BxAbstractBox->AbLeafType == LtCompound ||
+       pBox->BxAbstractBox->AbEnclosing->AbBox != pBlock ||
        pBox->BxAbstractBox->AbLeafType == LtPicture))
     pLine->LiNoOverlap = TRUE;
   /* Compute the current line height */
@@ -1859,7 +1860,7 @@ static void AddAllBoxesInLine (PtrBox pBox, int frame, PtrBox pBlock,
               (!pNextBox->BxAbstractBox->AbNotInLine ||
                pNextBox->BxAbstractBox->AbDisplay != 'U'))
             {
-              AddBoxInLine (pNextBox, frame, pLine, &descent, &ascent);
+              AddBoxInLine (pNextBox, frame, pBlock, pLine, &descent, &ascent);
               if (pNextBox->BxAbstractBox->AbLeafType == LtText)
                 line_spaces += pNextBox->BxNSpaces;
             }

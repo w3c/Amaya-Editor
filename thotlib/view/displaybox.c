@@ -2546,17 +2546,22 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
     {
       /* get the visible enclosing box */
       mbox = pAb->AbEnclosing->AbBox;
-      if (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost)
+      if (mbox->BxType == BoGhost ||
+          mbox->BxType == BoStructGhost ||
+          mbox->BxType == BoFloatGhost)
         {
           selfsel = selfsel || mbox->BxAbstractBox->AbSelected;
           while (mbox->BxAbstractBox->AbEnclosing &&
                  (mbox->BxType == BoGhost ||
+                  mbox->BxType == BoStructGhost ||
                   mbox->BxType == BoFloatGhost))
             {
               mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
               selfsel = selfsel ||
                 (mbox->BxAbstractBox->AbSelected &&
-                 (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost));
+                 (mbox->BxType == BoGhost ||
+                  mbox->BxType == BoStructGhost ||
+                  mbox->BxType == BoFloatGhost));
             }
         }
       else if (pAb->AbLeafType == LtPicture)

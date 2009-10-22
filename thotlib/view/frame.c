@@ -659,7 +659,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
       yd = pBox->BxYOrg + t;
       height = pBox->BxHeight;
     }
-  else if (from->BxType == BoStructGhost)
+  else if ((from->BxType == BoGhost || from->BxType == BoStructGhost) &&
+           pFrom->AbDisplay == 'B')
     {
       // check if borders are displayed
       if (first)
@@ -719,7 +720,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame, PtrFlow pFlow,
   else
     {
       // the box is displayed on a set of lines
-      GetExtraMargins (from, frame, TRUE, &t, &b, &l, &r);
+      GetExtraMargins (from, frame, FALSE, &t, &b, &l, &r);
       t += from->BxTMargin;
       b += from->BxBMargin;
       bt = from->BxTBorder;
