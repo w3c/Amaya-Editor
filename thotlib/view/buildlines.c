@@ -2671,19 +2671,16 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   // update parent ghost blocks if needed
                   GetLeftRightMargins (pNextBox, pBlock, frame, &ml, &mr);
                   GetLeftRightPaddings (pNextBox, pBlock, &l, &r);
-                  if (ml > 0 && setinline)
+                  if (setinline)
                     {
-                      if (pBlock->BxLeftFloat && pLine->LiXOrg < ml)
+                      if (ml > 0 && pLine->LiXOrg < ml)
                         {
                           // shift the box position
                           l = l + ml - pLine->LiXOrg;
                           ml = 0;
                         }
-                     }
-                 if (mr > 0 && setinline)
-                    {
                       shift = pBlock->BxW - pLine->LiXOrg - pLine->LiXMax;
-                      if (pBlock->BxRightFloat && shift < mr)
+                      if (mr > 0 && shift < mr)
                         {
                           // reduce the size of the box
                           r = r + mr - shift;
@@ -2892,8 +2889,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   //if (!variable)
                   wordWidth = pNextBox->BxMinWidth;
                   // don't justify this line
-                  *adjust = FALSE;
-                  *newblock = TRUE;
+                  //*adjust = TRUE;
                 }
               else if (!pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
                        pNextBox->BxAbstractBox->AbHorizEnclosing &&
@@ -2939,10 +2935,21 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   *newblock = Checknewblock (pBox, pNextBox, pBlock, frame);
                   if (*newblock)
                     {
-                      /* only one compound block by line */
-                      *full = TRUE;
-                      still = FALSE;
-                      *adjust = TRUE;
+                      if (pNextBox && pNextBox->BxAbstractBox->AbLeafType == LtText &&
+                          pNextBox->BxNChars == pNextBox->BxNSpaces)
+                        {
+                          // include the next empty box in the line
+                          pBox = pNextBox;
+                          toCut = FALSE;
+                          *adjust = TRUE;
+                        }
+                      else
+                        {
+                          /* only one compound block by line */
+                          *full = TRUE;
+                          still = FALSE;
+                          *adjust = TRUE;
+                        }
                     }
                   else if (!pBox->BxAbstractBox->AbElement->ElTerminal &&
                            (pBox->BxAbstractBox->AbElement->ElTypeNumber == 0 ||
@@ -3587,13 +3594,13 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       x = pBlock->BxWidth - right - bw + orgX;
     }
 
-  prevBox = GetPreviousBox (box->BxAbstractBox, frame);
   if (pLine)
     {
       y = orgY + pLine->LiYOrg;
       if (pLine->LiRealLength > 0)
         {
           /* it must be displayed below the current line */
+          prevBox = GetPreviousBox (box->BxAbstractBox, frame);
           AddAllBoxesInLine (prevBox, frame, pBlock, pRootAb, pLine, notComplete, full);
           if (pLine->LiRealLength + bw > pLine->LiXMax)
             return minWidth;
@@ -3680,18 +3687,25 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 
   if ((boxPrevL && y < bottomL) || (boxPrevR && y < bottomR))
     {
-       if (bw > w + 1 && boxPrevL && boxPrevR
-           && bottomL < bottomR && y < bottomL)
-         {
-           w = shiftr - left - orgX;
-           y = bottomL;
-         }
-       else if (bw > w + 1 && boxPrevL && boxPrevR &&
-                bottomR < bottomL && y < bottomR)
-         {
-           w = pBlock->BxW + left + orgX - shiftl;
-           y = bottomR;
-         }
+      if (bottomL < bottomR)
+        {
+          if ((bw > w + 1 && y < bottomL) ||
+              (boxPrevL && y > boxPrevL->BxYOrg))
+            {
+              // at the bottom of the left float
+              w = shiftr - left - orgX;
+              y = bottomL;
+            }
+        }
+      else
+        {
+          if ((bw > w + 1 && y < bottomR) ||
+              (boxPrevR && y > boxPrevR->BxYOrg))
+            {
+              w = pBlock->BxW + left + orgX - shiftl;
+              y = bottomR;
+            }
+        }
        if (bw > w + 1 && HasVariableWidth (box, pBlock) &&
            w > 0 && w >= box->BxMinWidth - ml - mr)
          {
@@ -3707,7 +3721,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
               box->BxAbstractBox->AbFloat == 'L')
             {
               x = shiftl;
-              y = boxPrevL->BxYOrg;
+              //y = boxPrevL->BxYOrg;
             }
           else if (boxPrevR && y < bottomR &&
                    box->BxAbstractBox->AbFloat == 'R')

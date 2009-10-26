@@ -5927,6 +5927,9 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
                 {
                   pNewAbbox = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
                   pNewAbbox->AbPSchema = pSchP;
+                  // generate the CSS visibility of the top element
+                  if (pEl->ElParent == NULL)
+                    pNewAbbox->AbVis = 'V';
                   if (pDoc->DocReadOnly)
                     {
                       /* document en lecture seule */

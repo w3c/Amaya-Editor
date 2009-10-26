@@ -2740,7 +2740,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
       /* ignore this box if it's not empty */
       if (*inlineFloatC)
         pBox->BxType = BoFloatGhost;
-      if (pAb->AbFirstEnclosed)
+      else if (pAb->AbFirstEnclosed)
         {
           if (dummyChild)
              pBox->BxType = BoStructGhost;
