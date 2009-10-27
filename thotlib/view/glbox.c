@@ -272,7 +272,8 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
 {
 #ifdef _GL
   GLfloat    feedBuffer[FEEDBUFFERSIZE];
-  int        size, mode;
+  GLint      mode;
+  int        size;
   ViewFrame  *pFrame;
  
   if (NotFeedBackMode)
@@ -327,7 +328,8 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax,
                        int ymin, int ymax, ThotBool show_bgimage)
 {
   GLfloat feedBuffer[4096];
-  int     size, mode;
+  GLint   mode;
+  int     size;
   
   if (NotFeedBackMode)
     {
