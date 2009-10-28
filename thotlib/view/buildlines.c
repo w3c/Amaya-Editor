@@ -3572,7 +3572,6 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     orgX += pBlock->BxXOrg;
   if (yAbs)
     orgY += pBlock->BxYOrg;
-
   ml = box->BxLMargin;
   mr = box->BxRMargin;
   bw = box->BxWidth;
@@ -3633,7 +3632,9 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
         }
       /* can be inserted next to this previous float ? */
       if (y < bottomR && y + box->BxHeight >= boxPrevR->BxYOrg)
-        w = shiftr;
+        w = shiftr - left - orgX;
+      else
+        shiftr = 0;
     }
   if  (boxPrevL)
     {
@@ -3652,6 +3653,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       /* can be inserted next to this previous float ? */
       if (y < bottomL && y + box->BxHeight > boxPrevL->BxYOrg)
         w = w - shiftl + left + orgX;
+      else
+        shiftl = 0;
     }
 
   /* check if a clear is requested */
@@ -3689,8 +3692,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     {
       if (bottomL < bottomR)
         {
-          if ((bw > w + 1 && y < bottomL) ||
-              (boxPrevL && y > boxPrevL->BxYOrg))
+          if (y < bottomL &&
+              (bw > w + 1 || (boxPrevL && y > boxPrevL->BxYOrg)))
             {
               // at the bottom of the left float
               w = shiftr - left - orgX;
@@ -3699,13 +3702,14 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
         }
       else
         {
-          if ((bw > w + 1 && y < bottomR) ||
-              (boxPrevR && y > boxPrevR->BxYOrg))
+          if (y < bottomR &&
+              (bw > w + 1 || (boxPrevR && y > boxPrevR->BxYOrg)))
             {
               w = pBlock->BxW + left + orgX - shiftl;
               y = bottomR;
             }
         }
+
        if (bw > w + 1 && HasVariableWidth (box, pBlock) &&
            w > 0 && w >= box->BxMinWidth - ml - mr)
          {
@@ -3719,11 +3723,11 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
           /* it's possible to display the floating box at the current position */
           if (boxPrevL && y < bottomL &&
               box->BxAbstractBox->AbFloat == 'L')
-            {
+             {
               x = shiftl;
               //y = boxPrevL->BxYOrg;
             }
-          else if (boxPrevR && y < bottomR &&
+          else if (y < bottomR && boxPrevR &&
                    box->BxAbstractBox->AbFloat == 'R')
             {
               x = shiftr - bw;

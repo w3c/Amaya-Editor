@@ -2735,25 +2735,24 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	       (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimValue <= 0)) &&
 	      !pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimValue <= 0);
 
-  if ((inLine || inLineFloat) && // within a block of lines
-      (!*inlineFloatC || // no included floated boxes
-       // or it could be a floated ghost if there is no margins
-       (uniqueChild && pAb->AbLeftMargin == 0 && pAb->AbRightMargin == 0)) &&
-      (pAb->AbAcceptLineBreak || *inlineFloatC) &&
-      displayI &&
-      cansplit &&
-      /* and not already registered as .... */
-      pBox->BxType != BoFloatGhost &&
-      pBox->BxType != BoFloatBlock &&
-      pBox->BxType != BoCellBlock)
+  if ((inLine || inLineFloat) &&
+      *inlineFloatC && uniqueChild && pAb->AbLeftMargin == 0 && pAb->AbRightMargin == 0)
+    /* include a unique floated box */
+    pBox->BxType = BoFloatGhost;
+  else if ((inLine || inLineFloat) && // within a block of lines
+           !*inlineFloatC && // no included floated boxes
+           pAb->AbAcceptLineBreak &&
+           displayI &&
+           cansplit &&
+           /* and not already registered as .... */
+           pBox->BxType != BoFloatGhost &&
+           pBox->BxType != BoFloatBlock &&
+           pBox->BxType != BoCellBlock)
     {
-      if (*inlineFloatC)
-	/* include a unique floated box */
-        pBox->BxType = BoFloatGhost;
-      else if (pAb->AbFirstEnclosed)
+      if (pAb->AbFirstEnclosed)
         {
           if (dummyChild)
-	    // include a pseudo paragraph
+            // include a pseudo paragraph
              pBox->BxType = BoStructGhost;
           else
             pBox->BxType = BoGhost;
