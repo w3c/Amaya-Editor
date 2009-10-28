@@ -227,8 +227,8 @@ static void SetYCompleteForOutOfStruct (PtrBox pBox, int visibility,
               /* Relation hors-struture sur l'origine de la boite */
               if (pRel->ReOp == OpVertDep &&
                   pRel->ReBox->BxYOutOfStruct &&
-                  pRel->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pAb &&
-                  pRel->ReBox->BxYToCompute)
+                  pRel->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pAb /*&&
+                                                                          pRel->ReBox->BxYToCompute*/)
                 {
                   if (pRel->ReBox->BxVertFlex)
                     MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, y, frame, FALSE);
