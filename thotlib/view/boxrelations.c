@@ -1371,7 +1371,6 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
     }
 
   pParentAb = pAb->AbEnclosing;
-
   if (pBox->BxType == BoStructGhost)
     {
       // change the position of structure ghost
@@ -1449,6 +1448,21 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
       }
   
   if (pRefAb && pRefAb->AbBox &&
+      pRefAb->AbBox->BxType == BoFloatGhost)
+    {
+      // get a valid child
+      pRefAb = pRefAb->AbFirstEnclosed;
+      while (pRefAb && pRefAb->AbFloat == 'N')
+         {
+           if (pRefAb != pAb && pRefAb->AbLeafType == LtCompound)
+             pRefAb = pRefAb->AbFirstEnclosed;
+           else
+             pRefAb = pRefAb->AbNext;
+        }
+      rule->PosAbRef = pRefAb;
+    }
+
+  if (pRefAb && pRefAb->AbBox &&
       (pRefAb->AbBox->BxType == BoStructGhost ||
        pRefAb->AbBox->BxType == BoGhost))
     {
@@ -1458,25 +1472,6 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
       else
         pAb->AbVertPosChange = FALSE;
       return;
-    }
-
-  if (pRefAb && pRefAb->AbBox &&
-      (pRefAb->AbBox->BxType == BoFloatGhost ||
-       pRefAb->AbBox->BxType == BoStructGhost ||
-       pRefAb->AbBox->BxType == BoGhost))
-    {
-      // get a valid child
-      while (pRefAb && pRefAb->AbBox &&
-             pRefAb->AbBox->BxType == BoFloatGhost)
-        {
-          pRefAb = pRefAb->AbFirstEnclosed;
-          if (rule->PosRefEdge == Right || rule->PosRefEdge == Bottom)
-            {
-              // look for the last sibling
-              while (pRefAb && pRefAb->AbNext)
-                pRefAb = pRefAb->AbNext;
-            }
-        }
     }
 
   if (horizRef)
