@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -672,6 +672,12 @@ void AmayaApp::OnKeyDown(wxKeyEvent& event)
   if (p_window && p_window->IsActive())
   {
   TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaApp::OnKeyDown key=%d"), event.GetKeyCode());
+#ifdef _MACOS
+  if (event.GetKeyCode() == 13 && event.GetUnicodeKey() != 13)
+    // it is a mute ^
+    event.Skip();
+  else
+#endif /* _MACOS */
     if(!TtaHandleSpecialKey(event))
       if (!TtaHandleShortcutKey(event))
         event.Skip();
