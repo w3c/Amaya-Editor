@@ -1616,7 +1616,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   PtrBox              nbox;
   PtrAbstractBox      pAb;
   SpecFont            font;
+#ifdef _GL
   PtrLine             pLine;
+#endif /* _GL */
   ThotFont            prevfont = NULL;
   ThotFont            nextfont = NULL;
   CHAR_T              c, transc;

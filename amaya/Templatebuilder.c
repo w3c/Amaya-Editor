@@ -106,7 +106,6 @@ void TemplateEntityCreated (unsigned char *entityValue, Language lang,
   ----------------------------------------------------------------------*/
 ThotBool NeedAMenu (Element el, Document doc)
 {
-  Element          parent;
   ElementType	     elType;
   Attribute        att;
   AttributeType    attributeType;

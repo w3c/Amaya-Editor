@@ -689,11 +689,6 @@ static void AnnotFilterCallbackDialog (int ref, int typedata, char * data)
   ----------------------------------------------------------------------*/
 void AnnotFilter (Document document, View view)
 {
-	/* local variables */
-#ifndef _WINGUI
-  int              i;
-#endif /* !_WINGUI */
-
   /* build the filter structures from the downloaded 
      annotation info */
   AnnotFilter_build (document);
