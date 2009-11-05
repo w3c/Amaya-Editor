@@ -86,6 +86,10 @@
 
 
 0;#Unicode (.or ... JAPANESe)
-1;1=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;2=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;3=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;
-2;1=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;2=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;3=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;
-3;1=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;2=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;3=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;
+1;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+2;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+3;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+4;1=$THOTDIR/fonts/Cyberbit.ttf;2=$THOTDIR/fonts/Cyberbit.ttf;3=$THOTDIR/fonts/Cyberbit.ttf;4=$THOTDIR/fonts/Cyberbit.ttf;5=$THOTDIR/fonts/Cyberbit.ttf;
+~#1;1=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;2=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;3=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;
+#2;1=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;2=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;3=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;
+#3;1=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;2=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;3=/usr/share/fonts/truetype/kochi/kochi-mincho-subst.ttf;
