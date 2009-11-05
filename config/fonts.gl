@@ -38,9 +38,10 @@
 
 
 6;#Arabic
-1;1=$THOTDIR/fonts/DejaVuSerifCondensed.ttf;2=$THOTDIR/fonts/DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR/fonts/DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR/fonts/DejaVuSerifCondensed-BoldItalic.ttf;
-2;1=$THOTDIR/fonts/DejaVuSansCondensed.ttf;2=$THOTDIR/fonts/DejaVuSansCondensed-Bold.ttf;3=$THOTDIR/fonts/DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR/fonts/DejaVuSansCondensed-BoldOblique.ttf;
-3;1=$THOTDIR/fonts/DejaVuSansMono.ttf;2=$THOTDIR/fonts/DejaVuSansMono-Bold.ttf;3=$THOTDIR/fonts/DejaVuSansMono-Oblique.ttf;4=$THOTDIR/fonts/DejaVuSansMono-BoldOblique.ttf;
+1;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
+2;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
+3;1=$THOTDIR/fonts/FreeSerif.ttf;2=$THOTDIR/fonts/FreeSerifBold.ttf;3=$THOTDIR/fonts/FreeSerifItalic.ttf;4=$THOTDIR/fonts/FreeSerifBoldItalic.ttf;
+# arabic characteres are only avalaible in Serif fonts
 
 
 7;#Greek
