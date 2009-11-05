@@ -1468,9 +1468,29 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
     {
       /* the box position is computed by the line formatter */
       if (horizRef)
-        pAb->AbHorizPosChange = FALSE;
+        {
+          pAb->AbHorizPosChange = FALSE;
+          if (pRefAb->AbBox->BxType == BoGhost &&
+              pAb->AbElement && pAb->AbElement->ElStructSchema &&
+              !strcmp (pAb->AbElement->ElStructSchema->SsName, "Template") &&
+              pAb->AbPresentationBox && pAb->AbTypeNum != 0)
+            {
+              pAb->AbNotInLine = FALSE;
+              pAb->AbHorizEnclosing = TRUE;
+            }
+        }
       else
-        pAb->AbVertPosChange = FALSE;
+        {
+          pAb->AbVertPosChange = FALSE;
+          if (pRefAb->AbBox->BxType == BoGhost &&
+              pAb->AbElement && pAb->AbElement->ElStructSchema &&
+              !strcmp (pAb->AbElement->ElStructSchema->SsName, "Template") &&
+              pAb->AbPresentationBox && pAb->AbTypeNum != 0)
+            {
+              pAb->AbNotInLine = FALSE;
+              pAb->AbVertEnclosing = TRUE;
+            }
+        }
       return;
     }
 
@@ -3052,7 +3072,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                                    pParentAb->AbWidth.DimAbRef &&
                                    pAb->AbDisplay != 'B' && pAb->AbDisplay != 'L')
                             {
-                              /* inherit from the parent box */
+                              /* inherit from contents */
                               pDimAb->DimAbRef = NULL;
                               pDimAb->DimValue = -1;		  
                               pBox->BxContentWidth = TRUE;
