@@ -152,25 +152,25 @@
 150 Superscript (sup)
 151 Quotation (q)
 152 BiDi override (bdo)
-153 Image (img)...
-154 Horizontal rule (hr)
-155 Break (br)
-156 Preformatted (pre)
-157 Insert a table
-158 Table
-159 Insert a table
-160 caption
-161 thead
-162 tbody
-163 tfoot
-164 &Math
-165 Insert a formula
-166 Plain text (mtext)
-167 Identifier (mi)
-168 Number (mn)
-169 Operator (mo)
-170 Space (mspace)
-171 Character (&xxx;)
+153 Character (&xxx;)
+154 Image (img)...
+155 Horizontal rule (hr)
+156 Break (br)
+157 Preformatted (pre)
+158 Insert a table
+159 Table
+160 Insert a table
+161 caption
+162 thead
+163 tbody
+164 tfoot
+165 &Math
+166 Insert a formula
+167 Plain text (mtext)
+168 Identifier (mi)
+169 Number (mn)
+170 Operator (mo)
+171 Space (mspace)
 172 InvisibleTimes
 173 ApplyFunction
 174 Root (mroot)

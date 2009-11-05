@@ -152,25 +152,25 @@
 150 Hochgestellt (sup)
 151 Zitat (q)
 152 Textrichtung LTR/RTL (bdo)
-153 Bild (img)...
-154 Horizontale Linie (hr)
-155 Zeilenumbruch (br)
-156 Vorformatiert (pre)
-157 Tabelle einfügen
-158 Tabelle
-159 Tabelle einfügen
-160 Überschrift (caption)
-161 Tabellenkopf (thead)
-162 Tabellenkörper (tbody)
-163 Tabellenfuß (tfoot)
-164 &Math
-165 Formel einfügen
-166 Text (mtext)
-167 Bezeichner (mi)
-168 Zahl (mn)
-169 Operator (mo)
-170 Leerzeichen (mspace)
-171 Zeichen (&xxx;)
+153 Zeichen (&xxx;)
+154 Bild (img)...
+155 Horizontale Linie (hr)
+156 Zeilenumbruch (br)
+157 Vorformatiert (pre)
+158 Tabelle einfügen
+159 Tabelle
+160 Tabelle einfügen
+161 Überschrift (caption)
+162 Tabellenkopf (thead)
+163 Tabellenkörper (tbody)
+164 Tabellenfuß (tfoot)
+165 &Math
+166 Formel einfügen
+167 Text (mtext)
+168 Bezeichner (mi)
+169 Zahl (mn)
+170 Operator (mo)
+171 Leerzeichen (mspace)
 172 Unsichtbare Multiplikation
 173 Angewendete Funktion (ApplyFunction)
 174 Wurzel (mroot)

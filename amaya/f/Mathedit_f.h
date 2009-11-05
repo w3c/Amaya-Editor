@@ -511,8 +511,8 @@ extern void FreeMathML ( void );
 extern void InitMathML ( void );
 extern void SetAttrParseMe ( Element el,
                              Document doc );
-extern void CreateMathEntity ( Document document,
-                               View view );
+extern void CreateEntity ( Document doc,
+                           View view );
 extern void CreateInvisibleTimes ( Document document,
                                    View view );
 extern void CreateApplyFunction ( Document document,
@@ -1089,8 +1089,8 @@ extern void FreeMathML ( void );
 extern void InitMathML ( void );
 extern void SetAttrParseMe ( Element el,
                                Document doc );
-extern void CreateMathEntity ( Document document,
-                                 View view );
+extern void CreateEntity ( Document doc,
+                             View view );
 extern void CreateInvisibleTimes ( Document document,
                                      View view );
 extern void CreateApplyFunction ( Document document,

@@ -3894,8 +3894,8 @@ domaineihin</message>
 	<message xml:lang="uk">Використовувати proxy лише для цих доменів</message>
 </label>
 <label define="AM_MATH_ENTITY_NAME">
-	<message xml:lang="en">Character name</message>
-	<message xml:lang="fr">Nom du caractère</message>
+	<message xml:lang="en">Character name or hexa code</message>
+	<message xml:lang="fr">Nom du caractère ou code hexadécimal</message>
 	<message xml:lang="de">Zeichenname</message>
 	<message xml:lang="it">Nome del carattere</message>
 	<message xml:lang="es">Nombre de carácter:</message>

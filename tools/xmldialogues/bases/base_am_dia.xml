@@ -2745,6 +2745,25 @@
 	<message xml:lang="nl">Bidirectioneel opheffen (bdo)</message>
 	<message xml:lang="uk">Скасування двоспрямованого тексту (bdo)</message>
 </label>
+<label define="BMEntity">
+	<message xml:lang="en">Character (&amp;xxx;)</message>
+	<message xml:lang="fr">Caractère (&amp;xxx;)</message>
+	<message xml:lang="de">Zeichen (&amp;xxx;)</message>
+	<message xml:lang="it">Carattere (&amp;xxx;)</message>
+	<message xml:lang="es">Carácter (&amp;xxx;)</message>
+	<message xml:lang="pt">Carácter (&amp;xxx;)</message>
+	<message xml:lang="fi">Merkki (&amp;xxx;)</message>
+	<message xml:lang="tr">Karakter (&amp;xxx;)</message>
+	<message xml:lang="ru">Символ (&amp;xxx;)</message>
+	<message xml:lang="hu">&amp;Karakter (&amp;xxx;)</message>
+	<message xml:lang="ka">სიმბოლო (&amp;xxx;)</message>
+	<message xml:lang="cn">特殊字符 (&amp;xxx;)</message>
+	<message xml:lang="tw">特殊字符 (&amp;xxx;)</message>
+	<message xml:lang="sk">Znaky (&amp;xxx;)</message>
+	<message xml:lang="ja">文字 (&amp;xxx;)</message>
+	<message xml:lang="nl">Teken (&amp;&amp;xxx;)</message>
+	<message xml:lang="uk">Символ (&amp;xxx;)</message>
+</label>
 <label define="BImage">
 	<message xml:lang="en">Image (img)...</message>
 	<message xml:lang="fr">Image (img)...</message>
@@ -3085,25 +3104,6 @@
 	<message xml:lang="ja">スペース (mspace)</message>
 	<message xml:lang="nl">Spatie (mspace)</message>
 	<message xml:lang="uk">Пробіл (mspace)</message>
-</label>
-<label define="BMEntity">
-	<message xml:lang="en">Character (&amp;xxx;)</message>
-	<message xml:lang="fr">Caractère (&amp;xxx;)</message>
-	<message xml:lang="de">Zeichen (&amp;xxx;)</message>
-	<message xml:lang="it">Carattere (&amp;xxx;)</message>
-	<message xml:lang="es">Carácter (&amp;xxx;)</message>
-	<message xml:lang="pt">Carácter (&amp;xxx;)</message>
-	<message xml:lang="fi">Merkki (&amp;xxx;)</message>
-	<message xml:lang="tr">Karakter (&amp;xxx;)</message>
-	<message xml:lang="ru">Символ (&amp;xxx;)</message>
-	<message xml:lang="hu">&amp;Karakter (&amp;xxx;)</message>
-	<message xml:lang="ka">სიმბოლო (&amp;xxx;)</message>
-	<message xml:lang="cn">特殊字符 (&amp;xxx;)</message>
-	<message xml:lang="tw">特殊字符 (&amp;xxx;)</message>
-	<message xml:lang="sk">Znaky (&amp;xxx;)</message>
-	<message xml:lang="ja">文字 (&amp;xxx;)</message>
-	<message xml:lang="nl">Teken (&amp;&amp;xxx;)</message>
-	<message xml:lang="uk">Символ (&amp;xxx;)</message>
 </label>
 <label define="BMInvisibleTimes">
 	<message xml:lang="en">InvisibleTimes</message>

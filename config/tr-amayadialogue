@@ -152,25 +152,25 @@
 150 Üst (sup)
 151 Alıntılama (q)
 152 BiDi (bdo)
-153 Görüntü (img)...
-154 Yatay çizgi (hr)
-155 Kesme (br)
-156 Tekrar sekillendirilmi (pre)
-157 table
-158 Tablo
-159 table
-160 Altyazi (caption)
-161 thead……
-162 tbody ……..
-163 tfoot………..
-164 **&Math
-165 Yeni formül
-166 Düz yazı (mtext)
-167 Teşhis eden (mi)
-168 Numara (mn)
-169 Oparatör (mo)
-170 Boşluk (mspace)
-171 Karakter (&xxx;)
+153 Karakter (&xxx;)
+154 Görüntü (img)...
+155 Yatay çizgi (hr)
+156 Kesme (br)
+157 Tekrar sekillendirilmi (pre)
+158 table
+159 Tablo
+160 table
+161 Altyazi (caption)
+162 thead……
+163 tbody ……..
+164 tfoot………..
+165 **&Math
+166 Yeni formül
+167 Düz yazı (mtext)
+168 Teşhis eden (mi)
+169 Numara (mn)
+170 Oparatör (mo)
+171 Boşluk (mspace)
 172 Kayip zaman
 173 Fonksiyonu onayla
 174 Kök (mroot)

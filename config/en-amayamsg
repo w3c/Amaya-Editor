@@ -191,7 +191,7 @@
 185 (separate each entry with a space)
 186 No proxy on these domains
 187 Only proxy these domains
-188 Character name
+188 Character name or hexa code
 189 Amaya user directory
 190 Temporary directory
 191 Use palette

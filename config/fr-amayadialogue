@@ -152,25 +152,25 @@
 150 Exposant (sup)
 151 Citation (q)
 152 BiDi (bdo)
-153 Image (img)...
-154 Trait horizontal (hr)
-155 Saut de ligne (br)
-156 Préformaté (pre)
-157 Insérer un tableau
-158 Table
-159 Insérer un tableau
-160 Légende (caption)
-161 Têtière (thead)
-162 Corps (tbody)
-163 Pied (tfoot)
-164 &Math
-165 Insérer une formule
-166 Texte (mtext)
-167 Identificateur (mi)
-168 Nombre (mn)
-169 Opérateur (mo)
-170 Espace (mspace)
-171 Caractère (&xxx;)
+153 Caractère (&xxx;)
+154 Image (img)...
+155 Trait horizontal (hr)
+156 Saut de ligne (br)
+157 Préformaté (pre)
+158 Insérer un tableau
+159 Table
+160 Insérer un tableau
+161 Légende (caption)
+162 Têtière (thead)
+163 Corps (tbody)
+164 Pied (tfoot)
+165 &Math
+166 Insérer une formule
+167 Texte (mtext)
+168 Identificateur (mi)
+169 Nombre (mn)
+170 Opérateur (mo)
+171 Espace (mspace)
 172 InvisibleTimes
 173 ApplyFunction
 174 Racine (mroot)

@@ -4205,6 +4205,9 @@ void Reload (Document doc, View view)
   if (method == CE_FORM_POST)
     mode |= AMAYA_FORM_POST;
 
+  // force the reload of CSS files
+  RemoveDocCSSs (doc, TRUE);
+
   tempfile = (char *)TtaGetMemory (MAX_LENGTH);
   tempfile[0] = EOS;
   toparse = 0;

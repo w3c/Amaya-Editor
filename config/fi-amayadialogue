@@ -152,25 +152,25 @@
 150 Yläindeksi (sup)
 151 Lainaus/Siteeraus (q)
 152 BiDi syrjäyttävänä (bdo)
-153 Kuva (img)...
-154 Vaakaviiva (hr)
-155 Rivinvaihto (br)
-156 Valmiiksi muotoiltu (pre)
-157 taulukko
-158 Taulukko
-159 taulukko
-160 nimike
-161 Taulukon otsikko
-162 Taulukon sisältö
-163 Taulukon alaotsikko
-164 **&Math
-165 Uusi kaava
-166 Teksti (mtext)
-167 Tunniste (mi)
-168 Numero (mn)
-169 Operaattori (mo)
-170 Välilyönti (mspace)
-171 Merkki (&xxx;)
+153 Merkki (&xxx;)
+154 Kuva (img)...
+155 Vaakaviiva (hr)
+156 Rivinvaihto (br)
+157 Valmiiksi muotoiltu (pre)
+158 taulukko
+159 Taulukko
+160 taulukko
+161 nimike
+162 Taulukon otsikko
+163 Taulukon sisältö
+164 Taulukon alaotsikko
+165 **&Math
+166 Uusi kaava
+167 Teksti (mtext)
+168 Tunniste (mi)
+169 Numero (mn)
+170 Operaattori (mo)
+171 Välilyönti (mspace)
 172 InvisibleTimes
 173 Käytä funktiota
 174 Juuri (mroot)

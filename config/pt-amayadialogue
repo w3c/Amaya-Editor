@@ -152,25 +152,25 @@
 150 Expoente (sup)
 151 Citação (q)
 152 Sobrepor BiDi (bdo)
-153 Imagem (img)...
-154 Linha horizontal (hr)
-155 Quebra de linha (br)
-156 Preformatado (pre)
-157 tabela
-158 Tabela
-159 tabela
-160 Legenda (caption)
-161 Cabeçalho (thead)
-162 Corpo (tbody)
-163 Rodapé (tfoot)
-164 **&Math
-165 Nova fórmula
-166 Texto puro (mtext)
-167 Identificador (mi)
-168 Número (mn)
-169 Operador (mo)
-170 Espaço (mspace)
-171 Carácter (&xxx;)
+153 Carácter (&xxx;)
+154 Imagem (img)...
+155 Linha horizontal (hr)
+156 Quebra de linha (br)
+157 Preformatado (pre)
+158 tabela
+159 Tabela
+160 tabela
+161 Legenda (caption)
+162 Cabeçalho (thead)
+163 Corpo (tbody)
+164 Rodapé (tfoot)
+165 **&Math
+166 Nova fórmula
+167 Texto puro (mtext)
+168 Identificador (mi)
+169 Número (mn)
+170 Operador (mo)
+171 Espaço (mspace)
 172 Multiplicação Invisível (InvisibleTimes)
 173 Aplicar função (ApplyFunction)
 174 Raiz (mroot)

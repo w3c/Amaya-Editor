@@ -152,25 +152,25 @@
 150 Indice (sup)
 151 Citazione (q)
 152 BiDi (bdo)
-153 Immagine (img)...
-154 Riga orizzontale (hr)
-155 A capo (br)
-156 Preformattato (pre)
-157 Inserisci a tabella
-158 Tabella
-159 Inserisci a tabella
-160 Legenda (caption)
-161 Intestazione (thead)
-162 Corpo (tbody)
-163 Piede (tfoot)
-164 &Math
-165 Inserisci una formula
-166 Testo (mtext)
-167 Identificatore (mi)
-168 Numero (mn)
-169 Operatore (mo)
-170 Spazio (mspace)
-171 Carattere (&xxx;)
+153 Carattere (&xxx;)
+154 Immagine (img)...
+155 Riga orizzontale (hr)
+156 A capo (br)
+157 Preformattato (pre)
+158 Inserisci a tabella
+159 Tabella
+160 Inserisci a tabella
+161 Legenda (caption)
+162 Intestazione (thead)
+163 Corpo (tbody)
+164 Piede (tfoot)
+165 &Math
+166 Inserisci una formula
+167 Testo (mtext)
+168 Identificatore (mi)
+169 Numero (mn)
+170 Operatore (mo)
+171 Spazio (mspace)
 172 InvisibleTimes
 173 ApplyFunction
 174 Radice (mroot)

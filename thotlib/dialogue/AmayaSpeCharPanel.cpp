@@ -231,11 +231,11 @@ void AmayaSpeCharToolPanel::InitializeBitmapMap()
 void AmayaSpeCharToolPanel::OnTool(wxCommandEvent& event)
 {
   Document doc;
-  int      view;
+  int      view, value;
 
-  int charactere = m_hash[event.GetId()]->unicode;
+  value = m_hash[event.GetId()]->unicode;
   FrameToView (TtaGiveActiveFrame(), &doc, &view);
-  TtcInsertChar (doc, view, charactere);
+  TtcInsertChar (doc, view, value);
   CloseTextInsertion ();
   TtaRedirectFocus();
 }
@@ -357,8 +357,8 @@ AmayaSpeChar filtre_maths[] =
     {0x2204, "there does not exist"},
     {0x2036, "reversed double prime"},
     {0x2037, "reversed triple prime"},
-    {0x2571, "light diagonal upper right to lower left"},
-    {0x2572, "light diagonal upper left to lower right"},
+    {0x2215, "division slash"},
+    {0x2216, "set minus"},
     {0x22A4, "down tack"},
     {0x22a5, "up tack"},
     {0x019B, "barred lambda"},

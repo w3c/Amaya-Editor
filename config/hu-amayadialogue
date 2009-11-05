@@ -152,25 +152,25 @@
 150 &Felső index (sup)
 151 &Idézet (q)
 152 &Szövegirány (bdo)
-153 &Kép (img)...
-154 &Vízszintes tagoló (hr)
-155 &Sortörés (br)
-156 &Előformázott szöveg (pre)
-157 Új &táblázat
-158 &Táblázat
-159 Új &táblázat
-160 &Felirat (caption)
-161 &Fejléc (thead)
-162 &Törzs (tbody)
-163 &Lábléc (tfoot)
-164 &Matematikai jelölés
-165 Képlet
-166 &Egyszerű szöveg (mtext)
-167 &Azonosító (mi)
-168 &Szám (mn)
-169 &Műveleti jel (mo)
-170 &Szóköz (mspace)
-171 &Karakter (&xxx;)
+153 &Karakter (&xxx;)
+154 &Kép (img)...
+155 &Vízszintes tagoló (hr)
+156 &Sortörés (br)
+157 &Előformázott szöveg (pre)
+158 Új &táblázat
+159 &Táblázat
+160 Új &táblázat
+161 &Felirat (caption)
+162 &Fejléc (thead)
+163 &Törzs (tbody)
+164 &Lábléc (tfoot)
+165 &Matematikai jelölés
+166 Képlet
+167 &Egyszerű szöveg (mtext)
+168 &Azonosító (mi)
+169 &Szám (mn)
+170 &Műveleti jel (mo)
+171 &Szóköz (mspace)
 172 &InvisibleTimes karakter
 173 &ApplyFunction
 174 &Gyök (mroot)

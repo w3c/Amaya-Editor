@@ -6,33 +6,34 @@
 #4 = cursive;normale face;bold face;italic face  
 #5 = fantasy;normale face;bold face;italic face  
 
+
 1;#Latin1 (West European)
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
+
 
 2;#Latin2 (East European)
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
+
 
 3;#Latin3 (South European)
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
-
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
 
 4;#Latin4 (North European)
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
 
 
 5;#Cyrillic
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
-
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
 
 6;#Arabic
 1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
@@ -41,34 +42,32 @@
 
 
 7;#Greek
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\courbi.ttf;
-
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
 
 8;#Hebrew
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
+1;1=$THOTDIR\fonts\FreeSerif.ttf;2=$THOTDIR\fonts\FreeSerifBold.ttf;3=$THOTDIR\fonts\FreeSerifItalic.ttf;4=$THOTDIR\fonts\FreeSerifBoldItalic.ttf;
+2;1=$THOTDIR\fonts\FreeSans.ttf;2=$THOTDIR\fonts\FreeSansBold.ttf;3=$THOTDIR\fonts\FreeSansOblique.ttf;4=$THOTDIR\fonts\FreeSansBoldOblique.ttf;
+3;1=$THOTDIR\fonts\FreeMono.ttf;2=$THOTDIR\fonts\FreeMonoBold.ttf;3=$THOTDIR\fonts\FreeMonoOblique.ttf;4=$THOTDIR\fonts\FreeMonoBoldOblique.ttf;
 
 
-9;#Latin9 (Turkish)
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
+9;#Latin5 (Turkish)
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
 
 
 10;#Latin6 (Nordic)
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
 
 
-18;#Georgian
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
-
+18;#Unicode (.or ... Georgian)
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
+2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
 
 20;#Symbols (...)
 1;1=$OSDIR\fonts\symbol.ttf;2=$OSDIR\fonts\symbol.ttf;

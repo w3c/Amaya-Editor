@@ -1680,9 +1680,16 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
           *font = fontset->Font_1;
           car = (int) c;
         }
-      else if (c <= 0xFF && c == ref_c)
+      else if ((c <= 0xFF && c == ref_c) || /* 0 -> FF */
+               c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
+               c == 0x178  /*ydiaeresis*/ ||
+               c == 0x2C6  /*circ*/   || c == 0x2DC  /*tilde*/ ||
+               c == 0x2013 /*ndash*/  || c == 0x2014 /*mdash*/ ||
+               (c >= 0x2018 && c <= 0x201E) /*quotes*/ ||
+               c == 0x2026 /*hellip*/ ||
+               c == 0x2039 /*inf*/    || c == 0x203A /*sup*/ ||
+               c == 0x20AC /*euro*/)
         {
-          /* 0 -> FF */
           *font = fontset->Font_1;
           car = (int) c;
           code = 1;
@@ -1700,7 +1707,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
         }
       else
         {
-#ifdef _WX
           if (c != ref_c)
             {
               // generate small-caps
@@ -1710,35 +1716,18 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
               code = '1';
               size = (int) (size * .8);
             }
-          else
-#endif /* _WX */
-          if (c >= 0x370 && c < 0x3FF)
+          else if ((c >= 0x370 && c < 0x3FF) ||
+                   (c >= 0x1F00 && c < 0x1FFF) ||
+                   c == 0x20d2 || c == 0x2758 /* Vertical Bars */ ||
+                   c == 0x2A2F /* vector or cross product */ ||
+                   c == 0x2970 /* roundimplies */ ||
+                   c == 0x220F || c == 0x2211 /* summation signs */ )
             {
               /* Greek characters */
-#ifdef _GL
-              /* use STIX fonts here */
-              code = 'E';
-              car = GetStixFontAndIndex (c, fontset, &pfont);
-              if (pfont == NULL)
-                {
-                  code = GreekFontScript;
-                  if (code == '7')
-                    {
-                      pfont = &(fontset->Font_7);
-#ifdef _WINDOWS
-                      encoding = WINDOWS_1253;
-#else /* _WINDOWS */
-                      encoding = ISO_8859_7;
-#endif /* _WINDOWS */
-                    }
-                  else
-                    {
-                      pfont = &(fontset->Font_16);
-                      encoding = ISO_SYMBOL;
-                    }
-                }
-#else /* _GL */
-              code = GreekFontScript;
+              code = '7';
+              pfont = &(fontset->Font_7);
+#ifndef _GL
+              encoding = WINDOWS_1253;
               if (c == 0x3C2 || c == 0x3D1 ||
                   c == 0x3D2 || c == 0x3D5 ||
                   c == 0x3D6)
@@ -1749,43 +1738,30 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                   pfont = &(fontset->Font_16);
                   encoding = ISO_SYMBOL;
                 }
-              else if (code == '7')
-                {
-                  pfont = &(fontset->Font_7);
-#ifdef _WINDOWS
-                  encoding = WINDOWS_1253;
-#else /* _WINDOWS */
-                  encoding = ISO_8859_7;
-#endif /* _WINDOWS */
-                }
-              else
-                {
-                  pfont = &(fontset->Font_16);
-                  encoding = ISO_SYMBOL;
-                }
 #endif /* _GL */
             }
 #ifdef _GL
-          else if ((c >= 0x2100 && c <= 0x22FF) /* math symbols */
-		   || c == 0x20d2 || c == 0x2758 /* Vertical Bars */
-		   || c == 0x2A2F /* vector or cross product */
-		   || c == 0x2970 /* roundimplies */
-		   || c == 0x2720 /* maltese cross */
-		   || c == 0x260E /* phone */
-		   || c == 0x20DB || c == 0x20DC /* dots */
-		   || (c >= 0xfe35 && c <= 0xfe38) /* over braces / parenthesis */
-		   || (c >= 0x1D49C && c <= 0x1D7E1) /* Alphanumeric symbols */
-		  )
+          else if ((c >= 0x2100 && c <= 0x22FF) /* math symbols */ ||
+                   c == 0x20DB || c == 0x20DC /* dots */ ||
+                   c == 0x2036 /* reversed double prime */ ||
+                   c == 0x2037 /* reversed double prime */ ||
+                   c == 0x2044 /* fraction slash */ ||
+                   (c >= 0xfe35 && c <= 0xfe38) /* over braces / parenthesis */ ||
+                   (c >= 0x1D49C && c <= 0x1D7E1) /* Alphanumeric symbols */ ||
+                   c == 0x2720 /* maltese cross */ ||
+                   c == 0x260E /* phone */ )
             {
               /* use STIX fonts here */
               code = 'E';
               car = GetStixFontAndIndex (c, fontset, &pfont);
               if (pfont == NULL )
                 {
-                  code = '1'; /* West Europe Latin */
-                  pfont = &(fontset->Font_1);
+                  code = '7'; /* West Europe Latin */
+                  pfont = &(fontset->Font_7);
                   if (c == 0x20d2 || c == 0x2758 /* Vertical Bars */)
                     c = '|';
+                  else if(c == 0x2215 /* division slash */ || c == 0x2044)
+                    c = '/';
                   else if(c == 0x2216 /* set minus */)
                     c = '\\';
                   else if(c == 0x02A2F /* vector or cross product */)
@@ -1800,6 +1776,10 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                     c = 104;
                   else  if (c == 0x2147 /* ExponentialE */)
                     c = 101;
+                  else  if (c == 0x220A /* small element of */)
+                    c = 0x3F5;
+                  else  if (c == 0x220D /* small contains as member */)
+                    c = 0x3F6;
                 }
             }
 #else /* _GL */
@@ -1807,19 +1787,14 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                    c == 0x2145 /* CapitalDifferentialD */ ||
                    c == 0x2146 /* DifferentialD */ ||
                    c == 0x2147 /* ExponentialE */ ||
-                   c == 0x2148 /* ImaginaryI */
-                   || c == 0x20d2 || c == 0x2758 /* Vertical Bars */
-                   || c == 0x2216 /* set minus */
-                   || c == 0x02A2F /* vector or cross product */
-                   )
+                   c == 0x2148 /* ImaginaryI */ ||
+                   c == 0x20d2 || c == 0x2758 /* Vertical Bars */ ||
+                   c == 0x2216 /* set minus */ ||
+                   c == 0x02A2F /* vector or cross product */)
             {
               code = '1'; /* West Europe Latin */
-              pfont = &(fontset->Font_1);
-#ifdef _WINDOWS
+              pfont = &(fontset->Font_7);
               encoding = WINDOWS_1252;
-#else /* _WINDOWS */
-              encoding = ISO_8859_1;
-#endif /* _WINDOWS */
               if (c == 0x20d2 || c == 0x2758 /* Vertical Bars */)
                 c = '|';
               else if(c == 0x2216) /* set minus */
@@ -1838,106 +1813,24 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                 c = 101;
             }
 #endif /* _GL */
-          else if (c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
-                   c == 0x178  /*ydiaeresis*/ ||
-                   c == 0x2C6  /*circ*/   || c == 0x2DC  /*tilde*/ ||
-                   c == 0x2013 /*ndash*/  || c == 0x2014 /*mdash*/ ||
-                   (c >= 0x2018 && c <= 0x201E) /*quotes*/ ||
-                   c == 0x2026 /*hellip*/ ||
-                   c == 0x2039 /*inf*/    || c == 0x203A /*sup*/ ||
-                   c == 0x20AC /*euro*/)
-            {
-#ifdef _GL
-              code = '1'; /* West Europe Latin */
-              pfont = &(fontset->Font_1);
-#else /* _GL */
-#ifdef _WINDOWS
-              code = '1'; /* West Europe Latin */
-              pfont = &(fontset->Font_1);
-              encoding = WINDOWS_1252;
-#else /* _WINDOWS */
-              if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
-                  c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/)
-                {
-                  if (Printing)
-                    {
-                      code = '1'; /* Extended Latin */
-                      pfont = &(fontset->Font_1);
-                      encoding = ISO_8859_1;
-                      if (c == 0x152)
-                        c = 75;
-                      else if (c == 0x153)
-                        c = 76;
-                      else if (c == 0x178)
-                        c = 255;
-                      else
-                        c = 128;
-                    }
-                  else
-                    {
-                      code = 'F'; /* Extended Latin */
-                      pfont = &(fontset->Font_15);
-                      encoding = ISO_8859_15;
-                    }
-                }
-              else
-                {
-                  /* use an approaching character */
-                  encoding = ISO_8859_1;
-                  code = '1';
-                  pfont = &(fontset->Font_1);
-                  if (c == 0x2C6)       /*circ*/
-                    c = 94;
-                  else if (c == 0x2DC)  /*tilde*/
-                    c = 126;
-                  else if (c == 0x2018 || c == 0x201C)
-                    c = 96;
-                  else if (c == 0x2019 || c == 0x201D)
-                    c = 39;
-                  else if (c == 0x201A || c == 0x201E)
-                    c = 44;
-                  else if (c == 0x2039)
-                    c = 60;
-                  else if (c == 0x203A)
-                    c = 62;
-                  else
-                    {
-                      code = 'G';
-                      pfont = &(fontset->Font_16);
-                      if (c == 0x2013)  /* en dash */
-                        c = 45;
-                      else if (c == 0x2014) /* em dash */
-                        c = 190;
-                      else if (c == 0x2026) /* horizontal ellipsis */
-                        c = 188;
-                    }
-                }
-#endif /* _WINDOWS */
-#endif /* _GL */
-            }
           else if (c == 0x11F || c == 0x130 || c == 0x131 || c == 0x15F)
             {
               code = '9'; /* Turkish */
               pfont = &(fontset->Font_9);
-#ifdef _WINDOWS
+#ifndef _GL
               encoding = WINDOWS_1254;
-#else /* _WINDOWS */
-              encoding = ISO_8859_9;
-#endif /* _WINDOWS */
+#endif /* _GL */
             }
           else if (c < 0x17F)
             {
               code = '2'; /* Central Europe */
               pfont = &(fontset->Font_2);
-#ifdef _WINDOWS
+#ifndef _GL
               encoding = WINDOWS_1250;
-#else /* _WINDOWS */
-              encoding = ISO_8859_2;
-#endif /* _WINDOWS */
+#endif /* _GL */
             }
           else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
-                    (c < 0x2018 || c > 0x201D) && /* Windows quotations */
-                    c != 0x20AC) || /* euro */
+                    (c < 0x2018 || c > 0x201D)) || /* Windows quotations */
                    c == 0x192  ||  /* latin small letter f with hook */
                    c == 0x25CA ||  /* lozenge */
                    c == 0x260E ||  /* black telephone */
@@ -1946,16 +1839,16 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                    c == 0x2665 ||  /* black heart suit */
                    c == 0x2666 ||  /* black diamond suit */
                    c == 0x2720 ||  /* maltese cross */
-		   c == 0x27FA ||  /* Long left right double arrow */
+                   c == 0x27FA ||  /* Long left right double arrow */
                    c == 0x2970     /* roundimplies */
                                   )
             {
 #ifdef _GL
-              if (c == 0x220F || c == 0x2211)
+             if (c == 0x220F || c == 0x2211)
                 /* an oversized product or summation sign. Use the Symbol
                    font: these characters are ill-aligned in Esstix */
                 {
-                  code = GreekFontScript;
+                  code = '7';
                   pfont = &(fontset->Font_16);
                   encoding = ISO_SYMBOL;
                 }
@@ -1964,19 +1857,14 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                   /* use Esstix fonts */
                   code = 'E';
                   car = GetStixFontAndIndex (c, fontset, &pfont);
-                  if (pfont == NULL )
+                  if (pfont == NULL)
                     {
-                      code = '7';
-                      pfont = &(fontset->Font_7);
-#ifdef _WINDOWS
-                      encoding = WINDOWS_1253;
-#else /* _WINDOWS */
-                      encoding = ISO_8859_7;
-#endif /* _WINDOWS */
+                      code = '1';
+                      pfont = &(fontset->Font_1);
                     }
                 }
 #else /* _GL */
-		  /* Symbols */
+		          /* Symbols */
               code = 'G';
               pfont = &(fontset->Font_16);
               encoding = ISO_SYMBOL;
@@ -1986,75 +1874,56 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
             {
               code = '3';
               pfont = &(fontset->Font_3);
-#ifdef _WINDOWS
+#ifndef _GL
               encoding = WINDOWS_1250;
-#else /* _WINDOWS */
-              encoding = ISO_8859_3;
-#endif /* _WINDOWS */
+#endif /* _GL */
             }
           else if (c < 0x2AF)
             {
               code = '4'; /* Baltic RIM */
               pfont = &(fontset->Font_4);
-#ifdef _WINDOWS
+#ifndef _GL
               encoding = WINDOWS_1257;
-#else /* _WINDOWS */
-              encoding = ISO_8859_4;
-#endif /* _WINDOWS */
+#endif /* _GL */
             }
           else if (c < 0x45F)
             {
               code = '5'; /* Cyrillic */
               pfont = &(fontset->Font_5);
-#ifdef _WINDOWS
+#ifndef _GL
               encoding = WINDOWS_1251;
-#else /* _WINDOWS */
-              encoding = ISO_8859_5;
-#endif /* _WINDOWS */
+#endif /* _GL */
             }
           else if (c < 0x5FF)
             {
               code = '8'; /* Hebrew */
               pfont = &(fontset->Font_8);
-#ifdef _WINDOWS
+#ifndef _GL
               encoding = WINDOWS_1255;
-#else /* _WINDOWS */
-              encoding = ISO_8859_8;
-#endif /* _WINDOWS */
+#endif /* _GL */
             }
           else if (c < 0x5FF)
             {
               code = '9'; /* Turkish */
               pfont = &(fontset->Font_9);
-#ifdef _WINDOWS
+#ifndef _GL
               encoding = WINDOWS_1254;        
-#else /* _WINDOWS */
-              encoding = ISO_8859_9;
-#endif /* _WINDOWS */
+#endif /* _GL */
             }
           else if (c < 0x65F)
             {
               code = '6'; /* Arabic */
               pfont = &(fontset->Font_17);
-#ifdef _WINDOWS
+#ifndef _GL
               encoding = WINDOWS_1256;
-#else /* _WINDOWS */
-              encoding = UNICODE_1_1;
-#endif /* _WINDOWS */
+#endif /* _GL */
             }
-#ifdef _GL
           else if (c >= 0x25A0 && c <= 0x25F7)
             /* geometric shapes */
             {
-              /* use Esstix fonts */
-              code = 'E';
-              car = GetStixFontAndIndex (c, fontset, &pfont);
-              if (pfont == NULL)
-                {
-                  code = 'Z'; /* Unicode */
-                  pfont = &(fontset->Font_17);
-                  encoding = UNICODE_1_1;
-                }
+              code = '1';
+              pfont = &(fontset->Font_1);
+              encoding = UNICODE_1_1;
             }
           else if (c <= 0x10FF && c >= 0x10A0)
             {
@@ -2063,7 +1932,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
               pfont = &(fontset->Font_18);
               encoding = UNICODE_1_1;
             }
-#endif /* GL */
           else
             {
               code = 'Z'; /* Unicode */

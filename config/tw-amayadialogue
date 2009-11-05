@@ -152,25 +152,25 @@
 150 上標 (sup)
 151 Quotation 引用 (q)
 152 文字反排 (bdo)
-153 圖片 (img)...
-154 水平標尺 (hr)
-155 換行 (br)
-156 預格式化 (pre)
-157 table
-158 Table
-159 table
-160 caption
-161 thead
-162 tbody
-163 tfoot
-164 &Math
-165 新建數學公式 (math)
-166 普通文本 (mtext)
-167 識別符 (mi)
-168 數字 (mn)
-169 算符 (mo)
-170 空格 (mspace)
-171 特殊字符 (&xxx;)
+153 特殊字符 (&xxx;)
+154 圖片 (img)...
+155 水平標尺 (hr)
+156 換行 (br)
+157 預格式化 (pre)
+158 table
+159 Table
+160 table
+161 caption
+162 thead
+163 tbody
+164 tfoot
+165 &Math
+166 新建數學公式 (math)
+167 普通文本 (mtext)
+168 識別符 (mi)
+169 數字 (mn)
+170 算符 (mo)
+171 空格 (mspace)
 172 不可見次數
 173 采用函數
 174 根 (mroot)

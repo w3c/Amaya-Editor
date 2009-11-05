@@ -152,25 +152,25 @@
 150 Horný index (sup)
 151 Krátky úryvok (q)
 152 Smer textu (bdo)
-153 Obrázok (img)
-154 Vodorovný oddelovač (hr)
-155 Zalomenie riadka (br)
-156 Predformátovaný text (pre)
-157 Vložiť tabuľka
-158 Tabuľka
-159 Vložiť tabuľka
-160 Menovka (caption)
-161 Hlavička tabuľky (thead)
-162 Telo tabuľky (tbody)
-163 Päta tabuľky (tfoot)
-164 &Math
-165 Vložiť vzorec
-166 Text (mtext)
-167 Identifikátor (mi)
-168 Číslo (mn)
-169 Operátor (mo)
-170 Medzera (mspace)
-171 Znaky (&xxx;)
+153 Znaky (&xxx;)
+154 Obrázok (img)
+155 Vodorovný oddelovač (hr)
+156 Zalomenie riadka (br)
+157 Predformátovaný text (pre)
+158 Vložiť tabuľka
+159 Tabuľka
+160 Vložiť tabuľka
+161 Menovka (caption)
+162 Hlavička tabuľky (thead)
+163 Telo tabuľky (tbody)
+164 Päta tabuľky (tfoot)
+165 &Math
+166 Vložiť vzorec
+167 Text (mtext)
+168 Identifikátor (mi)
+169 Číslo (mn)
+170 Operátor (mo)
+171 Medzera (mspace)
 172 Neviditeľný multiplikátor (InvisibleTimes)
 173 Aplikovanie funkcie (ApplyFunction)
 174 Odmocnina (mroot)

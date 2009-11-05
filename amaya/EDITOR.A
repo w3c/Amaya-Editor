@@ -192,6 +192,7 @@ MENUS
 	Types.Font toggle:TQuotation -> SetOnOffQuotation;
 	Types.Font toggle:TBDO -> SetOnOffBDO;
 
+	Types button:BMEntity -> CreateEntity icon:MATHML_greek.png;
 	Types button:BImage -> CreateImage icon:XHTML_Image.png;
 	Types button:BRule -> CreateHorizontalRule icon:XHTML_hr.png;
 	Types button:BBreak -> CreateBreak icon: XHTML_br.png;
@@ -211,7 +212,6 @@ MENUS
 	Types.MathConstruct button:BMNumber -> CreateMN;
 	Types.MathConstruct button:BMOperator -> CreateMO;
 	Types.MathConstruct button:BMSpace -> CreateMSPACE;
-	Types.MathConstruct button:BMEntity -> CreateMathEntity icon:MATHML_greek.png;
 	Types.MathConstruct button:BMInvisibleTimes -> CreateInvisibleTimes;
 	Types.MathConstruct button:BMApplyFunction -> CreateApplyFunction;
 	Types.MathConstruct button:BNthRoot -> CreateMROOT icon:MATHML_root.png;

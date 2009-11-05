@@ -405,25 +405,14 @@ static FontScript **FontConfigLoad ()
   ThotBool            complete;
 
   appHome = TtaGetEnvString ("APP_HOME");
-#ifndef _GL
-#ifdef _WINDOWS
-  strcpy (word, "fonts.win");  
-#else /* _WINDOWS */
-  strcpy (word, "fonts.unix");  
-#endif /* _WINDOWS */
-#else /* _GL */
-
-#ifdef _UNIX
-#ifdef _MACOS
-  strcpy (word, "fonts.gl.mac");  
-#else /* _MACOS */
-  strcpy (word, "fonts.gl");  
-#endif /* _MACOS */  
-#endif /* _UNIX */
-
+#ifdef _GL
 #ifdef _WINDOWS
   strcpy (word, "fonts.gl.win");  
+#else /* _WINDOWS */
+  strcpy (word, "fonts.gl");  
 #endif /* _WINDOWS */
+#else /* _GL */
+  strcpy (word, "fonts.win");  
 #endif /* _GL */
 
   strcpy (fname, appHome);
@@ -445,6 +434,7 @@ static FontScript **FontConfigLoad ()
   /* load the first config file */
   complete = FontLoadFile (file, fontsscript_tab);
   TtaReadClose (file);
+#ifdef IV
   if (!complete)
     {
 #if defined(_UNIX) && !defined(_MACOS)
@@ -502,6 +492,7 @@ static FontScript **FontConfigLoad ()
         complete = FontLoadFile (file, fontsscript_tab);
 #endif /* _WINDOWS && _GL */
     }
+#endif
   return fontsscript_tab;
 }
 

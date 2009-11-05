@@ -152,25 +152,25 @@
 150 Superíndice (sup)
 151 Cita (q)
 152 BiDi override (bdo)
-153 Imagen (img)...
-154 Línea Horizontal (hr)
-155 Salto de línea (br)
-156 Pre-formateado (pre)
-157 Insertar tabla
-158 Tabla
-159 Insertar tabla
-160 Leyenda (caption)
-161 thead
-162 tbody
-163 tfoot
-164 &Math
-165 Insertar fórmula
-166 Texto simple (mtext)
-167 Identificador (mi)
-168 Número (mn)
-169 Operador (mo)
-170 Espacio (mspace)
-171 Carácter (&xxx;)
+153 Carácter (&xxx;)
+154 Imagen (img)...
+155 Línea Horizontal (hr)
+156 Salto de línea (br)
+157 Pre-formateado (pre)
+158 Insertar tabla
+159 Tabla
+160 Insertar tabla
+161 Leyenda (caption)
+162 thead
+163 tbody
+164 tfoot
+165 &Math
+166 Insertar fórmula
+167 Texto simple (mtext)
+168 Identificador (mi)
+169 Número (mn)
+170 Operador (mo)
+171 Espacio (mspace)
 172 InvisibleTimes
 173 ApplyFunction
 174 Raíz (mroot)

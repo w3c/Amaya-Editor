@@ -7028,21 +7028,22 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
 }
 
 /*----------------------------------------------------------------------
-  CreateMathEntity
+  CreateEntity
   Display a dialogue box to allow input of a character entity name
   and create the corresponding entity at the current selection position
+  It could be used also outside Math construction
   -----------------------------------------------------------------------*/
-void CreateMathEntity (Document document, View view)
+void CreateEntity (Document doc, View view)
 {
   Element       firstSel, lastSel, parent;
   ElementType   elType;
-  int           firstChar, lastChar, i;
+  int           firstChar, lastChar, i, code;
   ThotBool      newMath = FALSE;
 
-  if (!TtaGetDocumentAccessMode (document))
+  if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode, don't do any change */
     return;
-  TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &i);
   if (!firstSel)
     {
       /* no selection. Nothing to do */
@@ -7050,15 +7051,37 @@ void CreateMathEntity (Document document, View view)
       return;
     }
 
+  MathMLEntityName[0] = EOS;
+#ifdef _WX
+  CreateTextDlgWX (BaseDialog + MathEntityForm, BaseDialog + MathEntityText,
+                   TtaGetViewFrame (doc, view),
+                   TtaGetMessage (AMAYA, AM_MEntity),
+                   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME),
+                   "");
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BaseDialog + MathEntityForm, FALSE, TRUE);
+  TtaWaitShowDialogue ();
+#endif /* _WX */
 
   parent = TtaGetParent (firstSel);
   if (parent)
     elType = TtaGetElementType (parent);
-  if (!parent || strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+  if (MathMLEntityName[0] == EOS)
+    return;
+  if ((MathMLEntityName[0] >= '0' && MathMLEntityName[0] <= '9') ||
+      (MathMLEntityName[0] >= 'a' && MathMLEntityName[0] <= 'f') ||
+      (MathMLEntityName[0] >= 'A' && MathMLEntityName[0] <= 'F'))
+    {
+      // insert the entity at that position
+      sscanf (MathMLEntityName, "%x", &code);
+      TtcInsertChar (doc, view, code);
+      return;
+    }
+  else if (!parent || strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
     {
       /* if not within a MathML element, create the math element */
-      CreateMathConstruct (document, view, 1);
-      TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+      CreateMathConstruct (doc, view, 1);
+      TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &i);
       if (!firstSel)
         return;
       
@@ -7068,42 +7091,16 @@ void CreateMathEntity (Document document, View view)
       else
         {
           /* math element created */
-          TtaExtendUndoSequence (document);
+          TtaExtendUndoSequence (doc);
           newMath = TRUE;
         }
     }
 
-  TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
+  TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastChar);
   /* an entity can replace only a single element */
   if (firstSel != lastSel)
     return;
-
-  MathMLEntityName[0] = EOS;
-
-#ifdef _WINGUI
-  CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
-#endif /* _WINGUI */
-
-#ifdef _WX
-  CreateTextDlgWX (BaseDialog + MathEntityForm, BaseDialog + MathEntityText,
-                   TtaGetViewFrame (document, view),
-                   TtaGetMessage (AMAYA, AM_MEntity),
-                   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME),
-                   "");
-  TtaSetDialoguePosition ();
-  TtaShowDialogue (BaseDialog + MathEntityForm, FALSE, TRUE);
-  TtaWaitShowDialogue ();
-#endif /* _WX */
-
-  if (MathMLEntityName[0] != EOS)
-    InsertMathEntity ((unsigned char *)MathMLEntityName, document);
-  else if (newMath)
-    {
-      /* We were creating a new image. Delete the empty PICTURE element */
-      TtaCloseUndoSequence (document);
-      TtcUndo (document, view);
-    }
-
+  InsertMathEntity ((unsigned char *)MathMLEntityName, doc);
 }
 
 /*----------------------------------------------------------------------
