@@ -4725,6 +4725,13 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
                     pAb->AbNotInLine = FALSE;
                   pAb->AbAcceptLineBreak = FALSE;
                 }
+              else if (!strcmp (pAb->AbElement->ElStructSchema->SsName, "Template") &&
+                       pAb->AbEnclosing && pAb->AbEnclosing->AbInLine)
+                {
+                  // when a use or a repeat is winthin a block of lines
+                  pAb->AbDisplay = 'I';
+                  pAb->AbAcceptLineBreak = TRUE;
+                }
             }
           else if (pEl->ElParent == NULL)
             {
