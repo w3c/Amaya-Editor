@@ -47,7 +47,7 @@ static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
 /* Maximum number of font size handled */
 static int          MaxNumberOfSizes;
 static int          LogicalPointsSizes[MAX_LOG_SIZE] =
-  {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60, 70};
+  {6, 8, 10, 11, 12, 14, 16, 18, 20, 30, 40, 60, 70};
 static char        *FontFamily;
 static char         GreekFontScript;
 
