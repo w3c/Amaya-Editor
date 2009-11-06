@@ -1024,7 +1024,7 @@ static Element MoveDocumentBody (Element el, Document destDoc,
       TtaInsertSibling (lastInserted, elem, TRUE, destDoc);
       /* this delimits the new inserted part of the document */
       RegisterSubDoc (lastInserted, url);
-      CreateTargetAnchor (destDoc, lastInserted, FALSE, FALSE);
+      CreateTargetAnchor (destDoc, lastInserted, FALSE,TRUE,  FALSE);
       div = lastInserted;
 
       // check if new natures are added
@@ -2022,7 +2022,7 @@ void MakeToc (Document doc, View view)
               if (!attr)
                 {
                   /* generate the ID if it does't exist */
-                  CreateTargetAnchor (doc, el, TRUE, TRUE);
+                  CreateTargetAnchor (doc, el, TRUE, TRUE, TRUE);
                   attr = TtaGetAttribute (el, attrType);
                 }
               i = TtaGetTextAttributeLength (attr) + 1;

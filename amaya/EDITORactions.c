@@ -2604,7 +2604,7 @@ void CreateMap (Document doc, View view)
       TtaInsertFirstChild (&map, div, doc);
       TtaDeleteTree (el, doc);
       // generate the id and or name attribute
-      CreateTargetAnchor (doc, map, FALSE, TRUE);
+      CreateTargetAnchor (doc, map, FALSE, FALSE, TRUE);
       // generate a division
       elType.ElTypeNum = HTML_EL_Division;
       div = TtaNewElement (doc, elType);

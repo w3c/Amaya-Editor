@@ -1308,7 +1308,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                                        these attributes in the undo queue, as the
                                        in_line element itself will be registered
                                        with its attributes */
-                                    CreateTargetAnchor (doc, in_line, FALSE, FALSE);
+                                    CreateTargetAnchor (doc, in_line, FALSE, FALSE, FALSE);
                                   else if ((aType == HTML_ATTR_Style_ ||
                                             aType == HTML_ATTR_Class) &&
                                            data &&
@@ -1376,7 +1376,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                                         child = TtaGetFirstChild (child);
                                       if (aType == HTML_ATTR_ID)
                                         // generate id and/or name
-                                        CreateTargetAnchor (doc, child, FALSE, TRUE);
+                                        CreateTargetAnchor (doc, child, FALSE, FALSE, TRUE);
                                       else
                                         {
                                           newAttr = TtaGetAttribute (child, attrType);
@@ -2207,11 +2207,13 @@ Attribute GetNameAttr (Document doc, Element selectedElement)
   CreateTargetAnchor
   Create a NAME or ID attribute with a default value for element el.
   If the withUndo parameter is true, we'll register the undo sequence.
-  If the forceID parameter, we'll always use an ID attribute, rather
-  than a NAME one in some cases.
+  If the forceID parameter is true, we'll always use an ID attribute,
+  rather than a NAME one in some cases.
+  If the generic parameter is true, the label is used to generate the
+  new value.
   ----------------------------------------------------------------------*/
 void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
-                         ThotBool withUndo)
+                         ThotBool generic, ThotBool withUndo)
 {
   AttributeType       attrType;
   Attribute           attr;
@@ -2281,6 +2283,8 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
   else if (withinHTML && elType.ElTypeNum == HTML_EL_LINK)
     /* linkxxx for a link element */
     strcpy (url, "link");
+  else if (generic)
+    strcpy (url, TtaGetElementLabel (el));
   else
     /* get the content for other elements */
     {
@@ -2429,7 +2433,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
       if (!createLink)
         {
           TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
-          CreateTargetAnchor (doc, anchor, FALSE, TRUE);
+          CreateTargetAnchor (doc, anchor, FALSE, FALSE, TRUE);
           TtaCloseUndoSequence (doc);
         }
     }
@@ -2442,7 +2446,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
       if (!createLink)
         {
           TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
-          CreateTargetAnchor (doc, anchor, FALSE, TRUE);
+          CreateTargetAnchor (doc, anchor, FALSE, FALSE, TRUE);
           TtaCloseUndoSequence (doc);
         }
     }
@@ -2461,7 +2465,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
           if (!createLink)
             {
               TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
-              CreateTargetAnchor (doc, anchor, FALSE, TRUE);
+              CreateTargetAnchor (doc, anchor, FALSE, FALSE, TRUE);
               TtaCloseUndoSequence (doc);
             }
         }
@@ -2565,7 +2569,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
                 /* create an ID for target element */
                 {
                   TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
-                  CreateTargetAnchor (doc, first, FALSE, TRUE);
+                  CreateTargetAnchor (doc, first, FALSE, FALSE, TRUE);
                   TtaCloseUndoSequence (doc);
                 }
               return;
@@ -3048,7 +3052,7 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
           if (!attr && createID) /* add it */
 		  {
             /* we reuse an existing Amaya function */
-            CreateTargetAnchor (doc, el, TRUE, TRUE);
+            CreateTargetAnchor (doc, el, TRUE, FALSE, TRUE);
             i++;
 		  }
           else if (attr && !createID) /* delete it */
