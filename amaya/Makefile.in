@@ -149,7 +149,7 @@ AMAYA_OPTION_SCHEMAS= \
          $(ANNOT_SCHEMAS) $(TEMPLATES_SCHEMAS)
 
 AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
-		-I@srcdir@/f -I@srcdir@/xpm \
+		-I@srcdir@/f \
                 $(AMAYA_OPTION_INCLUDES) $(WX_INCLUDES)
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a \
