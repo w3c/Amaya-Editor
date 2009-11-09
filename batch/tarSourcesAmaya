@@ -171,7 +171,6 @@ ${AMAYADIR}/amaya/wxdialog/*.cpp \
 ${AMAYADIR}/amaya/wxdialog/*.rc \
 ${AMAYADIR}/amaya/wxdialog/*.ico \
 ${AMAYADIR}/amaya/f/*.h \
-${AMAYADIR}/amaya/xpm/*.xpm \
 ${AMAYADIR}/annotlib/Makefile.* \
 ${AMAYADIR}/annotlib/*.A \
 ${AMAYADIR}/annotlib/*.S \
