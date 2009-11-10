@@ -2050,10 +2050,12 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
               // don't take into account the table border to display the caption
               //pParentAb = pAb->AbEnclosing;
               if (pParentAb && pParentAb->AbBox)
+                {
                 if (localEdge == Bottom && pParentAb->AbBox->BxTBorder)
                   y -= pParentAb->AbBox->BxTBorder;
                 else if (pParentAb->AbBox->BxBBorder)
                   y += pParentAb->AbBox->BxTBorder;
+                }
             }
           ClearBoxMoved (pBox);
           if (pBox->BxYToCompute)
@@ -2520,8 +2522,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                   pAb->AbWidth.DimAbRef = pParentAb;
                   pAb->AbWidth.DimIsPosition = FALSE;
                   pAb->AbWidth.DimValue = 0;
-                  if (pos->PnAlgorithm == PnAbsolute ||
-                      pos->PnAlgorithm == PnFixed &&
+                  if ((pos->PnAlgorithm == PnAbsolute ||
+                      pos->PnAlgorithm == PnFixed) &&
                       pAb->AbWidth.DimUnit == UnAuto)
                     /* shrink does apply */
                     pBox->BxShrink = TRUE;
