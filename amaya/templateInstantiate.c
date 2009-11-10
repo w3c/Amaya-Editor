@@ -796,7 +796,8 @@ void CreateInstance (char *templatePath, char *instancePath,
   // update the charset if needed
   charsetname = TtaGetEnvString ("DOCUMENT_CHARSET");
   charset = TtaGetCharset (charsetname);
-  ocharsetname = DocumentMeta[doc]->charset;
+  // old charset
+  ocharsetname = TtaStrdup (DocumentMeta[doc]->charset);
   ocharset =  TtaGetCharset (ocharsetname);
   if (charset != UNDEFINED_CHARSET &&
       DocumentMeta[doc]->charset &&
