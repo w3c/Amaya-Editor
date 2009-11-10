@@ -1532,9 +1532,9 @@ static ThotBool  CompleteUrl(char **url)
       s = (char *)TtaGetMemory (MAX_LENGTH);
         s[0] = EOS;
       *url = s;
-      if (ptr[0] == '/' && ptr[1] == '/' && ptr[2] == '/')
-        ptr = &ptr[2];
 #ifdef _WINDOWS
+      if (ptr[0] == '/' && ptr[1] == '/' && ptr[2] == '/')
+        ptr = &ptr[3];
       else if (ptr[0] == '/' && ptr[1] == '/' && ptr[3] == ':')
         ptr = &ptr[2];
       if (ptr[1] != ':')
@@ -1548,6 +1548,9 @@ static ThotBool  CompleteUrl(char **url)
             strcpy (s, "c:");
 		  s= &s[2];
         }
+#else /* _WINDOWS */
+      if (ptr[0] == '/' && ptr[1] == '/' && ptr[2] == '/')
+        ptr = &ptr[2];
 #endif /* _WINDOWS */
 	  while (*ptr != EOS)
 	  {
