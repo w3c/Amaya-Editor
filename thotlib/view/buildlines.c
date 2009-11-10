@@ -2642,18 +2642,35 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
   while (still)
     {
       val = 0;
-      GetExtraMargins (pNextBox, frame, TRUE, &t, &b, &l, &r);
       setinline = (pNextBox->BxAbstractBox->AbFloat == 'N' &&
                    !ExtraFlow (pNextBox, frame));
       // check if the width of the box can be adapted
       variable = HasVariableWidth (pNextBox, pBlock);
+      //GetExtraMargins (pNextBox, frame, TRUE, &t, &b, &ml, &mr);
+      GetLeftRightMargins (pNextBox, pBlock, frame, &ml, &mr);
+      GetLeftRightPaddings (pNextBox, pBlock, &l, &r);
       if (setinline)
         {
+          if (ml > 0 && pLine->LiXOrg < ml)
+            {
+              // shift the box position
+              l = l + ml - pLine->LiXOrg;
+              ml = 0;
+            }
+          l += pNextBox->BxLBorder;
+          r += pNextBox->BxRBorder;
+          shift = pBlock->BxW - pLine->LiXOrg - pLine->LiXMax;
+          if (mr > 0 && shift < mr)
+            {
+              // reduce the size of the box
+              r = r + mr - shift;
+              mr = 0;
+            }
           pRefBlock = GetEnclosingBlock (pNextBox->BxAbstractBox, pBlock->BxAbstractBox);
-          if (pRefBlock != pBlock->BxAbstractBox && l > 0)
+          if (pRefBlock != pBlock->BxAbstractBox && ml > 0)
             {
               // compute the virtual position of the box
-              shift = l + left - pLine->LiXOrg;
+              shift = ml + left - pLine->LiXOrg;
               pLine->LiXOrg += shift;
               pLine->LiXMax -= shift;
             }
@@ -2669,26 +2686,6 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               if (!extensibleBlock)
                 {
                   // update parent ghost blocks if needed
-                  GetLeftRightMargins (pNextBox, pBlock, frame, &ml, &mr);
-                  GetLeftRightPaddings (pNextBox, pBlock, &l, &r);
-                  if (setinline)
-                    {
-                      if (ml > 0 && pLine->LiXOrg < ml)
-                        {
-                          // shift the box position
-                          l = l + ml - pLine->LiXOrg;
-                          ml = 0;
-                        }
-                      shift = pBlock->BxW - pLine->LiXOrg - pLine->LiXMax;
-                      if (mr > 0 && shift < mr)
-                        {
-                          // reduce the size of the box
-                          r = r + mr - shift;
-                          mr = 0;
-                        }
-                   }
-                  l += pNextBox->BxLBorder;
-                  r += pNextBox->BxRBorder;
                   if (setinline && pNextBox->BxAbstractBox->AbClear != 'B')
                     val = pLine->LiXMax;
                   else if (pNextBox->BxAbstractBox->AbEnclosing &&
@@ -3009,6 +3006,7 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
     {
       /* Try to break the box pNextBox or a previous one */
       maxLength = pLine->LiXMax - xi;
+      GetExtraMargins (pNextBox, frame, FALSE, &t, &b, &l, &r);
       if (pNextBox == pLine->LiFirstBox || pNextBox == pLine->LiFirstPiece)
         {
           /* There is only one box in the line */
@@ -3074,7 +3072,6 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
               /* cut before that box */
               toCut = FALSE;
               pBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
-              GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
             }
           else if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
                    pNextBox->BxAbstractBox->AbAcceptLineBreak &&
@@ -3105,7 +3102,6 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     pBox = pBox->BxPrevious;
                   else
                     pBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
-                  GetExtraMargins (pBox, frame, FALSE, &t, &b, &l, &r);
                   toCut = TRUE;
                 }
             }
@@ -3122,7 +3118,6 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                     pNextBox = pNextBox->BxPrevious;
                   else
                     pNextBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
-                  GetExtraMargins (pNextBox, frame, FALSE, &t, &b, &l, &r);
                 }
 	      
               /* if we are working on the first box, we won't try again */
@@ -3148,11 +3143,12 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                   else
                     cutwidth = pNextBox->BxW - 1;
                   /* break on the last space of the box*/
+                  GetExtraMargins (pNextBox, frame, FALSE, &t, &b, &l, &r);
                   if (pNextBox->BxType == BoPiece ||
                       pNextBox->BxType == BoDotted ||
                       pNextBox->BxType == BoScript)
                     {
-                      BreakPieceOfBox (pLine, pNextBox, cutwidth, l, r, line_spaces,
+                       BreakPieceOfBox (pLine, pNextBox, cutwidth, l, r, line_spaces,
                                        hyphenate, pRootAb);
                       pBox = pNextBox;
                       toCut = FALSE;

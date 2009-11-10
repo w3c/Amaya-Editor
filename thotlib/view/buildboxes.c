@@ -2735,7 +2735,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
                 pAb->AbTopBorder == 0 && pAb->AbBottomBorder == 0)));
 
   // a template element within a block accept line break
-  if (inLine && pSS && !strcmp (pSS->SsName,"Template") &&
+  if (inLine && pAb->AbFloat == 'N' && pSS && !strcmp (pSS->SsName,"Template") &&
       !pAb->AbAcceptLineBreak) 
     pAb->AbAcceptLineBreak = TRUE;
 
@@ -2755,7 +2755,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
     {
       if (pAb->AbFirstEnclosed)
         {
-          if (dummyChild)
+          if (pAb->AbDisplay == 'B')
             // include a pseudo paragraph
              pBox->BxType = BoStructGhost;
           else
