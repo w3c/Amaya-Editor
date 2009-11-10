@@ -1792,7 +1792,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                    c == 0x2216 /* set minus */ ||
                    c == 0x02A2F /* vector or cross product */)
             {
-              code = '1'; /* West Europe Latin */
+              code = '7'; /* West Europe Latin */
               pfont = &(fontset->Font_7);
               encoding = WINDOWS_1252;
               if (c == 0x20d2 || c == 0x2758 /* Vertical Bars */)
@@ -1849,7 +1849,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                    font: these characters are ill-aligned in Esstix */
                 {
                   code = '7';
-                  pfont = &(fontset->Font_16);
+                  pfont = &(fontset->Font_7);
                   encoding = ISO_SYMBOL;
                 }
               else
@@ -1913,7 +1913,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
           else if (c < 0x65F)
             {
               code = '6'; /* Arabic */
-              pfont = &(fontset->Font_17);
+              pfont = &(fontset->Font_6);
 #ifndef _GL
               encoding = WINDOWS_1256;
 #endif /* _GL */

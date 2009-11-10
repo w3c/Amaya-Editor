@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -434,65 +434,6 @@ static FontScript **FontConfigLoad ()
   /* load the first config file */
   complete = FontLoadFile (file, fontsscript_tab);
   TtaReadClose (file);
-#ifdef IV
-  if (!complete)
-    {
-#if defined(_UNIX) && !defined(_MACOS)
-      /* try a redhat font file */
-      strcpy (word1, word);
-      strcat (word1, ".rd");
-      strcpy (fname1, fname);
-      strcat (fname1, ".rd");
-      if (!SearchFile (fname1, 0, name))
-        SearchFile (word1, 2, name);
-      /* open the fonts definition file */
-      file = TtaReadOpen (name);
-      if (file)
-        complete = FontLoadFile (file, fontsscript_tab);
-      if (!complete)
-        {
-          /* try a debian font file */
-          strcpy (word1, word);
-          strcat (word1, ".deb");
-          strcpy (fname1, fname);
-          strcat (fname1, ".deb");
-          if (!SearchFile (fname1, 0, name))
-            SearchFile (word1, 2, name);
-          /* open the fonts definition file */
-          file = TtaReadOpen (name);
-          if (file)
-            complete = FontLoadFile (file, fontsscript_tab);
-        }
-      if (!complete)
-        {
-          /* try a debian font file */
-          strcpy (word1, word);
-          strcat (word1, ".deb1");
-          strcpy (fname1, fname);
-          strcat (fname1, ".deb1");
-          if (!SearchFile (fname1, 0, name))
-            SearchFile (word1, 2, name);
-          /* open the fonts definition file */
-          file = TtaReadOpen (name);
-          if (file)
-            complete = FontLoadFile (file, fontsscript_tab);
-        }
-#endif /* _UNIX && !_MACOS*/
-#if defined(_WINDOWS) && defined (_GL) 
-      /* try a redhat font file */
-      strcpy (word1, word);
-      strcat (word1, ".nt");
-      strcpy (fname1, fname);
-      strcat (fname1, ".nt");
-      if (!SearchFile (fname1, 0, name))
-        SearchFile (word1, 2, name);
-      /* open the fonts definition file */
-      file = TtaReadOpen (name);
-      if (file)
-        complete = FontLoadFile (file, fontsscript_tab);
-#endif /* _WINDOWS && _GL */
-    }
-#endif
   return fontsscript_tab;
 }
 
