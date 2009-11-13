@@ -56,6 +56,7 @@ static ThotBool IsLargeOp (CHAR_T character)
       character == 0x2233 || /* CounterClockwiseContourIntegral */
       character == 0x222F || /* DoubleContourIntegral */
       character == 0x222B || /* Integral */
+      //      character == 0x222D || /* TripleIntegral */
       character == 0x22C0 || /* Wedge */
       character == 0x2297 || /* CircleTimes */
       character == 0x2210 || /* Coproduct */
@@ -1396,7 +1397,8 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                        text[i] == 0x296E || /* UpEquilibrium */
                        text[i] == 0x296F || /* ReverseUpEquilibrium */
                        text[i] == 0x2758 || /* VerticalSeparator */
-                       text[i] == 0x2223    /* VerticalSeparator */
+                       text[i] == 0x2223 || /* VerticalSeparator */
+		       text[i] == 0x007C    /* vertical line */
                        ))/* accept only symbols like simple integral, double or
                          triple integral, contour integral, etc. or vertical
                          arrows (add more arrows *****) */
@@ -1543,7 +1545,9 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                 break;
                                 case 0x2758: /* VerticalSeparator */
                                   c = 7;
+				break;
                                 case 0x2223: /* VerticalBar */
+				case 0x007C: /* Vertical Line */
                                   c = 11;
                                 break;
                                 case 0x2956: /* DoubleVerticalBar */
@@ -1564,7 +1568,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                             }
                           TtaRegisterElementDelete (textEl, doc);
                           TtaDeleteTree (textEl, doc);
-                          /* is there an other text element after the
+                          /* is there another text element after the
                              stretchable symbol? */
                           textEl = symbolEl; TtaNextSibling (&textEl);
                           if (textEl)
@@ -1587,13 +1591,18 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                       TtaGiveBufferContent (textEl, text,
                                                             len+1, &lang); 
                                       script = TtaGetScript (lang);
-                                      if (text[0] != 0x222B &&
+                                      if (text[0] != 0x007C &&  // vertical bar
+					  text[0] != 0x2223 &&
+					  text[0] != 0x222B &&  // integrals
                                           text[0] != 0x222C &&
                                           text[0] != 0x222D &&
                                           text[0] != 0x222E &&
                                           text[0] != 0x222F &&
                                           text[0] != 0x2230 &&
-                                          text[0] != 0x2191 &&
+                                          text[0] != 0x2231 &&
+                                          text[0] != 0x2232 &&
+                                          text[0] != 0x2233 &&
+                                          text[0] != 0x2191 &&  // vertical arrows
                                           text[0] != 0x2193)
                                         /* not a stretchable symbol */
                                         textEl = NULL;

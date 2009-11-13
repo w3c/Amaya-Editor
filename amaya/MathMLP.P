@@ -3089,18 +3089,18 @@ ATTRIBUTES
                 END;
         if MUNDEROVER
                 BEGIN
-                Height: Next not Construct . Height + 1.6;
-                VertPos: Top = Next not Construct . Top - 0.8;
+                Height: Next not Construct . Height + 2;
+                VertPos: Top = Next not Construct . Top - 1;
                 END;
         if MUNDER
                 BEGIN
-                Height: Next not Construct . Height + 0.8;
+                Height: Next not Construct . Height + 1;
                 VertPos: Top = Next not Construct . Top;
                 END;
         if MOVER
                 BEGIN
-                Height: Next not Construct . Height + 0.8;
-                VertPos: Top = Next not Construct . Top - 0.8;
+                Height: Next not Construct . Height + 1;
+                VertPos: Top = Next not Construct . Top - 1;
                 END;
         if MTD
                 BEGIN
@@ -3152,10 +3152,18 @@ ATTRIBUTES
         END;
   IntVertStretch (UnderOverBase):
         BEGIN
-{***}        VertPos: Top = Enclosing . Top + 0.8;
-{***}        Height:  Enclosing . Height - 1.6;
-{****        VertPos: Top = Overscript . Bottom;
-        Height: Bottom = Underscript . Top; ****}
+        IF within MUNDEROVER BEGIN
+                VertPos: Top = Enclosing . Top + 1;
+                Height:  Enclosing . Height - 2;
+		END;
+        IF within MOVER BEGIN
+                VertPos: Top = Enclosing . Top + 1;
+                Height:  Enclosing . Height - 2;
+		END;
+        IF within MUNDER BEGIN
+                VertPos: Top = Enclosing . Top;
+                Height:  Enclosing . Height - 1;
+		END;
         IN Structure_view BEGIN
                 Height: Enclosed . Height;
                 VertPos: Top = Enclosing . Top;
