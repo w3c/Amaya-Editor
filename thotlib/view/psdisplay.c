@@ -166,7 +166,7 @@ static int CurrentFont (FILE *fout, ThotFont font)
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
+void DrawChar (CHAR_T car, int frame, int x, int y, ThotFont font, int fg)
 {
 #ifndef _WX
    FILE               *fout;
@@ -185,8 +185,6 @@ void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
        CurrentFont (fout, font);
        fprintf (fout, "(%c) %d %d %d s\n", car, w, x, -y);
      }
-#else /* _WX */
-   /* TODO : a faire si on porte la version non _GL de wxWidgets */
 #endif /* _WX */
 }
 

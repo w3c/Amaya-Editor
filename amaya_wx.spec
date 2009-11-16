@@ -6,7 +6,7 @@
 # please send bugfixes or comments to feedback@suse.de.
 #
 
-# neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
+# neededforbuild  autoconf automake mmcore mmbase mmslib libz libpng libjpeg
 
 %define version 11.3
 

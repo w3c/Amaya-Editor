@@ -400,8 +400,6 @@ static FontScript **FontConfigLoad ()
   char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
   char                word[50];
   char               *appHome;
-  char                fname1[MAX_TXT_LEN];
-  char                word1[50];
   ThotBool            complete;
 
   appHome = TtaGetEnvString ("APP_HOME");

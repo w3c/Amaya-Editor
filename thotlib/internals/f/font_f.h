@@ -40,13 +40,7 @@ extern void GetFontIdentifier ( char script,
                                 int highlight,
                                 int size,
                                 TypeUnit unit,
-                                char r_name[10],
-                                char r_nameX[100] );
-extern ThotFont ReadFont ( char script,
-                           int family,
-                           int highlight,
-                           int size,
-                           TypeUnit unit );
+                                char r_name[10] );
 extern char *GetPostscriptNameFromFont ( void * font,
                                          char *fontname );
 extern ThotFont LoadNearestFont ( char script,
@@ -125,13 +119,7 @@ extern void GetFontIdentifier ( char script,
                                   int highlight,
                                   int size,
                                   TypeUnit unit,
-                                  char r_name[10],
-                                  char r_nameX[100] );
-extern ThotFont ReadFont ( char script,
-                             int family,
-                             int highlight,
-                             int size,
-                             TypeUnit unit );
+                                  char r_name[10] );
 extern char *GetPostscriptNameFromFont ( void * font,
                                            char *fontname );
 extern ThotFont LoadNearestFont ( char script,

@@ -2599,7 +2599,7 @@ static AHTReqContext *LoopRequest= NULL;
   ----------------------------------------------------------------------*/
 static int LoopForStop (AHTReqContext *me)
 {
-  int  status_req = HT_OK;
+  int  status_req = YES;
   int  count = 0;
   
 #ifdef _WX
@@ -2619,12 +2619,12 @@ static int LoopForStop (AHTReqContext *me)
       if (TtaFetchOneAvailableEvent (&ev))
         TtaHandleOneEvent (&ev);
       if (me->method == METHOD_GET)
-	{
-	  if (count < 1300)
-	    count ++; // no more retries
-	  else
-	    me->reqStatus = HT_ABORT;
-	}
+        {
+          if (count < 1300)
+            count ++; // no more retries
+          else
+            me->reqStatus = HT_ABORT;
+        }
       /* this is necessary for synchronous request*/
       /* check the socket stats */
       if (me->reqStatus != HT_ABORT)

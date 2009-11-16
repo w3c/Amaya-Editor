@@ -58,7 +58,7 @@
 #include "inites_f.h"
 #include "memory_f.h"
 #include "units_f.h"
-#include "xwindowdisplay_f.h"
+#include "windowdisplay_f.h"
 #include "tesse_f.h"
 
 #include "glwindowdisplay.h"

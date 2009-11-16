@@ -21,6 +21,13 @@ void GL_SetupPixelFormat (HDC hDC);
 /* Drawing */
 void InitDrawing (int style, int thick, int fg);
 
+void Clear (int frame, int width, int height, int x, int y);
+void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf);
+
+void DrawChar (CHAR_T car, int frame, int x, int y, ThotFont font, int fg);
+
+void DrawResizeTriangle (int frame, int size, int x_point, int y_point,
+                         int bg, int fg, int direction);
 
 void GL_Point (int fg, float width, float x, float y);
 

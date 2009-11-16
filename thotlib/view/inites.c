@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2005
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -51,77 +51,6 @@ static int             allocation_index[256];
 static int             have_colors = 0;
 #endif /* _WX */
 
-#ifdef _GTK
-/*----------------------------------------------------------------------
-   FindOutColor finds the closest color by allocating it, or picking
-   an already allocated color.
-  ----------------------------------------------------------------------*/
-static void FindOutColor (ThotDisplay *dsp, Colormap colormap,
-			  ThotColorStruct *colr)
-{
-  int                 i;
-  int                 rd, gd, bd, dist, mindist;
-  int                 cindx;
-  int                 NumCells;
-  gboolean            match;
-
-  match = gdk_colormap_alloc_color ((GdkColormap *)colormap,
-				    (GdkColor *)colr, FALSE, TRUE);
-  NumCells = 0;
-  if (!match)
-    {
-      NumCells = gdk_colormap_get_system_size (); 
-      if (!have_colors)
-	{
-	  for (i = 0; i < NumCells; i++)
-	    def_colrs[i].pixel = i;
-	  match = gdk_colormap_alloc_colors ((GdkColormap *)colormap,
-					     (GdkColor *)&def_colrs[0],
-					     NumCells,
-					     FALSE,
-					     TRUE, 
-					     NULL); 
-	  have_colors = 1;
-	}
-      mindist = 196608;	/* 256 * 256 * 3 */
-      cindx = colr->pixel;
-      for (i = 0; i < NumCells; i++)
-	{
-	  rd = ((int) (def_colrs[i].red >> 8) - (int) (colr->red >> 8));
-	  gd = ((int) (def_colrs[i].green >> 8) - (int) (colr->green >> 8));
-	  bd = ((int) (def_colrs[i].blue >> 8) - (int) (colr->blue >> 8));
-	  dist = (rd * rd) + (gd * gd) + (bd * bd);
-	  if (dist < mindist)
-	    {
-	      mindist = dist;
-	      cindx = def_colrs[i].pixel;
-	      if (dist == 0)
-		break;
-	    }
-	}
-      colr->pixel = cindx;
-      colr->red = def_colrs[cindx].red;
-      colr->green = def_colrs[cindx].green;
-      colr->blue = def_colrs[cindx].blue;
-    }
-  else
-    {
-      /*
-       * Keep a count of how many times we have allocated the
-       * same color, so we can properly free them later.
-       */
-      allocation_index[match]++;
-
-      /*
-       * If this is a new color, we've actually changed the default
-       * colormap, and may have to re-query it later.
-       */
-      if (allocation_index[match] == 1)
-	have_colors = 0;
-    }
-}
-#endif /* _GTK */
-
 
 /*----------------------------------------------------------------------
    InstallColor try to install a color in the public colormap.
@@ -131,7 +60,7 @@ static void InstallColor (int i)
 #ifdef _WINGUI
    Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
 #endif /* _WINGUI */
-#if defined(_WX)
+#ifdef _WX
    if (Pix_Color[i])
      {
        Pix_Color[i]->Set( RGB_Table[i].red,
@@ -144,23 +73,7 @@ static void InstallColor (int i)
 				    RGB_Table[i].green,
 				    RGB_Table[i].blue );
      }
-#endif /* #if defined(_WX) */
-#ifdef _GTK
-   ThotColorStruct     col;
-
-   if (Color_Table[i] != NULL)
-     {
-	/* load the color */
-	col.red   = RGB_Table[i].red * 256;
-	col.green = RGB_Table[i].green * 256;
-	col.blue  = RGB_Table[i].blue * 256;
-
-	/* Find closest color */
-	FindOutColor (TtDisplay, (Colormap)TtCmap, &col);
-	Pix_Color[i] = col.pixel;
-	/* TODO: find the nearest color */
-     }
-#endif /* _GTK */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -240,16 +153,6 @@ void         FreeDocColors ()
     WinErrorBox (WIN_Main_Wd, "FreeDocColors (1)");
   TtCmap = 0;
 #endif /* _WINGUI */
-#ifdef _GTK
-  int        i;
-
-  /* free standard colors */
-  gdk_colors_free (TtCmap, &Pix_Color[0], NColors, (gulong)0 );
-  /* free extended colors */
-  for (i = 0; i < NbExtColors; i++)
-    if (ExtColor[i])
-      gdk_colors_free (TtCmap, &ExtColor[i], 1, (gulong)0);
-#endif /* _GTK */
 #if defined(_WX)
   int        i;
 
@@ -356,14 +259,11 @@ void InitDocColors (const char *name)
 	}
     }
 #endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
   int                 i, j, k;
   char               *value;
   ThotBool            reducecolor;
   ThotBool            colormap_full;
-#ifdef _GTK
-  ThotColorStruct     gdkwhite, gdkblack;
-#endif /* #if defined(_GTK) || defined(_WX) */
   
   /* Initializes the color table */
   NColors = MAX_COLOR;
@@ -380,23 +280,11 @@ void InitDocColors (const char *name)
     reducecolor = FALSE;
 
   /* set up black and white Pixels */
-#ifdef _GTK
-  gdk_color_white (TtCmap, (GdkColor *)&gdkwhite);  
-  gdk_color_black (TtCmap, (GdkColor *)&gdkblack);
-  Pix_Color[0] = gdkwhite.pixel;
-  Pix_Color[1] = gdkblack.pixel;
-#endif /* _GTK */
-#ifdef _WX
   Pix_Color[0] = new wxColour(_T("WHITE"));
   Pix_Color[1] = new wxColour(_T("BLACK"));;
   /* clean up everything with white */
   for (i = 2; i < NColors; i++)
     Pix_Color[i] = new wxColour( *Pix_Color[0] );  
-#else /* _WX */
-  /* clean up everything with white */
-  for (i = 2; i < NColors; i++)
-    Pix_Color[i] = Pix_Color[0];
-#endif /* _WX */
   
   /* setup greyscale colors */
   for (i = 2; i < 8; i++)
@@ -414,16 +302,12 @@ void InitDocColors (const char *name)
     {
       for (j = 1; j <= (NColors / 8); j++)
 	for (i = j * 8, k = 0; (i < NColors) && (k < 8); i++, k++)
-#ifdef _WX  
 	  {         
 	    if (Pix_Color[i])
 	      *Pix_Color[i] = *Pix_Color[j * 8 + 4];
 	    else
 	      Pix_Color[i] = new wxColour( *Pix_Color[j * 8 + 4] );  
 	  }
-#else /* _WX */
-          Pix_Color[i] = Pix_Color[j * 8 + 4];
-#endif /* _WX */
       return;
     }
   
@@ -475,7 +359,7 @@ void InitDocColors (const char *name)
 
   ExtCount_Table = (int *) TtaGetMemory (Max_Extend_Colors * sizeof (int));
   memset( ExtCount_Table, 0, Max_Extend_Colors * sizeof (int) );  
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -503,20 +387,6 @@ const char *ColorName (int num)
   ----------------------------------------------------------------------*/
 ThotColor ColorPixel (int num)
 {
-#ifdef _GTK
-  unsigned short   red, green, blue;
-  ThotColor        color;
-
-  /* Return the value of a color in 3 octets */
-  TtaGiveThotRGB(num, &red, &green, &blue);
-  color = 0; 
-  color |= (red & 0xFF);
-  color <<= 8;
-  color |= (green & 0xFF);
-  color <<= 8;
-  color |= (blue & 0xFF);
-  return (color);
-#endif /* _GTK */
 #if defined(_WINGUI) || defined(_WX)
    if (num < NColors && num >= 0)
     return (Pix_Color[num]);
@@ -542,10 +412,6 @@ void TtaFreeThotColor (int num)
 	    delete ExtColor[num];
 	  ExtColor[num] = (ThotColor) 0;
 #endif /* defined(_WX) */
-#ifdef _GTK
-	  gdk_colors_free (TtCmap, &ExtColor[num], 1, (gulong)0);
-	  ExtColor[num] = (ThotColor) 0;	    
-#endif /* _GTK */
 	}
       ExtCount_Table[num]--;
     }
@@ -563,9 +429,6 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
   int                 i, prev;
   unsigned int        dsquare;
   unsigned int        best_dsquare = (unsigned int) -1;
-#ifdef _GTK
-  ThotColorStruct     col;
-#endif /* _GTK */
   ThotBool            found;
    
   /*
@@ -635,13 +498,6 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 					      blue );
 	     }
 #endif /* #if defined(_WX) */
-#ifdef _GTK
-	   col.red   = red * 256;
-	   col.green = green * 256;
-	   col.blue  = blue * 256;
-	   FindOutColor (TtDisplay, (Colormap)TtCmap, &col);
-	   ExtColor[prev] = col.pixel;
-#endif /* _GTK */
 #ifndef _WX	   
 	   /* check if this color is already in the table */
 	   found = FALSE;
@@ -669,11 +525,6 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 	       ExtRGB_Table[prev].green = green;
 	       ExtRGB_Table[prev].blue = blue;
 #endif  /* _WX */
-#ifdef _GTK
-	       ExtRGB_Table[prev].red = col.red / 256;
-	       ExtRGB_Table[prev].green = col.green / 256;
-	       ExtRGB_Table[prev].blue = col.blue / 256;
-#endif /* _GTK */
 	       best = prev + NColors;
 	       ExtCount_Table[prev] = 1;
 	       if (prev == NbExtColors)
@@ -837,18 +688,8 @@ ThotPixmap CreatePattern (int disp, int fg, int bg, int motif)
    HBITMAP             hBitmap;
 #endif /* _WINGUI */
 
-#ifdef _GTK
-   ThotColorStruct     gdkFgPixel;
-   ThotColorStruct     gdkBgPixel;
-#endif /* _GTK */
-
    FgPixel = ColorPixel (fg);
    BgPixel = ColorPixel (bg);
-#ifdef _GTK
-   gdkFgPixel.pixel = gdk_rgb_xpixel_from_rgb (FgPixel);
-   gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
-#endif /* _GTK */
-
 #ifdef _WINGUI
    if (WIN_LastBitmap != 0)
      {
@@ -1159,131 +1000,6 @@ ThotPixmap CreatePattern (int disp, int fg, int bg, int motif)
    /* WIN_LastBitmap = hBitmap; */
    pixmap = hBitmap;
 #endif /* _WINGUI */
-   
-#ifdef _GTK
-   switch (motif)
-     {
-     case 1:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray8_bits, gray8_width,
-					     gray8_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 2:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray0_bits, gray0_width,
-					     gray0_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 3:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray1_bits, gray1_width,
-					     gray1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 4:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray2_bits, gray2_width,
-					     gray2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 5:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray3_bits, gray3_width,
-					     gray3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 6:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray4_bits, gray4_width,
-					     gray4_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 7:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray5_bits, gray5_width,
-					     gray5_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 8:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray6_bits, gray6_width,
-					     gray6_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 9:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray7_bits, gray7_width,
-					     gray7_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 10:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz1_bits, horiz1_width,
-					     horiz1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 11:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz2_bits, horiz2_width,
-					     horiz2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 12:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz3_bits, horiz3_width,
-					     horiz3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 13:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert1_bits, vert1_width,
-					     vert1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 14:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert2_bits, vert2_width,
-					     vert2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 15:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert3_bits, vert3_width,
-					     vert3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 16:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) left1_bits, left1_width,
-					     left1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 17:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) left2_bits, left2_width,
-					     left2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 18:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) left3_bits, left3_width,
-					     left3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 19:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) right1_bits, right1_width,
-					     right1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 20:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) right2_bits, right2_width,
-					     right2_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 21:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) right3_bits, right3_width,
-					     right3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 22:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) square1_bits, square1_width,
-					     square1_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 23:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) square2_bits, square2_width,
-					     square2_height, TtWDepth,(GdkColor *) &gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 24:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) square3_bits, square3_width,
-					     square3_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 25:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) lozenge_bits, lozenge_width,
-					     lozenge_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 26:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) brick_bits, brick_width,
-					     brick_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 27:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) tile_bits, tile_width,
-					     tile_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 28:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) sea_bits, sea_width,
-					     sea_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     case 29:
-       pixmap = (ThotPixmap)gdk_pixmap_create_from_data (DefaultDrawable, (char *) basket_bits, basket_width,
-					     basket_height, TtWDepth, (GdkColor *)&gdkFgPixel, (GdkColor *)&gdkBgPixel);
-       break;
-     default:
-       pixmap = None;
-       break;
-     }
-#endif /* _GTK */
 #if defined(_WX)
    /* TODO */
    pixmap = NULL;

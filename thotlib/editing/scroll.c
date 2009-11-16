@@ -33,7 +33,7 @@
 #include "frame_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
-#include "xwindowdisplay_f.h"
+#include "windowdisplay_f.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"

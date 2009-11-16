@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2008
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -33,7 +33,6 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "paneltypes_wx.h"
-#include "colors_f.h"
 #include "containers.h"
 #include "inites_f.h"
 #include "presentmenu_f.h"

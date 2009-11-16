@@ -46,7 +46,7 @@
 #include "font_f.h"
 #include "frame_f.h" 
 #include "picture_f.h"
-#include "xwindowdisplay_f.h"
+#include "windowdisplay_f.h"
 #include "buildlines_f.h"
 #include "memory_f.h"
 #include "selectionapi_f.h"

@@ -299,8 +299,7 @@ EDITOR_OBJ = \
 	view/inites.o \
 	view/tableH.o \
 	view/unstructlocate.o\
-	view/viewapi.o \
-	view/xwindowdisplay.o
+	view/viewapi.o
 
 base/registry.o : @srcdir@/base/registry.c
 	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) \

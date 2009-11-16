@@ -42,6 +42,8 @@
 #include <GL/gl.h>
 #endif /* _MACOS */
 #include "glwindowdisplay.h"
+#else /*_GL*/
+#include "windowdisplay_f.h"
 #endif /*_GL*/
 static ThotBool     ComputeScrollBar = TRUE;
 
@@ -105,7 +107,6 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 #include "uconvert_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
-#include "xwindowdisplay_f.h"
 #include "appdialogue_wx_f.h"
 #include "paneltypes_wx.h"
 

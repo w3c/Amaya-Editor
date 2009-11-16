@@ -35,7 +35,6 @@
 #include "boxrelations_f.h"
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
-#include "windowdisplay_f.h"
 #include "displayselect_f.h"
 #include "font_f.h"
 #include "exceptions_f.h"
@@ -45,7 +44,7 @@
 #include "selectionapi_f.h"
 #include "stix_f.h"
 #include "units_f.h"
-#include "xwindowdisplay_f.h"
+#include "windowdisplay_f.h"
 
 #ifdef _GL
 #if defined (_MACOS) && defined (_WX)
@@ -860,7 +859,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
               DrawRectangle (frame, 1, 5, xd, yd, w, height-1, fg, 0, 0);
               break;
             default:
-              DrawChar (pBox->BxAbstractBox->AbShape, frame, xd,
+              DrawChar ((CHAR_T)pBox->BxAbstractBox->AbShape, frame, xd,
                         yd + FontBase (font), font, fg);
               break;
             } 
@@ -2108,13 +2107,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                           DrawHorizontalLine (frame, 1, 5, x+2, y, lg-2, pBox->BxH,
                                               2, BgSelColor, pBox, 0, 0);
 #else /* _WX */
-                        DrawChar ((char)val, frame, x, y1, nextfont, BgSelColor);
+                        DrawChar ((CHAR_T)(char)val, frame, x, y1, nextfont, BgSelColor);
 #endif /* _WX */
                         }
                       else if (transc == SHOWN_SPACE ||
                           transc == SHOWN_UNBREAKABLE_SPACE || transc == SHOWN_HALF_EM)
                         /* a new space is handled */
-                        DrawChar ((char)val, frame, x, y1, nextfont, BgSelColor);
+                        DrawChar ((CHAR_T)(char)val, frame, x, y1, nextfont, BgSelColor);
                       else
                         bl++;
                       nbcar = 0;
@@ -2280,7 +2279,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                 {
                   y = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
                   nextfont = (ThotFont)LoadStixFont (1, 12);
-                  DrawChar (0x40, frame, x, y, nextfont, 1);
+                  DrawChar ((CHAR_T)0x40, frame, x, y, nextfont, 1);
                   pLine = NULL;
                 }
               else

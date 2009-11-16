@@ -683,16 +683,10 @@ int CharacterHeight (int c, ThotFont font)
   else
     l = gl_font_char_height (font, (CHAR_T *) &c);
 #else /*_GL*/
-#ifdef _WINGUI
   else if (font->FiFirstChar <= c && font->FiLastChar >= c)
     l = font->FiHeights[c - font->FiFirstChar];
   else
     l = font->FiHeight;
-#endif /* _WINGUI */
-#ifdef _GTK
-  else
-    l = gdk_char_height (font, c);
-#endif /* _GTK */
 #endif /*_GL*/
   return l;
 }
@@ -702,16 +696,10 @@ int CharacterHeight (int c, ThotFont font)
   ----------------------------------------------------------------------*/
 int CharacterAscent (int c, ThotFont font)
 {
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
   int		    i;
   int       ascent;
-#endif /*#if defined(_GTK) || defined(_WX) */
-#ifndef _GL
-#ifdef _GTK
-  char      car;
-  int       lbearing, rbearing, width, descent;
-#endif /* _GTK */
-#endif /* _GL */
+#endif /* _WX */
 
   if (font == NULL)
     return (0);
@@ -719,7 +707,7 @@ int CharacterAscent (int c, ThotFont font)
   else
     ascent = gl_font_char_ascent (font, (CHAR_T *) &c);
 
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
   if (c == 244)
     {
       i = 0;
@@ -728,31 +716,11 @@ int CharacterAscent (int c, ThotFont font)
       if (TtPatchedFont[i])
         ascent -= 2;
     }
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _WX */
   return (ascent);
 #else /*_GL*/
-
-#ifdef _WINGUI
   else
     return font->FiAscent;
-#endif  /* _WINGUI */
-#ifdef _GTK  
-  else
-    {
-      car = (char) c;
-      gdk_string_extents (font, &car, &lbearing, &rbearing, &width, &ascent, &descent);
-    }
-  if (c == 244)
-    {
-      /* a patch due to errors in standard symbol fonts */
-      i = 0;
-      while (i < MAX_FONT && font != TtFonts[i])
-        i++;
-      if (TtPatchedFont[i])
-        ascent -= 2;
-    }
-  return (ascent);
-#endif /* _GTK */
 #endif /*_GL*/
 }
 
@@ -1056,19 +1024,15 @@ static void GeneratePostscriptFont (char r_name[10], char script, int family,
         family = 1;
       sprintf (r_name, "%c%c%c%i", TOLOWER (script), efamily[family],
                StylesTable[highlight], size);
-    }  
+    }
 }
 
 /*----------------------------------------------------------------------
   GetFontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
 void GetFontIdentifier (char script, int family, int highlight, int size,
-                        TypeUnit unit, char r_name[10], char r_nameX[100])
+                        TypeUnit unit, char r_name[10])
 {
-  const char  *ffamily;
-  const char  *wght, *slant;
-  char        encoding[3];
-
   /* apply the current font zoom */
   if (unit == UnRelative)
     {
@@ -1082,221 +1046,17 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
     size = PixelToPoint (size);
   if (script == '1')
     script = 'L';
-  if (script == 'A')  /* arabic */
+  else if (script != 'A' && script != 'G' && script != 'Z' && script != 'E')
     {
-      ffamily = "-monotype-arial";
-      wght="medium";
-      slant="r";
-      size = 24;
-      highlight=4;
-      sprintf (r_nameX, "%s-%s-%s-normal-*-%d-*-100-100-p-106-iso10646-1",
-               ffamily, wght, slant, size);
-      GeneratePostscriptFont (r_name, script, family, highlight, size);
+      if (size < 0)
+        size = 12;
     }
-  else
-    { 
-      if (script != 'L' && script != 'G' && script != 'Z' && script != 'E')
-        {
-          if (script == 'F')
-            strcpy (encoding, "15");
-          else if (script == 'D')
-            strcpy (encoding, "13");
-          else if (script == 'X')
-            strcpy (encoding, "18");
-          else
-            sprintf (encoding, "%c", script);
-          ffamily = "-*-*";
-          if (highlight > MAX_HIGHLIGHT)
-            wght = "*";
-          else if (highlight == 0 || highlight == 2 || highlight == 3)
-            wght = "medium";
-          else
-            wght = "bold";
-          if (highlight == 0 || highlight == 1)
-            slant = "r";
-          else
-            slant = "o";
-          if (size < 0)
-            {
-              sprintf (r_nameX, "%s-%s-%s-*-*-*-120-*-*-*-*-iso8859-%s",
-                       ffamily, wght, slant, encoding);
-              size = 12;
-            }
-          else
-            sprintf (r_nameX, "%s-%s-%s-*-*-*-%d-*-*-*-*-iso8859-%s",
-                     ffamily, wght, slant, size * 10, encoding);
-        }
-      else if (script == 'G' || family == 0)
-        {
-          family = 0;
-          highlight = 0;
-          sprintf (r_nameX, "-*-symbol-medium-r-*-*-*-%d-*-*-*-*-*-fontspecific", size * 10);
-        }
-      else if (script == 'E')
-        {
-          switch (family)
-            {
-            case 1 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixone-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 2 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixtwo-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 3 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixthree-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 4 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixfour-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 5 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixfive-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 6 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixsix-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 7:
-              sprintf (r_nameX, 
-                       "-altsys-esstixseven-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;	  
-            case 8:
-              sprintf (r_nameX, 
-                       "-altsys-esstixseight-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;	  
-            case 9 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixnine-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 10: 
-              sprintf (r_nameX, 
-                       "-altsys-esstixten-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 11 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixeleven-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 12 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixtwelve-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 13: 
-              sprintf (r_nameX, 
-                       "-altsys-esstixthirteen-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 14 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixfourteen-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 15 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixfifteen-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            case 16 :
-              sprintf (r_nameX, 
-                       "-altsys-esstixsixteen-medium-r-normal-*-%i-*-*-*-p-*-ascii-0", size);
-              break;
-            default:
-              break;
-            }
-        }
-      else if (script == 'Z')
-        {
-          ffamily = "-ms-*";
-          if (highlight > MAX_HIGHLIGHT)
-            wght = "*";
-          else if (highlight == 0 || highlight == 2 || highlight == 3)
-            wght = "medium";
-          else
-            wght = "bold";
-          if (highlight == 0 || highlight == 1)
-            slant = "r";
-          else
-            slant = "o";
-          if (size < 0)
-            {
-              strcpy (r_nameX, "-*-dfgothicu_w5-*-*-*-*-*-*-*-*-*-*-iso10646-*");
-              size = 12;
-            }
-          else
-            sprintf (r_nameX,  "-*-dfgothicu_w5-*-*-*-*-%i-*-*-*-*-*-iso10646-*",
-                     size);
-        }
-      else
-        {
-          switch (family)
-            {
-            case 1:
-              ffamily = "-*-times";
-              break;
-            case 2:
-              ffamily = "-*-helvetica";
-              break;
-            case 3:
-              ffamily = "-adobe-courier";
-              break;
-            default:
-              ffamily = "-*-*";
-            }
-      
-          switch (highlight)
-            {
-            case 1:
-              wght = "bold";
-              slant = "r";
-              break;
-            case 2:
-            case 3:
-              wght = "medium";
-              if (family == 2 || family == 3)
-                slant = "o";
-              else
-                slant = "i";
-              break;
-            case 4:
-            case 5:
-              if (family == 2 || family == 2)
-                {
-                  wght = "bold";
-                  slant = "o";
-                }
-              else
-                {
-                  wght = "bold";
-                  slant = "i";
-                }
-              break;
-            default:
-              wght = "medium";
-              slant = "r";
-              break;
-            }
-          sprintf (r_nameX, "%s-%s-%s-*-*-*-%d-*-*-*-*-iso8859-1",
-                   ffamily, wght, slant, size*10);
-        }
-      GeneratePostscriptFont (r_name, script, family, highlight, size);
+  else if (script == 'G' || family == 0)
+    {
+      family = 0;
+      highlight = 0;
     }
-}
-
-
-/*----------------------------------------------------------------------
-  ReadFont do a raw Thot font loading (bypasses the font cache).
-  ----------------------------------------------------------------------*/
-ThotFont ReadFont (char script, int family, int highlight, int size,
-                   TypeUnit unit)
-{
-  char             name[10], nameX[100];
-
-  GetFontIdentifier (script, family, highlight, size, unit, name, nameX);
-#if _GTK
-  return ((ThotFont) gdk_font_load ((gchar *)nameX));
-#else /*_GTK */
-  return NULL;
-#endif /*_GTK */
+  GeneratePostscriptFont (r_name, script, family, highlight, size);
 }
  
 /*----------------------------------------------------------------------
@@ -1349,7 +1109,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
   int                 i, j, deb, free_entry;
   int                 val;
   unsigned int		    mask;
-  char                text[MAX_FONTNAME], PsName[MAX_FONTNAME], textX[100];
+  char                text[MAX_FONTNAME];
 #ifdef _WINGUI
   SIZE                wsize;
   TEXTMETRIC          textMetric;
@@ -1359,9 +1119,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 #endif /* _WINGUI */
   ThotFont            ptfont;
   
-  GetFontIdentifier (script, family, highlight, size, UnPoint, text, textX);
-  /* initialize the PostScript font name */
-  strcpy (PsName, text);   
+  GetFontIdentifier (script, family, highlight, size, UnPoint, text);
   /* Font cache lookup */
   i = 0;
   deb = 0;
@@ -1392,7 +1150,6 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
           //printf("tex[%d]=%s \n", free_entry, text);
           ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
 #else /*_GL*/
-#ifdef _WINGUI
           /* Allocate the font structure */
           ActiveFont = WIN_LoadFont (script, family, highlight, size);
           if (ActiveFont)
@@ -1446,12 +1203,6 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
             }
           else
             ptfont = NULL;
-
-#endif  /* _WINGUI */
-#ifdef _GTK
-          ptfont = (ThotFont) gdk_font_load ((gchar *)textX);
-#endif /* _GTK */
-          
           /* Loading failed try to find another size */
           if (ptfont == NULL)
             {
@@ -1567,16 +1318,16 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
         {
           /* initialize a new entry */
           strcpy (&TtFontName[deb], text);
-          strcpy (&TtPsFontName[i * 8], PsName);
+          strcpy (&TtPsFontName[i * 8], text);
           TtFonts[i] = ptfont;
           TtFontMask[i] = 0;       
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
           val = size;
           if (script == 'G' &&
               (val == 8 || val == 10 || val == 12 ||
                val == 14 || val == 24))
             TtPatchedFont[i] = val;
-#endif /* _GTK || _WX */
+#endif /* _WX */
         }
       /* rely to the current frame */
       mask = 1 << (frame - 1);
@@ -1654,7 +1405,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
   CHAR_T             ref_c = c;
   char               code = ' ';
   int                car;
-  int                frame, size;
+  int                frame, size, highlight;
   unsigned int       mask, fontmask;
   
   *font = NULL;
@@ -1665,6 +1416,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
   car = EOS;
   if (fontset)
     {
+      highlight = fontset->FontHighlight;
       size = fontset->FontSize;
       if (c == EOL || c == BREAK_LINE ||
           c == SPACE || c == TAB ||
@@ -1738,6 +1490,46 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                   pfont = &(fontset->Font_16);
                   encoding = ISO_SYMBOL;
                 }
+#endif /* _GL */
+            }
+          else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
+                    (c < 0x2018 || c > 0x201D)) || /* Windows quotations */
+                   c == 0x192  ||  /* latin small letter f with hook */
+                   c == 0x25CA ||  /* lozenge */
+                   c == 0x260E ||  /* black telephone */
+                   c == 0x2660 ||  /* black spade suit */
+                   c == 0x2663 ||  /* black club suit */
+                   c == 0x2665 ||  /* black heart suit */
+                   c == 0x2666 ||  /* black diamond suit */
+                   c == 0x2720 ||  /* maltese cross */
+                   c == 0x27FA ||  /* Long left right double arrow */
+                   c == 0x2970     /* roundimplies */
+                                  )
+            {
+#ifdef _GL
+             if (c == 0x220F || c == 0x2211)
+                /* an oversized product or summation sign. Use the Symbol
+                   font: these characters are ill-aligned in Esstix */
+                {
+                  code = '7';
+                  pfont = &(fontset->Font_7);
+                }
+              else
+                {
+                  /* use Esstix fonts */
+                  code = 'E';
+                  car = GetStixFontAndIndex (c, fontset, &pfont);
+                  if (pfont == NULL)
+                    {
+                      code = '1';
+                      pfont = &(fontset->Font_1);
+                    }
+                }
+#else /* _GL */
+		          /* Symbols */
+              code = 'G';
+              pfont = &(fontset->Font_16);
+              encoding = ISO_SYMBOL;
 #endif /* _GL */
             }
 #ifdef _GL
@@ -1829,47 +1621,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
               encoding = WINDOWS_1250;
 #endif /* _GL */
             }
-          else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
-                    (c < 0x2018 || c > 0x201D)) || /* Windows quotations */
-                   c == 0x192  ||  /* latin small letter f with hook */
-                   c == 0x25CA ||  /* lozenge */
-                   c == 0x260E ||  /* black telephone */
-                   c == 0x2660 ||  /* black spade suit */
-                   c == 0x2663 ||  /* black club suit */
-                   c == 0x2665 ||  /* black heart suit */
-                   c == 0x2666 ||  /* black diamond suit */
-                   c == 0x2720 ||  /* maltese cross */
-                   c == 0x27FA ||  /* Long left right double arrow */
-                   c == 0x2970     /* roundimplies */
-                                  )
-            {
-#ifdef _GL
-             if (c == 0x220F || c == 0x2211)
-                /* an oversized product or summation sign. Use the Symbol
-                   font: these characters are ill-aligned in Esstix */
-                {
-                  code = '7';
-                  pfont = &(fontset->Font_7);
-                  encoding = ISO_SYMBOL;
-                }
-              else
-                {
-                  /* use Esstix fonts */
-                  code = 'E';
-                  car = GetStixFontAndIndex (c, fontset, &pfont);
-                  if (pfont == NULL)
-                    {
-                      code = '1';
-                      pfont = &(fontset->Font_1);
-                    }
-                }
-#else /* _GL */
-		          /* Symbols */
-              code = 'G';
-              pfont = &(fontset->Font_16);
-              encoding = ISO_SYMBOL;
-#endif /* _GL */
-            }
           else if (c < 0x24F)
             {
               code = '3';
@@ -1952,7 +1703,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                       if (fontmask & mask)
                         {
                           lfont = LoadNearestFont (code, fontset->FontFamily,
-                                                   fontset->FontHighlight,
+                                                   highlight,
                                                    size, size,
                                                    frame, TRUE, TRUE);
                           if (code == '7' && GreekFontScript == 'G')
@@ -2278,47 +2029,11 @@ void InitDialogueFonts (const char *name)
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
 
-#ifdef _WINGUI
-  /*if (script == 'L')
-    DialogFont = GetStockObject (DEFAULT_GUI_FONT);
-    else*/
-  DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
-#endif /* _WINGUI */
-
-#ifdef _WX
   DialogFont = NULL;
+#ifdef _WX
   IDialogFont = NULL;
   LargeDialogFont = NULL;
 #endif /* _WX */
-
-#if defined(_GTK)
-  DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
-  if (DialogFont == NULL)
-    {
-      DialogFont = ReadFont ('L', 1, 0, index, UnRelative);
-      if (DialogFont == NULL)
-        TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
-    }
-  InitDialogueFont ();
-  IDialogFont = ReadFont (script, 1, 2, index, UnRelative);
-  if (IDialogFont == NULL)
-    {
-      IDialogFont = ReadFont (script, 2, 2, index, UnRelative);
-      if (IDialogFont == NULL)
-        IDialogFont = DialogFont;
-    }
-  index = 0;
-  while (LogicalPointsSizes[index] < f_size && index <= MaxNumberOfSizes)
-    index++;
-  LargeDialogFont = ReadFont (script, 1, 1, index, UnRelative);
-  if (LargeDialogFont == NULL)
-    {
-      LargeDialogFont = ReadFont (script, 2, 1, index, UnRelative);
-      if (LargeDialogFont == NULL)
-        LargeDialogFont = IDialogFont;
-    }
-#endif /* _GTK */
-  
 #ifdef _GL
   /* Need a default GL font because the format is different */
   DefaultGLFont = NULL;

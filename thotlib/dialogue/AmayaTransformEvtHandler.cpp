@@ -32,7 +32,7 @@
 #include "geom_f.h"
 #include "font_f.h"
 #include "content_f.h"
-#include "xwindowdisplay_f.h"
+#include "windowdisplay_f.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"
