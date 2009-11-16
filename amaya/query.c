@@ -2620,7 +2620,7 @@ static int LoopForStop (AHTReqContext *me)
         TtaHandleOneEvent (&ev);
       if (me->method == METHOD_GET)
         {
-          if (count < 1300)
+          if (count < 2000)
             count ++; // no more retries
           else
             me->reqStatus = HT_ABORT;

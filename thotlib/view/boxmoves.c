@@ -1313,7 +1313,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                       pRel = &pPosRel->PosRTable[i];
                       if (pRel->ReBox->BxAbstractBox &&
                           // don't move children of a new system origin
-                          (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
+                          !isSysOrg)
                         {
                           /* Relation out of structure */
                           if (pRel->ReOp == OpVertDep &&
@@ -1325,7 +1325,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                                 ;
                               else if (pRel->ReBox->BxVertFlex)
                                 MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, delta, frame, FALSE);
-                              else
+                              else if (!IsParentBox (pBox, pRel->ReBox))
                                 YMove (pRel->ReBox, pBox, delta, frame);
                             }
                           else if (pRel->ReOp == OpHeight)
@@ -2594,7 +2594,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                   pRefAb = pRel->ReBox->BxAbstractBox;
                   if (pRefAb &&
                       // don't move children of a new system origin
-                      (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
+                      !isSysOrg)
                     {
                       /* Ignore the back relation of a stretchable box */
                       if (!pBox->BxVertFlex ||
@@ -2614,7 +2614,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                   val = delta * pRefAb->AbHorizPos.PosDistance / 100;
                                 else
                                   val = 0;
-                                if (pRel->ReOp == OpVertInc)
+                                if (pRel->ReOp == OpVertInc &&
+                                    !IsParentBox (pBox, pRel->ReBox))
                                   {
                                     if (!pBox->BxVertFlex)
                                       YMove (pBox, NULL, -orgTrans, frame);
@@ -2622,12 +2623,13 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
                                          || pRel->ReOp == OpHeight)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, orgTrans, frame, FALSE);
-                                else if (pRel->ReBox != pSourceBox)
+                                else if (pRel->ReBox != pSourceBox &&
+                                         !IsParentBox (pBox, pRel->ReBox))
                                   YMove (pRel->ReBox, pBox, orgTrans - val, frame);
                               }
                             break;
                           case HorizMiddle:
-                            if (pRel->ReOp == OpVertRef)
+                            if (pRel->ReOp == OpVertRef && !IsParentBox (pBox, pRel->ReBox))
                               {
                                 if (pRel->ReBox == pBox)
                                   {
@@ -2640,7 +2642,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                               }
                             else if (toMove)
                               {
-                                if (pRel->ReOp == OpVertInc)
+                                if (pRel->ReOp == OpVertInc &&
+                                    !IsParentBox (pBox, pRel->ReBox))
                                   {
                                     if (!pBox->BxVertFlex)
                                       YMove (pBox, NULL, -middleTrans, frame);
@@ -2648,12 +2651,14 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
                                          || pRel->ReOp == OpHeight)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, middleTrans, frame, FALSE);
-                                else if (pRel->ReBox != pSourceBox)
+                                else if (pRel->ReBox != pSourceBox &&
+                                         !IsParentBox (pBox, pRel->ReBox))
                                   YMove (pRel->ReBox, pBox, middleTrans, frame);
                               }
                             break;
                           case Bottom:
-                            if (pRel->ReOp == OpVertRef)
+                            if (pRel->ReOp == OpVertRef &&
+                                !IsParentBox (pBox, pRel->ReBox))
                               {
                                 if (pRel->ReBox == pBox)
                                   {
@@ -2675,7 +2680,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                   val = delta * pRefAb->AbHorizPos.PosDistance / 100;
                                 else
                                   val = 0;
-                                if (pRel->ReOp == OpVertInc)
+                                if (pRel->ReOp == OpVertInc &&
+                                    !IsParentBox (pBox, pRel->ReBox))
                                   {
                                     if (!pBox->BxVertFlex)
                                       YMove (pBox, NULL, val - endTrans, frame);
@@ -2683,7 +2689,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
                                          || pRel->ReOp == OpHeight)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, endTrans, frame, FALSE);
-                                else if (pRel->ReBox != pSourceBox)
+                                else if (pRel->ReBox != pSourceBox &&
+                                         !IsParentBox (pBox, pRel->ReBox))
                                   YMove (pRel->ReBox, pBox, endTrans + val, frame);
                               }
                             break;
@@ -3978,7 +3985,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
                       else
                         i = pChildBox->BxYOrg + pChildBox->BxHeight;
                     }
-                  else if (pChildBox->BxYOrg < y)
+                  else if (pChildBox->BxYOrg < y || pChildBox->BxType == BoCell)
                     /* don't take into account negative origins */
                     i = y + pChildBox->BxHeight;
                   else if (pBox->BxType == BoStructGhost &&

@@ -737,7 +737,7 @@ void DrawStixBracket (int frame, int x, int y, int l, int h,
   unsigned char   symb;
   ThotFont        font;
 
-  size = PixelToPoint (h);
+  size = PixelToPoint (l);
   font = (ThotFont)LoadStixFont (7, size);
   if (CharacterHeight (33, font) > (3 * h) / 4)
     {
@@ -840,22 +840,22 @@ void DrawStixBracket (int frame, int x, int y, int l, int h,
 /* ----------------------------------------------------------------------
    StixBracketWidth
    ----------------------------------------------------------------------*/
-static int StixBracketWidth (int height, SpecFont font)
+static int StixBracketWidth (int h, SpecFont font)
 {
   int             i, size;
   ThotFont        pfont;
 
   GetFontAndIndexFromSpec (32, font, 1, &pfont);
-  if (pfont && height <= (int) (1.3 * FontHeight (pfont)))
+  if (pfont && h <= (int) (1.3 * FontHeight (pfont)))
     /* use an ordinary parenthesis */
     i = CharacterWidth ('(', pfont);
   else
     {
-      size = PixelToPoint (height);
+      size = PixelToPoint (h);
       pfont = (ThotFont)LoadStixFont (7, size);
-      if (height < LOW_HEIGHT)
+      if (h < LOW_HEIGHT)
         i = CharacterWidth (63, pfont);
-      else if (height < MID_HEIGHT)
+      else if (h < MID_HEIGHT)
         i = CharacterWidth (36, pfont);
       else 
         i = CharacterWidth (50, pfont);
@@ -877,7 +877,7 @@ void DrawStixPointyBracket (int frame, int x, int y, int l, int h,
   if (fg < 0)
     return;
 
-  size = PixelToPoint (h);
+  size = PixelToPoint (l);
   font = (ThotFont)LoadStixFont (7, size);
   /*  write a single Esstix 7 character:
       61 normal
@@ -936,7 +936,7 @@ void DrawStixParenthesis (int frame, int x, int y, int l, int h,
   unsigned char   symb;
   ThotFont        font;
 
-  size = PixelToPoint (h);
+  size = PixelToPoint (l);
   font = (ThotFont)LoadStixFont (7, size);
   if (CharacterHeight (33, font) > (3 * h) / 4)
     {
@@ -1015,7 +1015,7 @@ void DrawStixBrace (int frame, int x, int y, int l, int h,
   ThotFont        font;
 
 #ifdef _GL
-  size = PixelToPoint ((3 * h) / 4);
+  size = PixelToPoint (l);
   font = (ThotFont)LoadStixFont (7, size);
   if (direction == 0)
     symb = 38;

@@ -316,12 +316,15 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
       useStix = FALSE;
       /* if its a prenthesis, a brace or a bracket, and if this character
          is not high, draw it as an ordinary character */
-      if (pBox->BxAbstractBox->AbShape == '(' ||
-          pBox->BxAbstractBox->AbShape == ')' ||
-          pBox->BxAbstractBox->AbShape == '[' ||
-          pBox->BxAbstractBox->AbShape == ']' ||
-          pBox->BxAbstractBox->AbShape == '{' ||
-          pBox->BxAbstractBox->AbShape == '}')
+      if (pBox->BxH <= ((int)1.3 * pBox->BxFont->FontSize) &&
+          (pBox->BxAbstractBox->AbShape == '(' ||
+           pBox->BxAbstractBox->AbShape == ')' ||
+           pBox->BxAbstractBox->AbShape == '[' ||
+           pBox->BxAbstractBox->AbShape == ']' ||
+           pBox->BxAbstractBox->AbShape == '<' ||
+           pBox->BxAbstractBox->AbShape == '>' ||
+           pBox->BxAbstractBox->AbShape == '{' ||
+           pBox->BxAbstractBox->AbShape == '}'))
         {
           /* get the regular font for that box (not the Symbol font used by
              the SYMBOL element, but the regular font of its parent) */
@@ -350,11 +353,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
             /* this is an extended symbol. */
             font = NULL;
         }
-#ifdef IV
-#ifdef _WINGUI
-      if (WinFontExist ("esstix6_.ttf"))
-#endif /*_WINGUI*/
-#endif
+
         if (StixExist && font == NULL && pBox->BxH > 0)
           {
             size = PixelToPoint (pBox->BxH);

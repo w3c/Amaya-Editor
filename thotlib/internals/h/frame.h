@@ -14,7 +14,7 @@
 #include "constmenu.h"
 #include "constbutton.h"
 
-#define MAX_FONT    60
+#define MAX_FONT    80
 #define MAX_FONTNAME   10
 
 /*

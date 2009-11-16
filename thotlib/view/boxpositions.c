@@ -222,19 +222,16 @@ static void SetYCompleteForOutOfStruct (PtrBox pBox, int visibility,
           pRel = &pPosRel->PosRTable[i];
           if (pRel->ReBox->BxAbstractBox &&
               // don't move children of a new system origin
-              (!IsParentBox (pBox, pRel->ReBox) || !IsSystemOrigin (pAb, frame)))
+              !IsSystemOrigin (pAb, frame))
             {
               /* Relation hors-struture sur l'origine de la boite */
               if (pRel->ReOp == OpVertDep &&
                   pRel->ReBox->BxYOutOfStruct &&
-                  pRel->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pAb /*&&
-                                                                          pRel->ReBox->BxYToCompute*/)
+                  pRel->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pAb)
                 {
                   if (pRel->ReBox->BxVertFlex)
                     MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, y, frame, FALSE);
-                  //else if (newY)
-                  //  YMove (pRel->ReBox, pBox, y, frame);
-                  else
+                  else if (!IsParentBox (pBox, pRel->ReBox))
                     YMoveAllEnclosed (pRel->ReBox, y, frame);
                   /* The rel box position is now computed */
                   pRel->ReBox->BxYToCompute = FALSE;
