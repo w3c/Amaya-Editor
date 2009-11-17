@@ -27,7 +27,7 @@
 #include "openglfont.h"
 #include "glwindowdisplay.h"
 #else /*_GL*/
-#include "windowdisplay.h"
+#include "windowdisplay_f.h"
 #endif /*_GL*/
 
 #include "font_f.h"
@@ -339,8 +339,8 @@ static void DrawCompoundBraceStix (int frame, int x, int y, int l, int h,
       else
         {  topChar = 0x47;  bottomChar = 0x48; }
       yf += (h - (2 * hd)) / 2;
-      DrawChar (topChar, frame, xm, yf, font, fg);
-      DrawChar (bottomChar, frame, xm, yf+hd, font, fg);      
+      DrawChar ((CHAR_T)topChar, frame, xm, yf, font, fg);
+      DrawChar ((CHAR_T)bottomChar, frame, xm, yf+hd, font, fg);      
     }
   else if (h < 4 * hd)
     /* we can use three characters, but the two gaps are too narrow to
@@ -352,25 +352,25 @@ static void DrawCompoundBraceStix (int frame, int x, int y, int l, int h,
         yf += delta;
       else
         delta -= 1;
-      DrawChar (topChar, frame, xm, yf, font, fg);
+      DrawChar ((CHAR_T)topChar, frame, xm, yf, font, fg);
       yf += hd;
       if (delta < 0)
         yf += delta;
-      DrawChar (middleChar, frame, xm, yf, font, fg);
+      DrawChar ((CHAR_T)middleChar, frame, xm, yf, font, fg);
       yf += hd;
       if (delta < 0)
         yf += delta;
-      DrawChar (bottomChar, frame, xm, yf, font, fg);
+      DrawChar ((CHAR_T)bottomChar, frame, xm, yf, font, fg);
     }
   else
     /* use the total height */
     {
-      DrawChar (topChar, frame, xm, yf, font, fg);
+      DrawChar ((CHAR_T)topChar, frame, xm, yf, font, fg);
       yend = y + h - CharacterHeight (bottomChar, font) +
         CharacterAscent (bottomChar, font) - 1;
-      DrawChar (bottomChar, frame, xm, yend, font, fg);
+      DrawChar ((CHAR_T)bottomChar, frame, xm, yend, font, fg);
       ym = (yf + yend) / 2;
-      DrawChar (middleChar, frame, xm, ym, font, fg);
+      DrawChar ((CHAR_T)middleChar, frame, xm, ym, font, fg);
       delta = (h - 3*hd) / 2;
       if (delta > 0 && hd > 0)
         /* there are two gaps between the top, middle and bottom characters */
@@ -379,8 +379,8 @@ static void DrawCompoundBraceStix (int frame, int x, int y, int l, int h,
             /* the gap is less than one character. Draw a single fill
                character centered in each gap */
             {
-              DrawChar (fillChar, frame, xm, (ym + yf) / 2, font, fg);
-              DrawChar (fillChar, frame, xm, (yend + ym) / 2, font, fg);
+              DrawChar ((CHAR_T)fillChar, frame, xm, (ym + yf) / 2, font, fg);
+              DrawChar ((CHAR_T)fillChar, frame, xm, (yend + ym) / 2, font, fg);
             }
           else
             /* draw several fill characters in each gap */
@@ -389,14 +389,14 @@ static void DrawCompoundBraceStix (int frame, int x, int y, int l, int h,
               while (delta > 0)
                 {
                   yf += hd;
-                  DrawChar (fillChar, frame, xm, yf, font, fg);
-                  DrawChar (fillChar, frame, xm, yf+second, font, fg);
+                  DrawChar ((CHAR_T)fillChar, frame, xm, yf, font, fg);
+                  DrawChar ((CHAR_T)fillChar, frame, xm, yf+second, font, fg);
                   delta -= hd;
                   ym -= hd;
                   if (delta > 0)
                     {
-                      DrawChar (fillChar, frame, xm, ym, font, fg);
-                      DrawChar (fillChar, frame, xm, ym+second+1, font, fg);
+                      DrawChar ((CHAR_T)fillChar, frame, xm, ym, font, fg);
+                      DrawChar ((CHAR_T)fillChar, frame, xm, ym+second+1, font, fg);
                       delta -= hd;
                     }
                 }
@@ -434,15 +434,15 @@ static void DrawCompoundExtendedStix (int frame, int x, int y, int l, int h,
        characters, next to each other, centered in the box */
     {
       yf += (h - (2 * hd)) / 2;
-      DrawChar (topChar, frame, xm, yf, font, fg);
-      DrawChar (bottomChar, frame, xm, yf+hd, font, fg);
+      DrawChar ((CHAR_T)topChar, frame, xm, yf, font, fg);
+      DrawChar ((CHAR_T)bottomChar, frame, xm, yf+hd, font, fg);
     }
   else
     {
-      DrawChar (topChar, frame, xm, yf, font, fg);
+      DrawChar ((CHAR_T)topChar, frame, xm, yf, font, fg);
       yend = y + h - CharacterHeight (bottomChar, font) +
         CharacterAscent (bottomChar, font) - 1;
-      DrawChar (bottomChar, frame, xm, yend, font, fg);
+      DrawChar ((CHAR_T)bottomChar, frame, xm, yend, font, fg);
       delta = yend - yf - hd;
       if (delta > 0 && hd > 0)
         /* there is a gap between the top and bottom characters.
@@ -451,19 +451,19 @@ static void DrawCompoundExtendedStix (int frame, int x, int y, int l, int h,
           if (delta <= hd)
             /* the gap is less than one character. Draw a single fill
                character centered in the gap */
-            DrawChar (fillChar, frame, xm, (yend + yf) / 2, font, fg);
+            DrawChar ((CHAR_T)fillChar, frame, xm, (yend + yf) / 2, font, fg);
           else
             /* draw several fill characters */
             {
               while (delta > 0)
                 {
                   yf += hd;
-                  DrawChar (fillChar, frame, xm, yf, font, fg);
+                  DrawChar ((CHAR_T)fillChar, frame, xm, yf, font, fg);
                   delta -= hd;
                   yend -= hd;
                   if (delta > 0)
                     {
-                      DrawChar (fillChar, frame, xm, yend, font, fg);
+                      DrawChar ((CHAR_T)fillChar, frame, xm, yend, font, fg);
                       delta -= hd;
                     }
                 }
@@ -482,7 +482,7 @@ void DrawCenteredStixChar (ThotFont font, unsigned char symb, int x, int y,
   x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
   y = y + ((h - CharacterHeight ((char)symb, font)) / 2)
 	  + CharacterAscent ((char) symb, font);
-  DrawChar ( symb, frame, x, y, font, fg);
+  DrawChar ((CHAR_T) symb, frame, x, y, font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -494,7 +494,7 @@ static void DrawStixChar (ThotFont font, unsigned char symb, int x,
 {
   y = y + ((h - CharacterHeight ((char)symb, font)) / 2)
 	  + CharacterAscent ((char) symb, font);
-  DrawChar ( symb, frame, x, y, font, fg);
+  DrawChar ((CHAR_T) symb, frame, x, y, font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -1118,10 +1118,10 @@ static void DrawCompoundHorizBraceStix (int frame, int x, int y, int l, int h,
   mWidth = CharacterWidth (middleChar, font);
   rWidth = CharacterWidth (rightChar, font);
   fWidth = CharacterWidth (fillChar, font);
-  DrawChar (leftChar, frame, x, baseline, font, fg);
+  DrawChar ((CHAR_T)leftChar, frame, x, baseline, font, fg);
   xMiddleChar = x + (l - mWidth) / 2;
-  DrawChar (middleChar, frame, xMiddleChar, baseline, font, fg);
-  DrawChar (rightChar, frame, x + l - rWidth, baseline, font, fg);
+  DrawChar ((CHAR_T)middleChar, frame, xMiddleChar, baseline, font, fg);
+  DrawChar ((CHAR_T)rightChar, frame, x + l - rWidth, baseline, font, fg);
 
   gap = l - lWidth - mWidth - rWidth;
   if (gap > 0 && fWidth > 0)
@@ -1133,9 +1133,9 @@ static void DrawCompoundHorizBraceStix (int frame, int x, int y, int l, int h,
         /* the gap is less than onefill character. Draw a single fill
            character centered in each gap */
         {
-          DrawChar (fillChar, frame, x+lWidth-((fWidth-gap)*3/4), baseline,
+          DrawChar ((CHAR_T)fillChar, frame, x+lWidth-((fWidth-gap)*3/4), baseline,
                     font, fg);
-          DrawChar (fillChar, frame, xMiddleChar+mWidth-(fWidth-gap)/4,
+          DrawChar ((CHAR_T)fillChar, frame, xMiddleChar+mWidth-(fWidth-gap)/4,
                     baseline, font, fg);
         }
       else
@@ -1146,8 +1146,8 @@ static void DrawCompoundHorizBraceStix (int frame, int x, int y, int l, int h,
           xf2 = xMiddleChar + mWidth;
           do
             {
-              DrawChar (fillChar, frame, xf1, baseline, font, fg);
-              DrawChar (fillChar, frame, xf2, baseline, font, fg);
+              DrawChar ((CHAR_T)fillChar, frame, xf1, baseline, font, fg);
+              DrawChar ((CHAR_T)fillChar, frame, xf2, baseline, font, fg);
               gap -= fWidth;
               if (gap > 0)
                 {
@@ -1219,8 +1219,8 @@ static void DrawCompoundHorizArrow (int frame, int x, int y, int l, int h,
   lWidth = CharacterWidth (leftChar, font);
   mWidth = CharacterWidth (middleChar, font);
   rWidth = CharacterWidth (rightChar, font);
-  DrawChar (leftChar, frame, x, baseline, font, fg);
-  DrawChar (rightChar, frame, x + l - rWidth, baseline, font, fg);
+  DrawChar ((CHAR_T)leftChar, frame, x, baseline, font, fg);
+  DrawChar ((CHAR_T)rightChar, frame, x + l - rWidth, baseline, font, fg);
 
   gap = l - lWidth - rWidth;
   xf1 = x + lWidth;
@@ -1232,10 +1232,10 @@ static void DrawCompoundHorizArrow (int frame, int x, int y, int l, int h,
           if (gap < mWidth/2)
             /* the gap is less than onefill character. Draw a single fill
                character centered in each gap */
-            DrawChar (middleChar, frame, xf1-(gap/2), baseline,
+            DrawChar ((CHAR_T)middleChar, frame, xf1-(gap/2), baseline,
                       font, fg);
           else
-            DrawChar (middleChar, frame, xf1, baseline, font, fg);
+            DrawChar ((CHAR_T)middleChar, frame, xf1, baseline, font, fg);
           gap -= mWidth;
           xf1 += mWidth;
         }

@@ -47,7 +47,7 @@ static int             NbWhiteSp;
 #include "memory_f.h"
 #include "inites_f.h"
 #include "units_f.h"
-#include "xwindowdisplay_f.h"
+#include "windowdisplay_f.h"
 /*
  * Math Macros conversion from
  * degrees to radians and so on...

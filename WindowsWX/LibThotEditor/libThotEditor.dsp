@@ -411,10 +411,6 @@ SOURCE=..\..\thotlib\dialogue\closedoc.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\colors.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\base\config.c
 # End Source File
 # Begin Source File
