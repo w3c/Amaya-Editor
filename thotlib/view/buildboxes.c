@@ -1726,7 +1726,7 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
   PtrAbstractBox      pChildAb, pFirstAb, pCurrentAb;
   PtrBox              pChildBox, box, pBox;
   PtrElement          pEl;
-  int                 val, x, y, zoom;
+  int                 val, x, y;
   ThotBool            still, hMin, vMin, isExtra;
 
   box = NULL;
@@ -1970,7 +1970,6 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
           (pAb->AbHeight.DimAbRef != NULL || pAb->AbHeight.DimValue != 0 ||
            pAb->AbHeight.DimUnit == UnAuto) && *height == 0)
         {
-          zoom = ViewFrameTable[frame - 1].FrMagnification;
           if (pAb->AbLeafType != LtText && pAb->AbLeafType != LtSymbol)
             *height = GetCurrentFontHeight (pAb->AbSize, pAb->AbSizeUnit, frame);
           else
@@ -2339,7 +2338,7 @@ ThotBool InlineTextChildren (PtrAbstractBox pAb, int frame)
         return TRUE;
       if (FrameTable[frame].FrView == 1 && /* only in formatted view */
           pAb->AbBox && pAb->AbBox->BxType != BoGhost &&
-          pAb->AbDisplay != 'I' &&
+          pAb->AbDisplay != 'I' && pAb->AbDisplay != 'b' &&
           !pAb->AbWidth.DimIsPosition &&
           (pAb->AbWidth.DimAbRef || pAb->AbWidth.DimValue != -1))
         {
@@ -2351,7 +2350,7 @@ ThotBool InlineTextChildren (PtrAbstractBox pAb, int frame)
               if (pChildAb->AbLeafType == LtText &&
                   !pChildAb->AbPresentationBox)
                 return TRUE;
-              else if (pChildAb->AbDisplay == 'I')
+              else if (pChildAb->AbDisplay == 'I' || pChildAb->AbDisplay == 'b')
                 return TRUE;
               pChildAb = pChildAb->AbNext;
             }
@@ -2719,7 +2718,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
     }
   pBox = pAb->AbBox;
   extraflow = ExtraAbFlow (pAb, frame);
-  displayI = ((pAb->AbDisplay == 'I' ||
+  displayI = ((pAb->AbDisplay == 'I' || pAb->AbDisplay == 'b' ||
 	       /* a sized box cannot be split by lines */
 	       (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimValue <= 0)) &&
 	      !pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimValue <= 0);

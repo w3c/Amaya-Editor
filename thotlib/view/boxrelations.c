@@ -1517,7 +1517,8 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
             pRefAb = pRefAb->AbPrevious;
           pAb->AbHorizPos.PosAbRef = pRefAb;
         }
-      if (pParentAb && pParentAb->AbDisplay == 'I' &&
+      if ((pParentAb && pParentAb->AbDisplay == 'I' ||
+           pParentAb && pParentAb->AbDisplay == 'b') &&
           pParentAb->AbFloat == 'N' &&  !ExtraAbFlow (pAb, frame))
         {
           // force inline display
@@ -1653,7 +1654,8 @@ void ComputePosRelation (AbPosition *rule, PtrBox pBox, int frame,
   else
     {
       /* Vertical rule */
-      if (pParentAb && pParentAb->AbDisplay == 'I' &&
+      if ((pParentAb && pParentAb->AbDisplay == 'I' ||
+           pParentAb && pParentAb->AbDisplay == 'b') &&
           pParentAb->AbFloat == 'N' &&  !ExtraAbFlow (pAb, frame))
         {
           // force inline display
@@ -2931,7 +2933,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
             {
               /* it's not the root box */
               inLine = (!pAb->AbNotInLine &&
-                        (pAb->AbDisplay == 'I' ||
+                        (pAb->AbDisplay == 'I' || pAb->AbDisplay == 'b' ||
                          (pParentAb->AbBox &&
                           (pParentAb->AbBox->BxType == BoBlock ||
                            pParentAb->AbBox->BxType == BoFloatBlock ||
@@ -2999,7 +3001,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
                           if (pAb->AbFloat != 'N'||
                               pBox->BxType == BoFloatGhost ||
                               pAb->AbNotInLine ||
-                              pAb->AbDisplay == 'I')
+                              pAb->AbDisplay == 'I' || pAb->AbDisplay == 'b')
                             {
                               /* floated box or inline -> content width */
                               pDimAb->DimAbRef = NULL;

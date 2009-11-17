@@ -2707,7 +2707,8 @@ static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock,
                             pNextBox->BxType == BoFloatBlock ||
                             pNextBox->BxType == BoCellBlock ||
                             pNextBox->BxType == BoTable) &&
-                           pNextBox->BxAbstractBox->AbDisplay == 'I' &&
+                           (pNextBox->BxAbstractBox->AbDisplay == 'I' ||
+                            pNextBox->BxAbstractBox->AbDisplay == 'b') &&
                            maxWidth < val)
                     {
                       /* use the max between the enclosed and the enclosing widths */
