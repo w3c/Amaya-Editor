@@ -184,8 +184,8 @@ Section "Amaya" SecAmaya
   File WindowsWX\bin\wxbase*u_net_vc_custom.dll
   File WindowsWX\bin\wxbase*u_xml_vc_custom.dll
   File WindowsWX\bin\thotprinter.dll
-;  File WindowsWX\bin\Microsoft.VC90.CRT.manifest
-;  File WindowsWX\bin\msvc*.dll
+  File WindowsWX\bin\msvc*.dll
+  File WindowsWX\bin\Microsoft.VC90.CRT.manifest
 
   SetDetailsPrint textonly
   DetailPrint "Installing Amaya resources : icons, dialogues"
@@ -348,24 +348,43 @@ Section "Amaya" SecAmaya
   CreateShortCut "$DESKTOP\Amaya.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
 
   ;register extension files
-  WriteRegStr HKCR ".xtd" "" "XTD"
-  WriteRegStr HKCR ".xtl" "" "XTL"
-  WriteRegStr HKCR ".svg" "" "SVG"
-  WriteRegStr HKCR ".mml" "" "MML"
-  WriteRegStr HKCR ".html" "" "HTML"
-  WriteRegStr HKCR ".htm" "" "HTM"
-  WriteRegStr HKCR "XTD\Shell\Action2" "" "Edit with Amaya"
-  WriteRegStr HKCR "XTD\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "XTL\Shell\Action2" "" "Edit with Amaya"
-  WriteRegStr HKCR "XTL\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "SVG\Shell\Action2" "" "Edit with Amaya"
-  WriteRegStr HKCR "SVG\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "MML\Shell\Action2" "" "Edit with Amaya"
-  WriteRegStr HKCR "MML\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "HTML\Shell\Action2" "" "Edit with Amaya"
-  WriteRegStr HKCR "HTML\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
-  WriteRegStr HKCR "HTM\Shell\Action2" "" "Edit with Amaya"
-  WriteRegStr HKCR "HTM\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR ".xtd" "" "AM_XTD"
+  WriteRegStr HKCR ".xtl" "" "AM_XTL"
+  WriteRegStr HKCR ".svg" "" "AM_SVG"
+  WriteRegStr HKCR ".mml" "" "AM_MML"
+  WriteRegStr HKCR ".htm" "" "AM_HTM"
+  WriteRegStr HKCR ".html" "" "AM_HTML"
+
+  ;WriteRegStr HKCR "XTD\Shell\edit" "" "Edit with Amaya"
+  ;WriteRegStr HKCR "XTD\Shell\edit\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "AM_XTD\Shell\Action2" "" "Edit with Amaya"
+  WriteRegStr HKCR "AM_XTD\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+
+  ;WriteRegStr HKCR "XTL\Shell\edit" "" "Edit with Amaya"
+  ;WriteRegStr HKCR "XTL\Shell\edit\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "AM_XTL\Shell\Action2" "" "Edit with Amaya"
+  WriteRegStr HKCR "AM_XTL\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+
+  ;WriteRegStr HKCR "SVG\Shell\edit" "" "Edit with Amaya"
+  ;WriteRegStr HKCR "SVG\Shell\edit\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "AM_SVG\Shell\Action2" "" "Edit with Amaya"
+  WriteRegStr HKCR "AM_SVG\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+
+  ;WriteRegStr HKCR "MML\Shell\edit" "" "Edit with Amaya"
+  ;WriteRegStr HKCR "MML\Shell\edit\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "AM_MML\Shell\Action2" "" "Edit with Amaya"
+  WriteRegStr HKCR "AM_MML\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+
+  ;WriteRegStr HKCR "HTML\Shell\edit" "" "Edit with Amaya"
+  ;WriteRegStr HKCR "HTML\Shell\edit\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "AM_HTML\Shell\Action2" "" "Edit with Amaya"
+  WriteRegStr HKCR "AM_HTML\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+
+  ;WriteRegStr HKCR "HTM\Shell\edit" "" "Edit with Amaya"
+  ;WriteRegStr HKCR "HTM\Shell\edit\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  WriteRegStr HKCR "AM_HTM\Shell\Action2" "" "Edit with Amaya"
+  WriteRegStr HKCR "AM_HTM\Shell\Action2\command" "" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+
 SectionEnd
 
 
@@ -510,24 +529,41 @@ Section "Uninstall"
   DetailPrint "Deleting Registry Keys..."
   SetDetailsPrint listonly
 
+  DeleteRegKey HKCR "AM_XTD\Shell\Action2"
+  DeleteRegKey HKCR "AM_XTL\Shell\Action2"
+  DeleteRegKey HKCR "AM_SVG\Shell\Action2"
+  DeleteRegKey HKCR "AM_MML\Shell\Action2"
+  DeleteRegKey HKCR "AM_HTM\Shell\Action2"
+  DeleteRegKey HKCR "AM_HTML\Shell\Action2"
+
+  DeleteRegKey HKCR "XTD\Shell\Action2"
+  DeleteRegKey HKCR "XTL\Shell\Action2"
+  DeleteRegKey HKCR "SVG\Shell\Action2"
+  DeleteRegKey HKCR "MML\Shell\Action2"
+  DeleteRegKey HKCR "HTM\Shell\Action2"
+  DeleteRegKey HKCR "HTML\Shell\Action2"
+
+  ;DeleteRegKey HKCR "HTML\Shell\edit"
+
+  ;DeleteRegValue HKCR "XTD\Shell" "edit"
+  ;DeleteRegKey HKCR "XTD\Shell"
+  ;DeleteRegValue HKCR "XTD\Shell\Action2" "Edit with Amaya"
+  ;DeleteRegValue HKCR "XTD\Shell\Action2\command" "Edit with Amaya"
+  ;DeleteRegValue HKCR "XTD\Shell\Action2" "Edit with Amaya"
+  ;DeleteRegValue HKCR "XTD\Shell\Action2\command" '$INSTDIR\WindowsWX\bin\amaya.exe "%1"'
+  ;DeleteRegValue HKCR "XTL\Shell\Action2" "Edit with Amaya"
+  ;DeleteRegValue HKCR "XTL\Shell\Action2\command" "Edit with Amaya"
+  ;DeleteRegValue HKCR "SVG\Shell\Action2" "Edit with Amaya"
+  ;DeleteRegValue HKCR "SVG\Shell\Action2\command" "Edit with Amaya"
+  ;DeleteRegValue HKCR "MML\Shell\Action2" "Edit with Amaya"
+  ;DeleteRegValue HKCR "MML\Shell\Action2\command" "Edit with Amaya"
+  ;DeleteRegValue HKCR "HTM\Shell\Action2" "Edit with Amaya"
+  ;DeleteRegValue HKCR "HTM\Shell\Action2\command" "Edit with Amaya"
+
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Amaya"
   DeleteRegKey HKLM "Software\Amaya"
   DeleteRegKey HKCR "Amaya"
   DeleteRegKey HKCU "Software\Amaya"
-
-  DeleteRegValue HKCR "XTD\Shell\Action2" "Edit with Amaya"
-  ;DeleteRegValue HKCR "XTD\Shell\Action2\command" "Edit with Amaya"
-  DeleteRegValue HKCR "XTL\Shell\Action2" "Edit with Amaya"
-  ;DeleteRegValue HKCR "XTL\Shell\Action2\command" "Edit with Amaya"
-  DeleteRegValue HKCR "SVG\Shell\Action2" "Edit with Amaya"
-  ;DeleteRegValue HKCR "SVG\Shell\Action2\command" "Edit with Amaya"
-  DeleteRegValue HKCR "MML\Shell\Action2" "Edit with Amaya"
-  ;DeleteRegValue HKCR "MML\Shell\Action2\command" "Edit with Amaya"
-  WriteRegStr HKCR "HTML\Shell\Action2\command" "" ''
-  DeleteRegValue HKCR "HTML\Shell\Action2\command" ""
-  DeleteRegValue HKCR "HTML\Shell\Action2" "Edit with Amaya"
-  DeleteRegValue HKCR "HTM\Shell\Action2" "Edit with Amaya"
-  ;DeleteRegValue HKCR "HTM\Shell\Action2\command" "Edit with Amaya"
 
 ; uninstall files associations
   ; --> .html
