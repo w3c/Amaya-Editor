@@ -2605,7 +2605,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                           case Top:
                             if (pRel->ReOp == OpVertRef)
                               {
-                                if (pRel->ReBox != pBox)
+                                if (pRel->ReBox != pBox &&
+                                    !IsParentBox (pBox, pRel->ReBox))
                                   MoveHorizRef (pRel->ReBox, pSourceBox, orgTrans, frame);
                               }
                             else if (toMove)
@@ -2614,10 +2615,10 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                   val = delta * pRefAb->AbHorizPos.PosDistance / 100;
                                 else
                                   val = 0;
-                                if (pRel->ReOp == OpVertInc &&
-                                    !IsParentBox (pBox, pRel->ReBox))
+                                if (pRel->ReOp == OpVertInc)
                                   {
-                                    if (!pBox->BxVertFlex)
+                                    if (!pBox->BxVertFlex &&
+                                        !IsParentBox (pBox, pRel->ReBox))
                                       YMove (pBox, NULL, -orgTrans, frame);
                                   }
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
@@ -2629,7 +2630,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                               }
                             break;
                           case HorizMiddle:
-                            if (pRel->ReOp == OpVertRef && !IsParentBox (pBox, pRel->ReBox))
+                            if (pRel->ReOp == OpVertRef)
                               {
                                 if (pRel->ReBox == pBox)
                                   {
@@ -2637,15 +2638,15 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                     /* restore the history of moved boxes */
                                     pBox->BxMoved = pFromBox;
                                   }
-                                else
+                                else if (!IsParentBox (pBox, pRel->ReBox))
                                   MoveHorizRef (pRel->ReBox, pSourceBox, middleTrans, frame);
                               }
                             else if (toMove)
                               {
-                                if (pRel->ReOp == OpVertInc &&
-                                    !IsParentBox (pBox, pRel->ReBox))
+                                if (pRel->ReOp == OpVertInc)
                                   {
-                                    if (!pBox->BxVertFlex)
+                                    if (!pBox->BxVertFlex &&
+                                        !IsParentBox (pBox, pRel->ReBox))
                                       YMove (pBox, NULL, -middleTrans, frame);
                                   }
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
@@ -2657,8 +2658,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                               }
                             break;
                           case Bottom:
-                            if (pRel->ReOp == OpVertRef &&
-                                !IsParentBox (pBox, pRel->ReBox))
+                            if (pRel->ReOp == OpVertRef)
                               {
                                 if (pRel->ReBox == pBox)
                                   {
@@ -2671,7 +2671,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                     /* restore the history of moved boxes */
                                     pBox->BxMoved = pFromBox;
                                   }
-                                else
+                                else if (!IsParentBox (pBox, pRel->ReBox))
                                   MoveHorizRef (pRel->ReBox, pSourceBox, endTrans, frame);
                               }
                             else if (toMove)
@@ -2680,10 +2680,10 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                   val = delta * pRefAb->AbHorizPos.PosDistance / 100;
                                 else
                                   val = 0;
-                                if (pRel->ReOp == OpVertInc &&
-                                    !IsParentBox (pBox, pRel->ReBox))
+                                if (pRel->ReOp == OpVertInc)
                                   {
-                                    if (!pBox->BxVertFlex)
+                                    if (!pBox->BxVertFlex &&
+                                        !IsParentBox (pBox, pRel->ReBox))
                                       YMove (pBox, NULL, val - endTrans, frame);
                                   }
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
