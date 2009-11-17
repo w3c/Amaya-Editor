@@ -5181,7 +5181,8 @@ static char *ParseCSSContent (Element element, PSchema tsch,
   int                 length, val;
   char               *buffer, *p;
   char               *start_value;
-  ThotBool            repeat;
+  wchar_t             wc;
+  ThotBool            repeat, done;
 
   value.typed_data.unit = UNIT_REL;
   value.typed_data.real = FALSE;
@@ -5217,11 +5218,12 @@ static char *ParseCSSContent (Element element, PSchema tsch,
           last = SkipString (last);
           length = last - cssRule;
           /* get a buffer to store the string */
-          buffer = (char *)TtaGetMemory (length);
+          buffer = (char *)TtaGetMemory (3 * length);
           p = buffer; /* beginning of the string */
           cssRule++;
           while (*cssRule != EOS && *cssRule != quoteChar)
             {
+	      done = FALSE;
               if (*cssRule == '\\')
                 {
                   cssRule++; /* skip the backslash */
@@ -5240,17 +5242,17 @@ static char *ParseCSSContent (Element element, PSchema tsch,
                       sscanf (start, "%x", &val);
                       TtaWCToMBstring ((wchar_t) val, (unsigned char **) &p);
                       *cssRule = savedChar;
-                    }
-                  else
-                    {
-                      *p = *cssRule;
-                      p++; cssRule++;
+		      done = TRUE;
                     }
                 }
-              else
+              if (!done)
                 {
-                  *p = *cssRule;
-                  p++; cssRule++;
+		  /* The default encoding of CSS style sheets is ISO-8859-1,
+		     but we should use the real encoding fo the file instead
+		     of this default value @@@@@ */
+		  wc = TtaGetWCFromChar ((unsigned char) cssRule[0], ISO_8859_1);
+		  TtaWCToMBstring (wc, (unsigned char **) &p);
+ 		  cssRule++;
                 }
             }
           *p = EOS;
