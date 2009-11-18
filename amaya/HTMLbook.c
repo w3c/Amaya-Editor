@@ -647,9 +647,6 @@ void CallbackPrint (int ref, int typedata, char *data)
           if (PaperPrint == PP_PS)
             {
               PaperPrint = PP_PRINTER;
-#ifdef _GTK
-              TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
-#endif /* _GTK */
               TtaSetPrintParameter (PP_Destination, PaperPrint);
             }
           break;
@@ -657,9 +654,6 @@ void CallbackPrint (int ref, int typedata, char *data)
           if (PaperPrint == PP_PRINTER)
             {
               PaperPrint = PP_PS;
-#ifdef _GTK
-              TtaSetTextForm (BasePrint + PPrinterName, PSfile);
-#endif /* _GTK */
               TtaSetPrintParameter (PP_Destination, PaperPrint);
             }
           break;
@@ -696,7 +690,11 @@ void InitPrint (void)
   else
     strcpy (PPrinter, ptr);
   TtaSetPrintCommand (PPrinter);
+#ifdef _MACOS
+  PaperPrint = PP_PS;
+#else /* _MACOS */
   PaperPrint = PP_PRINTER;
+#endif /* _MACOS */
   TtaSetPrintParameter (PP_Destination, PaperPrint);
 
   /* define the new default PrintSchema */
