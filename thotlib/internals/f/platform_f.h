@@ -10,7 +10,8 @@ extern int ThotDirExists ( CONST char *name );
 extern int TtaDirExists ( CONST char *dirpath );
 extern int ThotFileExist ( CONST char *name );
 extern ThotBool TtaFileExist ( CONST char *filename );
-extern int TtaFileUnlink ( CONST char *filename );
+extern ThotBool TtaFileUnlink ( CONST char *filename );
+extern ThotBool TtaDirectoryUnlink ( CONST char *dirname );
 extern ThotBool TtaFileRename ( const char * oldname,
                                 const char * newname );
 extern unsigned long TtaGetFileSize ( const char *filename );
@@ -25,7 +26,8 @@ extern int ThotDirExists ( CONST char *name );
 extern int TtaDirExists ( CONST char *dirpath );
 extern int ThotFileExist ( CONST char *name );
 extern ThotBool TtaFileExist ( CONST char *filename );
-extern int TtaFileUnlink ( CONST char *filename );
+extern ThotBool TtaFileUnlink ( CONST char *filename );
+extern ThotBool TtaDirectoryUnlink ( CONST char *dirname );
 extern ThotBool TtaFileRename ( const char * oldname,
                                   const char * newname );
 extern unsigned long TtaGetFileSize ( const char *filename );

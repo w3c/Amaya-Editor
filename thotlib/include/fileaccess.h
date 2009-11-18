@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2005
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -63,13 +63,13 @@ typedef int ThotFileOrigin;
 
 typedef long ThotFileOffset;
 #define ThotFile_BADOFFSET -1L
-
 #endif /* !_WINGUI */
 
 #ifndef __CEXTRACT__
 extern int TtaDirExists ( const char *dirpath );
 extern ThotBool TtaFileExist ( const char *filename );
-extern int TtaFileUnlink ( const char *filename );
+extern ThotBool TtaFileUnlink ( const char *filename );
+extern ThotBool TtaDirectoryUnlink ( const char *filename );
 extern ThotBool TtaFileRename( const char * oldname, const char * newname );
 extern unsigned long TtaGetFileSize (const char *filename);
 extern ThotBool TtaFileCopy ( const char *sourceFileName,

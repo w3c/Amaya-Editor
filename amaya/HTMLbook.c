@@ -14,6 +14,7 @@
 
 #ifdef _WX
 #include "wx/wx.h"
+#include "registry_wx.h"
 #endif /* _WX */
 
 /* Included headerfiles */
@@ -390,11 +391,9 @@ static void CheckPrintingDocument (Document document)
       DocPrintURL = TtaStrdup (DocumentURLs[document]);
       
       /* define the new default PS file */
-      ptr = TtaGetEnvString ("APP_TMPDIR");
-      if (ptr != NULL && TtaCheckDirectory (ptr))
-        strcpy (PSfile, ptr);
-      else
-        strcpy (PSfile, TtaGetDefEnvString ("APP_TMPDIR"));
+      ptr = TtaGetDocumentsDir ();
+      TtaCheckMakeDirectory (ptr, TRUE);
+      strcpy (PSfile, ptr);
       lg = strlen (PSfile);
       if (PSfile[lg - 1] == DIR_SEP)
         PSfile[--lg] = EOS;
@@ -410,14 +409,6 @@ static void CheckPrintingDocument (Document document)
   ----------------------------------------------------------------------*/  
 static void PrintDocument (Document doc, View view)
 {
-#if defined(_WINDOWS) && defined(_WX) && defined(IV)
-  /* On windows and with wxWidgets, disable printing for the moment */
-  wxMessageDialog messagedialog( NULL,
-                                 TtaConvMessageToWX("Not implemented yet"), 
-                                 _T("Warning"),
-                                 (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
-  messagedialog.ShowModal();
-#else /* defined(_WINDOWS) && defined(_WX) */
   AttributeType      attrType;
   ElementType        elType;
   Attribute          attr;
@@ -545,7 +536,6 @@ static void PrintDocument (Document doc, View view)
     TtaFreeMemory (files);
   if (!status)
     TtaSetDocumentUnmodified (doc);
-#endif /* defined(_WINDOWS) && defined(_WX) */
 }
 
 /*----------------------------------------------------------------------

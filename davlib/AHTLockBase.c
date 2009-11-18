@@ -879,7 +879,7 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative,
 }
 
 /* need this function from thotlib ... */
-extern int TtaFileUnlink ( const char *filename );
+extern ThotBool TtaFileUnlink ( const char *filename );
 
 /* ---------------------------------------------------------------------------
  * This function removes the lock information in LockLine object from the base.
@@ -960,7 +960,7 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
             /* try to remove the old file, to write a new one.
              * if remove failed, we force the creation of a new empty file.
              * if we have something to write, create a new file. */
-            if ((TtaFileUnlink(path) < 0) || (list && !HTList_isEmpty (list))) 
+            if (!TtaFileUnlink(path) || (list && !HTList_isEmpty (list))) 
                 fp = TtaWriteOpen (path);
          }      
 	

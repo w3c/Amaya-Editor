@@ -215,7 +215,7 @@ static int test_cachelock (char *filename)
 {
 #ifdef _WINDOWS
   /* if the lock is set, we can't unlink the file under Windows */
-  if (TtaFileUnlink(filename) == 0)
+  if (TtaFileUnlink(filename))
     return 0;
   else
     return -1;
@@ -1960,7 +1960,7 @@ static ThotBool RecCleanCache (char *dirname)
   bool     cont;
 
   /* try to delete the current directory */
-  if (wxRmdir(wx_dir_name))
+  if (TtaDirectoryUnlink (dirname))
     return TRUE;
 
   /* try to delete the files & directorys inside */
@@ -1985,7 +1985,7 @@ static ThotBool RecCleanCache (char *dirname)
 	wxRemoveFile(path);
     }
   /* try to delete the current directory */
-  if (wxRmdir(wx_dir_name))
+  if (TtaDirectoryUnlink (dirname))
     return TRUE;
   return FALSE;
 }

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -156,13 +156,12 @@ ThotBool TtaFileExist (CONST char *filename)
 
 /*----------------------------------------------------------------------
    TtaFileUnlink : remove a file.                             
-   return 0 if succesfull
-   return -1 if error
+   Return TRUE if succesfull.
   ----------------------------------------------------------------------*/
-int TtaFileUnlink (CONST char *filename)
+ThotBool TtaFileUnlink (CONST char *filename)
 {
 #ifdef _WX
-	return wxRemoveFile(TtaConvMessageToWX(filename)) ? 0 : -1;
+  return wxRemoveFile(TtaConvMessageToWX(filename));
 #else /* _WX */
   int         ret;
   char       *name;
@@ -172,10 +171,34 @@ int TtaFileUnlink (CONST char *filename)
       name = GetRealFileName (filename);
       ret = unlink (name);
       TtaFreeMemory (name);
-      return ret;
+      return (ret == -1);
     }
   else
-    return -1;
+    return TRUE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+   TtaDirectoryUnlink : remove a directory.                             
+   Return TRUE if succesfull.
+  ----------------------------------------------------------------------*/
+ThotBool TtaDirectoryUnlink (CONST char *dirname)
+{
+#ifdef _WX
+  return wxRmdir (TtaConvMessageToWX(dirname));
+#else /* _WX */
+  int         ret;
+  char       *name;
+
+  if (dirname)
+    {
+      name = GetRealFileName (dirname);
+      ret = rmdir (name);
+      TtaFreeMemory (name);
+      return (ret == -1);
+    }
+  else
+    return TRUE;
 #endif /* _WX */
 }
 

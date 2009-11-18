@@ -619,7 +619,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #else /*_WINDOWS*/
    cmd[j] = EOS;
    i = strlen (cmd);
-   sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
+   sprintf (&cmd[i], " -removedir \"%s/%s.PIV\" &", dir, name);
 #ifdef _PCLDEBUG
    printf ("\n/usr/bin/ddd bin/%s\n", cmd); 
 #else /* _PCLDEBUG */

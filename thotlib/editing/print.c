@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2009
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2462,9 +2462,7 @@ void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 #ifdef _WINDOWS
   char             *fileName;
 #endif /* _WINDOWS */
-  char             *realName = NULL;
-  char             *server = NULL;
-  char             *pChar = NULL;
+  char             *realName = NULL, *server = NULL, *pChar = NULL, *ptr;
   const char       *destination = NULL;
   char              option [100];
   char              name [MAX_PATH];             
@@ -2533,20 +2531,12 @@ void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
   /* create the print dialog befor the opengl initialisation because the virtual gl canvas is a child of this dialog */
   wx_print_dialog ();
 #endif /* _WX */
-
-#ifdef _GTK
-  /* Initialization of gtk libraries */
-  gtk_init_check (&argc, &argv);
-#endif /* _GTK */
 #ifdef _GL
   /* init an offscreen rendering context 
      in order to use OpenGL drawing results 
      as a base for printing. */
   GetGLContext ();
 #endif /* _GL */
-#ifdef _GTK
-  gtk_print_dialog ();
-#endif /* _GTK */
 #ifdef _WINGUI_WX
   if (!GetPrinterDC (TRUE))
     return;
@@ -2743,11 +2733,19 @@ void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
       else
         {
           /* the argument is the filename */
+              /* suppress quotes if necessary */
+              l = strlen (argv[argCounter]);
+              if (argv[argCounter][l - 1] == '"')
+                argv[argCounter][l - 1] = EOS;
+              if (argv[argCounter][0] == '"')
+                ptr = &(argv[argCounter][1]);
+              else
+                ptr = argv[argCounter];
           /* does it exist ?? */
-          if (TtaFileExist (argv[argCounter]))
+          if (TtaFileExist (ptr))
             /* Yes, it does, split the string into two parts: directory
                and filename */
-            TtaExtractName (argv[argCounter], tempDir, name);
+            TtaExtractName (ptr, tempDir, name);
           argCounter++;
         }
     }
@@ -2863,22 +2861,18 @@ void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
         {
           if (!strcmp (destination, "PSFILE"))
             {
-#ifdef _WINDOWS
-#ifndef _WX
               sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
+#ifdef _WINDOWS
               CopyFile (cmd, printer, FALSE);
-#else /* _WX */
-              /* TODO */
-#endif /* _WX */
 #else  /* _WINDOWS */
-              sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
-              system (cmd);
+	      TtaFileCopy (cmd, printer);
+	      TtaFileUnlink (cmd);
 #endif  /* _WINDOWS */         
             }
 #ifndef _WINDOWS
           else
             {
-              sprintf (cmd, "%s %s/%s.ps", printer, tempDir, name);
+              sprintf (cmd, "%s \"%s/%s.ps\"", printer, tempDir, name);
               system (cmd);
             }
 #endif  /* _WINDOWS */    
@@ -2930,40 +2924,19 @@ void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
                     } 
                 }
               if (rmdir (tempDir))
-                {
-#ifndef _WX
-                  WinErrorBox (NULL, "PrintDoc (4)");
-#else /* _WX */
-                  /* TODO: ... */
-#endif /* _WX */
-                }
+		WinErrorBox (NULL, "PrintDoc (4)");
             }
         }
 #else  /* _WINDOWS */
-      sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
+      sprintf (cmd, "/bin/rm -rf \"%s\"\n", tempDir);
       system (cmd);
 #endif  /* _WINDOWS */
     }
   TtaFreeMemory (realName);
-  
-#ifdef _GTK
-  if (!button_quit)
-    gtk_exit (0);
-  else
-    {      
-      gtk_main ();
-      return (0);
-    }
-  exit (0);
-#endif /* _GTK */
-  
 #ifdef _WX
   wxExit();
 #endif /* _WX */
-
 #ifdef _WINDOWS
   return;
-#else /* _WINDOWS */
-  return 0;
 #endif /* _WINDOWS */
 }
