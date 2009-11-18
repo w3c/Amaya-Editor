@@ -739,7 +739,7 @@ void TtaGetPrintNames (char **printDocName, char **printDirName)
    if (dirString) 
      { 
        if (!TtaCheckDirectory (dirString))
-	 TtaMakeDirectory (dirString);
+	       TtaMakeDirectory (dirString);
        strcpy (PrintDirName, dirString);
        lg = strlen(PrintDirName);
        if (PrintDirName[lg - 1] == DIR_SEP)
@@ -747,11 +747,11 @@ void TtaGetPrintNames (char **printDocName, char **printDirName)
      }
    else
      {
-       PrintDirName[0] = EOS;;
+       PrintDirName[0] = EOS;
        lg = 0;
      }
 
-   sprintf (PrintDocName, "Thot%ld", (long) pid + numOfJobs);
+   strcpy (PrintDocName, "Thot_Print");
    strcpy (&PrintDirName[lg], DIR_STR);
    strcat (&PrintDirName[lg], PrintDocName);
    if (!TtaCheckDirectory (PrintDirName))
