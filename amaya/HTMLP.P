@@ -3157,7 +3157,7 @@ RULES
         CreateWith(VerticalLine);
         LineBreak: No;
         VertPos: Top = Previous not MAP . Bottom;
-        Width: Enclosed . Width;
+        Width: Enclosing . Width;
         Display: Block;
         if within Center
            HorizPos: VMiddle = Enclosing . VMiddle;
