@@ -431,6 +431,7 @@ static void BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
   ----------------------------------------------------------------------*/
 ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width, int *percent)
 {
+  PtrAbstractBox      pRef;
   PtrAttribute        pAttr;
   ThotBool            found;
 
@@ -465,7 +466,8 @@ ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom, int *width, int *percent)
       else if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimValue > 0)
         {
           found = TRUE;
-          *width = PixelValue (pAb->AbWidth.DimValue, pAb->AbWidth.DimUnit, NULL, zoom);
+          pRef = pAb->AbEnclosing;
+          *width = PixelValue (pAb->AbWidth.DimValue, pAb->AbWidth.DimUnit, pRef, zoom);
           *percent = 0;
         }
     }
@@ -688,7 +690,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
     }
   if (cNumber == 0)
     return;
-  mbp = /*pBox->BxLPadding + pBox->BxRPadding + */pBox->BxLBorder + pBox->BxRBorder;
+  mbp = pBox->BxLBorder + pBox->BxRBorder;
   if (table->AbLeftMarginUnit != UnAuto && pBox->BxLMargin > 0)
     mbp += pBox->BxLMargin;
   if (table->AbRightMarginUnit != UnAuto && pBox->BxRMargin > 0)
@@ -787,9 +789,6 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       pTabRel = pTabRel->TaRNext;
     }
 
-  /* get the extra width of the table */
-  min = min;
-  max = max;
   /* take into account the cell spacing */
   if (cNumber > 1 && colBox[1] &&  colBox[1]->AbEnclosing && colBox[1]->AbHorizPos.PosDistance)
     // the distance between 2 columns gives the cellspacing
@@ -862,7 +861,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 #endif
         }
     }
-  else if (min + sum + sumPercent >= width)
+  else if (min + sum + sumPercent >= width && !constraint)
     {
 #ifdef TAB_DEBUG
       printf ("Minimum Widths ...\n");

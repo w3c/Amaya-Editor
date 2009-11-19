@@ -651,13 +651,6 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
       if (me->error_stream != (char *) NULL)
         HT_FREE (me->error_stream);
       me->error_stream = NULL;
-#if defined(_GTK) || defined(_WX)
-#ifdef WWW_XWINDOWS	
-      if (me->read_xtinput_id || me->write_xtinput_id ||
-          me->except_xtinput_id)
-        RequestKillAllXtevents(me);
-#endif /* WWW_XWINDOWS */
-#endif /* defined(_GTK) || defined(_WX) */
       
       if (me->reqStatus == HT_ABORT)
         {
@@ -2440,7 +2433,7 @@ static void         AHTProfile_delete (void)
   AmayacontextInit
   initializes an internal Amaya context for our libwww interface 
   ----------------------------------------------------------------------*/
-static void    AmayaContextInit ()
+static void AmayaContextInit ()
 {
   AmayaAlive_flag = TRUE;
   /* Initialization of the global context */
@@ -2454,7 +2447,7 @@ static void    AmayaContextInit ()
   QueryInit
   initializes the libwww interface 
   ----------------------------------------------------------------------*/
-void         QueryInit ()
+void QueryInit ()
 {
   char   *ptr;
   int     tmp_i;
@@ -2620,7 +2613,7 @@ static int LoopForStop (AHTReqContext *me)
         TtaHandleOneEvent (&ev);
       if (me->method == METHOD_GET)
         {
-          if (count < 2000)
+          if (count < 1300)
             count ++; // no more retries
           else
             me->reqStatus = HT_ABORT;
@@ -3402,9 +3395,9 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   StrAllocCopy (fileURL, "file:");
   StrAllocCat (fileURL, file_name);
 #endif /* _WINDOWS */
-#if defined(_UNIX)
+#ifdef _UNIX
   fileURL = HTParse (file_name, "file:/", PARSE_ALL);
-#endif /* #if defined(_UNIX) */
+#endif /* _UNIX */
 
   me->source = HTAnchor_findAddress (fileURL);
   HT_FREE (fileURL);
@@ -3776,16 +3769,14 @@ void InitAmayaCache (void)
   int i;
   char str[MAX_LENGTH];
   char *ptr;
-#if defined(_UNIX)
+#ifdef _UNIX
   pid_t pid;
   int fd_pid;
-#endif /* #if defined(_UNIX) */
 
-#if defined(_UNIX)
   /* create the temp dir for the Amaya pid */
   sprintf (str, "%s%cpid", TempFileDirectory, DIR_SEP);
   TtaMakeDirectory (str);
-#endif /* #if defined(_UNIX) */
+#endif /* _UNIX */
 
   /* protection against dir names that have . in them to avoid
      erasing everything  by accident */
@@ -3829,7 +3820,7 @@ void InitAmayaCache (void)
       TtaMakeDirectory (str);
     }
 
-#if defined(_UNIX)
+#ifdef _UNIX
   /* register this instance of Amaya */
   pid = getpid ();
   sprintf (str, "%s/pid/%d", TempFileDirectory, pid);
@@ -3838,7 +3829,7 @@ void InitAmayaCache (void)
     close (fd_pid);
   else
     printf ("Couldn't create fd_pid %s\n", str);
-#endif /* #if defined(_UNIX) */
+#endif /* _UNIX */
 }
 
 /*-----------------------------------------------------------------------

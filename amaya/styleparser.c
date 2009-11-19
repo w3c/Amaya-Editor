@@ -2307,7 +2307,8 @@ void ParseCSSImageCallback (Document doc, Element element, char *file,
              presentation */
           dispMode = TtaGetDisplayMode (redisplaydoc);
           /* force the redisplay of this box */
-          TtaSetDisplayMode (redisplaydoc, NoComputedDisplay);
+          if (dispMode == DisplayImmediately)
+            TtaSetDisplayMode (redisplaydoc, NoComputedDisplay);
           TtaSetDisplayMode (redisplaydoc, dispMode);
         }
       RedisplayBGImage = FALSE;
