@@ -31,8 +31,10 @@ extern void UpdateStylePanel ( Document doc,
                                View view );
 extern void DoSelectFontSize ( Document doc,
                                View view );
-extern void DoSelectFontFamilly ( Document doc,
-                                  View view );
+extern void DoSelectFontFamily ( Document doc,
+                                 View view );
+extern void DoSelectFontFamilyAndSize ( Document doc,
+                                        View view );
 extern void DoSelectFont ( Document doc,
                            View view );
 extern void DoSelectColor ( Document doc,
@@ -146,8 +148,10 @@ extern void UpdateStylePanel ( Document doc,
                                  View view );
 extern void DoSelectFontSize ( Document doc,
                                  View view );
-extern void DoSelectFontFamilly ( Document doc,
-                                    View view );
+extern void DoSelectFontFamily ( Document doc,
+                                   View view );
+extern void DoSelectFontFamilyAndSize ( Document doc,
+                                          View view );
 extern void DoSelectFont ( Document doc,
                              View view );
 extern void DoSelectColor ( Document doc,

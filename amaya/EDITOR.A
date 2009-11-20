@@ -413,7 +413,7 @@ FUNCTIONS
   UpdateShowError,
   ApplyClass,
   DoCreateTable,
-  DoSelectFontFamilly,
+  DoSelectFontFamily,
   DoSelectFontSize,
   DoNewXHTML,
   ShowHSplitToggle,

@@ -57,6 +57,7 @@ int FontDlgWX::GetFontFamily()const
 int FontDlgWX::GetFontSize()const
 {
   long l;
+
   if(!XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->GetValue().ToLong(&l))
     l = -1;
   return l;
@@ -74,6 +75,7 @@ void FontDlgWX::SetFontFamily(int family)
 void FontDlgWX::SetFontSize(int size)
 {
   wxString str;
+
   str.Printf(wxT("%d"), size);
   XRCCTRL(*this, "wxID_COMBO_SIZE", wxComboBox)->SetValue(str);
 }

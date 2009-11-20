@@ -345,7 +345,7 @@ DoNewXHTML
 &TtcRedo
 &SelectAll
 ShowEditingBar
-&DoSelectFontFamilly
+&DoSelectFontFamily
 &DoSelectFontSize
 *AmayaToolBarEditing
 *AmayaXHTMLPanel

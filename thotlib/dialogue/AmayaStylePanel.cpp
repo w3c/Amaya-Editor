@@ -582,7 +582,7 @@ void AmayaStyleToolPanel::OnChooseFontFamily(wxCommandEvent& event)
       TtaGiveActiveView( &doc, &view );
       /* force the refresh */
       if (doc > 0)
-        TtaExecuteMenuAction ("DoSelectFontFamilly", doc, view, TRUE);
+        TtaExecuteMenuAction ("DoSelectFontFamily", doc, view, TRUE);
     }
 }
 

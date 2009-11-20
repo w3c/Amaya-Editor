@@ -1374,12 +1374,12 @@ ThotBool CreateFontDlgWX(ThotWindow parent, const char *title, int* family,
       FontDlgWX dlg (parent, wx_title);
       // manage the return of the modal dialog
       if (*family > 0)
-        dlg.SetFontFamily(*family-1);
+        dlg.SetFontFamily((*family) - 1);
       if (*size > 0)
         dlg.SetFontSize(*size);
-      if (dlg.ShowModal()==wxID_OK)
+      if (dlg.ShowModal() == wxID_OK)
         {
-          *family = dlg.GetFontFamily();
+          *family = dlg.GetFontFamily() + 1;
           *size = dlg.GetFontSize();
           return TRUE;
         }

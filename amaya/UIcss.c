@@ -1169,10 +1169,10 @@ void DoSelectFontSize (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  DoSelectFontFamilly
+  DoSelectFontFamily
   Change the font family of the selection
   ----------------------------------------------------------------------*/
-void DoSelectFontFamilly (Document doc, View view)
+void DoSelectFontFamily (Document doc, View view)
 {
   Element             el = NULL;
   ElementType         elType;
@@ -1225,8 +1225,69 @@ void DoSelectFontFamilly (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  DoSelectFontFamily
+  Change the font family and the font size of the selection
+  ----------------------------------------------------------------------*/
+void DoSelectFontFamilyAndSize (Document doc, View view)
+{
+  Element             el = NULL;
+  ElementType         elType;
+  DisplayMode         dispMode;
+  char                font_string[200], *name;
+  int                 firstChar, lastChar;
+  int                 size, family, l;
+  TypeUnit            unit;
+  ThotBool            open = FALSE;
+
+  doc = TtaGetSelectedDocument();
+  if (NoCSSEditing (doc))
+    /* document is ReadOnly */
+    return;
+
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  if (el == NULL)
+    return;
+  if (NoStyleEdit (el, doc))
+    return;
+  elType = TtaGetElementType (el);
+  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (!strcmp (name, "Template"))
+    return;
+
+  TtaGiveBoxFontInfo (el, doc, 1, &size, &unit, &family);
+  if (el && size != -1 && family != Current_FontFamily)
+    {
+      /* Need to force a redisplay */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, DeferredDisplay);
+      NewSpanElement (doc, &open);
+      font_string[0] = EOS;
+      switch (Current_FontFamily)
+        {
+        case 3:
+          strcpy (font_string, "font_string, font-family: Courier New,Courier,monospace; ");
+          break;
+        case 2:
+          strcpy (font_string, "font-family: Arial,Helvetica,sans-serif; ");
+          break;
+        default:
+          strcpy (font_string, "font-family: Times New Roman,Times,serif; ");
+        }
+      l = strlen (font_string);
+      if (size != Current_FontSize || unit != UnPoint)
+        sprintf (&font_string[l], "font-size: %dpt", Current_FontSize);
+      GenerateStyle (font_string, TRUE, FALSE);
+      if (open)
+        TtaCloseUndoSequence (doc);
+      if (dispMode == DisplayImmediately)
+        TtaSetDisplayMode (doc, dispMode);
+    }
+}
+
+/*----------------------------------------------------------------------
   DoSelectFont
-  Change the font family and/or the font size of the selection
+  Dialog to change the font family and/or the font size of the selection
   ----------------------------------------------------------------------*/
 void DoSelectFont (Document doc, View view)
 {
@@ -1244,13 +1305,22 @@ void DoSelectFont (Document doc, View view)
 
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
   if (el == NULL)
-    return;
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_SELECTION);
+      return;
+    }
   if (NoStyleEdit (el, doc))
-    return;
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NOT_ALLOWED);
+      return;
+    }
   elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
   if (!strcmp (name, "Template"))
-    return;
+    {
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_INVALID_SELECTION);
+      return;
+    }
 
   if (el)
     {
@@ -1267,12 +1337,19 @@ void DoSelectFont (Document doc, View view)
           dispMode = TtaGetDisplayMode (doc);
           if (dispMode == DisplayImmediately)
             TtaSetDisplayMode (doc, DeferredDisplay);
-          if (Current_FontFamily != family)
+          if (Current_FontFamily != family && Current_FontSize != size)
+            {
+              // change family and size
+              Current_FontFamily = family;
+              Current_FontSize = size;
+              DoSelectFontFamilyAndSize (doc, view);
+            }
+          else if (Current_FontFamily != family)
             {
               Current_FontFamily = family;
-              DoSelectFontFamilly (doc, view);
+              DoSelectFontFamily (doc, view);
             }
-          if (Current_FontSize != size)
+          else if (Current_FontSize != size)
             {
               Current_FontSize = size;
               DoSelectFontSize (doc, view);
