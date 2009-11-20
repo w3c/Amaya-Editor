@@ -25,23 +25,34 @@ extern unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding);
 extern wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding);
 
 /*----------------------------------------------------------------------
-  TtaMBstringT0WC converts a multibyte string into a wide character.
-  Returns the number of bytes in the multibyte character or -1
+  TtaMBstringToWCS converts a UTF-8 multibyte string src into a Unicode
+  wide character.
+  The src parameter points to a multibyte string pointer.
+  Return:
+  The number of bytes consummed in the multibyte character string or -1
   The pointer to the source multibyte string is updated.
+  The new wide character is inserted at the dest address.
   ----------------------------------------------------------------------*/
 extern int TtaMBstringToWC (const unsigned char **src, wchar_t *dest);
 
 /*----------------------------------------------------------------------
-  TtaWCToMBs converts a wide character into a multibyte string according to
-  the charset.                                                                
-  Return the number of bytes in the multibyte character or -1
+  TtaWCToMBstring converts a Unicode wide character into a UTF-8
+  multibyte string.
+  The dest parameter points to a multibyte string pointer.
+  Return:
+  The number of consummed bytes in the multibyte character or -1
   The pointer to the dest multibyte string is updated.
   ----------------------------------------------------------------------*/
 extern int TtaWCToMBstring (wchar_t src, unsigned char **dest);
 
 /*----------------------------------------------------------------------
-  TtaGetNextWCFromString: Looks for the next Wide character 
+  TtaGetNextWCFromString: Looks for the next wide character 
   value in a multibyte character string.
+  The car parameter points to a wide character string.
+  The txt parameter points to a character string pointer.
+  Return:
+  The number of bytes in the multibyte character or -1
+  The new wide character is inserted at the car address.
   ----------------------------------------------------------------------*/
 extern int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding);
 
@@ -52,60 +63,68 @@ extern int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET en
 extern int TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertWCToByte converts the src (16-bit) into an ISO string
-  (8-bit).
+  TtaConvertWCToByte converts the whole src (16-bit) string into
+  an ISO string (8-bit).
+  Return:
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertByteToWC converts the src (1 byte or 2 byte character for
-  JIS) into a wide character.
-  The returned string should be freed by the caller.
+  TtaConvertByteToWC converts the whole src (1 byte or 2 byte character
+  for JIS) string into a wide character (16-bit) string.
+  Return:
+  The returned wide character string should be freed by the caller.
   -------------------------------------------------------------*/
 extern wchar_t *TtaConvertByteToWC (const unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertByteToMbs converts the src (1 or 2 bytes) into a UTF-8
+  TtaConvertByteToMbs converts the whole src (1 or 2 bytes) string into a UTF-8
   string (1 byte).
+  Return:
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding);
 
 
 /*----------------------------------------------------------------------
-  TtaConvertByteToMbsWithCheck converts the src (1 or 2 bytes) into a UTF-8
-  string (1 byte).
-  Returns the length of the treated source string.
+  TtaConvertByteToMbsWithCheck converts the whole src (1 or 2 bytes) string
+  into a UTF-8 string (1 byte).
+  Return:
+  The number of characters consummed in the source string.
   The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
 extern unsigned char *TtaConvertByteToMbsWithCheck (const unsigned char *src,
                                                     CHARSET encoding, int *length);
 
 /*-------------------------------------------------------------
-  TtaConvertMbsToByte converts a UTF-8 string (8-bit) into an
-  Byte string (8-bit).
+  TtaConvertMbsToByte converts the whole UTF-8 string (8-bit)
+  src into a byte string (8-bit).
+  Return:
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern unsigned char *TtaConvertMbsToByte (const unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertMbsToCHAR converts a UTF-8 string (8-bit) into CHAR_T
-  string (8-bit or 16-bit).
+  TtaConvertMbsToCHAR converts the whole UTF-8 string (8-bit) src
+  into a CHAR_T string (8-bit or 16-bit).
+  Return:
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern CHAR_T *TtaConvertMbsToCHAR (const unsigned char *src);
 
 /*-------------------------------------------------------------
-  TtaConvertCHARToByte converts the src CHAR_T* into an ISO
-  string (8-bit).
+  TtaConvertCHARToByte converts the whole src (16-bit) string into
+  an ISO string (8-bit).
+  Return:
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern unsigned char *TtaConvertCHARToByte (CHAR_T *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertByteToWC converts the src (8-bit) into a CHAR_T*
-  string.
+  TtaConvertByteToCHAR converts the whole src (8-bit) into
+  a wide character (16-bit) string.
+  Return:
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
 extern CHAR_T *TtaConvertByteToCHAR (const unsigned char *src, CHARSET encoding);
