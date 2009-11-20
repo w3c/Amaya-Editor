@@ -1264,8 +1264,6 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
               if (pRefBox)
                 InsertPosRelation (pBox, pRefBox, OpHorizDep, Right, Right);
               pBox->BxHorizEdge = Right;
-              if (pAb->AbWidth.DimUnit == UnAuto && r)
-                ResizeWidth (pBox, pRefBox, NULL, -r, 0, 0, 0, frame, FALSE);
             }
           else
             ComputePosRelation (&pAb->AbHorizPos, pBox, frame, TRUE);

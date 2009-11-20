@@ -231,7 +231,8 @@ static void SetYCompleteForOutOfStruct (PtrBox pBox, int visibility,
                 {
                   if (pRel->ReBox->BxVertFlex)
                     MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, y, frame, FALSE);
-                  else if (!IsParentBox (pBox, pRel->ReBox))
+                  else if (!IsParentBox (pRel->ReBox, pBox))
+                    /* don't move the enclosing box pBox */
                     YMoveAllEnclosed (pRel->ReBox, y, frame);
                   /* The rel box position is now computed */
                   pRel->ReBox->BxYToCompute = FALSE;
@@ -287,7 +288,8 @@ static void SetXCompleteForOutOfStruct (PtrBox pBox, int visibility,
                   pBox->BxMoved = NULL;
                   if (pRel->ReBox->BxHorizFlex)
                     MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, x, frame, TRUE);
-                  else
+                  else if (!IsParentBox (pRel->ReBox, pBox))
+                    /* don't move the enclosing box pBox */
                     XMoveAllEnclosed (pRel->ReBox, x, frame);
                   /* The rel box position is now computed */
                   pRel->ReBox->BxXToCompute = FALSE;

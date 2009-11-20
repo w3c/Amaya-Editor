@@ -1165,8 +1165,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                       pRel = &pPosRel->PosRTable[i];
                       if (pRel->ReBox->BxAbstractBox &&
                           // don't move children of a new system origin
-                          (!IsParentBox (pBox, pRel->ReBox) ||
-                           !isSysOrg))
+                           !isSysOrg)
                         {
                           /* Relation out of structure */
                           if (pRel->ReOp == OpHorizDep &&
@@ -1304,7 +1303,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
               */
               isSysOrg = IsSystemOrigin (pAb, frame);
               pPosRel = pBox->BxPosRelations;
-              while (pPosRel != NULL)
+              while (pPosRel)
                 {
                   i = 0;
                   notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
@@ -1325,7 +1324,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
                                 ;
                               else if (pRel->ReBox->BxVertFlex)
                                 MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, delta, frame, FALSE);
-                              else if (!IsParentBox (pBox, pRel->ReBox))
+                              else
                                 YMove (pRel->ReBox, pBox, delta, frame);
                             }
                           else if (pRel->ReOp == OpHeight)
@@ -1512,7 +1511,8 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                           while (i < MAX_RELAT_POS && notEmpty)
                             {
                               pRel = &pPosRel->PosRTable[i];
-                              if (pRel->ReBox->BxAbstractBox)
+                              if (pRel->ReBox->BxAbstractBox &&
+                                  pRel->ReBox->BxAbstractBox->AbFloat == 'N')
                                 {
                                   if (pRel->ReRefEdge == VertRef)
                                     {
@@ -1721,7 +1721,8 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                           while (i < MAX_RELAT_POS && notEmpty)
                             {
                               pRel = &pPosRel->PosRTable[i];
-                              if (pRel->ReBox->BxAbstractBox)
+                              if (pRel->ReBox->BxAbstractBox &&
+                                  pRel->ReBox->BxAbstractBox->AbFloat == 'N')
                                 {
                                   if (pRel->ReRefEdge == HorizRef)
                                     {
@@ -1921,7 +1922,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
             }
           /* Check the validity of dependency rules */
           toMove = TRUE;
-          if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+          if (pAb->AbFloat == 'N' && !HorizExtraAbFlow (pAb, frame) &&
+              pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
             toMove = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
@@ -2013,7 +2015,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                   pRefAb = pRel->ReBox->BxAbstractBox;
                   if (pRefAb &&
                       // don't move children of a new system origin
-                      (!IsParentBox (pBox, pRel->ReBox) || !isSysOrg))
+                      !isSysOrg)
                     {
                       /* Ignore the back relation of a stretchable box */
                       if (!pBox->BxHorizFlex ||
@@ -2035,13 +2037,16 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                                   val = 0;
                                 if (pRel->ReOp == OpHorizInc)
                                   {
-                                    if (!pBox->BxHorizFlex)
+                                    if (!pBox->BxHorizFlex &&
+                                        !IsParentBox (pBox, pRel->ReBox))
                                       XMove (pBox, NULL, -orgTrans, frame);
                                   }
                                 else if ((pRel->ReOp == OpHorizDep && pRel->ReBox->BxHorizFlex)
                                          || pRel->ReOp == OpWidth)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, orgTrans, frame, TRUE);
-                                else if (pRel->ReBox != pSourceBox)
+                                else if (pRel->ReBox != pSourceBox &&
+                                        !IsParentBox (pRel->ReBox, pBox))
+                                  /* don't move the enclosing box */
                                   XMove (pRel->ReBox, pBox, orgTrans + val, frame);
                               }
                             break;
@@ -2067,7 +2072,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                                 else if ((pRel->ReOp == OpHorizDep && pRel->ReBox->BxHorizFlex)
                                          || pRel->ReOp == OpWidth)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, middleTrans, frame, TRUE);
-                                else if (pRel->ReBox != pSourceBox)
+                                else if (pRel->ReBox != pSourceBox &&
+                                         !IsParentBox (pRel->ReBox, pBox))
+                                  /* don't move the enclosing box */
                                   XMove (pRel->ReBox, pBox, middleTrans, frame);
                               }
                             break;
@@ -2080,7 +2087,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                                     /* restore the history of moved boxes */
                                     pBox->BxMoved = pFromBox;
                                   }
-                                else
+                                else if (!IsParentBox (pRel->ReBox, pBox))
                                   MoveVertRef (pRel->ReBox, pSourceBox, endTrans, frame);
                               }
                             else if (toMove)
@@ -2097,7 +2104,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
                                 else if ((pRel->ReOp == OpHorizDep && pRel->ReBox->BxHorizFlex)
                                          || pRel->ReOp == OpWidth)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, endTrans, frame, TRUE);
-                                else if (pRel->ReBox != pSourceBox)
+                                else if (pRel->ReBox != pSourceBox &&
+                                         !IsParentBox (pRel->ReBox, pBox))
+                                  /* don't move the enclosing box pBox */
                                   XMove (pRel->ReBox, pBox, endTrans + val, frame);
                               }
                             break;
@@ -2518,7 +2527,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 
           /* Check the validity of dependency rules */
           toMove = TRUE;
-          if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+          if (pAb->AbFloat == 'N' && !VertExtraAbFlow (pAb, frame)  &&
+              pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
             toMove = (pAb->AbEnclosing->AbBox->BxType != BoGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoStructGhost &&
                       pAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
@@ -2597,8 +2607,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                       !isSysOrg)
                     {
                       /* Ignore the back relation of a stretchable box */
-                      if (!pBox->BxVertFlex ||
-                          pRel->ReOp != OpVertDep ||
+                      if (!pBox->BxVertFlex || pRel->ReOp != OpVertDep ||
                           pAb == pRefAb->AbVertPos.PosAbRef)
                         switch (pRel->ReRefEdge)
                           {
@@ -2625,7 +2634,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                          || pRel->ReOp == OpHeight)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, orgTrans, frame, FALSE);
                                 else if (pRel->ReBox != pSourceBox &&
-                                         !IsParentBox (pBox, pRel->ReBox))
+                                         !IsParentBox (pRel->ReBox, pBox))
+                                  /* don't move the enclosing box */
                                   YMove (pRel->ReBox, pBox, orgTrans - val, frame);
                               }
                             break;
@@ -2645,15 +2655,15 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                               {
                                 if (pRel->ReOp == OpVertInc)
                                   {
-                                    if (!pBox->BxVertFlex &&
-                                        !IsParentBox (pBox, pRel->ReBox))
+                                    if (!pBox->BxVertFlex)
                                       YMove (pBox, NULL, -middleTrans, frame);
                                   }
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
                                          || pRel->ReOp == OpHeight)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, middleTrans, frame, FALSE);
                                 else if (pRel->ReBox != pSourceBox &&
-                                         !IsParentBox (pBox, pRel->ReBox))
+                                         !IsParentBox (pRel->ReBox, pBox))
+                                  /* don't move the enclosing box */
                                   YMove (pRel->ReBox, pBox, middleTrans, frame);
                               }
                             break;
@@ -2671,7 +2681,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                     /* restore the history of moved boxes */
                                     pBox->BxMoved = pFromBox;
                                   }
-                                else if (!IsParentBox (pBox, pRel->ReBox))
+                                else if (!IsParentBox (pRel->ReBox, pBox))
                                   MoveHorizRef (pRel->ReBox, pSourceBox, endTrans, frame);
                               }
                             else if (toMove)
@@ -2682,15 +2692,15 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
                                   val = 0;
                                 if (pRel->ReOp == OpVertInc)
                                   {
-                                    if (!pBox->BxVertFlex &&
-                                        !IsParentBox (pBox, pRel->ReBox))
+                                    if (!pBox->BxVertFlex)
                                       YMove (pBox, NULL, val - endTrans, frame);
                                   }
                                 else if ((pRel->ReOp == OpVertDep && pRel->ReBox->BxVertFlex)
                                          || pRel->ReOp == OpHeight)
                                   MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, endTrans, frame, FALSE);
                                 else if (pRel->ReBox != pSourceBox &&
-                                         !IsParentBox (pBox, pRel->ReBox))
+                                         !IsParentBox (pRel->ReBox, pBox))
+                                  /* don't move the enclosing box pBox */
                                   YMove (pRel->ReBox, pBox, endTrans + val, frame);
                               }
                             break;
@@ -3285,12 +3295,10 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
                                       /* if it's not a child */
                                       pAb != pRel->ReBox->BxAbstractBox->AbEnclosing &&
                                       pAb == pRel->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
-                                    MoveBoxEdge (pRel->ReBox, pBox,
-                                                 pRel->ReOp, delta,
+                                    MoveBoxEdge (pRel->ReBox, pBox, pRel->ReOp, delta,
                                                  frame, TRUE);
                                   else
-                                    XMove (pRel->ReBox, pBox, delta,
-                                           frame);
+                                    XMove (pRel->ReBox, pBox, delta, frame);
                                 }
                             }
                         }
