@@ -833,7 +833,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       /* assign the maximum width, or the percent, or the width */
       width = max + sum + sumPercent;
       /* the table width is not constrained by the enclosing box */
-      table->AbWidth.DimAbRef = NULL;
+      //table->AbWidth.DimAbRef = NULL;
       if (width + cellspacing - pBox->BxW != 0)
         /* we will have to recheck scrollbars */
         AnyWidthUpdate = TRUE;
@@ -861,7 +861,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 #endif
         }
     }
-  else if (min + sum + sumPercent >= width && !constraint)
+  else if (min + sum + sumPercent >= width)
     {
 #ifdef TAB_DEBUG
       printf ("Minimum Widths ...\n");
@@ -869,8 +869,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
       /* assign the minimum width, or the percent, or the width */
       width = min + sum + sumPercent;
       /* the table width is constrained by the enclosing box */
-      table->AbWidth.DimAbRef = table->AbEnclosing;
-      table->AbWidth.DimValue = 0;
+      //table->AbWidth.DimAbRef = table->AbEnclosing;
+      //table->AbWidth.DimValue = 0;
       if (width + cellspacing - pBox->BxW != 0 && pCell == NULL)
         /* we will have to recheck scrollbars */
         AnyWidthUpdate = TRUE;

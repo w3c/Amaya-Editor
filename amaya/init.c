@@ -6958,7 +6958,7 @@ void InitAmaya (NotifyEvent * event)
   ptr = TtaGetEnvString ("CURRENT_PROFILE");
   if (ptr == NULL)
     {
-      TtaSetEnvString ("CURRENT_PROFILE", "Advanced", TRUE);
+      TtaSetEnvString ("CURRENT_PROFILE", "Advanced", FALSE);
       // Avoid to save previous "AUI_DECORATION"
       SavePANEL_PREFERENCES = 0;
     }
