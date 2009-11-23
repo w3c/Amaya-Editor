@@ -1874,7 +1874,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
   ThotBool            notEmpty, toMove, position, isSysOrg;
   ThotBool            absoluteMove, externalRef;
 
-  if (pBox == NULL /*|| pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost*/)
+  if (pBox == NULL)
     return;
   /* check if the inside width, margins, borders, and paddings change */
   pAb = pBox->BxAbstractBox;
@@ -2476,7 +2476,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   ThotBool            notEmpty, toMove, isSysOrg;
   ThotBool            absoluteMove, externalRef;
   
-  if (pBox == NULL /*|| pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost*/)
+  if (pBox == NULL)
     return;
   /* check if the inside width, margins, borders, and paddings change */
   pAb = pBox->BxAbstractBox;
@@ -3127,7 +3127,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   ThotBool            checkParent, isSysOrg;
   ThotBool            absoluteMove;
 
-  if (pBox == NULL /*|| pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost*/)
+  if (pBox == NULL)
     return;
   else
     pAb = pBox->BxAbstractBox;
@@ -3364,7 +3364,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
   ThotBool            checkParent, isSysOrg;
   ThotBool            absoluteMove;
 
-  if (pBox == NULL /*|| pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost*/)
+  if (pBox == NULL)
     return;
   else
     pAb = pBox->BxAbstractBox;

@@ -7265,7 +7265,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 </label>
 <label define="TemplateUnion">
 	<message xml:lang="en">Create a new types union</message>
-	<message xml:lang="de">Neue Typen Gemeinschaft erstellen##jk##</message>
+	<message xml:lang="de">Neue Typen Gemeinschaft erstellen</message>
 	<message xml:lang="fr">Créer une nouvelle union de types</message>
 	<message xml:lang="cn">创建一个新类型集合</message>
 	<message xml:lang="tw">創建一個新類型集合</message>
@@ -7307,7 +7307,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Botón hasta cierre</message>
 	<message xml:lang="cn">释放按钮以关闭</message>
 	<message xml:lang="tw">釋放按鈕以關閉</message>
-	<message xml:lang="de">Schaltfläche bis zum Schließen##jk##</message>
+	<message xml:lang="de">Schaltfläche bis zum Schließen</message>
 	<message xml:lang="it">Tasto fino alla fine</message>
 	<message xml:lang="ja">*ボタンを離して閉じる*Button up to close</message>
 	<message xml:lang="hu">Bezárás felfele nyíl billentyűvel</message>

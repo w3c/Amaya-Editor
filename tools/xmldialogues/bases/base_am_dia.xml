@@ -6071,7 +6071,7 @@ XPointer-ში</message>
 </label>
 <label define="BTemplateCreateUnion">
 	<message xml:lang="en">Create a new types union...</message>
-	<message xml:lang="de">Typen-Gemeinschaft erstellen##jk##...</message>
+	<message xml:lang="de">Typen-Gemeinschaft erstellen...</message>
 	<message xml:lang="fr">Créer une nouvelle union de types...</message>
 	<message xml:lang="es">Crear nueva unión de tipos...</message>
 	<message xml:lang="cn">创建一个新类型集合...</message>
