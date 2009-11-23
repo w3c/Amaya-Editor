@@ -211,7 +211,10 @@ END_EVENT_TABLE()
 
   // on windows, the color selector dialog must be complete.
   colour_data.SetChooseFull(true);
-  SetSize(720, 420);
+  Fit();
+  Refresh();
+  SetAutoLayout( TRUE );
+  //SetSize(720, 420);
 
   CentreOnScreen();
   // this flag is used to know when events can be proceed
