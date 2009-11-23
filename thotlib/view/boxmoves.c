@@ -2343,7 +2343,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta,
           
           /* Check enclosing constraints */
           pParent = pAb->AbEnclosing;
-          if (!toMove)
+          if (!toMove || pAb->AbFloat != 'N')
             {
               /* look for the enclosing block of lines  */
               while (pParent &&
@@ -2918,7 +2918,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 
           /* Check enclosing constraints */
           pParent = pAb->AbEnclosing;
-          if (!toMove)
+          if (!toMove || pAb->AbFloat != 'N')
             {
               /* look for the enclosing block of lines  */
               while (pParent &&

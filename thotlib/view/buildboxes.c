@@ -2798,6 +2798,10 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
                pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
                pAb->AbEnclosing->AbBox->BxType == BoGhost)
         pBox->BxType = BoGhost;
+      else if (*inlineFloatC &&
+               pAb->AbEnclosing && pAb->AbEnclosing->AbBox &&
+               pAb->AbEnclosing->AbBox->BxType == BoStructGhost)
+        pBox->BxType = BoStructGhost;
       else
         {
           pBox->BxType = BoBlock;
@@ -4461,11 +4465,11 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame, ThotBool *computeBBoxes)
                   pCurrentBox = pCurrentBox->BxNexChild;
             }
 
-          /* Est-ce que la boite englobante devient terminale ? */
+          /* Check if the enclosing box becomes empty */
           if (IsAbstractBoxEmpty (pParent))
             {
               pNextBox = pParent->AbBox;
-              /* Si la boite etait eclatee, elle ne l'est plus */
+              /* Change the status of the parent box */
               if (pNextBox->BxType == BoGhost ||
                   pNextBox->BxType == BoStructGhost ||
                   pNextBox->BxType == BoFloatGhost)

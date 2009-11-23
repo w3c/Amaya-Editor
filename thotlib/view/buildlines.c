@@ -3589,7 +3589,6 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       /* initial position */
       x = pBlock->BxWidth - right - bw + orgX;
     }
-
   if (pLine)
     {
       y = orgY + pLine->LiYOrg;
