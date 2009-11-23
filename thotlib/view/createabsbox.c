@@ -3049,7 +3049,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
                               /* on n'a pas pu appliquer la regle, on */
                               /* l'appliquera lorsque le pave pere */
                               /* sera  termine' */
-                              Delay (pRV, pSchP, pAbbCreated, NULL);
+                              Delay (pRV, pSchP, pAbbCreated, pAttr);
                           }
                       }
                 }
