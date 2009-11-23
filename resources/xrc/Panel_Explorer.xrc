@@ -6,6 +6,15 @@
       <object class="sizeritem">
         <object class="wxGenericDirCtrl" name="wxID_DIRCTRL_EXPLORER">
           <size>160,250</size>
+          <font>
+            <size>8</size>
+            <style>normal</style>
+            <weight>normal</weight>
+            <underlined>0</underlined>
+            <family>swiss</family>
+            <face>Sans</face>
+            <encoding>UTF-8</encoding>
+          </font>
         </object>
         <option>1</option>
         <flag>wxEXPAND</flag>

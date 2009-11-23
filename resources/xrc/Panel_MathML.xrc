@@ -5,7 +5,6 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxChoicebook" name="wxID_MATHS_CHOICEBOOK">
-          <style>wxNO_BORDER</style>
           <object class="choicebookpage">
             <label>Various constructs</label>
             <object class="wxPanel">
@@ -825,6 +824,16 @@
               </object>
             </object>
           </object>
+          <font>
+            <size>8</size>
+            <style>normal</style>
+            <weight>normal</weight>
+            <underlined>0</underlined>
+            <family>swiss</family>
+            <face>Sans</face>
+            <encoding>UTF-8</encoding>
+          </font>
+          <style>wxNO_BORDER</style>
         </object>
         <option>1</option>
         <flag>wxEXPAND</flag>

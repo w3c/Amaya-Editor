@@ -35,7 +35,6 @@
           </object>
         </object>
       </object>
-      
       <object class="sizeritem">
         <object class="wxScrolledWindow" name="wxID_PANEL_SWIN">
           <object class="wxBoxSizer">
@@ -52,33 +51,33 @@
   <object class="wxPanel" name="wxID_DOCKED_TOOL_PANEL_CONTAINER">
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
-      
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
             <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
               <bitmap>../icons/misc/expand_on.png</bitmap>
-              <style platform="unix|win">wxNO_BORDER</style>
+              <style>wxNO_BORDER</style>
             </object>
             <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
-            <border>4</border>
+            <border>0</border>
           </object>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL_TITLE">
               <label>Panel</label>
               <font>
-                <size>10</size>
-                <style>normal</style>
+                <size>8</size>
+                <style>italic</style>
                 <weight>bold</weight>
                 <underlined>0</underlined>
                 <family>swiss</family>
                 <face>Sans</face>
+                <encoding>UTF-8</encoding>
               </font>
               <style>wxALIGN_LEFT</style>
             </object>
             <option>1</option>
             <flag>wxALL|wxALIGN_CENTRE_VERTICAL</flag>
-            <border>4</border>
+            <border>0</border>
           </object>
           <orient>wxHORIZONTAL</orient>
         </object>
