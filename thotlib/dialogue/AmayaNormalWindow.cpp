@@ -219,8 +219,8 @@ void AmayaNormalWindow::RegisterThotToolPanels()
   if (s == NULL || strstr (s, "AmayaXHTMLToolPanel"))
     TtaSetEnvString("CLASSIC_PANEL_ORDER",
                     "AmayaElementToolPanel;AmayaStyleToolPanel;AmayaApplyClassToolPanel;"
-                    "StyleListToolPanel;AmayaExplorerToolPanel;AmayaAttributeToolPanel;"
-                    "AmayaSpeCharToolPanel",
+                    "AmayaAttributeToolPanel;AmayaSpeCharToolPanel;"
+                    "StyleListToolPanel;AmayaExplorerToolPanel",
                     TRUE);
 
   RegisterToolPanelClass(CLASSINFO(AmayaExplorerToolPanel));
@@ -263,11 +263,11 @@ void AmayaNormalWindow::LoadConfig()
       if(ci && g_AmayaToolPanelClassInfoSet.find(ci)!=g_AmayaToolPanelClassInfoSet.end())
         {
           wxString name = ci->GetClassName();
-          if(Prof_ShowGUI((const char*)wxString(name).mb_str(wxConvUTF8)))
+          if (Prof_ShowGUI((const char*)wxString(name).mb_str(wxConvUTF8)))
             {
               wxObject* object = ci->CreateObject();
               AmayaToolPanel* panel = wxDynamicCast(object, AmayaToolPanel);
-              if(panel)
+              if (panel)
                 {
                   RegisterToolPanel(panel);
                   wxString str = wxT("OPEN_") + panel->GetToolPanelConfigKeyName();
