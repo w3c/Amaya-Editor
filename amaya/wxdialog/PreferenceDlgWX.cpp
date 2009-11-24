@@ -214,7 +214,7 @@ END_EVENT_TABLE()
   Fit();
   Refresh();
   SetAutoLayout( TRUE );
-  //SetSize(720, 420);
+  SetSize(720, -1);
 
   CentreOnScreen();
   // this flag is used to know when events can be proceed
