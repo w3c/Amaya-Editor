@@ -3552,7 +3552,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
               int top, int bottom, int left, int right,
               PtrBox *floatL, PtrBox *floatR)
 {
-  PtrFloat            pFloat = NULL;
+  PtrFloat            pfloat = NULL;
   PtrBox              boxPrevL, boxPrevR;
   PtrBox              pNextBox, prevBox;
   int                 x, y, w, minWidth, ret, h, bottomL, bottomR;
@@ -3619,7 +3619,15 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if  (boxPrevR)
     {
       shiftr = boxPrevR->BxXOrg;
+      // calculate the current bottom of the right float
       bottomR = boxPrevR->BxYOrg + boxPrevR->BxHeight;
+      pfloat = pBlock->BxRightFloat;
+      while (pfloat && pfloat->FlBox != boxPrevR)
+        {
+          if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight > bottomR)
+            bottomR = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight;
+          pfloat = pfloat->FlNext;
+        }
       if (boxPrevR->BxXOrg + boxPrevR->BxWidth >= orgX + w - right)
         {
           // a negative left margin increases the line width
@@ -3635,7 +3643,15 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if  (boxPrevL)
     {
       shiftl = boxPrevL->BxXOrg + boxPrevL->BxWidth;
+      // calculate the current bottom of the left float
       bottomL = boxPrevL->BxYOrg + boxPrevL->BxHeight;
+      pfloat = pBlock->BxLeftFloat;
+      while (pfloat && pfloat->FlBox != boxPrevL)
+        {
+          if (pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight > bottomL)
+            bottomL = pfloat->FlBox->BxYOrg + pfloat->FlBox->BxHeight;
+          pfloat = pfloat->FlNext;
+        }
      if (boxPrevL->BxXOrg <= orgX + left)
         {
           // a negative right margin increases the line width
@@ -3658,30 +3674,12 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if (boxPrevL && clearl)
     {
       // make sure the float is displayed under previous left floats
-      pFloat = pBlock->BxLeftFloat;
-      while (pFloat)
-        {
-          if (y < pFloat->FlBox->BxYOrg + pFloat->FlBox->BxHeight)
-            y = pFloat->FlBox->BxYOrg + pFloat->FlBox->BxHeight;
-          if (pFloat->FlBox == boxPrevL)
-            pFloat = NULL;
-          else
-            pFloat = pFloat->FlNext;
-        }
+      y = bottomL;
     }
   if (boxPrevR && clearr)
     {
       // make sure the float is displayed under previous right floats
-      pFloat = pBlock->BxRightFloat;
-      while (pFloat)
-        {
-          if (y < pFloat->FlBox->BxYOrg + pFloat->FlBox->BxHeight)
-            y = pFloat->FlBox->BxYOrg + pFloat->FlBox->BxHeight;
-          if (pFloat->FlBox == boxPrevR)
-            pFloat = NULL;
-          else
-            pFloat = pFloat->FlNext;
-        }
+      y = bottomR;
     }
 
   if ((boxPrevL && y < bottomL) || (boxPrevR && y < bottomR))
