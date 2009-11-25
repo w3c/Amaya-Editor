@@ -802,7 +802,7 @@ extern ThotBool TtaEndPointToCenterParam(int x1, int y1, int x2, int y2,
 
 extern void TtaSplitPathSeg (void *segment, Document doc, Element el);
 extern ThotBool TtaInsertPointInCurve (Document doc, Element el,
-				       ThotBool before, int point_number);
+				       ThotBool before, int *point_number);
 extern ThotBool TtaDeletePointInCurve (Document doc, Element el,
 				       int point_number);
 

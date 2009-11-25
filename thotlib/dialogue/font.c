@@ -1492,46 +1492,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                 }
 #endif /* _GL */
             }
-          else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
-                    (c < 0x2018 || c > 0x201D)) || /* Windows quotations */
-                   c == 0x192  ||  /* latin small letter f with hook */
-                   c == 0x25CA ||  /* lozenge */
-                   c == 0x260E ||  /* black telephone */
-                   c == 0x2660 ||  /* black spade suit */
-                   c == 0x2663 ||  /* black club suit */
-                   c == 0x2665 ||  /* black heart suit */
-                   c == 0x2666 ||  /* black diamond suit */
-                   c == 0x2720 ||  /* maltese cross */
-                   c == 0x27FA ||  /* Long left right double arrow */
-                   c == 0x2970     /* roundimplies */
-                                  )
-            {
-#ifdef _GL
-             if (c == 0x220F || c == 0x2211)
-                /* an oversized product or summation sign. Use the Symbol
-                   font: these characters are ill-aligned in Esstix */
-                {
-                  code = '7';
-                  pfont = &(fontset->Font_7);
-                }
-              else
-                {
-                  /* use Esstix fonts */
-                  code = 'E';
-                  car = GetStixFontAndIndex (c, fontset, &pfont);
-                  if (pfont == NULL)
-                    {
-                      code = '1';
-                      pfont = &(fontset->Font_1);
-                    }
-                }
-#else /* _GL */
-		          /* Symbols */
-              code = 'G';
-              pfont = &(fontset->Font_16);
-              encoding = ISO_SYMBOL;
-#endif /* _GL */
-            }
 #ifdef _GL
           else if ((c >= 0x2100 && c <= 0x22FF) /* math symbols */ ||
                    c == 0x20DB || c == 0x20DC /* dots */ ||
@@ -1605,6 +1565,46 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, int variant,
                 c = 101;
             }
 #endif /* _GL */
+          else if ((c > 0x2000 && c < 0x237F &&  /* mathematical characters */
+                    (c < 0x2018 || c > 0x201D)) || /* Windows quotations */
+                   c == 0x192  ||  /* latin small letter f with hook */
+                   c == 0x25CA ||  /* lozenge */
+                   c == 0x260E ||  /* black telephone */
+                   c == 0x2660 ||  /* black spade suit */
+                   c == 0x2663 ||  /* black club suit */
+                   c == 0x2665 ||  /* black heart suit */
+                   c == 0x2666 ||  /* black diamond suit */
+                   c == 0x2720 ||  /* maltese cross */
+                   c == 0x27FA ||  /* Long left right double arrow */
+                   c == 0x2970     /* roundimplies */
+                                  )
+            {
+#ifdef _GL
+             if (c == 0x220F || c == 0x2211)
+                /* an oversized product or summation sign. Use the Symbol
+                   font: these characters are ill-aligned in Esstix */
+                {
+                  code = '7';
+                  pfont = &(fontset->Font_7);
+                }
+              else
+                {
+                  /* use Esstix fonts */
+                  code = 'E';
+                  car = GetStixFontAndIndex (c, fontset, &pfont);
+                  if (pfont == NULL)
+                    {
+                      code = '1';
+                      pfont = &(fontset->Font_1);
+                    }
+                }
+#else /* _GL */
+		          /* Symbols */
+              code = 'G';
+              pfont = &(fontset->Font_16);
+              encoding = ISO_SYMBOL;
+#endif /* _GL */
+            }
           else if (c == 0x11F || c == 0x130 || c == 0x131 || c == 0x15F)
             {
               code = '9'; /* Turkish */
