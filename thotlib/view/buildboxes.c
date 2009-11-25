@@ -2717,7 +2717,7 @@ static void CheckGhost (PtrAbstractBox pAb, int frame, ThotBool inLine,
       *inlineChildren = InlineTextChildren (pAb, frame);
     }
   pBox = pAb->AbBox;
-  extraflow = ExtraAbFlow (pAb, frame);
+  extraflow = IsFlow (pBox, frame);
   displayI = ((pAb->AbDisplay == 'I' || pAb->AbDisplay == 'b' ||
 	       /* a sized box cannot be split by lines */
 	       (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimValue <= 0)) &&

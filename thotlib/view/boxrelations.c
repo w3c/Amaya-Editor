@@ -1158,7 +1158,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
                   y = pRefBox->BxYOrg;
                 }
             }
-          /* negative values don't apply */
+          /* by default don't apply */
           appl = appt = appr = appb = FALSE;
           l = t = r = b = 0;
           if (pos->PnLeftUnit == UnAuto)
@@ -1253,7 +1253,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
             {
               /* right positioning */
               pBox->BxHorizEdge = Right;
-              XMoveAllEnclosed (pBox, x + lr + w /*+ rr*/ - r - pBox->BxWidth - pBox->BxXOrg, frame);
+              XMoveAllEnclosed (pBox, x + lr + w - r - pBox->BxWidth - pBox->BxXOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbHorizPos;
               pPosAb->PosAbRef = pRefAb;
@@ -1303,7 +1303,7 @@ ThotBool ComputePositioning (PtrBox pBox, int frame)
             {
               /* bottom positioning */
               pBox->BxVertEdge = Bottom;
-              YMoveAllEnclosed (pBox, y + tr + h /*+ br*/ - b - pBox->BxHeight - pBox->BxYOrg, frame);
+              YMoveAllEnclosed (pBox, y + tr + h - b - pBox->BxHeight - pBox->BxYOrg, frame);
               // register as a pos rule
               pPosAb = &pAb->AbVertPos;
               pPosAb->PosAbRef = pRefAb;
