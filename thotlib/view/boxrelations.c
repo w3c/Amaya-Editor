@@ -1014,21 +1014,20 @@ void GetLeftRightMargins (PtrBox box, PtrBox pBlock, int frame, int *l, int *r)
     {
       pAb = box->BxAbstractBox;
       parent = pAb->AbEnclosing;
-      if (pAb->AbLeftMarginUnit == UnPercent)
+      if (pAb->AbLeftMarginUnit == UnPercent && pBlock && !pBlock->BxContentWidth)
         {
           if (parent->AbBox && parent->AbBox->BxType == BoStructGhost)
             box->BxLMargin = parent->AbBox->BxW * pAb->AbLeftMargin / 100;
           else
             box->BxLMargin = pBlock->BxW * pAb->AbLeftMargin / 100;
         }
-      if (pAb->AbRightMarginUnit == UnPercent)
+      if (pAb->AbRightMarginUnit == UnPercent && pBlock && !pBlock->BxContentWidth)
         {
           if (parent->AbBox && parent->AbBox->BxType == BoStructGhost)
             box->BxRMargin = parent->AbBox->BxW * pAb->AbRightMargin / 100;
           else
             box->BxRMargin = pBlock->BxW * pAb->AbRightMargin / 100;
         }
-
         *l = box->BxLMargin;
         *r = box->BxRMargin;
     }
@@ -1052,9 +1051,11 @@ void GetLeftRightPaddings (PtrBox box, PtrBox pBlock, int *l, int *r)
           parent = pAb->AbEnclosing;
           if (parent->AbBox && parent->AbBox->BxType == BoStructGhost)
             {
-              if (pAb->AbLeftPaddingUnit == UnPercent)
+              if (pAb->AbLeftPaddingUnit == UnPercent &&
+                  !parent->AbBox->BxContentWidth)
                 box->BxLPadding = parent->AbBox->BxW * pAb->AbLeftPadding / 100;
-              if (pAb->AbRightPaddingUnit == UnPercent)
+              if (pAb->AbRightPaddingUnit == UnPercent &&
+                  !parent->AbBox->BxContentWidth)
                 box->BxRPadding = parent->AbBox->BxW * pAb->AbRightPadding / 100;
               // Include extra margins
               if (box->BxType == BoStructGhost)
@@ -1066,9 +1067,9 @@ void GetLeftRightPaddings (PtrBox box, PtrBox pBlock, int *l, int *r)
            }
           else
             {
-              if (pAb->AbLeftPaddingUnit == UnPercent)
+              if (pAb->AbLeftPaddingUnit == UnPercent && pBlock && !pBlock->BxContentWidth)
                 box->BxLPadding = pBlock->BxW * pAb->AbLeftPadding / 100;
-              if (pAb->AbRightPaddingUnit == UnPercent)
+              if (pAb->AbRightPaddingUnit == UnPercent && pBlock && !pBlock->BxContentWidth)
                 box->BxRPadding = pBlock->BxW * pAb->AbRightPadding / 100;
               pAb = NULL;
            }

@@ -3560,7 +3560,6 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       y = top;
       w = 0;
     }
-
   if (box->BxAbstractBox->AbFloat == 'L' && boxPrevL &&
       y < boxPrevL->BxYOrg)
     y = boxPrevL->BxYOrg;
