@@ -1932,12 +1932,12 @@ static void         AHTAlertInit (void)
 #ifdef _WINDOWS
   HTAlert_add ((HTAlertCallback *) WIN_Activate_Request, HT_PROG_CONNECT);
 #endif /* _WINDOWS */
+  HTAlert_add (AHTPrompt, HT_A_PROMPT);
+  HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
    
   HTAlert_add (AHTError_print, HT_A_MESSAGE);
   HTError_setShow ( (HTErrorShow)(~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG)) );	/* process all messages except debug ones*/
   HTAlert_add (AHTConfirm, HT_A_CONFIRM);
-  HTAlert_add (AHTPrompt, HT_A_PROMPT);
-  HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
 }
 
 #ifdef AMAYA_WWW_CACHE
