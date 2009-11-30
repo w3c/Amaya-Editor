@@ -466,7 +466,7 @@ bool AmayaAdvancedWindow::RegisterToolPanel(AmayaToolPanel* tool)
   
   m_manager.AddPane(tool, wxAuiPaneInfo().
           Name(tool->GetToolPanelConfigKeyName()).Caption(tool->GetToolPanelName()).
-          PaneBorder(false).
+          PaneBorder(false).FloatingPosition(100,100).
           LeftDockable().RightDockable().Right().
           TopDockable(false).BottomDockable(false).
           Resizable(tool->CanResize()).
