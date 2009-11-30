@@ -312,12 +312,20 @@ unsigned long TtaGetFileSize (const char *filename)
 ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
 {
 #ifdef _WX
+  ThotBool result;
+
   wxString targetFile = TtaConvMessageToWX(targetFileName);
   if (wxFile::Exists(targetFile) &&
       !wxFile::Access(targetFile, wxFile::write))
     return FALSE;
   else
-    return wxCopyFile(TtaConvMessageToWX(sourceFileName), targetFile, TRUE);
+    {
+      wxFile::wxFile (targetFile, wxFile::write);
+      result = wxFile::Exists(targetFile);
+      if (result)
+        result = wxConcatFiles (targetFile, TtaConvMessageToWX(sourceFileName), targetFile);
+      return result;
+    }
 #else /* _WX */
   FILE               *targetf, *sourcef;
   int                 size;
