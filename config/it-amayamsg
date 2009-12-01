@@ -187,7 +187,7 @@
 185 (separa ogni campo con uno spazio)
 186 Escludi l'utilizzo del proxy su questi domini
 187 Utilizza il proxy solo su questi domini
-188 Nome del carattere
+188 Nome del carattere (ex: amp or 026)
 189 Directory dell'utente
 190 Directory temporanea
 191 Usa la palette

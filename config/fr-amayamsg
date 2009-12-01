@@ -187,7 +187,7 @@
 185 (séparer chaque entrée avec un espace)
 186 Ne pas utiliser le proxy dans ces domaines
 187 Utiliser le proxy uniquement dans ces domaines
-188 Nom du caractère ou code hexadécimal
+188 Nom du caractère (ex: amp) ou code hexadécimal (ex: 026)
 189 Répertoire utilisateur
 190 Repertoire témporaire
 191 Par palette

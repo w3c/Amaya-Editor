@@ -187,7 +187,7 @@
 185 (separar los dominios con un espacio)
 186 No usar proxy en estos dominios
 187 Usar proxy sólo en estos dominios
-188 Nombre de carácter:
+188 Nombre de carácter (ex: amp or 026)
 189 Directorio de usuario de Amaya:
 190 Directorio temporal:
 191 Usar paleta

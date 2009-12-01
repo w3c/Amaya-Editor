@@ -7068,12 +7068,24 @@ void CreateEntity (Document doc, View view)
     elType = TtaGetElementType (parent);
   if (MathMLEntityName[0] == EOS)
     return;
-  if ((MathMLEntityName[0] >= '0' && MathMLEntityName[0] <= '9') ||
-      (MathMLEntityName[0] >= 'a' && MathMLEntityName[0] <= 'f') ||
-      (MathMLEntityName[0] >= 'A' && MathMLEntityName[0] <= 'F'))
+  if (MapXMLEntity (XHTML_TYPE, MathMLEntityName, &code))
     {
-      // insert the entity at that position
+      TtcInsertChar (doc, view, code);
+      return;
+    }
+  else if (((MathMLEntityName[0] >= '0' && MathMLEntityName[0] <= '9') ||
+           (MathMLEntityName[0] >= 'a' && MathMLEntityName[0] <= 'f') ||
+           (MathMLEntityName[0] >= 'A' && MathMLEntityName[0] <= 'F')) &&
+           ((MathMLEntityName[1] >= '0' && MathMLEntityName[1] <= '9') ||
+            (MathMLEntityName[1] >= 'a' && MathMLEntityName[1] <= 'f') ||
+            (MathMLEntityName[1] >= 'A' && MathMLEntityName[1] <= 'F')) &&
+           ((MathMLEntityName[2] >= '0' && MathMLEntityName[2] <= '9') ||
+            (MathMLEntityName[2] >= 'a' && MathMLEntityName[2] <= 'f') ||
+            (MathMLEntityName[2] >= 'A' && MathMLEntityName[2] <= 'F')))
+    // insert the entity at that position
       sscanf (MathMLEntityName, "%x", &code);
+  if (code >= 32)
+    {
       TtcInsertChar (doc, view, code);
       return;
     }
