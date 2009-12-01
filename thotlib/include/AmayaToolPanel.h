@@ -46,7 +46,7 @@ public:
   bool IsFloating() {return m_bFloating;}
   bool IsVisible()  {return m_bVisible;}
 
-  void SetExapndedFlag(bool bExpanded) {m_bExpanded = bExpanded;}
+  void SetExpandedFlag(bool bExpanded) {m_bExpanded = bExpanded;}
   void SetFloatingFlag(bool bFloating) {m_bFloating = bFloating;}
   void SetVisibleFlag(bool bVisible) {m_bVisible = bVisible;}
   

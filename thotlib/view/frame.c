@@ -220,9 +220,10 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
   int                 x1, x2, y1, y2, k;
 
   k = 0;
-  if (pBox && pBox->BxType == BoGhost ||
-      pBox->BxType == BoStructGhost ||
-      pBox->BxType == BoFloatGhost)
+  if (pBox &&
+      (pBox->BxType == BoGhost ||
+       pBox->BxType == BoStructGhost ||
+       pBox->BxType == BoFloatGhost))
     {
       pAb = pBox->BxAbstractBox;
       /* get the first and last enclosed boxes */
@@ -2365,9 +2366,9 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   PtrElement          pEl = NULL;
   ViewFrame          *pFrame;
   PtrFlow             pFlow;
-  int                 delta, t, b;
+  int                 delta = 0, t, b;
   int                 y, tVol, bVol, h, l;
-  int                 top, bottom, org;
+  int                 top, bottom, org = 0;
   int                 xmin, xmax, view;
   int                 ymin, ymax, plane, nextplane;
   ThotBool            toadd;
