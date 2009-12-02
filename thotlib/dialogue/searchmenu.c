@@ -404,7 +404,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
           firstChar = 1;
           lastChar = pFirstSel->ElVolume + 1;
         }
-      if (StartSearch)
+      if (StartSearch && SearchingD->SWholeDocument)
         pCurrEl = NULL;
       else if (SearchingD->SStartToEnd)
         pCurrEl = pLastSel;
