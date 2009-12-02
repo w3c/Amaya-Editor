@@ -316,6 +316,7 @@ ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
   ThotBool result;
   wxString targetFile = TtaConvMessageToWX(targetFileName);
   wxString sourceFile = TtaConvMessageToWX(sourceFileName);
+  wxString tmpFile;
 
   if (!wxFile::Exists(sourceFile))
 	return FALSE;
@@ -329,11 +330,12 @@ ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
       tmp = (char *)TtaGetMemory (strlen(targetFileName)+10);
       sprintf (tmp, "%s.tmp", targetFileName);
       wxFile::wxFile (targetFile, wxFile::write);
-      wxFile::wxFile (TtaConvMessageToWX(tmp), wxFile::write);
+      tmpFile = TtaConvMessageToWX(tmp);
+      wxFile::wxFile (tmpFile, wxFile::write);
       result = wxFile::Exists(targetFile);
       if (result)
-        result = wxConcatFiles (TtaConvMessageToWX(tmp), sourceFile, targetFile);
-      wxRemoveFile(TtaConvMessageToWX(tmp));
+        result = wxConcatFiles (tmpFile, sourceFile, targetFile);
+      wxRemoveFile(tmpFile);
       TtaFreeMemory (tmp);
       return result;
     }
