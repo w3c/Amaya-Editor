@@ -1701,7 +1701,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 
 /*----------------------------------------------------------------------
   GetPreviousSibling
-  returns the sibling element before element el, ignoring Tamplate
+  returns the sibling element before element el, ignoring Template
   elements.
   ----------------------------------------------------------------------*/
 static PtrElement GetPreviousSibling (PtrElement el)
@@ -1771,7 +1771,7 @@ static PtrElement GetPreviousSibling (PtrElement el)
                         {
                           if (strcmp (sibling->ElStructSchema->SsName, "Template"))
                             /* not a template element */
-                            ancestor = NULL;
+                            return sibling;
                           else
                             /* it's a Template element. Look for its first
                                descendant that is not a Template element */
