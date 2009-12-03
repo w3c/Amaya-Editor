@@ -12,74 +12,76 @@
 <body xml:lang="fr" lang="fr">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="WebDAV.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Numbering.html.fr" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Numbering.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="PageBody" id="Printing">
 <h2 id="Imprimer">Imprimer des documents</h2>
 
-<p>Amaya est capable d'imprimer des document avec ou sans feuilles de style
-CSS pour les plates-formes Linux et Windows. </p>
+<p>Amaya est capable d'imprimer des document avec ou sans feuilles de style CSS
+pour les plates-formes Linux et Windows. </p>
 
-<p class="Note"><strong>Important :</strong> Pour Linux, il est uniquement
-possible de générer une description PostScript, donc vous avez besoin d'une
-imprimante PostScript ou d'utiliser une application capable de traduire le
-PostScript dans le langage de votre imprimante.</p>
+<p class="Note"><strong>Important :</strong> Pour Linux et mac OSX, il est
+uniquement possible de générer une description PostScript, donc vous avez
+besoin d'une imprimante PostScript ou d'utiliser une application capable de
+traduire le PostScript dans le langage de votre imprimante.</p>
 
 <p>Il y a trois manières d'imprimer un document avec Amaya :</p>
 <ul>
   <li>la commande <strong>Paramétrer et imprimer</strong>
-    (<strong>Fichier/Paramétrer et imprimer</strong>), qui vous permet de
-    fixer certains paramètres et options avant d'imprimer.</li>
+    (<strong>Fichier/Paramétrer et imprimer</strong>), qui vous permet de fixer
+    certains paramètres et options avant d'imprimer.</li>
   <li>la commande <strong>Imprimer</strong>
     (<strong>Fichier/Imprimer</strong>), qui imprime un document en utilisant
     la configuration de la commande précédente.</li>
   <li>le <strong>bouton</strong> <img
-    src="../../resources/icons/22x22/print.png" alt="Print" /> , dans la
-    barre des boutons, qui est un raccourci de la commande
-    <strong>Imprimer</strong> sur les plates-formes Linux. Sous Windows, ce
-    bouton est le raccourci de la commande <strong>Paramétrer et
-    imprimer</strong>.</li>
+    src="../../resources/icons/22x22/print.png" alt="Print" /> , dans la barre
+    des boutons, qui est un raccourci de la commande <strong>Imprimer</strong>
+    sur les plates-formes Linux. Sous Windows, ce bouton est le raccourci de la
+    commande <strong>Paramétrer et imprimer</strong>.</li>
 </ul>
 
 <h3 id="commande">La commande Paramétrer et imprimer</h3>
 
-<p>Cette commande vous permet d'établir différents paramètres et options.
-Notez que certains paramètres et certaines options reprennent leur valeur par
-défaut quand vous ouvrez un autre document. Cette propriété dépend de la
+<p>Cette commande vous permet d'établir différents paramètres et options. Notez
+que certains paramètres et certaines options reprennent leur valeur par défaut
+quand vous ouvrez un autre document. Cette propriété dépend de la
 plate-forme.</p>
 
-<h4 id="Plates-for">Plates-formes Linux</h4>
+<h4 id="Plates-for">Plateformes Linux</h4>
 
-<p>Sous Linux, avec la commande <strong>Fichier/Paramétrer et
-imprimer</strong> vous pouvez fixer les paramètres suivant :</p>
+<p>Sous Linux, avec la commande <strong>Fichier/Paramétrer et imprimer</strong>
+vous pouvez fixer les paramètres suivant :</p>
 <ul>
   <li>le format du papier : A4, US</li>
   <li>l'orientation : Portrait, Paysage</li>
   <li>la disposition (le nombre de pages imprimées sur la même feuille de
     papier) : 1, 2, 4 pages par feuille</li>
-  <li>la destination : fichier PostScript ou imprimante</li>
+  <li>la destination : fichier PostScript ou imprimante
+    <p class="Note">Note: Quand vous sélectionnez l'option imprimante, vous
+    devez insérer dans la zone de texte la commande batch qui donne accès à
+    l'imprimante.</p>
+  </li>
 </ul>
 
 <p>En plus, vous pouvez sélectionner les options suivantes :</p>
 <ul>
   <li>Alimentation manuelle</li>
   <li>Générer la table des matières</li>
-  <li>Générer la table des liens : un numéro est généré après chaque lien
-    dans le document qui réfère à un entrée de la table de liens; chaque
-    entrée de la table liste l'URI correspondant</li>
+  <li>Générer la table des liens : un numéro est généré après chaque lien dans
+    le document qui réfère à un entrée de la table de liens; chaque entrée de
+    la table liste l'URI correspondant</li>
   <li>Imprimer l'URI du document sur chaque page</li>
   <li>Imprimer sans feuille de style</li>
 </ul>
 
-<h4 id="Plates-for1">Plates-formes Windows</h4>
+<h4 id="Plates-for1">Plateformes Windows</h4>
 
 <p>Sur les stations Windows, une boîte de dialogue vous proposera en premier
 lieu les options suivantes :</p>
@@ -99,8 +101,8 @@ défaut ou avec les valeurs précédemment fixées grâce à la commande
 <strong>Paramétrer et imprimer</strong>. 
 
 <p>Sur les stations Windows, la première fois que vous lancez la commande
-<strong>Imprimer</strong>, le dialogue standard de Windows est affiché et
-vous laisse vérifier que l'imprimante par défaut est correcte. Les commandes
+<strong>Imprimer</strong>, le dialogue standard de Windows est affiché et vous
+laisse vérifier que l'imprimante par défaut est correcte. Les commandes
 <strong>Imprimer</strong> suivantes sont lancées sans aucun dialogue.</p>
 
 <h3 id="Contr">Contrôler l'impression avec les CSS</h3>
@@ -112,12 +114,11 @@ contenir :</p>
 <pre>@media print {a:link {text-decoration: underline} ... }</pre>
 
 <p>Amaya supporte les propriétés de saut de page CSS :
-"<code>page-break-before: always</code>". Quand cette propriété est attachée
-à un élément spécifique par un attribut <code>style</code>, elle génère un
-saut de page avant l'élément. Quand cette propriété est attachée à un type
-d'élément dans l'élément style du document ou dans la feuille de style CSS
-externe, elle génère un saut de page avant chaque occurence de cet
-élément.</p>
+"<code>page-break-before: always</code>". Quand cette propriété est attachée à
+un élément spécifique par un attribut <code>style</code>, elle génère un saut
+de page avant l'élément. Quand cette propriété est attachée à un type d'élément
+dans l'élément style du document ou dans la feuille de style CSS externe, elle
+génère un saut de page avant chaque occurence de cet élément.</p>
 
 <p class="Note"><strong>Note :</strong> Quelques propriétés CSS ne sont pas
 bien supportées par le processus d'impression.</p>

@@ -14,13 +14,12 @@
 <body xml:lang="en" lang="en">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="WebDAV.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Numbering.html" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Numbering.html" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
@@ -30,9 +29,9 @@ src="../../resources/icons/misc/right.png" /></a></p>
 <p>Amaya can print documents with or without CSS style sheets, on both Linux
 and Windows platforms.</p>
 
-<p class="Note"><b>Important</b>: On Linux platforms, Amaya can only generate
-a Postscript description, so you must have a PostScript printer or use an
-application to translate the PostScript into your specific printer
+<p class="Note"><b>Important</b>: On Linux or Mac OSX platforms, Amaya can only
+generate a Postscript description, so you must have a PostScript printer or use
+an application to translate the PostScript into your specific printer
 language.</p>
 
 <p>You can print a document in three ways:</p>
@@ -45,9 +44,9 @@ language.</p>
     print configuration (defined using the <strong>Setup and Print</strong>
     command).</li>
   <li>The <img src="../../resources/icons/22x22/print.png" alt="Print Button"
-    /> button on the button bar. On Linux platforms, this is a shortcut to
-    the <strong>Print</strong> command. On Windows platforms, this is a
-    shortcut to the <strong>Setup and Print</strong> command.</li>
+    /> button on the button bar. On Linux platforms, this is a shortcut to the
+    <strong>Print</strong> command. On Windows platforms, this is a shortcut to
+    the <strong>Setup and Print</strong> command.</li>
 </ul>
 
 <p>For more information on printing with style sheets, see section <span
@@ -67,9 +66,9 @@ printer is correct.</p>
 <h3 id="Using1">Using the Setup and print command</h3>
 
 <p>The <strong>Setup and print</strong> command allows you to change the
-printer and other options. Depending on your operating system, some
-parameters and options are reset to their default value when you browse
-another document.</p>
+printer and other options. Depending on your operating system, some parameters
+and options are reset to their default value when you browse another
+document.</p>
 
 <h4 id="Windows">On Windows platforms</h4>
 
@@ -82,35 +81,38 @@ activated, a dialog allows you to make some choices like:</p>
   <li>and print with or without style sheets.</li>
 </ul>
 
-<p>The next times, or when the <strong>Print</strong> command is selected,
-the standard Windows dialog pops up, and allows you to choose the other
-printing parameters.</p>
+<p>The next times, or when the <strong>Print</strong> command is selected, the
+standard Windows dialog pops up, and allows you to choose the other printing
+parameters.</p>
 
-<h4 id="Linux">On Linux platforms</h4>
+<h4 id="Linux">On Linux or Mac OSX platforms</h4>
 
-<p>Under Linux, the <strong>Setup and print</strong> command allows you
-to:</p>
+<p>Under Linux, the <strong>Setup and print</strong> command allows you to:</p>
 <ul>
   <li>set the paper format (A4 or US),</li>
   <li>set the orientation (portrait or landscape),</li>
   <li>choose the number of pages printed on the same sheet (1, 2, or 4 pages
     per sheet),</li>
-  <li>choose the output (postscript file or printer).</li>
+  <li>choose the output (postscript file or printer):
+    <p class="Note">Note: When you select the printer output option, you have
+    to insert the batch command that gives access to the printer in the text
+    area.</p>
+  </li>
 </ul>
 
 <p>In addition, you can:</p>
 <ul>
   <li>select manual paper feed,</li>
   <li>generate a table of contents for the document,</li>
-  <li>generate a table of links, which creates a number after each link in
-    the document that refers to an entry in the table of links and the
+  <li>generate a table of links, which creates a number after each link in the
+    document that refers to an entry in the table of links and the
     corresponding URI</li>
   <li>print the document URI on each page,</li>
   <li>print the document with or without style sheets.</li>
 </ul>
 
-<p>When the <strong>Print</strong> command is activated, printing is done
-with the standard options or the options previous selected.</p>
+<p>When the <strong>Print</strong> command is activated, printing is done with
+the standard options or the options previous selected.</p>
 
 <h3 id="About">About controlling printing with CSS</h3>
 
@@ -123,10 +125,10 @@ href="Configure.html#AmayaHome">AmayaHome directory</a></span>):</p>
 
 <p>Amaya supports the CSS page break property <code>page-break-before:
 always</code>. When you attach this property to a specific element using a
-<code>style</code> attribute, Amaya generates a page break before that
-element. When you attach this property to an element type within the style
-element of the document or within an external CSS style sheet, Amaya
-generates a page break before each instance of that element.</p>
+<code>style</code> attribute, Amaya generates a page break before that element.
+When you attach this property to an element type within the style element of
+the document or within an external CSS style sheet, Amaya generates a page
+break before each instance of that element.</p>
 
 <p class="Note"><strong>Note:</strong> Some CSS properties are not well
 supported by the print process.</p>
