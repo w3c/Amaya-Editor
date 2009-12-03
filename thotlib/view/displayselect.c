@@ -967,7 +967,7 @@ void DisplayStringSelection (int frame, int leftX, int rightX, int t,
       if (!pBox->BxAbstractBox->AbPresentationBox)
         l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       leftX = leftX + l - pFrame->FrXOrg;
-      if (leftX > width)
+      if (leftX > pBox->BxXOrg + width)
         width = 0;
       else
         {
