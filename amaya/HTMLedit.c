@@ -631,7 +631,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                                 const char * data, ThotBool replace)
 {
   Element         el, firstSel, lastSel, next, in_line, sibling, child;
-  Element         last, parent, enclose, selected;
+  Element         last, parent, enclose, selected, lastChild;
   ElementType	  elType, parentType, newType, childType;
   Attribute       newAttr, attr;
   AttributeType   attrType;
@@ -1255,7 +1255,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                                       // get next sibling of moved 
                                       child = el;
                                     }
-                                  el = enclose;
+                                  el = NULL;
                                   if (removed)
                                     {
                                       // remove the enclose element
@@ -1331,14 +1331,17 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                             }
                           else if (in_line && charlevel)
                             {
-                              TtaRegisterElementDelete (el, doc);
-                              TtaRemoveTree (el, doc);
-                              sibling = TtaGetLastChild (in_line);
-                              TtaInsertSibling (el, sibling, FALSE, doc);
-                              TtaRegisterElementCreate (el, doc);
-                              done = TRUE; // action done
-                              if (el == lastSel)
-                                lastSel = in_line;
+                              if (el)
+                                {
+                                  TtaRegisterElementDelete (el, doc);
+                                  TtaRemoveTree (el, doc);
+                                  lastChild = TtaGetLastChild (in_line);
+                                  TtaInsertSibling (el, lastChild, FALSE, doc);
+                                  TtaRegisterElementCreate (el, doc);
+                                  done = TRUE; // action done
+                                  if (el == lastSel)
+                                    lastSel = in_line;
+                                }
                             }
                           else
                             {
