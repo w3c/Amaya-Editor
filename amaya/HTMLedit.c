@@ -842,8 +842,14 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                   while (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
                          !IsCharacterLevelElement (lastSel))
                     {
-                      child = GetNoTemplateChild (lastSel, FALSE);
+                      // keep all children
+                      child = TtaGetLastChild (lastSel);
                       elType = TtaGetElementType (child);
+                      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "Template"))
+                        {
+                          child = GetNoTemplateChild (child, FALSE);
+                          elType = TtaGetElementType (child);
+                        }
                       if (child)
                         {
                           lastSel = child;
@@ -968,7 +974,8 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                     next = NULL;
                   else
                     {
-                      next = el;
+                      if (el)
+                        next = el;
                       if (next != selected && TtaIsAncestor (next, selected))
                         {
                           // get next sibling
@@ -1170,6 +1177,7 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                                               firstSel = next;
                                               TtaRemoveTree (in_line, doc);
                                               in_line = NULL;
+                                              parent = NULL;
                                             }
                                           else
                                             {
@@ -1499,8 +1507,11 @@ ThotBool GenerateInlineElement (int eType, SSchema eSchema, int aType,
                               sibling = in_line;
                               TtaNextSibling (&sibling);
                               if (sibling != next)
+                                {
                                 // cannot extent the in_line to the next element
                                 in_line = NULL;
+                                parent = NULL;
+                                }
                             }
                         }
                     }
