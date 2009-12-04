@@ -3214,6 +3214,7 @@ void CreateHorizontalRule (Document doc, View view)
       // then insert an empty element after
       TtaExtendUndoSequence (doc);  
       InsertAfter (doc, view);
+      TtaCloseUndoSequence (doc);
     }
 }
 

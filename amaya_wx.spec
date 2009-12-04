@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib libz libpng libjpeg
 
-%define version 11.3
+%define version 11.3.1
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -19,7 +19,7 @@ Group:        Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
 Packager:     Irene.Vatton@inria.fr
-BuildRoot:    /var/tmp/%{name}-buildroot
+#BuildRoot:    /var/tmp/%{name}-buildroot
 #BuildRoot:     /usr/src/redhat/BUILD/
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
@@ -42,6 +42,8 @@ Authors:
     Vincent.Quint@inria.fr, Laurent.Carcone@w3.org
 
 %changelog
+* Fri Dec 4 2009 Irene Vatton <Irene.Vatton@inrialpes.fr>
+  The application uses now libssl.so and libcrypt.so
 * Fri Jan 30 2009 Irene Vatton <Irene.Vatton@inrialpes.fr>
   The application uses now libraptor.so.1
 * Wed Nov 20 2008 Irene Vatton <Irene.Vatton@inrialpes.fr>

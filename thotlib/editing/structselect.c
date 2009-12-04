@@ -1734,6 +1734,10 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
                                 TypeHasException (ExcSelectParent, pEl->ElTypeNumber,
                                                   pEl->ElStructSchema)))
                           pEl = pEl->ElParent;
+                        // when the selection comes from a click on children
+                        if (TypeHasException (ExcIsBreak, pEl->ElTypeNumber,
+                                              pEl->ElStructSchema))
+                          SelPosition = TRUE;
                         DisplaySel (pEl, view + 1, frame, &abExist);
                       }
                   }
