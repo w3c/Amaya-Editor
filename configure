@@ -13436,6 +13436,14 @@ done
 #
 # Check for operating system (UNIX / WINDOWS / MACOSX )
 # ---------->
+
+#default library path
+UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
+SYSLIB_PATH="/usr/lib"
+if test "${UNAME_MACHINE}"="x86_64" ; then
+ SYSLIB_PATH="/usr/lib64"
+fi
+
 # canonicalize the target OS
 AMAYAOS="LINUX"
 case $target_os in
@@ -13562,11 +13570,15 @@ AMAYAGUI="wx"
 
 if test "$with_mesa" = "yes" ; then
   # --------- compile Mesa library (opengl) --------------- #
+  # check that the right configure is used
+  if test "${UNAME_MACHINE}"="x86_64" ; then
+    cp ../../Mesa/configs/linux-x86-64-static ../../Mesa/configs/current
+  fi
   # check that sources of Mesa exists
   if test ! -f ../../Mesa/Makefile ; then
     GL_BUILDDIR=""
     GL_INCLUDES="-I/usr/include"
-    GL_LIBRARIES="-Wl,-rpath,usr/lib -L/usr/lib -lGL -lGLU"
+    GL_LIBRARIES="-Wl,-rpath,$SYSLIB_PATH -L$SYSLIB_PATH -lGL -lGLU"
     echo "---> Use system Mesa library"
   else
     OLDDIR=`pwd`
@@ -13869,7 +13881,7 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
 	# for AC_CHECK_LIB library existance checks
 	LIBS_OLD=$LIBS
 	LDFLAGS_OLD=$LDFLAGS
-	LDFLAGS="-L/usr/X11R6/lib -L/usr/lib -L/usr/local/lib"
+	LDFLAGS="-L/usr/X11R6/lib -L$SYSLIB_PATH -L/usr/local/lib"
   	{ echo "$as_me:$LINENO: checking OpenGL" >&5
 echo $ECHO_N "checking OpenGL... $ECHO_C" >&6; }
 	for ac_dir in               		\
@@ -14167,7 +14179,7 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
       GL_LIBRARIES=""
       GL_BUILDDIR=""
     else
-      GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib -lGL -lGLU"
+      GL_LIBRARIES="-L$SYSLIB_PATH -L/usr/X11R6/lib -lGL -lGLU"
       GL_OPTIONS="-D_GL"
     fi
 
@@ -14238,7 +14250,7 @@ echo "$as_me: error: Cannot find freetype library (font load/display routines). 
   { echo "$as_me:$LINENO: checking gcc3" >&5
 echo $ECHO_N "checking gcc3... $ECHO_C" >&6; }
   for ac_dir in               		\
-		/usr/lib 			\
+		$SYSLIB_PATH 			\
 		/usr/X11R6/lib 		\
 		/usr/local/lib		\
 		; \
@@ -14388,7 +14400,7 @@ if test "$with_system_libwww" != "yes" ; then
   -L$CURRENT_PATH/libwww/Library/src/SSL/.libs -lwwwssl\
   -L$CURRENT_PATH/libwww/modules/md5/.libs -lmd5 \
   -L$CURRENT_PATH/libwww/modules/expat/.libs -lexpat \
-  -L/usr/lib -lssl -lcrypto -L/usr/lib64 -lssl -lcrypto"
+  -L$SYSLIB_PATH -lssl -lcrypto"
   LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww -I$CURRENT_PATH/../../libwww/modules/expat/lib -I$CURRENT_PATH/../../libwww/Library/src/SSL"
 else
   LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
@@ -16190,7 +16202,7 @@ fi
 
 if test "$build_amaya" = "yes" ; then
     echo Amaya $AMAYA_VER configured
-    echo Amaya configured with libWWW \(local source\)
+    echo Amaya configured with libWWW \(local source\) and $SYSLIB_PATH
     if test "$with_math" = "yes" ; then
 	echo Amaya configured with Math support
     fi
