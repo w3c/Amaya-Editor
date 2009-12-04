@@ -1727,8 +1727,15 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
                                 SetActiveView (0);
                             }
                       }
-                    if (!done)
-                      DisplaySel (pEl, view + 1, frame, &abExist);
+                    if (!done && pEl)
+                      {
+                        while (pEl && pEl->ElParent &&
+                               (pEl->ElIsCopy ||
+                                TypeHasException (ExcSelectParent, pEl->ElTypeNumber,
+                                                  pEl->ElStructSchema)))
+                          pEl = pEl->ElParent;
+                        DisplaySel (pEl, view + 1, frame, &abExist);
+                      }
                   }
               }
 
@@ -2139,25 +2146,12 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin,
       /* highest level protected ancestor. */
       /* If it has exception SelectParent, select the first ancestor that */
       /* do not have that exception */
-      if (pEl->ElIsCopy ||
-          TypeHasException (ExcSelectParent, pEl->ElTypeNumber,
-                            pEl->ElStructSchema))
-        {
-          pAncest = pEl->ElParent;
-          stop = FALSE;
-          while (!stop)
-            if (pAncest == NULL)
-              stop = TRUE;
-            else if (!pAncest->ElIsCopy &&
-                     !TypeHasException (ExcSelectParent, pEl->ElTypeNumber,
-                                        pEl->ElStructSchema))
-              stop = TRUE;
-            else
-              {
-                pEl = pAncest;
-                pAncest = pAncest->ElParent;
-              }
-        }
+      while (pEl && pEl->ElParent &&
+             (pEl->ElIsCopy ||
+              TypeHasException (ExcSelectParent, pEl->ElTypeNumber,
+                                pEl->ElStructSchema)))
+        pEl = pEl->ElParent;
+ 
       /* If the element is in a holophrasted tree, selected the */
       /* holphrasted ancestor */
       pAncest = pEl;
@@ -2170,7 +2164,7 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin,
               pAncest = NULL;
             }
         }
-      while (pAncest != NULL);
+      while (pAncest);
 
       /* Is the new selected element in the same tree as the previous one? */
       FirstSelectedElement = pEl;
