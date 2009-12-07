@@ -1,59 +1,62 @@
 
 #font script 1-17 iso, then unicode,symbol,stix...;
-#1 = serif;normale face;bold face;italic face  
-#2 = sans-serif;normale face;bold face;italic face  
-#3 = monospace;normale face;bold face;italic face  
-#4 = cursive;normale face;bold face;italic face  
-#5 = fantasy;normale face;bold face;italic face  
+#1 = serif;1=normale face;2=bold face;3=italic face;4=bold-italic face
+#2 = sans-serif;1=normale face;2=bold face;3=italic face;4=bold-italic face
+#3 = monospace;1=normale face;2=bold face;3=italic face;4=bold-italic face
+#4 = cursive;1=normale face;2=bold face;3=italic face;4=bold-italic face
+#5 = fantasy;1=normale face;2=bold face;3=italic face;4=bold-italic face
 
 
-1;#Latin1 (West European)
-1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
-2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
-3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
-
-
-2;#Latin2 (East European)
-1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
-2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
-3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
-
-
-3;#Latin3 (South European)
-1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;
-2;1==$THOTDIR\fonts\DejaVuSansCondensed.ttf;2==$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3==$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;
-3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;
-
-4;#Latin4 (North European)
+1;#Unicode (West European)
 1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
 2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
 3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
 
 
-5;#Cyrillic
-1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
-2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
-3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
-
-6;#Arabic
-1;1=$OSDIR\fonts\times.ttf;2=$OSDIR\fonts\timesbd.ttf;3=$OSDIR\fonts\timesi.ttf;4=$OSDIR\fonts\timesbi.ttf;
-2;1=$OSDIR\fonts\arial.ttf;2=$OSDIR\fonts\arialbd.ttf;3=$OSDIR\fonts\ariali.ttf;4=$OSDIR\fonts\arialbi.ttf;
-3;1=$OSDIR\fonts\cour.ttf;2=$OSDIR\fonts\courbd.ttf;3=$OSDIR\fonts\couri.ttf;4=$OSDIR\fonts\courbi.ttf;
-
-
-7;#Greek
+2;#Unicode (East European)
 1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
 2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
 3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
 
 
-8;#Hebrew
+3;#Unicode (South European)
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
+2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
+
+
+4;#Unicode (North European)
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
+2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
+
+
+5;#Unicode (Cyrillic)
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
+2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
+
+
+6;#Unicode (Arabic)
+1;1=$THOTDIR\fonts\FreeSerif.ttf;2=$THOTDIR\fonts\FreeSerifBold.ttf;3=$THOTDIR\fonts\FreeSerifItalic.ttf;4=$THOTDIR\fonts\FreeSerifBoldItalic.ttf;
+2;1=$THOTDIR\fonts\FreeSerif.ttf;2=$THOTDIR\fonts\FreeSerifBold.ttf;3=$THOTDIR\fonts\FreeSerifItalic.ttf;4=$THOTDIR\fonts\FreeSerifBoldItalic.ttf;
+3;1=$THOTDIR\fonts\FreeSerif.ttf;2=$THOTDIR\fonts\FreeSerifBold.ttf;3=$THOTDIR\fonts\FreeSerifItalic.ttf;4=$THOTDIR\fonts\FreeSerifBoldItalic.ttf;
+# arabic characteres are only avalaible in Serif fonts
+
+
+7;#Unicode (Greek)
+1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
+2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
+3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
+
+
+8;#Unicode (Hebrew)
 1;1=$THOTDIR\fonts\FreeSerif.ttf;2=$THOTDIR\fonts\FreeSerifBold.ttf;3=$THOTDIR\fonts\FreeSerifItalic.ttf;4=$THOTDIR\fonts\FreeSerifBoldItalic.ttf;
 2;1=$THOTDIR\fonts\FreeSans.ttf;2=$THOTDIR\fonts\FreeSansBold.ttf;3=$THOTDIR\fonts\FreeSansOblique.ttf;4=$THOTDIR\fonts\FreeSansBoldOblique.ttf;
 3;1=$THOTDIR\fonts\FreeMono.ttf;2=$THOTDIR\fonts\FreeMonoBold.ttf;3=$THOTDIR\fonts\FreeMonoOblique.ttf;4=$THOTDIR\fonts\FreeMonoBoldOblique.ttf;
 
 
-9;#Latin5 (Turkish)
+9;#Unicode (Turkish)
 1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
 2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
 3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
@@ -65,18 +68,17 @@
 3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
 
 
-
-18;#Unicode (.or ... Georgian)
+18;#Unicode (Georgian)
 1;1=$THOTDIR\fonts\DejaVuSerifCondensed.ttf;2=$THOTDIR\fonts\DejaVuSerifCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSerifCondensed-Italic.ttf;4=$THOTDIR\fonts\DejaVuSerifCondensed-BoldItalic.ttf;
 2;1=$THOTDIR\fonts\DejaVuSansCondensed.ttf;2=$THOTDIR\fonts\DejaVuSansCondensed-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansCondensed-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansCondensed-BoldOblique.ttf;
 3;1=$THOTDIR\fonts\DejaVuSansMono.ttf;2=$THOTDIR\fonts\DejaVuSansMono-Bold.ttf;3=$THOTDIR\fonts\DejaVuSansMono-Oblique.ttf;4=$THOTDIR\fonts\DejaVuSansMono-BoldOblique.ttf;
 
 
 20;#Symbols (...)
-1;1=$OSDIR\fonts\symbol.ttf;2=$OSDIR\fonts\symbol.ttf;
+1;1=\usr\X11R6\lib\X11\fonts\Type1\s050000l.pfb;2=\usr\X11R6\lib\X11\fonts\Type1\s050000l.pfb;
 
 
-21;#Esstix (...)
+21;#esstix (...)
 1;1=$THOTDIR\fonts\ESSTIX1_.TTF;2=$THOTDIR\fonts\ESSTIX2_.TTF;3=$THOTDIR\fonts\ESSTIX3_.TTF;4=$THOTDIR\fonts\ESSTIX4_.TTF;5=$THOTDIR\fonts\ESSTIX5_.TTF;
 2;1=$THOTDIR\fonts\ESSTIX6_.TTF;2=$THOTDIR\fonts\ESSTIX7_.TTF;3=$THOTDIR\fonts\ESSTIX8_.TTF;4=$THOTDIR\fonts\ESSTIX9_.TTF;5=$THOTDIR\fonts\ESSTIX10.TTF;
 3;1=$THOTDIR\fonts\ESSTIX11.TTF;2=$THOTDIR\fonts\ESSTIX12.TTF;3=$THOTDIR\fonts\ESSTIX13.TTF;4=$THOTDIR\fonts\ESSTIX14.TTF;5=$THOTDIR\fonts\ESSTIX15.TTF;
