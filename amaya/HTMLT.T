@@ -1208,7 +1208,7 @@ RULES
         NoLineBreak;
         {NoTranslation;}
         Create '-->' after;
-	if not within ParagEquiv
+	if not within ParagEquiv and not within SCRIPT_
            Create '\12' after;
         END;
 

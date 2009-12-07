@@ -1015,7 +1015,7 @@ EXCEPT
         BUTTON_:        NoReplicate;
         Preformatted:   ReturnCreateNL, NoReplicate;
         STYLE_:         ReturnCreateNL, NoSpellCheck, NoReplicate;
-        SCRIPT_:        ReturnCreateNL, NoReplicate;
+        SCRIPT_:        ReturnCreateNL, NoReplicate, MarkupPreserve;
         Text_Area:      ReturnCreateNL, NoReplicate;
         HTMLfragment:   NoMove, NoResize, Hidden, NoBreakByReturn;
         Division:       NoMove, NoResize, NoBreakByReturn;
