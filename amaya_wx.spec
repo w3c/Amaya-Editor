@@ -19,7 +19,7 @@ Group:        Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
 Packager:     Irene.Vatton@inria.fr
-#BuildRoot:    /var/tmp/%{name}-buildroot
+BuildRoot:    /var/tmp/%{name}-buildroot
 #BuildRoot:     /usr/src/redhat/BUILD/
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
