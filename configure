@@ -13437,13 +13437,6 @@ done
 # Check for operating system (UNIX / WINDOWS / MACOSX )
 # ---------->
 
-#default library path
-UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
-SYSLIB_PATH="/usr/lib"
-if test "${UNAME_MACHINE}"="x86_64" ; then
- SYSLIB_PATH="/usr/lib64"
-fi
-
 # canonicalize the target OS
 AMAYAOS="LINUX"
 case $target_os in
@@ -13473,12 +13466,20 @@ echo "$as_me: error: Windows port do not use configure - not yet tested." >&2;}
    { (exit 1); exit 1; }; }
 fi
 
+#default library path
+UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
+SYSLIB_PATH="/usr/lib"
+
 OS_OPTIONS="-D_UNIX" # default is UNIX
 case $AMAYAOS in
-  LINUX)       OS_OPTIONS="-D_UNIX" ;;
-  WINDOWS)     OS_OPTIONS="-D_WINDOWS" ;; # not tested (cygwin or mingw)
-  MACOSX)      OS_OPTIONS="-D_UNIX -D_MACOS" ;;
-  FREEBSD)     OS_OPTIONS="-D_UNIX -D_FREEBSD" ;;
+  LINUX)
+            if test "$UNAME_MACHINE"="x86_64" ; then
+              SYSLIB_PATH="/usr/lib64"
+            fi
+            OS_OPTIONS="-D_UNIX" ;;
+  WINDOWS)  OS_OPTIONS="-D_WINDOWS" ;; # not tested (cygwin or mingw)
+  MACOSX)   OS_OPTIONS="-D_UNIX -D_MACOS" ;;
+  FREEBSD)  OS_OPTIONS="-D_UNIX -D_FREEBSD" ;;
 esac
 
 
@@ -13571,7 +13572,7 @@ AMAYAGUI="wx"
 if test "$with_mesa" = "yes" ; then
   # --------- compile Mesa library (opengl) --------------- #
   # check that the right configure is used
-  if test "${UNAME_MACHINE}"="x86_64" ; then
+  if test "$SYSLIB_PATH"="/usr/lib64" ; then
     cp ../../Mesa/configs/linux-x86-64-static ../../Mesa/configs/current
   fi
   # check that sources of Mesa exists
