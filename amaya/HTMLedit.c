@@ -17,6 +17,8 @@
 
 #ifdef _WX
 #include "wx/wx.h"
+#include "wx/utils.h"
+#include "wx/file.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -35,6 +37,9 @@
 #include "templateUtils_f.h"
 #endif /* TEMPLATES */
 #include "templates_f.h"
+#ifdef _WX
+#include "message_wx.h"
+#endif /* _WX */
 
 static char        *TargetDocumentURL = NULL;
 static int          OldWidth;
@@ -1588,19 +1593,19 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
           else if (elType.ElTypeNum == HTML_EL_SCRIPT_)
             attrType.AttrTypeNum = HTML_ATTR_script_src;
           else
-		  {
+            {
             /* The anchor element must have an HREF attribute */
             /* create an attribute PseudoClass = link */
             attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
             attr = TtaGetAttribute (element, attrType);
             if (attr == NULL)
-			{
+              {
                 attr = TtaNewAttribute (attrType);
                 TtaAttachAttribute (element, attr, doc);
-			}
+              }
             TtaSetAttributeText (attr, "link", element, doc);
             attrType.AttrTypeNum = HTML_ATTR_HREF_;
-		  }
+            }
         }
 #ifdef _SVG
       else if (isSVG)
@@ -1673,7 +1678,22 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
                             &LoadedResources, FALSE);
         }
       else
-        strcpy (tempURL, targetURL);
+        {
+         if (!IsHTTPPath (DocumentURLs[doc]) &&
+              strncmp (targetURL, "http", 4))
+            {
+              // create the file if needed
+              TtaExtractName (targetURL, tempURL, resname);
+              NormalizeURL (resname, doc, tempURL, resname, NULL);
+              if ((LinkAsCSS || LinkAsXmlCSS) && !TtaFileExist (tempURL))
+                {
+#ifdef _WX
+                  wxFile::wxFile (TtaConvMessageToWX(tempURL), wxFile::write);
+#endif /* _WX */
+                }
+              strcpy (tempURL, targetURL);
+            }
+        }
     }
   else
     tempURL[0] = EOS;
