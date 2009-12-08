@@ -791,7 +791,7 @@ if test "$with_system_libwww" != "yes" ; then
   -L$CURRENT_PATH/libwww/Library/src/SSL/.libs -lwwwssl\
   -L$CURRENT_PATH/libwww/modules/md5/.libs -lmd5 \
   -L$CURRENT_PATH/libwww/modules/expat/.libs -lexpat \
-  -Wl,-rpath,$SYSLIB_PATH -L$SYSLIB_PATH -lssl -lcrypto"
+  -L$SYSLIB_PATH -lssl -lcrypto"
   LIBWWW_CFLAGS="-I$CURRENT_PATH/../../libwww/Library/src -I$CURRENT_PATH/libwww -I$CURRENT_PATH/../../libwww/modules/expat/lib -I$CURRENT_PATH/../../libwww/Library/src/SSL"
 else
   LIBWWW_CFLAGS="`$LIBWWW_CONFIG --cflags`"
