@@ -5882,6 +5882,8 @@ void CheckScrollingWidthHeight (int frame)
                       printf ("Cycle\n");
                       pBox = NULL;
                     }
+                  else if (pBox->BxNext == pBox)
+                    pBox = NULL;
                   else
                     pBox = pBox->BxNext;
                 }
