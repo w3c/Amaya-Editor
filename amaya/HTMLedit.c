@@ -1691,8 +1691,8 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
                   wxFile::wxFile (TtaConvMessageToWX(tempURL), wxFile::write);
 #endif /* _WX */
                 }
-              strcpy (tempURL, targetURL);
             }
+         strcpy (tempURL, targetURL);
         }
     }
   else
