@@ -1541,10 +1541,11 @@ void AddNewImage (Document doc, View view, ThotBool isInput, ThotBool isSvg)
             newAttr = FALSE;
           // check if the image is larger than the window
           TtaGiveWindowSize (doc, 1, UnPixel, &w, &h);
-          if (width < w || isSvg)
+          if (width <= w || isSvg)
             sprintf (value, "%d", width);
           else
-            strcpy (value, "100%");
+            // limit the width to hte current window width
+            sprintf (value, "%d", w);
           if (!newAttr)
             TtaRegisterAttributeReplace (attr, el, doc);
           TtaSetAttributeText (attr, value, el, doc);
