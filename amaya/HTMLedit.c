@@ -1688,7 +1688,8 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
               if ((LinkAsCSS || LinkAsXmlCSS) && !TtaFileExist (tempURL))
                 {
 #ifdef _WX
-                  wxFile::wxFile (TtaConvMessageToWX(tempURL), wxFile::write);
+                  wxString tmpFile = TtaConvMessageToWX(tempURL);
+                  wxFile::wxFile (tmpFile, wxFile::write);
 #endif /* _WX */
                 }
             }
