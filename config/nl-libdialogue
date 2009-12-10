@@ -272,7 +272,7 @@
 270 Gebruik het pijltje helemaal rechts ter hoogte van de tabbladen om eenvoudig een ander document te selecteren.
 271 Als u Doelen selecteert in het menu Beeld, worden doelen voor koppelingen duidelijk gemarkeerd in het venster met opgemaakte tekst. Dit is handig als u een nieuwe koppeling wilt maken: u kunt het doel eenvoudig aangeven door erop te klikken.
 272 Als u een SVG-object roteert, wordt het middelpunt ervan met een kruis aangegeven. U kunt het met de muis verplaatsen.
-273 Elementaire SVG-vormen kunt u met handgrepen bewerken. Een blauwe driehoek of groen vierkant geeft aan dat u de afmetingen kunt wijzigen. Een rode cirkel bij een <rect/>-element geeft aan dat u de straal van afgeronde hoeken kunt aanpassen.
+273 Elementaire SVG-vormen kunt u met handgrepen bewerken. Een blauwe driehoek of groen vierkant geeft aan dat u de afmetingen kunt wijzigen. Een rode cirkel bij een <rectrect />-element geeft aan dat u de straal van afgeronde hoeken kunt aanpassen.
 274 Als u in SVG lijnen trekt en daarbij Shift ingedrukt houdt, worden de lijnen geplaatst onder vaste hoeken van telkens 15°. Dit is handig als u zeker wilt zijn dat de lijnen recht zijn.
 275 Houd Shift ingedrukt als u de afmeting van een afbeelding of SVG-object wilt veranderen zonder de beeldverhoudingen te wijzigen.
 276 U kunt de taal voor menu's in Amaya instellen in het menu Bewerken > Voorkeuren > Menutaal.

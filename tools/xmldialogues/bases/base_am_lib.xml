@@ -5170,11 +5170,11 @@ essere usate per modificarle. Si puo' cambiare la gradezza deI triangoli blu e
 dei quadrati verdi. Per l'elemento &lt;rect&gt;
 e per i cerchi rossi give il controllo è dato dal raggio degli angoli
 arrotondati.</message>
-	<message xml:lang="ja">*基本的な SVG シェイプでは、それらを編集するために使うことができるハンドルを持っている。 青い三角形あるいは緑の正方形で、それらのサイズ変更できる。 &lt;rect />エレメントのために、赤い円が丸い角の半径の上にコントロールを与える。</message>
-	<message xml:lang="ru">Базовые SVG формы наделены метками-манипуляторами, используемыми для их редактирования. Синие треугольники или зеленый квадрат позволяют изменять размер форм. В элементах &lt;rect/> красные кружочки управляют радиусом скругленных углов.</message>
+	<message xml:lang="ja">*基本的な SVG シェイプでは、それらを編集するために使うことができるハンドルを持っている。 青い三角形あるいは緑の正方形で、それらのサイズ変更できる。 &lt;rect /&gt;エレメントのために、赤い円が丸い角の半径の上にコントロールを与える。</message>
+	<message xml:lang="ru">Базовые SVG формы наделены метками-манипуляторами, используемыми для их редактирования. Синие треугольники или зеленый квадрат позволяют изменять размер форм. В элементах &lt;rectrect /&gt; красные кружочки управляют радиусом скругленных углов.</message>
 	<message xml:lang="hu">Az egyszerű SVG alakzatok fogantyúikkal szerkeszthetők. A kék háromszögekkel vagy a zöld négyszögekkel átméretezhetők. A &lt;rect/&gt; elem esetén a vörös körökkel a sarkok lekerekítésének sugara határozható meg.</message>
-	<message xml:lang="uk">Базові SVG форми наділені мітками-маніпуляторами, що використовуються для їх редагування. Сині трикутники або зелений квадрат дозволяють змінювати розмір форм. В елементах &lt;rect/> червоні кружальця керують радіусом скруглених кутів.</message>
-	<message xml:lang="nl">Elementaire SVG-vormen kunt u met handgrepen bewerken. Een blauwe driehoek of groen vierkant geeft aan dat u de afmetingen kunt wijzigen. Een rode cirkel bij een &lt;rect/>-element geeft aan dat u de straal van afgeronde hoeken kunt aanpassen.</message>
+	<message xml:lang="uk">Базові SVG форми наділені мітками-маніпуляторами, що використовуються для їх редагування. Сині трикутники або зелений квадрат дозволяють змінювати розмір форм. В елементах &lt;rectrect /&gt; червоні кружальця керують радіусом скруглених кутів.</message>
+	<message xml:lang="nl">Elementaire SVG-vormen kunt u met handgrepen bewerken. Een blauwe driehoek of groen vierkant geeft aan dat u de afmetingen kunt wijzigen. Een rode cirkel bij een &lt;rectrect /&gt;-element geeft aan dat u de straal van afgeronde hoeken kunt aanpassen.</message>
 </label>
 <label define="TIP_SVG_LINES">
 	<message xml:lang="en">For SVG drawing, lines are created with a precision of
@@ -7300,6 +7300,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="de">Bibliothek importieren</message>
 	<message xml:lang="fr">Importer une librairie</message>
 	<message xml:lang="hu">Könyvtár importálása</message>
+	<message xml:lang="ja">ライブラリをインポート</message>
 </label>
 <label define="BUTTON_UP">
 	<message xml:lang="en">Button up to close</message>
@@ -7349,6 +7350,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="it">Risorsa bloccata</message>
 	<message xml:lang="es">Recurso bloqueado</message>
 	<message xml:lang="hu">Zárolt erőforrás</message>
+	<message xml:lang="ja">リソースをロック</message>
 </label>
 <label define="UNLOCK">
 	<message xml:lang="en">Unlocked resource</message>
@@ -7357,6 +7359,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="it">Risorsa non bloccata</message>
 	<message xml:lang="es">Recurso desbloqueado</message>
 	<message xml:lang="hu">Nem zárolt erőforrás</message>
+	<message xml:lang="ja">リソースをアンロック</message>
 </label>
 <label define="NO_WEBDAV">
 	<message xml:lang="en">Not a WebDAV resource</message>
@@ -7365,6 +7368,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="it">Non è una risorsa WebDAV</message>
 	<message xml:lang="es">No es un recurso WebDAV</message>
 	<message xml:lang="hu">Nem WebDAV erőforrás</message>
+	<message xml:lang="ja">WebDAVリソースではありません</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

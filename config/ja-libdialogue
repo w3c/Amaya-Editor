@@ -420,10 +420,10 @@
 418 *ボックスを作って自由に編集*Create a free editing box
 419 *新しい共用体の型を作る*Create a new types union
 420 ライブラリを作成
-421 **Import a library
+421 ライブラリをインポート
 422 *ボタンを離して閉じる*Button up to close
 423 *ダブルクリックで閉じる*Double click to close
 424 *クリックで閉じる*Click to close
-425 **Locked resource
-426 **Unlocked resource
-427 **Not a WebDAV resource
+425 リソースをロック
+426 リソースをアンロック
+427 WebDAVリソースではありません
