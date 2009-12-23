@@ -11,7 +11,7 @@
 9 Regeltabelle voll.
 10 Datei fehlerhaft: %s.STR
 11 Datei fehlerhaft: %s.PRS
-12 Drucken von Dokument %s
+12 Dokument %s gedruckt
 13 Einteilung
 14 1 Seite/Blatt
 15 2 Seiten/Blatt
@@ -33,9 +33,9 @@
 31 Grafiken
 32 Format
 33 Standard
-34 Ausrichten
+34 Ausrichtung
 35 Einzug vergrößern
-36 Drucken...
+36 Drucken wird ausgeführt
 37 Drucken
 38 Manueller Papiereinzug
 39 Optionen
@@ -51,7 +51,7 @@
 49 Normal
 50 Fett
 51 Kursiv
-52 Kursiv
+52 Schräg
 53 Normal
 54 Fett
 55 Normal
@@ -62,7 +62,7 @@
 60 Einfach
 61 1,5 Zeilen
 62 Doppelt
-63 Dpkument speichern
+63 Dokument speichern
 64 Schließen, nicht speichern
 65 Schriftart
 66 Farben
@@ -114,7 +114,7 @@
 112 Standardzeichen
 113 Standardgrafiken
 114 Standardformat
-115 Standardgeometrie
+115 Standard-Fenstereinstellung
 116 pt
 117 Linienart
 118 Linienstärke
@@ -137,11 +137,11 @@
 135 Durchgestrichen
 136 Papierformat
 137 Attribut entfernen
-138 Hintergrundfarbe auswählen
-139 Schriftfarbe auswählen
+138 Hintergrundfarbe wählen
+139 Schriftfarbe wählen
 140 Generische XML-Struktur auswählen
 141 Überprüfen
-142 EWeitersuchen
+142 Weitersuchen
 143 Ersetzen durch
 144 Ersetzen
 145 Andere Sprache
@@ -170,14 +170,14 @@
 168 Rechtsbündig
 169 Zentriert
 170 Blocksatz
-171 Klasse übernehmen
-172 Eine Klasse oder eine Pseudoklasse auswählen
+171 Klassen
+172 Klasse oder Pseudoklasse wählen
 173 Auswählen
 174 Verwerfen
 175 Mathematik
 176 Verschiedenes
 177 Binäre Beziehungen
-178 Binäre Relationen der Verneinung
+178 Binäre Beziehungen der Verneinung
 179 Operatoren
 180 Griechisches Alphabet (Großbuchstaben)
 181 Pfeile
@@ -205,21 +205,21 @@
 203 Aufzählungszeichen
 204 Nummerierung
 205 Definition
-206 Link/Verweis
+206 Verweis
 207 Tabelle
 208 Möchten Sie %d geöffnete Registerkarten schließen?
 209 Warnung anzeigen, wenn mehrere Registerkarten geschlossen werden
 210 Registerkarten schließen
 211 Kein Fehler gefunden
-212 Parserfehler anzeigen
+212 Parserfehler einblenden
 213 Rahmen
 214 Bereich
-215 Anker
+215 Ziel
 216 Text als eingefügt markieren
 217 Text als gelöscht markieren
 218 Tiefgestellt
 219 Hochgestellt
-220 Ausdruck
+220 Term
 221 Definition
 222 Objekt
 223 Style
@@ -245,8 +245,8 @@
 243 XML
 244 Text
 245 Kein neues Dokument
-246 Klicken Sie ein Element, um es zu wählen
-247 Klicken Sie, um den Bearbeitungsmodus zu ändern
+246 Auf ein Element klicken, um es zu wählen
+247 Klicken, um den Bearbeitungsmodus zu ändern
 248 Zellen verbinden
 249 Horizontale Breite verkleinern
 250 Vertikale Breite verkleinern
@@ -276,7 +276,7 @@
 274 Für SVG-Zeichnungen werden Linien mit einer Genauigkeit von 15º erstellt, wenn Sie die Umschalttaste drücken. Das ist sehr nützlich, wenn Sie gerade Linien zeichnen wollen.
 275 Wenn Sie eine Grafik oder ein SVG-Objekt redimensionieren, können Sie mit der Umschalttaste das  Seitenverhältnis erhalten.
 276 Verwenden Sie >Bearbeiten>Einstellungen>Allgemein, um die Sprache der Benutzerschnittstelle zu ändern.
-277 Klassik
+277 Klassisch
 278 Modern
 279 (ohne)
 280 Titel/Beschreibung
@@ -331,7 +331,7 @@
 329 Polygon
 330 Fremdes Objekt
 331 Bild
-332 SVG Graphik
+332 SVG-Canvas
 333 Text
 334 Kegel
 335 Würfel
@@ -416,7 +416,7 @@
 414 Komponente oder Element verwenden
 415 Komponente erstellen
 416 Wiederholen
-416 Aktuelle Anwendung wiederholen
+416 Wiederholen; Eingabe
 417 Erstellen und wiederholen
 418 Freien Bearbeitungsrahmen erstellen
 419 Neue Typen Gemeinschaft erstellen
@@ -426,5 +426,5 @@
 423 Zum Schließen doppelklicken
 424 Zum Schließen klicken
 425 Ressource gesperrt
-426 Ressource geöffnet
-427 Keine WebDAV Ressource
+426 Ressource entsperren
+427 Keine WebDAV-Ressource

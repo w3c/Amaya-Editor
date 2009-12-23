@@ -42,7 +42,7 @@
 <label define="Context_">
 	<message xml:lang="en">Context</message>
 	<message xml:lang="fr">Context</message>
-	<message xml:lang="de">Context</message>
+	<message xml:lang="de">Kontext</message>
 	<message xml:lang="it">Context</message>
 	<message xml:lang="tr">Context</message>
 	<message xml:lang="es">Context</message>
@@ -61,7 +61,7 @@
 <label define="DocContext_">
 	<message xml:lang="en">Context</message>
 	<message xml:lang="fr">Context</message>
-	<message xml:lang="de">Context</message>
+	<message xml:lang="de">Kontext</message>
 	<message xml:lang="it">Context</message>
 	<message xml:lang="tr">Context</message>
 	<message xml:lang="es">Context</message>
@@ -153,7 +153,7 @@
 <label define="Links">
 	<message xml:lang="en">&amp;Links</message>
 	<message xml:lang="fr">&amp;Liens</message>
-	<message xml:lang="de">&amp;Links</message>
+	<message xml:lang="de">&amp;Verweise</message>
 	<message xml:lang="it">&amp;Collegamenti</message>
 	<message xml:lang="tr">&amp;Bağlantılar</message>
 	<message xml:lang="es">En&amp;laces</message>
@@ -312,7 +312,7 @@
 <label define="BSvg">
 	<message xml:lang="en">New &amp;Drawing...</message>
 	<message xml:lang="fr">Nouveau dessin...</message>
-	<message xml:lang="de">Grafik (SV&amp;G)...</message>
+	<message xml:lang="de">&amp;Grafik...</message>
 	<message xml:lang="it">Nuovo documento SV&amp;G...</message>
 	<message xml:lang="es">Nuevo documento SV&amp;G...</message>
 	<message xml:lang="pt">Novo documento SV&amp;G...</message>
@@ -332,7 +332,7 @@
 <label define="BCss">
 	<message xml:lang="en">New s&amp;tyle sheet...</message>
 	<message xml:lang="fr">Nouvelle feuille de s&amp;tyle...</message>
-	<message xml:lang="de">S&amp;tylesheet ...</message>
+	<message xml:lang="de">S&amp;tylesheet...</message>
 	<message xml:lang="it">Nuovo s&amp;tile CSS...</message>
 	<message xml:lang="es">Nueva hoja de es&amp;tilo CSS...</message>
 	<message xml:lang="pt">Nova folha de es&amp;tilo CSS...</message>
@@ -1048,7 +1048,7 @@
 <label define="BPrint">
 	<message xml:lang="en">&amp;Print</message>
 	<message xml:lang="fr">Im&amp;primer</message>
-	<message xml:lang="de">Drucken</message>
+	<message xml:lang="de">&amp;Drucken</message>
 	<message xml:lang="it">Stam&amp;pa</message>
 	<message xml:lang="tr">Ya&amp;pılandır ve yazdır</message>
 	<message xml:lang="es">&amp;Imprimir</message>
@@ -1067,7 +1067,7 @@
 <label define="BCloseTab">
 	<message xml:lang="en">&amp;Close tab</message>
 	<message xml:lang="fr">Fermer l'onglet</message>
-	<message xml:lang="de">Registerkarte s&amp;chließen</message>
+	<message xml:lang="de">S&amp;chließen</message>
 	<message xml:lang="es">&amp;Cerrar pestaña</message>
 	<message xml:lang="it">&amp;Chiudi tab</message>
 	<message xml:lang="ru">Закрыть панель</message>
@@ -1083,7 +1083,7 @@
 <label define="BCloseWindow">
 	<message xml:lang="en">Close &amp;window</message>
 	<message xml:lang="fr">Fermer la fenêtre</message>
-	<message xml:lang="de">S&amp;chließen</message>
+	<message xml:lang="de">Alles s&amp;chließen</message>
 	<message xml:lang="it">Chiudi</message>
 	<message xml:lang="tr">Belgeyi kapat</message>
 	<message xml:lang="es">Cerrar &amp;ventana</message>
@@ -1102,7 +1102,7 @@
 <label define="BExit">
 	<message xml:lang="en">E&amp;xit Amaya</message>
 	<message xml:lang="fr">Quitter Amaya</message>
-	<message xml:lang="de">Amaya &amp;beenden</message>
+	<message xml:lang="de">&amp;Beenden</message>
 	<message xml:lang="it">Esci</message>
 	<message xml:lang="tr">Çıkış</message>
 	<message xml:lang="es">&amp;Salir de Amaya</message>
@@ -1368,7 +1368,7 @@
 	<message xml:lang="fr">Insérer</message>
 	<message xml:lang="es">Insertar delante</message>
 	<message xml:lang="it">Inserisci</message>
-	<message xml:lang="de">Einfügen</message>
+	<message xml:lang="de">Zeile einfügen</message>
 	<message xml:lang="ru">Вставить перед</message>
 	<message xml:lang="hu">Be&amp;szúrás</message>
 	<message xml:lang="ka">ჩამატება</message>
@@ -1384,7 +1384,7 @@
 	<message xml:lang="fr">Ajouter</message>
 	<message xml:lang="es">Añadir detrás</message>
 	<message xml:lang="it">Aggiungi</message>
-	<message xml:lang="de">Hinzufügen</message>
+	<message xml:lang="de">Zeile hinzufügen</message>
 	<message xml:lang="pt">Adicionar</message>
 	<message xml:lang="fi">Lisää</message>
 	<message xml:lang="tr">Ekle</message>
@@ -1518,7 +1518,7 @@
 	<message xml:lang="fr">&amp;Insérer</message>
 	<message xml:lang="es">&amp;Insertar delante</message>
 	<message xml:lang="it">&amp;Inserisci</message>
-	<message xml:lang="de">&amp;Einfügen</message>
+	<message xml:lang="de">Zeile e&amp;infügen</message>
 	<message xml:lang="ru">Вставить перед</message>
 	<message xml:lang="hu">Be&amp;szúrás</message>
 	<message xml:lang="ka">ჩამატება</message>
@@ -1534,7 +1534,7 @@
 	<message xml:lang="fr">&amp;Ajouter</message>
 	<message xml:lang="es">&amp;Añadir detrás</message>
 	<message xml:lang="it">&amp;Aggiungi</message>
-	<message xml:lang="de">&amp;Hinzufügen</message>
+	<message xml:lang="de">Zeile hinzufügen</message>
 	<message xml:lang="pt">&amp;Adicionar</message>
 	<message xml:lang="fi">&amp;Lisää</message>
 	<message xml:lang="tr">&amp;Ekle</message>
@@ -1579,7 +1579,7 @@
 <label define="BParentElement">
 	<message xml:lang="en">Parent element</message>
 	<message xml:lang="fr">Élément parent</message>
-	<message xml:lang="de">Übergeordneter Elternknoten</message>
+	<message xml:lang="de">Übergeordnetes Element</message>
 	<message xml:lang="it">Elemento padre</message>
 	<message xml:lang="es">Elemento padre</message>
 	<message xml:lang="hu">Szülőelem</message>
@@ -1596,7 +1596,7 @@
 <label define="BChildElement">
 	<message xml:lang="en">First child</message>
 	<message xml:lang="fr">Premier fils</message>
-	<message xml:lang="de">Untergeordneter Knoten</message>
+	<message xml:lang="de">Untergeordnetes Element</message>
 	<message xml:lang="it">Primo figlio</message>
 	<message xml:lang="es">Primer hijo</message>
 	<message xml:lang="hu">Első gyermekelem</message>
@@ -1696,7 +1696,7 @@
 	<message xml:lang="en">&amp;Browsing</message>
 	<message xml:lang="es">&amp;Navegación</message>
 	<message xml:lang="fr">&amp;Navigation</message>
-	<message xml:lang="de">&amp;Durchsuchen</message>
+	<message xml:lang="de">&amp;Adressleiste</message>
 	<message xml:lang="hu">&amp;Böngésző</message>
 	<message xml:lang="it">&amp;Browsing</message>
 	<message xml:lang="ja">ブラウザバー(&amp;B)</message>
@@ -1708,7 +1708,7 @@
 	<message xml:lang="en">&amp;Editing</message>
 	<message xml:lang="es">&amp;Edición</message>
 	<message xml:lang="fr">&amp;Édition</message>
-	<message xml:lang="de">&amp;Bearbeiten</message>
+	<message xml:lang="de">&amp;Bearbeitungsleiste</message>
 	<message xml:lang="hu">&amp;Szerkesztő</message>
 	<message xml:lang="it">&amp;Modifica</message>
 	<message xml:lang="ja">編集バー(&amp;E)</message>
@@ -1755,7 +1755,7 @@
 <label define="TShowTargets">
 	<message xml:lang="en">Show &amp;targets</message>
 	<message xml:lang="fr">Montrer les &amp;cibles</message>
-	<message xml:lang="de">Anker einblenden</message>
+	<message xml:lang="de">&amp;Anker einblenden</message>
 	<message xml:lang="it">Mostra obiettivi</message>
 	<message xml:lang="es">&amp;Destinos</message>
 	<message xml:lang="pt">Exibir destinos</message>
@@ -1792,7 +1792,7 @@
 <label define="BShowStructure">
 	<message xml:lang="en">Show &amp;structure</message>
 	<message xml:lang="fr">Montrer la &amp;structure</message>
-	<message xml:lang="de">Strukturansicht</message>
+	<message xml:lang="de">Struktur einblenden</message>
 	<message xml:lang="it">Mostra struttura</message>
 	<message xml:lang="tr">Yapıyı göster</message>
 	<message xml:lang="es">Es&amp;tructura</message>
@@ -1830,7 +1830,7 @@
 <label define="BShowLinks">
 	<message xml:lang="en">Show lin&amp;ks</message>
 	<message xml:lang="fr">Montrer les lie&amp;ns</message>
-	<message xml:lang="de">Verweise/Links anzeigen </message>
+	<message xml:lang="de">&amp;Verweise einblenden </message>
 	<message xml:lang="it">Mostra collegamenti</message>
 	<message xml:lang="tr">Bağlantıları göster</message>
 	<message xml:lang="es">&amp;Enlaces</message>
@@ -1849,7 +1849,7 @@
 <label define="BShowAlternate">
 	<message xml:lang="en">Show &amp;alternate</message>
 	<message xml:lang="fr">Montrer la vue &amp;alternée</message>
-	<message xml:lang="de">Textbrowser anzeigen</message>
+	<message xml:lang="de">&amp;Textbrowser einblenden</message>
 	<message xml:lang="it">Mostra la vista alternativa</message>
 	<message xml:lang="tr">Alternatif gösterim</message>
 	<message xml:lang="es">A&amp;lternativo</message>
@@ -1869,7 +1869,7 @@
 <label define="BShowToC">
 	<message xml:lang="en">Show table &amp;of contents</message>
 	<message xml:lang="fr">Montrer la table des &amp;matières</message>
-	<message xml:lang="de">Inhaltsverzeichnis</message>
+	<message xml:lang="de">Inhaltsverzeichnis einblenden</message>
 	<message xml:lang="it">Mostra sommario</message>
 	<message xml:lang="tr">Içindekileri göster</message>
 	<message xml:lang="es">Tabla de &amp;contenidos</message>
@@ -1889,7 +1889,7 @@
 	<message xml:lang="en">Split view horizontally</message>
 	<message xml:lang="fr">Partager horizontalement</message>
 	<message xml:lang="es">Dividir vista horizontalmente</message>
-	<message xml:lang="de">Ansicht horizontal teilen</message>
+	<message xml:lang="de">Horizontal teilen</message>
 	<message xml:lang="it">Dividi la vista in orizzontale</message>
 	<message xml:lang="hu">Vízszintes felosztás</message>
 	<message xml:lang="ka">ხედის ჰორიზონტალური გაყოფა</message>
@@ -1905,7 +1905,7 @@
 	<message xml:lang="en">Split view vertically</message>
 	<message xml:lang="fr">Partager verticalement</message>
 	<message xml:lang="es">Dividir vista verticalmente</message>
-	<message xml:lang="de">Ansicht vertikal teilen</message>
+	<message xml:lang="de">Vertikal teilen</message>
 	<message xml:lang="it">Dividi la vista in verticale</message>
 	<message xml:lang="hu">Függőleges felosztás</message>
 	<message xml:lang="ka">ხედის ვერტიკალური გაყოფა</message>
@@ -1939,7 +1939,7 @@
 <label define="BShowLogFile">
 	<message xml:lang="en">Show parsing errors</message>
 	<message xml:lang="fr">Montrer les erreurs</message>
-	<message xml:lang="de">Parserfehler anzeigen</message>
+	<message xml:lang="de">Parserfehler einblenden</message>
 	<message xml:lang="it">Mostra le errore</message>
 	<message xml:lang="es">&amp;Mostrar errores sintácticos</message>
 	<message xml:lang="pt">Exibir erros de gramática (parsing)</message>
@@ -2194,7 +2194,7 @@
 <label define="BBulletedList">
 	<message xml:lang="en">Unordered list (ul)</message>
 	<message xml:lang="fr">Liste non ordonnée (ul)</message>
-	<message xml:lang="de">Aufzählungsliste (ul)</message>
+	<message xml:lang="de">Aufzählung (ul)</message>
 	<message xml:lang="it">Lista puntata (ul)</message>
 	<message xml:lang="tr">Noktalı liste (ul)</message>
 	<message xml:lang="es">Lista no ordenada (ul)</message>
@@ -2213,7 +2213,7 @@
 <label define="BNumberedList">
 	<message xml:lang="en">Ordered list (ol)</message>
 	<message xml:lang="fr">Liste ordonnée (ol)</message>
-	<message xml:lang="de">Nummerierte Liste (ol)</message>
+	<message xml:lang="de">Nummerierung (ol)</message>
 	<message xml:lang="it">Lista numerata (ol)</message>
 	<message xml:lang="tr">Numaralı liste (ol)</message>
 	<message xml:lang="es">Lista ordenada (ol)</message>
@@ -2232,7 +2232,7 @@
 <label define="BDefinitionList">
 	<message xml:lang="en">Definition list (dl)</message>
 	<message xml:lang="fr">Liste de définitions (dl)</message>
-	<message xml:lang="de">Definitionsliste (dl)</message>
+	<message xml:lang="de">Definition (dl)</message>
 	<message xml:lang="it">Lista di definizioni (dl)</message>
 	<message xml:lang="tr">Tanım listesi (dl)</message>
 	<message xml:lang="es">Lista de definición (dl)</message>
@@ -2252,7 +2252,7 @@
 <label define="BTerm">
 	<message xml:lang="en">Term (dt)</message>
 	<message xml:lang="fr">Terme (dt)</message>
-	<message xml:lang="de">Ausdruck (dt)</message>
+	<message xml:lang="de">Term (dt)</message>
 	<message xml:lang="it">Termine (dt)</message>
 	<message xml:lang="tr">Terim (dt)</message>
 	<message xml:lang="es">Término (dt)</message>
@@ -2290,7 +2290,7 @@
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>
 	<message xml:lang="fr">Types information</message>
-	<message xml:lang="de">Inline-Elemente</message>
+	<message xml:lang="de">Informationstyp</message>
 	<message xml:lang="it">Tipo di informazione</message>
 	<message xml:lang="tr">Bilgi türü</message>
 	<message xml:lang="es">Tipo de Información</message>
@@ -2348,7 +2348,7 @@
 <label define="TCite">
 	<message xml:lang="en">cite</message>
 	<message xml:lang="fr">Citation (cite)</message>
-	<message xml:lang="de">Quelle/Autor (cite)</message>
+	<message xml:lang="de">Zitieren (cite)</message>
 	<message xml:lang="it">Cita (cite)</message>
 	<message xml:lang="tr">Metin aktarımı (cite)</message>
 	<message xml:lang="es">Cita (cite)</message>
@@ -2443,7 +2443,7 @@
 <label define="TKeyboard">
 	<message xml:lang="en">Keyboard (kbd)</message>
 	<message xml:lang="fr">Clavier (kbd)</message>
-	<message xml:lang="de">Benutzereingabe  (kbd)</message>
+	<message xml:lang="de">Benutzereingabe (kbd)</message>
 	<message xml:lang="it">Tastiera (kbd)</message>
 	<message xml:lang="tr">Klaviye (kbd)</message>
 	<message xml:lang="es">Teclado (kbd)</message>
@@ -2728,7 +2728,7 @@
 <label define="TBDO">
 	<message xml:lang="en">BiDi override (bdo)</message>
 	<message xml:lang="fr">BiDi (bdo)</message>
-	<message xml:lang="de">Textrichtung LTR/RTL (bdo)</message>
+	<message xml:lang="de">Textrichtung (bdo)</message>
 	<message xml:lang="it">BiDi (bdo)</message>
 	<message xml:lang="es">BiDi override (bdo)</message>
 	<message xml:lang="pt">Sobrepor BiDi (bdo)</message>
@@ -2978,7 +2978,7 @@
 	<message xml:lang="en">&amp;Math</message>
 	<message xml:lang="fr">&amp;Math</message>
 	<message xml:lang="it">&amp;Math</message>
-	<message xml:lang="de">&amp;Math</message>
+	<message xml:lang="de">&amp;Mathematik</message>
 	<message xml:lang="es">&amp;Math</message>
 	<message xml:lang="ru">&amp;Математика</message>
 	<message xml:lang="hu">&amp;Matematikai jelölés</message>
@@ -3012,7 +3012,7 @@
 <label define="BMText">
 	<message xml:lang="en">Plain text (mtext)</message>
 	<message xml:lang="fr">Texte (mtext)</message>
-	<message xml:lang="de">Text (mtext)</message>
+	<message xml:lang="de">Nur Text (mtext)</message>
 	<message xml:lang="it">Testo (mtext)</message>
 	<message xml:lang="es">Texto simple (mtext)</message>
 	<message xml:lang="pt">Texto puro (mtext)</message>
@@ -3051,7 +3051,7 @@
 <label define="BMNumber">
 	<message xml:lang="en">Number (mn)</message>
 	<message xml:lang="fr">Nombre (mn)</message>
-	<message xml:lang="de">Zahl (mn)</message>
+	<message xml:lang="de">Nummer (mn)</message>
 	<message xml:lang="it">Numero (mn)</message>
 	<message xml:lang="es">Número (mn)</message>
 	<message xml:lang="pt">Número (mn)</message>
@@ -3128,7 +3128,7 @@
 <label define="BMApplyFunction">
 	<message xml:lang="en">ApplyFunction</message>
 	<message xml:lang="fr">ApplyFunction</message>
-	<message xml:lang="de">Angewendete Funktion (ApplyFunction)</message>
+	<message xml:lang="de">Funktion anwenden (ApplyFunction)</message>
 	<message xml:lang="it">ApplyFunction</message>
 	<message xml:lang="es">ApplyFunction</message>
 	<message xml:lang="pt">Aplicar função (ApplyFunction)</message>
@@ -3462,7 +3462,7 @@
 	<message xml:lang="en">ForeignObject</message>
 	<message xml:lang="fr">ForeignObject</message>
 	<message xml:lang="es">ForeignObject</message>
-	<message xml:lang="de">fremdes Objekt</message>
+	<message xml:lang="de">ForeignObject</message>
 	<message xml:lang="cn">外来对象</message>
 	<message xml:lang="tw">外來對象</message>
 	<message xml:lang="it">OggettoEsterno</message>
@@ -3598,7 +3598,7 @@
 <label define="BSVG_Spline">
 	<message xml:lang="en">Open curve</message>
 	<message xml:lang="fr">Courbe ouverte</message>
-	<message xml:lang="de">offene Kurve</message>
+	<message xml:lang="de">Offene Kurve</message>
 	<message xml:lang="cn">开弧线</message>
 	<message xml:lang="tw">開弧線</message>
 	<message xml:lang="it">Curva aperta</message>
@@ -3643,7 +3643,7 @@
 <label define="BForm">
 	<message xml:lang="en">Insert a form</message>
 	<message xml:lang="fr">Insérer un formulaire (form)</message>
-	<message xml:lang="de">Formular (form)</message>
+	<message xml:lang="de">Formular einfügen</message>
 	<message xml:lang="it">form</message>
 	<message xml:lang="tr">Form (form)</message>
 	<message xml:lang="es">Insertar formulario (form)</message>
@@ -3662,7 +3662,7 @@
 <label define="BPushButton">
 	<message xml:lang="en">Button (input)</message>
 	<message xml:lang="fr">Bouton (input)</message>
-	<message xml:lang="de">Schaltfläche (button) (input)</message>
+	<message xml:lang="de">Schaltfläche (input)</message>
 	<message xml:lang="it">Pulsante (input)</message>
 	<message xml:lang="es">Botón (button)</message>
 	<message xml:lang="pt">Botão (input)</message>
@@ -3681,7 +3681,7 @@
 <label define="BToggle">
 	<message xml:lang="en">Checkbox (input)</message>
 	<message xml:lang="fr">Bouton bascule (input)</message>
-	<message xml:lang="de">Eingabefeld (checkbox) (input)</message>
+	<message xml:lang="de">Eingabefeld (input)</message>
 	<message xml:lang="it">Checkbox (input)</message>
 	<message xml:lang="tr">Değiştir (input)</message>
 	<message xml:lang="es">Casilla de verificación (checkbox input)</message>
@@ -3700,7 +3700,7 @@
 <label define="BFileInput">
 	<message xml:lang="en">File selector (input)</message>
 	<message xml:lang="fr">Sélecteur fichier (input)</message>
-	<message xml:lang="de">Datei-Upload (file) (input)</message>
+	<message xml:lang="de">Datei-Upload (input)</message>
 	<message xml:lang="it">Selettore di file (input)</message>
 	<message xml:lang="es">Selector de archivo (file input)</message>
 	<message xml:lang="pt">Seletor de arquivo (input)</message>
@@ -3720,7 +3720,7 @@
 <label define="BHiddenInput">
 	<message xml:lang="en">Hidden (input)</message>
 	<message xml:lang="fr">Contrôle caché (input)</message>
-	<message xml:lang="de">Verstecktes Feld (hidden) (input)</message>
+	<message xml:lang="de">Verstecktes Feld (input)</message>
 	<message xml:lang="it">Controllo nascosto (input)</message>
 	<message xml:lang="es">Oculto (hidden input)</message>
 	<message xml:lang="pt">Oculto (input)</message>
@@ -3739,7 +3739,7 @@
 <label define="BImageInput">
 	<message xml:lang="en">Image (input)...</message>
 	<message xml:lang="fr">Image (input)...</message>
-	<message xml:lang="de">Grafikfeld (image) (input)</message>
+	<message xml:lang="de">Grafik (input)</message>
 	<message xml:lang="it">Immagine (input)...</message>
 	<message xml:lang="tr">Görüntü (input)...</message>
 	<message xml:lang="es">Imagen (image input)...</message>
@@ -3759,7 +3759,7 @@
 <label define="BPasswordInput">
 	<message xml:lang="en">Password (input)</message>
 	<message xml:lang="fr">Mot de passe (input)</message>
-	<message xml:lang="de">Kennwortfeld (password) (input)</message>
+	<message xml:lang="de">Kennwortfeld (input)</message>
 	<message xml:lang="it">Password (input)</message>
 	<message xml:lang="es">Contraseña (password input)</message>
 	<message xml:lang="pt">Senha (password) (input)</message>
@@ -3778,7 +3778,7 @@
 <label define="BRadio">
 	<message xml:lang="en">Radio (input)</message>
 	<message xml:lang="fr">Bouton radio (input)</message>
-	<message xml:lang="de">Optionsfeld (radio) (input)</message>
+	<message xml:lang="de">Optionsfeld (input)</message>
 	<message xml:lang="it">Pulsante radio (input)</message>
 	<message xml:lang="tr">Radio düğmesi (input)</message>
 	<message xml:lang="es">Radio (radio input)</message>
@@ -3797,7 +3797,7 @@
 <label define="BReset">
 	<message xml:lang="en">Reset (input)</message>
 	<message xml:lang="fr">Réinitialisation (input)</message>
-	<message xml:lang="de">Zurücksetzen (reset)(input)</message>
+	<message xml:lang="de">Zurücksetzen (input)</message>
 	<message xml:lang="it">Reset (input)</message>
 	<message xml:lang="tr">Sıfırlamak (input)</message>
 	<message xml:lang="es">Reset (reset input)</message>
@@ -3816,7 +3816,7 @@
 <label define="BSubmit">
 	<message xml:lang="en">Submit (input)</message>
 	<message xml:lang="fr">Soumission (input)</message>
-	<message xml:lang="de">Senden (submit) (input)</message>
+	<message xml:lang="de">Senden (input)</message>
 	<message xml:lang="it">Invia (input)</message>
 	<message xml:lang="tr">Onayla (input)</message>
 	<message xml:lang="es">Enviar (submit input)</message>
@@ -3835,7 +3835,7 @@
 <label define="BTextInput">
 	<message xml:lang="en">Text (input)</message>
 	<message xml:lang="fr">Saisie de texte (input)</message>
-	<message xml:lang="de">Textfeld (text) (input)</message>
+	<message xml:lang="de">Textfeld (input)</message>
 	<message xml:lang="it">Testo (input)</message>
 	<message xml:lang="tr">Metin girişi (input)</message>
 	<message xml:lang="es">Texto (text input)</message>
@@ -4116,7 +4116,7 @@
 <label define="BStyle">
 	<message xml:lang="en">style</message>
 	<message xml:lang="fr">style</message>
-	<message xml:lang="de">Stil (style)</message>
+	<message xml:lang="de">Style</message>
 	<message xml:lang="it">style</message>
 	<message xml:lang="tr">Dizayn</message>
 	<message xml:lang="es">Estilo (style)</message>
@@ -4362,7 +4362,7 @@
 	<message xml:lang="fr">Classique</message>
 	<message xml:lang="es">Clásico</message>
 	<message xml:lang="it">Classico</message>
-	<message xml:lang="de">Klassik</message>
+	<message xml:lang="de">Klassisch</message>
 	<message xml:lang="cn">Classic</message>
 	<message xml:lang="tw">Classic</message>
 	<message xml:lang="hu">Klasszikus</message>
@@ -4418,7 +4418,7 @@
 	<message xml:lang="en">Select a text color...</message>
 	<message xml:lang="fr">Sélectionner une couleur du texte...</message>
 	<message xml:lang="es">Seleccionar un color del texto...</message>
-	<message xml:lang="de">Auswählen...</message>
+	<message xml:lang="de">Schriftfarbe wählen...</message>
 	<message xml:lang="it">Seleziona un colore per il testo...</message>
 	<message xml:lang="ru">Цвет текста документа...</message>
 	<message xml:lang="hu">Szín választása...</message>
@@ -4463,7 +4463,7 @@
 	<message xml:lang="en">Select a background color...</message>
 	<message xml:lang="fr">Sélectionner une couleur de fond...</message>
 	<message xml:lang="es">Seleccionar un color del fondo...</message>
-	<message xml:lang="de">Auswählen...</message>
+	<message xml:lang="de">Hintergrundfarbe wählen...</message>
 	<message xml:lang="it">Seleziona un colore di sfondo...</message>
 	<message xml:lang="ru">Цвет фона...</message>
 	<message xml:lang="hu">Szín választása...</message>
@@ -4592,7 +4592,7 @@
 	<message xml:lang="fr">Simple</message>
 	<message xml:lang="es">Sencillo</message>
 	<message xml:lang="it">Singola</message>
-	<message xml:lang="de">1-zeilig</message>
+	<message xml:lang="de">Einfach</message>
 	<message xml:lang="cn">单行距</message>
 	<message xml:lang="tw">單行距</message>
 	<message xml:lang="hu">Egyszeres</message>
@@ -4606,7 +4606,7 @@
 	<message xml:lang="fr">Moitié</message>
 	<message xml:lang="es">Medio</message>
 	<message xml:lang="it">Mezza</message>
-	<message xml:lang="de">1,5-zeilig</message>
+	<message xml:lang="de">1,5 Zeilen</message>
 	<message xml:lang="cn">1.5行距</message>
 	<message xml:lang="tw">1.5行距</message>
 	<message xml:lang="hu">Másfélszeres</message>
@@ -4620,7 +4620,7 @@
 	<message xml:lang="fr">Double</message>
 	<message xml:lang="es">Doble</message>
 	<message xml:lang="it">Doppia</message>
-	<message xml:lang="de">2-zeilig</message>
+	<message xml:lang="de">Doppelt</message>
 	<message xml:lang="cn">双行距</message>
 	<message xml:lang="tw">雙行距</message>
 	<message xml:lang="hu">Kétszeres</message>
@@ -4722,7 +4722,7 @@
 	<message xml:lang="en">Select a font...</message>
 	<message xml:lang="fr">Choisir une police de caractères...</message>
 	<message xml:lang="es">Seleccionar Fuente...</message>
-	<message xml:lang="de">Schriftart...</message>
+	<message xml:lang="de">Schriftart wählen...</message>
 	<message xml:lang="it">Selezionare un tipo di carattere...</message>
 	<message xml:lang="cn">选择字体...</message>
 	<message xml:lang="tw">選擇字體...</message>
@@ -4752,7 +4752,7 @@
 	<message xml:lang="it">&amp;Style...</message>
 	<message xml:lang="es">&amp;Estilo...</message>
 	<message xml:lang="hu">&amp;Stílusszerkesztő...</message>
-	<message xml:lang="de">&amp;Stil bearbeiten</message>
+	<message xml:lang="de">&amp;Style-Editor</message>
 	<message xml:lang="ka">CSS style...</message>
 	<message xml:lang="ru">Настройка каскадной таблицы стиля CSS...</message>
 	<message xml:lang="cn">CSS样式(&amp;S)...</message>
@@ -4765,7 +4765,7 @@
 <label define="BCreateClass">
 	<message xml:lang="en">Create &amp;rule...</message>
 	<message xml:lang="fr">Créer une &amp;règle...</message>
-	<message xml:lang="de">Regel erstellen...</message>
+	<message xml:lang="de">&amp;Regel erstellen...</message>
 	<message xml:lang="it">Crea una regola...</message>
 	<message xml:lang="tr">Kural yarat...</message>
 	<message xml:lang="es">Crear &amp;regla...</message>
@@ -4786,7 +4786,7 @@
 	<message xml:lang="fr">Montrer le style appliqué...</message>
 	<message xml:lang="it">Mostra lo stile applicato...</message>
 	<message xml:lang="es">&amp;Mostrar estilo aplicado...</message>
-	<message xml:lang="de">Stil anzeigen...</message>
+	<message xml:lang="de">Angewendeten Style einblenden...</message>
 	<message xml:lang="ru">Показать применяемый стиль...</message>
 	<message xml:lang="hu">&amp;Alkalmazott stílusok...</message>
 	<message xml:lang="ka">გამოყენებული სტილის
@@ -4821,7 +4821,7 @@
 	<message xml:lang="en">Link...</message>
 	<message xml:lang="fr">Ajouter...</message>
 	<message xml:lang="it">Collegamento...</message>
-	<message xml:lang="de">Link/Verweis...</message>
+	<message xml:lang="de">Verweis...</message>
 	<message xml:lang="es">Enlazar hoja de estilo...</message>
 	<message xml:lang="pt">Ligar...</message>
 	<message xml:lang="fi">Linkki...</message>
@@ -4917,7 +4917,7 @@
 	<message xml:lang="fr">Copier l'adresse</message>
 	<message xml:lang="es">Copiar localización</message>
 	<message xml:lang="it">Copia URL</message>
-	<message xml:lang="de">Kopieren</message>
+	<message xml:lang="de">Adresse kopieren</message>
 	<message xml:lang="ru">Копировать расположение</message>
 	<message xml:lang="cn">复制地址</message>
 	<message xml:lang="tw">復制地址</message>
@@ -4932,7 +4932,7 @@
 	<message xml:lang="fr">Coller l'adresse</message>
 	<message xml:lang="es">Pegar localización</message>
 	<message xml:lang="it">Incolla URL</message>
-	<message xml:lang="de">Einfügen</message>
+	<message xml:lang="de">Adresse einfügen</message>
 	<message xml:lang="ru">Вставить расположение</message>
 	<message xml:lang="cn">粘贴地址</message>
 	<message xml:lang="tw">粘貼地址</message>
@@ -4946,7 +4946,7 @@
 	<message xml:lang="en">&amp;Link to previous target</message>
 	<message xml:lang="fr">&amp;Lier à la cible créée</message>
 	<message xml:lang="it">Collega al precedente obiettivo</message>
-	<message xml:lang="de">Vorheriges Anker</message>
+	<message xml:lang="de">&amp;Verweis zum vorherigen Ziel</message>
 	<message xml:lang="es">Enlazar último destino &amp;creado</message>
 	<message xml:lang="pt">Ligar ao destino precedente</message>
 	<message xml:lang="fi">Linkki edelliseen kohteeseen</message>
@@ -4965,7 +4965,7 @@
 <label define="BCreateLink">
 	<message xml:lang="en">&amp;Create or change link...</message>
 	<message xml:lang="fr">&amp;Créer/changer un lien...</message>
-	<message xml:lang="de">Verweise erstellen oder ändern...</message>
+	<message xml:lang="de">Verweis erstellen oder ändern...</message>
 	<message xml:lang="it">Crea o cambia collegamento...</message>
 	<message xml:lang="tr">Baglantı yarat...</message>
 	<message xml:lang="es">Crear o cambiar &amp;enlace...</message>
@@ -4986,7 +4986,7 @@ módosítása...</message>
 <label define="BCreateTarget">
 	<message xml:lang="en">Create &amp;target</message>
 	<message xml:lang="fr">Créer une ci&amp;ble</message>
-	<message xml:lang="de">&amp;Anker erstellen</message>
+	<message xml:lang="de">&amp;Ziel erstellen</message>
 	<message xml:lang="it">Crea obiettivo</message>
 	<message xml:lang="tr">Hedef yarat</message>
 	<message xml:lang="es">Crear &amp;destino (a / id)</message>
@@ -5005,7 +5005,7 @@ módosítása...</message>
 <label define="BDeleteAnchor">
 	<message xml:lang="en">&amp;Delete link or target</message>
 	<message xml:lang="fr">&amp;Supprimer le lien ou la cible</message>
-	<message xml:lang="de">Verweis oder Anker &amp;löschen</message>
+	<message xml:lang="de">Verweis oder Ziel &amp;löschen</message>
 	<message xml:lang="it">Cancella ancora</message>
 	<message xml:lang="tr">tanımı sil</message>
 	<message xml:lang="es">&amp;Borrar ancla (a)</message>
@@ -5026,7 +5026,7 @@ módosítása...</message>
 	<message xml:lang="fr">&amp;Ajouter/Retirer des attributs ID...</message>
 	<message xml:lang="es">&amp;Crear/Borrar atributos id...</message>
 	<message xml:lang="it">Aggiungi/Togli ID...</message>
-	<message xml:lang="de">IDs hinzufü&amp;gen/entfernen...</message>
+	<message xml:lang="de">ID hinzufü&amp;gen/entfernen...</message>
 	<message xml:lang="pt">Adicionar/Remover IDs...</message>
 	<message xml:lang="fi">Lisää/Poista elementti...</message>
 	<message xml:lang="tr">IDs ekle/sil</message>
@@ -5376,7 +5376,7 @@ hozzáadása/eltávolítása...</message>
 	<message xml:lang="en">Change doctype</message>
 	<message xml:lang="fr">Changer le doctype</message>
 	<message xml:lang="it">Cambia/Crea doctype</message>
-	<message xml:lang="de">DOCTYPE ändern</message>
+	<message xml:lang="de">Dokumenttypdefinition ändern</message>
 	<message xml:lang="es">Cambiar doct&amp;ype</message>
 	<message xml:lang="pt">Alterar document type</message>
 	<message xml:lang="fi">Muuta tyyppi</message>
@@ -5396,7 +5396,7 @@ hozzáadása/eltávolítása...</message>
 	<message xml:lang="en">Remove the doctype</message>
 	<message xml:lang="fr">Supprimer le doctype</message>
 	<message xml:lang="it">Elimina doctype</message>
-	<message xml:lang="de">DOCTYPE entfernen</message>
+	<message xml:lang="de">Dokumenttypdefinition entfernen</message>
 	<message xml:lang="es">&amp;Borrar doctype</message>
 	<message xml:lang="pt">Remover doctype</message>
 	<message xml:lang="fi">Poista tyyppi</message>
@@ -5416,7 +5416,7 @@ hozzáadása/eltávolítása...</message>
 	<message xml:lang="en">Add a doctype</message>
 	<message xml:lang="fr">Ajouter un doctype</message>
 	<message xml:lang="it">Aggiungi un doctype</message>
-	<message xml:lang="de">DOCTYPE hinzufügen</message>
+	<message xml:lang="de">Dokumenttypdefinition hinzufügen</message>
 	<message xml:lang="es">Añadir doctype</message>
 	<message xml:lang="ru">Добавить тип документа</message>
 	<message xml:lang="hu">Dokumentum-típus megadása</message>
@@ -5668,7 +5668,7 @@ XHTML 4.01-ით</message>
 	<message xml:lang="en">Annotate selection</message>
 	<message xml:lang="fr">Annoter la sélection</message>
 	<message xml:lang="it">Annota la selezione</message>
-	<message xml:lang="de">Anmerkung auswählen</message>
+	<message xml:lang="de">Anmerkung wählen</message>
 	<message xml:lang="es">Anotar &amp;selección</message>
 	<message xml:lang="pt">Anotar seleção</message>
 	<message xml:lang="fi">Valinnan lisätiedot</message>
@@ -5845,7 +5845,7 @@ XPointer-ში</message>
 <label define="BCustomQuery">
 	<message xml:lang="en">Customize query...</message>
 	<message xml:lang="fr">Personnaliser la requête...</message>
-	<message xml:lang="de">Abfrage bearbeiten...</message>
+	<message xml:lang="de">Benutzerdefinierte Abfrage...</message>
 	<message xml:lang="it">Personalizza la richiesta</message>
 	<message xml:lang="es">&amp;Personalizar consulta...</message>
 	<message xml:lang="pt">Personalizar consulta...</message>
@@ -5865,7 +5865,7 @@ XPointer-ში</message>
 <label define="BFilterAnnotations">
 	<message xml:lang="en">Local filter...</message>
 	<message xml:lang="fr">Filtrer local...</message>
-	<message xml:lang="de">Filter...</message>
+	<message xml:lang="de">Lokaler Filter...</message>
 	<message xml:lang="it">Filtro locale...</message>
 	<message xml:lang="es">&amp;Filtro local...</message>
 	<message xml:lang="pt">Filtro local...</message>
@@ -5970,7 +5970,7 @@ XPointer-ში</message>
 <label define="BLibrary">
 	<message xml:lang="en">Create library...</message>
 	<message xml:lang="fr">Créer une librairie...</message>
-	<message xml:lang="de">Bibliothek erzeugen...</message>
+	<message xml:lang="de">Bibliothek erstellen...</message>
 	<message xml:lang="fi">Luo kirjasto...</message>
 	<message xml:lang="it">Crea libreria...</message>
 	<message xml:lang="es">Crear biblioteca...</message>
@@ -6003,7 +6003,7 @@ XPointer-ში</message>
 	<message xml:lang="en">Use a component or an element...</message>
 	<message xml:lang="fr">Utiliser un composant ou un élément...</message>
 	<message xml:lang="es">Usar componente o elemento...</message>
-	<message xml:lang="de">Eine Komponente oder Element verwenden...</message>
+	<message xml:lang="de">Komponente oder Element verwenden...</message>
 	<message xml:lang="cn">使用组件或元素...</message>
 	<message xml:lang="tw">使用組件或元素...</message>
 	<message xml:lang="it">Usa un componente o un elemento...</message>
@@ -6092,7 +6092,7 @@ XPointer-ში</message>
 <label define="JavascriptDom_">
 	<message xml:lang="en">&amp;Javascript/DOM</message>
 	<message xml:lang="fr">&amp;Javascript/DOM</message>
-	<message xml:lang="de">&amp;Javascript/DOM</message>
+	<message xml:lang="de">&amp;JavaScript/DOM</message>
 	<message xml:lang="it">&amp;Javascript/DOM</message>
 	<message xml:lang="tr">&amp;Javascript/DOM</message>
 	<message xml:lang="es">&amp;Javascript/DOM</message>
@@ -6126,7 +6126,7 @@ XPointer-ში</message>
 	<message xml:lang="en">Execute a command</message>
 	<message xml:lang="es">Ejecutar un comando</message>
 	<message xml:lang="fr">Exécuter une commande</message>
-	<message xml:lang="de">Einen Befehl ausführen</message>
+	<message xml:lang="de">Befehl ausführen</message>
 	<message xml:lang="hu">Parancs futtatása</message>
 	<message xml:lang="cn">执行命令</message>
 	<message xml:lang="tw">執行命令</message>

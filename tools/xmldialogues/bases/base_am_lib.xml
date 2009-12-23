@@ -265,7 +265,7 @@ değiştirildi</message>
 <label define="TMSG_DOC_PRINTED">
 	<message xml:lang="en">Document %s printed</message>
 	<message xml:lang="fr">Impression terminée: %s</message>
-	<message xml:lang="de">Drucken von Dokument %s</message>
+	<message xml:lang="de">Dokument %s gedruckt</message>
 	<message xml:lang="it">Il documento %s è stato stampato</message>
 	<message xml:lang="tr">%s belgesi yazdırıldı</message>
 	<message xml:lang="es">Documento %s impreso</message>
@@ -695,7 +695,7 @@ uložené</message>
 <label define="TMSG_ALIGN">
 	<message xml:lang="en">Align</message>
 	<message xml:lang="fr">Alignement</message>
-	<message xml:lang="de">Ausrichten</message>
+	<message xml:lang="de">Ausrichtung</message>
 	<message xml:lang="it">Allineamento</message>
 	<message xml:lang="tr">Hizala</message>
 	<message xml:lang="es">Alineación</message>
@@ -735,7 +735,7 @@ uložené</message>
 	<message xml:lang="fr">Impression en cours</message>
 	<message xml:lang="es">Imprimiendo</message>
 	<message xml:lang="ru">Выполняется печать</message>
-	<message xml:lang="de">Drucken...</message>
+	<message xml:lang="de">Drucken wird ausgeführt</message>
 	<message xml:lang="it">Stampa in corso</message>
 	<message xml:lang="hu">Nyomtatás folyamatban</message>
 	<message xml:lang="ka">მიმდინარეობს
@@ -1033,7 +1033,7 @@ dele?</message>
 <label define="TMSG_OBLIQUE">
 	<message xml:lang="en">Oblique</message>
 	<message xml:lang="fr">Oblique</message>
-	<message xml:lang="de">Kursiv</message>
+	<message xml:lang="de">Schräg</message>
 	<message xml:lang="it">Obliquo</message>
 	<message xml:lang="tr">Oblik</message>
 	<message xml:lang="es">Oblicua</message>
@@ -1222,7 +1222,7 @@ dele?</message>
 <label define="TMSG_SAVE_DOC">
 	<message xml:lang="en">Save document</message>
 	<message xml:lang="fr">Enregistrer le document</message>
-	<message xml:lang="de">Dpkument speichern</message>
+	<message xml:lang="de">Dokument speichern</message>
 	<message xml:lang="it">Salva il documento</message>
 	<message xml:lang="tr">Belge kaydet</message>
 	<message xml:lang="es">Guardar documento</message>
@@ -2223,7 +2223,7 @@ dele?</message>
 <label define="TMSG_STD_GEOMETRY">
 	<message xml:lang="en">Standard geometry</message>
 	<message xml:lang="fr">Géométrie standard</message>
-	<message xml:lang="de">Standardgeometrie</message>
+	<message xml:lang="de">Standard-Fenstereinstellung</message>
 	<message xml:lang="it">Geometria standard</message>
 	<message xml:lang="tr">Standart geometri</message>
 	<message xml:lang="es">Geometría estándar</message>
@@ -2674,7 +2674,7 @@ dele?</message>
 	<message xml:lang="en">Select a background color</message>
 	<message xml:lang="fr">Sélectionner une couleur de fond</message>
 	<message xml:lang="es">Seleccionar un color del fondo</message>
-	<message xml:lang="de">Hintergrundfarbe auswählen</message>
+	<message xml:lang="de">Hintergrundfarbe wählen</message>
 	<message xml:lang="it">Seleziona un colore di sfondo</message>
 	<message xml:lang="ru">Цвет фона</message>
 	<message xml:lang="hu">Válasszon háttérszínt</message>
@@ -2690,7 +2690,7 @@ dele?</message>
 	<message xml:lang="en">Select a text color</message>
 	<message xml:lang="fr">Sélectionner une couleur du texte</message>
 	<message xml:lang="es">Seleccionar un color del texto</message>
-	<message xml:lang="de">Schriftfarbe auswählen</message>
+	<message xml:lang="de">Schriftfarbe wählen</message>
 	<message xml:lang="it">Seleziona un colore per il testo</message>
 	<message xml:lang="ru">Цвет текста документа</message>
 	<message xml:lang="hu">Válasszon szövegszínt</message>
@@ -2740,7 +2740,7 @@ dele?</message>
 </label>
 <label define="TMSG_Pass_Without">
 	<message xml:lang="en">Search/Skip</message>
-	<message xml:lang="de">EWeitersuchen</message>
+	<message xml:lang="de">Weitersuchen</message>
 	<message xml:lang="fr">Chercher/Suivant</message>
 	<message xml:lang="it">Cerca</message>
 	<message xml:lang="tr">Atla ve sonraki</message>
@@ -3310,7 +3310,7 @@ odstránený</message>
 <label define="TMSG_APPLY_CLASS">
 	<message xml:lang="en">Apply class</message>
 	<message xml:lang="fr">Appliquer classe</message>
-	<message xml:lang="de">Klasse übernehmen</message>
+	<message xml:lang="de">Klassen</message>
 	<message xml:lang="it">Applica la classe</message>
 	<message xml:lang="tr">Sınıf uygula</message>
 	<message xml:lang="es">Aplicar clase</message>
@@ -3330,7 +3330,7 @@ odstránený</message>
 <label define="TMSG_SEL_CLASS">
 	<message xml:lang="en">Select a class or a pseudo-class</message>
 	<message xml:lang="fr">Sélectionner une classe ou une pseudo-classe</message>
-	<message xml:lang="de">Eine Klasse oder eine Pseudoklasse auswählen</message>
+	<message xml:lang="de">Klasse oder Pseudoklasse wählen</message>
 	<message xml:lang="it">Seleziona una classe o una pseudoclasse</message>
 	<message xml:lang="tr">Sınıf seçimi</message>
 	<message xml:lang="es">Seleccionar una clase o seudo-clase</message>
@@ -3437,7 +3437,7 @@ odstránený</message>
 	<message xml:lang="en">Binary relations of negation</message>
 	<message xml:lang="fr">Relations binaires de négation</message>
 	<message xml:lang="es">Relaciones de negación binarias</message>
-	<message xml:lang="de">Binäre Relationen der Verneinung</message>
+	<message xml:lang="de">Binäre Beziehungen der Verneinung</message>
 	<message xml:lang="it">Relazioni binarie di negazione</message>
 	<message xml:lang="ru">Символы неравенства</message>
 	<message xml:lang="hu">Bináris műveletek negáltjai</message>
@@ -3961,7 +3961,7 @@ odstránený</message>
 <label define="TMSG_BUTTON_LINK">
 	<message xml:lang="en">Link</message>
 	<message xml:lang="fr">Lien</message>
-	<message xml:lang="de">Link/Verweis</message>
+	<message xml:lang="de">Verweis</message>
 	<message xml:lang="it">Collegamento</message>
 	<message xml:lang="tr">Bağlantı</message>
 	<message xml:lang="es">Enlace</message>
@@ -4077,7 +4077,7 @@ naraz</message>
 <label define="TMSG_LIB_ERROR_DOC">
 	<message xml:lang="en">Show parsing errors</message>
 	<message xml:lang="fr">Montrer les erreurs</message>
-	<message xml:lang="de">Parserfehler anzeigen</message>
+	<message xml:lang="de">Parserfehler einblenden</message>
 	<message xml:lang="it">Mostra le errore</message>
 	<message xml:lang="es">Mostrar errores sintácticos</message>
 	<message xml:lang="pt">Exibir erros de gramática (parsing)</message>
@@ -4130,7 +4130,7 @@ naraz</message>
 <label define="TMSG_BUTTON_TARGET">
 	<message xml:lang="en">Target</message>
 	<message xml:lang="fr">Cible</message>
-	<message xml:lang="de">Anker</message>
+	<message xml:lang="de">Ziel</message>
 	<message xml:lang="it">Obiettivo</message>
 	<message xml:lang="tr">Yarat</message>
 	<message xml:lang="es">Destino</message>
@@ -4224,7 +4224,7 @@ naraz</message>
 <label define="TMSG_BUTTON_DT">
 	<message xml:lang="en">Term</message>
 	<message xml:lang="fr">Terme</message>
-	<message xml:lang="de">Ausdruck</message>
+	<message xml:lang="de">Term</message>
 	<message xml:lang="it">Termine</message>
 	<message xml:lang="tr">Terim</message>
 	<message xml:lang="es">Término</message>
@@ -4668,7 +4668,7 @@ constantes</message>
 <label define="TMSG_CLIC_ELEM_TO_SELECT_IT">
 	<message xml:lang="en">Click an element to select it</message>
 	<message xml:lang="fr">Cliquer sur un élément pour le sélectionner</message>
-	<message xml:lang="de">Klicken Sie ein Element, um es zu wählen</message>
+	<message xml:lang="de">Auf ein Element klicken, um es zu wählen</message>
 	<message xml:lang="hu">Kattintson egy elemre annak kijelöléséhez</message>
 	<message xml:lang="es">Haga clic en un elemento para seleccionarlo</message>
 	<message xml:lang="cn">点击选择一个元素</message>
@@ -4682,7 +4682,7 @@ constantes</message>
 <label define="TMSG_INSERT_MODE">
 	<message xml:lang="en">Click to change the editing mode</message>
 	<message xml:lang="fr">Cliquer pour changer de mode d'édition</message>
-	<message xml:lang="de">Klicken Sie, um den Bearbeitungsmodus zu ändern</message>
+	<message xml:lang="de">Klicken, um den Bearbeitungsmodus zu ändern</message>
 	<message xml:lang="hu">Kattintson a szerkesztő mód váltásához</message>
 	<message xml:lang="cn">点击以改变编辑模式</message>
 	<message xml:lang="tw">點擊以改變編輯模式</message>
@@ -5243,7 +5243,7 @@ dialogo per scegliere la lingua dell'interfaccia utente.</message>
 	<message xml:lang="fr">Classique</message>
 	<message xml:lang="es">Clásico</message>
 	<message xml:lang="it">Classico</message>
-	<message xml:lang="de">Klassik</message>
+	<message xml:lang="de">Klassisch</message>
 	<message xml:lang="cn">Classic</message>
 	<message xml:lang="tw">Classic</message>
 	<message xml:lang="hu">Klasszikus</message>
@@ -6013,7 +6013,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="en">SVG Canvas</message>
 	<message xml:lang="fr">Canevas SVG</message>
 	<message xml:lang="es">Lienzo SVG</message>
-	<message xml:lang="de">SVG Graphik</message>
+	<message xml:lang="de">SVG-Canvas</message>
 	<message xml:lang="cn">SVG 画布</message>
 	<message xml:lang="tw">SVG 畫布</message>
 	<message xml:lang="it">SVG Canvas</message>
@@ -7227,7 +7227,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 	<message xml:lang="es">Repetir uso actual</message>
 	<message xml:lang="cn">重复当前应用</message>
 	<message xml:lang="tw">重複當前應用</message>
-	<message xml:lang="de">Aktuelle Anwendung wiederholen</message>
+	<message xml:lang="de">Wiederholen; Eingabe</message>
 	<message xml:lang="it">Ripeti uso corrente </message>
 	<message xml:lang="ja">*現在の利用を繰り返す*Repeat the current use</message>
 	<message xml:lang="hu">Aktuális használat ismétlése</message>
@@ -7354,7 +7354,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 </label>
 <label define="UNLOCK">
 	<message xml:lang="en">Unlocked resource</message>
-	<message xml:lang="de">Ressource geöffnet</message>
+	<message xml:lang="de">Ressource entsperren</message>
 	<message xml:lang="fr">Ressource débloquée</message>
 	<message xml:lang="it">Risorsa non bloccata</message>
 	<message xml:lang="es">Recurso desbloqueado</message>
@@ -7363,7 +7363,7 @@ SVG panel --><label define="TMSG_SVG_Information">
 </label>
 <label define="NO_WEBDAV">
 	<message xml:lang="en">Not a WebDAV resource</message>
-	<message xml:lang="de">Keine WebDAV Ressource</message>
+	<message xml:lang="de">Keine WebDAV-Ressource</message>
 	<message xml:lang="fr">Ce n'est pas une resource</message>
 	<message xml:lang="it">Non è una risorsa WebDAV</message>
 	<message xml:lang="es">No es un recurso WebDAV</message>

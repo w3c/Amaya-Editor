@@ -1,12 +1,12 @@
 # encoding= latin1
 0 &Datei
-1 Context
-2 Context
+1 Kontext
+2 Kontext
 3 &Bearbeiten
 4 &Ansicht
 5 &Einfügen
 6 &Format
-7 &Links
+7 &Verweise
 8 Attribute
 9 &Extras
 10 &Hilfe
@@ -15,8 +15,8 @@
 13 Neu
 14 &Dokument...
 15 &Formel (MathML)...
-16 Grafik (SV&G)...
-17 S&tylesheet ...
+16 &Grafik...
+17 S&tylesheet...
 18 Ö&ffnen...
 19 &Datei
 20 In neuem &Fenster öffnen...
@@ -54,10 +54,10 @@
 52 S&ynchronisieren
 53 Seite via E-Mail senden...
 54 Dr&uckeinstellungen...
-55 Drucken
-56 Registerkarte s&chließen
-57 S&chließen
-58 Amaya &beenden
+55 &Drucken
+56 S&chließen
+57 Alles s&chließen
+58 &Beenden
 59 Neue Registerkarte
 60 Registerkarte aktualisieren
 61 Alle Registerkarten aktualisieren
@@ -76,40 +76,40 @@
 74 Kopieren
 75 Einfügen
 76 Löschen
-77 Einfügen
-78 Hinzufügen
+77 Zeile einfügen
+78 Zeile hinzufügen
 79 R&ückgängig
 80 Wiede&rherstellen
 81 Auss&chneiden
 82 Kopieren
 83 E&infüen
 84 &Löschen
-85 &Einfügen
-86 &Hinzufügen
+85 Zeile e&infügen
+86 Zeile hinzufügen
 87 &Alles markieren
 88 Markieren
-89 Übergeordneter Elternknoten
-90 Untergeordneter Knoten
+89 Übergeordnetes Element
+90 Untergeordnetes Element
 91 Vorheriges Element
 92 Nächstes Element
 93 &Suchen...
 94 &Optionen
 95 Symbolleisten
-96 &Durchsuchen
-97 &Bearbeiten
+96 &Adressleiste
+97 &Bearbeitungsleiste
 98 &Werkzeuge
 99 Bildbereiche einblenden
-100 Anker einblenden
+100 &Anker einblenden
 101 Layoutansicht
-102 Strukturansicht
+102 Struktur einblenden
 103 Quelltext einblenden
-104 Verweise/Links anzeigen 
-105 Textbrowser anzeigen
-106 Inhaltsverzeichnis
-107 Ansicht horizontal teilen
-108 Ansicht vertikal teilen
+104 &Verweise einblenden 
+105 &Textbrowser einblenden
+106 Inhaltsverzeichnis einblenden
+107 Horizontal teilen
+108 Vertikal teilen
 109 E&igenschaften
-110 Parserfehler anzeigen
+110 Parserfehler einblenden
 111 &Vollbild
 112 Zoom vergrößern
 113 Zoom verkleinern
@@ -123,20 +123,20 @@
 121 h5
 122 h6
 123 Liste
-124 Aufzählungsliste (ul)
-125 Nummerierte Liste (ol)
-126 Definitionsliste (dl)
-127 Ausdruck (dt)
+124 Aufzählung (ul)
+125 Nummerierung (ol)
+126 Definition (dl)
+127 Term (dt)
 128 Definition (dd)
-129 Inline-Elemente
+129 Informationstyp
 130 Betont (em)
 131 Stark betont (strong)
-132 Quelle/Autor (cite)
+132 Zitieren (cite)
 133 Definition (dfn)
 134 Quelltext (code)
 135 Variable (var)
 136 Beispiel (samp)
-137 Benutzereingabe  (kbd)
+137 Benutzereingabe (kbd)
 138 Abkürzung (abbr)
 139 Akronym (acronym)
 140 Eingefügter Text (ins)
@@ -151,7 +151,7 @@
 149 Tiefgestellt (sub)
 150 Hochgestellt (sup)
 151 Zitat (q)
-152 Textrichtung LTR/RTL (bdo)
+152 Textrichtung (bdo)
 153 Zeichen (&xxx;)
 154 Bild (img)...
 155 Horizontale Linie (hr)
@@ -164,15 +164,15 @@
 162 Tabellenkopf (thead)
 163 Tabellenkörper (tbody)
 164 Tabellenfuß (tfoot)
-165 &Math
+165 &Mathematik
 166 Formel einfügen
-167 Text (mtext)
+167 Nur Text (mtext)
 168 Bezeichner (mi)
-169 Zahl (mn)
+169 Nummer (mn)
 170 Operator (mo)
 171 Leerzeichen (mspace)
 172 Unsichtbare Multiplikation
-173 Angewendete Funktion (ApplyFunction)
+173 Funktion anwenden (ApplyFunction)
 174 Wurzel (mroot)
 175 Quadratwurzel (msqrt)
 176 Einschluss (menclose)
@@ -190,7 +190,7 @@
 188 Linie
 189 Pfeil
 190 Text
-191 fremdes Objekt
+191 ForeignObject
 192 Gruppierung
 193 Quadrat
 194 Rechteck
@@ -200,20 +200,20 @@
 198 Elipse
 199 Linienzug
 200 Vieleck
-201 offene Kurve
+201 Offene Kurve
 202 Geschlossene Kurve
 203 Formular
-204 Formular (form)
-205 Schaltfläche (button) (input)
-206 Eingabefeld (checkbox) (input)
-207 Datei-Upload (file) (input)
-208 Verstecktes Feld (hidden) (input)
-209 Grafikfeld (image) (input)
-210 Kennwortfeld (password) (input)
-211 Optionsfeld (radio) (input)
-212 Zurücksetzen (reset)(input)
-213 Senden (submit) (input)
-214 Textfeld (text) (input)
+204 Formular einfügen
+205 Schaltfläche (input)
+206 Eingabefeld (input)
+207 Datei-Upload (input)
+208 Verstecktes Feld (input)
+209 Grafik (input)
+210 Kennwortfeld (input)
+211 Optionsfeld (input)
+212 Zurücksetzen (input)
+213 Senden (input)
+214 Textfeld (input)
 215 Feldgruppe (fieldset)
 216 Beschriftungstext (label)
 217 Auswahlfeld (option)
@@ -228,7 +228,7 @@
 226 Polygon (area)
 227 Rechteck (area)
 228 Versteckte Elemente
-229 Stil (style)
+229 Style
 230 Kommentar
 231 Adressbasis (base)
 232 Meta-Angabe (meta)
@@ -241,14 +241,14 @@
 239 Eingebettete Frames (iframe)
 240 Ruby-Markup (ruby)
 241 Thema
-242 Klassik
+242 Klassisch
 243 Modern
 244 Kein
 245 Textfarbe
-246 Auswählen...
+246 Schriftfarbe wählen...
 247 Keine
 248 Hintergrundfarbe
-249 Auswählen...
+249 Hintergrundfarbe wählen...
 250 Keine
 251 Horizontale Ausrichtung
 252 Linksbündig
@@ -257,33 +257,33 @@
 255 Blocksatz
 256 Standard
 257 Zeilenmaß
-258 1-zeilig
-259 1,5-zeilig
-260 2-zeilig
+258 Einfach
+259 1,5 Zeilen
+260 Doppelt
 261 Standard
 262 Zeileneinzug
 263 Einzug vergrößern
 264 Einzug verkleinern
 265 Standard
 266 Zeichen
-267 Schriftart...
+267 Schriftart wählen...
 268 Standard
-269 &Stil bearbeiten
-270 Regel erstellen...
-271 Stil anzeigen...
+269 &Style-Editor
+270 &Regel erstellen...
+271 Angewendeten Style einblenden...
 272 Stylesheets
-273 Link/Verweis...
+273 Verweis...
 274 Öffnen...
 275 Deaktivieren...
 276 Aktivieren...
 277 Entfernen...
-278 Kopieren
-279 Einfügen
-280 Vorheriges Anker
-281 Verweise erstellen oder ändern...
-282 &Anker erstellen
-283 Verweis oder Anker &löschen
-284 IDs hinzufü&gen/entfernen...
+278 Adresse kopieren
+279 Adresse einfügen
+280 &Verweis zum vorherigen Ziel
+281 Verweis erstellen oder ändern...
+282 &Ziel erstellen
+283 Verweis oder Ziel &löschen
+284 ID hinzufü&gen/entfernen...
 285 Rechtschreibung...
 286 Transfor&mieren...
 287 Quelltext säubern
@@ -304,9 +304,9 @@
 302 Einfügen (davor)
 303 Einfügen (danach)
 304 Titel ändern
-305 DOCTYPE ändern
-306 DOCTYPE entfernen
-307 DOCTYPE hinzufügen
+305 Dokumenttypdefinition ändern
+306 Dokumenttypdefinition entfernen
+307 Dokumenttypdefinition hinzufügen
 308 XHTML 1.1
 309 XHTML 1.0 Transitional
 310 XHTML 1.0 Strict
@@ -320,7 +320,7 @@
 318 Zeitstempel einfügen
 319 Namespace-Deklarationen...
 320 A&nmerkungen
-321 Anmerkung auswählen
+321 Anmerkung wählen
 322 Dokument kommentieren
 323 Zur Auswahl verschieben
 324 Auswahl als &XPointer speichern
@@ -329,25 +329,25 @@
 327 An Server veröffentlichen
 328 Löschen
 329 Laden
-330 Abfrage bearbeiten...
-331 Filter...
+330 Benutzerdefinierte Abfrage...
+331 Lokaler Filter...
 332 K&ooperation
 333 Ressource sperren
 334 Sperrinformation kopieren...
 335 Vorlagen
 336 Vorlage aus aktuellem Dokument erstellen
-337 Bibliothek erzeugen...
+337 Bibliothek erstellen...
 338 Textbereich erstellen...
-339 Eine Komponente oder Element verwenden...
+339 Komponente oder Element verwenden...
 340 Komponente erstellen...
 341 Wiederholen...
 342 Erstellen und wiederholen...
 343 Ungebundenes Bearbeitungsfeld erstellen...
 344 Typen-Gemeinschaft erstellen...
 345 Bibliothek importieren...
-346 &Javascript/DOM
+346 &JavaScript/DOM
 347 Java-Unterstützung
-348 Einen Befehl ausführen
+348 Befehl ausführen
 349 Externes Skript ausführen
 350 Externes Skript hinzufügen
 351 Skript einfügen

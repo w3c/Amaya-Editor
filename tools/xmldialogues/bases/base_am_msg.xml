@@ -101,7 +101,7 @@
 <label define="AM_NEW_CSS">
 	<message xml:lang="en">New CSS style sheet</message>
 	<message xml:lang="fr">Nouvelle feuille de style</message>
-	<message xml:lang="de">Neues Stylesheet</message>
+	<message xml:lang="de">Neues CSS-Stylesheet</message>
 	<message xml:lang="it">Nuovo stile CSS</message>
 	<message xml:lang="es">Nueva hoja de estilo CSS</message>
 	<message xml:lang="pt">Nova folha de estilo CSS</message>
@@ -121,7 +121,7 @@
 <label define="AM_NEW_TEMPLATE">
 	<message xml:lang="en">From template</message>
 	<message xml:lang="fr">À partir du modèle</message>
-	<message xml:lang="de">Vorlage</message>
+	<message xml:lang="de">Von Vorlage</message>
 	<message xml:lang="it">Modello</message>
 	<message xml:lang="es">Desde plantilla</message>
 	<message xml:lang="pt">Do gabarito</message>
@@ -156,7 +156,7 @@
 <label define="AM_OPEN_IN_NEW_WINDOW">
 	<message xml:lang="en">Open in new window</message>
 	<message xml:lang="fr">Dans nouvelle fenêtre</message>
-	<message xml:lang="de">In neuem Fenster Öffnen</message>
+	<message xml:lang="de">In neuem Fenster öffnen</message>
 	<message xml:lang="it">Apri in una nuova finestra</message>
 	<message xml:lang="tr">Yeni pencerede aç</message>
 	<message xml:lang="es">Abrir en ventana nueva</message>
@@ -195,7 +195,7 @@
 <label define="AM_CLICK">
 	<message xml:lang="en">Click</message>
 	<message xml:lang="fr">Clic</message>
-	<message xml:lang="de">Klick</message>
+	<message xml:lang="de">Übernehmen</message>
 	<message xml:lang="it">Click</message>
 	<message xml:lang="es">Clic</message>
 	<message xml:lang="pt">Clique</message>
@@ -212,7 +212,7 @@
 <label define="AM_SAVED">
 	<message xml:lang="en">Document saved: %s</message>
 	<message xml:lang="fr">Document sauvé : %s</message>
-	<message xml:lang="de">Dokument auf %s gespeichert</message>
+	<message xml:lang="de">Dokument gespeichert: %s</message>
 	<message xml:lang="it">Documento salvato: %s</message>
 	<message xml:lang="tr">%s belgesi kaydedildi</message>
 	<message xml:lang="es">Documento guardado: %s</message>
@@ -347,7 +347,7 @@
 <label define="AM_FETCHING">
 	<message xml:lang="en">Fetching %s</message>
 	<message xml:lang="fr">Recherche de %s</message>
-	<message xml:lang="de">%s laden</message>
+	<message xml:lang="de">%s abrufen</message>
 	<message xml:lang="it">Sto caricando %s</message>
 	<message xml:lang="tr">%s alınıyor</message>
 	<message xml:lang="es">Recogiendo %s</message>
@@ -366,7 +366,7 @@
 <label define="AM_CANNOT_LOAD">
 	<message xml:lang="en">Cannot load %s</message>
 	<message xml:lang="fr">Impossible de charger %s</message>
-	<message xml:lang="de">%s konnte nicht geladen werden</message>
+	<message xml:lang="de">%s kann nicht geladen werden</message>
 	<message xml:lang="it">Impossibile caricare %s</message>
 	<message xml:lang="tr">%s yüklenemiyor</message>
 	<message xml:lang="es">No puedo cargar %s</message>
@@ -385,7 +385,7 @@
 <label define="AM_DOCUMENT_LOADED">
 	<message xml:lang="en">Finished!</message>
 	<message xml:lang="fr">C'est fini !</message>
-	<message xml:lang="de">Fertiggestellt!</message>
+	<message xml:lang="de">Erfolgreich!</message>
 	<message xml:lang="it">Finito!</message>
 	<message xml:lang="tr">Bitti!</message>
 	<message xml:lang="es">¡Terminado!</message>
@@ -404,7 +404,7 @@
 <label define="AM_SEL_TARGET">
 	<message xml:lang="en">Select the target</message>
 	<message xml:lang="fr">Sélectionner la destination</message>
-	<message xml:lang="de">Ziel auswählen</message>
+	<message xml:lang="de">Ziel wählen</message>
 	<message xml:lang="it">Seleziona l'obiettivo</message>
 	<message xml:lang="tr">Hedefi seçin</message>
 	<message xml:lang="es">Seleccionar el destino</message>
@@ -442,7 +442,7 @@
 <label define="AM_LOCATION">
 	<message xml:lang="en">Insert the URI or browse</message>
 	<message xml:lang="fr">Inserer l'URI ou parcourir</message>
-	<message xml:lang="de">URI einfügen</message>
+	<message xml:lang="de">URI eingeben oder durchsuchen</message>
 	<message xml:lang="it">Indirizzo</message>
 	<message xml:lang="tr">Adres</message>
 	<message xml:lang="es">Escriba el URI o pulse el botón Buscar:</message>
@@ -502,7 +502,7 @@
 	<message xml:lang="fr">Document modifié - Voulez-vous l'enregistrer
 ?</message>
 	<message xml:lang="it">Documento modificato - salvare?</message>
-	<message xml:lang="de">Möchten Sie die Änderungen übernehmen?</message>
+	<message xml:lang="de">Möchten Sie die Änderungen im Dokument speichern?</message>
 	<message xml:lang="es">Documento modificado. ¿Quiere guardarlo?</message>
 	<message xml:lang="ru">Документ изменён. Сохранить его?</message>
 	<message xml:lang="hu">A dokumentum megváltozott - Kívánja
@@ -519,7 +519,7 @@ menteni?</message>
 <label define="AM_RED_FETCHING">
 	<message xml:lang="en">Redirection fetching of %s</message>
 	<message xml:lang="fr">Recherche de %s</message>
-	<message xml:lang="de">Weiterleitung von %s laden</message>
+	<message xml:lang="de">Umleitung von %s abrufen</message>
 	<message xml:lang="it">Redirezione durante il caricamento di %s</message>
 	<message xml:lang="tr">%s aranıyor</message>
 	<message xml:lang="es">Redirección recuperación de %s</message>
@@ -539,7 +539,7 @@ menteni?</message>
 <label define="AM_REDIRECTIONS_LIMIT">
 	<message xml:lang="en">Too many redirections detected</message>
 	<message xml:lang="fr">Dépassement de la limite de redirections</message>
-	<message xml:lang="de">Zu viele Weiterleitungen ermittelt</message>
+	<message xml:lang="de">Zu viele Umleitungen erkannt</message>
 	<message xml:lang="it">Ho rilevato troppe redirezioni</message>
 	<message xml:lang="tr">Yeniden yönlerdirme zamanı dolmuştur</message>
 	<message xml:lang="es">Demasiadas redirecciones detectadas</message>
@@ -677,7 +677,7 @@ menteni?</message>
 <label define="AM_CONTACTING_HOST">
 	<message xml:lang="en">Contacting %s</message>
 	<message xml:lang="fr">Connexion vers %s</message>
-	<message xml:lang="de">%s aufrufen</message>
+	<message xml:lang="de">Kontaktaufnahme mit %s</message>
 	<message xml:lang="it">Sto contattando %s</message>
 	<message xml:lang="tr">%s: bağlanılıyor</message>
 	<message xml:lang="es">Contactando %s</message>
@@ -696,7 +696,7 @@ menteni?</message>
 <label define="AM_LOOKING_HOST">
 	<message xml:lang="en">Looking up %s</message>
 	<message xml:lang="fr">Recherche de %s</message>
-	<message xml:lang="de">Nach %s suchen</message>
+	<message xml:lang="de">Suchen von %s</message>
 	<message xml:lang="it">Sto cercando %s</message>
 	<message xml:lang="tr">%s: aranıyor</message>
 	<message xml:lang="es">Buscando %s</message>
@@ -774,7 +774,7 @@ menteni?</message>
 <label define="AM_AUTHENTICATION_FAILURE">
 	<message xml:lang="en">Authorization failure for %s</message>
 	<message xml:lang="fr">Manque d'autorisation pour accéder à %s</message>
-	<message xml:lang="de">Anmeldung für %s fehlgeschlagen</message>
+	<message xml:lang="de">Anmeldung fehlgeschlagen für %s</message>
 	<message xml:lang="it">Autorizzazione fallita per %s</message>
 	<message xml:lang="tr">%s için yetkilendirme başarısız</message>
 	<message xml:lang="es">Fallo de autorización para %s</message>
@@ -794,7 +794,7 @@ menteni?</message>
 <label define="AM_LOADED_NO_DATA">
 	<message xml:lang="en">%s loaded but no data is available</message>
 	<message xml:lang="fr">%s chargé mais ne comporte pas de données</message>
-	<message xml:lang="de">%s wurde geladen, es sind aber keine Daten vorhanden</message>
+	<message xml:lang="de">%s geladen, es sind aber keine Daten vorhanden</message>
 	<message xml:lang="it">%s caricato, ma non è disponibile alcun dato</message>
 	<message xml:lang="tr">%s yüklendi, ancak veri içermiyor</message>
 	<message xml:lang="es">%s cargado pero no hay datos disponibles</message>
@@ -837,8 +837,8 @@ menteni?</message>
 later</message>
 	<message xml:lang="fr">Indisponibilité momentanée de %s. Réessayez plus
 tard</message>
-	<message xml:lang="de">%s ist im Moment nicht verfügbar. Bitte später
-erneut versuchen!</message>
+	<message xml:lang="de">%s ist im Moment nicht verfügbar. Bitte versuchen Sie es später
+erneut!</message>
 	<message xml:lang="it">%s è indisponibile al momento. Riprova piú
 tardi</message>
 	<message xml:lang="tr">%s: şu anda erişilemiyor, başka bir zaman
@@ -1053,7 +1053,7 @@ tipo: %s</message>
 feature</message>
 	<message xml:lang="fr">Cette version d'Amaya ne supporte pas cette
 option</message>
-	<message xml:lang="de">Dieses Feature wird nicht von Amaa unterstützt</message>
+	<message xml:lang="de">Diese Version von Amaya unterstützt diese Funktion nicht</message>
 	<message xml:lang="it">La presente versione di Amaya non supporta questa
 funzionalità</message>
 	<message xml:lang="tr">Amaya\'nın bu sürümü, bu özelliği
@@ -1191,7 +1191,7 @@ transformácia</message>
 <label define="AM_TRANS_PARSE_ERROR">
 	<message xml:lang="en">syntax error in file HTML.trans line %s</message>
 	<message xml:lang="fr">HTML.trans erreur de syntaxe ligne %s</message>
-	<message xml:lang="de">Syntaxfehler in der Datei HTML.trans, Zeile %s</message>
+	<message xml:lang="de">Syntaxfehler in der Datei HTML.trans Zeile %s</message>
 	<message xml:lang="it">errore di sintassi nel file HTML.trans alla linea
 %s</message>
 	<message xml:lang="tr">HTML.trans dosyası, %s satırında yazım
@@ -1235,7 +1235,7 @@ hatası</message>
 <label define="AM_BUTTON_GRAPHICS">
 	<message xml:lang="en">Graphics</message>
 	<message xml:lang="fr">Graphique</message>
-	<message xml:lang="de">Grafik (SVG)</message>
+	<message xml:lang="de">Grafiken</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
 	<message xml:lang="es">SVG</message>
@@ -1562,7 +1562,7 @@ neodpovedá</message>
 <label define="AM_BTRANSFORM_URL">
 	<message xml:lang="en">Transform URLs</message>
 	<message xml:lang="fr">Transformer les URL</message>
-	<message xml:lang="de">URIs transformieren</message>
+	<message xml:lang="de">URLs transformieren</message>
 	<message xml:lang="it">Trasforma URL</message>
 	<message xml:lang="tr">URL\'leri dönüştür</message>
 	<message xml:lang="es">Transformar URLs</message>
@@ -1582,7 +1582,7 @@ neodpovedá</message>
 <label define="AM_DOC_LOCATION">
 	<message xml:lang="en">Document location</message>
 	<message xml:lang="fr">Adresse du document</message>
-	<message xml:lang="de">Dokument</message>
+	<message xml:lang="de">Speicherort</message>
 	<message xml:lang="it">Collocazione del documento</message>
 	<message xml:lang="tr">Belgenin adresi</message>
 	<message xml:lang="es">Ubicación de documento:</message>
@@ -1602,7 +1602,7 @@ neodpovedá</message>
 <label define="AM_IMAGES_LOCATION">
 	<message xml:lang="en">Images directory</message>
 	<message xml:lang="fr">Répertoire des images</message>
-	<message xml:lang="de">Bilderpfad</message>
+	<message xml:lang="de">Ordner für Bilder</message>
 	<message xml:lang="it">Directory delle immagini</message>
 	<message xml:lang="tr">Görüntü dizini</message>
 	<message xml:lang="es">Directorio de imágenes:</message>
@@ -1662,7 +1662,7 @@ neodpovedá</message>
 	<message xml:lang="en">Open CSS</message>
 	<message xml:lang="fr">Ouvrir CSS</message>
 	<message xml:lang="it">Apri CSS</message>
-	<message xml:lang="de">CSS öffen</message>
+	<message xml:lang="de">CSS öffnen</message>
 	<message xml:lang="es">Abrir hoja de estilo enlazada</message>
 	<message xml:lang="pt">Abrir CSS</message>
 	<message xml:lang="fi">Avaa CSS</message>
@@ -1737,7 +1737,7 @@ neodpovedá</message>
 <label define="AM_ABOUT1">
 	<message xml:lang="en">W3C's editor/browser for the web</message>
 	<message xml:lang="fr">Le navigateur/éditeur du W3C</message>
-	<message xml:lang="de">W3C's Editor/Browser für das Web</message>
+	<message xml:lang="de">W3Cs Editor/Browser für das Web</message>
 	<message xml:lang="it">Il editor/browser del W3C</message>
 	<message xml:lang="tr">W3C için tarayıcı ve belge düzenleyici</message>
 	<message xml:lang="es">Editor/Navegador web del W3C</message>
@@ -1880,7 +1880,7 @@ znakov</message>
 <label define="AM_UPDATED_LINK">
 	<message xml:lang="en">Links update: %s%% has been done</message>
 	<message xml:lang="fr">Mise à jour des liens : %s%% a été traité</message>
-	<message xml:lang="de">Links-Aktualisierung: s%% erfolgreich</message>
+	<message xml:lang="de">Aktualisierung der Verweise: %s%% erfolgreich</message>
 	<message xml:lang="it">Aggiornamento dei collegamenti: %s%% è stato
 fatto</message>
 	<message xml:lang="tr">Bağlantı güncellemesi: %s%% tamamlandı</message>
@@ -2016,7 +2016,7 @@ ukončené</message>
 <label define="AM_NO_REPEAT">
 	<message xml:lang="en">no-repeat</message>
 	<message xml:lang="fr">no-repeat</message>
-	<message xml:lang="de">keine Wiederholung</message>
+	<message xml:lang="de">Keine Wiederholung</message>
 	<message xml:lang="it">no-repeat</message>
 	<message xml:lang="tr">tekrar yok</message>
 	<message xml:lang="es">No repetir (no-repeat)</message>
@@ -2036,7 +2036,7 @@ ukončené</message>
 <label define="AM_NO_NAME">
 	<message xml:lang="en">Document doesn't have a name. Saving to:</message>
 	<message xml:lang="fr">Le document n'a pas de nom. Sauvé en :</message>
-	<message xml:lang="de">Das Dokument ist unbenannt. Speichere unter:</message>
+	<message xml:lang="de">Das Dokument ist unbenannt. Speichern unter:</message>
 	<message xml:lang="it">Il documento non ha nome. Salva come:</message>
 	<message xml:lang="tr">Belgenin bir ismi yok. Şu isimle
 kaydediyorum:</message>
@@ -2077,7 +2077,7 @@ nimellä:</message>
 <label define="AM_UNKNOWN_SAVE_ERROR">
 	<message xml:lang="en">Unknown error while saving URL %s</message>
 	<message xml:lang="fr">Erreur inconnue lors de la sauvegarde de %s</message>
-	<message xml:lang="de">Unbekannter Fehler bei Speichung von URL %s aufgetreten</message>
+	<message xml:lang="de">Unbekannter Fehler bei Speicherung von URL %s aufgetreten</message>
 	<message xml:lang="it">Errore sconosciuto durante il salvataggio dell'URL
 %s</message>
 	<message xml:lang="tr">%s URL\'ini kaydederken, belirsiz hata</message>
@@ -2142,7 +2142,7 @@ toimesta</message>
 <label define="AM_REQUEST_SUCCEEDED">
 	<message xml:lang="en">Operation succeeded for %s</message>
 	<message xml:lang="fr">Opération réussie pour %s</message>
-	<message xml:lang="de">Operation für %s erfolgreich</message>
+	<message xml:lang="de">Vorgang für %s erfolgreich</message>
 	<message xml:lang="it">L'operazione ha avuto successo per %s</message>
 	<message xml:lang="tr">%s için işlem başarılı</message>
 	<message xml:lang="es">Operación correcta para %s</message>
@@ -2200,7 +2200,7 @@ toimesta</message>
 <label define="AM_UNKNOWN_XXX_STATUS">
 	<message xml:lang="en">Operation completed with a %s status code</message>
 	<message xml:lang="fr">L'opération a fini avec un code %s</message>
-	<message xml:lang="de">Operation wurde beendet mit Code %s</message>
+	<message xml:lang="de">Vorgang wurde mit Code %s beendet</message>
 	<message xml:lang="it">Operazione completata con codice %s</message>
 	<message xml:lang="tr">İşlem %s durum kodu ile tamamlandı</message>
 	<message xml:lang="es">Operación completada con un código de estado
@@ -2329,6 +2329,7 @@ odpoveď</message>
 </label>
 <label define="AM_SAVING_FAILED">
 	<message xml:lang="en">Do you want to keep a local copy?</message>
+	<message xml:lang="de">Möchten Sie eine lokale Kopie beibehalten?</message>
 	<message xml:lang="fr">Voulez-vous garder une copie locale ?</message>
 	<message xml:lang="uk">Невдала спроба збереження в %s. Зберегти на диск?</message>
 	<message xml:lang="it">Vuoi una copia in locale?</message>
@@ -2384,7 +2385,7 @@ Ignorovať?</message>
 <label define="AM_SAVE_RELOAD_FAILED">
 	<message xml:lang="en">Reload of %s failed, ignore?</message>
 	<message xml:lang="fr">Le relecture de %s a échouée, ignorer ?</message>
-	<message xml:lang="de">Aktualisierung von %s fehlerhaft, ignorieren?</message>
+	<message xml:lang="de">Aktualisierung von %s fehlgeschlagen, ignorieren?</message>
 	<message xml:lang="it">Ricaricamento di %s fallito, ignora ?</message>
 	<message xml:lang="tr">%s yeniden yüklenemedi, devam edeyim mi?</message>
 	<message xml:lang="es">La recarga de %s ha fallado, ¿Ignorar?</message>
@@ -2526,7 +2527,7 @@ requisição</message>
 <label define="AM_NUMBERED_LINKS">
 	<message xml:lang="en">Table of links</message>
 	<message xml:lang="fr">Table des liens</message>
-	<message xml:lang="de">Tabelle von Verweisen</message>
+	<message xml:lang="de">Übersicht der Verweise</message>
 	<message xml:lang="it">Sommario dei collegamenti</message>
 	<message xml:lang="es">Tabla de enlaces</message>
 	<message xml:lang="pt">Tabela de enlaces</message>
@@ -2606,7 +2607,7 @@ requisição</message>
 reload backup documents?</message>
 	<message xml:lang="fr">La précédente session Amaya s'est mal terminée.
 Voulez-vous recharger les documents modifiés ?</message>
-	<message xml:lang="de">Ihre vorherige Amaya-Sitzung wurde nicht ordnungsgemäß beendet. Sollen die Sicherungskopien geladen werden?</message>
+	<message xml:lang="de">Ihre vorherige Amaya-Sitzung wurde nicht ordnungsgemäß beendet. Sollen vorhandene Sicherungskopien geladen werden?</message>
 	<message xml:lang="it">La precedente sessione con Amaya non è terminata
 correttamente. Vuoi ricaricare i documenti di backup?</message>
 	<message xml:lang="es">Su sesión anterior de Amaya falló. ¿Quiere recargar
@@ -2636,7 +2637,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="en">Authentication failed. Retry?</message>
 	<message xml:lang="fr">Echec de l'authentification. Voulez-vous réessayer
 ?</message>
-	<message xml:lang="de">Abneldung fehlgeschlagen. Wiederholen?</message>
+	<message xml:lang="de">Anmeldung fehlgeschlagen. Wiederholen?</message>
 	<message xml:lang="it">Autenticazione fallita. Vuoi riprovare?</message>
 	<message xml:lang="es">Fallo de autentificación. ¿Reintentar?</message>
 	<message xml:lang="pt">A autenticação falhou. Tentar novamente?</message>
@@ -2657,7 +2658,7 @@ Obnoviť dokument zo zálohy?</message>
 	<message xml:lang="en">Operation will be redirected. Continue?</message>
 	<message xml:lang="fr">L'opération sera redirigée. Voulez-vous continuer
 ?</message>
-	<message xml:lang="de">Operation wird umgeleitet. Fortsetzen?</message>
+	<message xml:lang="de">Vorgang wird weitergeleitet. Fortsetzen?</message>
 	<message xml:lang="it">L'operazione sarà rediretta. Vuoi continuare?</message>
 	<message xml:lang="es">La operación será redirigida. ¿Continuar?</message>
 	<message xml:lang="pt">A operação será redirecionada. Continuar?</message>
@@ -2737,7 +2738,7 @@ Obnoviť dokument zo zálohy?</message>
 <label define="AM_ALT">
 	<message xml:lang="en">Alternate text</message>
 	<message xml:lang="fr">Texte alternatif</message>
-	<message xml:lang="de">Alternativer Text:</message>
+	<message xml:lang="de">Alternativtext</message>
 	<message xml:lang="it">Testo alternativo</message>
 	<message xml:lang="es">Texto alternativo:</message>
 	<message xml:lang="pt">Texto alternativo</message>
@@ -2757,7 +2758,7 @@ Obnoviť dokument zo zálohy?</message>
 <label define="AM_ALT_MISSING">
 	<message xml:lang="en">Give an alternate text</message>
 	<message xml:lang="fr">Donner texte de remplacement !</message>
-	<message xml:lang="de">Alternativer Text muss angegeben werden!</message>
+	<message xml:lang="de">Alternativtext muss angegeben werden!</message>
 	<message xml:lang="it">Il testo alternativo è obbligatorio</message>
 	<message xml:lang="es">El texto alternativo es obligatorio</message>
 	<message xml:lang="pt">O texto alternativo é mandatório</message>
@@ -2933,7 +2934,7 @@ edin</message>
 <label define="AM_IGNORE_EXPIRES">
 	<message xml:lang="en">Ignore Expires: header</message>
 	<message xml:lang="fr">Ignorer l'en-tête Expires:</message>
-	<message xml:lang="de">Ungültigkeit ignorieren: Kopfzeile</message>
+	<message xml:lang="de">Expires ignorieren: HTTP-Header</message>
 	<message xml:lang="it">Ignora le scadenze: header</message>
 	<message xml:lang="es">Ignorar Expires: cabecera</message>
 	<message xml:lang="pt">Ignorar fim de validade (Expires): cabeçalho</message>
@@ -3031,7 +3032,7 @@ edin</message>
 <label define="AM_HTTP_PROXY">
 	<message xml:lang="en">HTTP proxy (e.g., www.w3.org:1234)</message>
 	<message xml:lang="fr">Proxy HTTP</message>
-	<message xml:lang="de">HTTP-Proxy (z. B. www.w3.org:1234)</message>
+	<message xml:lang="de">HTTP-Proxy (z. B.: www.w3.org:1234)</message>
 	<message xml:lang="it">HTTP proxy (es., http://groucho.marx.edu)</message>
 	<message xml:lang="es">Proxy HTTP (p.e., www.w3.org:1234):</message>
 	<message xml:lang="pt">Proxy HTTP (por exemplo www.w3.org:1234)</message>
@@ -3052,7 +3053,7 @@ www.w3.org:1234)</message>
 	<message xml:lang="en">Proxy domain list (e.g., lists.w3.org)</message>
 	<message xml:lang="fr">Liste des domaines du proxy (e.g.,
 lists.w3.org)</message>
-	<message xml:lang="de">Proxy-Domänen (z. B. lists.w3.org.) </message>
+	<message xml:lang="de">Proxy-Domänen (z. B.: lists.w3.org.) </message>
 	<message xml:lang="it">Domini di proxy (es., www.w3.org)</message>
 	<message xml:lang="es">Lista de dominios proxy (p.e., lists.w3.org):</message>
 	<message xml:lang="pt">Lista de domínios proxy (por exemplo
@@ -3281,7 +3282,7 @@ lists.w3.org)</message>
 <label define="AM_SHOW_BUTTONBAR">
 	<message xml:lang="en">Show button bar</message>
 	<message xml:lang="fr">Montrer boutons</message>
-	<message xml:lang="de">Symbolleiste anzeigen</message>
+	<message xml:lang="de">Symbolleiste einblenden</message>
 	<message xml:lang="it">Mostra barra dei pulsanti</message>
 	<message xml:lang="tr">Tusları göster</message>
 	<message xml:lang="es">Mostar barra de botones</message>
@@ -3301,7 +3302,7 @@ lists.w3.org)</message>
 <label define="AM_SHOW_TEXTZONE">
 	<message xml:lang="en">Show address</message>
 	<message xml:lang="fr">Montrer adresse</message>
-	<message xml:lang="de">Adresszeile anzeigen</message>
+	<message xml:lang="de">Adresszeile einblenden</message>
 	<message xml:lang="it">Mostra indirizzo</message>
 	<message xml:lang="tr">Adres göster</message>
 	<message xml:lang="es">Mostrar barra de dirección</message>
@@ -3321,7 +3322,7 @@ lists.w3.org)</message>
 <label define="AM_SHOW_TARGETS">
 	<message xml:lang="en">Show targets</message>
 	<message xml:lang="fr">Montrer les cibles</message>
-	<message xml:lang="de">Anker anzeigen</message>
+	<message xml:lang="de">Ziele einblenden</message>
 	<message xml:lang="it">Mostra obiettivi</message>
 	<message xml:lang="es">Mostrar destinos</message>
 	<message xml:lang="pt">Exibir destinos</message>
@@ -3360,7 +3361,7 @@ lists.w3.org)</message>
 <label define="AM_BROWSE_MENU">
 	<message xml:lang="en">Browsing</message>
 	<message xml:lang="fr">Navigation</message>
-	<message xml:lang="de">Browser</message>
+	<message xml:lang="de">Browsing</message>
 	<message xml:lang="fi">Selaus</message>
 	<message xml:lang="it">Visualizzazione</message>
 	<message xml:lang="es">Navegación</message>
@@ -3378,7 +3379,7 @@ lists.w3.org)</message>
 <label define="AM_LOAD_IMAGES">
 	<message xml:lang="en">Load images (img)</message>
 	<message xml:lang="fr">Charger les images (img)</message>
-	<message xml:lang="de">Grafik laden (img)</message>
+	<message xml:lang="de">Grafiken laden (img)</message>
 	<message xml:lang="fi">Lataa kuvat (img)</message>
 	<message xml:lang="it">Caricare immagini (img)</message>
 	<message xml:lang="es">Cargar imágenes (img)</message>
@@ -3397,7 +3398,7 @@ lists.w3.org)</message>
 <label define="AM_ENABLE_DOUBLECLICK">
 	<message xml:lang="en">Double click activates link</message>
 	<message xml:lang="fr">Cliquer deux fois pour suivre un lien</message>
-	<message xml:lang="de">Verweis durch Doppelklick öffnen</message>
+	<message xml:lang="de">Verweis mit Doppelklick öffnen</message>
 	<message xml:lang="it">Il doppio click attiva il collegamento</message>
 	<message xml:lang="es">Activar enlaces con un doble clic</message>
 	<message xml:lang="pt">Duplo clique ativa enlace</message>
@@ -3418,7 +3419,7 @@ tuşlayın</message>
 <label define="AM_PUBLISH_MENU">
 	<message xml:lang="en">Publishing</message>
 	<message xml:lang="fr">Publication</message>
-	<message xml:lang="de">Veröffentlichen</message>
+	<message xml:lang="de">Veröffentlichung</message>
 	<message xml:lang="it">Pubblicazione</message>
 	<message xml:lang="es">Publicación</message>
 	<message xml:lang="pt">Publicação</message>
@@ -3479,7 +3480,7 @@ tuşlayın</message>
 	<message xml:lang="en">Default name for URLs finishing in '/'</message>
 	<message xml:lang="fr">Nom par défaut pour les URLs finissant par un
 '/'</message>
-	<message xml:lang="de">Standardname für URL-Ziel nach '/' </message>
+	<message xml:lang="de">Standardname für URLs die mit '/' enden</message>
 	<message xml:lang="it">Nome di default per gli URL che terminano con
 '/'</message>
 	<message xml:lang="es">El nombre por omisión de URL termina en '/':</message>
@@ -3501,7 +3502,7 @@ tuşlayın</message>
 <label define="AM_GEOMETRY_MENU">
 	<message xml:lang="en">Geometry</message>
 	<message xml:lang="fr">Géométrie</message>
-	<message xml:lang="de">Ansicht</message>
+	<message xml:lang="de">Fenstereinstellung</message>
 	<message xml:lang="it">Geometria</message>
 	<message xml:lang="es">Geometría</message>
 	<message xml:lang="pt">Geometria</message>
@@ -3520,7 +3521,7 @@ tuşlayın</message>
 <label define="AM_SAVE_GEOMETRY">
 	<message xml:lang="en">Save current geometry</message>
 	<message xml:lang="fr">Enregistrer la géométrie courante</message>
-	<message xml:lang="de">Aktuelle Ansicht speichern</message>
+	<message xml:lang="de">Aktuelle Fenstereinstellung speichern</message>
 	<message xml:lang="it">Salva la geometria corrente</message>
 	<message xml:lang="es">Guardar la geometría actual</message>
 	<message xml:lang="pt">Salvar geometria atual</message>
@@ -3540,7 +3541,7 @@ tuşlayın</message>
 <label define="AM_RESTORE_GEOMETRY">
 	<message xml:lang="en">Restore default geometry</message>
 	<message xml:lang="fr">Restaurer la géométrie défaut</message>
-	<message xml:lang="de">Standardansicht wiederherstellen</message>
+	<message xml:lang="de">Fenstereinstellung zurücksetzen</message>
 	<message xml:lang="it">Ripristina la geometria di default</message>
 	<message xml:lang="es">Restaurar la geometría por omisión</message>
 	<message xml:lang="pt">restaurar geometria padrão</message>
@@ -3589,7 +3590,7 @@ spustení programu.</message>
 <label define="AM_DOC_FG_COLOR">
 	<message xml:lang="en">Document foreground color</message>
 	<message xml:lang="fr">Couleur du texte</message>
-	<message xml:lang="de">Schriftfarbe</message>
+	<message xml:lang="de">Dokument Schriftfarbe</message>
 	<message xml:lang="it">Colore in primo piano nei documenti</message>
 	<message xml:lang="es">Color del texto del documento:</message>
 	<message xml:lang="pt">Cor do plano frontal do documento</message>
@@ -3609,7 +3610,7 @@ spustení programu.</message>
 <label define="AM_DOC_BG_COLOR">
 	<message xml:lang="en">Document background color</message>
 	<message xml:lang="fr">Couleur de fond</message>
-	<message xml:lang="de">Hintergrundfarbe</message>
+	<message xml:lang="de">Dokument Hintergrundfarbe</message>
 	<message xml:lang="it">Colore dello sfondo nei documenti</message>
 	<message xml:lang="es">Color de fondo del documento:</message>
 	<message xml:lang="pt">Cor de fundo do documento</message>
@@ -3629,7 +3630,7 @@ spustení programu.</message>
 <label define="AM_MENU_FG_COLOR">
 	<message xml:lang="en">Menu foreground color</message>
 	<message xml:lang="fr">Couleur des menus</message>
-	<message xml:lang="de">Menüvordergrundfarbe</message>
+	<message xml:lang="de">Menü Schriftfarbe</message>
 	<message xml:lang="it">Colore in primo piano nei menu</message>
 	<message xml:lang="es">Color del menú</message>
 	<message xml:lang="pt">Cor do plano frontal do menu</message>
@@ -3649,7 +3650,7 @@ spustení programu.</message>
 <label define="AM_MENU_BG_COLOR">
 	<message xml:lang="en">Menu background color</message>
 	<message xml:lang="fr">Couleur de fond des menus</message>
-	<message xml:lang="de">Menühintergrundfarbe</message>
+	<message xml:lang="de">Menü Hintergrundfarbe</message>
 	<message xml:lang="it">Colore dello sfondo nei menu</message>
 	<message xml:lang="es">Color de fondo del menú</message>
 	<message xml:lang="pt">Cor de fundo do menu</message>
@@ -3711,7 +3712,7 @@ používateľ.</message>
 fr&quot;:</message>
 	<message xml:lang="fr">Liste des langues préférées comme &quot;fr, en&quot;
 :</message>
-	<message xml:lang="de">Liste bevorzugter Sprachen wie &quot;DE, EN&quot;:</message>
+	<message xml:lang="de">Bevorzugte Sprachen wie &quot;de, en, fr&quot;:</message>
 	<message xml:lang="it">Lista delle lingue preferite, come &quot;it, en,
 fr&quot;:</message>
 	<message xml:lang="es">Lista de idiomas preferidos (p.e. &quot;es, en,
@@ -3795,7 +3796,7 @@ tieto domény</message>
 <label define="AM_WITH_CSS">
 	<message xml:lang="en">Ignore style sheets</message>
 	<message xml:lang="fr">Sans feuilles de style</message>
-	<message xml:lang="de">Stylesheet ignorieren</message>
+	<message xml:lang="de">Stylesheets ignorieren</message>
 	<message xml:lang="it">Ignora gli stili CSS</message>
 	<message xml:lang="es">Ignorar hojas de estilo</message>
 	<message xml:lang="pt">Ignorar folhas de estilo</message>
@@ -3834,7 +3835,7 @@ tieto domény</message>
 <label define="AM_PROXY_DOMAIN_INFO">
 	<message xml:lang="en">(separate each entry with a space)</message>
 	<message xml:lang="fr">(séparer chaque entrée avec un espace)</message>
-	<message xml:lang="de">(Einträge durch Leerzeichen trennen)</message>
+	<message xml:lang="de">(Jeder Eintrag durch ein Leerzeichen trennen)</message>
 	<message xml:lang="it">(separa ogni campo con uno spazio)</message>
 	<message xml:lang="es">(separar los dominios con un espacio)</message>
 	<message xml:lang="pt">(separar cada entrada com um espaço)</message>
@@ -3896,7 +3897,7 @@ domaineihin</message>
 <label define="AM_MATH_ENTITY_NAME">
 	<message xml:lang="en">Character name (ex: amp) or hexa code (ex: 026)</message>
 	<message xml:lang="fr">Nom du caractère (ex: amp) ou code hexadécimal (ex: 026)</message>
-	<message xml:lang="de">Zeichenname (ex: amp)</message>
+	<message xml:lang="de">Zeichenname (z. B.: amp) oder hex-Code (z. B.: 026)</message>
 	<message xml:lang="it">Nome del carattere (ex: amp or 026)</message>
 	<message xml:lang="es">Nombre de carácter (ex: amp or 026)</message>
 	<message xml:lang="pt">Nome de carácter (ex: amp or 026)</message>
@@ -3974,7 +3975,7 @@ domaineihin</message>
 <label define="AM_LANNEG_MENU">
 	<message xml:lang="en">Language Negotiation</message>
 	<message xml:lang="fr">Négociation de langues</message>
-	<message xml:lang="de">Sprachen</message>
+	<message xml:lang="de">Sprachaushandlung</message>
 	<message xml:lang="it">Negoziazione della lingua</message>
 	<message xml:lang="es">Negociación de idioma</message>
 	<message xml:lang="pt">Negociação de idioma</message>
@@ -4013,7 +4014,7 @@ domaineihin</message>
 <label define="AM_LINK">
 	<message xml:lang="en">Link</message>
 	<message xml:lang="fr">Lien</message>
-	<message xml:lang="de">Link/Verweis</message>
+	<message xml:lang="de">Verweis</message>
 	<message xml:lang="it">Link</message>
 	<message xml:lang="tr">Bağlantı</message>
 	<message xml:lang="es">Enlace</message>
@@ -4032,7 +4033,7 @@ domaineihin</message>
 <label define="AM_ANNOT_USER">
 	<message xml:lang="en">Annotation and bookmark user</message>
 	<message xml:lang="fr">Nom de l'utilisateur</message>
-	<message xml:lang="de">Anmerkungs- und Lesezeichenbenutzer</message>
+	<message xml:lang="de">Anmerkung und Lesezeichen-Benutzer</message>
 	<message xml:lang="it">Nome utente</message>
 	<message xml:lang="es">Usuario anotaciones/marcadores:</message>
 	<message xml:lang="pt">Usuário anotador</message>
@@ -4052,7 +4053,7 @@ domaineihin</message>
 <label define="AM_ANNOT_POST_SERVER">
 	<message xml:lang="en">Annotation post server</message>
 	<message xml:lang="fr">Serveur de publication</message>
-	<message xml:lang="de">Anmerkungen veröffentlichen</message>
+	<message xml:lang="de">Anmerkung Ausgangsserver</message>
 	<message xml:lang="it">Server per la pubblicazione</message>
 	<message xml:lang="es">Servidor de publicación:</message>
 	<message xml:lang="pt">Servidor de publicação de anotações</message>
@@ -4072,7 +4073,7 @@ domaineihin</message>
 <label define="AM_ANNOT_SERVERS">
 	<message xml:lang="en">Annotation servers</message>
 	<message xml:lang="fr">Serveur d'annotations</message>
-	<message xml:lang="de">Anmerkungsserver</message>
+	<message xml:lang="de">Anmerkung Server</message>
 	<message xml:lang="it">Server per le annotazioni</message>
 	<message xml:lang="es">Servidores de anotaciones:</message>
 	<message xml:lang="pt">Servidores de anotações</message>
@@ -4115,7 +4116,7 @@ locales</message>
 	<message xml:lang="en">Autoload remote annotations</message>
 	<message xml:lang="fr">Charger automatiquement les annotations
 distantes</message>
-	<message xml:lang="de">Entfernte Anmerkungen automatisch laden</message>
+	<message xml:lang="de">Remote Anmerkungen automatisch laden</message>
 	<message xml:lang="it">Caricamento automatico delle annotazioni
 remote</message>
 	<message xml:lang="es">Autocargar anotaciones remotas</message>
@@ -4143,7 +4144,7 @@ distantes au démarrage</message>
 inicio (para trabajo sin conexión)</message>
 	<message xml:lang="it">Disabilita il caricamento remoto automatico alla
 partenza (per lavorare offline)</message>
-	<message xml:lang="de">Entferntes bei jedem Systemstart automatisch Laden deaktivieren (für Offlinearbeit.)</message>
+	<message xml:lang="de">Remote Anmerkungen automatisch beim Systemstart laden deaktivieren (Offline)</message>
 	<message xml:lang="pt">Desabilitar autocarga remota em cada partida (para
 trabalho off-line)</message>
 	<message xml:lang="fi">Poista etälataus käytöstä käynnistyksen
@@ -4167,7 +4168,7 @@ komentárov pri každom spustení (pre prácu offline)</message>
 <label define="AM_FG_SEL_COLOR">
 	<message xml:lang="en">Selection color</message>
 	<message xml:lang="fr">Couleur de sélection</message>
-	<message xml:lang="de">Farbe auswählen</message>
+	<message xml:lang="de">Markierung Schriftfarbe</message>
 	<message xml:lang="it">Colore della selezione</message>
 	<message xml:lang="es">Color del texto seleccionado:</message>
 	<message xml:lang="pt">Cor de seleção</message>
@@ -4189,7 +4190,7 @@ komentárov pri každom spustení (pre prácu offline)</message>
 	<message xml:lang="fr">Couleur de fond de sélection</message>
 	<message xml:lang="it">Selezione colore di sfondo</message>
 	<message xml:lang="es">Color de fondo texto selecc.:</message>
-	<message xml:lang="de">Hintergrundfarbe bei Markierungen</message>
+	<message xml:lang="de">Markierung Hintergrundfarbe</message>
 	<message xml:lang="ru">Цвет фона выбранного</message>
 	<message xml:lang="hu">A kijelölés háttérszíne</message>
 	<message xml:lang="ka">მონიშნულის ფონის
@@ -4262,7 +4263,7 @@ komentárov pri každom spustení (pre prácu offline)</message>
 	<message xml:lang="en">Keep multiple spaces</message>
 	<message xml:lang="fr">Garder les espaces multiples</message>
 	<message xml:lang="es">Mantener espaciado múltiple</message>
-	<message xml:lang="de">Mehrfache Leerzeichen erhalten</message>
+	<message xml:lang="de">Mehrere Leerzeichen beibehalten</message>
 	<message xml:lang="hu">Többszörös szóközök megtartása</message>
 	<message xml:lang="sk">Ponechať viacnásobné medzery</message>
 	<message xml:lang="it">Conserva gli spazi multipli</message>
@@ -4292,7 +4293,7 @@ komentárov pri každom spustení (pre prácu offline)</message>
 continuer</message>
 	<message xml:lang="es">Error fatal - Corrija el código fuente para
 continuar</message>
-	<message xml:lang="de">Fataler Fehler - den Quellcode korrigieren, um fortzusetzen</message>
+	<message xml:lang="de">Schwerwiegender Fehler - Quellcode korrigieren um fortzusetzen</message>
 	<message xml:lang="it">Errore fatale - Correggi il sorgente per
 continuare</message>
 	<message xml:lang="hu">Végzetes hiba - A forráskód javítandó</message>
@@ -4373,7 +4374,7 @@ errors</message>
 erreurs</message>
 	<message xml:lang="it">Errore - vedi Viste &gt; Mostra le errore</message>
 	<message xml:lang="de">Fehler aufgetreten - siehe Ansicht &gt; Parserfehler
-anzeigen</message>
+einblenden</message>
 	<message xml:lang="es">Eerrores - vea Ver &gt; Mostrar errores
 sintácticos</message>
 	<message xml:lang="pt">Erros - veja Vistas &gt; Exibir erros de gramática
@@ -4482,7 +4483,7 @@ typ</message>
 	<message xml:lang="en">Browse</message>
 	<message xml:lang="fr">Parcourir</message>
 	<message xml:lang="it">Scorri</message>
-	<message xml:lang="de">Öffnen...</message>
+	<message xml:lang="de">Durchsuchen</message>
 	<message xml:lang="es">Buscar</message>
 	<message xml:lang="pt">Navegar</message>
 	<message xml:lang="fi">Selaa</message>
@@ -4501,7 +4502,7 @@ typ</message>
 	<message xml:lang="en">File Browser</message>
 	<message xml:lang="fr">Sélecteur de fichiers</message>
 	<message xml:lang="it">File Browser</message>
-	<message xml:lang="de">Öffnen...</message>
+	<message xml:lang="de">Datei-Browser</message>
 	<message xml:lang="es">Buscador de archivos</message>
 	<message xml:lang="pt">Navegador de arquivos</message>
 	<message xml:lang="fi">Selaa tiedostoja</message>
@@ -4537,7 +4538,7 @@ typ</message>
 </label>
 <label define="AM_AFILTER">
 	<message xml:lang="en">Annotation Local Filter Menu</message>
-	<message xml:lang="de">Anmerkungsfilter</message>
+	<message xml:lang="de">Anmerkung lokales Filter-Menü</message>
 	<message xml:lang="fr">Filtre local des annotations</message>
 	<message xml:lang="es">Filtro local de anotaciones</message>
 	<message xml:lang="it">Menu per i filtri locali - annotazioni</message>
@@ -4557,7 +4558,7 @@ typ</message>
 </label>
 <label define="AM_AFILTER_SHOW">
 	<message xml:lang="en">Show errors</message>
-	<message xml:lang="de">Fehler anzeigen</message>
+	<message xml:lang="de">Fehler einblenden</message>
 	<message xml:lang="fr">Montrer les erreurs</message>
 	<message xml:lang="es">Mostrar</message>
 	<message xml:lang="it">Mostra</message>
@@ -4595,7 +4596,7 @@ typ</message>
 </label>
 <label define="AM_AFILTER_SHOW_ALL">
 	<message xml:lang="en">Show all</message>
-	<message xml:lang="de">Alle anzeigen</message>
+	<message xml:lang="de">Alle einblenden</message>
 	<message xml:lang="fr">Montrer tout</message>
 	<message xml:lang="es">Mostrar todo</message>
 	<message xml:lang="it">Mostra tutto</message>
@@ -4614,7 +4615,7 @@ typ</message>
 </label>
 <label define="AM_AFILTER_HIDE_ALL">
 	<message xml:lang="en">Hide all</message>
-	<message xml:lang="de">Keine</message>
+	<message xml:lang="de">Alle ausblenden</message>
 	<message xml:lang="fr">Cacher tout</message>
 	<message xml:lang="es">Ocultar todo</message>
 	<message xml:lang="it">Nascondi tutto</message>
@@ -4633,7 +4634,7 @@ typ</message>
 </label>
 <label define="AM_AFILTER_HELP">
 	<message xml:lang="en">* means hidden, - means partially hidden</message>
-	<message xml:lang="de">* = verborgen, - = teilweise verborgen</message>
+	<message xml:lang="de">* = ausgeblendet, - = teilweise ausgeblendet</message>
 	<message xml:lang="fr">* signifie caché, - signifie partiellement
 caché</message>
 	<message xml:lang="es">* significa oculto, - significa parcialmente
@@ -4740,7 +4741,7 @@ skryté</message>
 	<message xml:lang="en">Access keys</message>
 	<message xml:lang="fr">Accés rapides</message>
 	<message xml:lang="es">Atajos de teclado</message>
-	<message xml:lang="de">Zugriffstasten</message>
+	<message xml:lang="de">Tastenkombinationen</message>
 	<message xml:lang="it">Chiavi di accesso</message>
 	<message xml:lang="pt">Teclas de acesso</message>
 	<message xml:lang="fi">Access näppäimet</message>
@@ -4814,7 +4815,7 @@ skryté</message>
 	<message xml:lang="en">Style element</message>
 	<message xml:lang="fr">Elément Style</message>
 	<message xml:lang="es">Elemento de estilo</message>
-	<message xml:lang="de">Stilelement</message>
+	<message xml:lang="de">Style-Element</message>
 	<message xml:lang="it">Elemento si stile</message>
 	<message xml:lang="pt">Elemento de estilo</message>
 	<message xml:lang="fi">Tyyli elementti</message>
@@ -4855,8 +4856,7 @@ added element</message>
 ajouté par Amaya</message>
 	<message xml:lang="it">Impossibile attaccare uno start XPointer su un elemento
 aggiunto internamente</message>
-	<message xml:lang="de">Anbringen eines Start XPointer an ein internes
-zusätzliches Element nicht möglich</message>
+	<message xml:lang="de">Start XPointer konnte nicht auf ein internes zusätzliches Element angehängt werden</message>
 	<message xml:lang="es">Imposible adjuntar un XPointer inicial sobre un
 elemento interno agregado</message>
 	<message xml:lang="pt">Impossível anexar um XPointer inicial a um elemento
@@ -4968,7 +4968,7 @@ dokumentu</message>
 Preferences</message>
 	<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir les Préférences</message>
 	<message xml:lang="it">Non sono state dichiarate annotazioni utente Preferenze</message>
-	<message xml:lang="de">Kein Ersteller für Anmerkung konfiguriert, bitte das Einstellungen öffnen</message>
+	<message xml:lang="de">Für die Anmerkung wurde kein Benutzer angegeben. Bitte Optionen öffnen</message>
 	<message xml:lang="es">No hay usuarios de anotaciones declarados. Por favor, abra el Preferencias</message>
 	<message xml:lang="pt">Não foi declarado o usuário da anotação. Por favor abra Preferências</message>
 	<message xml:lang="fi">Merkinnän käyttäjää ei valittu. Valitse
@@ -5140,7 +5140,7 @@ XPointerის შექმნა ვერ ხერხდება</message>
 	<message xml:lang="en">Select a charset</message>
 	<message xml:lang="fr">Sélectionner un codage</message>
 	<message xml:lang="it">Seleziona un charset</message>
-	<message xml:lang="de">Zeichenkodierung wählen</message>
+	<message xml:lang="de">Zeichensatz wählen</message>
 	<message xml:lang="es">Seleccionar un charset</message>
 	<message xml:lang="pt">Selecionar um charset</message>
 	<message xml:lang="fi">Valitse charset</message>
@@ -5178,7 +5178,7 @@ XPointerის შექმნა ვერ ხერხდება</message>
 	<message xml:lang="en">Change charset</message>
 	<message xml:lang="fr">Changer le codage</message>
 	<message xml:lang="it">Cambia Charset</message>
-	<message xml:lang="de">Zeichenkodierung ändern</message>
+	<message xml:lang="de">Zeichensatz ändern</message>
 	<message xml:lang="es">Cambiar Charset</message>
 	<message xml:lang="pt">Mudar Charset</message>
 	<message xml:lang="fi">Muuta Charset</message>
@@ -5263,7 +5263,7 @@ option</message>
 	<message xml:lang="fr">L'URL doit être de type HTTP pour utiliser</message>
 	<message xml:lang="it">Per usare questa opzione, il target deve essere un'URL
 HTTP</message>
-	<message xml:lang="de">Das Ziel muss eine HTTP-URL sein, um diese Option zu benutzen</message>
+	<message xml:lang="de">Das Ziel muss eine HTTP-URL sein, um diese Option zu verwenden</message>
 	<message xml:lang="es">Para usar esta opción el destino tiene que ser una URL
 HTTP</message>
 	<message xml:lang="pt">O destino deve ser uma URL HTTP para usar esta
@@ -5363,8 +5363,8 @@ fenêtre.</message>
 ventana</message>
 	<message xml:lang="it">Questo documento è già caricato in un'altra
 finestra</message>
-	<message xml:lang="de">Dieses Dokument wird bereits in einem anderen Fenster
-angezeigt</message>
+	<message xml:lang="de">Dieses Dokument ist bereits in einem anderen Fenster
+geladen</message>
 	<message xml:lang="pt">Este documento já está carregado em outra
 Janela</message>
 	<message xml:lang="fi">Tämä dokumentti on avattu jo toiseen
@@ -5423,7 +5423,7 @@ or attributes</message>
 certains éléments ou attributs</message>
 	<message xml:lang="it">Aggiungere o cambiare doctype eliminerà alcuni
 elementi o attributi</message>
-	<message xml:lang="de">Durch Hinzuzufügen oder Änderung des DOCTYPE, werden einige Elemente oder Attribute entfernt</message>
+	<message xml:lang="de">Durch Hinzufügen oder Änderung des Dokumenttyps werden einige Elemente oder Attribute entfernt</message>
 	<message xml:lang="es">Al añadir o modificar el doctype se pueden eliminar
 algunos elementos o atributos</message>
 	<message xml:lang="ru">Добавление или изменения типа документа удалит некоторые элементы или атрибуты</message>
@@ -5447,7 +5447,7 @@ niektoré prvky a atribúty</message>
 	<message xml:lang="en">Please confirm operation</message>
 	<message xml:lang="fr">Confirmez-vous l'opération ?</message>
 	<message xml:lang="it">Confermi l'operazione?</message>
-	<message xml:lang="de">Sind Sie sicher?</message>
+	<message xml:lang="de">Bestätigung</message>
 	<message xml:lang="es">Por favor, confirme la operación</message>
 	<message xml:lang="ru">Подтвердите операцию</message>
 	<message xml:lang="hu">Hagyja jóvá a műveletet</message>
@@ -5465,7 +5465,7 @@ niektoré prvky a atribúty</message>
 documents</message>
 	<message xml:lang="fr">Utiliser le type MIME application/xhtml+xml pour les
 documents XHTML</message>
-	<message xml:lang="de">MIME-Typ application/xhtml+xml für XHTML-Dokumente
+	<message xml:lang="de">MIME-Typ 'application/xhtml+xml' für XHTML-Dokumente
 verwenden</message>
 	<message xml:lang="it">Per un documento XHTML, usa il MIME type
 application/xhtml+xml</message>
@@ -5496,7 +5496,7 @@ dokumenty</message>
 	<message xml:lang="en">Charset for new documents</message>
 	<message xml:lang="fr">Charset pour les nouveaux documents</message>
 	<message xml:lang="it">Charset per i nuovi documenti</message>
-	<message xml:lang="de">Zeichensatz für neue Dokumente</message>
+	<message xml:lang="de">Zeichencodierung für neue Dokumente</message>
 	<message xml:lang="es">Juego de caracteres para nuevos documentos:</message>
 	<message xml:lang="ru">Кодировка для новых документов</message>
 	<message xml:lang="hu">Az új dokumentumok kódolása</message>
@@ -5513,7 +5513,7 @@ dokumenty</message>
 	<message xml:lang="en">Lock succeeded!</message>
 	<message xml:lang="fr">Verrou réussit!</message>
 	<message xml:lang="pt">Documento foi travado com sucesso!</message>
-	<message xml:lang="de">Erfolgreich gesperrt</message>
+	<message xml:lang="de">Sperrung erfolgreich!</message>
 	<message xml:lang="fi">Lukitus onnistui!</message>
 	<message xml:lang="it">Lock riuscito!</message>
 	<message xml:lang="es">¡Bloqueo conseguido!</message>
@@ -5532,7 +5532,7 @@ dokumenty</message>
 	<message xml:lang="en">Lock failed!</message>
 	<message xml:lang="fr">Verrou a échué!</message>
 	<message xml:lang="pt">Documento não pode ser travado com sucesso!</message>
-	<message xml:lang="de">Sperrung fehlgeschlagen</message>
+	<message xml:lang="de">Sperrung fehlgeschlagen!</message>
 	<message xml:lang="fi">Lukitus epäonnistui!</message>
 	<message xml:lang="it">Lock fallito!</message>
 	<message xml:lang="es">¡Bloqueo fallido!</message>
@@ -5571,7 +5571,7 @@ dokumenty</message>
 	<message xml:lang="en">Document %s is locked!</message>
 	<message xml:lang="fr">Document %s est verrouillé!</message>
 	<message xml:lang="pt">Documento %s está travado!</message>
-	<message xml:lang="de">Dokument %s ist gesperrt</message>
+	<message xml:lang="de">Dokument %s ist gesperrt!</message>
 	<message xml:lang="fi">Dokumentti %s on lukittu!</message>
 	<message xml:lang="it">Il documento %s ha un lock!</message>
 	<message xml:lang="es">El documento %s bloqueado!</message>
@@ -5593,7 +5593,7 @@ dokumenty</message>
 d'expiration %s)</message>
 	<message xml:lang="pt">Documento %s foi travado por %s (tempo restante
 %s)</message>
-	<message xml:lang="de">Dokument %s wurde von %s gesperrt (timeout %s)</message>
+	<message xml:lang="de">Dokument %s wurde von %s gesperrt (Timeout %s)</message>
 	<message xml:lang="fi">Dokumentin %s on lukinnut %s (aikakatkaisu %s)</message>
 	<message xml:lang="it">Il documento %s ha un lock da %s (timeout %s)</message>
 	<message xml:lang="es">El documento %s está bloqueado por % (timeout
@@ -5658,7 +5658,7 @@ süresi %s)</message>
 	<message xml:lang="en">Try to unlock the document before...</message>
 	<message xml:lang="fr">Essayez déverrouillé le document...</message>
 	<message xml:lang="pt">Tente destravar o documento...</message>
-	<message xml:lang="de">Versuchen, das Dokument zuvor zu entsperren...</message>
+	<message xml:lang="de">Versuchen, das Dokument zu entsperren, bevor...</message>
 	<message xml:lang="fi">Yritä poistaa lukitus ensin...</message>
 	<message xml:lang="it">Prova a togliere prima il lock dal
 documento...&quot;</message>
@@ -5720,7 +5720,7 @@ sucesso!</message>
 	<message xml:lang="en">Unlocking %s...</message>
 	<message xml:lang="fr">En attente d'une libération du verrou...</message>
 	<message xml:lang="pt">Destravando %s...</message>
-	<message xml:lang="de">Entsperren von %s...</message>
+	<message xml:lang="de">Entsperrung von %s...</message>
 	<message xml:lang="fi">Poistetaan lukitus %s...</message>
 	<message xml:lang="it">Tolgo il lock su %s...</message>
 	<message xml:lang="es">Desbloqueando %s...</message>
@@ -5908,7 +5908,7 @@ WebDAV</message>
 échoué</message>
 	<message xml:lang="pt">Impossível salvar informação de trava
 localmente</message>
-	<message xml:lang="de">Sperrinformation in der lokalen Basis zu speichern fehlgeschlagen</message>
+	<message xml:lang="de">Speicherung der Sperrinformation in der lokalen Datenbank fehlgeschlagen</message>
 	<message xml:lang="fi">Lukitustietojen tallennus paikallisesti
 epäonnistui</message>
 	<message xml:lang="it">Impossibile salvare le informazioni di lock sulla base
@@ -5935,7 +5935,7 @@ lokálneho zdroja</message>
 	<message xml:lang="fr">Impossible éffacer verrou de la base local</message>
 	<message xml:lang="pt">Impossível remover informação de trava
 local</message>
-	<message xml:lang="de">Entfernen der Sperrinformation in der lokalen Basis fehlgeschlagen</message>
+	<message xml:lang="de">Entfernung der Sperrinformation in der lokalen Datenbank fehlgeschlagen</message>
 	<message xml:lang="fi">Lukitustietojen poisto paikallisesti
 epäonnistui</message>
 	<message xml:lang="it">Impossibile togliere le informazioni di lock dalla base
@@ -5963,7 +5963,7 @@ lokálneho zdroja</message>
 %s</message>
 	<message xml:lang="pt">Lamento, esta operação não é permitida para
 %s</message>
-	<message xml:lang="de">Sorry, diese Operation ist für %s nicht erlaubt</message>
+	<message xml:lang="de">Sorry, dieser Vorgang ist für %s nicht erlaubt</message>
 	<message xml:lang="fi">Tämä toiminto ei ole käytettävissä %s</message>
 	<message xml:lang="it">Mi spiace, questa operazione non è permessa per
 %s</message>
@@ -6092,7 +6092,7 @@ nadväznosť</message>
 	<message xml:lang="en">WebDAV sites list</message>
 	<message xml:lang="fr">Liste des sites WebDAV</message>
 	<message xml:lang="pt">Lista de recursos WebDAV</message>
-	<message xml:lang="de">WebDAV Sites-Liste</message>
+	<message xml:lang="de">WebDAV Sites</message>
 	<message xml:lang="fi">Käyttäjän WebDAV resurssi luettelo</message>
 	<message xml:lang="it">Resource list WebDAV per l'utente</message>
 	<message xml:lang="es">Lista de recursos WebDAV del usuario:</message>
@@ -6150,7 +6150,7 @@ nadväznosť</message>
 	<message xml:lang="en">Lock Timeout</message>
 	<message xml:lang="fr">Expiration du verrou</message>
 	<message xml:lang="pt">Duração da Trava</message>
-	<message xml:lang="de">Sperrzeitüberschreitung</message>
+	<message xml:lang="de">Sperrzeitspanne</message>
 	<message xml:lang="fi">Lukituksen aikakatkaisu</message>
 	<message xml:lang="it">Timeout per il lock</message>
 	<message xml:lang="es">Bloqueo terminado</message>
@@ -6247,7 +6247,7 @@ nadväznosť</message>
 	<message xml:lang="en">shared</message>
 	<message xml:lang="fr">partagée</message>
 	<message xml:lang="pt">compartilhado</message>
-	<message xml:lang="de">Gemeinsam</message>
+	<message xml:lang="de">gemeinsam</message>
 	<message xml:lang="fi">jaettu</message>
 	<message xml:lang="it">condiviso</message>
 	<message xml:lang="es">compartido</message>
@@ -6304,8 +6304,7 @@ nadväznosť</message>
 new key position...</message>
 	<message xml:lang="fr">Déplacer le curseur de position dans le document
 édité pour définir une nouvelle position clé...</message>
-	<message xml:lang="de">Den Cursor an die neue Schlüsselposition
-bewegen...</message>
+	<message xml:lang="de">Den Positionszeiger in bearbeitete Dokument verschieben, um eine neue Schlüsselposition zu definieren...</message>
 	<message xml:lang="fi">Siirrä kursoria dokumentissa määrittääksesi uuden
 avainkohdan...</message>
 	<message xml:lang="it">Muovi il cursore nel documento editato per definire la
@@ -6335,7 +6334,7 @@ má vytvoriť nová kľučová pozícia...</message>
 animation duration...</message>
 	<message xml:lang="fr">Position clé définie. Déplacer le curseur de temps
 pour définir la durée de l'animation...</message>
-	<message xml:lang="de">Schlüsselposition definiert. Schieber bewegen um die
+	<message xml:lang="de">Schlüsselposition definiert. Schieberegler verschieben, um die
 Dauer der Animation festzulegen...</message>
 	<message xml:lang="fi">Avainkohta määritelty. Siirrä liukukytkintä
 määrittääksesi animaation keston...</message>
@@ -6387,8 +6386,7 @@ l'élément...</message>
 animation duration...</message>
 	<message xml:lang="fr">Couleur de départ définie. Déplacer le curseur de
 temps pour définir la durée de l'animation...</message>
-	<message xml:lang="de">Anfangsfarbe definiert. Schieber bewegen um die Dauer
-der Animation festzulegen...</message>
+	<message xml:lang="de">Anfangsfarbe definiert. Schieberegler verschieben, um die Dauer der Animation  festzulegen...</message>
 	<message xml:lang="fi">Alkuväri määritelty. Siirrä liukukytkintä
 määrittääksesi animaation keston...</message>
 	<message xml:lang="it">Colore iniziale definito. Sposta il cursore per
@@ -6511,7 +6509,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="fr">Supprimer ID</message>
 	<message xml:lang="it">Elimina ID</message>
 	<message xml:lang="es">Borrar atributos id</message>
-	<message xml:lang="de">ID löschen</message>
+	<message xml:lang="de">ID entfernen</message>
 	<message xml:lang="ru">Удалить ID</message>
 	<message xml:lang="hu">Azonosító eltávolítása</message>
 	<message xml:lang="ka">ID-ის წაშლა</message>
@@ -6527,7 +6525,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="fr">Ajouter/Supprimer IDs</message>
 	<message xml:lang="it">Aggiungi/Elimina ID</message>
 	<message xml:lang="es">Crear/Borrar atributos id</message>
-	<message xml:lang="de">IDs hinzufügen/löschen</message>
+	<message xml:lang="de">ID hinzufügen/entfernen</message>
 	<message xml:lang="ru">Добавить/Удалить ID</message>
 	<message xml:lang="hu">Azonosítók hozzáadása/eltávolítása</message>
 	<message xml:lang="ka">ID-ების
@@ -6544,7 +6542,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="fr">Appliquer opération</message>
 	<message xml:lang="it">Applica l'operazione</message>
 	<message xml:lang="es">Aplicar operación</message>
-	<message xml:lang="de">Operationen anwenden</message>
+	<message xml:lang="de">Vorgang anwenden</message>
 	<message xml:lang="ru">Выполнить операцию</message>
 	<message xml:lang="hu">A művelet alkalmazása</message>
 	<message xml:lang="ka">ორიენტაციის
@@ -6611,7 +6609,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="fr">Nouvelle Rubrique</message>
 	<message xml:lang="it">Nuova rubrica</message>
 	<message xml:lang="es">Nuevo Tema</message>
-	<message xml:lang="de">Neue Überschrift</message>
+	<message xml:lang="de">Neues Thema</message>
 	<message xml:lang="ru">Новая тема</message>
 	<message xml:lang="hu">Új téma</message>
 	<message xml:lang="ka">ახალი თემა</message>
@@ -6627,7 +6625,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="fr">Propriétés du signet</message>
 	<message xml:lang="it">Proprietà del bookmark</message>
 	<message xml:lang="es">Propiedades de marcador</message>
-	<message xml:lang="de">Eigenschaften der Lesezeichen</message>
+	<message xml:lang="de">Lesezeichen-Eigenschaften</message>
 	<message xml:lang="ru">Свойства закладки</message>
 	<message xml:lang="hu">A könyvjelző tulajdonságai</message>
 	<message xml:lang="ka">სანიშნეების
@@ -6644,7 +6642,7 @@ nastavte dĺžku trvania animácie...</message>
 	<message xml:lang="fr">Propriétés de la rubrique</message>
 	<message xml:lang="it">Proprietà della rubrica</message>
 	<message xml:lang="es">Propiedades de tema</message>
-	<message xml:lang="de">Eigenschaften der Überschriften</message>
+	<message xml:lang="de">Thema-Eigenschaften</message>
 	<message xml:lang="ru">Свойства темы</message>
 	<message xml:lang="hu">A téma tulajdonságai</message>
 	<message xml:lang="ka">თემის
@@ -6816,7 +6814,7 @@ element\n</message>
 &lt;%s&gt;\n</message>
 	<message xml:lang="es">Reglas de estilo aplicadas al elemento
 &lt;%s&gt;\n</message>
-	<message xml:lang="de">CSS-Regeln, die für &lt;%s&gt; gelten\n</message>
+	<message xml:lang="de">CSS-Formatierungsregeln auf das &lt;%s&gt;-Element angewendet\n</message>
 	<message xml:lang="ru">Правила каскадной таблицы стилей CSS применённые к элементу &lt;%s>\n</message>
 	<message xml:lang="hu">A CSS stílusszabályok alkalmazva a(z) &lt;%s&gt; elemre\n</message>
 	<message xml:lang="ka">CSS სტილის წესები
@@ -6839,8 +6837,7 @@ double (ou simple) click\n</message>
 doppio (o semplice) clic\n</message>
 	<message xml:lang="es">Cada línea de código es un enlace al correspondiente
 código fuente. Para editarlo, active el enlace.\n</message>
-	<message xml:lang="de">Farbige Linien sind Verweise, die durch einen Doppel-
-(oder Einfach-)klick aktiviert wurden.\n</message>
+	<message xml:lang="de">Hervorgehobene Zeilen sind Verweise, die durch Doppelklick (oder einfachen Klick) aktiviert werden\n</message>
 	<message xml:lang="ru">Покрашенные линии являются ссылками и активируются при двойном (или одинарном) щелчке по ним\n</message>
 	<message xml:lang="hu">A kék egyenesek dupla (vagy egyszeres) kattintással aktiválható hivatkozások\n</message>
 	<message xml:lang="ka">ლურჯი ხაზები ბმას
@@ -6879,7 +6876,7 @@ código fuente. Para editarlo, active el enlace.\n</message>
 	<message xml:lang="fr">Pas de règle de style pour cet élément</message>
 	<message xml:lang="it">Nessuna regola di stile per questo elemento</message>
 	<message xml:lang="es">No hay regla de estilo para este elemento</message>
-	<message xml:lang="de">Für dieses Element ist keine Formatvorlage vorhanden</message>
+	<message xml:lang="de">Keine Stilregel für dieses Element</message>
 	<message xml:lang="ru">К этому элементу не применяются никакие правила стиля</message>
 	<message xml:lang="hu">Ehhez az elemhez nem tartozik stílusszabály</message>
 	<message xml:lang="ka">ამ ელემენტისთვის
@@ -6899,8 +6896,7 @@ d'abord</message>
 	<message xml:lang="es">El punto de inserción no está definido. Por favor,
 seleccionelo antes.</message>
 	<message xml:lang="ru">Не определена позиция вставки, сначала выберите её.</message>
-	<message xml:lang="de">Keine Einfügeposition definiert. Bitte zuerst
-auswählen</message>
+	<message xml:lang="de">Keine Einfügeposition definiert. Bitte zuerst wählen</message>
 	<message xml:lang="it">Nessuna posizione di inserimenti definita. Selezionala
 prima</message>
 	<message xml:lang="hu">Nincs definiálva beszúrási pozíció. Jelöljön ki egyet</message>
@@ -6969,7 +6965,7 @@ first</message>
 	<message xml:lang="en">Charset</message>
 	<message xml:lang="fr">Codage</message>
 	<message xml:lang="es">Charset</message>
-	<message xml:lang="de">Zeichensatz</message>
+	<message xml:lang="de">Zeichencodierung</message>
 	<message xml:lang="it">Charset</message>
 	<message xml:lang="ru">Кодировка</message>
 	<message xml:lang="hu">Kódolás</message>
@@ -7104,7 +7100,7 @@ first</message>
 	<message xml:lang="en">Replace current</message>
 	<message xml:lang="fr">Remplacer le document</message>
 	<message xml:lang="es">Reemplazar actual</message>
-	<message xml:lang="de">Aktuelle Seite ersetzen</message>
+	<message xml:lang="de">Aktuelles Dokument ersetzen</message>
 	<message xml:lang="it">Sostituisci l'attuale</message>
 	<message xml:lang="hu">A jelenlegi cseréje</message>
 	<message xml:lang="ka">მიმდინარის
@@ -7121,7 +7117,7 @@ first</message>
 	<message xml:lang="en">In new Window</message>
 	<message xml:lang="fr">Dans une nouvelle fenêtre</message>
 	<message xml:lang="es">En nueva ventana</message>
-	<message xml:lang="de">Neues Fenster</message>
+	<message xml:lang="de">In neuem Fenster</message>
 	<message xml:lang="it">In una nuova finestra</message>
 	<message xml:lang="hu">Új ablakban</message>
 	<message xml:lang="ka">ახალ ფანჯარაში</message>
@@ -7137,7 +7133,7 @@ first</message>
 	<message xml:lang="en">Anti-aliasing</message>
 	<message xml:lang="fr">Anti-aliasing</message>
 	<message xml:lang="es">Anti-aliasing</message>
-	<message xml:lang="de">Bildglättung</message>
+	<message xml:lang="de">Anti-Aliasing</message>
 	<message xml:lang="it">Anti-aliasing</message>
 	<message xml:lang="pt">Anti-aliasing</message>
 	<message xml:lang="tr">Anti-aliasing</message>
@@ -7156,7 +7152,7 @@ first</message>
 	<message xml:lang="en">ISO format for date</message>
 	<message xml:lang="fr">Date au format ISO</message>
 	<message xml:lang="es">Formato de fecha ISO</message>
-	<message xml:lang="de">ISO-Datumsformat</message>
+	<message xml:lang="de">Datum im ISO-Format</message>
 	<message xml:lang="it">Formato ISO per la data</message>
 	<message xml:lang="hu">A dátum ISO formátuma</message>
 	<message xml:lang="ka">თარიღის ISO
@@ -7173,7 +7169,7 @@ first</message>
 	<message xml:lang="en">New documents location</message>
 	<message xml:lang="fr">Ouvrir les nouveaux documents dans</message>
 	<message xml:lang="es">Ubicación de nuevos documentos</message>
-	<message xml:lang="de">Dateipfad für neue Dokumente</message>
+	<message xml:lang="de">Neuer Speicherort für Dokumente</message>
 	<message xml:lang="it">Locazione per i nuovi documenti</message>
 	<message xml:lang="hu">Új dokumentumok helye</message>
 	<message xml:lang="ka">ახალი დოკუმენტის
@@ -7190,7 +7186,7 @@ first</message>
 	<message xml:lang="en">Opening location</message>
 	<message xml:lang="fr">Endroit d'ouverture</message>
 	<message xml:lang="es">Abrir localización</message>
-	<message xml:lang="de">Dateipfad öffnen</message>
+	<message xml:lang="de">Speicherort öffnen</message>
 	<message xml:lang="it">Locazione per aprire documenti</message>
 	<message xml:lang="hu">Hely megnyitása</message>
 	<message xml:lang="ka">ადგილმდებარეობის
@@ -7207,7 +7203,7 @@ first</message>
 	<message xml:lang="en">Warn when closing multiple tabs</message>
 	<message xml:lang="fr">Avertir avant de fermer plusieurs onglets</message>
 	<message xml:lang="es">Avisar cuando se cierren mútiples pestañas</message>
-	<message xml:lang="de">Warnen, wenn mehrere Registerkarten geschlossen werden
+	<message xml:lang="de">Warnung wenn mehrere Registerkarten geschlossen werden
 sollen</message>
 	<message xml:lang="it">Avviso quando si chiudono pi tab</message>
 	<message xml:lang="hu">Figyelmeztetés több lap bezárása esetén</message>
@@ -7244,7 +7240,7 @@ sollen</message>
 	<message xml:lang="en">Clear url list</message>
 	<message xml:lang="fr">Vider la liste des urls</message>
 	<message xml:lang="es">Borrar historial</message>
-	<message xml:lang="de">URL-Liste löschen</message>
+	<message xml:lang="de">Verlauf löschen</message>
 	<message xml:lang="it">Vuota la lista degli URL</message>
 	<message xml:lang="hu">URL lista törlése</message>
 	<message xml:lang="ka">მისამართების სიის
@@ -7264,7 +7260,7 @@ sollen</message>
 	<message xml:lang="es">Mostrar todos los atajos</message>
 	<message xml:lang="it">Locazione per aprire documenti</message>
 	<message xml:lang="hu">Az összes gyorsbillentyű megjelenítése</message>
-	<message xml:lang="de">Alle Tastaturkürzel anzeigen</message>
+	<message xml:lang="de">Alle Tastenkombinationen anzeigen</message>
 	<message xml:lang="ka">თარგი</message>
 	<message xml:lang="ru">Показывать все ярлыки</message>
 	<message xml:lang="cn">显示所有快捷键</message>
@@ -7349,7 +7345,7 @@ hodnota)</message>
 	<message xml:lang="it">Mostra i box per il modello</message>
 	<message xml:lang="es">Mostrar cajas de plantilla</message>
 	<message xml:lang="hu">A sablon dobozainak mutatása</message>
-	<message xml:lang="de">Vorlagenumrisse anzeigen</message>
+	<message xml:lang="de">Felder in Vorlagen einblenden</message>
 	<message xml:lang="ka">თარგების დაფების
 ჩვენება</message>
 	<message xml:lang="ru">Показывать блоки шаблонов</message>
@@ -7445,7 +7441,7 @@ typu</message>
 	<message xml:lang="en">Save anyway</message>
 	<message xml:lang="fr">Enregistrer quand même</message>
 	<message xml:lang="es">Guardar de todas formas</message>
-	<message xml:lang="de">Dennoch speichern</message>
+	<message xml:lang="de">Trotzdem speichern</message>
 	<message xml:lang="it">Salva comunque</message>
 	<message xml:lang="hu">Mentés mindenképpen</message>
 	<message xml:lang="cn">强制保存</message>
@@ -7460,7 +7456,7 @@ typu</message>
 	<message xml:lang="en">Cannot locate host</message>
 	<message xml:lang="fr">Serveur inconnu</message>
 	<message xml:lang="es">Servidor no encontrado</message>
-	<message xml:lang="de">Der Host konnte nicht gefunden werden</message>
+	<message xml:lang="de">Host konnte nicht gefunden werden</message>
 	<message xml:lang="it">Non posso trovare l'host</message>
 	<message xml:lang="hu">A hoszt nem található</message>
 	<message xml:lang="cn">无法定位主机</message>
@@ -7475,7 +7471,7 @@ typu</message>
 	<message xml:lang="en">Document has changed (412)</message>
 	<message xml:lang="fr">Document modifié (412)</message>
 	<message xml:lang="es">El documento ha sido modificado (412)</message>
-	<message xml:lang="de">Das Dokument wurde geändert (412)</message>
+	<message xml:lang="de">Dokument wurde geändert (412)</message>
 	<message xml:lang="it">Il documento è stato modificato (412)</message>
 	<message xml:lang="hu">A dokumentum megváltozott (412)</message>
 	<message xml:lang="cn">文档已被改变 (412)</message>
@@ -7490,8 +7486,7 @@ typu</message>
 	<message xml:lang="en">Conflict with the current state of the resource</message>
 	<message xml:lang="fr">Conflit avec l'état de la ressource</message>
 	<message xml:lang="es">Conflicto con el estado actual del recurso</message>
-	<message xml:lang="de">Es besteht ein Konflikt mit dem aktuellen Status der
-Ressource</message>
+	<message xml:lang="de">Konflikt mit dem aktuellen Status der Ressource</message>
 	<message xml:lang="it">Conflitto con lo stato attuale della risorsa</message>
 	<message xml:lang="hu">Ellentmondás az erőforrás jelenlegi állapotával</message>
 	<message xml:lang="cn">与当前资源的状态冲突</message>
@@ -7550,7 +7545,7 @@ Ressource</message>
 <label define="AM_MISSING_TITLE">
 	<message xml:lang="en">The title is mandatory</message>
 	<message xml:lang="fr">Le titre est obligatoire</message>
-	<message xml:lang="de">Der Titel muss angegeben werden</message>
+	<message xml:lang="de">Der Titel ist obligatorisch</message>
 	<message xml:lang="it">Il titolo è obbligatorio</message>
 	<message xml:lang="es">El título es obligatorio</message>
 	<message xml:lang="hu">A cím kötelező</message>
@@ -7577,7 +7572,7 @@ Ressource</message>
 	<message xml:lang="en">Number of occurrences</message>
 	<message xml:lang="fr">Nombre d'occurrences</message>
 	<message xml:lang="es">Número de ocurrencias</message>
-	<message xml:lang="de">Anzahl des Auftretens</message>
+	<message xml:lang="de">Anzahl der Ereignisse</message>
 	<message xml:lang="hu">Előfordulások száma</message>
 	<message xml:lang="sk">Počet výskytov</message>
 	<message xml:lang="it">Numero di occorrenze</message>
@@ -7590,7 +7585,7 @@ Ressource</message>
 	<message xml:lang="en">Maximum number of occurrences reached</message>
 	<message xml:lang="fr">Nombre maximal d'occurrences atteint</message>
 	<message xml:lang="es">Número máximo de ocurrencias alcanzado</message>
-	<message xml:lang="de">Maximale Anzahl des Auftretens erreicht</message>
+	<message xml:lang="de">Maximale Anzahl der Ereignisse erreicht</message>
 	<message xml:lang="hu">Az előfordulások legnagyobb száma elérve</message>
 	<message xml:lang="sk">Maximálny počet dosiahnutých výskytov</message>
 	<message xml:lang="it">Raggiunto il massimo numero di occorrenze</message>
@@ -7603,7 +7598,7 @@ Ressource</message>
 	<message xml:lang="en">Minimum number of occurrences reached</message>
 	<message xml:lang="fr">Nombre minimum d'occurrences atteint</message>
 	<message xml:lang="es">Número mínimo de ocurrencias alcanzado</message>
-	<message xml:lang="de">Minimal Anzahl des Auftretens wurde erreicht</message>
+	<message xml:lang="de">Minimale Anzahl der Ereignisse erreicht</message>
 	<message xml:lang="hu">Az előfordulások legkisebb száma elérve</message>
 	<message xml:lang="sk">Manimálny počet dosiahnutých výskytov</message>
 	<message xml:lang="it">Raggiunto il minimo numero di occorrenze</message>
@@ -7616,7 +7611,7 @@ Ressource</message>
 	<message xml:lang="en">Check duplicated IDs</message>
 	<message xml:lang="fr">Vérifier les IDs dupliqués</message>
 	<message xml:lang="es">Verificar los IDs duplicados</message>
-	<message xml:lang="de">Doppelter IDs überprüfen</message>
+	<message xml:lang="de">Überprüfen doppelte IDs</message>
 	<message xml:lang="hu">Ellenőrizze a duplikált azonosítókat</message>
 	<message xml:lang="sk">Kontrolovať duplicitné ID</message>
 	<message xml:lang="it">Controllo ID duplicati</message>
@@ -7630,7 +7625,7 @@ Ressource</message>
 	<message xml:lang="fr">Ajouter la feuille xsl pour les éléments
 MathML</message>
 	<message xml:lang="es">Agregar la hoja xsl para los elementos MathML</message>
-	<message xml:lang="de">xsl-Stylesheet für MathML Elemente hinzufügen</message>
+	<message xml:lang="de">XSL-Stylesheet für MathML-Elemente hinzufügen</message>
 	<message xml:lang="hu">Az XSL stíluslap megadása a MathML elemekhez</message>
 	<message xml:lang="sk">Pridať XSL štýly pre prvky jazyka MathML</message>
 	<message xml:lang="it">Aggiungi il foglio di stile xsl per gli elementi
@@ -7659,7 +7654,7 @@ MathML</message>
 affiché</message>
 	<message xml:lang="es">Seleccionar la manera cuya el operador debe ser
 visualizado</message>
-	<message xml:lang="de">Art auswählen, wie der Operator angezeigt werden muss</message>
+	<message xml:lang="de">Art und Weise auswählen, wie der Operator angezeigt werden soll</message>
 	<message xml:lang="hu">Válassza ki a műveleti jel megjelenítési módját</message>
 	<message xml:lang="sk">Vyberte spôsob akým budú operátory
 zobrazené</message>
@@ -7808,7 +7803,7 @@ chiusura</message>
 	<message xml:lang="en">Degree of the variable number %d</message>
 	<message xml:lang="fr">Degré de la variable numéro %d</message>
 	<message xml:lang="es">Grado de la variable %d</message>
-	<message xml:lang="de">Grad der Variable mit Nummer %d</message>
+	<message xml:lang="de">Grad der Variablen-Nummer %d</message>
 	<message xml:lang="hu">A %d változó foka</message>
 	<message xml:lang="sk">Počet stupňov voľnosti premenných %d</message>
 	<message xml:lang="it">Grado della variable numero %d</message>
@@ -7837,7 +7832,7 @@ chiusura</message>
 	<message xml:lang="sk">Skopírovať zdroje (štýly, skripty, ...)</message>
 	<message xml:lang="it">Copia le risorse (stili, script, ...)</message>
 	<message xml:lang="ru">Копировать ресурсы (стили и сценарии)</message>
-	<message xml:lang="de">Bezugsquelle kopieren (Stile, Skripte, ...)</message>
+	<message xml:lang="de">Ressourcen kopieren (Style, Skripte, ...)</message>
 	<message xml:lang="hu">Erőforrások másolása (stílusok, szkriptek ...)</message>
 	<message xml:lang="ja">リソース（スタイルとスクリプト）をコピー</message>
 	<message xml:lang="nl">Bronnen kopiëren (opmaakmodellen en scripts)</message>
@@ -7863,7 +7858,7 @@ chiusura</message>
 	<message xml:lang="sk">Umiestnenie obrázkov</message>
 	<message xml:lang="it">Dove salvare le immagini</message>
 	<message xml:lang="ru">Место для сохранения изображений</message>
-	<message xml:lang="de">Speicherort für Bilder</message>
+	<message xml:lang="de">Dateipfad der Bilder</message>
 	<message xml:lang="hu">Hova mentendők a képek</message>
 	<message xml:lang="ja">画像を保存する場所</message>
 	<message xml:lang="nl">Locatie voor opslaan afbeeldingen</message>
@@ -7889,7 +7884,7 @@ chiusura</message>
 	<message xml:lang="sk">Obrázky, štýly a skripty</message>
 	<message xml:lang="it">Immagini, Stili e Script</message>
 	<message xml:lang="ru">Изображения, стили и сценарии</message>
-	<message xml:lang="de">Grafiken, Stile und Skripte</message>
+	<message xml:lang="de">Bilder, Stile und Skripte</message>
 	<message xml:lang="hu">Képek, stílusok és szkriptek</message>
 	<message xml:lang="ja">イメージ, スタイル, スクリプト</message>
 	<message xml:lang="nl">Afbeeldingen, opmaak en scripts</message>
@@ -8054,7 +8049,7 @@ chiusura</message>
 <label define="AM_EMAILS_SEND_AS_ZIP">
 	<message xml:lang="en">Zip archive</message>
 	<message xml:lang="fr">Archive zip</message>
-	<message xml:lang="de">Zip Archiv</message>
+	<message xml:lang="de">Zip-Archiv</message>
 	<message xml:lang="hu">ZIP-archívum</message>
 	<message xml:lang="es">Archivo zip</message>
 	<message xml:lang="it">Archivio Zip</message>
@@ -8099,7 +8094,7 @@ nastaveniach.</message>
 	<message xml:lang="it">Indirizzo e porta del server devono essere settati
 nelle Preferenze</message>
 	<message xml:lang="ru">Адрес сервера и его порт должны быть указаны в настройках</message>
-	<message xml:lang="de">Die Serveradresse und der -anschluss müssen angegeben werden</message>
+	<message xml:lang="de">Die Serveradresse und der -anschluss müssen in den Optionen angegeben werden</message>
 	<message xml:lang="hu">A kiszolgáló címét és portját meg kell adni a Beállításokban</message>
 	<message xml:lang="ja">[設定]でサーバとポートの設定をしてください</message>
 	<message xml:lang="nl">Het serveradres en de serverpoort moeten eerst in het menu Voorkeuren worden ingesteld.</message>
@@ -8165,7 +8160,7 @@ nicht</message>
 	<message xml:lang="sk">Adredsa odosielateľa má nesprávny tvar</message>
 	<message xml:lang="it">L'indirizzo del mittente è malformattato</message>
 	<message xml:lang="ru">Адрес отправителя имеет неправильный формат</message>
-	<message xml:lang="de">Die Absenderadresse ist falsch formatiert</message>
+	<message xml:lang="de">Die Absenderadresse ist ungültig</message>
 	<message xml:lang="hu">A küldő címének formátuma érvénytelen</message>
 	<message xml:lang="ja">送信元アドレスの形式がおかしいです</message>
 	<message xml:lang="nl">Het adres van de afzender is onjuist ingedeeld</message>
@@ -8179,7 +8174,7 @@ nicht</message>
 	<message xml:lang="it">L'indirizzo di un destinatario è
 malformattato</message>
 	<message xml:lang="ru">Адрес получателся имеет неправильный формат</message>
-	<message xml:lang="de">Die Empfängeradresse ist falsch formatiert</message>
+	<message xml:lang="de">Die Empfängeradresse ist ungültig</message>
 	<message xml:lang="hu">A címzett címének formátuma érvénytelen</message>
 	<message xml:lang="ja">受取人アドレスの形式がおかしいです</message>
 	<message xml:lang="nl">Het adres van de bestemmeling is onjuist ingedeeld</message>
@@ -8192,7 +8187,7 @@ malformattato</message>
 	<message xml:lang="sk">Obsah mail má nesprávny tvar</message>
 	<message xml:lang="it">Il contenuto del messaggio è malformattato</message>
 	<message xml:lang="ru">Содержимое почты имеет неправильный формат</message>
-	<message xml:lang="de">Der Inhalt der Nachricht ist falsch formatiert</message>
+	<message xml:lang="de">Der Inhalt der Nachricht ist ungültig</message>
 	<message xml:lang="hu">Az üzenet tartalma érvénytelen formátumú</message>
 	<message xml:lang="ja">メールの形式がおかしいです</message>
 	<message xml:lang="nl">De inhoud van het bericht is onjuist ingedeeld</message>
@@ -8311,8 +8306,8 @@ documentos HTML+RDFa</message>
 (syntax prefix=&quot;uri&quot;)</message>
 	<message xml:lang="fr">Choisir un espace de noms dans la liste ou en saisir un
 nouveau (syntaxe: prefix=&quot;uri&quot;)</message>
-	<message xml:lang="de">Namensraum auswählen oder hinzuzufügen eine neue (
-Syntaxpräfix = &quot;uri&quot;) </message>
+	<message xml:lang="de">Namensraum auswählen oder neu hinzuzufügen (
+Syntax Präfix=&quot;uri&quot;) </message>
 	<message xml:lang="es">Seleccionar un espacio de nombres de la lista o añadir
 uno nuevos (sintaxis prefijo=&quot;uri&quot;)</message>
 	<message xml:lang="it">Seleziona un namespace nell'elenco sotto o aggiungi uno
@@ -8347,7 +8342,7 @@ abortará lo antes posible.</message>
 	<message xml:lang="fr">Un script est encore en cours d'exécution mais sera
 interrompu dès que possible. Veuillez ressayer ultérieurement.</message>
 	<message xml:lang="de">Ein Script wird immer noch ausgeführt, wird aber sobald wie
-möglich abgebrochen. Bitte versuchen Sie es später erneut</message>
+möglich abgebrochen. Bitte versuchen Sie es später erneut.</message>
 	<message xml:lang="hu">A szkript még fut, de amint lehet, megszakításra kerül. Próbálja meg később.</message>
 	<message xml:lang="it">E' in esecuzione uno script che si cercherà di fermare
 prima possibile. Per favore prova più tardi.</message>
@@ -8362,7 +8357,7 @@ prima possibile. Per favore prova più tardi.</message>
 vista</message>
 	<message xml:lang="fr">Javascript/DOM ne peut être activé dans cette
 vue.</message>
-	<message xml:lang="de">Javascript/DOM kann in dieser Ansicht nicht aktiviert werden</message>
+	<message xml:lang="de">JavaScript/DOM kann in dieser Ansicht nicht aktiviert werden</message>
 	<message xml:lang="hu">A Javascript/DOM ebben a nézetben nem engedélyezhető.</message>
 	<message xml:lang="it">Javascript/DOM non è disponibile in questa
 vista.</message>
@@ -8375,7 +8370,7 @@ vista.</message>
 	<message xml:lang="en">Enter a javascript command:</message>
 	<message xml:lang="es">Escriba un comando JavaScript:</message>
 	<message xml:lang="fr">Rentrez une commande javascript :</message>
-	<message xml:lang="de">Javascript-Befehl eingeben:</message>
+	<message xml:lang="de">JavaScript-Befehl eingeben:</message>
 	<message xml:lang="hu">Adjon meg egy Javascript parancsot:</message>
 	<message xml:lang="it">Inserisci un comando javascript:</message>
 	<message xml:lang="ja">javascript のコマンドを入力してください:</message>
@@ -8447,7 +8442,7 @@ vista.</message>
 	<message xml:lang="en">Customizable</message>
 	<message xml:lang="es">Personalizable</message>
 	<message xml:lang="fr">Paramétrable</message>
-	<message xml:lang="de">Anpassbar</message>
+	<message xml:lang="de">Benutzerdefiniert</message>
 	<message xml:lang="hu">Testreszabható</message>
 	<message xml:lang="it">Personalizzabile</message>
 	<message xml:lang="ja">カスタマイズ可能</message>
@@ -8460,7 +8455,7 @@ vista.</message>
 	<message xml:lang="fr">Créer</message>
 	<message xml:lang="es">Crear</message>
 	<message xml:lang="it">Crea</message>
-	<message xml:lang="de">Erstellen</message>
+	<message xml:lang="de">OK</message>
 	<message xml:lang="pt">Create</message>
 	<message xml:lang="fi">Luo</message>
 	<message xml:lang="hu">Létrehoz</message>
@@ -8473,7 +8468,7 @@ vista.</message>
 	<message xml:lang="en">Create the link by click</message>
 	<message xml:lang="fr">Créer le lien en cliquant</message>
 	<message xml:lang="es">Crear el enlace haciendo clic en el destino</message>
-	<message xml:lang="de">Verweis durch anklicken erstellen</message>
+	<message xml:lang="de">Verweis übernehmen</message>
 	<message xml:lang="hu">Hivatkozás létrehozása kattintással</message>
 	<message xml:lang="it">Creare il collegamento con un click</message>
 	<message xml:lang="ja">クリックでリンクを作成</message>
@@ -8576,7 +8571,7 @@ vista.</message>
 	<message xml:lang="en">XML editing mode</message>
 	<message xml:lang="fr">Mode d'édition XML</message>
 	<message xml:lang="es">Modo de edición XML</message>
-	<message xml:lang="de">XML Bearbeitung</message>
+	<message xml:lang="de">XML-Bearbeitungsmodus</message>
 	<message xml:lang="hu">XML szerkesztési mód</message>
 	<message xml:lang="it">Modalità di editing XML</message>
 	<message xml:lang="ja">XML 編集モード</message>
@@ -8589,7 +8584,7 @@ vista.</message>
 	<message xml:lang="fr">Liste des styles</message>
 	<message xml:lang="es">Lista de hojas de estilo</message>
 	<message xml:lang="it">Elenco dei fogli di stile</message>
-	<message xml:lang="de">Liste der Stylesheets</message>
+	<message xml:lang="de">Stylesheets</message>
 	<message xml:lang="hu">Stíluslapok</message>
 	<message xml:lang="ja">スタイルシートのリスト</message>
 	<message xml:lang="nl">Opmaakmodellen</message>
@@ -8613,7 +8608,7 @@ vista.</message>
 	<message xml:lang="fr">Retirer les styles sélectionnées</message>
 	<message xml:lang="es">Eliminar hojas de estilo seleccionadas</message>
 	<message xml:lang="it">Rimuovi il foglio di stile selezionato</message>
-	<message xml:lang="de">Ausgewählte Stylesheets löschen</message>
+	<message xml:lang="de">Ausgewählte Stylesheets entfernen</message>
 	<message xml:lang="hu">Kijelölt stíluslapok eltávolítása</message>
 	<message xml:lang="ja">選択されたスタイルシートを削除</message>
 	<message xml:lang="nl">Geselecteerde opmaakmodellen verwijderen</message>
@@ -8734,7 +8729,7 @@ usato:</message>
 	<message xml:lang="ja">コンポーネント '%s' は複数定義されています</message>
 	<message xml:lang="es">El componente '%s' tiene múltiples
 definiciones</message>
-	<message xml:lang="de">Komponente '%s' hat mehrfache Definition</message>
+	<message xml:lang="de">Komponente '%s' verfügt über mehrere Definition.</message>
 	<message xml:lang="it">Il componente '%s' ha definizioni
 multiple.</message>
 	<message xml:lang="nl">Component '%s' heeft een meervoudige definitie.</message>
@@ -8747,7 +8742,7 @@ multiple.</message>
 	<message xml:lang="fr">La bibliothèque '%s' ne peut être chargée.</message>
 	<message xml:lang="ja">ライブラリ '%s' を読み込めません</message>
 	<message xml:lang="es">La biblioteca '%s' no puede cargarse.</message>
-	<message xml:lang="de">Bibliothek '%s' kann nicht geladen werden</message>
+	<message xml:lang="de">Bibliothek '%s' kann nicht geladen werden.</message>
 	<message xml:lang="it">La libreria '%s' non puo' essere
 caricata.</message>
 	<message xml:lang="nl">Bibliotheek '%s' kan niet worden geladen.</message>
@@ -8812,7 +8807,7 @@ schema.</message>
 	<message xml:lang="en">Element label:</message>
 	<message xml:lang="fr">Label de l'élément :</message>
 	<message xml:lang="es">Etiqueta de elemento:</message>
-	<message xml:lang="de">Elementbeschriftung: </message>
+	<message xml:lang="de">Elementbeschriftung:</message>
 	<message xml:lang="it">Elemento etichetta:</message>
 	<message xml:lang="ja">要素ラベル</message>
 	<message xml:lang="nl">Bijschrift voor element:</message>
@@ -8824,7 +8819,7 @@ schema.</message>
 	<message xml:lang="en">Bag area</message>
 	<message xml:lang="fr">Zone multi éléments</message>
 	<message xml:lang="es">Zona multi elementos</message>
-	<message xml:lang="de">Mehrfachelemente in Bereich</message>
+	<message xml:lang="de">Mehrere Elemente im Bereich</message>
 	<message xml:lang="it">Zona multi elementi</message>
 	<message xml:lang="ja">多要素区域</message>
 	<message xml:lang="nl">Verzamelveld</message>
@@ -9102,7 +9097,7 @@ cancellarlo.</message>
 	<message xml:lang="en">New use</message>
 	<message xml:lang="fr">Nouvelle utilisation</message>
 	<message xml:lang="es">Nuevo uso</message>
-	<message xml:lang="de">Neu Verwendung</message>
+	<message xml:lang="de">Neue Verwendung</message>
 	<message xml:lang="it">Uso nuovo</message>
 	<message xml:lang="ja">新規の利用</message>
 	<message xml:lang="nl">Nieuw gebruik</message>
@@ -9126,7 +9121,7 @@ cancellarlo.</message>
 	<message xml:lang="en">Color source code</message>
 	<message xml:lang="fr">Colorier le code source</message>
 	<message xml:lang="es">Color del código fuente</message>
-	<message xml:lang="de">Farbe Quellcode</message>
+	<message xml:lang="de">Quellcode farbig hervorheben</message>
 	<message xml:lang="it">Colore del codice sorgente</message>
 	<message xml:lang="ja">ソースコードの色</message>
 	<message xml:lang="nl">Broncode kleuren</message>
@@ -9150,7 +9145,7 @@ cancellarlo.</message>
 	<message xml:lang="en">New union</message>
 	<message xml:lang="fr">Nouvelle union</message>
 	<message xml:lang="es">Nueva unión</message>
-	<message xml:lang="de">Neue Vereinigung</message>
+	<message xml:lang="de">Neue Verbindung</message>
 	<message xml:lang="it">Nuova unione</message>
 	<message xml:lang="ja">新規の共用体</message>
 	<message xml:lang="nl">Nieuwe typenverbinding</message>
@@ -9162,7 +9157,7 @@ cancellarlo.</message>
 	<message xml:lang="en">Union</message>
 	<message xml:lang="fr">Union</message>
 	<message xml:lang="es">Unión</message>
-	<message xml:lang="de">Vereinigung</message>
+	<message xml:lang="de">Verbindung</message>
 	<message xml:lang="it">Unione</message>
 	<message xml:lang="ja">共用体</message>
 	<message xml:lang="nl">Verbinding</message>
@@ -9174,7 +9169,7 @@ cancellarlo.</message>
 	<message xml:lang="en">Union name:</message>
 	<message xml:lang="fr">Nom de l'union :</message>
 	<message xml:lang="es">Nombre de la unión:</message>
-	<message xml:lang="de">Vereinigung:</message>
+	<message xml:lang="de">Verbindung:</message>
 	<message xml:lang="it">Nome di l'unione:</message>
 	<message xml:lang="nl">Naam verbinding:</message>
 	<message xml:lang="ru">Имя объединения:</message>
