@@ -1815,7 +1815,14 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
         pParent = pAncestor[i];
     }
 
-  pNext = pAncestorNext[0];
+  if (pAncestorNext[0] && pAncestorNext[0]->ElStructSchema &&
+      DocumentOfElement (pAncestorNext[0]) == pSelDoc)
+    pNext = pAncestorNext[0];
+  else
+    {
+      pAncestorNext[0] = NULL;
+      pNext = NULL;
+    }
   for (i = 0; i < MAX_ANCESTOR && pNext == NULL; i++)
     {
       if (pAncestor[i] == NULL)
@@ -1833,7 +1840,14 @@ ThotBool CutCommand (ThotBool save, ThotBool replace)
         }
     }
 
-  pPrev = pAncestorPrev[0];
+  if (pAncestorPrev[0] && pAncestorPrev[0]->ElStructSchema &&
+      DocumentOfElement (pAncestorPrev[0]) == pSelDoc)
+    pPrev = pAncestorPrev[0];
+  else
+    {
+      pAncestorPrev[0] = NULL;
+      pPrev = NULL;
+    }
   for (i = 0; i < MAX_ANCESTOR && pPrev == NULL; i++)
     {
       if (pAncestor[i] == NULL)
