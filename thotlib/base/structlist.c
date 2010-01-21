@@ -4107,6 +4107,9 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
                                   wrnumber (pItem->ViConstant, fileDescriptor);
                                   break;
                                 case VarCounter:
+                                  fprintf (fileDescriptor, " Cntr");
+                                  wrnumber (pItem->ViCounter, fileDescriptor);
+				  break;
                                 case VarDate:
                                 case VarFDate:
                                 case VarDirName:
@@ -4403,7 +4406,11 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
                 }
               break;
             case VarCounter:
-              fprintf (fileDescriptor, " counter(Cnt%d)", pSchP->PsCounter[item->ViCounter - 1].CnNItems);
+	      if (pSchP->PsCounter[item->ViCounter - 1].CnNameIndx == 0)
+                 fprintf (fileDescriptor, " counter(Cnt%d)", item->ViCounter);
+	      else
+		fprintf (fileDescriptor, " counter(%s)",
+			 pSchP->PsConstant[pSchP->PsCounter[item->ViCounter-1].CnNameIndx-1].PdString);
               l += 14;
               break;
             case VarAttrValue:

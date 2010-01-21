@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -256,7 +256,10 @@ static void PresBoxInsert (PtrPSchema tsch, GenericContext ctxt)
 
   if (tsch->PsPresentBox)
     /* there is already a presentation box for pseudo-elements */
-    return;
+    {
+      ctxt->box = 1;
+      return;
+    }
 
   if (tsch->PsNPresentBoxes >= tsch->PsPresentBoxTableSize)
     /* the presentation box table is full. Extend it */
@@ -532,7 +535,7 @@ static int PresConstInsert (PSchema tcsh, char *value, BasicType constType)
           pSchemaPrs->PsConstant[i].PdString &&
           !strcmp (value, pSchemaPrs->PsConstant[i].PdString))
         {
-        return (i+1);
+	  return (i+1);
         }
     }
 
@@ -2990,6 +2993,45 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
 }
 
 /*----------------------------------------------------------------------
+  GetCounter
+  In presentation schema SchemaPrs, get the counter whose name is the
+  cst constant in this schema. If such a counter does not exist, create one.
+  Return the num of the counter, or 0 if a new counter cannot be created.
+  ----------------------------------------------------------------------*/
+static int GetCounter (PtrPSchema pSchemaPrs, int cst)
+{
+  int         cntr;
+  Counter    *pCntr;
+
+  cntr = 1;
+  while (cntr <= pSchemaPrs->PsNCounters &&
+	 pSchemaPrs->PsCounter[cntr - 1].CnNameIndx != cst)
+    cntr++;
+  pCntr = &pSchemaPrs->PsCounter[cntr - 1];
+  if (pCntr->CnNameIndx != cst)
+    /* this counter does not exist. Create it */
+    {
+      if (pSchemaPrs->PsNCounters >= MAX_PRES_COUNTER)
+	/* table is full */
+	cntr = 0;
+      else
+	{
+	  cntr = pSchemaPrs->PsNCounters;
+	  pCntr = &pSchemaPrs->PsCounter[cntr];
+	  pCntr->CnNameIndx = cst;
+	  pCntr->CnNItems = 0;
+	  pCntr->CnNTransmAttrs = 0;
+	  pCntr->CnNPresBoxes = 0;
+	  pCntr->CnNCreators = 0;
+	  pCntr->CnNCreatedBoxes = 0;
+	  pSchemaPrs->PsNCounters++;
+	  cntr = pSchemaPrs->PsNCounters;
+	}
+    }
+  return cntr;
+}
+
+/*----------------------------------------------------------------------
   SetVariableItem
   Add a new item to a Thot presentation variable.
   ----------------------------------------------------------------------*/
@@ -2997,31 +3039,144 @@ static void SetVariableItem (unsigned int type, PSchema tsch,
                              PresentationContext c, PresentationValue v)
 {
   GenericContext     ctxt = (GenericContext) c;
+  PtrPSchema         pSchemaPrs = (PtrPSchema) tsch;
   PtrPresVariable    pVar;
-  int                cst;
+  Counter           *pCntr;
+  int                cst, cntr;
 
-  if (c->destroy)
+  if (c->destroy || ctxt->var <= 0)
     return;
+  pVar = pSchemaPrs->PsVariable->PresVar[ctxt->var - 1];
+  if (type == PRContentCounterStyle)
+    /* set the style of the latest counter used in the current variable */
+    {
+      switch (v.typed_data.value)
+        {
+        case Disc:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntDisc;
+          break;
+        case Circle:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntCircle;
+          break;
+        case Square:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntSquare;
+          break;
+        case Decimal:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntDecimal;
+          break;
+        case DecimalLeadingZero:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntZLDecimal;
+          break;
+        case LowerRoman:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntLRoman;
+          break;
+        case UpperRoman:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntURoman;
+          break;
+        case LowerGreek:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntLGreek;
+          break;
+        case LowerLatin:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntLowercase;
+          break;
+        case UpperLatin:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntUppercase;
+          break;
+        case ListStyleTypeNone:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntNone;
+          break;
+        default:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntDecimal;
+          break;
+        }
+      return;
+    }
   cst = -1;
-  if (type == PRContentString || type == PRContentAttr)
+  if (type == PRContentString || type == PRContentAttr ||
+      type == PRContentCounter)
     cst = PresConstInsert (tsch, (char *)v.pointer, CharString);
   else if (type == PRContentURL)
     cst = PresConstInsert (tsch, (char *)v.pointer, tt_Picture);
-  if (cst >= 0 && ctxt->var > 0)
+  if (cst >= 0 && pVar->PvNItems < MAX_PRES_VAR_ITEM)
     {
-      pVar = ((PtrPSchema)tsch)->PsVariable->PresVar[ctxt->var - 1];
-      if (pVar->PvNItems < MAX_PRES_VAR_ITEM)
-        {
-          if (type == PRContentString || type == PRContentURL ||
-              type == PRContentAttr)
-            {
-              if (type == PRContentAttr)
-                pVar->PvItem[pVar->PvNItems].ViType = VarNamedAttrValue;
-              else
-                pVar->PvItem[pVar->PvNItems].ViType = VarText;
-              pVar->PvItem[pVar->PvNItems].ViConstant = cst;
-            }
-          pVar->PvNItems ++;
+      if (type == PRContentCounter)
+	{
+	  /* look for the named counter */
+	  cntr = GetCounter (pSchemaPrs, cst);
+	  /* Add a counter item to the variable */
+	  if (cntr > 0)
+	    {
+	      pVar->PvItem[pVar->PvNItems].ViType = VarCounter;
+	      pVar->PvItem[pVar->PvNItems].ViStyle = CntDecimal;
+	      pVar->PvItem[pVar->PvNItems].ViCounter = cntr;
+	      pVar->PvItem[pVar->PvNItems].ViCounterVal = CntCurVal;
+	      pVar->PvNItems ++;
+	      /* indicate that this counter is used by the presentation box
+		 that uses the variable as its content */
+	      pCntr = &pSchemaPrs->PsCounter[cntr - 1];
+	      pCntr->CnPresBox[pCntr->CnNPresBoxes] = ctxt->box;
+	      pCntr->CnNPresBoxes++;
+	    }
+	}
+      else if (type == PRContentString || type == PRContentURL ||
+	       type == PRContentAttr)
+	{
+	  if (type == PRContentAttr)
+	    pVar->PvItem[pVar->PvNItems].ViType = VarNamedAttrValue;
+	  else
+	    pVar->PvItem[pVar->PvNItems].ViType = VarText;
+	  pVar->PvItem[pVar->PvNItems].ViConstant = cst;
+	  pVar->PvNItems ++;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  SetCounterOp
+  Add a new operation to a Thot counter.
+  ----------------------------------------------------------------------*/
+static void SetCounterOp (unsigned int type, PSchema tsch,
+			  PresentationContext c, PresentationValue v)
+{
+  GenericContext     ctxt = (GenericContext) c;
+  PtrPSchema         pSchemaPrs = (PtrPSchema) tsch;
+  Counter           *pCntr;
+  int                cst, cntr;
+
+  if (c->destroy)
+    return;
+  /* look for the named counter */
+  cst = PresConstInsert (tsch, (char *)v.pointer, CharString);
+  cntr = GetCounter (pSchemaPrs, cst);
+  if (cntr > 0 && (type == PRCounterIncrement || type == PRCounterReset))
+    {
+      pCntr = &pSchemaPrs->PsCounter[cntr - 1];
+      if (pCntr->CnNItems < MAX_PRES_COUNT_ITEM)
+	{
+	  if (type == PRCounterIncrement)
+	    {
+	      pCntr->CnItem[pCntr->CnNItems].CiCntrOp = CntrAdd;
+	      pCntr->CnItem[pCntr->CnNItems].CiParamValue = v.data;
+	    }
+	  else
+	    {
+	      pCntr->CnItem[pCntr->CnNItems].CiCntrOp = CntrSet;
+	      pCntr->CnItem[pCntr->CnNItems].CiParamValue = v.data;
+	    }
+	  pCntr->CnItem[pCntr->CnNItems].CiElemType = ctxt->type;
+	  pCntr->CnItem[pCntr->CnNItems].CiAscendLevel = 0;
+	  pCntr->CnItem[pCntr->CnNItems].CiInitAttr = 0;
+	  pCntr->CnItem[pCntr->CnNItems].CiReinitAttr = 0;
+	  if (ctxt->attrLevel[0] == 0 && ctxt->attrType[0])
+	    /* there is an attribute at the first level of the CSS selector */
+	    {
+	      pCntr->CnItem[pCntr->CnNItems].CiCondAttr = ctxt->attrType[0];
+	      pCntr->CnItem[pCntr->CnNItems].CiCondAttrPresent = TRUE;
+	      pCntr->CnItem[pCntr->CnNItems].CiCondAttrValue = TtaStrdup(ctxt->attrText[0]);
+	    }
+	  else
+	    pCntr->CnItem[pCntr->CnNItems].CiCondAttr = 0;
+	  pCntr->CnNItems++;
         }
     }
 }
@@ -3070,6 +3225,8 @@ static void VariableInsert (PtrPSchema tsch, GenericContext c)
   tsch->PsNVariables++;
   ctxt->var = tsch->PsNVariables;
   var->PvNItems = 0;
+  tsch->PsPresentBox->PresBox[ctxt->box-1]->PbContent = ContVariable;
+  tsch->PsPresentBox->PresBox[ctxt->box-1]->PbContVariable = tsch->PsNVariables;
 }
 
 /*----------------------------------------------------------------------
@@ -3101,10 +3258,14 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
   int                doc = c->doc;
   ThotBool           absolute, generic, minValue;
 
-  if (type == PRContentString || type == PRContentURL || type == PRContentAttr)
+  if (type == PRContentString || type == PRContentURL ||
+      type == PRContentAttr || type == PRContentCounter ||
+      type == PRContentCounterStyle)
     /* it is a value in a CSS content rule. Generate the corresponding
        Thot presentation variable item */
     SetVariableItem (type, tsch, c, v);
+  else if (type == PRCounterIncrement || type == PRCounterReset)
+    SetCounterOp (type, tsch, c, v);
   else
     {
       TypeToPresentation (type, &intRule, &func, &absolute);
@@ -4494,6 +4655,8 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
     case PRContentString:
     case PRContentURL:
     case PRContentAttr:
+    case PRContentCounter:
+    case PRContentCounterStyle:
       break;
     case PRContent:
       sprintf (buffer, "content:");

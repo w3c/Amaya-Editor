@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2357,12 +2357,12 @@ void RedispAllReferences (PtrAbstractBox pAb, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-  SearchAbsBoxBackward                
+  SearchAbsBoxForward                
   ----------------------------------------------------------------------*/
-static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAb,
-                                            ThotBool Test, PtrSSchema pSchStr,
-                                            PtrPSchema pSchP, int Typ,
-                                            ThotBool Pres)
+static PtrAbstractBox SearchAbsBoxForward (PtrAbstractBox pAb,
+                                           ThotBool Test, PtrSSchema pSchStr,
+                                           PtrPSchema pSchP, int Typ,
+					   ThotBool Pres, ThotBool Var)
 {
   PtrAbstractBox      p, s;
 
@@ -2371,7 +2371,8 @@ static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAb,
     {
       if (Pres)
         {
-          if (pAb->AbPresentationBox && pAb->AbTypeNum == Typ)
+          if (pAb->AbPresentationBox && ((Var && pAb->AbVarNum == Typ) ||
+					 (!Var && pAb->AbTypeNum == Typ)))
             {
               if (pAb->AbPSchema == pSchP)
                 p = pAb;
@@ -2380,8 +2381,8 @@ static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAb,
         }
       else if (!pAb->AbPresentationBox
                && pAb->AbElement->ElTypeNumber == Typ
-               && (pSchStr == NULL
-                   || pAb->AbElement->ElStructSchema == pSchStr))
+               && (pSchStr == NULL ||
+                   pAb->AbElement->ElStructSchema == pSchStr))
         p = pAb;
     }
   if (p == NULL)
@@ -2390,7 +2391,7 @@ static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAb,
       s = pAb->AbFirstEnclosed;
       while (s != NULL && p == NULL)
         {
-          p = SearchAbsBoxBackward (s, TRUE, pSchStr, pSchP, Typ, Pres);
+          p = SearchAbsBoxForward (s, TRUE, pSchStr, pSchP, Typ, Pres, Var);
           s = s->AbNext;
         }
     }
@@ -2399,17 +2400,18 @@ static PtrAbstractBox SearchAbsBoxBackward (PtrAbstractBox pAb,
 
 /*----------------------------------------------------------------------
   AbsBoxFromElOrPres cherche un pave en avant dans un arbre de paves, a   
-  partir du pave pointe' par pAb. Si pres est vrai, on   
-  cherche un pave de presentation du type typeElOrPres defini dans 
-  le schema de presentation pSchP. Si pres est faux, on   
-  cherche un pave d'un element structure de type typeElOrPres      
-  defini dans le schema de structure pointe' par pSchStr. 
-  Retourne un pointeur sur le pave trouve' ou             
-  NULL si echec.                                          
+  partir du pave pointe' par pAb.
+  Si pres est vrai et var faux, on cherche un pave de presentation du type
+  typeElOrPres defini dans le schema de presentation pSchP.
+  Si pres et var sont vrais, on cherche un pave de presentation dont le contenu
+  est produit par la variable var du schema de presentation pSchP.
+  Si pres est faux, on cherche un pave d'un element structure de type
+  typeElOrPres defini dans le schema de structure pointe' par pSchStr. 
+  Retourne un pointeur sur le pave trouve' ou NULL si echec.
   ----------------------------------------------------------------------*/
-PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
-                                   int typeElOrPres, PtrPSchema pSchP,
-                                   PtrSSchema pSchStr)
+  PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
+				     ThotBool var, int typeElOrPres,
+				     PtrPSchema pSchP, PtrSSchema pSchStr)
 {
   PtrAbstractBox      pAbbResult, pAbbForward, pAbbAscent;
   ThotBool            stop;
@@ -2418,16 +2420,16 @@ PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
   if (pAb != NULL)
     /* cherche dans le sous-arbre du pave */
     {
-      pAbbResult = SearchAbsBoxBackward (pAb, FALSE, pSchStr, pSchP,
-                                         typeElOrPres, pres);
+      pAbbResult = SearchAbsBoxForward (pAb, FALSE, pSchStr, pSchP,
+					typeElOrPres, pres, var);
       if (pAbbResult == NULL)
         /* si echec, cherche dans les sous-arbres des freres suivants */
         {
           pAbbForward = pAb->AbNext;
           while (pAbbForward != NULL && pAbbResult == NULL)
             {
-              pAbbResult = SearchAbsBoxBackward (pAbbForward, TRUE,
-                                                 pSchStr, pSchP, typeElOrPres, pres);
+              pAbbResult = SearchAbsBoxForward (pAbbForward, TRUE, pSchStr,
+					       pSchP, typeElOrPres, pres, var);
               pAbbForward = pAbbForward->AbNext;
             }
           /* si echec, cherche le premier ascendant avec un frere suivant */
@@ -2453,7 +2455,8 @@ PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
                       if (pres)
                         {
                           if (pAbbAscent->AbPresentationBox &&
-                              pAbbAscent->AbTypeNum == typeElOrPres)
+			      (typeElOrPres == 0 ||
+			       pAbbAscent->AbTypeNum == typeElOrPres))
                             {
                               if (pAbbAscent->AbPSchema == pSchP)
                                 pAbbResult = pAbbAscent;
@@ -2466,7 +2469,8 @@ PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
                                    pAbbAscent->AbElement->ElStructSchema == pSchStr))
                         pAbbResult = pAbbAscent;    /* trouve */
                       if (pAbbResult == NULL)
-                        pAbbResult = AbsBoxFromElOrPres (pAbbAscent, pres, typeElOrPres, pSchP, pSchStr);
+                        pAbbResult = AbsBoxFromElOrPres (pAbbAscent, pres, var,
+						 typeElOrPres, pSchP, pSchStr);
                     }
                 }
             }
@@ -2549,10 +2553,63 @@ void ComputePageNum (PtrElement pEl, PtrDocument pDoc, int view)
 }
 
 /*----------------------------------------------------------------------
+  ComputeContentVar   recalcule le contenu de toutes les boites de    
+  presentation qui utilisent le compteur counter (dans le schema de       
+  presentation pSchP) qui sont apres pElBegin, dans la vue nv.
+  ----------------------------------------------------------------------*/
+static void  ComputeContentVar (int counter, int nv, PtrDocument pDoc,
+				PtrSSchema pSS, PtrPSchema pSchP,
+				PtrElement pElBegin, ThotBool redisp)
+{
+  PtrAbstractBox      pAb;
+  PresVariable       *pVar;
+  int                 frame, h, varNum, item;
+
+  FindFirstAbsBox (pElBegin, nv);
+  /* check all variables in this presentation schema */
+  for (varNum = 1; varNum <= pSchP->PsNVariables; varNum++)
+    {
+      pVar = pSchP->PsVariable->PresVar[varNum - 1];
+      /* check all items of this variable */
+      for (item = 1; item <= pVar->PvNItems; item++)
+	if (pVar->PvItem[item - 1].ViType == VarCounter &&
+	    pVar->PvItem[item - 1].ViCounter == counter)
+	  /* this item uses the counter */
+	  {
+	    item = pVar->PvNItems + 1; /* don't check the other items of this
+	    variable, we will recompute the value of the whole variable anyway */
+	    /* check all presentation boxes that use this variable */
+	    pAb = pAbbBegin[nv - 1];
+	    while (pAb != NULL)
+	      {
+		if (pAb->AbPresentationBox && pAb->AbVarNum == varNum &&
+		    pAb->AbPSchema == pSchP)
+		  /* fait reafficher le pave de presentation si le contenu a */
+		  /* change' */
+		  if (NewVariable (varNum, pSS, pSchP, pAb, NULL, pDoc))
+		    /* et si le pave a deja ete traite' par le mediateur */
+		    if (!pAb->AbNew)
+		      {
+			pAb->AbChange = TRUE;
+			frame = pDoc->DocViewFrame[nv - 1];
+			h = PageHeight;
+			ChangeConcreteImage (frame, &h, pAb);
+			/* on ne reaffiche pas si on est en train de calculer les
+			   pages */
+			if (PageHeight == 0 && redisp)
+			  DisplayFrame (frame);
+		      }
+		/* cherche le pave de presentation suivant de ce type */
+		pAb = AbsBoxFromElOrPres (pAb, TRUE, TRUE, varNum, pSchP, NULL);
+	      }
+	  }
+    }
+}
+
+/*----------------------------------------------------------------------
   ComputeContent   recalcule le contenu de toutes les boites de    
-  presentation du type boxType (dans le schema de       
-  presentation pSchP) qui sont apres pElBegin, dans la    
-  vue nv.                                                 
+  presentation du type boxType (dans le schema de presentation pSchP)
+  qui sont apres pElBegin, dans la vue nv.                                                 
   ----------------------------------------------------------------------*/
 static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
                             PtrSSchema pSS, PtrPSchema pSchP,
@@ -2585,7 +2642,7 @@ static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
                 DisplayFrame (frame);
             }
       /* cherche le pave de presentation suivant de ce type */
-      pAb = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
+      pAb = AbsBoxFromElOrPres (pAb, TRUE, FALSE, boxType, pSchP, NULL);
     }
 }
 
@@ -2663,7 +2720,8 @@ static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
               /* On va detruire le pave, on cherche d'abord le pave de */
               /* presentation suivant de meme type */
               {
-                pAbbFollow = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
+                pAbbFollow = AbsBoxFromElOrPres (pAb, TRUE, FALSE, boxType,
+						 pSchP, NULL);
                 /* tue le pave */
                 SetDeadAbsBox (pAb);
                 /* signale le pave mort au mediateur */
@@ -2683,7 +2741,7 @@ static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
       if (pAbbFollow == NULL)
         {
           if (pAb != NULL)
-            pAb = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
+            pAb = AbsBoxFromElOrPres (pAb, TRUE, FALSE, boxType, pSchP, NULL);
         }
       else
         {
@@ -2875,9 +2933,9 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
       /* cherche le pave suivant de ce type */
       if (page)
         /* on cherche une boite page */
-        pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
+        pAb = AbsBoxFromElOrPres (pAb, FALSE, FALSE, PageBreak + 1, NULL, NULL);
       else
-        pAb = AbsBoxFromElOrPres (pAb, presBox, boxType, pSchP, NULL);
+        pAb = AbsBoxFromElOrPres (pAb, presBox, FALSE, boxType, pSchP, NULL);
     }
 }
 
@@ -2956,10 +3014,10 @@ void TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr,
 }
 
 /*----------------------------------------------------------------------
-  ChangeBoxesCounter dans le document dont le contexte est pDoc,
+  ChangeBoxesCounter. Dans le document dont le contexte est pDoc,
   change le contenu de toutes les boites de presentation qui sont
   affectees par le compteur counter du schema de presentation 
-  pSchP, apartir de l'element pElBegin.                   
+  pSchP, a partir de l'element pElBegin.                   
   ----------------------------------------------------------------------*/
 static void ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc,
                                 int counter, PtrPSchema pSchP, PtrSSchema pSS,
@@ -2972,20 +3030,22 @@ static void ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc,
   Counter            *pCounter;
   PtrElement          pElRoot;
 
-  /* On traite toutes les boites qui utilisent ce compteur comme contenu */
+  /* On traite toutes les boites de présentation dont le contenu est une
+     variable qui utilise ce compteur */
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    ComputeContentVar (counter, view, pDoc, pSS, pSchP, pElBegin, redisp);
+
+  /* On traite toutes les boites qui utilisent la valeur maximale ou minimale
+     de ce compteur comme contenu */
   pCo1 = &pSchP->PsCounter[counter - 1];
   for (util = 1; util <= pCo1->CnNPresBoxes; util++)
     for (view = 1; view <= MAX_VIEW_DOC; view++)
       if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-        {
-          /* Il faut determiner si on doit reevaluer du debut de l'image
-             abstraite ou de pElBegin; on ne reevalue que si CnMinMaxPresBox
-             est TRUE, i.e. une boite est creee par une condition de min ou de
-             max du compteur */
-          if (!pCo1->CnMinMaxPresBox[util - 1])
-            ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS, pSchP,
-                            pElBegin, redisp);
-          else
+          /* Il faut determiner si on doit reevaluer à partir du début de l'image
+	     abstraite ou à partir de pElBegin;
+	     on ne reevalue que si CnMinMaxPresBox est TRUE, i.e. une boite est
+	     creee par une condition de min ou de max du compteur */
+          if (pCo1->CnMinMaxPresBox[util - 1])
             {
               /* On determine le debut de l'image abstraite */
               if (pDoc->DocViewRootAb[view - 1] != NULL)
@@ -3002,7 +3062,6 @@ static void ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc,
                 ComputeContent (pCo1->CnPresBox[util - 1], view, pDoc, pSS,
                                 pSchP, pElBegin, redisp);
             }
-        }
   /* On traite toutes les boites dont la creation est conditionnee par */
   /* la valeur de ce compteur */
   for (util = 1; util <= pCo1->CnNCreatedBoxes; util++)
@@ -3131,7 +3190,7 @@ static void UpdateListItemNumber (PtrElement pElBegin, PtrElement pElModif,
                         DisplayFrame (frame);		      
                     }
                 }
-              pAb = AbsBoxFromElOrPres (pAb, TRUE, 0, NULL, NULL);
+              pAb = AbsBoxFromElOrPres (pAb, TRUE, FALSE, 0, NULL, NULL);
             }
         }
 }
@@ -3147,6 +3206,7 @@ static void UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif,
 {
   int                 counter, oper, i;
   PtrPSchema          pSchP;
+  PtrHandlePSchema    pHd;
   PtrSSchema          pSS;
   int                 index;
   ThotBool            trigger;
@@ -3161,48 +3221,63 @@ static void UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif,
   /* if it's an element with "display: list-item" update the item
      numbers of the following elements */
   UpdateListItemNumber (pElBegin, pElModif, pDoc, redisp);
-  /* cherche le schema de presentation de l'element : pSchP */
+  /* get the main P Schema for this element : pSchP */
   SearchPresSchema (pElModif, &pSchP, &index, &pSS, pDoc);
-  if (pSchP != NULL)
-    /* cherche les compteurs affectes par pElModif */
-    for (counter = 1; counter <= pSchP->PsNCounters; counter++)
-      /* pour tous les compteurs du schema */
-      {
-        pCo1 = &pSchP->PsCounter[counter - 1];
-        /* examine toutes les operations du compteur */
-        for (oper = 1; oper <= pCo1->CnNItems; oper++)
-          {
-            pCp1 = &pCo1->CnItem[oper - 1];
-            /* teste si le type de l'element pElModif trigger */
-            /* l'operation sur le compteur */
-            trigger = FALSE;
-            if (pCp1->CiElemType == index)
-              /* l'element a le type qui declanche l'operation */
-              trigger = TRUE;
-            else
-              /* cherche si le type de l'element est equivalent a celui */
-              /* qui declanche l'operation */
-              {
-                pRe1 = pSS->SsRule->SrElem[pCp1->CiElemType - 1];
-                if (pRe1->SrConstruct == CsChoice && pRe1->SrNChoices > 0)
-                  {
-                    i = 0;
-                    do
-                      {
-                        i++;
-                        if (pRe1->SrChoice[i - 1] == index)
-                          trigger = TRUE;
-                      }
-                    while (!trigger && i < pRe1->SrNChoices);
-                  }
-              }
-            if (trigger)
-              /* l'operation du compteur counter est declanchee par les */
-              /* elements du type de pElModif. */
-              ChangeBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS,
-                                  redisp);
-          }
-      }
+  /* check the main P Schema and its additional schemas (CSS style sheets) */
+  pHd = NULL;
+  while (pSchP)
+    {
+      /* cherche les compteurs affectes par pElModif */
+      for (counter = 1; counter <= pSchP->PsNCounters; counter++)
+	/* pour tous les compteurs du schema */
+	{
+	  pCo1 = &pSchP->PsCounter[counter - 1];
+	  /* examine toutes les operations du compteur */
+	  for (oper = 1; oper <= pCo1->CnNItems; oper++)
+	    {
+	      pCp1 = &pCo1->CnItem[oper - 1];
+	      /* teste si le type de l'element pElModif trigger */
+	      /* l'operation sur le compteur */
+	      trigger = FALSE;
+	      if (pCp1->CiElemType == index)
+		/* l'element a le type qui declanche l'operation */
+		trigger = TRUE;
+	      else
+		/* cherche si le type de l'element est equivalent a celui */
+		/* qui declanche l'operation */
+		{
+		  pRe1 = pSS->SsRule->SrElem[pCp1->CiElemType - 1];
+		  if (pRe1->SrConstruct == CsChoice && pRe1->SrNChoices > 0)
+		    {
+		      i = 0;
+		      do
+			{
+			  i++;
+			  if (pRe1->SrChoice[i - 1] == index)
+			    trigger = TRUE;
+			}
+		      while (!trigger && i < pRe1->SrNChoices);
+		    }
+		}
+	      if (trigger)
+		/* l'operation du compteur counter est declanchee par les */
+		/* elements du type de pElModif. */
+		ChangeBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS, redisp);
+	    }
+	}
+      if (pHd)
+	/* get the next extension schema */
+	pHd = pHd->HdNextPSchema;
+      else if (CanApplyCSSToElement (pElModif))
+	/* extension schemas have not been checked yet */
+	/* get the first extension schema */
+	pHd = FirstPSchemaExtension (pElModif->ElStructSchema, pDoc, pElModif);
+      if (pHd == NULL)
+	/* no more extension schemas. Stop */
+	pSchP = NULL;
+      else
+	pSchP = pHd->HdPSchema;
+    }
 }
 
 /*----------------------------------------------------------------------

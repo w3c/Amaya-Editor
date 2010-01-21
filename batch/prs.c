@@ -4883,6 +4883,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
             {
               pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters];
               pPSchema->PsNCounters++;
+	      pCntr->CnNameIndx = 0;
               pCntr->CnNItems = 0;
               pCntr->CnNTransmAttrs = 0;
               pCntr->CnNPresBoxes = 0;

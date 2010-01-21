@@ -1594,7 +1594,7 @@ static PtrAbstractBox NextPage (PtrAbstractBox pAb)
         pAb = pAb->AbNext;
     }
   /* cherche la marque de page suivante */
-  pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
+  pAb = AbsBoxFromElOrPres (pAb, FALSE, FALSE, PageBreak + 1, NULL, NULL);
   return (pAb);
 }
 
@@ -1652,7 +1652,7 @@ static void PrintView (PtrDocument pDoc)
   if (pAb->AbElement->ElTypeNumber != PageBreak + 1)
     /* le document ne commence pas par une marque de page, cherche la */
     /* premiere marque de page qui suit */
-    pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
+    pAb = AbsBoxFromElOrPres (pAb, FALSE, FALSE, PageBreak + 1, NULL, NULL);
    
   if (pAb != NULL)
     if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
@@ -2071,7 +2071,8 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
         /* c'est la fin de la vue */
         {
           /* cherche le premier pave feuille de l'image */
-          pAb = AbsBoxFromElOrPres (rootAbsBox, FALSE, PageBreak + 1, NULL, NULL);
+          pAb = AbsBoxFromElOrPres (rootAbsBox, FALSE, FALSE, PageBreak + 1,
+				    NULL, NULL);
           if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
             /* le premier pave feuille est une marque de page. Est-il */
             /* suivi d'un autre pave ? */

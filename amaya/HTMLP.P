@@ -82,11 +82,6 @@ COUNTERS
 				 add 1 on INS with ExternalLink
 				 add 1 on DEL with ExternalLink;
 #endif
-   H2Counter : Set 0 on H1 add 1 on H2;
-   H3Counter : Set 0 on H1 set 0 on H2 add 1 on H3;
-   H4Counter : Set 0 on H1 set 0 on H2 set 0 on H3 add 1 on H4;
-   H5Counter : Set 0 on H1 set 0 on H2 set 0 on H3 set 0 on H4 add 1 on H5;
-   H6Counter : Set 0 on H1 set 0 on H2 set 0 on H3 set 0 on H4 set 0 on H5 add 1 on H6;
 
 DEFAULT
         BEGIN

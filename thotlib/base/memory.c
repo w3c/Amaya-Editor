@@ -1296,7 +1296,7 @@ void GetSchPres (PtrPSchema *pSP)
 void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
 {
   AttributePres      *pAP, *pNextAP;
-  int                 i;
+  int                 i, j;
   PtrHostView         pHostView, pNextHostView;
 
   pSP->PsNext = NULL;
@@ -1307,6 +1307,13 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
     free (pSP->PsPresentName);
   pSP->PsPresentName = NULL;
   pSP->PsFirstDefaultPRule = NULL;
+  for (i = 0; i < pSP->PsNCounters; i++)
+    {
+      for (j = 0; j < pSP->PsCounter[i].CnNItems; j++)
+	if (pSP->PsCounter[i].CnItem[j].CiCondAttr &&
+	    pSP->PsCounter[i].CnItem[j].CiCondAttrValue)
+	  TtaFreeMemory (pSP->PsCounter[i].CnItem[j].CiCondAttrValue);
+    }
   for (i = 0; i < pSP->PsNConstants; i++)
     {
       if (pSP->PsConstant[i].PdString)

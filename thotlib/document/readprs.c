@@ -1493,6 +1493,7 @@ PtrPSchema      ReadPresentationSchema (const char *fileName, PtrSSchema pSS)
             for (i = 0; i < pPSch->PsNCounters; i++)
               {
                 pCntr = &pPSch->PsCounter[i];
+		pCntr->CnNameIndx = 0;
                 error = !TtaReadShort (file, &pCntr->CnNItems);
                 if (!error)
                   for (j = 0; j < pCntr->CnNItems; j++)
@@ -1506,6 +1507,7 @@ PtrPSchema      ReadPresentationSchema (const char *fileName, PtrSSchema pSS)
                       TtaReadShort (file, &pCntrItem->CiInitAttr);
                       TtaReadShort (file, &pCntrItem->CiReinitAttr);
                       TtaReadShort (file, &pCntrItem->CiCondAttr);
+		      pCntrItem->CiCondAttrValue = NULL;
                       TtaReadBool (file, &pCntrItem->CiCondAttrPresent);
                     }
                 error = !TtaReadShort (file, &pCntr->CnNPresBoxes);

@@ -175,7 +175,7 @@ static ThotBool CondAttrOK (CntrItem * pCountItem, PtrElement pEl,
     /* there is no condition about attribute in this counter item */
     return TRUE;
 
-  /* cet attribut est-il present sur l'element courant */
+  /* cet attribut est-il present sur l'element courant ? */
   pAttr = pEl->ElFirstAttr;
   stop = FALSE;	/* parcourt les attributs de l'element */
   do
@@ -187,6 +187,9 @@ static ThotBool CondAttrOK (CntrItem * pCountItem, PtrElement pEl,
     else
       pAttr = pAttr->AeNext;	/* au suivant */
   while (!stop);
+  if (pAttr && pAttr->AeAttrType == AtTextAttr)
+    if (!StringAndTextEqual(pCountItem->CiCondAttrValue, pAttr->AeAttrText))
+      pAttr = NULL;
   if (pCountItem->CiCondAttrPresent)
     result = (pAttr != NULL);
   else
@@ -385,9 +388,9 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
           CondAttr = TRUE;
       pSchStr = pSS;
 
-      /* Cherche le premier element de type TypeSet */
-      /* englobant l'element a numeroter */
-      pEl = GetTypedAncestor (pElNum, TypeSet, pSS);
+      /* Find the first element of type TypeSet that is before the element
+	 to be numbered */
+      pEl = BackSearchTypedElem (pElNum, TypeSet, pSS, NULL);
       if (CondAttr)
         /* there is a condition on attributes for this counter */
         {
@@ -401,11 +404,11 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
                 if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
                   found = TRUE;
                 else
-                  pEl = GetTypedAncestor (pEl, TypeSet, pSS);
+		  pEl = BackSearchTypedElem (pElNum, TypeSet, pSS, NULL);
             }
-          while (!found && pEl != NULL);
+          while (!found && pEl);
         }
-      /* s'il n' y a pas d'ascendant du type requis alors on reste sur pElNum */
+      /* s'il n' y a pas de précédent du type requis alors on reste sur pElNum */
       if (pEl == NULL)
         pEl = pElNum;
 
@@ -431,7 +434,7 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
             do
               {
                 pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber,
-                                           pSchIncr, pElNum->ElStructSchema, NULL);
+                                         pSchIncr, pElNum->ElStructSchema, NULL);
                 if (pEl != NULL &&
                     EquivalentType (pEl, TypeIncr, pSchIncr))
                   {
@@ -474,18 +477,16 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
   int                 TypeIncr, TypeSet, TypeRank, TypeRLevel;
   PtrSSchema          pSchIncr, pSchSet;
   ThotBool            stop, pstop, initattr;
-  PtrElement          pEl;
   Counter            *pCo1;
-  PtrElement          pEl2;
   PtrSSchema          pSchStr, pSSpr;
   PtrAttribute        pAttr;
-  PtrElement          pElReinit;
-  ThotBool	       CondAttr, found;
+  PtrElement          pEl, pElReinit, pEl2;
+  ThotBool	      CondAttr;
 #define MaxAncestor 50
   PtrElement          PcWithin[MaxAncestor];
 
   pCo1 = &pSchP->PsCounter[counterNum - 1];
-  initattr = FALSE;		/* a priori, la valeur initiale du compteur ne
+  initattr = FALSE;   /* a priori, la valeur initiale du compteur ne
                          depend pas d'un attribut. */
   value = 0;
   pstop = TRUE;
@@ -676,12 +677,12 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
               }
           }
       }
-  /* fonction de comptage SET ON, ADD ON */
+  /* the counting function is SET ON, ADD ON */
     else
       {
-        /* type ou alias qui fait reset */
+        /* type or alias that resets the counter */
         TypeSet = MakeAliasTypeCount (pCo1, CntrSet, pSS);
-        /* type ou alias qui incremente */
+        /* type or alias that increments the counter */
         TypeIncr = MakeAliasTypeCount (pCo1, CntrAdd, pSS);
         /* is there a condition on attributes for this counter? */
         CondAttr = FALSE;
@@ -692,158 +693,98 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
         if (initattr)
           value = valueinitattr;
 
-        /* Cherche le premier element de type TypeSet englobant l'element */
-        /* a numeroter */
-        pEl = GetTypedAncestor (pElNum, TypeSet, pSS);
-        if (CondAttr && pEl)
-          /* there is a condition on attributes for this counter */
-          {
-            found = FALSE;
-            do
-              {
-                i = GetCounterItem (pCo1, CntrSet, pSS, pEl);
-                if (i < 0)
-                  pEl = NULL;
-                else
-                  if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-                    found = TRUE;
-                  else
-                    pEl = GetTypedAncestor (pEl, TypeSet, pSS);
-              }
-            while (!found && pEl != NULL);
-          }
-        if (pEl != NULL)
-          {
-            /* l'element trouve' est celui qui reinitialise le compteur */
-            if (!initattr)
-              value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
-            /* a partir de l'element trouve', cherche en avant tous les */
-            /* elements ayant le type qui incremente le compteur, */
-            /* jusqu'a rencontrer l'element qui a cree la boite compteur. */
-            if (TypeIncr <= MAX_BASIC_TYPE)
-              /* c'est un type de base, on le cherche quel que soit son schema*/
-              pSchIncr = NULL;
-            else
-              pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
-            if (TypeIncr > 0)
-              do
-                {
-                  pEl = FwdSearchElem2Types (pEl, TypeIncr,
-                                             pElNum->ElTypeNumber, pSchIncr,
-                                             pElNum->ElStructSchema, NULL);
-                  if (pEl != NULL &&
-                      EquivalentType (pEl, TypeIncr, pSchIncr))
-                    {
-                      /* on a trouve' un element du type qui incremente */
-                      if (!CondAttr)
-                        value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-                      else
-                        /* check conditions on attributes */
-                        {
-                          i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
-                          if (i >= 0)
-                            if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-                              value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-                        }
-                    }
-                }
-              while (pEl != NULL && pEl != pElNum);
-          }
+	/* On compte tous les elements precedents de type TypeIncr */
+	/* jusqu'a en trouver un de type TypeSet. */
+	if (TypeSet <= MAX_BASIC_TYPE)
+	  /* c'est un type de base, on le cherche quel que soit son schema */
+	  pSchSet = NULL;
+	else
+	  pSchSet = pSchStr; /* schema de struct. du type qui initialise */
+	if (TypeIncr <= MAX_BASIC_TYPE)
+	  /* c'est un type de base, on le cherche quel que soit son schema */
+	  pSchIncr = NULL;
+	else
+	  pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
+	pEl = pElNum;
+	incrVal = 0;
+	if (EquivalentType (pEl, TypeIncr, pSchIncr))
+	  {
+	    if (!CondAttr)
+	      {
+		Nincr = 1;
+		incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+	      }
+	    else
+	      /* check conditions on attributes */
+	      {
+		i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
+		if (i >= 0)
+		  if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
+		    {
+		      Nincr = 1;
+		      incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+		    }
+	      }
+	  }
+	else
+	  Nincr = 0;
+	if (TypeSet > 0 && TypeIncr > 0)
+	  do
+	    {
+	      pEl = BackSearchElem2Types (pEl, TypeSet, TypeIncr, pSchSet,
+					  pSchIncr, NULL);
+	      if (pEl)
+		{
+		  if (EquivalentType (pEl, TypeIncr, pSchIncr))
+		    /* on a trouve' un element du type qui incremente */
+		    {
+		      if (!CondAttr)
+			{
+			  Nincr++;
+			  if (incrVal == 0)
+			    incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+			}
+		      else
+			/* check conditions on attributes */
+			{
+			  i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
+			  if (i >= 0)
+			    if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
+			      {
+				Nincr++;
+				if (incrVal == 0)
+				  incrVal = GetCounterValEl (pCo1, pEl, CntrAdd,
+							     pSS);
+			      }
+			}
+		    }
+		  else if (EquivalentType (pEl, TypeSet, pSchSet))
+		    /* on a trouve' un element du type qui initialise */
+		    {
+		      if (!CondAttr)
+			{
+			  if (!initattr)
+			    value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
+			  pEl = NULL;	/* on arrete */
+			}
+		      else
+			/* check conditions on attributes */
+			{
+			  i = GetCounterItem (pCo1, CntrSet, pSS, pEl);
+			  if (i >= 0)
+			    if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
+			      {
+				if (!initattr)
+				  value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
+				pEl = NULL;	/* on arrete */
+			      }
+			}
+		    }
+		}
+	    }
+	  while (pEl);
+	value += Nincr * incrVal;
 
-        else
-          /* il n' y a pas d'ascendant du type qui initialise le compteur. */
-          /* On compte tous les elements precedents de type TypeIncr */
-          /* jusqu'a en trouver un de type TypeSet */
-          {
-            if (TypeSet <= MAX_BASIC_TYPE)
-              /* c'est un type de base, on le cherche quel que soit son schema*/
-              pSchSet = NULL;
-            else
-              pSchSet = pSchStr; /* schema de struct. du type qui initialise */
-            if (TypeIncr <= MAX_BASIC_TYPE)
-              /* c'est un type de base, on le cherche quel que soit son schema*/
-              pSchIncr = NULL;
-            else
-              pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
-            pEl = pElNum;
-            incrVal = 0;
-            if (EquivalentType (pEl, TypeIncr, pSchIncr))
-              {
-                if (!CondAttr)
-                  {
-                    Nincr = 1;
-                    incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-                  }
-                else
-                  /* check conditions on attributes */
-                  {
-                    i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
-                    if (i >= 0)
-                      if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-                        {
-                          Nincr = 1;
-                          incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-                        }
-                  }
-              }
-            else
-              Nincr = 0;
-            if (TypeSet > 0 && TypeIncr > 0)
-              do
-                {
-                  pEl = BackSearchElem2Types (pEl, TypeSet, TypeIncr, pSchSet,
-                                              pSchIncr, NULL);
-                  if (pEl != NULL)
-                    {
-                      if (EquivalentType (pEl, TypeIncr, pSchIncr))
-                        /* on a trouve' un element du type qui incremente */
-                        {
-                          if (!CondAttr)
-                            {
-                              Nincr++;
-                              if (incrVal == 0)
-                                incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-                            }
-                          else
-                            /* check conditions on attributes */
-                            {
-                              i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
-                              if (i >= 0)
-                                if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-                                  {
-                                    Nincr++;
-                                    if (incrVal == 0)
-                                      incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-                                  }
-                            }
-                        }
-                      else if (EquivalentType (pEl, TypeSet, pSchSet))
-                        /* on a trouve' un element du type qui initialise */
-                        {
-                          if (!CondAttr)
-                            {
-                              if (!initattr)
-                                value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
-                              pEl = NULL;	/* on arrete */
-                            }
-                          else
-                            /* check conditions on attributes */
-                            {
-                              i = GetCounterItem (pCo1, CntrSet, pSS, pEl);
-                              if (i >= 0)
-                                if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-                                  {
-                                    if (!initattr)
-                                      value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
-                                    pEl = NULL;	/* on arrete */
-                                  }
-                            }
-                        }
-                    }
-                }
-              while (pEl != NULL);
-            value += Nincr * incrVal;
-          }
         ReleaseAliasTypeCount (TypeSet, pSS);
         ReleaseAliasTypeCount (TypeIncr, pSS);
       }
@@ -1126,6 +1067,8 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
   char                number[20];
   PtrTextBuffer       pBTN, pBTA, pBTAPrec;
 
+  if (varNum <= 0)
+    return FALSE;
   /* sauve temporairement le contenu de ce pave de presentation */
   isOld = pAb->AbText;
   /* acquiert un buffer de texte pour y calculer la (nouvelle) valeur */

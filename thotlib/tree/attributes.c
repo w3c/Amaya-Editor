@@ -294,8 +294,7 @@ static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int varNum,
   if (pAbsBox->AbPresentationBox)
     {
       /* c'est un pave de presentation */
-      if (pAbsBox->AbPSchema == pPSchema &&
-          pAbsBox->AbVarNum == varNum)
+      if (pAbsBox->AbPSchema == pPSchema && pAbsBox->AbVarNum == varNum)
         /* c'est bien un pave du type cherche' */
         /* recalcule la valeur de la variable de presentation */
         if (NewVariable (varNum, pAttr->AeAttrSSchema, pPSchema, pAbsBox,

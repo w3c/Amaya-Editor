@@ -267,7 +267,7 @@ typedef enum
 typedef enum
   {
     CntDecimal, CntZLDecimal, CntURoman, CntLRoman, CntUppercase, CntLowercase,
-    CntLGreek, CntUGreek
+    CntLGreek, CntUGreek, CntDisc, CntCircle, CntSquare, CntNone
   } CounterStyle;
 
 /* types of a presentation variable */
@@ -357,24 +357,24 @@ typedef struct _Condition
   ThotBool        CoChangeElem;    /* this condition apply to the element
                                       selected by the previous conditions */
   ThotBool        CoNotNegative;   /* the condition is not negative */
-  ThotBool	      CoTarget;	       /* the condition affects the target
+  ThotBool	  CoTarget;	   /* the condition affects the target
                                       (for references only) */
   union
   {
     struct			   /* CoCondition = PcInterval, PcEven, PcOdd, PcOne */
     {
-      int	   _CoCounter_;          /* number of the counter on which the
+      int	   _CoCounter_;    /* number of the counter on which the
                                       condition applies */
-      int	   _CoMinCounter_;       /* minimum value of the counter so that
+      int	   _CoMinCounter_; /* minimum value of the counter so that
                                       the presentation rule may be applied */
-      int	   _CoMaxCounter_;       /* maximum value of the counter so that
+      int	   _CoMaxCounter_; /* maximum value of the counter so that
                                       the presentation rule may be applied */
       CounterValue _CoValCounter_; /* indicates if the minimum, maximum or
                                       current value of the counter is used */
     } s0;
     struct			   /* CoCondition = PcWithin */
     {
-      int       _CoRelation_;	     /* RelLevel */
+      int       _CoRelation_;	   /* RelLevel */
       int       _CoTypeAncestor_;  /* type of the ancestor */	
       ThotBool  _CoImmediate_;	   /* Immediately */
       ArithRel  _CoAncestorRel_;
@@ -385,12 +385,12 @@ typedef struct _Condition
     } s1;
     struct			   /* CoCondition = PcElemType */
     {
-      int	_CoTypeElem_;	           /* type of the element to which the
+      int	_CoTypeElem_;	   /* type of the element to which the
                                       attribute is attached */
     } s2;
     struct			   /* CoCondition = PcAttribute */
     {
-      int	_CoTypeAttr_;	           /* attribute carried by the element */
+      int	_CoTypeAttr_;	   /* attribute carried by the element */
       ThotBool  _CoTestAttrValue_; /* the attribute value must be tested */
       union
       {
@@ -619,6 +619,8 @@ typedef struct _CntrItem
   int	    CiCondAttr;	   /* Attribute that qualifies the element to be
 			      counted or not, 0 if there is no condition on
 			      attributes */
+  char     *CiCondAttrValue;   /* if CiCondAttr > 0, value of the attribute for
+				  the element to be counted */
   ThotBool  CiCondAttrPresent; /* if CiCondAttr > 0, indicates whether elements
 			      with that attribute are counted of not */
 } CntrItem;
@@ -626,6 +628,8 @@ typedef struct _CntrItem
 /* a counter */
 typedef struct _Counter
 {
+  int      CnNameIndx;           /* name of the counter (0 if no name, otherwise
+				    index in the constant table) */
   int	   CnNItems;	         /* number of operations on this counter */
   CntrItem CnItem[MAX_PRES_COUNT_ITEM];	   /* the operations */
   int	   CnNPresBoxes;         /* Number of elements in CnPresBox */
@@ -658,10 +662,10 @@ typedef struct _Counter
 /* a presentation constant */
 typedef struct _PresConstant
 {
-  BasicType PdType;                       /* type of the constant */
-  char      PdScript;                     /* script of the constant */
-  char     *PdString; /* constant presentation string,
-					     terminated by a NUL character */
+  BasicType PdType;             /* type of the constant */
+  char      PdScript;           /* script of the constant */
+  char     *PdString;           /* constant presentation string,
+				   terminated by a NUL character */
 } PresConstant;
 
 /* a presentation variable is the concatenation of the results of various
@@ -827,30 +831,30 @@ typedef struct _PresentSchema *PtrPSchema;
 /* a presentation schema loaded in memory */
 typedef struct _PresentSchema
 {
-  PtrPSchema    PsNext;    		    /* for free blocks linking */
-  PtrSSchema    PsSSchema;        /* Structure schema */
+  PtrPSchema    PsNext;    	        /* for free blocks linking */
+  PtrSSchema    PsSSchema;              /* Structure schema */
   char         *PsStructName;    	/* name of the structure schema */
   char	       *PsPresentName;		/* name of this presentation schema */
-  int	 	        PsStructCode;    	/* code identifying the version of this
-					                           structure schema */
-  StyleSheetOrigin PsOrigin;      /* origin of this structure schema */
-  int		        PsNViews;	    	  /* number of views */
-  ViewTable     PsView;    		    /* definition of the views */
+  int	 	PsStructCode;    	/* code identifying the version of this
+					   structure schema */
+  StyleSheetOrigin PsOrigin;            /* origin of this structure schema */
+  int		PsNViews;	        /* number of views */
+  ViewTable     PsView;    		/* definition of the views */
   PtrHostView   PsHostViewList[MAX_VIEW]; /* for each view defined in ViewTable
-				                                     pointer to its first host view */
+				             pointer to its first host view */
   ThotBool      PsPaginatedView[MAX_VIEW];/* indicates the paginated views */
   ThotBool      PsColumnView[MAX_VIEW];	  /* indicates the views separated in
-					                                   columns */
-  int		        PsNPrintedViews;	/* number of views to be printed */
+					     columns */
+  int		PsNPrintedViews;          /* number of views to be printed */
   PrintedView   PsPrintedView[MAX_PRINT_VIEW];/* the views to be printed */
   ThotBool      PsExportView[MAX_VIEW];   /* indicates the views that display
-					                                   only the exported elements */
-  int		        PsNCounters;		  /* number of counters */
-  int		        PsNConstants;		  /* number of presentation constants */
-  int		        PsNVariables;		  /* number of presentation variables */
-  int           PsVariableTableSize; /* size of table PsVariable */
-  int		        PsNPresentBoxes;	/* number of presentation and layout
-					                           boxes that are actually defined */
+					     only the exported elements */
+  int		PsNCounters;	    /* number of counters */
+  int		PsNConstants;	    /* number of presentation constants */
+  int		PsNVariables;	    /* number of presentation variables */
+  int           PsVariableTableSize;/* size of table PsVariable */
+  int		PsNPresentBoxes;    /* number of presentation and layout
+				       boxes that are actually defined */
   int           PsPresentBoxTableSize; /* size of table PsPresentBox */
   int           PsNElemPRule;       /* number of known structure rules */
   PtrPRule      PsFirstDefaultPRule;/* beginning of the default rules string */
@@ -858,7 +862,7 @@ typedef struct _PresentSchema
   PresConstant  PsConstant[MAX_PRES_CONST];   /* presentation constants */
   PresVarTable  *PsVariable;        /* presentation variables*/
   PresBoxTable  *PsPresentBox;      /* descriptions of the presentation
-					                             and layout boxes */
+				       and layout boxes */
         /* For columns layout, box number 0 contains the Column group box,
 	         box number 1 contains the left-hand column, etc. */
   AttrPresTable *PsAttrPRule;       /* pointers on the presentation

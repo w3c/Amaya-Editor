@@ -62,6 +62,7 @@ extern void RedispAllReferences ( PtrAbstractBox pAb,
                                   PtrDocument pDoc );
 extern PtrAbstractBox AbsBoxFromElOrPres ( PtrAbstractBox pAb,
                                            ThotBool pres,
+                                           ThotBool var,
                                            int typeElOrPres,
                                            PtrPSchema pSchP,
                                            PtrSSchema pSchStr );
@@ -160,6 +161,7 @@ extern void RedispAllReferences ( PtrAbstractBox pAb,
                                     PtrDocument pDoc );
 extern PtrAbstractBox AbsBoxFromElOrPres ( PtrAbstractBox pAb,
                                              ThotBool pres,
+                                             ThotBool var,
                                              int typeElOrPres,
                                              PtrPSchema pSchP,
                                              PtrSSchema pSchStr );

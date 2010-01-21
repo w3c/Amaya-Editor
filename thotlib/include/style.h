@@ -101,7 +101,7 @@ typedef struct struct_SpecificContext
   }
 PresentationContextBlock, *PresentationContext;
 
-typedef union _PresentationValue
+typedef struct _PresentationValue
  {
    int                 data;          /* some data without unit */
    struct
@@ -126,7 +126,7 @@ typedef struct _PresentationSetting
      unsigned int        type;	/* type of the presentation rule returned */
      PresentationValue   value;	/* the presentation value (type + value)  */
   }
-                   *PresentationSetting, PresentationSettingBlock;
+*PresentationSetting, PresentationSettingBlock;
 
 typedef void (*SettingsApplyHandler) (Element element,
 				      Document doc,
