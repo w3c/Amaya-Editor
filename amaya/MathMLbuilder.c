@@ -1075,6 +1075,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             case 0x2194: /* LeftRightArrow */
                               c = 'A';
                             break;
+#ifdef STRETCHY_ARROWS // workaround for Bug 8890 - fred
                             case 0x21A4: /* LeftTeeArrow */
                               c = 160;
                             break;
@@ -1168,6 +1169,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
                             case 0x21CB: /* ReverseEquilibrium */
                               c = 215;
                             break;
+#endif
 
                             default:
                             break;
@@ -1456,6 +1458,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                 case 0x2195: /* UpDownArrow */
                                   c = 155;
                                 break;
+#ifdef STRETCHY_ARROWS // workaround for Bug 8890 - fred
                                 case 0x2196: /* UpperLeftArrow */
                                   c = 156;
                                 break;
@@ -1543,6 +1546,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
                                 case 0x296F: /* ReverseUpEquilibrium */
                                   c = 213;
                                 break;
+#endif
                                 case 0x2758: /* VerticalSeparator */
                                   c = 7;
 				break;
