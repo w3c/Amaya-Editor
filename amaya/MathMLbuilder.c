@@ -2546,10 +2546,10 @@ void      CheckFence (Element el, Document doc)
                             }
                           /* create a new content for the MF element */
                           elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-                          if (text[0] == 0x2329)
-                            c = '<';    /* LeftAngleBracket */
-                          else if (text[0] == 0x232a)
-                            c = '>';    /* RightAngleBracket */
+                          if (text[0] == 0x27E8)
+                            c = '<';    /* mathematical left angle bracket */
+                          else if (text[0] == 0x27E9)
+                            c = '>';    /* mathematical right angle bracket */
                           else if (text[0] == 0x301a)
                             c = 1;    /* LeftDoubleBracket */
                           else if (text[0] == 0x301b)
