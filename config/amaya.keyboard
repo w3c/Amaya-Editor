@@ -16,6 +16,7 @@
 #moving around 
 <Key>Delete:        TtcDeleteSelection() 
 <Key>Backspace:     TtcDeletePreviousChar() 
+<Key>F1:            HelpIndex()
 <Key>F2:            TtcParentElement()
 <Key>F4:            TtcNextElement()
 Shift <Key>F2:        TtcChildElement()
