@@ -187,9 +187,17 @@ static ThotBool CondAttrOK (CntrItem * pCountItem, PtrElement pEl,
     else
       pAttr = pAttr->AeNext;	/* au suivant */
   while (!stop);
-  if (pAttr && pAttr->AeAttrType == AtTextAttr)
-    if (!StringAndTextEqual(pCountItem->CiCondAttrValue, pAttr->AeAttrText))
-      pAttr = NULL;
+  if (pAttr)
+    if (pAttr->AeAttrType == AtTextAttr)
+      {
+	if (!StringAndTextEqual(pCountItem->CiCondAttrTextValue, pAttr->AeAttrText))
+	  pAttr = NULL;
+      }
+    else if (pAttr->AeAttrType == AtNumAttr || pAttr->AeAttrType == AtEnumAttr)
+      {
+	if (pCountItem->CiCondAttrIntValue != pAttr->AeAttrValue)
+	  pAttr = NULL;
+      }
   if (pCountItem->CiCondAttrPresent)
     result = (pAttr != NULL);
   else

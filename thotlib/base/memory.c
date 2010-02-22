@@ -1311,8 +1311,8 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
     {
       for (j = 0; j < pSP->PsCounter[i].CnNItems; j++)
 	if (pSP->PsCounter[i].CnItem[j].CiCondAttr &&
-	    pSP->PsCounter[i].CnItem[j].CiCondAttrValue)
-	  TtaFreeMemory (pSP->PsCounter[i].CnItem[j].CiCondAttrValue);
+	    pSP->PsCounter[i].CnItem[j].CiCondAttrTextValue)
+	  TtaFreeMemory (pSP->PsCounter[i].CnItem[j].CiCondAttrTextValue);
     }
   for (i = 0; i < pSP->PsNConstants; i++)
     {

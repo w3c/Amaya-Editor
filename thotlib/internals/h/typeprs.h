@@ -619,8 +619,10 @@ typedef struct _CntrItem
   int	    CiCondAttr;	   /* Attribute that qualifies the element to be
 			      counted or not, 0 if there is no condition on
 			      attributes */
-  char     *CiCondAttrValue;   /* if CiCondAttr > 0, value of the attribute for
-				  the element to be counted */
+  int       CiCondAttrIntValue; /* if CiCondAttr > 0, integer value of the attribute for
+				   the element to be counted */
+  char     *CiCondAttrTextValue; /* if CiCondAttr > 0, string value of the attribute for
+				    the element to be counted */
   ThotBool  CiCondAttrPresent; /* if CiCondAttr > 0, indicates whether elements
 			      with that attribute are counted of not */
 } CntrItem;

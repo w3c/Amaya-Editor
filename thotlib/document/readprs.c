@@ -1507,7 +1507,8 @@ PtrPSchema      ReadPresentationSchema (const char *fileName, PtrSSchema pSS)
                       TtaReadShort (file, &pCntrItem->CiInitAttr);
                       TtaReadShort (file, &pCntrItem->CiReinitAttr);
                       TtaReadShort (file, &pCntrItem->CiCondAttr);
-		      pCntrItem->CiCondAttrValue = NULL;
+                      pCntrItem->CiCondAttrIntValue = 0;
+		      pCntrItem->CiCondAttrTextValue = NULL;
                       TtaReadBool (file, &pCntrItem->CiCondAttrPresent);
                     }
                 error = !TtaReadShort (file, &pCntr->CnNPresBoxes);

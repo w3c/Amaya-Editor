@@ -3140,8 +3140,9 @@ static void SetCounterOp (unsigned int type, PSchema tsch,
 {
   GenericContext     ctxt = (GenericContext) c;
   PtrPSchema         pSchemaPrs = (PtrPSchema) tsch;
+  AttributeType      attrType;
   Counter           *pCntr;
-  int                cst, cntr;
+  int                cst, cntr, kind;
 
   if (c->destroy)
     return;
@@ -3172,7 +3173,17 @@ static void SetCounterOp (unsigned int type, PSchema tsch,
 	    {
 	      pCntr->CnItem[pCntr->CnNItems].CiCondAttr = ctxt->attrType[0];
 	      pCntr->CnItem[pCntr->CnNItems].CiCondAttrPresent = TRUE;
-	      pCntr->CnItem[pCntr->CnNItems].CiCondAttrValue = TtaStrdup(ctxt->attrText[0]);
+	      pCntr->CnItem[pCntr->CnNItems].CiCondAttrTextValue = NULL;
+	      pCntr->CnItem[pCntr->CnNItems].CiCondAttrIntValue = 0;
+              attrType.AttrSSchema = ctxt->schema;
+              attrType.AttrTypeNum = ctxt->attrType[0];
+              kind = TtaGetAttributeKind (attrType);
+	      if (kind == 0 || kind == 1)
+		/* enumerated or integer value */
+		  pCntr->CnItem[pCntr->CnNItems].CiCondAttrIntValue = (int)ctxt->attrText[0];
+	      else if (kind == 2)
+		/* character string value */
+		  pCntr->CnItem[pCntr->CnNItems].CiCondAttrTextValue = TtaStrdup(ctxt->attrText[0]);
 	    }
 	  else
 	    pCntr->CnItem[pCntr->CnNItems].CiCondAttr = 0;
