@@ -313,7 +313,7 @@ static int          CharLevelElement[] =
     HTML_EL_Button_Input, HTML_EL_BUTTON_,
     HTML_EL_LABEL,
     HTML_EL_BR, HTML_EL_ruby,
-    HTML_EL_Object, HTML_EL_Basic_Elem, HTML_EL_Applet,
+    HTML_EL_Object, HTML_EL_Basic_Elem,
     0};
 
 /* block level elements, i.e. elements having a Line rule in the presentation
@@ -6110,7 +6110,6 @@ static void MergePseudoParagraph (Element el, Document doc)
         }
     }
 }
-
 
 /*----------------------------------------------------------------------
   CheckBlocksInCharElem

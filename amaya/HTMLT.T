@@ -464,9 +464,12 @@ RULES
         create SOT;
         Create 'applet';
         Create Attributes;
-        Create '>';
+        Create '>\12';
+        Indent +2;
+        Indent -2 after;
+        Create '\12' after;
         create SCT after;
-        Create 'applet>' After;        
+        Create 'applet>\12' after;        
         END;
 
  Parameter: BEGIN
