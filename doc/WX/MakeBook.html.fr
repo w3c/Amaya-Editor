@@ -12,21 +12,21 @@
 <body xml:lang="fr" lang="fr">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Numbering.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Annotations.html.fr" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Annotations.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div class="PageBody" id="Assembling">
-<h2 id="Assembler">Assembler des collections de documents</h2>
+<h2 id="Assembler">Assembler des collections de documents (Construire un
+livre)</h2>
 
-<p>Pour activer cette fonctionnalité, choisissez l'entrée <strong>Construire
-un livre</strong> du menu <strong>Outils</strong>.</p>
+<p>Pour activer cette fonctionnalité, choisissez l'entrée <strong>Construire un
+livre</strong> du menu <strong>Outils</strong>.</p>
 
 <p>Amaya vous permet de manipuler des collections de documents. Une telle
 collection peut, par exemple, représenter une documentation technique
@@ -43,12 +43,12 @@ séparés qui peuvent aussi avoir le même type de structure.</p>
 nombre d'inconvénients lorsque la totalité de la documentation doit être
 imprimée.</p>
 
-<p>Amaya règle ce problème à l'aide de la commande <strong>Outils/Construire
-un livre</strong>. Il vous suffit d'utiliser les liens typés pour lier les
+<p>Amaya règle ce problème à l'aide de la commande <strong>Outils/Construire un
+livre</strong>. Il vous suffit d'utiliser les liens typés pour lier les
 chapitres : associez un attribut <code>rel="chapter"</code> ou
 <code>rel="subdocument</code>" à l'ancre lien (créez un lien et utilisez
-l'outil <strong><a href="Attributes.html.fr#L1073">Attributs</a></strong>
-pour l'attribut <code>rel</code>).</p>
+l'outil <strong><a href="Attributes.html.fr#L1073">Attributs</a></strong> pour
+l'attribut <code>rel</code>).</p>
 
 <p>Chaque chapitre ou sous-document peut être :</p>
 <ul>
@@ -57,8 +57,8 @@ pour l'attribut <code>rel</code>).</p>
 </ul>
 
 <p>Pour référencer une partie d'un document, la méthode habituelle est de
-définir un élément <code>div</code> qui délimite la partie du document que
-vous voulez inclure vous créez un lien vers cet élément <code>div</code>.</p>
+définir un élément <code>div</code> qui délimite la partie du document que vous
+voulez inclure vous créez un lien vers cet élément <code>div</code>.</p>
 
 <p>Ensuite, lorsque vous activez la commande <strong>Outils/Construire un
 livre</strong>, tous les blocs (éléments <code>li</code> dans l'exemple
@@ -78,28 +78,32 @@ unique document contenant la totalité de la collection :</p>
   </li>
 </ul>
 
-<p>Avant chaque remplacement, la commande <strong>Construire un
-livre</strong> engendre un nouvel élément <code>div</code> avec un attribut
-<code>id</code>. Ainsi, toutes les parties incluses sont clairement
-séparées.</p>
+<p>Avant chaque remplacement, la commande <strong>Construire un livre</strong>
+engendre un nouvel élément <code>div</code> avec un attribut <code>id</code>.
+Ainsi, toutes les parties incluses sont clairement séparées.</p>
 
 <p>Les parties du nouveau document engendré peuvent contenir des liens, des
 ancres cibles et des éléments cibles. Pendant cette opération, Amaya vérifie
 que chaque valeur des attributs <code>name</code> et <code>id</code> reste
-unique dans le nouveau document. Si besoin est, Amaya change ces valeurs et
-met à jour les liens relatifs.</p>
+unique dans le nouveau document. Si besoin est, Amaya change ces valeurs et met
+à jour les liens relatifs.</p>
 
 <p>Les liens externes sont automatiquement mis à jour quand ils se réfèrent à
 un document externe ou à un e partie de document nouvellement inclus. Par
-exemple, si un lien pointe vers un document entier externe, ce lien
-référencera l'élément <code>div</code> engendré par la commande
-<strong>Construire un livre</strong>. Ainsi, le nouveau document unique
-contient la totalité de la collection avec l'ensemble de ses liens.</p>
+exemple, si un lien pointe vers un document entier externe, ce lien référencera
+l'élément <code>div</code> engendré par la commande <strong>Construire un
+livre</strong>. Ainsi, le nouveau document unique contient la totalité de la
+collection avec l'ensemble de ses liens.</p>
 
 <p>Ce document assemblé peut être <a
 href="Numbering.html.fr#L1064">numéroté</a> et <a
-href="Printing.html.fr#L1062">imprimé</a> avec une table des matières
-complète et une liste de tous les liens.</p>
+href="Printing.html.fr#L1062">imprimé</a> avec une table des matières complète
+et une liste de tous les liens.</p>
+
+<p><strong>Exemple</strong> : vous pouvez essayer la commande
+<strong>Construire un livre</strong> sur ce <a
+href="http://www.w3.org/Amaya/User/doc/SampleBook.html">document
+d'essai</a>.</p>
 </div>
 </body>
 </html>

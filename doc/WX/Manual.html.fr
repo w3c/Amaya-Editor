@@ -327,7 +327,7 @@ Manuel d'utilisation d'Amaya</div>
   <li><a href="Numbering.html.fr#Engendrer">Engendrer la table des
   matières</a></li>
   <li><a href="MakeBook.html.fr#Assembler">Assembler des collections de
-    documents</a></li>
+    documents (Construire un livre)</a></li>
   <li><a href="Annotations.html.fr#annotation">Annoter des documents</a> 
     <ul>
       <li><a href="Annotations.html.fr#def">Qu'est-ce qu'une
@@ -489,7 +489,7 @@ Manuel d'utilisation d'Amaya</div>
 </div>
 <hr />
 
-<p class="policyfooter"><small>Copyright  ©  1994-2008 <a
+<p class="policyfooter"><small>Copyright  ©  1994-2010 <a
 href="http://www.inria.fr/">INRIA</a> and <a
 href="http://www.w3.org/">W3C</a><sup>®</sup> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a

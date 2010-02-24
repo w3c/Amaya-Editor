@@ -13,38 +13,37 @@
 <body xml:lang="en" lang="en">
 
 <div class="PageHead">
-Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo"
-/> 
+Amaya<img alt="logo" src="../../resources/icons/22x22/logo.png" class="logo" /> 
 
 <p class="nav"><a href="Numbering.html" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
-accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
-<a href="Annotations.html" accesskey="n"><img alt="next"
+accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a> <a
+href="Annotations.html" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
 <div id="page_body" class="PageBody">
-<h2 id="Assembling">Assembling large document collections</h2>
+<h2 id="Assembling">Assembling large document collections (Make book)</h2>
 
-<p>Amaya enables you to handle document collections. Such a collection may,
-for example, represent a technical documentation made up of several web
-pages. The present manual is a document collection.</p>
+<p>Amaya enables you to handle document collections. Such a collection may, for
+example, represent a technical documentation made up of several web pages. The
+present manual is a document collection.</p>
 
 <p>One of the web pages in the collection contains the title of the entire
 documentation (an <code>h1</code> element), an introduction (some other
 elements), and a list <code>ol</code> or <code>ul</code> whose items
-<code>li</code> contain links to each chapter. Chapters are separate
-documents that can have a similar structure.</p>
+<code>li</code> contain links to each chapter. Chapters are separate documents
+that can have a similar structure.</p>
 
-<p>This organization is useful for browsing, but has several drawbacks when
-the entire documentation has to be printed.</p>
+<p>This organization is useful for browsing, but has several drawbacks when the
+entire documentation has to be printed.</p>
 
 <p>Amaya addresses this problem with the <strong>Tools/Make book</strong>
 command, which assembles a document collection into a single volume. You use
 typed links for linking chapters, by associating an attribute
 <code>rel="chapter"</code> or <code>rel="subdocument"</code> with the anchor
-that refers to a chapter (create a link and use the
-<strong>Attributes</strong> tool for the <code>rel</code> attribute).</p>
+that refers to a chapter (create a link and use the <strong>Attributes</strong>
+tool for the <code>rel</code> attribute).</p>
 
 <p>Each referred chapter or sub-document may be:</p>
 <ul>
@@ -52,14 +51,14 @@ that refers to a chapter (create a link and use the
   <li>a subset of a larger external document.</li>
 </ul>
 
-<p>To refer to a document subset, you usually define a <code>div</code>
-element to identify the part of the document you want to include, and you
-create a link to this <code>div</code> element.</p>
+<p>To refer to a document subset, you usually define a <code>div</code> element
+to identify the part of the document you want to include, and you create a link
+to this <code>div</code> element.</p>
 
 <p>Then, when you activate the <strong>Tools/Make book</strong> command, all
-blocks (<code>li</code> elements in the above example) containing a typed
-link to a chapter will be replaced by the corresponding actual web pages (or
-a part of it), and Amaya will display a unique document containing the whole
+blocks (<code>li</code> elements in the above example) containing a typed link
+to a chapter will be replaced by the corresponding actual web pages (or a part
+of it), and Amaya will display a unique document containing the whole
 collection:</p>
 <ul>
   <li>If the link refers to a web page as a whole, Amaya includes all the
@@ -70,25 +69,29 @@ collection:</p>
     includes the content of the anchor, but not the anchor itself.</li>
 </ul>
 
-<p>Before each replacement, the <strong>Make book</strong> command generates
-a new <code>div</code> element with an <code>id</code> attribute to clearly
+<p>Before each replacement, the <strong>Make book</strong> command generates a
+new <code>div</code> element with an <code>id</code> attribute to clearly
 separate each included piece.</p>
 
 <p>Pieces of the new generated document may contain normal links, target
-anchors, and target elements. During the <strong>Make book</strong>
-operation, Amaya ensures that each <code>name</code> and <code>id</code>
-attribute value remains unique in the new document. Amaya changes these
-values ss needed, and updates all relative links.</p>
+anchors, and target elements. During the <strong>Make book</strong> operation,
+Amaya ensures that each <code>name</code> and <code>id</code> attribute value
+remains unique in the new document. Amaya changes these values as needed, and
+updates all relative links.</p>
 
 <p>Amaya automatically transforms external links referring to external
 documents or to document parts, into internal links to the part that are now
-included. For example, if the link originally pointed to an external
-document, the link will now refer to the  <code>div</code> element generated
-by the <strong>Make book</strong> command. This ensures that all links are
-preserved in the new unique document containing the whole collection.</p>
+included. For example, if the link originally pointed to an external document,
+the link will now refer to the  <code>div</code> element generated by the
+<strong>Make book</strong> command. This ensures that all links are preserved
+in the new unique document containing the whole collection.</p>
 
 <p>This large document can then be numbered and printed with a complete table
 of contents and a list of all links.</p>
+
+<p><strong>Example</strong> : you can experiment with the <strong>Make
+book</strong> command using this <a
+href="http://www.w3.org/Amaya/User/doc/SampleBook.html">test document</a>.</p>
 </div>
 </body>
 </html>
