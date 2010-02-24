@@ -56,9 +56,10 @@ l'attribut <code>rel</code>).</p>
   <li>soit une partie d'un document externe.</li>
 </ul>
 
-<p>Pour référencer une partie d'un document, la méthode habituelle est de
-définir un élément <code>div</code> qui délimite la partie du document que vous
-voulez inclure vous créez un lien vers cet élément <code>div</code>.</p>
+<p>Pour référencer une partie d'un document, vous devez définir un élément
+conteneur (comme un <code>div</code>) qui délimite la partie du document à
+inclure, lui ajouter un identificateur (attribut <code>id</code>) et créer un
+lien vers cet élément conteneur.</p>
 
 <p>Ensuite, lorsque vous activez la commande <strong>Outils/Construire un
 livre</strong>, tous les blocs (éléments <code>li</code> dans l'exemple
