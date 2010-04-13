@@ -711,7 +711,7 @@ THOT_EXPORT LoadedImageDesc *LoadedResources;
 #define DOCTYPE2_XHTML10_TRANSITIONAL "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
 #define DOCTYPE2_XHTML_PLUS_RDFa      "      \"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd\">"
 #define DOCTYPE2_MATHML20             "      \"http://www.w3.org/TR/MathML2/dtd/mathml2.dtd\">"
-#define DOCTYPE2_SVG10                "      \"http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd\">"
+#define DOCTYPE2_SVG10                "      \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">"
 
 #define MATHML_XSLT_NAME     "pmathml.xsl"
 #define MATHML_XSLT_URI      "xml-stylesheet type=\"text/xsl\" href=\""
