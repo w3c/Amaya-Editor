@@ -3710,7 +3710,9 @@ void CreateMABS (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMNORM (Document document, View view)
 {
-  CreateMathConstruct (document, view,  40,8741,8741, FALSE);}
+  /* Unicode Character 'DOUBLE VERTICAL LINE' (U+2016) */
+  CreateMathConstruct (document, view,  40, 0x2016, 0x2016, FALSE);
+}
 /*----------------------------------------------------------------------
   CreateMALEPHSUB
   ----------------------------------------------------------------------*/
