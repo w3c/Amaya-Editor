@@ -3614,6 +3614,7 @@ void CreateMOVERHAT (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMOVERTILDE (Document document, View view)
 {
+  /* Unicode Character 'TILDE' (U+007E) */
   CreateMathConstruct (document, view,  59, 'T');
 }
 
@@ -3974,7 +3975,9 @@ void CreateMEQUIVALENTBINARY (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMEQUIVALENTUNDER (Document document, View view)
 {
-  CreateMathConstruct (document, view,  33, TRUE, MathML_EL_MO, '~');}
+  /* Unicode Character 'TILDE OPERATOR' (U+223C) */
+  CreateMathConstruct (document, view,  33, TRUE, MathML_EL_MO, 0x223C);
+}
 /*----------------------------------------------------------------------
   CreateMEULERGAMMA
   ----------------------------------------------------------------------*/
