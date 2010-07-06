@@ -1207,7 +1207,7 @@ static void SyncBoundingboxesReal (PtrAbstractBox pInitAb,
         }
       else
         {
-          if (pAb->AbElement->ElSystemOrigin)
+          if (pAb->AbElement->ElSystemOrigin && pAb->AbBox)
             {
               CoordinateSystemUpdate (pAb, frame, 
                                       pAb->AbBox->BxXOrg, 
