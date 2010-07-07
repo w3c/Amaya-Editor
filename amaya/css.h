@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2005
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -61,7 +61,6 @@ typedef struct _CSSInfo
 
 THOT_EXPORT CSSInfoPtr   CSSList;
 THOT_EXPORT char        *UserCSS; /* name of the User style sheet */
-THOT_EXPORT char         CSSbuffer[MAX_CSS_LENGTH + 1];
 THOT_EXPORT ThotBool     DoDialog; /* TRUE when CSS rules are parsed to update the CSS dialog */
 
 #endif /* CSS_INC_H */

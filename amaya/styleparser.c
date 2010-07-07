@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -76,6 +76,7 @@ static char         *ImportantPos = NULL;
 static ThotBool      RedisplayBGImage = FALSE; /* TRUE when a BG image is inserted */
 static ThotBool      DoApply = TRUE;
 static ThotBool      All_sides = FALSE; // TRUE when "boder valus must be displayed
+static char          CSSbuffer[MAX_CSS_LENGTH + 1];
 
 
 /*----------------------------------------------------------------------
@@ -5183,7 +5184,7 @@ static char *ParseCSSContent (Element element, PSchema tsch,
 {
   PresentationValue   value, pval;
   char                *last, *start, quoteChar, savedChar;
-  int                 length, val;
+  int                 length, val, l;
   char               *buffer, *p;
   char               *start_value;
   wchar_t             wc;
@@ -5219,17 +5220,18 @@ static char *ParseCSSContent (Element element, PSchema tsch,
         {
           quoteChar = *cssRule;
           /* how long is the string? */
-          last = cssRule;
-          last = SkipString (last);
+          last = SkipString (cssRule);
           length = last - cssRule;
           /* get a buffer to store the string */
           buffer = (char *)TtaGetMemory (3 * length);
           p = buffer; /* beginning of the string */
           cssRule++;
-          while (*cssRule != EOS && *cssRule != quoteChar)
+
+          l = TtaGetNextWCFromString (&wc, (unsigned char **) &cssRule, UTF_8);
+          while (wc != EOS && wc != quoteChar && l > 0)
             {
 	      done = FALSE;
-              if (*cssRule == '\\')
+              if (wc == '\\')
                 {
                   cssRule++; /* skip the backslash */
                   if ((*cssRule >= '0' && *cssRule <= '9') ||
@@ -5247,17 +5249,16 @@ static char *ParseCSSContent (Element element, PSchema tsch,
                       sscanf (start, "%x", &val);
                       TtaWCToMBstring ((wchar_t) val, (unsigned char **) &p);
                       *cssRule = savedChar;
+		      wc = savedChar;
 		      done = TRUE;
                     }
                 }
               if (!done)
                 {
-		  /* The default encoding of CSS style sheets is ISO-8859-1,
-		     but we should use the real encoding fo the file instead
-		     of this default value @@@@@ */
-		  wc = TtaGetWCFromChar ((unsigned char) cssRule[0], ISO_8859_1);
 		  TtaWCToMBstring (wc, (unsigned char **) &p);
- 		  cssRule++;
+                  cssRule+= l;
+                  l = TtaGetNextWCFromString (&wc, (unsigned char **) &cssRule,
+					      UTF_8);
                 }
             }
           *p = EOS;
