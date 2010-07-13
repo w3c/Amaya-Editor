@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1291,6 +1291,30 @@ void GetSchPres (PtrPSchema *pSP)
 }
 
 /*----------------------------------------------------------------------
+  FreeConditions
+      free a string of presentation conditions
+  ----------------------------------------------------------------------*/
+static void FreeConditions (PtrCondition pCond, PtrSSchema pSS)
+{
+  PtrCondition        nextCond;
+
+   while (pCond)
+    {
+      nextCond = pCond->CoNextCondition;
+      if ((pCond->CoCondition == PcAttribute ||
+           pCond->CoCondition == PcInheritAttribute) &&
+          pSS &&
+          pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
+        TtaFreeMemory (pCond->CoAttrTextValue);
+      else if (pCond->CoCondition == PcWithin ||
+               pCond->CoCondition == PcSibling)
+        TtaFreeMemory (pCond->CoAncestorName);
+      FreePresentRuleCond (pCond);
+      pCond = nextCond;
+    }
+}
+
+/*----------------------------------------------------------------------
   FreeSchPres libere un schemas de presentation.                  
   ----------------------------------------------------------------------*/
 void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
@@ -1310,9 +1334,12 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
   for (i = 0; i < pSP->PsNCounters; i++)
     {
       for (j = 0; j < pSP->PsCounter[i].CnNItems; j++)
-	if (pSP->PsCounter[i].CnItem[j].CiCondAttr &&
-	    pSP->PsCounter[i].CnItem[j].CiCondAttrTextValue)
-	  TtaFreeMemory (pSP->PsCounter[i].CnItem[j].CiCondAttrTextValue);
+	{
+	  FreeConditions (pSP->PsCounter[i].CnItem[j].CiCond, pSS);
+	  if (pSP->PsCounter[i].CnItem[j].CiCondAttr &&
+	      pSP->PsCounter[i].CnItem[j].CiCondAttrTextValue)
+	    TtaFreeMemory (pSP->PsCounter[i].CnItem[j].CiCondAttrTextValue);
+	}
     }
   for (i = 0; i < pSP->PsNConstants; i++)
     {
@@ -1753,21 +1780,7 @@ void FreePresentRule (PtrPRule pRP, PtrSSchema pSS)
 {
   PtrCondition        pCond, nextCond;
 
-  pCond = pRP->PrCond;
-  while (pCond)
-    {
-      nextCond = pCond->CoNextCondition;
-      if ((pCond->CoCondition == PcAttribute ||
-           pCond->CoCondition == PcInheritAttribute) &&
-          pSS &&
-          pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
-        TtaFreeMemory (pCond->CoAttrTextValue);
-      else if (pCond->CoCondition == PcWithin ||
-               pCond->CoCondition == PcSibling)
-        TtaFreeMemory (pCond->CoAncestorName);
-      FreePresentRuleCond (pCond);
-      pCond = nextCond;
-    }
+  FreeConditions (pRP->PrCond, pSS);
   pRP->PrCSSLine = 0;
   pRP->PrCSSURL = NULL;
   TtaFreeMemory (pRP);

@@ -22,6 +22,11 @@ extern void TtaListBoxes ( Document document,
                            FILE *fileDescriptor );
 extern void TtaListStyleSchemas ( Document document,
                                   FILE *fileDescriptor );
+extern void DisplayCounterRule ( int counter,
+                                 int item,
+                                 FILE *fileDescriptor,
+                                 PtrElement pEl,
+                                 PtrPSchema pSchP );
 extern void DisplayPRule ( PtrPRule rule,
                            FILE *fileDescriptor,
                            PtrElement pEl,
@@ -48,6 +53,11 @@ extern void TtaListBoxes ( Document document,
                              FILE *fileDescriptor );
 extern void TtaListStyleSchemas ( Document document,
                                     FILE *fileDescriptor );
+extern void DisplayCounterRule ( int counter,
+                                   int item,
+                                   FILE *fileDescriptor,
+                                   PtrElement pEl,
+                                   PtrPSchema pSchP );
 extern void DisplayPRule ( PtrPRule rule,
                              FILE *fileDescriptor,
                              PtrElement pEl,

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -605,6 +605,9 @@ typedef struct _CntrItem
   CounterOp CiCntrOp;	   /* the operation */
   int       CiElemType;	   /* number of the element type (if CECatElem =
 			      ElementStruct) triggering the operation */
+  PtrCondition  CiCond;	   /* conditions for applying the operation */
+  char      *CiCSSURL;     /* points to the current CSS URL */
+  int       CiCSSLine;     /* the line number of the CSS rule */
   int	    CiAscendLevel; /* level of the parent we wish to count for
 			      recursive structures */
   int       CiViewNum;	   /* number of the view to which the pages to be

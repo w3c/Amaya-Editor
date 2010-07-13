@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2952,7 +2952,8 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
                 pElPage->ElPageNumber = CounterVal (counter,
                                                     pElPage->ElStructSchema,
                                                     pSchP, pElPage,
-                                                    pElPage->ElViewPSchema);
+                                                    pElPage->ElViewPSchema,
+						    pDoc);
               else
                 /* page non numerotee */
                 pElPage->ElPageNumber = 1;

@@ -2542,7 +2542,7 @@ void ComputePageNum (PtrElement pEl, PtrDocument pDoc, int view)
           else
             /* calcule le nouveau numero de page */
             {
-              pPage->ElPageNumber = CounterVal (cpt, pPage->ElStructSchema, pSchP, pPage, view);
+              pPage->ElPageNumber = CounterVal (cpt, pPage->ElStructSchema, pSchP, pPage, view, pDoc);
               if (pPage->ElPageNumber == numpageprec)
                 /* le numero de page n'a pas change', on s'arrete */
                 stop = TRUE;
@@ -2950,7 +2950,7 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
 static void AttachCounterValue (PtrElement pEl, PtrElement pElIncluded,
                                 PtrDocument pDocIncluded, Name NmAttr,
                                 int counter, PtrPSchema pSchP,
-                                PtrSSchema pSchS)
+                                PtrSSchema pSchS, PtrDocument pDoc)
 {
   int                 att;
   PtrAttribute        pAttr;
@@ -2981,7 +2981,7 @@ static void AttachCounterValue (PtrElement pEl, PtrElement pElIncluded,
           pAttr->AeAttrSSchema = pElIncluded->ElStructSchema;
           pAttr->AeAttrNum = att;
           pAttr->AeAttrType = AtNumAttr;
-          pAttr->AeAttrValue = CounterVal (counter, pSchS, pSchP, pEl, 1);
+          pAttr->AeAttrValue = CounterVal (counter, pSchS, pSchP, pEl, 1, pDoc);
           AttachAttrWithValue (pElIncluded, pDocIncluded, pAttr, FALSE);
           DeleteAttribute (NULL, pAttr);
         }
@@ -3008,9 +3008,10 @@ void TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr,
     pRef = pEl->ElSource;
   pElIncluded = ReferredElement (pRef);
   /* Transmet au document inclus, en externe */
-  AttachCounterValue (pEl, pElIncluded, pDoc, nameAttr, counter, pSchP, pSchS);
+  AttachCounterValue (pEl, pElIncluded, pDoc, nameAttr, counter, pSchP, pSchS,
+		      pDoc);
   /* Transmet au document inclus, semi expanse */
-  AttachCounterValue (pEl, pEl, pDoc, nameAttr, counter, pSchP, pSchS);
+  AttachCounterValue (pEl, pEl, pDoc, nameAttr, counter, pSchP, pSchS, pDoc);
 }
 
 /*----------------------------------------------------------------------

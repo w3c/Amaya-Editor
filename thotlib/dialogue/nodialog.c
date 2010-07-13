@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -92,6 +92,14 @@ void TtaPostMenuActionById (int actionId, Document doc, View view,
   ----------------------------------------------------------------------*/
 void TtaExecuteMenuActionFromActionId (int action_id, Document doc,
                                        View view, ThotBool force)
+{
+}
+
+/*----------------------------------------------------------------------
+  DisplayCounterRule displays an item of a counter in the CSS format.
+  ----------------------------------------------------------------------*/
+void DisplayCounterRule (int counter, int item, FILE *fileDescriptor,
+			 PtrElement pEl, PtrPSchema pSchP)
 {
 }
 

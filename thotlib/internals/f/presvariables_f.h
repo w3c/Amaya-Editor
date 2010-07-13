@@ -16,7 +16,8 @@ extern int CounterVal ( int counterNum,
                         PtrSSchema pSS,
                         PtrPSchema pSchP,
                         PtrElement pElNum,
-                        int view );
+                        int view,
+                        PtrDocument pDoc );
 extern ThotBool PresAbsBoxUserEditable ( PtrAbstractBox pAb );
 extern void GetCounterValue ( int number,
                               CounterStyle style,
@@ -41,7 +42,8 @@ extern int CounterVal ( int counterNum,
                           PtrSSchema pSS,
                           PtrPSchema pSchP,
                           PtrElement pElNum,
-                          int view );
+                          int view,
+                          PtrDocument pDoc );
 extern ThotBool PresAbsBoxUserEditable ( PtrAbstractBox pAb );
 extern void GetCounterValue ( int number,
                                 CounterStyle style,

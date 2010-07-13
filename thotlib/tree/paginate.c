@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1025,7 +1025,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
     }
   else				/* calcule le numero de page */
     pElPage->ElPageNumber = CounterVal (cpt, pElPage->ElStructSchema, pSchP,
-                                        pElPage, schView);
+                                        pElPage, schView, pDoc);
   /* envoie l'evenement ElemNew.Post */
 #ifndef PAGINEETIMPRIME
   NotifySubTree (TteElemNew, pDoc, pElPage, 0, 0, FALSE, FALSE);
@@ -1841,7 +1841,7 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
           else
             /* calcule le numero de page */
             pElPage->ElPageNumber = CounterVal (cpt, pElPage->ElStructSchema,
-                                                pSchP, pElPage, schView);
+                                                pSchP, pElPage, schView, pDoc);
 #ifndef PAGINEETIMPRIME
           /* envoie l'evenement ElemNew.Post */
           if (withAPP)
@@ -2000,9 +2000,8 @@ void PaginateView (PtrDocument pDoc, int view)
                     {
                       pPage->ElPageNumber = CounterVal (cpt, 
                                                         pPage->ElStructSchema, 
-                                                        pSchP, 
-                                                        pPage, 
-                                                        schView);
+                                                        pSchP, pPage, 
+                                                        schView, pDoc);
                       /* update the presentation box for next pages */
                       /* this update is done at the end when the pagination */
                       /* is not associated with print */		      

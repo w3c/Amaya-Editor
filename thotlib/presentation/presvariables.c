@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -22,6 +22,7 @@
 #include "tree_f.h"
 #include "memory_f.h"
 #include "changeabsbox_f.h"
+#include "createabsbox_f.h"
 #include "presrules_f.h"
 #include "fileaccess_f.h"
 #include "structschema_f.h"
@@ -479,7 +480,7 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
   compteurs de page).                                     
   ----------------------------------------------------------------------*/
 int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
-                PtrElement pElNum, int view)
+                PtrElement pElNum, int view, PtrDocument pDoc)
 {
   int                 i, value, valueinitattr, level, Nincr, incrVal;
   int                 TypeIncr, TypeSet, TypeRank, TypeRLevel;
@@ -489,6 +490,7 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
   PtrSSchema          pSchStr, pSSpr;
   PtrAttribute        pAttr;
   PtrElement          pEl, pElReinit, pEl2;
+  PtrCondition        CondSet, CondIncr;
   ThotBool	      CondAttr;
 #define MaxAncestor 50
   PtrElement          PcWithin[MaxAncestor];
@@ -685,7 +687,8 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
               }
           }
       }
-  /* the counting function is SET ON, ADD ON */
+    /* the counting function is SET ON, ADD ON (Thot P language) or
+       counter-reset, counter-increment (CSS) */
     else
       {
         /* type or alias that resets the counter */
@@ -694,25 +697,34 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
         TypeIncr = MakeAliasTypeCount (pCo1, CntrAdd, pSS);
         /* is there a condition on attributes for this counter? */
         CondAttr = FALSE;
-        for (i = 0; i < pCo1->CnNItems && !CondAttr; i++)
-          if (pCo1->CnItem[i].CiCondAttr > 0)
-            CondAttr = TRUE;
+        CondSet = NULL;
+        CondIncr = NULL;
+        for (i = 0; i < pCo1->CnNItems; i++)
+	  {
+	    if (pCo1->CnItem[i].CiCondAttr > 0)
+	      CondAttr = TRUE;
+	    if (pCo1->CnItem[i].CiCntrOp == CntrSet)
+	      CondSet = pCo1->CnItem[i].CiCond;
+	    if (pCo1->CnItem[i].CiCntrOp == CntrAdd)
+	      CondIncr = pCo1->CnItem[i].CiCond;
+	  }
         pSchStr = pSS;
         if (initattr)
           value = valueinitattr;
 
-	/* On compte tous les elements precedents de type TypeIncr */
-	/* jusqu'a en trouver un de type TypeSet. */
+	/* Count all preceding elements of type TypeIncr */
+	/* up to the first element of type TypeSet. */
 	if (TypeSet <= MAX_BASIC_TYPE)
-	  /* c'est un type de base, on le cherche quel que soit son schema */
+	  /* it's a basic type, ignore the schema */
 	  pSchSet = NULL;
 	else
-	  pSchSet = pSchStr; /* schema de struct. du type qui initialise */
+	  pSchSet = pSchStr; /* schema of element that (re)sets the counter */
 	if (TypeIncr <= MAX_BASIC_TYPE)
 	  /* c'est un type de base, on le cherche quel que soit son schema */
 	  pSchIncr = NULL;
 	else
-	  pSchIncr = pSchStr; /* schema de struct. du type qui incremente */
+	  pSchIncr = pSchStr; /* schema of the element that increments the
+				 counter */
 	pEl = pElNum;
 	incrVal = 0;
 	if (EquivalentType (pEl, TypeIncr, pSchIncr))
@@ -743,14 +755,50 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 					  pSchIncr, NULL);
 	      if (pEl)
 		{
-		  if (EquivalentType (pEl, TypeIncr, pSchIncr))
-		    /* on a trouve' un element du type qui incremente */
+		  if (EquivalentType (pEl, TypeSet, pSchSet))
+		    /* we have found an element that (re)sets the counter */
 		    {
 		      if (!CondAttr)
 			{
-			  Nincr++;
-			  if (incrVal == 0)
-			    incrVal = GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+			  if (!CondSet ||
+			      (CondSet &&
+			       CondPresentation (CondSet, pEl, NULL, NULL,
+						 NULL, view, pSS, pDoc)))
+			    {
+			      if (!initattr)
+				value = GetCounterValEl (pCo1, pEl, CntrSet,
+							 pSS);
+			      pEl = NULL;	/* stop */
+			    }
+			}
+		      else
+			/* check conditions on attributes */
+			{
+			  i = GetCounterItem (pCo1, CntrSet, pSS, pEl);
+			  if (i >= 0)
+			    if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
+			      {
+				if (!initattr)
+				  value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
+				pEl = NULL;	/* stop */
+			      }
+			}
+		    }
+		  if (pEl && EquivalentType (pEl, TypeIncr, pSchIncr))
+		    /* we have found an element that increments the counter */
+		    {
+		      if (!CondAttr)
+			{
+			  if (!CondIncr ||
+			      (CondIncr &&
+			       CondPresentation (CondIncr, pEl, NULL, NULL,
+						 NULL, view, pSS, pDoc)))
+			    {
+			      Nincr++;
+			      if (incrVal == 0)
+				incrVal = GetCounterValEl (pCo1, pEl, CntrAdd,
+							   pSS);
+			    }
 			}
 		      else
 			/* check conditions on attributes */
@@ -763,28 +811,6 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 				if (incrVal == 0)
 				  incrVal = GetCounterValEl (pCo1, pEl, CntrAdd,
 							     pSS);
-			      }
-			}
-		    }
-		  else if (EquivalentType (pEl, TypeSet, pSchSet))
-		    /* on a trouve' un element du type qui initialise */
-		    {
-		      if (!CondAttr)
-			{
-			  if (!initattr)
-			    value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
-			  pEl = NULL;	/* on arrete */
-			}
-		      else
-			/* check conditions on attributes */
-			{
-			  i = GetCounterItem (pCo1, CntrSet, pSS, pEl);
-			  if (i >= 0)
-			    if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-			      {
-				if (!initattr)
-				  value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
-				pEl = NULL;	/* on arrete */
 			      }
 			}
 		    }
@@ -1202,7 +1228,8 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
           else
             /* valeur courante du compteur */
             i = CounterVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
-                            pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView);
+                            pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
+			    pDoc);
           /* le cas particulier des compteurs en bas de page (ou il */
           /* fallait decrementer la valeur) est supprime dans V4 car  */
           /* le bas de page est associe a la page courante et non la */

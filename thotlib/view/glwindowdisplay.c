@@ -908,11 +908,11 @@ static float ZoomedValue (float val, int zoom)
   Modify the current transformation matrix
   this is a GL Matrix         this is SVG Matrix
   |a0  a4  a8   a12|        | a d f |
-  |		    |        | b c d |
+  |		   |        | b c d |
   |a1  a5  a9   a13|        | 0 0 1 |
-  |		    |
+  |		   |
   |a2  a6  a10  a14|
-  |		    |
+  |		   |
   |a3  a7  a11  a15|
   ----------------------------------------------------------------------*/
 void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2007
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1883,7 +1883,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
                       /* page non numerotee */
                       else
                         /* calcule la valeur du compteur */
-                        pNew->ElPageNumber = CounterVal (counterNum, pNew->ElStructSchema, pPSchema, pNew, schView);
+                        pNew->ElPageNumber = CounterVal (counterNum, pNew->ElStructSchema, pPSchema, pNew, schView, pDoc);
                     }
                   else if (pNextEl == NULL)
                     /* l'element pEl n'est plus le dernier fils de son pere */

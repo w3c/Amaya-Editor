@@ -576,9 +576,9 @@ static void AddCond (PtrCondition *base, PtrCondition cond, SSchema sch)
 }
 
 /*----------------------------------------------------------------------
-  PresRuleAddElemCond : add an element condition to a presentation rule.
+  AddElemCond : add an element condition to a presentation rule.
   ----------------------------------------------------------------------*/
-static void PresRuleAddElemCond (PtrPRule rule, GenericContext ctxt, int level,
+static void AddElemCond (PtrCondition *base, GenericContext ctxt, int level,
                                  ThotBool firstChild)
 {
   PtrCondition        cond = NULL;
@@ -635,13 +635,13 @@ static void PresRuleAddElemCond (PtrPRule rule, GenericContext ctxt, int level,
       cond->CoAncestorName = NULL;
       cond->CoSSchemaName[0] = EOS;
     }
-  AddCond (&rule->PrCond, cond, ctxt->schema);
+  AddCond (base, cond, ctxt->schema);
 }
 
 /*----------------------------------------------------------------------
-  PresRuleAddAttrCond : add a Attr condition to a presentation rule.
+  AddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
-static void PresRuleAddAttrCond (PtrPRule rule, GenericContext ctxt, int att)
+static void AddAttrCond (PtrCondition *base, GenericContext ctxt, int att)
 {
   AttributeType       attType;
   PtrCondition        cond = NULL;
@@ -677,7 +677,7 @@ static void PresRuleAddAttrCond (PtrPRule rule, GenericContext ctxt, int att)
       else
         cond->CoAttrTextValue = NULL;
     }
-  AddCond (&rule->PrCond, cond, attType.AttrSSchema);
+  AddCond (base, cond, attType.AttrSSchema);
 }
 
 static char ListOfValues[MAX_LENGTH];
@@ -1139,6 +1139,44 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
 }
 
 /*----------------------------------------------------------------------
+  AddConditions : generate presentation conditions for the context.
+  ----------------------------------------------------------------------*/
+static void AddConditions (PtrCondition *base, GenericContext ctxt)
+{
+  int                 i, att;
+          if (ctxt->box == 0)
+            /* rules associated to a presentation box do not have conditions */
+            {
+              /* In case of an attribute rule, add the Attr condition */
+              if (ctxt->attrType[0] && ctxt->attrLevel[0] == 0 && ctxt->type)
+                /* the attribute is attached to that element like a
+                   selector "a#id" */
+                AddElemCond (base, ctxt, 0, FALSE);
+              /* add other conditions ... */
+              i = 0;
+              att = 0;
+              while (i <= ctxt->nbElem)
+                {
+                  if (i > 0)
+                    /* it's an ancestor like a selector "li a" */
+                    AddElemCond (base, ctxt, i, FALSE);
+                  if (ctxt->firstChild[i])
+                    /* it's a pseudo-class first-child */
+                    AddElemCond (base, ctxt, i, TRUE);
+                  while (ctxt->attrType[att] && ctxt->attrLevel[att] == i)
+                    {
+                      /* skip the first attribute if it is at level 0 : it
+                         is already used as the anchor of the list of rules */
+                      if (att > 0 || ctxt->attrLevel[att] > 0)
+                        AddAttrCond (base, ctxt, att);
+                      att++;
+                    }
+                  i++;
+                }
+            }
+}
+
+/*----------------------------------------------------------------------
   PresRuleInsert : insert a new presentation rule for a given type
   in a chain. If it already exists, return the current block.
   In a chain all the rules are sorted by type and also by view.
@@ -1148,7 +1186,6 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 {
   PtrPRule           *chain;
   PtrPRule            pRule = NULL;
-  int                 i, att;
 
   /* Search presentation rule */
   pRule = PresRuleSearch (tsch, ctxt, pres, (FunctionType) extra, &chain);
@@ -1167,38 +1204,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
           pRule->PrViewNum = 1;
           pRule->PrSpecifAttr = 0;
           pRule->PrSpecifAttrSSchema = NULL;
-
-          if (ctxt->box == 0)
-            /* rules associated to a presentation box do not have conditions */
-            {
-              /* In case of an attribute rule, add the Attr condition */
-              if (ctxt->attrType[0] && ctxt->attrLevel[0] == 0 && ctxt->type)
-                /* the attribute is attached to that element like a
-                   selector "a#id" */
-                PresRuleAddElemCond (pRule, ctxt, 0, FALSE);
-              /* add other conditions ... */
-              i = 0;
-              att = 0;
-              while (i <= ctxt->nbElem)
-                {
-                  if (i > 0)
-                    /* it's an ancestor like a selector "li a" */
-                    PresRuleAddElemCond (pRule, ctxt, i, FALSE);
-                  if (ctxt->firstChild[i])
-                    /* it's a pseudo-class first-child */
-                    PresRuleAddElemCond (pRule, ctxt, i, TRUE);
-                  while (ctxt->attrType[att] && ctxt->attrLevel[att] == i)
-                    {
-                      /* skip the first attribute if it is at level 0 : it
-                         is already used as the anchor of the list of rules */
-                      if (att > 0 || ctxt->attrLevel[att] > 0)
-                        PresRuleAddAttrCond (pRule, ctxt, att);
-                      att++;
-                    }
-                  i++;
-                }
-            }
-
+	  AddConditions (&pRule->PrCond, ctxt);
           /* chain in the rule */
           if (chain)
             {
@@ -3165,9 +3171,15 @@ static void SetCounterOp (unsigned int type, PSchema tsch,
 	      pCntr->CnItem[pCntr->CnNItems].CiParamValue = v.data;
 	    }
 	  pCntr->CnItem[pCntr->CnNItems].CiElemType = ctxt->type;
+	  pCntr->CnItem[pCntr->CnNItems].CiCond = NULL;
+	  pCntr->CnItem[pCntr->CnNItems].CiCSSURL = ctxt->cssURL;
+	  pCntr->CnItem[pCntr->CnNItems].CiCSSLine = ctxt->cssLine;
 	  pCntr->CnItem[pCntr->CnNItems].CiAscendLevel = 0;
 	  pCntr->CnItem[pCntr->CnNItems].CiInitAttr = 0;
 	  pCntr->CnItem[pCntr->CnNItems].CiReinitAttr = 0;
+	  /* add conditions based on the context */
+	  AddConditions (&pCntr->CnItem[pCntr->CnNItems].CiCond, ctxt);
+
 	  if (ctxt->attrLevel[0] == 0 && ctxt->attrType[0])
 	    /* there is an attribute at the first level of the CSS selector */
 	    {
