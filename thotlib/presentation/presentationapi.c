@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1334,7 +1334,7 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
   PRDisplay: Undefined, DisplayNone, Inline, Block, ListItem, RunIn,
   InlineBlock.
   PRListStyleType: Disc, Circle, Square, Decimal, DecimalLeadingZero,
-  LowerRoman, UpperRoman, LowerGreek, LowerLatin, UpperLatin,
+  LowerRoman, UpperRoman, LowerGreek, UpperGreek, LowerLatin, UpperLatin,
   ListStyleTypeNone.
   PRListStylePosition: Inside, Outside.
   PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
@@ -1717,6 +1717,9 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
               break;
             case LowerGreek:
               ((PtrPRule) pRule)->PrChrValue = 'g';
+              break;
+            case UpperGreek:
+              ((PtrPRule) pRule)->PrChrValue = 'G';
               break;
             case LowerLatin:
               ((PtrPRule) pRule)->PrChrValue = 'a';
@@ -3025,7 +3028,7 @@ int                 TtaGetPRuleType (PRule pRule)
   PRDisplay: Undefined, DisplayNone, Inline, Block, ListItem, RunIn,
   InlineBlock.
   PRListStyleType: Disc, Circle, Square, Decimal, DecimalLeadingZero,
-  LowerRoman, UpperRoman, LowerGreek, LowerLatin, UpperLatin,
+  LowerRoman, UpperRoman, LowerGreek, UpperGreek, LowerLatin, UpperLatin,
   ListStyleTypeNone.
   PRListStylePosition: Inside, Outside.
   PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
@@ -3317,6 +3320,9 @@ int TtaGetPRuleValue (PRule pRule)
             break;
           case 'g':
             value = LowerGreek;
+            break;
+          case 'G':
+            value = UpperGreek;
             break;
           case 'a':
             value = LowerLatin;

@@ -2837,6 +2837,9 @@ static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
           case 'g':
             fprintf (fileDescriptor, "LowerGreek");
             break;
+          case 'G':
+            fprintf (fileDescriptor, "UpperGreek");
+            break;
           case 'a':
             fprintf (fileDescriptor, "LowerLatin");
             break;
@@ -4349,22 +4352,48 @@ void DisplayCounterRule (int counter, int item, FILE *fileDescriptor,
 			 PtrElement pEl, PtrPSchema pSchP)
 {
   CntrItem        *CntItem;
+  char            *name;
+  int              l;
 
   CntItem = &pSchP->PsCounter[counter].CnItem[item];
   /* if there is no number for the source line, don't do anything */
   if (CntItem->CiCSSLine == 0)
     return;
-
+  l = 0;
   fprintf (fileDescriptor, "@");
   if (CntItem->CiCntrOp == CntrSet)
-     fprintf (fileDescriptor, "counter-reset: ");
+    {
+      fprintf (fileDescriptor, "counter-reset: ");
+      l += 15;
+    }
   else if (CntItem->CiCntrOp == CntrAdd)
-     fprintf (fileDescriptor, "counter-increment: ");
-  fprintf (fileDescriptor, pSchP->PsConstant[pSchP->PsCounter[counter].CnNameIndx-1].PdString);
+    {
+      fprintf (fileDescriptor, "counter-increment: ");
+      l += 19;
+    }
+  name = pSchP->PsConstant[pSchP->PsCounter[counter].CnNameIndx-1].PdString;
+  fprintf (fileDescriptor, name);
+  l += strlen (name);
   if ((CntItem->CiCntrOp == CntrAdd && CntItem->CiParamValue != 1) ||
       (CntItem->CiCntrOp == CntrSet && CntItem->CiParamValue != 0))
-    fprintf (fileDescriptor, " %d", CntItem->CiParamValue);
-  fprintf (fileDescriptor, ";  ");
+    {
+      fprintf (fileDescriptor, " %d", CntItem->CiParamValue);
+      l += 2;
+      if (CntItem->CiParamValue > 9)
+	l++;
+      if (CntItem->CiParamValue > 99)
+	l++;
+      if (CntItem->CiParamValue > 999)
+	l++;
+    }
+  fprintf (fileDescriptor, "; ");
+  l += 2;
+  while (l < 30)
+    {
+      fprintf (fileDescriptor, " ");
+      l++;
+    }
+
   if (CntItem->CiCSSURL)
     fprintf (fileDescriptor, "line %d, file %s\n", CntItem->CiCSSLine,
              CntItem->CiCSSURL);
@@ -4433,7 +4462,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
               else if (pSchP->PsConstant[item->ViConstant - 1].PdType == tt_Picture)
                 {
                   fprintf (fileDescriptor, " url(\"");
-                  l += 8;
+                  l += 7;
                   if (ptr)
                     {
                       fprintf (fileDescriptor, "%s", ptr);
@@ -4444,29 +4473,78 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
               break;
             case VarCounter:
 	      if (pSchP->PsCounter[item->ViCounter - 1].CnNameIndx == 0)
-                 fprintf (fileDescriptor, " counter(Cnt%d", item->ViCounter);
+		{
+                   fprintf (fileDescriptor, " counter(Cnt%d", item->ViCounter);
+		   l += 13;
+                   if (item->ViCounter > 9)
+		     l++;
+                   if (item->ViCounter > 99)
+		     l++;
+                   if (item->ViCounter > 999)
+		     l++;
+		}
 	      else
-		fprintf (fileDescriptor, " counter(%s",
-			 pSchP->PsConstant[pSchP->PsCounter[item->ViCounter-1].CnNameIndx-1].PdString);
-              l += 13;
+		{
+		  fprintf (fileDescriptor, " counter(%s",
+			   pSchP->PsConstant[pSchP->PsCounter[item->ViCounter-1].CnNameIndx-1].PdString);
+		  l+= 9;
+		  l+= strlen(pSchP->PsConstant[pSchP->PsCounter[item->ViCounter-1].CnNameIndx-1].PdString);
+		
+		}
 	      if (item->ViStyle != CntDecimal)
 		{
 		  fprintf (fileDescriptor, ", ");
 		  l+= 2;
 		  switch (item->ViStyle)
 		    {
-		    case CntDisc: fprintf (fileDescriptor, "disc"); break;
-		    case CntCircle: fprintf (fileDescriptor,"circle"); break;
-		    case CntSquare: fprintf (fileDescriptor,"square"); break;
-		    case CntDecimal: fprintf (fileDescriptor,"decimal"); break;
-		    case CntZLDecimal: fprintf (fileDescriptor,"decimal-leading-zero"); break;
-		    case CntLRoman: fprintf (fileDescriptor,"lower-roman"); break;
-		    case CntURoman: fprintf (fileDescriptor,"upper-roman"); break;
-		    case CntLGreek: fprintf (fileDescriptor,"lower-greek"); break;
-		    case CntUGreek: fprintf (fileDescriptor,"upper-greek"); break;
-		    case CntLowercase: fprintf (fileDescriptor,"lower-latin"); break;
-		    case CntUppercase: fprintf (fileDescriptor,"upper-latin"); break;
-		    case CntNone: fprintf (fileDescriptor,"none"); break;
+		    case CntDisc:
+		      fprintf (fileDescriptor, "disc");
+		      l+= 4;
+		      break;
+		    case CntCircle:
+		      fprintf (fileDescriptor, "circle");
+		      l+= 6;
+		      break;
+		    case CntSquare:
+		      fprintf (fileDescriptor, "square");
+		      l+= 6;
+		      break;
+		    case CntDecimal:
+		      fprintf (fileDescriptor, "decimal");
+		      l+= 7;
+		      break;
+		    case CntZLDecimal:
+		      fprintf (fileDescriptor, "decimal-leading-zero");
+		      l+= 20;
+		      break;
+		    case CntLRoman:
+		      fprintf (fileDescriptor, "lower-roman");
+		      l+= 11;
+		      break;
+		    case CntURoman:
+		      fprintf (fileDescriptor, "upper-roman");
+		      l+= 11;
+		      break;
+		    case CntLGreek:
+		      fprintf (fileDescriptor, "lower-greek");
+		      l+= 11;
+		      break;
+		    case CntUGreek:
+		      fprintf (fileDescriptor, "upper-greek");
+		      l+= 11;
+		      break;
+		    case CntLowercase:
+		      fprintf (fileDescriptor, "lower-latin");
+		      l+= 11;
+		      break;
+		    case CntUppercase:
+		      fprintf (fileDescriptor, "upper-latin"); 
+		      l+= 11;
+		      break;
+		    case CntNone:
+		      fprintf (fileDescriptor, "none");
+		      l+= 4;
+		      break;
 		    }
 		}
 	      fprintf (fileDescriptor, ")");
@@ -4474,13 +4552,15 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
               break;
             case VarAttrValue:
               fprintf (fileDescriptor, " attr(%s)", pSchP->PsSSchema->SsAttribute->TtAttr[item->ViAttr - 1]->AttrName);
+	      l = l + 7 + strlen(pSchP->PsSSchema->SsAttribute->TtAttr[item->ViAttr - 1]->AttrName);
               break;
             case VarNamedAttrValue:
               ptr = pSchP->PsConstant[item->ViConstant - 1].PdString;
-              fprintf (fileDescriptor, " attr(");
               if (ptr)
-                fprintf (fileDescriptor, "%s", ptr);
-              fprintf (fileDescriptor, ")");
+		{
+		  fprintf (fileDescriptor, " attr(%s)", ptr);
+		  l = l + 7 + strlen(ptr);
+		}
               break;
             default:
               break;

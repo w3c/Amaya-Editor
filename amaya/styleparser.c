@@ -2033,15 +2033,15 @@ static char *ParseCounterStyle (char *cssRule, PresentationValue *pval,
       cssRule += 6;
       (*pval).typed_data.value = Square;
     }
-  else if (!strncasecmp (cssRule, "decimal-leading-zero", 20))
-    {
-      cssRule += 20;
-      (*pval).typed_data.value = DecimalLeadingZero;
-    }
   else if (!strncasecmp (cssRule, "decimal", 7))
     {
       cssRule += 7;
       (*pval).typed_data.value = Decimal;
+    }
+  else if (!strncasecmp (cssRule, "decimal-leading-zero", 20))
+    {
+      cssRule += 20;
+      (*pval).typed_data.value = DecimalLeadingZero;
     }
   else if (!strncasecmp (cssRule, "lower-roman", 11))
     {
@@ -2058,22 +2058,17 @@ static char *ParseCounterStyle (char *cssRule, PresentationValue *pval,
       cssRule += 11;
       (*pval).typed_data.value = LowerGreek;
     }
+  else if (!strncasecmp (cssRule, "upper-greek", 11))
+    {
+      cssRule += 11;
+      (*pval).typed_data.value = UpperGreek;
+    }
   else if (!strncasecmp (cssRule, "lower-latin", 11))
     {
       cssRule += 11;
       (*pval).typed_data.value = LowerLatin;
     }
-  else if (!strncasecmp (cssRule, "lower-alpha", 11))
-    {
-      cssRule += 11;
-      (*pval).typed_data.value = LowerLatin;
-    }
   else if (!strncasecmp (cssRule, "upper-latin", 11))
-    {
-      cssRule += 11;
-      (*pval).typed_data.value = UpperLatin;
-    }
-  else if (!strncasecmp (cssRule, "upper-alpha", 11))
     {
       cssRule += 11;
       (*pval).typed_data.value = UpperLatin;
@@ -2087,6 +2082,16 @@ static char *ParseCounterStyle (char *cssRule, PresentationValue *pval,
     {
       cssRule += 8;
       (*pval).typed_data.value = Decimal;
+    }
+  else if (!strncasecmp (cssRule, "lower-alpha", 11))
+    {
+      cssRule += 11;
+      (*pval).typed_data.value = LowerLatin;
+    }
+  else if (!strncasecmp (cssRule, "upper-alpha", 11))
+    {
+      cssRule += 11;
+      (*pval).typed_data.value = UpperLatin;
     }
   else if (!strncasecmp (cssRule, "none", 4))
     {
@@ -5227,7 +5232,16 @@ static char *ParseCSSContent (Element element, PSchema tsch,
           p = buffer; /* beginning of the string */
           cssRule++;
 
-          l = TtaGetNextWCFromString (&wc, (unsigned char **) &cssRule, UTF_8);
+          if (ctxt->cssURL)
+	    /* it's an external style sheet. Assume it is encoded in the
+	       default encoding (iso-latin-1), but we should use the actual
+	       encoding of the file @@@@ */
+	    l = TtaGetNextWCFromString (&wc, (unsigned char **) &cssRule,
+					ISO_8859_1);
+	  else
+	    /* it's the content of a <style> element. It is encoded in UTF-8 */
+	    l = TtaGetNextWCFromString (&wc, (unsigned char **) &cssRule,
+					UTF_8);
           while (wc != EOS && wc != quoteChar && l > 0)
             {
 	      done = FALSE;
@@ -5257,8 +5271,17 @@ static char *ParseCSSContent (Element element, PSchema tsch,
                 {
 		  TtaWCToMBstring (wc, (unsigned char **) &p);
                   cssRule+= l;
-                  l = TtaGetNextWCFromString (&wc, (unsigned char **) &cssRule,
-					      UTF_8);
+		  if (ctxt->cssURL)
+		    /* it's an external style sheet. Assume it is encoded in
+		       the default encoding (iso-latin-1), but we should use
+		       the actual encoding of the file @@@@ */
+		    l = TtaGetNextWCFromString (&wc, (unsigned char **)&cssRule,
+						ISO_8859_1);
+		  else
+		    /* it's the content of a <style> element. It is encoded
+		       in UTF-8 */
+		    l = TtaGetNextWCFromString (&wc, (unsigned char **)&cssRule,
+						UTF_8);
                 }
             }
           *p = EOS;

@@ -884,6 +884,18 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
     }
   switch (style)
     {
+    case CntDisc:
+      ptr = (unsigned char*) (&string[*len]);
+      *len += TtaWCToMBstring ((wchar_t) 0x25cf, &ptr);
+      break;
+    case CntCircle:
+      ptr = (unsigned char*) (&string[*len]);
+      *len += TtaWCToMBstring ((wchar_t) 0x25cb, &ptr);
+      break;
+    case CntSquare:
+      ptr = (unsigned char*) (&string[*len]);
+      *len += TtaWCToMBstring ((wchar_t) 0x25a0, &ptr);
+      break;
     case CntDecimal:
     case CntZLDecimal:
       if (style == CntZLDecimal && number < 10)
@@ -1064,6 +1076,8 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
       while (c > 0);
       string[*len] = EOS;
       (*len)++;
+      break;
+    case CntNone:
       break;
     default:
       break;

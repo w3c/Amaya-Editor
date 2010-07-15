@@ -1607,6 +1607,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
         case LowerGreek:
           rule->PrChrValue = 'g';
           break;
+        case UpperGreek:
+          rule->PrChrValue = 'G';
+          break;
         case LowerLatin:
           rule->PrChrValue = 'a';
           break;
@@ -2391,6 +2394,9 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
         case 'g':
           value = LowerGreek;
           break;
+        case 'G':
+          value = UpperGreek;
+          break;
         case 'a':
           value = LowerLatin;
           break;
@@ -3081,6 +3087,9 @@ static void SetVariableItem (unsigned int type, PSchema tsch,
           break;
         case LowerGreek:
           pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntLGreek;
+          break;
+        case UpperGreek:
+          pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntUGreek;
           break;
         case LowerLatin:
           pVar->PvItem[pVar->PvNItems - 1].ViStyle = CntLowercase;
@@ -3915,6 +3924,9 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len,
           break;
         case LowerGreek:
           strcpy (buffer, "list-style-type: lower-greek");
+          break;
+        case UpperGreek:
+          strcpy (buffer, "list-style-type: upper-greek");
           break;
         case LowerLatin:
           strcpy (buffer, "list-style-type: lower-latin");

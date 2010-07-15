@@ -252,9 +252,10 @@ typedef int        *PRule;
 #define LowerRoman 6
 #define UpperRoman 7
 #define LowerGreek 8
-#define LowerLatin 9
-#define UpperLatin 10
-#define ListStyleTypeNone 11
+#define UpperGreek 9
+#define LowerLatin 10
+#define UpperLatin 11
+#define ListStyleTypeNone 12
 
 /* values for rule PRListStylePosition */
 #define Inside 1
