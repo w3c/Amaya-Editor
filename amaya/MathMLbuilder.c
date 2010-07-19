@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -4344,7 +4344,9 @@ void      MathMLElementCreated (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  EvaluateChildRendering tests what children should be displayed
+  EvaluateChildRendering
+  choose the child of element el (a <semantics> element) that should be
+  displayed
   ----------------------------------------------------------------------*/
 void EvaluateChildRendering (Element el, Document doc)
 {
@@ -4360,16 +4362,18 @@ void EvaluateChildRendering (Element el, Document doc)
 
   ctxt = TtaGetSpecificStyleContext (doc);
   ctxt->cssSpecificity = 0;   /* the presentation rule to be set is not a CSS rule */
+  /* prepare the value of the rule */
   pval.typed_data.unit = UNIT_PX;
   pval.typed_data.value = 0;
   pval.typed_data.real = FALSE;
   MathMLSSchema = TtaGetElementType(el).ElSSchema;
-  /* process all children in order */
+  renderedChild = NULL; /* no child to render yet */
+  /* check all children of element el */
   child = TtaGetFirstChild (el);
-  renderedChild = NULL;
   while (child)
     {
-      /* if this child is a comment or a processing instruction, skip it */
+      /* if this child is a comment, a processing instruction, or an annotation
+	 we skip it */
       elType = TtaGetElementType (child);
       ctxt->destroy = FALSE; /* we will most probably create a PRule
                                 Visibility: 0; for this child */
@@ -4380,11 +4384,13 @@ void EvaluateChildRendering (Element el, Document doc)
           elType.ElTypeNum != MathML_EL_ANNOTATION)
         {
           if (!renderedChild && elType.ElTypeNum == MathML_EL_ANNOTATION_XML)
+	    /* it's an <annotation-xml> element */
             {
-              /* check if the mime type is known */
+              /* check its encoding */
               attrType.AttrSSchema = MathMLSSchema;
               attrType.AttrTypeNum = MathML_ATTR_encoding;
               attr = TtaGetAttribute (child, attrType);
+	      /* there is an "encoding" attribute */
               if (attr)
                 {
                   length = TtaGetTextAttributeLength (attr);
@@ -4398,8 +4404,9 @@ void EvaluateChildRendering (Element el, Document doc)
                           !strncmp (value, "text/htm", 8) ||
                           !strcmp (value, AM_XHTML_MIME_TYPE))
                         {
-                          /* display that child */
+                          /* we know this encoding. We will display that child*/
                           renderedChild = child;
+			  /* remove the Visibility rule if there is one */
                           ctxt->destroy = TRUE;
                         }  
                     }
@@ -4648,8 +4655,8 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
           CreatePlaceholders (TtaGetFirstChild (el), doc);
           break;
         case MathML_EL_SEMANTICS:
-          /* it's a ANNOTATION_XML element */
-          /* Evaluate what direct child element to be rendered */
+          /* it's a <semantics> element */
+          /* Evaluate what child element to be rendered */
           EvaluateChildRendering (el, doc);
           break;
         case MathML_EL_MGLYPH:

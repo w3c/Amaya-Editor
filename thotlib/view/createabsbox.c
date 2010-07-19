@@ -4490,37 +4490,7 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
     else
       pAsc = pAsc->ElParent;
 
-  /* first, look at specific presentation rules attached ot the element */
   pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-  pRule = pEl->ElFirstPRule;
-  while (pRule)
-    /* apply a rule if it is related to the view */
-    {
-      if ((pRule->PrType == PtVisibility || pRule->PrType == PtDisplay)
-          && pRule->PrViewNum == viewSch)
-        {
-          if (pRule->PrSpecifAttr == 0)
-            /* this rule does not depend on an attribute */
-            pAttr = NULL;
-          else
-            /* get the attribute the rule depends on */
-            {
-              pAttr = pEl->ElFirstAttr;
-              stop = FALSE;
-              while (pAttr != NULL && !stop)
-                if (pAttr->AeAttrNum == pRule->PrSpecifAttr &&
-                    !strcmp (pAttr->AeAttrSSchema->SsName,
-                             pRule->PrSpecifAttrSSchema->SsName))
-                  stop = TRUE;
-                else
-                  pAttr = pAttr->AeNext;
-            }
-          // keep the right rule
-          CascadeVisibility (pRule, pSP, NULL, NULL);
-        }
-      pRule = pRule->PrNextPRule;
-    }
-
   /* look for visibility rules in the main presentation schema */
   pRule = GetRule (pRSpec, pRDef, pEl, NULL, pEl->ElStructSchema, pDoc);
   /* first rule to be applied */
@@ -4665,6 +4635,36 @@ static ThotBool ComputeVisib (PtrElement pEl, PtrDocument pDoc,
       cssUndisplay = ApplyVisibRuleAttr (pEl, pAttr, pEl, pDoc, vis,
                                          viewNb, &ok, FALSE);
       pAttr = pAttr->AeNext;	/* next attribute for the element */
+    }
+
+  /* finally, look at specific presentation rules attached to the element */
+  pRule = pEl->ElFirstPRule;
+  while (pRule)
+    /* apply a rule if it is related to the view */
+    {
+      if ((pRule->PrType == PtVisibility || pRule->PrType == PtDisplay)
+          && pRule->PrViewNum == viewSch)
+        {
+          if (pRule->PrSpecifAttr == 0)
+            /* this rule does not depend on an attribute */
+            pAttr = NULL;
+          else
+            /* get the attribute the rule depends on */
+            {
+              pAttr = pEl->ElFirstAttr;
+              stop = FALSE;
+              while (pAttr != NULL && !stop)
+                if (pAttr->AeAttrNum == pRule->PrSpecifAttr &&
+                    !strcmp (pAttr->AeAttrSSchema->SsName,
+                             pRule->PrSpecifAttrSSchema->SsName))
+                  stop = TRUE;
+                else
+                  pAttr = pAttr->AeNext;
+            }
+          // keep the right rule
+          CascadeVisibility (pRule, NULL, NULL, NULL);
+        }
+      pRule = pRule->PrNextPRule;
     }
 
   // apply the selected rule
