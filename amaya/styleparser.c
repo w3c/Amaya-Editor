@@ -4758,7 +4758,7 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
             {
               /* install the new presentation. */
               TtaSetStylePresentation (PRBackground, element, tsch, context, best);
-              /* thot specificity: need to set fill pattern for background color */
+              /* thot specifics: need to set fill pattern for background color */
               best.typed_data.value = PATTERN_BACKGROUND;
               best.typed_data.unit = UNIT_REL;
               TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
@@ -4881,7 +4881,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
       TtaSetStylePresentation (PRBackground, element, tsch, context, fill);
       if (url)
 	TtaFreeMemory (url);
-      /* thot specificity: need to set fill pattern for background color */
+      /* thot specifics: need to set fill pattern for background color */
       fill.typed_data.value = pattern;
       fill.typed_data.unit = UNIT_REL;
       TtaSetStylePresentation (PRFillPattern, element, tsch, context, fill);
@@ -6737,14 +6737,26 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
   DisplayMode         dispMode;
   PresentationContext ctxt;
   ElementType         elType;
+  Element             asc;
   char               *buff, *ptr, *end;
   ThotBool            isHTML;
 
   /*  A rule applying to BODY is really meant to address HTML */
   elType = TtaGetElementType (el);
   NewLineSkipped = 0;
-  /* store the current line for eventually reported errors */
+  /* store the current line for reporting errors and for displaying applied
+     style rules. */
   LineNumber = TtaGetElementLineNumber (el);
+  asc = el;
+  /* if the element has just been created (such as a <span>) for a new style
+  attribute, use the line number of its parent element, otherwise command
+  "Show applied style" would not display this style. */
+  while (LineNumber == 0 && asc)
+    {
+      asc = TtaGetParent (asc);
+      if (asc)
+	LineNumber = TtaGetElementLineNumber (asc);
+    }
   if (destroy)
     /* no reported errors */
     ParsedDoc = 0;

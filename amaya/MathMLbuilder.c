@@ -2889,7 +2889,7 @@ void MathMLScriptShift (Document doc, Element el, char *value, int attr)
                 pval.typed_data.unit = UNIT_EM;
               pval.typed_data.mainValue = TRUE;
               /* the specific presentation to be created is not a CSS rule */
-              ctxt->cssSpecificity = 0;
+              ctxt->cssSpecificity = 2000;
               if (attr == MathML_ATTR_superscriptshift)
                 pval.typed_data.value = - pval.typed_data.value;
               TtaSetStylePresentation (PRVertPos, script, NULL, ctxt, pval);
@@ -3344,7 +3344,7 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation to be created is not a CSS rule */
-  ctxt->cssSpecificity = 0;
+  ctxt->cssSpecificity = 2000;
   ptr = value;
   rowspanType.AttrSSchema = elType.ElSSchema;
   rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
@@ -3617,7 +3617,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation to be created is not a CSS rule */
-  ctxt->cssSpecificity = 0;
+  ctxt->cssSpecificity = 2000;
   val = 0;
   colspanType.AttrSSchema = elType.ElSSchema;
   colspanType.AttrTypeNum = MathML_ATTR_columnspan;
@@ -4166,7 +4166,7 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
     }
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation to be created is not a CSS rule */
-  ctxt->cssSpecificity = 0;
+  ctxt->cssSpecificity = 2000;
   vertPadding = 0;
   horizPadding = 0;
   vertPaddingUnit = UNIT_PT;
@@ -4361,7 +4361,7 @@ void EvaluateChildRendering (Element el, Document doc)
   int                  length;
 
   ctxt = TtaGetSpecificStyleContext (doc);
-  ctxt->cssSpecificity = 0;   /* the presentation rule to be set is not a CSS rule */
+  ctxt->cssSpecificity = 2000;   /* the presentation rule to be set is not a CSS rule */
   /* prepare the value of the rule */
   pval.typed_data.unit = UNIT_PX;
   pval.typed_data.value = 0;
@@ -4893,7 +4893,7 @@ void MathMLSetScriptLevel (Document doc, Element el, char *value)
 	  pval.typed_data.value = percentage;
 	  pval.typed_data.unit = UNIT_PERCENT;
 	  /* the specific presentation to be created is not a CSS rule */
-	  ctxt->cssSpecificity = 0;
+	  ctxt->cssSpecificity = 2000;
 	  TtaSetStylePresentation (PRSize, el, NULL, ctxt, pval);       
         }
     }
@@ -4957,7 +4957,7 @@ void MathMLSpacingAttr (Document doc, Element el, const char *value, int attr)
           if (pval.typed_data.unit == UNIT_BOX)
             pval.typed_data.unit = UNIT_PX;
           /* the specific presentation to be created is not a CSS rule */
-          ctxt->cssSpecificity = 0;
+          ctxt->cssSpecificity = 2000;
           TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
         }
       TtaFreeMemory(tmp);

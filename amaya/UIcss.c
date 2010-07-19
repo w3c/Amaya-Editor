@@ -1074,7 +1074,7 @@ void DoStyleColor (char *color, ThotBool isBg)
 	  elType.ElTypeNum == SVG_EL_tspan ||
 	  elType.ElTypeNum == SVG_EL_foreignObject)
         {
-          if(isBg)
+          if (isBg)
             sprintf( buffer, "fill:%s", color);
           else 
             sprintf( buffer, "stroke:%s", color);

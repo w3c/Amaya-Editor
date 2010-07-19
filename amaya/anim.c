@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 2002-2009
+ *  (c) COPYRIGHT INRIA and W3C, 2002-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -744,7 +744,7 @@ static void TimelineParseCoordAttribute (Attribute attr, Element el, Document do
             return;
           ctxt = TtaGetSpecificStyleContext (doc);
           /* the specific presentation is not a CSS rule */
-          ctxt->cssSpecificity = 0;
+          ctxt->cssSpecificity = 2000;
           ctxt->important = TRUE;
           ctxt->destroy = FALSE;
           TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
@@ -787,7 +787,7 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el,
     }
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation is not a CSS rule */
-  ctxt->cssSpecificity = 0;
+  ctxt->cssSpecificity = 2000;
   ctxt->important = TRUE;
   ctxt->destroy = FALSE;
   /* decide of the presentation rule to be created or updated */

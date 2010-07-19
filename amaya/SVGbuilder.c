@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1998-2009
+ *  (c) COPYRIGHT INRIA and W3C, 1998-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -544,7 +544,7 @@ void  SetGraphicDepths (Document doc, Element el)
   /* set depth to all SVG elements */
   ctxt = TtaGetSpecificStyleContext (doc);
   /* the specific presentation is not a CSS rule */
-  ctxt->cssSpecificity = 0;
+  ctxt->cssSpecificity = 2000;
   ctxt->destroy = FALSE;
   pval.typed_data.value = 0; /*TtaGetDepth (el, doc, 1)*/
   pval.typed_data.unit = UNIT_REL;
@@ -1483,7 +1483,7 @@ void EvaluateTestAttrs (Element el, Document doc)
   renderedChild = NULL;
   attrType.AttrSSchema = TtaGetElementType (el).ElSSchema;
   ctxt = TtaGetSpecificStyleContext (doc);
-  ctxt->cssSpecificity = 0;   /* the presentation rule to be set is not a CSS rule */
+  ctxt->cssSpecificity = 2000;   /* the presentation rule to be set is not a CSS rule */
   pval.typed_data.unit = UNIT_PX;
   pval.typed_data.value = 0;
   pval.typed_data.real = FALSE;
