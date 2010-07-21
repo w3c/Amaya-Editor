@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -543,53 +543,85 @@ void AttributeChange (int aType, char * data)
 }
 
 /*----------------------------------------------------------------------
-  UpdateAttribute 
+  UpdateAttribute
+  Add the CSS rule (property:value) contained in data to the content of
+  attribute attr (a style attribute). If the property to be added is already
+  present in attr, replace the existing rule by the new one.
   -----------------------------------------------------------------------*/
 static void UpdateAttribute (Attribute attr, char * data, Element el, Document doc)
 {
-  char     *buffer, *property, *start, *stop;
+  char     *buffer, *property, *start, *end, *current;
   char      value[50];
   int       lg, val = 0, inc;
-  ThotBool  margin;
+  ThotBool  margin, found;
 
   lg = TtaGetTextAttributeLength (attr);
   property = strstr (data, ":");
   if (lg && property)
     {
-      // look for the property in the initial string
+      // look for the property in the initial content of attr
       buffer = (char *)TtaGetMemory (lg + strlen (data) + 2);
       TtaGiveTextAttributeValue (attr, buffer, &lg);
-      *property = EOS;
-      lg = strlen (data);
+      *property = EOS; // isolate the property name in the new CSS rule
+      lg = strlen (data);   // length of the property name
       margin = !strcmp (data, "margin-left");
-      start = strstr (buffer, data);
-      if (start &&
-          (start != buffer || start[-1] != SPACE || start[-1] != ';') &&
-		  start[lg] != ':')
-        start = NULL;
+      found = FALSE;
+      current = buffer;
+      do
+	{
+	  start = strstr (current, data);
+	  if (start)
+	    {
+	      /* the name of the property is present in the initial content */
+	      /* check with the previous and following character that it is
+		 really the property name we are looking for */
+	      if ((start == buffer || start[-1] == SPACE || start[-1] == ';') &&
+		  (start[lg] == SPACE || start[lg] == ':'))
+		/* the string is at the beginning of the buffer or it is
+		   preceded by a space or a semi-colon, and it is followed by a
+		   space or a colon. It's really the property name we are
+		   looking for */
+		found = TRUE;
+	      else
+		{
+		  /* it's not the full name we are looking for. For instance,
+		     it could be the substring "color" of property
+		     "background-color" when we are looking for property
+		     "color". Check further. */
+		  current = start + 1;
+		}
+	    }
+	}
+      while (!found && start);
       *property = ':';
-      if (start)
+      if (start && found)
+	/* the property was already present. Remove the rule. */
         {
-          // remove or update the current property
-          stop = start;
-          while (*stop != EOS && *stop != ';')
-            stop++;
-          if (*stop == EOS)
+	  // get the end of the rule
+          end = start;
+          while (*end != EOS && *end != ';')
+            end++;
+          if (*end == EOS)
             {
-              // the property is the last one
-              val = GetEmValue (&start[12], el, doc);
+              // the rule is the last one in the buffer
+	      if (margin)
+		val = GetEmValue (&start[12], el, doc);
               *start = EOS;
             }
           else
             {
-              // there are other properties after
-              *stop = EOS;
-              val = GetEmValue (&start[12], el, doc);
-              *stop = ';';
-              while (*stop != EOS)
+              // there are other rules after this one
+	      if (margin)
+		{
+		  *end = EOS;
+		  val = GetEmValue (&start[12], el, doc);
+		  *end = ';';
+		}
+	      // copy the rest of the buffer over the rule to be removed
+              while (*end != EOS)
                 {
-                  stop++;
-                  *start = *stop;
+                  end++;
+                  *start = *end;
                   start++;
                 }
             }
@@ -600,9 +632,10 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
       lg = strlen (buffer);
       if (lg && buffer[lg-1] != ';')
         strcat (buffer, ";");
+      // append the new rule
       if (margin)
         {
-          // increment or decrement the value
+          // increment or decrement the existing value
           inc = atoi (&property[1]);
           if (inc == 0 && val != 0)
             val -= 2;
@@ -615,12 +648,15 @@ static void UpdateAttribute (Attribute attr, char * data, Element el, Document d
       else
         {
           strcat (buffer, data);
+	  // apply the new rule
           ParseHTMLSpecificStyle (el, data, doc, 1000, FALSE);
         }
+      // update the style attribute
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaFreeMemory (buffer);
     }
   else
+    /* there was no initial content in attr. Just put data */
     TtaSetAttributeText (attr, data, el, doc);
 }
 
