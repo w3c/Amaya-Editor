@@ -315,6 +315,8 @@ static void TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
   PtrReference        pRef, pNextRef;
   PtrReference        pPR1;
 
+  if (!pElem || !pDoc || !pRoot)
+    return;
   /* Sets a new label to the element */
   ConvertIntToLabel (NewLabel (pDoc), pElem->ElLabel);
   if (pElem->ElReferredDescr != NULL)
@@ -454,7 +456,8 @@ Element TtaCopyTree (Element sourceElement, Document sourceDocument,
                           LoadedDocument[destinationDocument - 1],
                           (PtrElement) parent,
                           TRUE, TRUE, FALSE, TRUE, TRUE);
-      TransRef (element, element, LoadedDocument[destinationDocument - 1]);
+      if (element)
+	TransRef (element, element, LoadedDocument[destinationDocument - 1]);
     }
   return ((Element) element);
 }
@@ -534,7 +537,8 @@ Element TtaCopyElement (Element sourceElement, Document sourceDocument,
                           LoadedDocument[destinationDocument - 1],
                           (PtrElement) parent,
                           TRUE, TRUE, FALSE, FALSE, TRUE);
-      TransRef (element, element, LoadedDocument[destinationDocument - 1]);
+      if (element)
+	TransRef (element, element, LoadedDocument[destinationDocument - 1]);
     }
   return ((Element) element);
 }
