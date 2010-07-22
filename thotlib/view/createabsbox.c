@@ -1589,7 +1589,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
             /* verifie si l'attribut est attache' a un element du
                type voulu */
             found = (pCond->CoTypeElem == AnyType+1 ||
-                     pElAttr->ElTypeNumber == pCond->CoTypeElem);
+                     (pElAttr && pElAttr->ElTypeNumber == pCond->CoTypeElem));
             if (!found)
               /* if the element type is a choice, check all options of the
                  choice */
