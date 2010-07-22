@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -101,6 +101,7 @@ static int          Loading_method = CE_INIT;
 #include "MENUconf.h"
 #include "AHTURLTools_f.h"
 #include "css_f.h"
+#include "document.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
@@ -1350,6 +1351,7 @@ void CheckParsingErrors (Document doc)
   char       fileName[200];
   char       text [200];
   ThotBool   closeLog = FALSE;
+  ThotBool   retry = FALSE;
 
   // Avoid recursive call
   if (CriticCheckError)
@@ -1372,7 +1374,7 @@ void CheckParsingErrors (Document doc)
     }
   if (ErrFile)
     {
-      /* Active the menu entry */
+      /* Activate the menu entry */
       UpdateLogFile (doc, TRUE);
       if (XMLCharacterNotSupported || XMLInvalidToken)
         {
@@ -1388,11 +1390,25 @@ void CheckParsingErrors (Document doc)
           CleanUpParsingErrors ();
         }
       else if (XMLNotWellFormed)
+	/* not a well-formed XML document */
         {
-          /* Raise a popup message */
-          /* The document is not well-formed */
-          if (DocumentTypes[doc] == docHTML &&
-              (!DocumentMeta[doc] || !DocumentMeta[doc]->compound))
+          /* If it's a XHTML document, try to read it again, but as plain HTML*/
+	  retry = FALSE;
+          if (DocumentTypes[doc] == docHTML)
+	    /* it's a XHTML document */
+	    {
+	      if (!DocumentMeta[doc] || !DocumentMeta[doc]->compound)
+		/* we have not yet encountered any MathML or SVG element in the
+		   document */
+		{
+		  /* have we already met some namespace declarations with
+		     prefixes ? The HTML parser cannot handle prefixed tag
+		     names */
+		  if (!TtaDocumentUsesNsPrefixes(doc))
+		    retry = TRUE;
+		}
+	    }
+	  if (retry)
             {
               ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
               // save the original log file
@@ -1437,6 +1453,7 @@ void CheckParsingErrors (Document doc)
                 }
             }
           else
+	    // we can't rescue the document
             {
               ptr = TtaGetMessage (AMAYA, AM_XML_ERROR);
               if (SavingDocument == DocumentSource[doc])
@@ -1447,15 +1464,15 @@ void CheckParsingErrors (Document doc)
               ConfirmError (doc, 1, ptr,
                             TtaGetMessage (AMAYA, AM_AFILTER_SHOW),
                             NULL);
-                  if (ExtraChoice || UserAnswer)
-                    {
-                      // GTK or WX version: show errors
-                      CleanUpParsingErrors ();
-                      CloseLogs (doc);
-                      closeLog = TRUE;
-                      ShowLogFile (doc, 1);
-                      ShowSource (doc, 1);
-                    }
+	      if (ExtraChoice || UserAnswer)
+		{
+		  // GTK or WX version: show errors
+		  CleanUpParsingErrors ();
+		  CloseLogs (doc);
+		  closeLog = TRUE;
+		  ShowLogFile (doc, 1);
+		  ShowSource (doc, 1);
+		}
             }
         }
       CleanUpParsingErrors ();

@@ -783,10 +783,16 @@ char *TtaGiveNamespaceDeclaration (Document document, Element element);
 
 /*----------------------------------------------------------------------
   TtaGiveElemNamespaceDeclarations
-  Give all namespace declarations and prefixes defined for a element           
+  Give all namespace declarations and prefixes defined for an element           
   ----------------------------------------------------------------------*/
 void TtaGiveElemNamespaceDeclarations (Document doc, Element pNode,
-				       char **declarations, char **prefixes);
+				       char **declarations, char **prefixes,
+				       int max);
+/*----------------------------------------------------------------------
+  TtaDocumentUsesNsPrefixes
+  Check wether the document uses namespaces with prefix
+  ----------------------------------------------------------------------*/
+ThotBool TtaDocumentUsesNsPrefixes (Document document);
 
 /*----------------------------------------------------------------------
   TtaFreeElemNamespaceDeclarations

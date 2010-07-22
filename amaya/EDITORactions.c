@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1574,7 +1574,7 @@ static int GiveNSDeclaration (Document document, Element el, char *buf)
       prefixes[i] = NULL;
     }
   
-  TtaGiveElemNamespaceDeclarations (document, el, &declarations[0], &prefixes[0]);
+  TtaGiveElemNamespaceDeclarations (document, el, &declarations[0], &prefixes[0], MAX_NS);
   CurrentDocument = document;
   
   for (i = 0; i < MAX_NS; i++)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2008
+ *  (c) COPYRIGHT INRIA, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1586,7 +1586,7 @@ PtrDocument DocToPtr (Document document)
 
 /*----------------------------------------------------------------------
   TtaSetNamespaceDeclaration
-  Sets a namespace declaration for an element 
+  Set a namespace declaration for an element 
   ----------------------------------------------------------------------*/
 void TtaSetANamespaceDeclaration (Document document, Element element,
                                   const char *nsPrefix, const char *nsUri)
@@ -1608,8 +1608,8 @@ void TtaSetANamespaceDeclaration (Document document, Element element,
 }
 
 /*----------------------------------------------------------------------
-  TtaSetNamespaceDeclaration
-  Sets a namespace declaration for an element 
+  TtaRemoveANamespaceDeclaration
+  Remove a namespace declaration for an element 
   ----------------------------------------------------------------------*/
 void TtaRemoveANamespaceDeclaration (Document document, Element element,
                                       const char *nsPrefix, const char *nsUri)
@@ -1652,7 +1652,8 @@ char *TtaGiveNamespaceDeclaration (Document document, Element element)
   Give all namespace declarations and prefixes defined for a element           
   ----------------------------------------------------------------------*/
 void TtaGiveElemNamespaceDeclarations (Document document, Element element,
-				       char **declarations, char **prefixes)
+				       char **declarations, char **prefixes,
+				       int max)
 {
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -1662,7 +1663,25 @@ void TtaGiveElemNamespaceDeclarations (Document document, Element element,
     TtaError (ERR_invalid_document_parameter);
   else
     GiveElemNamespaceDeclarations (LoadedDocument[document - 1],
-				   (PtrElement)element, declarations, prefixes);
+				   (PtrElement)element, declarations, prefixes,
+				   max);
+}
+
+/*----------------------------------------------------------------------
+  TtaDocumentUsesNsPrefixes
+  Check wether the document uses namespaces with prefix
+  ----------------------------------------------------------------------*/
+ThotBool TtaDocumentUsesNsPrefixes (Document document)
+{
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    return DocumentUsesNsPrefixes (LoadedDocument[document - 1]);
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------

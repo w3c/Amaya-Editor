@@ -445,7 +445,7 @@ static ThotBool     EndOfHtmlFile;
 /* input buffer */
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
-#define MaxMsgLength 200	/* maximum size of error messages */
+#define MaxMsgLength 300	/* maximum size of error messages */
 static  unsigned char     inputBuffer[MaxBufferLength];
 static int          LgBuffer = 0;	  /* actual length of text in input
                                        buffer */
@@ -2334,7 +2334,7 @@ static void ProcessStartGI (const char* GIname)
   char                msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
   ThotBool            sameLevel, removed, error;
-  SSchema	            schema;
+  SSchema	      schema;
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, DocumentSSchema))
@@ -2365,24 +2365,23 @@ static void ProcessStartGI (const char* GIname)
         /* unknown tag */
         {
           UnknownTag = TRUE;
-// Replaced by sprintf formating
-//          if (strlen ((const char *)GIname) > MaxMsgLength - 20)
-//            GIname[MaxMsgLength - 20] = EOS;
           if (DocumentMeta[HTMLcontext.doc] &&
               DocumentMeta[HTMLcontext.doc]->xmlformat)
             {
-              sprintf (msgBuffer, "Invalid tag <%*s> (removed when saving)", 20, GIname);
+              snprintf (msgBuffer, MaxMsgLength,
+			"Invalid tag <%s> (removed when saving)", GIname);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
               removed = TRUE;
             }
           else
             {
-              sprintf (msgBuffer, "Warning - unknown tag <%*s>", 20, GIname);
+              snprintf (msgBuffer, MaxMsgLength, "Warning - unknown tag <%s>",
+			GIname);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
               removed = FALSE;
             }
           /* create an Invalid_element */
-          sprintf (msgBuffer, "<%*s", 20, GIname);
+          snprintf (msgBuffer, MaxMsgLength, "<%s", GIname);
           InsertInvalidEl (msgBuffer, removed);
         }
     }
@@ -2395,12 +2394,8 @@ static void ProcessStartGI (const char* GIname)
         {
           /* Invalid element for the document profile */
           /* don't process that element */
-// Replaced by sprintf formating
-//          if (strlen ((const char *)GIname) > MaxMsgLength - 20)
-//            GIname[MaxMsgLength - 20] = EOS;
-          sprintf (msgBuffer,
-                   "Invalid start element <%*s> for the document profile",
-                   20, GIname);
+          snprintf (msgBuffer, MaxMsgLength,
+                   "Invalid element <%s> for the document profile", GIname);
           HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
           XMLErrorsFoundInProfile = TRUE;
           UnknownTag = TRUE;
@@ -2440,7 +2435,7 @@ static void ProcessStartGI (const char* GIname)
             /* element not allowed in the current structural context */
             {
               /* send an error message */
-              sprintf (msgBuffer,
+              snprintf (msgBuffer, MaxMsgLength,
                        "Tag <%s> is not allowed here (removed when saving)",
                        GIname);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
@@ -2453,7 +2448,7 @@ static void ProcessStartGI (const char* GIname)
             {
               UnknownTag = TRUE;
               /* create an Invalid_element */
-              sprintf (msgBuffer, "<%s", GIname);
+              snprintf (msgBuffer, MaxMsgLength, "<%s", GIname);
               InsertInvalidEl (msgBuffer, TRUE);
             }
           else
@@ -2513,6 +2508,7 @@ static void     EndOfStartGI (char c)
 {
   char        schemaName[20];
   char        theGI[MaxMsgLength];
+  char        *tagName;
   int	      i;
 
   if (HTMLcontext.parsingTextArea || HTMLcontext.parsingScript)
@@ -2540,9 +2536,6 @@ static void     EndOfStartGI (char c)
       CloseBuffer ();
       strncpy ((char *)theGI, (char *)inputBuffer, MaxMsgLength - 1);
       theGI[MaxMsgLength - 1] = EOS;
-      /*** there may be a namespace prefix in front of the tag name ****/
-      /*** We consider ":" as separator character ***/      
-      /* Must the first or the last ":" character be considered ? */
 
       InitBuffer ();
       if (HTMLcontext.lastElementClosed &&
@@ -2552,7 +2545,17 @@ static void     EndOfStartGI (char c)
           HTMLParseError (HTMLcontext.doc, "Element after tag </html>. Ignored", 0);
           return;
         }
-      if (!strcmp (theGI, "math") || !strcmp (theGI, "svg"))
+
+      /* if it's a "math" or "svg" tag, it may have a namespace name */
+      tagName = theGI;
+      for (i = 0; theGI[i] != ':' && theGI[i] != EOS; i++);
+      if (theGI[i] == ':' &&
+          (strcasecmp ((char *)&theGI[i+1], "math") == 0 ||
+           strcasecmp ((char *)&theGI[i+1], "svg") == 0))
+        /* it's a math or svg tag with a namespace prefix. ignore the prefix */
+	tagName = &theGI[i+1];
+
+      if (!strcmp (tagName, "math") || !strcmp (tagName, "svg"))
         /* a <math> or <svg> tag has been read */
         {
           /* get back to the beginning of the tag in the input buffer */
@@ -2574,7 +2577,7 @@ static void     EndOfStartGI (char c)
           else
             CurrentBufChar = StartOfTagIndx;
 	  
-          if (!strcmp ((char *)theGI, (char *)"math"))
+          if (!strcmp ((char *)tagName, (char *)"math"))
             strcpy ((char *)schemaName, (char *)"MathML");
           else
             strcpy ((char *)schemaName, (char *)"SVG");
@@ -2596,7 +2599,7 @@ static void     EndOfStartGI (char c)
           CharProcessed = TRUE;
         }
       else
-        ProcessStartGI (theGI);
+        ProcessStartGI (tagName);
     }
 }
 
@@ -2778,19 +2781,19 @@ static void EndOfEndTag (char c)
                   DocumentMeta[HTMLcontext.doc]->xmlformat)
                 {
                   snprintf (msgBuffer, MaxMsgLength,
-			    "Invalid tag <%50s> (removed when saving)", inputBuffer);
+			    "Invalid tag <%s> (removed when saving)", inputBuffer);
                   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
                   removed = TRUE;
                 }
               else
                 {
                   snprintf (msgBuffer, MaxMsgLength,
-			    "Warning - unknown tag </%50s>", inputBuffer);
+			    "Warning - unknown tag </%s>", inputBuffer);
                   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
                   removed = FALSE;
                 }
               /* create an Invalid_element */
-              snprintf (msgBuffer, MaxMsgLength, "</%50s", inputBuffer);
+              snprintf (msgBuffer, MaxMsgLength, "</%s", inputBuffer);
               InsertInvalidEl (msgBuffer, removed);
             }
           else if (entry >= 0 &&
@@ -2801,7 +2804,7 @@ static void EndOfEndTag (char c)
               if (strlen ((char *)inputBuffer) > MaxMsgLength - 20)
                 inputBuffer[MaxMsgLength - 20] = EOS;
               snprintf (msgBuffer, MaxMsgLength,
-			"Invalid end element <%50s> for the document profile",
+			"Invalid end element <%s> for the document profile",
 			inputBuffer);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
               XMLErrorsFoundInProfile = TRUE;
@@ -2813,7 +2816,7 @@ static void EndOfEndTag (char c)
                   DocumentMeta[HTMLcontext.doc]->xmlformat)
                 {
                   snprintf (msgBuffer, MaxMsgLength,
-			    "Invalid end tag <%50s>", inputBuffer);
+			    "Invalid end tag <%s>", inputBuffer);
                   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
                 }
               else
@@ -2857,17 +2860,18 @@ static void EndOfEndTag (char c)
                   if (!ok)
                     /* unrecoverable error. Create an Invalid_element */
                     {
-                      if (strlen ((char *)inputBuffer) > MaxMsgLength - 10)
-                        inputBuffer[MaxMsgLength - 10] = EOS;
-                      sprintf (msgBuffer, "</%s", inputBuffer);
+                      snprintf (msgBuffer, MaxMsgLength, "</%s", inputBuffer);
                       InsertInvalidEl (msgBuffer, TRUE);
                       /* print an error message... */
-                      sprintf (msgBuffer, "Invalid end tag </%s> (removed when saving)",
+                      snprintf (msgBuffer, MaxMsgLength,
+				"Invalid end tag </%s> (removed when saving)",
                                inputBuffer);
                     }
                   else
                     /* print an error message... */
-                    sprintf (msgBuffer, "Warning - unexpected end tag </%s>", inputBuffer);
+                    snprintf (msgBuffer, MaxMsgLength,
+			      "Warning - unexpected end tag </%s>",
+			      inputBuffer);
                   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
                 }
             }
@@ -2949,9 +2953,9 @@ static void EndOfAttrName (char c)
         }
       else if (tableEntry->ThotAttribute == HTML_ATTR_xmlid)
         {
-          if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)
-            inputBuffer[MaxMsgLength - 30] = EOS;
-          sprintf (msgBuffer, "Invalid attribute \"%s\"(removed when saving)", inputBuffer);
+          snprintf (msgBuffer, MaxMsgLength,
+		   "Invalid attribute \"%s\"(removed when saving)",
+		   inputBuffer);
           HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
           /* attach an Invalid_attribute to the current element */
           tableEntry = &pHTMLAttributeMapping[0];
@@ -2978,9 +2982,9 @@ static void EndOfAttrName (char c)
           //  lastAttrEntry = NULL;
           else
             {
-              if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)
-                inputBuffer[MaxMsgLength - 30] = EOS;
-              sprintf (msgBuffer, "Invalid attribute \"%s\"(removed when saving)", inputBuffer);
+              snprintf (msgBuffer, MaxMsgLength,
+			"Invalid attribute \"%s\"(removed when saving)",
+			inputBuffer);
               HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
               /* attach an Invalid_attribute to the current element */
               tableEntry = &pHTMLAttributeMapping[0];
@@ -2991,9 +2995,7 @@ static void EndOfAttrName (char c)
       else
         {
           /* attribute invalid for the document profile */
-          if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)
-            inputBuffer[MaxMsgLength - 30] = EOS;
-          sprintf (msgBuffer,
+          snprintf (msgBuffer, MaxMsgLength,
                    "Invalid attribute \"%s\" for the document profile",
                    inputBuffer);
           HTMLParseError (HTMLcontext.doc, msgBuffer, 0);

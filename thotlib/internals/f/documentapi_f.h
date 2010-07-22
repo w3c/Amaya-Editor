@@ -96,7 +96,9 @@ extern char *TtaGiveNamespaceDeclaration ( Document document,
 extern void TtaGiveElemNamespaceDeclarations ( Document document,
                                                Element element,
                                                char **declarations,
-                                               char **prefixes );
+                                               char **prefixes,
+                                               int max );
+extern ThotBool TtaDocumentUsesNsPrefixes ( Document document );
 extern void TtaFreeElemNamespaceDeclarations ( Document document,
                                                Element element );
 extern void TtaFreeNamespaceDeclarations ( Document document );
@@ -221,7 +223,9 @@ extern char *TtaGiveNamespaceDeclaration ( Document document,
 extern void TtaGiveElemNamespaceDeclarations ( Document document,
                                                  Element element,
                                                  char **declarations,
-                                                 char **prefixes );
+                                                 char **prefixes,
+                                                 int max );
+extern ThotBool TtaDocumentUsesNsPrefixes ( Document document );
 extern void TtaFreeElemNamespaceDeclarations ( Document document,
                                                  Element element );
 extern void TtaFreeNamespaceDeclarations ( Document document );

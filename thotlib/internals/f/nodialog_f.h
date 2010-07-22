@@ -32,6 +32,11 @@ extern void TtaExecuteMenuActionFromActionId ( int action_id,
                                                Document doc,
                                                View view,
                                                ThotBool force );
+extern void DisplayCounterRule ( int counter,
+                                 int item,
+                                 FILE *fileDescriptor,
+                                 PtrElement pEl,
+                                 PtrPSchema pSchP );
 extern void DisplayPRule ( PtrPRule RP,
                            FILE *fileDescriptor,
                            PtrElement pEl,
@@ -239,6 +244,11 @@ extern void TtaExecuteMenuActionFromActionId ( int action_id,
                                                  Document doc,
                                                  View view,
                                                  ThotBool force );
+extern void DisplayCounterRule ( int counter,
+                                   int item,
+                                   FILE *fileDescriptor,
+                                   PtrElement pEl,
+                                   PtrPSchema pSchP );
 extern void DisplayPRule ( PtrPRule RP,
                              FILE *fileDescriptor,
                              PtrElement pEl,

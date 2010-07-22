@@ -123,7 +123,9 @@ extern char *GiveCurrentNsUri ( PtrDocument pDoc,
 extern void GiveElemNamespaceDeclarations ( PtrDocument pDoc,
                                             PtrElement pEl,
                                             char **declarations,
-                                            char **prefixes );
+                                            char **prefixes,
+                                            int max );
+extern ThotBool DocumentUsesNsPrefixes ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
@@ -244,7 +246,9 @@ extern char *GiveCurrentNsUri ( PtrDocument pDoc,
 extern void GiveElemNamespaceDeclarations ( PtrDocument pDoc,
                                               PtrElement pEl,
                                               char **declarations,
-                                              char **prefixes );
+                                              char **prefixes,
+                                              int max );
+extern ThotBool DocumentUsesNsPrefixes ( PtrDocument pDoc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -3065,7 +3065,6 @@ char *GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
 {
   PtrNsUriDescr    uriDecl;
   ThotBool         found;
-  int              i;
   char            *ns_uri = NULL;
 
 
@@ -3080,7 +3079,6 @@ char *GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
     /* There is no namespace declaration for this document */
     return (ns_uri);
 
-  i = 0;
   found = FALSE;
   /* Give the current namespace declarations for this element */
   uriDecl = pDoc->DocNsUriDecl;
@@ -3106,16 +3104,23 @@ char *GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
   Give the current namespace declarations / prefixes  for the element pEl
   ----------------------------------------------------------------------*/
 void GiveElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl,
-				    char **declarations, char **prefixes)
+				    char **declarations, char **prefixes,
+				    int max)
 {
 
   PtrNsUriDescr    uriDecl;
   PtrNsPrefixDescr prefixDecl;
-  int              i = 0;
+  int              i;
 
+  for (i = 0; i < max; i++)
+    {
+      *&declarations[i] = NULL;
+      *&prefixes[i] = NULL;
+    }
   /* Search all the namespace declarations declared for this element */
   uriDecl = pDoc->DocNsUriDecl;
-  while (uriDecl)
+  i = 0;
+  while (uriDecl && i < max)
     {
       prefixDecl = uriDecl->NsPtrPrefix;
       while (prefixDecl != NULL)
@@ -3124,8 +3129,8 @@ void GiveElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl,
               (uriDecl->NsUriName || prefixDecl->NsPrefixName))
             {
               /* A Namespace declaration has been found for this element */
-              *&prefixes[i] = prefixDecl->NsPrefixName;
               *&declarations[i] = uriDecl->NsUriName;
+              *&prefixes[i] = prefixDecl->NsPrefixName;
               i++;
             }
           prefixDecl = prefixDecl->NsNextPrefixDecl;
@@ -3133,4 +3138,32 @@ void GiveElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl,
       uriDecl = uriDecl->NsNextUriDecl;
     }
   return;
+}
+
+/*----------------------------------------------------------------------
+  DocumentUsesNsPrefixes
+  Check wether the document uses namespaces with prefix
+  ----------------------------------------------------------------------*/
+ThotBool DocumentUsesNsPrefixes (PtrDocument pDoc)
+{
+  PtrNsUriDescr    uriDecl;
+  ThotBool         usesPrefix;
+  char            *ns_uri = NULL;
+
+  usesPrefix = FALSE;
+  if (pDoc == NULL)
+    return (usesPrefix);
+
+  /* check all namespace declarations of the document */
+  uriDecl = pDoc->DocNsUriDecl;
+  while (uriDecl && !usesPrefix)
+    {
+      if (uriDecl->NsUriName && uriDecl->NsPtrPrefix &&
+	  uriDecl->NsPtrPrefix->NsPrefixName)
+	/* This declaration has both a name and a prefix */
+	usesPrefix = TRUE;
+      else
+        uriDecl = uriDecl->NsNextUriDecl;
+    }
+  return (usesPrefix);
 }
