@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -618,7 +618,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
   int attrNum	: the attribut identifier
   int value	: the attribut value
   ----------------------------------------------------------------------*/
-static void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
+void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
 {
   AttributeType attrType;
   Attribute	attr;

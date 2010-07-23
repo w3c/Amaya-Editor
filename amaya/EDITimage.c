@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA and W3C, 1996-2009
+ *  (c) COPYRIGHT INRIA and W3C, 1996-2010
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -829,14 +829,15 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 {
   AttributeType    attrType;
   Attribute        attr;
-  Element          elSRC, el, child, next;
+  Element          elSRC, el, child, next, img;
   ElementType      elType;
   Document         doc;
   DisplayMode      dispMode;
   char            *text, *name;
   char            *utf8value;
   int              length;
-  ThotBool         newAttr, isObject = FALSE, isInput = FALSE, isSvg = FALSE;
+  ThotBool         newAttr, isObject = FALSE, isInput = FALSE, isSvg = FALSE,
+                   noURI = FALSE;
 
   el = event->element;
   doc = event->document;
@@ -849,6 +850,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
     }
   else
     isSvg = (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"));
+  if (isObject && event->event == TteElemTextModify)
+    /* do not do anything when the user is modifying the content of an <object>
+       element */
+    return;
   attrType.AttrSSchema = elType.ElSSchema;
   /* if it's not an HTML picture (it could be an SVG image for instance),
      ignore */
@@ -908,7 +913,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 
   /* Select an image name */
   text = GetImageURL (doc, 1, isObject, isInput, isSvg);
-  if (text == NULL || text[0] == EOS)
+  if (!isObject && (text == NULL || text[0] == EOS))
     /* The user has cancelled */
     {
       if (CreateNewImage)
@@ -982,31 +987,36 @@ void UpdateSRCattribute (NotifyOnTarget *event)
             TtaRegisterAttributeCreate (attr, elSRC, doc);
     }
 
+  noURI = TRUE;
   /* search the SRC attribute */
-  if (elType.ElTypeNum == HTML_EL_Object)
-    attrType.AttrTypeNum = HTML_ATTR_data;
-  else
-    attrType.AttrTypeNum = HTML_ATTR_SRC;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr == NULL)
+  if (text && text[0] != EOS)
     {
-      newAttr = TRUE;
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-    }
-  else
-    {
-      newAttr = FALSE;
-      TtaRegisterAttributeReplace (attr, elSRC, doc);
-    }
+      noURI = FALSE;   // there is an URI for the image
+      if (elType.ElTypeNum == HTML_EL_Object)
+	attrType.AttrTypeNum = HTML_ATTR_data;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_SRC;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
+	{
+	  newAttr = TRUE;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	}
+      else
+	{
+	  newAttr = FALSE;
+	  TtaRegisterAttributeReplace (attr, elSRC, doc);
+	}
 #ifdef _WX
-  ComputeSRCattribute (el, doc, 0, attr, text);
+      ComputeSRCattribute (el, doc, 0, attr, text);
 #else /* _WX */
-  utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)text,
-                                           TtaGetDefaultCharset ());
-  ComputeSRCattribute (el, doc, 0, attr, utf8value);
-  TtaFreeMemory (utf8value);
+      utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)text,
+					       TtaGetDefaultCharset ());
+      ComputeSRCattribute (el, doc, 0, attr, utf8value);
+      TtaFreeMemory (utf8value);
 #endif /* _WX */
+    }
 
   if (!CreateNewImage)
     {
@@ -1023,10 +1033,20 @@ void UpdateSRCattribute (NotifyOnTarget *event)
   /* generate an ALT content */
   if (isObject)
     {
+      if (noURI)
+	// no image in the object. Put an attribute to display the alternate
+	// content
+	SetAttrOnElement (doc, elSRC, HTML_ATTR_NoObjects, 1);
+      img = NULL;
       // get the Object_content
       el = TtaGetFirstChild (elSRC);
       if (el)
-        child = TtaGetFirstChild (el);
+	{
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	    img = el;
+	  child = TtaGetFirstChild (el);
+	}
       else
         child = NULL;
       elType = TtaGetElementType (child);
@@ -1125,17 +1145,15 @@ void UpdateSRCattribute (NotifyOnTarget *event)
               TtaInsertFirstChild (&next, el, doc);
               el = next;
             }
-
-          // insert a pseudo paragraph
-          elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-          next = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&next, el, doc);
           // insert the alternate text
           elType.ElTypeNum = HTML_EL_TEXT_UNIT;
           child = TtaNewElement (doc, elType);
-          TtaInsertFirstChild (&child, next, doc);
+          TtaInsertFirstChild (&child, el, doc);
           TtaSetTextContent (child, (unsigned char*)ImgAlt,
                              TtaGetDefaultCharset (), doc);
+	  // remove element PICTURE if there is no image
+	  if (noURI && img)
+	    TtaDeleteTree (img, doc);
         }
     }
   /* ask Thot to display changes made in the document */

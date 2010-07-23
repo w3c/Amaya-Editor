@@ -226,14 +226,14 @@ void ObjectDlgWX::OnOpenButton( wxCommandEvent& event )
       Waiting = 0;
       ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
       TtaRedirectFocus();
-      return;
     }
-
-  strncpy( buffer, (const char*)url.mb_str(wxConvUTF8), MAX_LENGTH - 1);
-  buffer[MAX_LENGTH - 1] = EOS;
-  // give the new url to amaya (to do url completion)
-  ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)buffer );
-
+  else
+    {
+      strncpy( buffer, (const char*)url.mb_str(wxConvUTF8), MAX_LENGTH - 1);
+      buffer[MAX_LENGTH - 1] = EOS;
+      // give the new url to amaya (to do url completion)
+      ThotCallback (BaseImage + ImageURL,  STRING_DATA, (char *)buffer );
+    }
   // get the current alt
   wxString alt = XRCCTRL(*this, "wxID_ALT", wxTextCtrl)->GetValue( );
   if (alt.Len() == 0)
