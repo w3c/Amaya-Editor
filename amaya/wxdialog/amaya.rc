@@ -84,8 +84,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 9,0,1,0
- PRODUCTVERSION 9,0,1,0
+ FILEVERSION 11,3,1
+ PRODUCTVERSION 11,3,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -103,14 +103,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "W3C INRIA\0"
             VALUE "FileDescription", "Amaya\0"
-            VALUE "FileVersion", "9.0.1\0"
+            VALUE "FileVersion", "11.3.1\0"
             VALUE "InternalName", "Amaya\0"
-            VALUE "LegalCopyright", "Copyright © 1999-2004\0"
+            VALUE "LegalCopyright", "Copyright © 1999-2010\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "Amaya.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "W3C INRIA Amaya\0"
-            VALUE "ProductVersion", "9.0.1\0"
+            VALUE "ProductVersion", "11.3.1\0"
             VALUE "SpecialBuild", "\0"
         END
     END
