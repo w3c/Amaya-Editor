@@ -3201,7 +3201,7 @@ static void SetCounterOp (unsigned int type, PSchema tsch,
               kind = TtaGetAttributeKind (attrType);
 	      if (kind == 0 || kind == 1)
 		/* enumerated or integer value */
-		  pCntr->CnItem[pCntr->CnNItems].CiCondAttrIntValue = (int)ctxt->attrText[0];
+		  pCntr->CnItem[pCntr->CnNItems].CiCondAttrIntValue = (long int)ctxt->attrText[0];
 	      else if (kind == 2)
 		/* character string value */
 		  pCntr->CnItem[pCntr->CnNItems].CiCondAttrTextValue = TtaStrdup(ctxt->attrText[0]);
