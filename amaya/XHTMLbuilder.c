@@ -1996,8 +1996,8 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
                     {
                       TtaRemoveAttribute (lastAttrElement, currentAttribute,
                                           context->doc);
-                      sprintf (msgBuffer,
-                               "Unknown attribute value \"%s\"",
+                      snprintf (msgBuffer, MaxMsgLength,
+                               "Unknown attribute value \"%170s\"",
                                attrValue);
                       if (isXML)
                         XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
