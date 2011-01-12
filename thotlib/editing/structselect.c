@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2009
+ *  (c) COPYRIGHT INRIA, 1996-2011
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -470,7 +470,7 @@ PtrElement GetColHeadOfCell (PtrElement pCell)
   GetCellInRow
   Return the cell in row pRow that is related to column head pColHead or
   a previous column if orPrevious is TRUE.
-  If the cell comes from a previous column, *back gives the shift of
+  If the cell comes from a previous column, *back gives the distance of
   that related column.
   ----------------------------------------------------------------------*/
 PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead,
@@ -654,7 +654,7 @@ static PtrElement PreviousColumnInTable (PtrElement pCol)
   ----------------------------------------------------------------------*/
 static PtrElement PreviousLeafInSelection (PtrElement pEl)
 {
-  PtrElement          pCell, pRow, pEl1;
+  PtrElement          pCell, pRow, pTable, pEl1;
   int                 i, back;
   ThotBool            found;
 
@@ -707,7 +707,14 @@ static PtrElement PreviousLeafInSelection (PtrElement pEl)
             /* We are in column selection mode and we have not found yet */
             /* get the cell belonging to the column in the previous row */
             {
-              /* first, get the row that contains pEl */
+              /* get the table that contains the selection */
+	      pTable = FirstSelectedColumn;
+	      while (pTable &&
+		     !TypeHasException (ExcIsTable,
+					pTable->ElTypeNumber,
+					pTable->ElStructSchema))
+		pTable = pTable->ElParent;
+              /* get the row that contains pEl */
               pRow = pEl1->ElParent;
               while (pRow && !TypeHasException (ExcIsRow,
                                                 pRow->ElTypeNumber,
@@ -718,8 +725,7 @@ static PtrElement PreviousLeafInSelection (PtrElement pEl)
                  have "eaten" the cell in this column */
               while (pRow && !pEl)
                 {
-                  pRow = BackSearchTypedElem (pRow, pRow->ElTypeNumber,
-                                              pRow->ElStructSchema, NULL);
+                  pRow = PreviousRowInTable (pRow, pTable);
                   if (pRow)
                     {
                       pCell = GetCellInRow (pRow, FirstSelectedColumn, FALSE,
@@ -4046,33 +4052,91 @@ ThotBool SelectPairInterval ()
   return ret;
 }
 
-
 /*----------------------------------------------------------------------
   MoveSelectionToCol returns pointer to <col> elements if the selection
-  concerns intenal <colhead>
-  Return TRUE if the change is done
+  concerns a <colhead>
+  Return TRUE if a change is done
   ----------------------------------------------------------------------*/
 ThotBool MoveSelectionToCol (PtrElement *firstSel, PtrElement *lastSel)
 {
+  PtrElement          pTable, pRow;
   PtrAttribute        pAttr;
+  ThotBool            first, last;
+  int                 back;
 
   if (FirstSelectedColumn)
+    // we are in column selection mode
     {
-      // point to <col> elements instead of cells
-      pAttr = GetAttrElementWithException (ExcColColRef, FirstSelectedColumn);
-      if (pAttr && pAttr->AeAttrReference &&
-          pAttr->AeAttrReference->RdReferred)
-        *firstSel = pAttr->AeAttrReference->RdReferred->ReReferredElem;
-      if (LastSelectedColumn != FirstSelectedColumn)
+      /* get the table that contains the selection */
+      pTable = FirstSelectedColumn;
+      while (pTable &&
+	     !TypeHasException (ExcIsTable, pTable->ElTypeNumber,
+				pTable->ElStructSchema))
+	pTable = pTable->ElParent;
+      /* get the row that contains the first cell selected */
+      pRow = (*firstSel)->ElParent;
+      while (pRow && !TypeHasException (ExcIsRow,
+					pRow->ElTypeNumber,
+					pRow->ElStructSchema))
+	pRow = pRow->ElParent;
+      /* get the previous row that contains a cell in this column (a
+         colspanned cell from a previous column may have "eaten" the cell
+         in this column */
+      first = true;
+      while (pRow && first)
+	{
+	  pRow = PreviousRowInTable (pRow, pTable);
+	  if (pRow)
+	    {
+	      if (GetCellInRow (pRow, FirstSelectedColumn, FALSE, &back))
+		/* there is a cell for that column in a previous row */
+		first = false;
+	    }
+	}
+      if (first)
         {
-          pAttr = GetAttrElementWithException (ExcColColRef, LastSelectedColumn);
-          if (pAttr && pAttr->AeAttrReference &&
-              pAttr->AeAttrReference->RdReferred)
-            *lastSel = pAttr->AeAttrReference->RdReferred->ReReferredElem;
-        }
-      else
-        *lastSel = *firstSel;
-      return TRUE;
+	  /* get the row that contains the last cell selected */
+	  pRow = (*lastSel)->ElParent;
+	  while (pRow && !TypeHasException (ExcIsRow,
+					    pRow->ElTypeNumber,
+					    pRow->ElStructSchema))
+	    pRow = pRow->ElParent;
+	  /* get the next row that contains a cell in this column (a colspanned
+             cell from a previous column may have "eaten" the cell in this
+             column */
+	  last = true;
+	  while (pRow && last)
+	    {
+	      pRow = NextRowInTable (pRow, pTable);
+	      if (pRow)
+		{
+		  if (GetCellInRow (pRow, LastSelectedColumn, FALSE, &back))
+		    /* there is a cell for that column in a following row */
+		    last = false;
+		}
+	    }
+	  if (last)
+            // all cells in the column are selected
+	    {
+	      // point to the corresponding <col> elements instead of cells
+	      pAttr = GetAttrElementWithException (ExcColColRef,
+						   FirstSelectedColumn);
+	      if (pAttr && pAttr->AeAttrReference &&
+		  pAttr->AeAttrReference->RdReferred)
+		*firstSel = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+	      if (LastSelectedColumn != FirstSelectedColumn)
+		{
+		  pAttr = GetAttrElementWithException (ExcColColRef,
+						       LastSelectedColumn);
+		  if (pAttr && pAttr->AeAttrReference &&
+		      pAttr->AeAttrReference->RdReferred)
+		    *lastSel = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+		}
+	      else
+		*lastSel = *firstSel;
+	      return TRUE;
+	    }
+	}
     }
   return FALSE;
 }
