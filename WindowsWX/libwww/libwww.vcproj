@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\wxWidgets\src\zlib;..\..\..\libwww\modules\md5;..\..\..\libwww\modules\expat\lib;..\..\..\libwww\Library\src;..\..\..\libwww\modules;..\..\..\libwww\Library\src\windows;..\..\..\libwww\Library\src\SSL;..\..\..\\src\openssl\inc32"
+				AdditionalIncludeDirectories="..\..\..\wxWidgets\src\zlib;..\..\..\libwww\modules\md5;..\..\..\libwww\modules\expat\lib;..\..\..\libwww\Library\src;..\..\..\libwww\Library\src\SSL;..\..\..\libwww\modules;..\..\..\libwww\Library\src\windows;..\..\..\openssl\inc32"
 				PreprocessorDefinitions="HT_DAV;HT_ZLIB;_GL;WIN32;_WINDOWS;_SVGLIB;_SVGANIM;_STIX;_FONTCONFIG;_GLANIM;_GLTRANSFORMATION;LIBWWW_USEIDN;WITHOUT_ICONV"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -2235,6 +2235,22 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\libwww\Library\src\SSL\HTSSL.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\libwww\Library\src\SSL\HTSSLhttps.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\libwww\Library\src\SSL\HTSSLReader.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\libwww\Library\src\SSL\HTSSLWriter.c"
+				>
 			</File>
 			<File
 				RelativePath="..\..\..\libwww\Library\src\HTStream.c"
