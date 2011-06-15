@@ -129,9 +129,9 @@ void HRefDlgWX::OnOk( wxCommandEvent& event )
   url = url.Trim(TRUE).Trim(FALSE);
   Waiting = 0;
   // allocate a temporary buffer to copy the 'const char *' url buffer 
-  char buffer[MAX_LENGTH];
-  strncpy( buffer, (const char*)url.mb_str(wxConvUTF8),  MAX_LENGTH / 4);
-  buffer[MAX_LENGTH / 4] = EOS;
+  char buffer[MAX_LENGTH * 4];
+  strncpy( buffer, (const char*)url.mb_str(wxConvUTF8),  MAX_LENGTH);
+  buffer[MAX_LENGTH] = EOS;
   // give the new url to amaya (to do url completion)
   ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, (char *)buffer);
   // create or load the new document
