@@ -329,9 +329,9 @@ ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
     {
       tmp = (char *)TtaGetMemory (strlen(targetFileName)+10);
       sprintf (tmp, "%s.tmp", targetFileName);
-      wxFile::wxFile (targetFile, wxFile::write);
+      wxFile (targetFile, wxFile::write);
       tmpFile = TtaConvMessageToWX(tmp);
-      wxFile::wxFile (tmpFile, wxFile::write);
+      wxFile (tmpFile, wxFile::write);
       result = wxFile::Exists(targetFile);
       if (result)
         result = wxConcatFiles (tmpFile, sourceFile, targetFile);
