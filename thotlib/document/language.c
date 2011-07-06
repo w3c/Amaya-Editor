@@ -170,6 +170,7 @@ static ISO639entry	ISO639table[] =
 	{"Latvian",        "lv"},
 	{"Lingala",        "ln"},
 	{"Lithuanian",     "lt"},
+	{"Luxembourg",     "lb"},
 	{"Macedonian",     "mk"},
 	{"Malagasy",       "mg"},
 	{"Malay",          "ms"},
