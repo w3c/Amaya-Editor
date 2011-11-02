@@ -2,11 +2,12 @@
 #define _WIN_FCT_
 #include <windows.h>
 #include "fileaccess.h"
-#define APPFILENAMEFILTER "HTML files (*.*htm[l])\0*.*htm*\0XML files (*.xml)\0*.xml\0MathML Files (*.mml)\0*.mml\0SVG files (*.svg)\0*.svg\0CSS files (*.css)\0*.css\0Javascript files (*.js)\0*.js\0All files (*.*)\0*.*\0"
+#define APPFILENAMEFILTER "HTML files (*.*htm[l])\0*.*htm*\0XML files (*.xml)\0*.xml\0MathML Files (*.mml)\0*.mml\0SVG files (*.svg)\0*.svg\0CSS files (*.css)\0Text files (*.txt)\0*.css\0Javascript files (*.js)\0*.js\0All files (*.*)\0*.*\0"
 #define APPCSSNAMEFILTER "CSS files (*.css)\0*.css\0All files (*.*)\0*.*\0"
 #define APPSVGNAMEFILTER "SVG files (*.svg)\0*.svg\0All files (*.*)\0*.*\0"
 #define APPMATHNAMEFILTER "MathML files (*.mml)\0*.mml\0All files (*.*)\0*.*\0"
 #define APPHTMLNAMEFILTER "HTML files (*.*htm[l])\0*.*htm*\0All files (*.*)\0*.*\0"
+#define APPTXTNAMEFILTER "Text files (*.txt)\0*.txt\0All files (*.*)\0*.*\0"
 #define APPIMAGENAMEFILTER "All files (*.*)\0*.*\0Image files (*.png)\0*.png\0Image files (*.jpg)\0*.jpg\0Image files (*.gif)\0*.gif\0"
 #define APPLIBRARYNAMEFILTER "Library files (*.lhtml)\0*.lhtml\0All files (*.*)\0*.*\0"
 #define APPJAVASCRIPTNAMEFILTER _T("Javascript files (*.js)\0*.js\0All files (*.*)\0*.*\0"
