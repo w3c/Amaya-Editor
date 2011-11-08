@@ -9,7 +9,7 @@
  * Initialization functions and button functions of Amaya application.
  *
  * Author: I. Vatton
- *         R. Guetari (W3C/INRIA) - Windows version - 
+ *         R. Guetari (W3C/INRIA) - Windows version
  */
 
 /* Included headerfiles */
