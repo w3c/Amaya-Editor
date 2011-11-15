@@ -3361,6 +3361,13 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
   TtaFreeMemory (esc_url);
 
   me->block_size =  file_size;
+
+#ifdef LC
+#ifdef SSL
+  HTSetSocketBufSize (file_size);
+#endif /* SSL */
+#endif /* LC */
+
   /* select the parameters that distinguish a PUT from a GET/POST */
   me->method = METHOD_PUT;
   if (mode & AMAYA_SIMPLE_PUT)

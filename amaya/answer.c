@@ -766,4 +766,11 @@ void PrintTerminateStatus (AHTReqContext *me, int status)
         }
     }
 #endif
+
+#ifdef LC
+#ifdef SSL
+  HTUnSetSocketBufSize ();
+#endif /* SSL */
+#endif /* LC */
+
 }
