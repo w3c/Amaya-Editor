@@ -2582,6 +2582,19 @@ void QueryInit ()
 #ifdef CATCH_SIG
   signal (SIGPIPE, SIG_IGN);
 #endif
+
+#ifdef LC
+#ifdef SSL
+  ptr = TtaGetEnvString ("BUF_SIZE_SOCKET");
+  if (ptr && *ptr) {
+    int bufSize;
+    bufSize = atoi (ptr);
+    TtaSetEnvInt ("BUF_SIZE_SOCKET", bufSize, TRUE);
+    bufSize = bufSize * 1024;
+    HTSetSocketBufSize (bufSize);
+  }
+#endif /* SSL */
+#endif /* LC */
 }
 
 static AHTReqContext *LoopRequest= NULL;
