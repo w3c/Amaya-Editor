@@ -2593,6 +2593,9 @@ void QueryInit ()
     bufSize = bufSize * 1024;
     HTSetSocketBufSize (bufSize);
   }
+  else {
+    HTUnSetSocketBufSize ();
+  }
 #endif /* SSL */
 #endif /* LC */
 }
