@@ -12,6 +12,7 @@
  *
  * Author: J. Kahan
  *         J. Kahan/R. Guetari Windows 95/NT routines
+ *         L. Carcone SSL support
  */
 
 /* defines to include elsewhere
@@ -2583,7 +2584,6 @@ void QueryInit ()
   signal (SIGPIPE, SIG_IGN);
 #endif
 
-#ifdef LC
 #ifdef SSL
   ptr = TtaGetEnvString ("BUF_SIZE_SOCKET");
   if (ptr && *ptr) {
@@ -2597,7 +2597,6 @@ void QueryInit ()
     HTUnSetSocketBufSize ();
   }
 #endif /* SSL */
-#endif /* LC */
 }
 
 static AHTReqContext *LoopRequest= NULL;
