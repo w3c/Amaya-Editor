@@ -1893,6 +1893,11 @@ static void         AHTNetInit (void)
   HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_REAUTH, HT_FILTER_MIDDLE);
 #ifdef SSL
   HTNet_addAfter (HTPEP_afterFilter,	"http://*", NULL, HT_ALL, HT_FILTER_MIDDLE);
+  HTNet_addAfter (redirection_handler, "https://*", NULL, HT_PERM_REDIRECT, HT_FILTER_MIDDLE);
+  HTNet_addAfter (redirection_handler, "https://*", NULL, HT_FOUND, HT_FILTER_MIDDLE);
+  HTNet_addAfter (redirection_handler, "https://*", NULL, HT_SEE_OTHER, HT_FILTER_MIDDLE);
+  HTNet_addAfter (redirection_handler, "https://*", NULL, HT_TEMP_REDIRECT, HT_FILTER_MIDDLE);
+  HTNet_addAfter (HTAuthInfoFilter,    "https://*", NULL, HT_ALL, HT_FILTER_MIDDLE);
 #endif /* SSL */
   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT, HT_FILTER_MIDDLE);
   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_FOUND, HT_FILTER_MIDDLE);
