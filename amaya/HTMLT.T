@@ -2138,7 +2138,7 @@ ATTRIBUTES
         Create 'type="I"';
         END;
 
- Start > 1: BEGIN
+ Start: BEGIN
   Create SAN;
         Create 'start="';
         Create Start;
