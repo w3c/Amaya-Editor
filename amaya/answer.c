@@ -203,8 +203,12 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
     case HT_MSG_RETRY_PROXY_AUTH:
     case HT_MSG_RETRY_AUTHENTICATION:
       if (!TtaTestWaitShowDialogue ())
-        // avoid to close the current authentication dialog
-        InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_AUTHENTICATION_CONFIRM));
+        {
+	  // avoid to close the current authentication dialog
+	  // remove wrong password
+	  CleanPasswordTable();
+	  InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_AUTHENTICATION_CONFIRM));
+        }
       break;
     case HT_MSG_REDIRECTION:
       if (me)

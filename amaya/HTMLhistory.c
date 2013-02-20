@@ -1436,6 +1436,7 @@ void UpdatePasswordsSiteList (int i_site, const char *label_site)
             }
         }
     }
+  WritePasswordTable ();
 }
 
 /*----------------------------------------------------------------------
@@ -1573,9 +1574,9 @@ void NewPasswordTable (char *realm, char *server, char *name, char *pwd,
 
   if (i_auth != 0)
     {
-      /* same name/pwd infos - don't change the record */
+      // same name/pwd infos - don't change the record
       new_auth = FALSE;
-      /* get the existing server/realm infos */
+      // get the existing server/realm infos
       pm_name[0] = EOS;
       pm_passwd[0] = EOS;
       GetPasswordTable (i_auth, &pm_name[0], &pm_passwd[0]);
@@ -1592,7 +1593,7 @@ void NewPasswordTable (char *realm, char *server, char *name, char *pwd,
     }
 
   /* Store the new record */
-  if (new_auth)
+    if (new_auth)
     {
       PM_Index += 1;
       if (PM_Index < MAX_PM_TABLE)
@@ -1618,12 +1619,17 @@ void CleanPasswordTable ()
   int        i;
 
   /* Is the password table loaded ? */
-  if (PM_Index == 0)
+  if (PM_Index == 0) {
     LoadPasswordTable ();
-
+  }    
+        
   /* Remove every password */
-  for (i = 1; i <= PM_Index; i++)
+  for (i = 1; i <= PM_Index; i++) {
     RemovePasswordTable (i, TRUE);
+  }
+
+  PM_Index = 0;
+
   return;
 }
 
