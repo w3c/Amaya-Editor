@@ -1491,8 +1491,8 @@ void WritePasswordTable ()
   char      name[MAX_LENGTH], passwd[MAX_LENGTH];
   FILE     *f;
 
-  if (PM_Index == 0)
-    return;
+  //if (PM_Index == 0)
+  //  return;
 
   if (PM_Save)
     {
