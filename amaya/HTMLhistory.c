@@ -1629,7 +1629,6 @@ void CleanPasswordTable ()
   }
 
   PM_Index = 0;
-  WritePasswordTable ();
 
   return;
 }

@@ -2257,6 +2257,7 @@ static void PasswordsCallbackDialog (int ref, int typedata, char *data)
             case 3:
               /* flush the password table */
 	      CleanPasswordTable();
+	      WritePasswordTable ();
               break;
             default:
               break;
