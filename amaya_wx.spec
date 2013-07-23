@@ -8,13 +8,13 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib libz libpng libjpeg
 
-%define version 11.3.1
+%define version 11.4.7
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_wx
 Release:      0
-License:    W3C http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
+License:      W3C http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
 Group:        Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
@@ -22,7 +22,7 @@ Packager:     Irene.Vatton@inria.fr
 BuildRoot:    /var/tmp/%{name}-buildroot
 #BuildRoot:     /usr/src/redhat/BUILD/
 
-Summary:      Web Browser/Editor from the World Wide Web Consortium
+Summary:      Web Editor from the World Wide Web Consortium
 Version:      %{version}
 Source:       amaya-fullsrc-%{version}.tgz
 #Source:      ftp://ftp.w3.org/pub/amaya/amaya-src-%{version}.tgz
@@ -92,7 +92,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/
 # Force 64-bit Mesa configure
 # WARNING: Check that Mesa/configs/linux-x86-64 uses
 #          "LIB_DIR = lib" "EXTRA_LIB_PATH = -L/usr/X11R6/lib"
-#cp ../Mesa/configs/linux-x86-64-static ../Mesa/configs/current
+cp ../Mesa/configs/linux-x86-64-static ../Mesa/configs/current
 #autoconf
 #cd libwww  && libtoolize --force --copy
 #cd libwww && aclocal; autoheader; automake; autoconf
