@@ -27,7 +27,7 @@ The Amaya source tree can be found in the directory Amaya of this project.
 <a name="libraries"/>
 ## External Libraries
 Amaya uses several external librarie (libwww, Mesa, redland, wxWidgets, freetype). 
-They can be found in the tar file located in the directory Library or in the Amaya page 
+They can be found in the tar file indicated in the Amaya Source page 
 <http://www.w3.org/Amaya/User/SourceDist.html>
 
  
